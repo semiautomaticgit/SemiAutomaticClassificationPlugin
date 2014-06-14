@@ -1,0 +1,181 @@
+[general]
+name=Semi-Automatic Classification Plugin
+qgisMinimumVersion=2.0
+description= Plugin for the semi-automatic supervised classification designed to expedite the processing of multispectral or hyperspectral remote sensing images, which provides a set of tools for pre processing and post processing. 
+version=3.0.0
+about=Written by Luca Congedo, the Semi-Automatic Classification Plugin (SACP) allows for the semi-automatic supervised classification of remote sensing images, providing tools to expedite the creation of ROIs (training areas) through region growing or multliple ROI creation. The spectral signatures of training areas can be automatically calculated and displayed in a spectral signature plot. It is possible to import spectral signatures from external sources. Also, a tool allows for the selection and download of spectral signatures from the USGS Spectral Library (http://speclab.cr.usgs.gov/spectral-lib.html). Several tools are available for the pre processing phase (image clipping, Landsat conversion to reflectance), the classification process (Minimum Distance, Maximum Likelihood, Spectral Angle Mapping algorithms, and classification previews), and the post processing phase (conversion to vector, accuracy assessment, land cover change, classification report). This plugin requires the installation of GDAL, OGR, Numpy, SciPy and Matplotlib. Also, a virtual machine is available http://fromgistors.blogspot.com/p/semi-automatic-os.html. Keywords: 土地被覆分類 监督分类 土地覆盖分类 教師付き分類 تصنيف استخدام الأراضي Classificação da Cobertura do Solo Clasificación de la Cobertura de la Tierra Classification de la Couverture du Sol классификация землепользования Klassifizierung der Landbedeckung Classificazione della Copertura del Suolo. For more information please visit http://fromgistors.blogspot.com/
+
+author=Luca Congedo
+email=ing.congedoluca@gmail.com
+category=Raster
+
+icon=semiautomaticclassificationplugin.png
+
+; start of optional metadata
+changelog=
+	3.0.0
+	New version:
+	-reduced dependencies (GDAL, OGR, and Python)
+	-required: GDAL, OGR, Python Numpy, Python SciPy, and Python Matplotlib
+	-several code improvements
+	-classification performed using spectral signatures
+	-classification previews are faster because performed only on selected area
+	-possibility to import external spectral signatures
+	-direct download and sampling of USGS spectral libraries
+	-updated interface and signature plots
+
+	2.5.1
+	Minor update:
+	-bug fixing (attempt to solve http://hub.qgis.org/issues/9845)
+	-metadata change
+	
+	2.5.0
+	Major update:
+	-replaced several Orfeo Toolbox functions such as the region growing with GDAL, numpy and scipy
+	-Orfeo Toolbox is no longer required for the plugin
+	-bug fixing and code improvements 
+	
+	2.4.0
+	Major update:
+	-new button for the manual drawing of ROIs
+	-new ID field for macroclass, which allow for the definition of a macroclass (a group of ROIs having different class ID)
+	-new classification option (Use Macroclass ID), which allows the land cover classification using the macroclass field
+	-new tab for the scatter plots of ROIs
+	-code improvements
+	
+	2.3.3
+	Minor update:
+	-fixed a bug with the processing of the band 8 of Landsat 8  (http://hub.qgis.org/issues/9284), which now is skipped
+	
+	2.3.2
+	Minor update:
+	-fixed a bug with the calculation of the classification report
+	
+	2.3.1
+	Minor update:
+	-fixed a bug with the calculation of ROI signature
+	
+	2.3.0
+	Major update:
+	-new Pre processing tab with utilities
+	-Pre processing tab: clip multiple rasters at once with coordinates or shapefile
+	-Pre processing tab: Landsat (4, 5, 7, and 8) utility for automatic conversion to TOA Reflectance and At-Satellite Brightness Temperature, and optionally DOS1 atmosperic correction
+	-Post processing tab: classification report in pixel, percentage and area
+	-added language checkbox for switching between English and locale (default English)
+	-Land cover change calculation now uses SAGA command changedetection
+	-bug fixing
+
+	2.2.3
+	Minor update:
+	-fixed a bug with the selection of a qml style
+	
+	2.2.2
+	Minor update:
+	-compatibility with QGIS dev and Processing 2.0-20131029
+	-bugfix and code improvements
+	
+	2.2.1
+	Minor update:
+	-small bugfix
+	
+	2.2.0
+	Major update:
+	-added internationalization
+	-new language: italian
+	
+	2.1.4
+	Minor update:
+	-added online help functionality
+	-bugfix and code improvements
+	
+	2.1.3
+	Minor update:
+	-bugfix
+	
+	2.1.2
+	Minor update:
+	-fix SAGA version according to Processing settings
+	
+	2.1.1
+	Minor update:
+	-update to the new Processing framework (SEXTANTE)
+	
+	2.1.0
+	Major update:
+	-changes to the interface, now ROI creation is a dock widget
+	-new option for fast ROI on one band
+	-new tab for multiple ROI creation from point coordinates
+	-new Post processing tab that allows for:
+		-Accuracy assessment using a vector reference ground truth (it requires GRASS)
+		-Land cover change calculation between two classifications (it requires GDAL)
+	-new option to select ROIs for classification and preview
+	-new option to mask a classification using a shapefile  in classification tab
+	-new option to create a vector classification in classification tab
+	-added field names customization in settings tab
+	-added test functions in settings tab
+	-version for QGIS 2.0
+	
+	2.0.2
+	Minor update:
+	-update to new SAGA 2.1, classification codes
+	-version for QGIS 2.0
+	
+	2.0.1
+	Minor update:
+	-update to new SAGA 2.1, different output of csv table
+	-version for QGIS 2.0
+
+	2.0.0
+	Major update:
+	-upgrade to QGIS 2.0 API
+	-version for QGIS 2.0
+
+	1.8.0
+	Major update:
+	-interface improvements
+	-new function for calculating spectral signature for ROIs (Mean and Standard Deviation)
+	-shapefile are created with the required fields for spectral signature according to raster bands
+	-added signature tab for plotting ROI signatures
+	-added bandset tab for creating a group of bands as input for ROI creation and classification
+	-added progress bar and cancel function
+	-several code enhancements
+	-version for QGIS 1.8
+
+	1.5.1
+	Minor update:
+	-minor changes to the interface
+	-code cleaning
+
+	1.5.0
+	Major update:
+	-added function to redo ROI
+	-added function to redo preview classification
+	-added function to undo save ROI
+	-added RAM setting
+	-optimization of several processes
+	
+	1.4.3
+	Major update:
+	-plugin ported to QGIS master (revision 226c524)
+	-updated interface
+	-added a "Settings" tab
+	-in "Settings" added the ability to select a qml file as style for classifications and previews
+	-in "Settings" added the ability to set ROI styles (colour and transparency)
+	-in "Settings" added the ability to activate a log function that creates a log file (useful for reporting bugs)
+	-plugin is in the raster menu
+	-several bugs fixed and code cleaning
+
+	1.3:
+	-Now the classes of the output classification have the same IDs of ROI classes.
+	-Tracker and Wiki links added.
+	-New function that controls the installed version of SEXTANTE (version 1.0.9 has an issue that precludes some functionalities of the Semi-Automatic Classification Plugin), and suggests to install version 1.0.8.
+
+
+experimental=False
+deprecated=False
+
+tags = Raster, Classification, Land Cover, Remote Sensing, Analysis
+
+homepage=http://fromgistors.blogspot.com/p/semi-automatic-classification-plugin.html
+tracker=http://hub.qgis.org/projects/semi-automatic-class/issues
+repository=https://github.com/semiautomaticgit/SemiAutomaticClassificationPlugin

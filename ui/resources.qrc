@@ -1,0 +1,32 @@
+<RCC>
+  <qresource prefix="/plugins/semiautomaticclassificationplugin">
+    <file>icons/semiautomaticclassificationplugin_import_USGS_spectral_library.png</file>
+    <file>icons/semiautomaticclassificationplugin_import_spectral_library.png</file>
+    <file>icons/semiautomaticclassificationplugin_export_sign_to_csv.png</file>
+    <file>icons/semiautomaticclassificationplugin_docks.png</file>
+    <file>icons/guide.png</file>
+    <file>icons/semiautomaticclassificationplugin_delete_signature.png</file>
+    <file>icons/semiautomaticclassificationplugin_delete_ROI.png</file>
+    <file>icons/semiautomaticclassificationplugin_scatter_tool.png</file>
+    <file>icons/semiautomaticclassificationplugin_manual_ROI.png</file>
+    <file>icons/semiautomaticclassificationplugin_clip_tool.png</file>
+    <file>icons/semiautomaticclassificationplugin_landsat8_tool.png</file>
+    <file>icons/semiautomaticclassificationplugin_report_tool.png</file>
+    <file>icons/help.png</file>
+    <file>icons/semiautomaticclassificationplugin_land_cover_change.png</file>
+    <file>icons/semiautomaticclassificationplugin_post_process.png</file>
+    <file>icons/semiautomaticclassificationplugin_classification.png</file>
+    <file>icons/semiautomaticclassificationplugin_roi_multiple.png</file>
+    <file>icons/semiautomaticclassificationplugin_roi_creation.png</file>
+    <file>icons/fromGIStoRS.png</file>
+    <file>icons/semiautomaticclassificationplugin_accuracy_tool.png</file>
+    <file>icons/semiautomaticclassificationplugin_roi_single.png</file>
+    <file>icons/ACCDAR.png</file>
+    <file>semiautomaticclassificationplugin.png</file>
+    <file>icons/semiautomaticclassificationplugin_bandset_tool.png</file>
+    <file>icons/semiautomaticclassificationplugin_class_tool.png</file>
+    <file>icons/semiautomaticclassificationplugin_roi_tool.png</file>
+    <file>icons/semiautomaticclassificationplugin_settings_tool.png</file>
+    <file>icons/semiautomaticclassificationplugin_sign_tool.png</file>
+  </qresource>
+</RCC>
