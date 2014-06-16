@@ -137,6 +137,11 @@ class SemiAutomaticClassificationPlugin:
 		cfg.sets = Settings()
 		cfg.uiUtls = Ui_Utils()
 		cfg.ipt = Input()
+		# 32bit or 64bit
+		if sys.maxsize > 2**32:
+			cfg.sys64bit = "Yes"
+		else:
+			cfg.sys64bit = "No"
 		# file system encoding
 		cfg.fSEnc = sys.getfilesystemencoding()
 		self.readVariables()

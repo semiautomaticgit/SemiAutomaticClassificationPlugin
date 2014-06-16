@@ -72,6 +72,8 @@ utls = None
 uiUtls = None
 # accuracy
 acc = None
+# system platform
+sys64bit = None
 # signature importer
 sigImport = None
 QGISVer = None
@@ -124,7 +126,7 @@ spectrPlotList = {}
 signPlotIDs = {}
 # set classification path
 clssPth = None
-arrayUnitMemory = 0.000012
+arrayUnitMemory = 0.000016
 tableColString = "ID"
 ROITabEdited = "No"
 SigTabEdited = "No"

@@ -194,6 +194,10 @@ class Messages:
 	def msgErr27(self):
 		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [27]", QApplication.translate("semiautomaticclassificationplugin", "Unable to perform operation. Possibly OGR is missinig drivers. Please repeat QGIS installation."))
 					
+	def msgErr28(self):
+		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [28]", QApplication.translate("semiautomaticclassificationplugin", "Memory error. Please, set a lower value of RAM in the tab Settings."))
+					
+					
 	""" Warnings """
 	def msgWar2Windows(self):
 		self.msgBoxWarning(QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [2]", QApplication.translate("semiautomaticclassificationplugin", "It appears that SciPy is not correctly installed. Please, see this page for information about SciPy installation ") + " http://semiautomaticclassificationmanual.readthedocs.org/en/latest/installation_win64.html#scipy-installation")

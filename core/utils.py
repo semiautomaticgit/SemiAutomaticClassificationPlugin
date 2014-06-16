@@ -890,40 +890,43 @@ class Utils:
 					StartT = time.clock()
 					# algorithm
 					c = self.algorithmMinimumDistance(rasterArray, s)
-					oR = outputGdalRasterList[bN]
-					if previewSize > 0:
-						pixelStartColumn = int(pixelStartColumnPreview)
-						pixelStartRow = int(pixelStartRowPreview)
-					# algorithm raster
-					self.writeArrayBlock(oR, 1, c, pixelStartColumn, pixelStartRow, nodataValue)
-					if minArray is None:
-						minArray = c
+					if type(c) is not int:
+						oR = outputGdalRasterList[bN]
+						if previewSize > 0:
+							pixelStartColumn = int(pixelStartColumnPreview)
+							pixelStartRow = int(pixelStartRowPreview)
+						# algorithm raster
+						self.writeArrayBlock(oR, 1, c, pixelStartColumn, pixelStartRow, nodataValue)
+						if minArray is None:
+							minArray = c
+						else:
+							minArray = self.findMinimumArray(c, minArray)
+						# minimum raster
+						self.writeArrayBlock(outputAlgorithmRaster, 1, minArray, pixelStartColumn, pixelStartRow, nodataValue)
+						# signature classification raster
+						if macroclassCheck == "Yes":
+							clA = self.classifyClasses(c, minArray, signatureList[n][0])
+						else:
+							clA = self.classifyClasses(c, minArray, signatureList[n][2])
+						# classification raster
+						if classArray == None:
+							classArray = clA
+						else:
+							e = np.ma.masked_equal(clA, 0)
+							classArray =  e.mask * classArray + clA
+							e = None
+						clA = None
+						# threshold
+						if cfg.algThrshld > 0:
+							thr = self.minimumDistanceThreshold(minArray, cfg.algThrshld)
+							classArray = classArray * thr
+							thr = None		
+						# classification raster
+						self.writeArrayBlock(outputClassificationRaster, 1, classArray, pixelStartColumn, pixelStartRow, nodataValue)
+						bN = bN + 1
+						n = n + 1
 					else:
-						minArray = self.findMinimumArray(c, minArray)
-					# minimum raster
-					self.writeArrayBlock(outputAlgorithmRaster, 1, minArray, pixelStartColumn, pixelStartRow, nodataValue)
-					# signature classification raster
-					if macroclassCheck == "Yes":
-						clA = self.classifyClasses(c, minArray, signatureList[n][0])
-					else:
-						clA = self.classifyClasses(c, minArray, signatureList[n][2])
-					# classification raster
-					if classArray == None:
-						classArray = clA
-					else:
-						e = np.ma.masked_equal(clA, 0)
-						classArray =  e.mask * classArray + clA
-						e = None
-					clA = None
-					# threshold
-					if cfg.algThrshld > 0:
-						thr = self.minimumDistanceThreshold(minArray, cfg.algThrshld)
-						classArray = classArray * thr
-						thr = None		
-					# classification raster
-					self.writeArrayBlock(outputClassificationRaster, 1, classArray, pixelStartColumn, pixelStartRow, nodataValue)
-					bN = bN + 1
-					n = n + 1
+						return "No"
 				else:
 					return "No"
 		elif algorithmName == cfg.algSAM:
@@ -945,40 +948,43 @@ class Utils:
 					StartT = time.clock()
 					# algorithm
 					c = self.algorithmSAM(rasterArray, s)
-					oR = outputGdalRasterList[bN]
-					if previewSize > 0:
-						pixelStartColumn = int(pixelStartColumnPreview)
-						pixelStartRow = int(pixelStartRowPreview)
-					# algorithm raster
-					self.writeArrayBlock(oR, 1, c, pixelStartColumn, pixelStartRow, nodataValue)
-					if minArray is None:
-						minArray = c
+					if type(c) is not int:
+						oR = outputGdalRasterList[bN]
+						if previewSize > 0:
+							pixelStartColumn = int(pixelStartColumnPreview)
+							pixelStartRow = int(pixelStartRowPreview)
+						# algorithm raster
+						self.writeArrayBlock(oR, 1, c, pixelStartColumn, pixelStartRow, nodataValue)
+						if minArray is None:
+							minArray = c
+						else:
+							minArray = self.findMinimumArray(c, minArray)
+						# minimum raster
+						self.writeArrayBlock(outputAlgorithmRaster, 1, minArray, pixelStartColumn, pixelStartRow, nodataValue)
+						# signature classification raster
+						if macroclassCheck == "Yes":
+							clA = self.classifyClasses(c, minArray, signatureList[n][0])
+						else:
+							clA = self.classifyClasses(c, minArray, signatureList[n][2])
+						# classification raster
+						if classArray == None:
+							classArray = clA
+						else:
+							e = np.ma.masked_equal(clA, 0)
+							classArray =  e.mask * classArray + clA
+							e = None
+						clA = None
+						# threshold
+						if cfg.algThrshld > 0:
+							thr = self.minimumDistanceThreshold(minArray, cfg.algThrshld)
+							classArray = classArray * thr
+							thr = None
+						# classification raster
+						self.writeArrayBlock(outputClassificationRaster, 1, classArray, pixelStartColumn, pixelStartRow, nodataValue)
+						bN = bN + 1
+						n = n + 1
 					else:
-						minArray = self.findMinimumArray(c, minArray)
-					# minimum raster
-					self.writeArrayBlock(outputAlgorithmRaster, 1, minArray, pixelStartColumn, pixelStartRow, nodataValue)
-					# signature classification raster
-					if macroclassCheck == "Yes":
-						clA = self.classifyClasses(c, minArray, signatureList[n][0])
-					else:
-						clA = self.classifyClasses(c, minArray, signatureList[n][2])
-					# classification raster
-					if classArray == None:
-						classArray = clA
-					else:
-						e = np.ma.masked_equal(clA, 0)
-						classArray =  e.mask * classArray + clA
-						e = None
-					clA = None
-					# threshold
-					if cfg.algThrshld > 0:
-						thr = self.minimumDistanceThreshold(minArray, cfg.algThrshld)
-						classArray = classArray * thr
-						thr = None
-					# classification raster
-					self.writeArrayBlock(outputClassificationRaster, 1, classArray, pixelStartColumn, pixelStartRow, nodataValue)
-					bN = bN + 1
-					n = n + 1
+						return "No"
 				else:
 					return "No"
 		elif algorithmName == cfg.algML:
@@ -999,42 +1005,45 @@ class Utils:
 						cfg.uiUtls.updateBar(progress)
 					StartT = time.clock()
 					# algorithm
-					c = self.algorithmMaximumLikelihood(rasterArray, s, covMatrList[n])					
-					oR = outputGdalRasterList[bN]
-					if previewSize > 0:
-						pixelStartColumn = int(pixelStartColumnPreview)
-						pixelStartRow = int(pixelStartRowPreview)
-					# algorithm raster
-					self.writeArrayBlock(oR, 1, c, pixelStartColumn, pixelStartRow, nodataValue)
-					
-					if maxArray is None:
-						maxArray = c
+					c = self.algorithmMaximumLikelihood(rasterArray, s, covMatrList[n])		
+					if type(c) is not int:					
+						oR = outputGdalRasterList[bN]
+						if previewSize > 0:
+							pixelStartColumn = int(pixelStartColumnPreview)
+							pixelStartRow = int(pixelStartRowPreview)
+						# algorithm raster
+						self.writeArrayBlock(oR, 1, c, pixelStartColumn, pixelStartRow, nodataValue)
+						
+						if maxArray is None:
+							maxArray = c
+						else:
+							maxArray = self.findMaximumArray(c, maxArray)
+						# minimum raster
+						self.writeArrayBlock(outputAlgorithmRaster, 1, maxArray, pixelStartColumn, pixelStartRow, nodataValue)
+						# signature classification raster
+						if macroclassCheck == "Yes":
+							clA = self.classifyClasses(c, maxArray, signatureList[n][0])
+						else:
+							clA = self.classifyClasses(c, maxArray, signatureList[n][2])
+						# classification raster
+						if classArray == None:
+							classArray = clA
+						else:
+							e = np.ma.masked_equal(clA, 0)
+							classArray =  e.mask * classArray + clA
+							e = None
+						clA = None
+						# threshold
+						if cfg.algThrshld > 0:
+							thr = self.maximumLikelihoodThreshold(maxArray)
+							classArray = classArray * thr
+							thr = None
+						# classification raster
+						self.writeArrayBlock(outputClassificationRaster, 1, classArray, pixelStartColumn, pixelStartRow, nodataValue)
+						bN = bN + 1
+						n = n + 1
 					else:
-						maxArray = self.findMaximumArray(c, maxArray)
-					# minimum raster
-					self.writeArrayBlock(outputAlgorithmRaster, 1, maxArray, pixelStartColumn, pixelStartRow, nodataValue)
-					# signature classification raster
-					if macroclassCheck == "Yes":
-						clA = self.classifyClasses(c, maxArray, signatureList[n][0])
-					else:
-						clA = self.classifyClasses(c, maxArray, signatureList[n][2])
-					# classification raster
-					if classArray == None:
-						classArray = clA
-					else:
-						e = np.ma.masked_equal(clA, 0)
-						classArray =  e.mask * classArray + clA
-						e = None
-					clA = None
-					# threshold
-					if cfg.algThrshld > 0:
-						thr = self.maximumLikelihoodThreshold(maxArray)
-						classArray = classArray * thr
-						thr = None
-					# classification raster
-					self.writeArrayBlock(outputClassificationRaster, 1, classArray, pixelStartColumn, pixelStartRow, nodataValue)
-					bN = bN + 1
-					n = n + 1
+						return "No"
 				else:
 					return "No"
 		# logger
@@ -1111,10 +1120,16 @@ class Utils:
 	
 	# minimum Euclidean distance algorithm [ sqrt( sum( (r_i - s_i)^2 ) ) ]
 	def algorithmMinimumDistance(self, rasterArray, signatureArray):
-		algArray = np.sqrt(((rasterArray - signatureArray)**2).sum(axis = 2))
-		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "")
-		return algArray
+		try:
+			algArray = np.sqrt(((rasterArray - signatureArray)**2).sum(axis = 2))
+			# logger
+			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "")
+			return algArray
+		except Exception, err:
+			# logger
+			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.mx.msgErr28()
+			return 0
 		
 	# create covariance matrix list from signature list
 	def covarianceMatrixList(self, signatureList):
@@ -1132,28 +1147,40 @@ class Utils:
 		
 	# Maximum Likelihood algorithm
 	def algorithmMaximumLikelihood(self, rasterArray, signatureArray, covarianceMatrix):
-		(sign, logdet) = np.linalg.slogdet(covarianceMatrix)
-		invC = np.linalg.inv(covarianceMatrix)
-		d = rasterArray - signatureArray
-		v = rasterArray.shape
-		algArray = np.zeros((v[0], v[1]), dtype=np.float64)
-		for i in range(0, v[0]):
-			for j in range(0, v[1]):
-				algArray[i, j] = - logdet - np.dot(np.dot(d[i, j, :].T, invC), d[i, j, :])
-		if cfg.algThrshld > 0:
-			chi = self.chisquare()
-			threshold = - chi - logdet
-			e = np.ma.masked_less(algArray, threshold)
-			algArray = np.ma.filled(e, cfg.maxLikeNoDataVal)
-		return algArray
+		try:
+			(sign, logdet) = np.linalg.slogdet(covarianceMatrix)
+			invC = np.linalg.inv(covarianceMatrix)
+			d = rasterArray - signatureArray
+			v = rasterArray.shape
+			algArray = np.zeros((v[0], v[1]), dtype=np.float64)
+			for i in range(0, v[0]):
+				for j in range(0, v[1]):
+					algArray[i, j] = - logdet - np.dot(np.dot(d[i, j, :].T, invC), d[i, j, :])
+			if cfg.algThrshld > 0:
+				chi = self.chisquare()
+				threshold = - chi - logdet
+				e = np.ma.masked_less(algArray, threshold)
+				algArray = np.ma.filled(e, cfg.maxLikeNoDataVal)
+			return algArray
+		except Exception, err:
+			# logger
+			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.mx.msgErr28()
+			return 0
 		
 	# spectral angle mapping algorithm [ arccos( sum(r_i * s_i) / ( sum(r_i**2) * sum(s_i**2) ) ) ]
 	def algorithmSAM(self, rasterArray, signatureArray):
-		algArray = np.arccos((rasterArray * signatureArray).sum(axis = 2) / np.sqrt((rasterArray**2).sum(axis = 2) * (signatureArray**2).sum())) * 180 / np.pi
-		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "")
-		return algArray
-		
+		try:
+			algArray = np.arccos((rasterArray * signatureArray).sum(axis = 2) / np.sqrt((rasterArray**2).sum(axis = 2) * (signatureArray**2).sum())) * 180 / np.pi
+			# logger
+			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "")
+			return algArray
+		except Exception, err:
+			# logger
+			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.mx.msgErr28()
+			return 0
+			
 	# read all raster from band
 	def readAllBandsFromRaster(self, gdalRaster):
 		bandNumber = gdalRaster.RasterCount
@@ -1269,8 +1296,17 @@ class Utils:
 	# calculate block number
 	def calculateBlockSize(self, bandNumber):
 		b = int((cfg.RAMValue / (cfg.arrayUnitMemory * (bandNumber +  5) ))**.5)
+		# check memory
+		try:
+			np.zeros((b,b), dtype = np.float64)
+		except:
+			try:
+				np.zeros((b/2,b/2), dtype = np.float64)
+				b = b/2
+			except:
+				b = int((280 / (cfg.arrayUnitMemory * (bandNumber +  5) ))**.5)
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "")
+		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "block = " + str(b))
 		return b
 		
 	# get random color and complementary color

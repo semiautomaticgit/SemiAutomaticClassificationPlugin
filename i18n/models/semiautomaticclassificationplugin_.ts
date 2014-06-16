@@ -642,7 +642,7 @@
 <context>
     <name>SemiAutomaticClassificationPlugin</name>
     <message>
-        <location filename="semiautomaticclassificationplugin.py" line="213"/>
+        <location filename="semiautomaticclassificationplugin.py" line="218"/>
         <source> Input image</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1582,57 +1582,57 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>semiautomaticclassificationplugin</name>
     <message>
-        <location filename="semiautomaticclassificationplugin.py" line="193"/>
+        <location filename="semiautomaticclassificationplugin.py" line="198"/>
         <source>Semi-Automatic Classification Plugin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="semiautomaticclassificationplugin.py" line="219"/>
+        <location filename="semiautomaticclassificationplugin.py" line="224"/>
         <source>Select an image</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="semiautomaticclassificationplugin.py" line="223"/>
+        <location filename="semiautomaticclassificationplugin.py" line="228"/>
         <source>Refresh list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="semiautomaticclassificationplugin.py" line="229"/>
+        <location filename="semiautomaticclassificationplugin.py" line="234"/>
         <source>Band set</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="semiautomaticclassificationplugin.py" line="235"/>
+        <location filename="semiautomaticclassificationplugin.py" line="240"/>
         <source>Spectral plot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="semiautomaticclassificationplugin.py" line="241"/>
+        <location filename="semiautomaticclassificationplugin.py" line="246"/>
         <source>ROI tools</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="semiautomaticclassificationplugin.py" line="247"/>
+        <location filename="semiautomaticclassificationplugin.py" line="252"/>
         <source>Pre processing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="semiautomaticclassificationplugin.py" line="253"/>
+        <location filename="semiautomaticclassificationplugin.py" line="258"/>
         <source>Post processing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="semiautomaticclassificationplugin.py" line="259"/>
+        <location filename="semiautomaticclassificationplugin.py" line="264"/>
         <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="semiautomaticclassificationplugin.py" line="265"/>
+        <location filename="semiautomaticclassificationplugin.py" line="270"/>
         <source>User guide</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="semiautomaticclassificationplugin.py" line="271"/>
+        <location filename="semiautomaticclassificationplugin.py" line="276"/>
         <source>Online help</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1888,32 +1888,37 @@ Possible reason: selected rapid ROI band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="messages.py" line="214"/>
+        <location filename="messages.py" line="198"/>
+        <source>Memory error. Please, set a lower value of RAM in the tab Settings.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="messages.py" line="218"/>
         <source>Warning</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="messages.py" line="202"/>
+        <location filename="messages.py" line="206"/>
         <source>It appears that SciPy is not correctly installed. Please, see this page for information about SciPy installation </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="messages.py" line="205"/>
+        <location filename="messages.py" line="209"/>
         <source>rasters have different pixel sizes that can lead to incorrect results. Please, consider to resample rasters to the same pixel size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="messages.py" line="208"/>
+        <location filename="messages.py" line="212"/>
         <source>The same ID class has been already assigned to a different macrolass</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="messages.py" line="211"/>
+        <location filename="messages.py" line="215"/>
         <source>Wavelength already present</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="messages.py" line="214"/>
+        <location filename="messages.py" line="218"/>
         <source>Wavelength unit not provided</source>
         <translation type="unfinished"></translation>
     </message>
