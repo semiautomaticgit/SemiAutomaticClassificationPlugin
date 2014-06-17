@@ -613,6 +613,8 @@ class RoiDock:
 				cfg.utls.copyFeatureToLayer(cfg.lstROI, 1, cfg.shpLay)
 			self.ROILastID = cfg.utls.getLastFeatureID(cfg.shpLay)
 			cfg.uiUtls.updateBar(30)
+			tW = cfg.uid.ROI_tableWidget
+			tW.blockSignals(True)
 			try:
 				# start editing
 				cfg.shpLay.startEditing()
@@ -656,6 +658,7 @@ class RoiDock:
 			self.ROIListTable(cfg.trnLay, cfg.uid.ROI_tableWidget)
 			self.ROIScatterPlotListTable(cfg.trnLay, cfg.uiscp.scatter_list_plot_tableWidget)
 			cfg.uiUtls.updateBar(40)
+			tW.blockSignals(False)
 			# logger
 			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "roi: " + str(cfg.ROIID) + ", " + str(cfg.ROIInfo) + " saved to shapefile: " + str(cfg.shpLay.name()))
 			# calculate signature if checkbox is yes
@@ -749,7 +752,7 @@ class RoiDock:
 			for i in tW.selectedIndexes():
 				id = int(cfg.uid.ROI_tableWidget.item(i.row(), 4).text())
 				ids.append(id)
-			cfg.utls.deleteFeautureShapefile(cfg.shpLay, ids)
+			cfg.utls.deleteFeatureShapefile(cfg.shpLay, ids)
 			self.ROIListTable(cfg.trnLay, cfg.uid.ROI_tableWidget)
 			self.ROIScatterPlotListTable(cfg.trnLay, cfg.uiscp.scatter_list_plot_tableWidget)
 			cfg.uid.undo_save_Button.setEnabled(False)
@@ -877,7 +880,7 @@ class RoiDock:
 				v = str(v)
 				f = cfg.fldROI_info
 			if f is not None:
-				cfg.utls.editFeautureShapefile(l, id, str(f), v)
+				cfg.utls.editFeatureShapefile(l, id, str(f), v)
 			tW.blockSignals(False)
 		cfg.ROITabEdited = "No"
 		# refresh and set the same layer
@@ -984,7 +987,7 @@ class RoiDock:
 			# ask for confirm
 			a = cfg.utls.questionBox(QApplication.translate("semiautomaticclassificationplugin", "Undo save ROI"), QApplication.translate("semiautomaticclassificationplugin", "Are you sure you want to delete the last saved ROI?"))
 			if a == "Yes":
-				cfg.utls.deleteFeautureShapefile(cfg.shpLay, [self.ROILastID])
+				cfg.utls.deleteFeatureShapefile(cfg.shpLay, [self.ROILastID])
 				cfg.uid.undo_save_Button.setEnabled(False)
 				self.ROIListTable(cfg.trnLay, cfg.uid.ROI_tableWidget)
 				self.ROIScatterPlotListTable(cfg.trnLay, cfg.uiscp.scatter_list_plot_tableWidget)

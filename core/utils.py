@@ -1497,7 +1497,7 @@ class Utils:
 		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "")
 		
 ### Delete a feauture from a shapefile by its Id
-	def deleteFeautureShapefile(self, layer, feautureIds):
+	def deleteFeatureShapefile(self, layer, feautureIds):
 		layer.startEditing()				
 		res = layer.dataProvider().deleteFeatures(feautureIds)
 		layer.commitChanges()
@@ -1506,7 +1506,7 @@ class Utils:
 		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "feauture deleted: " + str(layer) + " " + str(feautureId) )
 
 ### Edit a feauture in a shapefile by its Id
-	def editFeautureShapefile(self, layer, feautureId, fieldName, value):
+	def editFeatureShapefile(self, layer, feautureId, fieldName, value):
 		id = self.fieldID(layer, fieldName)
 		layer.startEditing()				
 		res = layer.changeAttributeValue(feautureId, id, value)
@@ -1677,7 +1677,7 @@ class Utils:
 			# return "Yes"
 
 ### Delete a feauture from a shapefile by its Id
-	def deleteFeautureShapefileOGR(self, layerPath, feautureId):
+	def deleteFeatureShapefileOGR(self, layerPath, feautureId):
 		d = ogr.GetDriverByName("ESRI Shapefile")
 		dr = d.Open(layerPath, 1)
 		l = dr.GetLayer()
@@ -1692,7 +1692,7 @@ class Utils:
 		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "feauture deleted: " + str(layerPath) + " " + str(feautureId) )
 		
 ### Edit a feauture in a shapefile by its Id
-	def editFeautureShapefileOGR(self, layerPath, feautureId, fieldName, value):
+	def editFeatureShapefileOGR(self, layerPath, feautureId, fieldName, value):
 		d = ogr.GetDriverByName("ESRI Shapefile")
 		dr = d.Open(layerPath, 1)
 		l = dr.GetLayer()
