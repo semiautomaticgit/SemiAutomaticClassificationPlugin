@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/ui_semiautomaticclassificationplugin.ui'
 #
-# Created: Tue Jun 17 18:58:32 2014
+# Created: Thu Jun 19 18:04:47 2014
 #      by: PyQt4 UI code generator 4.10
 #
 # WARNING! All changes made in this file will be lost!
@@ -1073,8 +1073,8 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.tab_Settings.setMinimumSize(QtCore.QSize(454, 0))
         self.tab_Settings.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.tab_Settings.setObjectName(_fromUtf8("tab_Settings"))
-        self.gridLayout_32 = QtGui.QGridLayout(self.tab_Settings)
-        self.gridLayout_32.setObjectName(_fromUtf8("gridLayout_32"))
+        self.gridLayout_17 = QtGui.QGridLayout(self.tab_Settings)
+        self.gridLayout_17.setObjectName(_fromUtf8("gridLayout_17"))
         self.gridLayout_13 = QtGui.QGridLayout()
         self.gridLayout_13.setObjectName(_fromUtf8("gridLayout_13"))
         self.label_31 = QtGui.QLabel(self.tab_Settings)
@@ -1128,7 +1128,7 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.label_46.setFrameShadow(QtGui.QFrame.Sunken)
         self.label_46.setObjectName(_fromUtf8("label_46"))
         self.gridLayout_13.addWidget(self.label_46, 1, 1, 1, 1)
-        self.gridLayout_32.addLayout(self.gridLayout_13, 0, 0, 1, 1)
+        self.gridLayout_17.addLayout(self.gridLayout_13, 0, 0, 1, 1)
         self.gridLayout_21 = QtGui.QGridLayout()
         self.gridLayout_21.setObjectName(_fromUtf8("gridLayout_21"))
         self.color_mdiArea = QtGui.QMdiArea(self.tab_Settings)
@@ -1191,9 +1191,7 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.reset_color_Button = QtGui.QPushButton(self.tab_Settings)
         self.reset_color_Button.setObjectName(_fromUtf8("reset_color_Button"))
         self.gridLayout_21.addWidget(self.reset_color_Button, 2, 4, 1, 1)
-        self.gridLayout_32.addLayout(self.gridLayout_21, 1, 0, 1, 1)
-        spacerItem19 = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
-        self.gridLayout_32.addItem(spacerItem19, 3, 0, 1, 1)
+        self.gridLayout_17.addLayout(self.gridLayout_21, 1, 0, 1, 1)
         self.gridLayout_2 = QtGui.QGridLayout()
         self.gridLayout_2.setObjectName(_fromUtf8("gridLayout_2"))
         self.label_8 = QtGui.QLabel(self.tab_Settings)
@@ -1222,7 +1220,9 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.label_54.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
         self.label_54.setObjectName(_fromUtf8("label_54"))
         self.gridLayout_2.addWidget(self.label_54, 0, 0, 1, 2)
-        self.gridLayout_32.addLayout(self.gridLayout_2, 2, 0, 1, 1)
+        self.gridLayout_17.addLayout(self.gridLayout_2, 2, 0, 1, 1)
+        spacerItem19 = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
+        self.gridLayout_17.addItem(spacerItem19, 3, 0, 1, 1)
         self.gridLayout_30 = QtGui.QGridLayout()
         self.gridLayout_30.setObjectName(_fromUtf8("gridLayout_30"))
         self.sound_checkBox = QtGui.QCheckBox(self.tab_Settings)
@@ -1242,7 +1242,7 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.label_45.setStyleSheet(_fromUtf8("background-color : qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #243a4e, stop:1 rgba(0, 0, 0, 0)); color : white"))
         self.label_45.setObjectName(_fromUtf8("label_45"))
         self.gridLayout_30.addWidget(self.label_45, 0, 0, 1, 2)
-        self.gridLayout_32.addLayout(self.gridLayout_30, 4, 0, 1, 1)
+        self.gridLayout_17.addLayout(self.gridLayout_30, 4, 0, 1, 1)
         self.gridLayout_3 = QtGui.QGridLayout()
         self.gridLayout_3.setObjectName(_fromUtf8("gridLayout_3"))
         self.label_28 = QtGui.QLabel(self.tab_Settings)
@@ -1277,7 +1277,7 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.label_23.setObjectName(_fromUtf8("label_23"))
         self.gridLayout.addWidget(self.label_23, 0, 0, 1, 1)
         self.gridLayout_3.addLayout(self.gridLayout, 1, 0, 1, 1)
-        self.gridLayout_32.addLayout(self.gridLayout_3, 5, 0, 1, 1)
+        self.gridLayout_17.addLayout(self.gridLayout_3, 5, 0, 1, 1)
         self.gridLayout_7 = QtGui.QGridLayout()
         self.gridLayout_7.setObjectName(_fromUtf8("gridLayout_7"))
         self.log_checkBox = QtGui.QCheckBox(self.tab_Settings)
@@ -1300,7 +1300,7 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.label_30.setStyleSheet(_fromUtf8("background-color : qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #243a4e, stop:1 rgba(0, 0, 0, 0)); color : white"))
         self.label_30.setObjectName(_fromUtf8("label_30"))
         self.gridLayout_7.addWidget(self.label_30, 0, 0, 1, 3)
-        self.gridLayout_32.addLayout(self.gridLayout_7, 6, 0, 1, 1)
+        self.gridLayout_17.addLayout(self.gridLayout_7, 6, 0, 1, 1)
         icon15 = QtGui.QIcon()
         icon15.addPixmap(QtGui.QPixmap(_fromUtf8(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_settings_tool.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.toolButton_plugin.addTab(self.tab_Settings, icon15, _fromUtf8(""))
@@ -1409,8 +1409,8 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.USGS_library_textBrowser.setHtml(_translate("SemiAutomaticClassificationPlugin", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Droid Sans\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", None))
+"</style></head><body style=\" font-family:\'Droid Sans\'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:9pt;\"><br /></p></body></html>", None))
         self.label_18.setText(_translate("SemiAutomaticClassificationPlugin", "Library Description (requires internet connection)", None))
         self.label.setText(_translate("SemiAutomaticClassificationPlugin", "<html><head/><body><p>USGS Spectral Library downloaded from <a href=\"http://speclab.cr.usgs.gov/spectral-lib.html\"><span style=\" text-decoration: underline; color:#0057ae;\">http://speclab.cr.usgs.gov/spectral-lib.html</span></a>.</p><p><span style=\" font-weight:600;\">Reference</span>: R. N. Clark, G. A. Swayze, R. Wise, K. E. Livo, T. M. Hoefen, R. F. Kokaly, and S. J. Sutley, 2007, USGS Digital Spectral Library splib06a, U.S. Geological Survey, Data Series 231.</p></body></html>", None))
         self.add_usgs_library_pushButton.setToolTip(_translate("SemiAutomaticClassificationPlugin", "<html><head/><body><p>Add signature to list (requires internet connection)</p></body></html>", None))
@@ -1579,7 +1579,7 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.textBrowser.setHtml(_translate("SemiAutomaticClassificationPlugin", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Droid Sans\'; font-size:9pt; font-weight:400; font-style:normal;\" bgcolor=\"#f2f1f0\">\n"
+"</style></head><body style=\" font-family:\'Droid Sans\'; font-size:10pt; font-weight:400; font-style:normal;\" bgcolor=\"#f2f1f0\">\n"
 "<p align=\"justify\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:11pt;\">Written by Luca Congedo (ing.congedoluca@gmail.com), the Semi-Automatic Classification Plugin (SACP) allows for the semi-automatic supervised classification of remote sensing images, providing tools to expedite the creation of ROIs (training areas) through region growing or multliple ROI creation. The spectral signatures of training areas can be automatically calculated and displayed in a spectral signature plot. It is possible to import spectral signatures from external sources. Also, a tool allows for the selection and download of spectral signatures from the USGS Spectral Library (http://speclab.cr.usgs.gov/spectral-lib.html). Several tools are available for the pre processing phase (image clipping, Landsat conversion to reflectance), the classification process (Minimum Distance, Maximum Likelihood, Spectral Angle Mapping algorithms, and classification previews), and the post processing phase (conversion to vector, accuracy assessment, land cover change, classification report).</span></p>\n"
 "<p align=\"justify\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:11pt;\"><br /></p>\n"
 "<p align=\"justify\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:11pt; font-style:italic;\">This plugin requires the installation of GDAL, OGR, Numpy, SciPy, and Matplotlib.</span></p>\n"
@@ -1587,10 +1587,10 @@ class Ui_SemiAutomaticClassificationPlugin(object):
 "<p align=\"justify\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:11pt;\">For further information about software installation and tutorials, please visit to the following website:</span></p>\n"
 "<p align=\"justify\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:11pt;\"><br /></p>\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><img src=\":/plugins/semiautomaticclassificationplugin/icons/fromGIStoRS.png\" /><a href=\"http://fromgistors.blogspot.com/p/semi-automatic-classification-plugin.html?spref=sacp\"><span style=\" font-size:14pt; text-decoration: underline; color:#0000ff;\">From GIS to Remote Sensing</span></a></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:9pt;\"><br /></span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:9pt;\"><br /></span></p>\n"
 "<hr />\n"
-"<p align=\"justify\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:10pt; text-decoration: underline; color:#0000ff;\"><br /></p>\n"
+"<p align=\"justify\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; text-decoration: underline; color:#0000ff;\"><br /></p>\n"
 "<p align=\"justify\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt; font-weight:600;\">Acknowledgments</span><span style=\" font-size:8pt;\">:</span></p>\n"
 "<p align=\"justify\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">Thanks go to Michele Munafò for his valuable advice.</span></p>\n"
 "<p align=\"justify\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;\"><br /></p>\n"

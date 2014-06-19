@@ -471,6 +471,12 @@ class Utils:
 		TMatrix = GMatrix.T
 		# covariance matrix (degree of freedom = 1 for unbiased estimate)
 		CovMatrix = np.cov(TMatrix, ddof=1)
+		if np.isnan(CovMatrix[0,0]):
+			CovMatrix = "No"
+		try:
+			np.linalg.inv(CovMatrix)
+		except:
+			CovMatrix = "No"
 		# logger
 		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "get band: " + str(band))
 		return CovMatrix
@@ -792,7 +798,7 @@ class Utils:
 		# logger
 		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "")
 		
-	def createRasterFromReference(self, gdalRasterRef, bandNumber, outputRasterList, nodataValue = None, driver = "GTiff", format = GDT_Float64, previewSize = 0, previewPoint = None):
+	def createRasterFromReference(self, gdalRasterRef, bandNumber, outputRasterList, nodataValue = None, driver = "GTiff", format = GDT_Float64, previewSize = 0, previewPoint = None, compress = "No"):
 		oRL = []
 		for o in outputRasterList:
 			# pixel size and origin from reference
@@ -819,7 +825,10 @@ class Utils:
 				if previewSize < r:
 					r = previewSize
 				rGT = (lX, rGT[1], rGT[2], tY,  rGT[4],  rGT[5])
-			oR = tD.Create(o, c, r, bandNumber, format)
+			if compress == "No":
+				oR = tD.Create(o, c, r, bandNumber, format)
+			else:
+				oR = tD.Create(o, c, r, bandNumber, format, ['COMPRESS=LZW'])
 			# set raster projection from reference
 			oR.SetGeoTransform(rGT)
 			oR.SetProjection(rP)
@@ -1293,18 +1302,30 @@ class Utils:
 			# logger
 			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "")
 			
-	# calculate block number
+	# calculate block size
 	def calculateBlockSize(self, bandNumber):
 		b = int((cfg.RAMValue / (cfg.arrayUnitMemory * (bandNumber +  5) ))**.5)
 		# check memory
 		try:
-			np.zeros((b,b), dtype = np.float64)
+			a = np.zeros((b,b), dtype = np.float64)
 		except:
-			try:
-				np.zeros((b/2,b/2), dtype = np.float64)
-				b = b/2
-			except:
-				b = int((280 / (cfg.arrayUnitMemory * (bandNumber +  5) ))**.5)
+			for i in reversed(range(128, cfg.RAMValue, int(cfg.RAMValue/10))):
+				try:
+					b = int((i / (cfg.arrayUnitMemory * (bandNumber +  5) ))**.5)
+					a = np.zeros((int(b),int(b)), dtype = np.float64)
+					size = a.nbytes / 1048576
+					cfg.ui.RAM_spinBox.setValue(size * bandNumber)
+					cfg.mx.msgWar11()
+					# logger
+					if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "block = " + str(b))
+					return b
+				except:
+					pass
+			# try:
+				# np.zeros((b/2,b/2), dtype = np.float64)
+				# b = b/2
+			# except:
+				# b = int((280 / (cfg.arrayUnitMemory * (bandNumber +  5) ))**.5)
 		# logger
 		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "block = " + str(b))
 		return b

@@ -150,7 +150,9 @@ class ClassificationDock:
 					ckB = self.checkBandSet()
 				if ckB == "Yes":
 					cfg.uiUtls.updateBar(20)
-					ok, opOut, mOut = self.runAlgorithm(cfg.algName, cfg.imgNm, sL, pP, cfg.macroclassCheck, None, int(cfg.prvwSz), point)
+					# compression
+					compress = "Yes"
+					ok, opOut, mOut = self.runAlgorithm(cfg.algName, cfg.imgNm, sL, pP, cfg.macroclassCheck, None, int(cfg.prvwSz), point, compress)
 					if ok == "Yes":
 						r = cfg.iface.addRasterLayer(pP, os.path.basename(str(pP)))
 						cfg.uiUtls.updateBar(80)
@@ -176,7 +178,6 @@ class ClassificationDock:
 				cfg.cnvs.setRenderFlag(True)
 				# logger
 				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "preview no")	
-			
 			
 	def getSignatureList(self):
 		id = cfg.signIDs.values()
@@ -322,7 +323,7 @@ class ClassificationDock:
 		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "reset qml")
 		
 	# run classification algorithm
-	def runAlgorithm(self, algorithmName, imageName, signatureList, outputRasterPath, macroclassCheck = "No", algRasterPath = None, previewSize = 0, previewPoint = None):
+	def runAlgorithm(self, algorithmName, imageName, signatureList, outputRasterPath, macroclassCheck = "No", algRasterPath = None, previewSize = 0, previewPoint = None, compress = "No"):
 		# if band set
 		if cfg.bndSetPresent == "Yes" and cfg.imgNm == cfg.bndSetNm:
 			# if masked bandset
@@ -363,7 +364,7 @@ class ClassificationDock:
 				oM.append(tPMD)
 			oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", GDT_Float64, previewSize, previewPoint)
 			oC.append(outputRasterPath)
-			oCR = cfg.utls.createRasterFromReference(rD, 1, oC, cfg.NoDataVal, "GTiff", GDT_Int32, previewSize, previewPoint)
+			oCR = cfg.utls.createRasterFromReference(rD, 1, oC, cfg.NoDataVal, "GTiff", GDT_Int32, previewSize, previewPoint, compress)
 			o = cfg.utls.processRaster(rD, bL, signatureList, None, cfg.utls.classification, algorithmName, oRL, oMR[0], oCR[0], previewSize, previewPoint, cfg.NoDataVal, macroclassCheck)
 			# close GDAL rasters
 			for x in range(0, len(oRL)):
@@ -467,7 +468,9 @@ class ClassificationDock:
 						img = cfg.maskRasterNm
 				### if not mask
 					cfg.uiUtls.updateBar(20)
-					ok, opOut, mOut = self.runAlgorithm(cfg.algName, img, sL, cfg.clssPth, cfg.macroclassCheck)
+					# compression
+					compress = "Yes"
+					ok, opOut, mOut = self.runAlgorithm(cfg.algName, img, sL, cfg.clssPth, cfg.macroclassCheck, None, None, None, compress)
 					if ok == "Yes":
 						c = cfg.iface.addRasterLayer(cfg.clssPth, os.path.basename(unicode(cfg.clssPth)))
 						cfg.uiUtls.updateBar(80)

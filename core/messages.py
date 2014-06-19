@@ -218,7 +218,11 @@ class Messages:
 		self.msgBarWarning(QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [8]", QApplication.translate("semiautomaticclassificationplugin", "Wavelength unit not provided"))
 		
 	def msgWar9(self, Macro_ID, Class_ID):
-		self.msgBarWarning(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [9]", QApplication.translate("semiautomaticclassificationplugin", "The following signature has wavelength different from band set. Macro: " + str(Macro_ID) + " ID: " + str(Class_ID)))
+		self.msgBarWarning(QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [9]", QApplication.translate("semiautomaticclassificationplugin", "The following signature has wavelength different from band set. Macro: " + str(Macro_ID) + " ID: " + str(Class_ID)))
 		
 	def msgWar10(self, Macro_ID, Class_ID):
-		self.msgBarWarning(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [10]", QApplication.translate("semiautomaticclassificationplugin", "The following signature has not a covariance matrix and is excluded. Macro: " + str(Macro_ID) + " ID: " + str(Class_ID)))
+		self.msgBarWarning(QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [10]", QApplication.translate("semiautomaticclassificationplugin", "The following signature has not a covariance matrix and is excluded. Macro: " + str(Macro_ID) + " ID: " + str(Class_ID)))
+				
+	def msgWar11(self):
+		self.msgBarWarning(QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [11]", QApplication.translate("semiautomaticclassificationplugin", "RAM value was too high. Value has been decreased automatically"))
+		
