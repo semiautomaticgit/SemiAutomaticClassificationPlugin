@@ -481,6 +481,13 @@ class Utils:
 		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "get band: " + str(band))
 		return CovMatrix
 		
+	def createVirtualRaster(self, inputRasterList, output):
+		r = ""
+		for i in inputRasterList:
+			r = r + " " + i
+		sP = subprocess.Popen("gdalbuildvrt -separate " + unicode(output) + " " + unicode(r), shell=True)
+		return sP
+		
 	# convert list to covariance array
 	def listToCovarianceMatrix(self, list):
 		try:

@@ -153,6 +153,8 @@ scatterBandX = 1
 scatterBandY = 2
 # fill plot
 pF = []
+# virtual raster
+landsatVrtNm = "landsat"
 
 """ Project variables """
 qmlFl = None

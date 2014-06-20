@@ -699,10 +699,12 @@ class LandsatTab:
 						if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			# copy bands to output
 			cfg.uiUtls.updateBar(80)
+			rasterList = []
 			for x in range(1, 12):
 				try:
-					shutil.copy(str(dTBs1["TEMPBAND" + str(x)]) + ".tif", str(dNBs["NEWBAND" + str(x)]))
-					cfg.iface.addRasterLayer(str(dNBs["NEWBAND" + str(x)]), str(dNBsN["BANDNAME" + str(x)]))
+					shutil.copy(unicode(dTBs1["TEMPBAND" + str(x)]) + ".tif", unicode(dNBs["NEWBAND" + str(x)]))
+					cfg.iface.addRasterLayer(unicode(dNBs["NEWBAND" + str(x)]), unicode(dNBsN["BANDNAME" + str(x)]))
+					rasterList.append(unicode(dNBs["NEWBAND" + str(x)]))
 					# logger
 					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "Converted: " + str(sat) + str(dNBs["NEWBAND" + str(x)]))
 				except Exception, err:
@@ -717,6 +719,15 @@ class LandsatTab:
 				except Exception, err:
 					# logger
 					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			# create virtual raster
+			if cfg.ui.create_VRT_checkBox.isChecked() is True:
+				outVrt = unicode(out) + "/" + cfg.landsatVrtNm + ".vrt"
+				cfg.utls.createVirtualRaster(rasterList, outVrt)
+				vrtRaster = cfg.iface.addRasterLayer(outVrt)
+				vrtRaster.setDrawingStyle('MultiBandColor')
+				vrtRaster.renderer().setRedBand(3)
+				vrtRaster.renderer().setGreenBand(2)
+				vrtRaster.renderer().setBlueBand(1)
 			cfg.uiUtls.updateBar(100)
 			cfg.ui.label_26.setText("")
 			cfg.ui.label_27.setText("")

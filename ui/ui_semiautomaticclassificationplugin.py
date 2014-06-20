@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/ui_semiautomaticclassificationplugin.ui'
 #
-# Created: Thu Jun 19 18:04:47 2014
+# Created: Fri Jun 20 22:58:09 2014
 #      by: PyQt4 UI code generator 4.10
 #
 # WARNING! All changes made in this file will be lost!
@@ -530,6 +530,11 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.nodata_checkBox_2.setObjectName(_fromUtf8("nodata_checkBox_2"))
         self.gridLayout_29.addWidget(self.nodata_checkBox_2, 0, 0, 1, 1)
         self.gridLayout_37.addLayout(self.gridLayout_29, 6, 1, 1, 2)
+        self.create_VRT_checkBox = QtGui.QCheckBox(self.tab_Landsat)
+        self.create_VRT_checkBox.setChecked(True)
+        self.create_VRT_checkBox.setTristate(False)
+        self.create_VRT_checkBox.setObjectName(_fromUtf8("create_VRT_checkBox"))
+        self.gridLayout_37.addWidget(self.create_VRT_checkBox, 7, 0, 1, 1)
         self.gridLayout_18.addLayout(self.gridLayout_37, 0, 0, 1, 1)
         spacerItem9 = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.gridLayout_18.addItem(spacerItem9, 1, 0, 1, 1)
@@ -1409,8 +1414,8 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.USGS_library_textBrowser.setHtml(_translate("SemiAutomaticClassificationPlugin", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Droid Sans\'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:9pt;\"><br /></p></body></html>", None))
+"</style></head><body style=\" font-family:\'Droid Sans\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", None))
         self.label_18.setText(_translate("SemiAutomaticClassificationPlugin", "Library Description (requires internet connection)", None))
         self.label.setText(_translate("SemiAutomaticClassificationPlugin", "<html><head/><body><p>USGS Spectral Library downloaded from <a href=\"http://speclab.cr.usgs.gov/spectral-lib.html\"><span style=\" text-decoration: underline; color:#0057ae;\">http://speclab.cr.usgs.gov/spectral-lib.html</span></a>.</p><p><span style=\" font-weight:600;\">Reference</span>: R. N. Clark, G. A. Swayze, R. Wise, K. E. Livo, T. M. Hoefen, R. F. Kokaly, and S. J. Sutley, 2007, USGS Digital Spectral Library splib06a, U.S. Geological Survey, Data Series 231.</p></body></html>", None))
         self.add_usgs_library_pushButton.setToolTip(_translate("SemiAutomaticClassificationPlugin", "<html><head/><body><p>Add signature to list (requires internet connection)</p></body></html>", None))
@@ -1463,6 +1468,8 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.DOS1_checkBox.setText(_translate("SemiAutomaticClassificationPlugin", " Apply DOS1 atmospheric correction", None))
         self.nodata_spinBox_3.setToolTip(_translate("SemiAutomaticClassificationPlugin", "<html><head/><body><p>No data value</p></body></html>", None))
         self.nodata_checkBox_2.setText(_translate("SemiAutomaticClassificationPlugin", "Use No data value", None))
+        self.create_VRT_checkBox.setToolTip(_translate("SemiAutomaticClassificationPlugin", "<html><head/><body><p>Enable/Disable the DOS1 atmospheric correction (thermal band is not corrected)</p></body></html>", None))
+        self.create_VRT_checkBox.setText(_translate("SemiAutomaticClassificationPlugin", "Create Virtual Raster", None))
         self.tabWidget_preprocessing.setTabText(self.tabWidget_preprocessing.indexOf(self.tab_Landsat), _translate("SemiAutomaticClassificationPlugin", "Landsat", None))
         self.toolButton_plugin.setTabText(self.toolButton_plugin.indexOf(self.tab_preprocessing), _translate("SemiAutomaticClassificationPlugin", "Pre processing", None))
         self.classification_name_combo.setToolTip(_translate("SemiAutomaticClassificationPlugin", "<html><head/><body><p>Select the image to be classified</p></body></html>", None))
@@ -1579,7 +1586,7 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.textBrowser.setHtml(_translate("SemiAutomaticClassificationPlugin", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Droid Sans\'; font-size:10pt; font-weight:400; font-style:normal;\" bgcolor=\"#f2f1f0\">\n"
+"</style></head><body style=\" font-family:\'Droid Sans\'; font-size:9pt; font-weight:400; font-style:normal;\" bgcolor=\"#f2f1f0\">\n"
 "<p align=\"justify\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:11pt;\">Written by Luca Congedo (ing.congedoluca@gmail.com), the Semi-Automatic Classification Plugin (SACP) allows for the semi-automatic supervised classification of remote sensing images, providing tools to expedite the creation of ROIs (training areas) through region growing or multliple ROI creation. The spectral signatures of training areas can be automatically calculated and displayed in a spectral signature plot. It is possible to import spectral signatures from external sources. Also, a tool allows for the selection and download of spectral signatures from the USGS Spectral Library (http://speclab.cr.usgs.gov/spectral-lib.html). Several tools are available for the pre processing phase (image clipping, Landsat conversion to reflectance), the classification process (Minimum Distance, Maximum Likelihood, Spectral Angle Mapping algorithms, and classification previews), and the post processing phase (conversion to vector, accuracy assessment, land cover change, classification report).</span></p>\n"
 "<p align=\"justify\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:11pt;\"><br /></p>\n"
 "<p align=\"justify\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:11pt; font-style:italic;\">This plugin requires the installation of GDAL, OGR, Numpy, SciPy, and Matplotlib.</span></p>\n"
@@ -1587,10 +1594,10 @@ class Ui_SemiAutomaticClassificationPlugin(object):
 "<p align=\"justify\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:11pt;\">For further information about software installation and tutorials, please visit to the following website:</span></p>\n"
 "<p align=\"justify\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:11pt;\"><br /></p>\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><img src=\":/plugins/semiautomaticclassificationplugin/icons/fromGIStoRS.png\" /><a href=\"http://fromgistors.blogspot.com/p/semi-automatic-classification-plugin.html?spref=sacp\"><span style=\" font-size:14pt; text-decoration: underline; color:#0000ff;\">From GIS to Remote Sensing</span></a></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:9pt;\"><br /></span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:9pt;\"><br /></span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
 "<hr />\n"
-"<p align=\"justify\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; text-decoration: underline; color:#0000ff;\"><br /></p>\n"
+"<p align=\"justify\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:10pt; text-decoration: underline; color:#0000ff;\"><br /></p>\n"
 "<p align=\"justify\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt; font-weight:600;\">Acknowledgments</span><span style=\" font-size:8pt;\">:</span></p>\n"
 "<p align=\"justify\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">Thanks go to Michele Munafò for his valuable advice.</span></p>\n"
 "<p align=\"justify\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;\"><br /></p>\n"
