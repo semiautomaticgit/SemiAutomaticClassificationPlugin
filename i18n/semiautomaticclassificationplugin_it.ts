@@ -1742,7 +1742,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="landsatTab.py" line="738"/>
+        <location filename="landsatTab.py" line="740"/>
         <source>Select a directory</source>
         <translation type="unfinished"></translation>
     </message>

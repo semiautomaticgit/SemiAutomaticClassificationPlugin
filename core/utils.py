@@ -486,6 +486,7 @@ class Utils:
 		for i in inputRasterList:
 			r = r + " " + i
 		sP = subprocess.Popen("gdalbuildvrt -separate " + unicode(output) + " " + unicode(r), shell=True)
+		sP.wait()
 		return sP
 		
 	# convert list to covariance array

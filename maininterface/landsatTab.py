@@ -139,10 +139,12 @@ class LandsatTab:
 			# open MTL file
 			try:
 				MTL = open(MTLFile, "r")
+				check = "Yes"
 			except Exception, err:
 				# logger
 				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				cfg.mx.msgErr8()
+				check = "No"
 			# get information from MTL
 			for r in MTL:
 				# satellite
@@ -720,8 +722,8 @@ class LandsatTab:
 					# logger
 					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			# create virtual raster
-			if cfg.ui.create_VRT_checkBox.isChecked() is True:
-				outVrt = unicode(out) + "/" + cfg.landsatVrtNm + ".vrt"
+			if cfg.ui.create_VRT_checkBox.isChecked() is True and check == "Yes":
+				outVrt = out + "//" + cfg.landsatVrtNm + ".vrt"
 				cfg.utls.createVirtualRaster(rasterList, outVrt)
 				vrtRaster = cfg.iface.addRasterLayer(outVrt)
 				vrtRaster.setDrawingStyle('MultiBandColor')
