@@ -1254,6 +1254,8 @@ class Utils:
 						if functionRaster is not None:
 							qApp.processEvents()
 							o = functionRaster(gdalBandList, signatureList, algorithmName, c, bSX, bSY, x, y, outputRasterList, outputAlgorithmRaster, outputClassificationRaster, nodataValue, macroclassCheck, previewSize, pX[lX.index(x)], pY[lY.index(y)], progressStart, progresStep, remainingBlocks)
+							if o == "No":
+								return "No"
 						remainingBlocks = (remainingBlocks - 1)
 					else:
 						return "No"
@@ -1313,27 +1315,31 @@ class Utils:
 	# calculate block size
 	def calculateBlockSize(self, bandNumber):
 		b = int((cfg.RAMValue / (cfg.arrayUnitMemory * (bandNumber +  5) ))**.5)
+		# set system memory max
+		if cfg.sys64bit == "No" and b > 2500:
+			b = 2500
 		# check memory
 		try:
 			a = np.zeros((b,b), dtype = np.float64)
+			cfg.uiUtls.updateBar(20,  QApplication.translate("semiautomaticclassificationplugin", "Calculating remaining time"))
 		except:
 			for i in reversed(range(128, cfg.RAMValue, int(cfg.RAMValue/10))):
 				try:
 					b = int((i / (cfg.arrayUnitMemory * (bandNumber +  5) ))**.5)
+					# set system memory max
+					if cfg.sys64bit == "No" and b > 2500:
+						b = 2500
 					a = np.zeros((int(b),int(b)), dtype = np.float64)
 					size = a.nbytes / 1048576
 					cfg.ui.RAM_spinBox.setValue(size * bandNumber)
 					cfg.mx.msgWar11()
+					cfg.uiUtls.updateBar(20,  QApplication.translate("semiautomaticclassificationplugin", "Calculating remaining time"))
 					# logger
 					if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "block = " + str(b))
 					return b
-				except:
-					pass
-			# try:
-				# np.zeros((b/2,b/2), dtype = np.float64)
-				# b = b/2
-			# except:
-				# b = int((280 / (cfg.arrayUnitMemory * (bandNumber +  5) ))**.5)
+				except Exception, err:
+					# logger
+					if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), " ERROR exception: " + str(err))
 		# logger
 		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "block = " + str(b))
 		return b

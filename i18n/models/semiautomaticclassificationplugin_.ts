@@ -1647,32 +1647,32 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="408"/>
+        <location filename="classificationdock.py" line="410"/>
         <source>Save classification output</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="552"/>
+        <location filename="classificationdock.py" line="554"/>
         <source>Select a qml style</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="628"/>
+        <location filename="classificationdock.py" line="630"/>
         <source>Select a signature list file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="686"/>
+        <location filename="classificationdock.py" line="688"/>
         <source>Export the signature list to file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="715"/>
+        <location filename="classificationdock.py" line="717"/>
         <source>Select a library file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="736"/>
+        <location filename="classificationdock.py" line="738"/>
         <source>Export the highlighted signatures to CSV library</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1930,6 +1930,11 @@ Possible reason: selected rapid ROI band is not loaded</source>
     <message>
         <location filename="messages.py" line="227"/>
         <source>RAM value was too high. Value has been decreased automatically</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="utils.py" line="1336"/>
+        <source>Calculating remaining time</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

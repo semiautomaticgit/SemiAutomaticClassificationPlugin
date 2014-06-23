@@ -366,6 +366,8 @@ class ClassificationDock:
 			oC.append(outputRasterPath)
 			oCR = cfg.utls.createRasterFromReference(rD, 1, oC, cfg.NoDataVal, "GTiff", GDT_Int32, previewSize, previewPoint, compress)
 			o = cfg.utls.processRaster(rD, bL, signatureList, None, cfg.utls.classification, algorithmName, oRL, oMR[0], oCR[0], previewSize, previewPoint, cfg.NoDataVal, macroclassCheck)
+			if o == "No":
+				return "No", opOut, tPMD
 			# close GDAL rasters
 			for x in range(0, len(oRL)):
 				oRL[x] = None
