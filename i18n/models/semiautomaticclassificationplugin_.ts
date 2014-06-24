@@ -1647,32 +1647,32 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="410"/>
+        <location filename="classificationdock.py" line="411"/>
         <source>Save classification output</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="554"/>
+        <location filename="classificationdock.py" line="555"/>
         <source>Select a qml style</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="630"/>
+        <location filename="classificationdock.py" line="631"/>
         <source>Select a signature list file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="688"/>
+        <location filename="classificationdock.py" line="689"/>
         <source>Export the signature list to file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="717"/>
+        <location filename="classificationdock.py" line="718"/>
         <source>Select a library file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="738"/>
+        <location filename="classificationdock.py" line="739"/>
         <source>Export the highlighted signatures to CSV library</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1933,7 +1933,7 @@ Possible reason: selected rapid ROI band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="utils.py" line="1336"/>
+        <location filename="utils.py" line="1346"/>
         <source>Calculating remaining time</source>
         <translation type="unfinished"></translation>
     </message>

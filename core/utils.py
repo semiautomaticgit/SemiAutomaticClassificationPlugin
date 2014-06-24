@@ -1074,9 +1074,19 @@ class Utils:
 		at.CreateColumn(str(cfg.fldID_class), gdal.GFT_Integer, gdal.GFU_Generic )
 		at.CreateColumn(str(cfg.fldROI_info), gdal.GFT_String, gdal.GFU_Generic )
 		v = signatureList
-		for i in range(len(v)):
-			at.SetValueAsInt(i, 0, int(v[i][2]))
-			at.SetValueAsString(i, 1, v[i][3])
+		if cfg.macroclassCheck == "Yes":
+			mc = []
+			for c in range(len(v)):
+				mc.append(int(v[c][0]))
+			mcList = list(set(mc))
+			for i in range(len(mcList)):
+				at.SetValueAsInt(i, 0, mcList[i])
+				ind = mc.index(mcList[i])
+				at.SetValueAsString(i, 1, v[ind][1])
+		else:
+			for i in range(len(v)):
+				at.SetValueAsInt(i, 0, int(v[i][2]))
+				at.SetValueAsString(i, 1, v[i][3])
 		b.SetDefaultRAT(at)
 		b = None
 		r = None

@@ -375,6 +375,7 @@ class ClassificationDock:
 				oCR[x] = None
 			for x in range(0, len(bL)):
 				bL[x] = None
+			# create raster table
 			cfg.utls.createRasterTable(outputRasterPath, 1, signatureList)
 			return "Yes", opOut, tPMD
 		else:
