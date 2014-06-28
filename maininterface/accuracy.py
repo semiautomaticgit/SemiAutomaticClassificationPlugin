@@ -291,7 +291,7 @@ class Accuracy:
 					for g in range(0, len(total) - 1):
 						p = 100 * errMatrix[g,g] / errMatrix[:, g].sum()
 						u = 100 * errMatrix[g,g] / errMatrix[g, :].sum()
-						t = QApplication.translate("semiautomaticclassificationplugin", 'Class ') + str(g) + QApplication.translate("semiautomaticclassificationplugin", ' producer accuracy [%] = ') + str(p) + "\t" + QApplication.translate("semiautomaticclassificationplugin", ' user accuracy [%] = ') + str(u) + str("\n")
+						t = QApplication.translate("semiautomaticclassificationplugin", 'Class ') + str(total[g]) + QApplication.translate("semiautomaticclassificationplugin", ' producer accuracy [%] = ') + str(p) + "\t" + QApplication.translate("semiautomaticclassificationplugin", ' user accuracy [%] = ') + str(u) + str("\n")
 						l.write(t)
 					l.close()
 					# close bands
