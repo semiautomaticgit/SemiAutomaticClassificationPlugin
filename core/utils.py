@@ -478,7 +478,7 @@ class Utils:
 		except:
 			CovMatrix = "No"
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "get band: " + str(band))
+		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "cov matrix: " + str(CovMatrix))
 		return CovMatrix
 		
 	def createVirtualRaster(self, inputRasterList, output):
