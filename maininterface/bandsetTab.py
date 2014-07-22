@@ -74,6 +74,7 @@ class BandsetTab:
 		c = tW.rowCount()
 		wl = []
 		tW.blockSignals(True)
+		id = cfg.ui.unit_combo.findText(cfg.noUnit)
 		if satelliteName == cfg.NoSatellite:
 			for x in range(0, c):
 				wl.append(x + 1)
@@ -158,7 +159,7 @@ class BandsetTab:
 			cfg.imgNm = cfg.rstrNm
 			cfg.BandTabEdited = "Yes"
 			# logger
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " band set changed n. of bands" + str(tc))
+			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " band set changed n. of bands" + str(lc))
 		
 	# set all bands to state 0 or 2
 	def allBandSetState(self, value):

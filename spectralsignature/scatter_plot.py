@@ -148,7 +148,7 @@ class Scatter_Plot:
 		# get layer crs
 		crs = cfg.utls.getCrs(lyr)
 		# create a temp shapefile with a field
-		cfg.utls.createEmptyShapefile(crs.authid(), tLD)
+		cfg.utls.createEmptyShapefile(crs.toWkt(), tLD)
 		tL = cfg.utls.addVectorLayer(tLD , tLN, "ogr")
 		# copy ROI to temp shapefile
 		cfg.utls.copyFeatureToLayer(lyr, featureID, tL)		
@@ -171,7 +171,7 @@ class Scatter_Plot:
 			sP.wait()
 		else:
 			# temp files
-			tRN = "ROI_temp2" + dT + ".tif"
+			tRN = cfg.subsTmpROI + dT + ".tif"
 			tRD = str(cfg.tmpDir + "//" + tRN)
 			i = cfg.utls.selectLayerbyName(str(cfg.rstrNm))		
 			cfg.utls.getRasterBandByBandNumber(i.source().encode(cfg.fSEnc), rasterBand, tRD)

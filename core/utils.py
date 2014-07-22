@@ -1580,7 +1580,7 @@ class Utils:
 		layer.commitChanges()
 		res2 = layer.dataProvider().createSpatialIndex()
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "feauture deleted: " + str(layer) + " " + str(feautureId) )
+		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "feauture deleted: " + str(layer) + " " + str(feautureIds) )
 
 ### Edit a feauture in a shapefile by its Id
 	def editFeatureShapefile(self, layer, feautureId, fieldName, value):
@@ -1590,7 +1590,7 @@ class Utils:
 		layer.commitChanges()
 		res2 = layer.dataProvider().createSpatialIndex()
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "feauture edited: " + unicode(layerPath) + " " + str(feautureId) )
+		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "feauture edited: " + unicode(layer) + " " + str(feautureId) )
 		
 	# select band set tab
 	def bandSetTab(self):

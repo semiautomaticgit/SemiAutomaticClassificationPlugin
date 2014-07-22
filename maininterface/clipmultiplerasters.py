@@ -107,9 +107,9 @@ class ClipMultipleRasters:
 		noDt = cfg.ui.nodata_spinBox.value()
 		if len(oD) > 0:
 			UX = cfg.ui.UX_lineEdit.text()
-			UY = cfg.ui.UY_lineEdit .text()
+			UY = cfg.ui.UY_lineEdit.text()
 			LX = cfg.ui.LX_lineEdit.text()
-			LY = cfg.ui.LY_lineEdit .text()
+			LY = cfg.ui.LY_lineEdit.text()
 			for l in rT:
 				lC = cfg.utls.selectLayerbyName(l)
 				if str(l).endswith(".tif"):
@@ -125,11 +125,11 @@ class ClipMultipleRasters:
 					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				if  st != "Yes":
 					# no shapefile
-					if uS == 0:
+					if uS == 0 and len(UX) > 0 and len(UY) > 0 and len(LX) > 0 and len(LY) > 0:
 						sP = subprocess.Popen("gdal_translate -a_nodata " + str(noDt) + " -projwin " + str(UX) + " " + str(UY) + " " + str(LX) + " " + str(LY) + " -of GTiff " + cL + " \"" + str(oD) + "/" + cfg.clipNm + "_" + os.path.basename(str(l)) + "\"", shell=True)
 						sP.wait()
 					# using shapefile
-					else:
+					elif uS == 1:
 						sP = subprocess.Popen("gdalwarp -dstnodata " + str(noDt) + " -cutline \"" + s + "\" -crop_to_cutline -of GTiff " + cL + " \"" + str(oD) + "/" + cfg.clipNm + "_" + os.path.basename(str(l)) + "\"", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 						sP.wait()
 						# get error
@@ -139,6 +139,8 @@ class ClipMultipleRasters:
 							st = "Yes"
 							# logger
 							if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " GDAL error:: " + str(err) )
+					else:
+						return "No"
 					try:
 						if  st != "Yes":
 							cfg.iface.addRasterLayer(str(str(oD.encode(cfg.fSEnc)) + "/clip_" + str(os.path.basename(str(l)).encode(cfg.fSEnc))), str("clip_" + str(os.path.basename(str(l)).encode(cfg.fSEnc))))

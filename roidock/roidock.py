@@ -84,7 +84,7 @@ class RoiDock:
 		f = QgsFeature()
 		dT = cfg.utls.getTime()
 		# temp name
-		tN = "ROI_temp" + dT
+		tN = cfg.subsTmpROI + dT
 		# band set
 		if cfg.bndSetPresent == "Yes" and cfg.rstrNm == cfg.bndSetNm:
 			# crs of loaded raster
@@ -99,7 +99,7 @@ class RoiDock:
 			except:
 				ck = "No"
 		if ck == "Yes":
-			mL = QgsVectorLayer("Polygon", tN, "memory")
+			mL = QgsVectorLayer("Polygon?crs=" + str(crs.toWkt()), tN, "memory")
 			mL.setCrs(crs) 
 			if not len(cfg.lastVrt) >= 3:
 				cfg.mx.msg16()
@@ -345,8 +345,8 @@ class RoiDock:
 			# disable map canvas render for speed (not in QGIS 1.8)
 			cfg.cnvs.setRenderFlag(False)
 			# temp files
-			tRN = "ROI_temp" + dT + ".tif"
-			tSN = "ROI_temp" + dT + ".shp"
+			tRN = cfg.subsTmpROI + dT + ".tif"
+			tSN = cfg.subsTmpROI + dT + ".shp"
 			tR = str(cfg.tmpDir + "//" + tRN)
 			tS = str(cfg.tmpDir + "//" + tSN)
 			# subprocess bands
@@ -405,7 +405,7 @@ class RoiDock:
 				else:
 					try:
 						# temp files
-						tRN2 = "ROI_temp2" + dT + ".tif"
+						tRN2 = cfg.copyTmpROI + dT + ".tif"
 						tR2 = str(cfg.tmpDir + "//" + tRN2)
 						# subset image
 						pr = cfg.utls.subsetImage(cfg.rstrNm, point.x(), point.y(), int(cfg.maxROIWdth), int(cfg.maxROIWdth), tR2)

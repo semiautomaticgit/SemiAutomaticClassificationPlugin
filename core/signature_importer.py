@@ -34,6 +34,7 @@
 
 import os
 import sys
+import inspect
 import numpy as np
 import SemiAutomaticClassificationPlugin.core.config as cfg
 

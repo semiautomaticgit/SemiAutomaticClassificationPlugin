@@ -2,7 +2,7 @@
 name=Semi-Automatic Classification Plugin
 qgisMinimumVersion=2.0
 description= Plugin for the semi-automatic supervised classification designed to expedite the processing of multispectral or hyperspectral remote sensing images, which provides a set of tools for pre processing and post processing. 
-version=3.0.3
+version=3.0.4
 about=Written by Luca Congedo, the Semi-Automatic Classification Plugin (SCP) allows for the semi-automatic supervised classification of remote sensing images, providing tools to expedite the creation of ROIs (training areas) through region growing or multliple ROI creation. The spectral signatures of training areas can be automatically calculated and displayed in a spectral signature plot. It is possible to import spectral signatures from external sources. Also, a tool allows for the selection and download of spectral signatures from the USGS Spectral Library (http://speclab.cr.usgs.gov/spectral-lib.html). Several tools are available for the pre processing phase (image clipping, Landsat conversion to reflectance), the classification process (Minimum Distance, Maximum Likelihood, Spectral Angle Mapping algorithms, and classification previews), and the post processing phase (conversion to vector, accuracy assessment, land cover change, classification report). This plugin requires the installation of GDAL, OGR, Numpy, SciPy and Matplotlib. Also, a virtual machine is available http://fromgistors.blogspot.com/p/semi-automatic-os.html. Keywords: 土地被覆分類 监督分类 土地覆盖分类 教師付き分類 تصنيف استخدام الأراضي Classificação da Cobertura do Solo Clasificación de la Cobertura de la Tierra Classification de la Couverture du Sol классификация землепользования Klassifizierung der Landbedeckung Classificazione della Copertura del Suolo. For more information please visit http://fromgistors.blogspot.com/
 
 author=Luca Congedo
@@ -13,6 +13,10 @@ icon=semiautomaticclassificationplugin.png
 
 ; start of optional metadata
 changelog=
+	3.0.4
+	Minor update:
+	-fixed some bugs when the record event log was activated
+	
 	3.0.3
 	Minor update:
 	-fixed a bug when saving ROIs and the record event log was activated
