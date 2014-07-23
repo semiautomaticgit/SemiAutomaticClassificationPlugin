@@ -1463,14 +1463,22 @@ class Utils:
 			# subset origin
 			sX = (int((XCoord - tLX) / pS)) - int(Width / 2) 
 			sY = (int((tLY - YCoord) / pS)) - int(Height / 2)
-			sP = subprocess.Popen("gdal_translate -ot Float64 -a_nodata " + str(cfg.NoDataVal) + " -srcwin " + str(sX) + " " + str(sY) + " " + str(Width) + " " + str(Height) + " -of GTiff \"" + i.source().encode(cfg.fSEnc) + "\" " + output, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-			sP.wait()
-			# get error
-			out, err = sP.communicate()
-			if len(err) > 0:
-				st = "Yes"
+			try:
+				sP = subprocess.Popen("gdal_translate -ot Float64 -a_nodata " + str(cfg.NoDataVal) + " -srcwin " + str(sX) + " " + str(sY) + " " + str(Width) + " " + str(Height) + " -of GTiff \"" + i.source().encode(cfg.fSEnc) + "\" " + output, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+				sP.wait()
+				# get error
+				out, err = sP.communicate()
+				sP.stdout.close()
+				if len(err) > 0:
+					st = "Yes"
+					# logger
+					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " GDAL error:: " + str(err) )
+			# in case of errors
+			except Exception, err:
 				# logger
-				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " GDAL error:: " + str(err) )
+				if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), " ERROR exception: " + str(err))
+				sP = subprocess.Popen("gdal_translate -ot Float64 -a_nodata " + str(cfg.NoDataVal) + " -srcwin " + str(sX) + " " + str(sY) + " " + str(Width) + " " + str(Height) + " -of GTiff \"" + i.source().encode(cfg.fSEnc) + "\" " + output, shell=True)
+				sP.wait()
 			# logger
 			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "image: " + str(imageName) + " subset origin: (" + str(XCoord) + ","+ str(YCoord) + ") width: " + str(Width))
 			return st

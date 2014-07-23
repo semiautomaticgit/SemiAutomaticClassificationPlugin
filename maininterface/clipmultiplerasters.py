@@ -134,6 +134,7 @@ class ClipMultipleRasters:
 						sP.wait()
 						# get error
 						out, err = sP.communicate()
+						sP.stdout.close()
 						if len(err) > 0:
 							cfg.mx.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error"), err)
 							st = "Yes"
