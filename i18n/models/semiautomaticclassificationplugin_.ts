@@ -642,7 +642,7 @@
 <context>
     <name>SemiAutomaticClassificationPlugin</name>
     <message>
-        <location filename="semiautomaticclassificationplugin.py" line="218"/>
+        <location filename="semiautomaticclassificationplugin.py" line="226"/>
         <source> Input image</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1587,57 +1587,62 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>semiautomaticclassificationplugin</name>
     <message>
-        <location filename="semiautomaticclassificationplugin.py" line="198"/>
+        <location filename="semiautomaticclassificationplugin.py" line="867"/>
+        <source>Please, restart QGIS for executing the Semi-Automatic Classification Plugin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="semiautomaticclassificationplugin.py" line="206"/>
         <source>Semi-Automatic Classification Plugin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="semiautomaticclassificationplugin.py" line="224"/>
+        <location filename="semiautomaticclassificationplugin.py" line="232"/>
         <source>Select an image</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="semiautomaticclassificationplugin.py" line="228"/>
+        <location filename="semiautomaticclassificationplugin.py" line="236"/>
         <source>Refresh list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="semiautomaticclassificationplugin.py" line="234"/>
+        <location filename="semiautomaticclassificationplugin.py" line="242"/>
         <source>Band set</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="semiautomaticclassificationplugin.py" line="240"/>
+        <location filename="semiautomaticclassificationplugin.py" line="248"/>
         <source>Spectral plot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="semiautomaticclassificationplugin.py" line="246"/>
+        <location filename="semiautomaticclassificationplugin.py" line="254"/>
         <source>ROI tools</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="semiautomaticclassificationplugin.py" line="252"/>
+        <location filename="semiautomaticclassificationplugin.py" line="260"/>
         <source>Pre processing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="semiautomaticclassificationplugin.py" line="258"/>
+        <location filename="semiautomaticclassificationplugin.py" line="266"/>
         <source>Post processing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="semiautomaticclassificationplugin.py" line="264"/>
+        <location filename="semiautomaticclassificationplugin.py" line="272"/>
         <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="semiautomaticclassificationplugin.py" line="270"/>
+        <location filename="semiautomaticclassificationplugin.py" line="278"/>
         <source>User guide</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="semiautomaticclassificationplugin.py" line="276"/>
+        <location filename="semiautomaticclassificationplugin.py" line="284"/>
         <source>Online help</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1757,7 +1762,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="clipmultiplerasters.py" line="138"/>
+        <location filename="clipmultiplerasters.py" line="139"/>
         <source>Error</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1938,7 +1943,7 @@ Possible reason: selected rapid ROI band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="utils.py" line="1369"/>
+        <location filename="utils.py" line="1385"/>
         <source>Calculating remaining time</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1998,32 +2003,32 @@ Possible reason: selected rapid ROI band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="bandsetTab.py" line="181"/>
+        <location filename="bandsetTab.py" line="182"/>
         <source>Clear band set</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="bandsetTab.py" line="181"/>
+        <location filename="bandsetTab.py" line="182"/>
         <source>Are you sure you want to clear the band set?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="bandsetTab.py" line="298"/>
+        <location filename="bandsetTab.py" line="299"/>
         <source>Save the band set to file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="bandsetTab.py" line="327"/>
+        <location filename="bandsetTab.py" line="328"/>
         <source>Select a band set file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="bandsetTab.py" line="501"/>
+        <location filename="bandsetTab.py" line="502"/>
         <source>Remove band</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="bandsetTab.py" line="501"/>
+        <location filename="bandsetTab.py" line="502"/>
         <source>Are you sure you want to remove the selected bands from band set?</source>
         <translation type="unfinished"></translation>
     </message>

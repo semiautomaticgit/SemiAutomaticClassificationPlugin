@@ -526,8 +526,24 @@ class Utils:
 			tR = str(cfg.tmpDir + "//" + tRN)
 		else:
 			tR = str(outputRaster)
-		sP = subprocess.Popen("gdalwarp -ot Float64 -dstnodata " + str(cfg.NoDataVal) + " -cutline \"" + unicode(shapefile) + "\" -crop_to_cutline -of GTiff " + unicode(raster) + " " + str(tR) , shell=True)
-		sP.wait()
+		try:
+			sP = subprocess.Popen("gdalwarp -ot Float64 -dstnodata " + str(cfg.NoDataVal) + " -cutline \"" + unicode(shapefile) + "\" -crop_to_cutline -of GTiff " + unicode(raster) + " " + str(tR) , shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+			sP.wait()
+			# get error
+			out, err = sP.communicate()
+			sP.stdout.close()
+			if len(err) > 0:
+				st = "Yes"
+				# logger
+				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " GDAL error:: " + str(err) )
+		# in case of errors
+		except Exception, err:
+			# logger
+			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), " ERROR exception: " + str(err))
+			sP = subprocess.Popen("gdalwarp -ot Float64 -dstnodata " + str(cfg.NoDataVal) + " -cutline \"" + unicode(shapefile) + "\" -crop_to_cutline -of GTiff " + unicode(raster) + " " + str(tR) , shell=True)
+			sP.wait()
+		# logger
+		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "sP " + str(sP) + "shapefile " + str(shapefile) + "raster " + str(raster) + "tR " + str(tR))
 		return tR
 		
 	# get  time

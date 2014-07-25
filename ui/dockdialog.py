@@ -39,9 +39,13 @@ from PyQt4.QtCore import *
 from PyQt4.QtCore import QCoreApplication
 from PyQt4.QtGui import *
 from ui_semiautomaticclassificationplugin_dock import Ui_Dock
-import SemiAutomaticClassificationPlugin.core.config as cfg
+try:
+	import SemiAutomaticClassificationPlugin.core.config as cfg
+except:
+	# error when updating plugin
+	cfg = None
+	
 # create the dialog
-
 class DockDialog(QDockWidget):
 	def __init__(self, parent, iface):
 		QDockWidget.__init__(self)

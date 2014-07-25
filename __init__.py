@@ -42,7 +42,7 @@ def description():
 
 
 def version():
-    return "Version 3.0.5 - Rome"
+    return "Version 3.0.6 - Rome"
 
 
 def icon():

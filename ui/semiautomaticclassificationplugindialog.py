@@ -39,7 +39,6 @@ from PyQt4.QtCore import *
 from PyQt4.QtCore import QCoreApplication
 from PyQt4.QtGui import *
 from ui_semiautomaticclassificationplugin import Ui_SemiAutomaticClassificationPlugin
-import SemiAutomaticClassificationPlugin.core.config as cfg
 
 # create the dialog
 class SemiAutomaticClassificationPluginDialog(QtGui.QDialog):
