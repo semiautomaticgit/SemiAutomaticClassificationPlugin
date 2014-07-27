@@ -100,6 +100,16 @@ class Settings:
 		# logger
 		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "IDFieldName changed to: " + str(cfg.fldID_class))
 		
+	# field Macro ID name
+	def MacroIDFieldNameChange(self):
+		cfg.fldMacroID_class = cfg.ui.MID_field_name_lineEdit.text()
+		q = QSettings()
+		q.setValue(cfg.regMacroIDFieldName, cfg.fldMacroID_class)
+		cfg.ROId.refreshShapeLayer()
+		cfg.acc.refreshReferenceLayer()
+		# logger
+		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "macroclassIDFieldName changed to: " + str(cfg.fldMacroID_class))
+		
 	# macroclass field Info name
 	def MacroInfoFieldNameChange(self):
 		cfg.fldROIMC_info = cfg.ui.MCInfo_field_name_lineEdit.text()
@@ -110,7 +120,7 @@ class Settings:
 		# logger
 		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "Macroclass IDFieldName changed to: " + str(cfg.fldROIMC_info))
 		
-	# field Info name
+	# field class Info name
 	def InfoFieldNameChange(self):
 		cfg.fldROI_info = cfg.ui.Info_field_name_lineEdit.text()
 		q = QSettings()
@@ -146,16 +156,6 @@ class Settings:
 		# logger
 		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "sound: " + str(cfg.soundVal))
 		
-	# field ID name
-	def MacroIDFieldNameChange(self):
-		cfg.fldMacroID_class = cfg.ui.MID_field_name_lineEdit.text()
-		q = QSettings()
-		q.setValue(cfg.regIDFieldName, cfg.fldMacroID_class)
-		cfg.ROId.refreshShapeLayer()
-		cfg.acc.refreshReferenceLayer()
-		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "macroclassIDFieldName changed to: " + str(cfg.fldMacroID_class))
-		
 	# RAM setting
 	def RAMSettingChange(self):
 		cfg.RAMValue = cfg.ui.RAM_spinBox.value()
@@ -168,10 +168,10 @@ class Settings:
 	def resetFieldNames(self):
 		a = cfg.utls.questionBox(QApplication.translate("semiautomaticclassificationplugin", "Reset field names"), QApplication.translate("semiautomaticclassificationplugin", "Are you sure you want to reset field names?"))
 		if a == "Yes":
-			cfg.ui.ID_field_name_lineEdit.setText("Class_ID")
-			cfg.ui.Info_field_name_lineEdit.setText("Class_info")
-			cfg.ui.MID_field_name_lineEdit.setText("Macro_ID")
-			cfg.ui.MCInfo_field_name_lineEdit.setText("MCl_info")
+			cfg.ui.ID_field_name_lineEdit.setText("C_ID")
+			cfg.ui.Info_field_name_lineEdit.setText("C_info")
+			cfg.ui.MID_field_name_lineEdit.setText("MC_ID")
+			cfg.ui.MCInfo_field_name_lineEdit.setText("MC_info")
 		# logger
 		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "field Info name reset")
 		

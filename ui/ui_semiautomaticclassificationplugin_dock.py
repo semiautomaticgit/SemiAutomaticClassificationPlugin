@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/ui_semiautomaticclassificationplugin_dock.ui'
 #
-# Created: Fri Jul 25 20:42:35 2014
+# Created: Sun Jul 27 12:59:14 2014
 #      by: PyQt4 UI code generator 4.10
 #
 # WARNING! All changes made in this file will be lost!
@@ -491,21 +491,21 @@ class Ui_Dock(object):
         self.redo_ROI_Button.setToolTip(_translate("Dock", "<html><head/><body><p>Redo the ROI at the same point</p></body></html>", None))
         self.redo_ROI_Button.setText(_translate("Dock", "Redo ↺", None))
         self.label_43.setText(_translate("Dock", " ROI Signature definition", None))
-        self.label_44.setText(_translate("Dock", "Macroclass ID", None))
+        self.label_44.setText(_translate("Dock", "MC ID", None))
         self.button_Save_ROI.setToolTip(_translate("Dock", "<html><head/><body><p>Save the last ROI to training shapefile</p></body></html>", None))
         self.button_Save_ROI.setText(_translate("Dock", "Save ROI", None))
-        self.ROI_Macroclass_ID_spin.setToolTip(_translate("Dock", "<html><head/><body><p>The ID of the signature macroclass</p></body></html>", None))
-        self.ROI_ID_spin.setToolTip(_translate("Dock", "<html><head/><body><p>The ID of the signature class</p></body></html>", None))
+        self.ROI_Macroclass_ID_spin.setToolTip(_translate("Dock", "<html><head/><body><p>The macroclass ID of the ROI signature</p></body></html>", None))
+        self.ROI_ID_spin.setToolTip(_translate("Dock", "<html><head/><body><p>The class ID of the ROI signature</p></body></html>", None))
         self.ROI_Class_line.setToolTip(_translate("Dock", "<html><head/><body><p>The class name of the ROI signature</p></body></html>", None))
         self.ROI_Class_line.setText(_translate("Dock", "Class_1", None))
-        self.label_41.setText(_translate("Dock", "Class Information", None))
-        self.label_45.setText(_translate("Dock", "Macroclass Information", None))
+        self.label_41.setText(_translate("Dock", "C Info", None))
+        self.label_45.setText(_translate("Dock", "MC Info", None))
         self.ROI_Macroclass_line.setToolTip(_translate("Dock", "<html><head/><body><p>The macroclass name of the ROI signature</p></body></html>", None))
         self.ROI_Macroclass_line.setText(_translate("Dock", "Macroclass_1", None))
         self.undo_save_Button.setToolTip(_translate("Dock", "<html><head/><body><p>Delete the last saved ROI</p></body></html>", None))
         self.undo_save_Button.setText(_translate("Dock", "↶ Undo", None))
         self.signature_checkBox.setToolTip(_translate("Dock", "<html><head/><body><p>Add ROI spectral signature to signature list</p></body></html>", None))
         self.signature_checkBox.setText(_translate("Dock", "Add sig. list", None))
-        self.label_42.setText(_translate("Dock", "Class ID", None))
+        self.label_42.setText(_translate("Dock", "C ID", None))
 
 import resources_rc

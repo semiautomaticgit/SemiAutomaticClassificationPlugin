@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/ui_semiautomaticclassificationplugin_dock_class.ui'
 #
-# Created: Fri Jul 25 20:42:35 2014
+# Created: Sun Jul 27 12:59:14 2014
 #      by: PyQt4 UI code generator 4.10
 #
 # WARNING! All changes made in this file will be lost!
@@ -382,7 +382,7 @@ class Ui_DockClass(object):
         self.label_38.setText(_translate("DockClass", " Signature list file", None))
         self.open_signature_list_toolButton.setToolTip(_translate("DockClass", "<html><head/><body><p>Open a signature list file</p></body></html>", None))
         self.open_signature_list_toolButton.setText(_translate("DockClass", "Open", None))
-        self.signatureFile_lineEdit.setToolTip(_translate("DockClass", "<html><head/><body><p>Qml file path</p></body></html>", None))
+        self.signatureFile_lineEdit.setToolTip(_translate("DockClass", "<html><head/><body><p>Signature file path</p></body></html>", None))
         self.save_signature_list_toolButton.setToolTip(_translate("DockClass", "<html><head/><body><p>Save a signature list</p></body></html>", None))
         self.save_signature_list_toolButton.setText(_translate("DockClass", "Save", None))
         self.label_37.setText(_translate("DockClass", " Signature list", None))

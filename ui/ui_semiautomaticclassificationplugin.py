@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/ui_semiautomaticclassificationplugin.ui'
 #
-# Created: Fri Jul 25 20:42:34 2014
+# Created: Sun Jul 27 12:59:13 2014
 #      by: PyQt4 UI code generator 4.10
 #
 # WARNING! All changes made in this file will be lost!
@@ -1544,17 +1544,17 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.label_59.setText(_translate("SemiAutomaticClassificationPlugin", " Quick wavelength settings", None))
         self.wavelength_sat_combo.setToolTip(_translate("SemiAutomaticClassificationPlugin", "<html><head/><body><p>Select a configuration of band wavelengths</p></body></html>", None))
         self.toolButton_plugin.setTabText(self.toolButton_plugin.indexOf(self.tab_bandset), _translate("SemiAutomaticClassificationPlugin", "Band set", None))
-        self.label_31.setText(_translate("SemiAutomaticClassificationPlugin", "Information field", None))
+        self.label_31.setText(_translate("SemiAutomaticClassificationPlugin", "C Info field", None))
         self.reset_field_names_Button.setToolTip(_translate("SemiAutomaticClassificationPlugin", "<html><head/><body><p>Reset field names to default</p></body></html>", None))
         self.reset_field_names_Button.setText(_translate("SemiAutomaticClassificationPlugin", "Reset field names", None))
-        self.Info_field_name_lineEdit.setToolTip(_translate("SemiAutomaticClassificationPlugin", "<html><head/><body><p>Set the information field name</p><p>[max 10 characters]</p></body></html>", None))
+        self.Info_field_name_lineEdit.setToolTip(_translate("SemiAutomaticClassificationPlugin", "<html><head/><body><p>Set the Class information field name</p><p>[max 10 characters]</p></body></html>", None))
         self.label_24.setText(_translate("SemiAutomaticClassificationPlugin", " Field names of training shapefile", None))
-        self.ID_field_name_lineEdit.setToolTip(_translate("SemiAutomaticClassificationPlugin", "<html><head/><body><p>Set the ID field name</p><p>[max 10 characters]</p></body></html>", None))
-        self.MID_field_name_lineEdit.setToolTip(_translate("SemiAutomaticClassificationPlugin", "<html><head/><body><p>Set the ID field name</p><p>[max 10 characters]</p></body></html>", None))
-        self.label_10.setText(_translate("SemiAutomaticClassificationPlugin", "Class ID field", None))
-        self.MCInfo_field_name_lineEdit.setToolTip(_translate("SemiAutomaticClassificationPlugin", "<html><head/><body><p>Set the information field name</p><p>[max 10 characters]</p></body></html>", None))
-        self.label_17.setText(_translate("SemiAutomaticClassificationPlugin", "Macroclass ID field", None))
-        self.label_46.setText(_translate("SemiAutomaticClassificationPlugin", "Information field", None))
+        self.ID_field_name_lineEdit.setToolTip(_translate("SemiAutomaticClassificationPlugin", "<html><head/><body><p>Set the Class ID field name</p><p>[max 10 characters]</p></body></html>", None))
+        self.MID_field_name_lineEdit.setToolTip(_translate("SemiAutomaticClassificationPlugin", "<html><head/><body><p>Set the Macroclass ID field name</p><p>[max 10 characters]</p></body></html>", None))
+        self.label_10.setText(_translate("SemiAutomaticClassificationPlugin", "C ID field", None))
+        self.MCInfo_field_name_lineEdit.setToolTip(_translate("SemiAutomaticClassificationPlugin", "<html><head/><body><p>Set the Macroclass information field name</p><p>[max 10 characters]</p></body></html>", None))
+        self.label_17.setText(_translate("SemiAutomaticClassificationPlugin", "MC ID field", None))
+        self.label_46.setText(_translate("SemiAutomaticClassificationPlugin", "MC Info field", None))
         self.transparency_Slider.setToolTip(_translate("SemiAutomaticClassificationPlugin", "<html><head/><body><p>Change ROI transparency</p></body></html>", None))
         self.transparency_Label.setText(_translate("SemiAutomaticClassificationPlugin", "Transparency", None))
         self.label_21.setText(_translate("SemiAutomaticClassificationPlugin", " ROI style", None))

@@ -196,18 +196,18 @@ regRAMValue = "SemiAutomaticClassificationPlugin/RAMValue"
 RAMValue = 512
 # field names for shapefile
 regIDFieldName = "SemiAutomaticClassificationPlugin/IDFieldName"
-fldID_class = "Class_ID"
+fldID_class = "C_ID"
 # macroclass ID
-regMacroIDFieldName = "SemiAutomaticClassificationPlugin/SubIDFieldName"
-fldMacroID_class = "Macro_ID"
+regMacroIDFieldName = "SemiAutomaticClassificationPlugin/MCIDFieldName"
+fldMacroID_class = "MC_ID"
 # macroclass check
 regConsiderMacroclass = "SemiAutomaticClassificationPlugin/ConsiderMacroclass"
 macroclassCheck = "No"
 # info field
 regInfoFieldName = "SemiAutomaticClassificationPlugin/InfoFieldName"
 regMCInfoFieldName = "SemiAutomaticClassificationPlugin/MCInfoFieldName"
-fldROI_info = "Class_info"
-fldROIMC_info = "MCl_info"
+fldROI_info = "C_info"
+fldROIMC_info = "MC_info"
 # band set name
 regBandSetName = "SemiAutomaticClassificationPlugin/BandSetName"
 bndSetNm = "<< band set >>"

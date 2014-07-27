@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/ui_semiautomaticclassificationplugin_welcome.ui'
 #
-# Created: Fri Jul 25 20:42:35 2014
+# Created: Sun Jul 27 12:59:14 2014
 #      by: PyQt4 UI code generator 4.10
 #
 # WARNING! All changes made in this file will be lost!
@@ -66,10 +66,10 @@ class Ui_Welcome(object):
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt; font-weight:600;\">Welcome to the Semi-Automatic Classification Plugin for QGIS</span></p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-weight:600;\"><br /></p>\n"
 "<p align=\"justify\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">The Semi-Automatic Classification Plugin allows for the semi-automatic supervised classification of remote sensing images, providing tools to expedite the creation of ROIs, the classification process, the pre processing and the post processing phases (accuracy assessment, land cover change).</p>\n"
-"<p align=\"justify\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Please, visit the <a href=\"http://fromgistors.blogspot.com/p/theinterface-2.html\"><span style=\" text-decoration: underline; color:#0057ae;\">user manual page</span></a> for information about the plugin interface.</p>\n"
-"<p align=\"justify\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Also, several <a href=\"http://fromgistors.blogspot.com/search/label/Tutorial\"><span style=\" text-decoration: underline; color:#0057ae;\">tutorials</span></a> are available about the use of this plugin.</p>\n"
+"<p align=\"justify\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Please, visit the <a href=\"http://fromgistors.blogspot.com/p/theinterface-2.html?spref=scp\"><span style=\" text-decoration: underline; color:#0057ae;\">user manual page</span></a> for information about the plugin interface.</p>\n"
+"<p align=\"justify\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Also, several <a href=\"http://fromgistors.blogspot.com/search/label/Tutorial/?spref=scp\"><span style=\" text-decoration: underline; color:#0057ae;\">tutorials</span></a> are available about the use of this plugin.</p>\n"
 "<p align=\"justify\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
-"<p align=\"right\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"http://fromgistors.blogspot.com/\"><span style=\" font-weight:600; text-decoration: underline; color:#0057ae;\">From GIS to Remote Sensing</span></a></p></body></html>", None))
+"<p align=\"right\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"http://fromgistors.blogspot.com/?spref=scp\"><span style=\" font-weight:600; text-decoration: underline; color:#0057ae;\">From GIS to Remote Sensing</span></a></p></body></html>", None))
 
 import resources_rc

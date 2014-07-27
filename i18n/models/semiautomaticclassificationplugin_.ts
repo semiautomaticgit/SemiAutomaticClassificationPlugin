@@ -43,22 +43,22 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin_dock.ui" line="134"/>
+        <location filename="ui_semiautomaticclassificationplugin_dock.ui" line="756"/>
         <source>MC ID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin_dock.ui" line="139"/>
+        <location filename="ui_semiautomaticclassificationplugin_dock.ui" line="886"/>
         <source>MC Info</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin_dock.ui" line="144"/>
+        <location filename="ui_semiautomaticclassificationplugin_dock.ui" line="985"/>
         <source>C ID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin_dock.ui" line="149"/>
+        <location filename="ui_semiautomaticclassificationplugin_dock.ui" line="873"/>
         <source>C Info</source>
         <translation type="unfinished"></translation>
     </message>
@@ -188,11 +188,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin_dock.ui" line="756"/>
-        <source>Macroclass ID</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="ui_semiautomaticclassificationplugin_dock.ui" line="774"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Save the last ROI to training shapefile&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
@@ -204,12 +199,12 @@
     </message>
     <message>
         <location filename="ui_semiautomaticclassificationplugin_dock.ui" line="798"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The ID of the signature macroclass&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The macroclass ID of the ROI signature&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="ui_semiautomaticclassificationplugin_dock.ui" line="829"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The ID of the signature class&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The class ID of the ROI signature&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -220,16 +215,6 @@
     <message>
         <location filename="ui_semiautomaticclassificationplugin_dock.ui" line="857"/>
         <source>Class_1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="ui_semiautomaticclassificationplugin_dock.ui" line="873"/>
-        <source>Class Information</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="ui_semiautomaticclassificationplugin_dock.ui" line="886"/>
-        <source>Macroclass Information</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -262,11 +247,6 @@
         <source>Add sig. list</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <location filename="ui_semiautomaticclassificationplugin_dock.ui" line="985"/>
-        <source>Class ID</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>DockClass</name>
@@ -291,8 +271,8 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin_dock_class.ui" line="662"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Qml file path&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <location filename="ui_semiautomaticclassificationplugin_dock_class.ui" line="72"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Signature file path&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -493,6 +473,11 @@
     <message>
         <location filename="ui_semiautomaticclassificationplugin_dock_class.ui" line="642"/>
         <source> Classification style</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui_semiautomaticclassificationplugin_dock_class.ui" line="662"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Qml file path&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1278,8 +1263,8 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2549"/>
-        <source>Information field</source>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2434"/>
+        <source>C Info field</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1293,8 +1278,8 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2520"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the information field name&lt;/p&gt;&lt;p&gt;[max 10 characters]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2451"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the Class information field name&lt;/p&gt;&lt;p&gt;[max 10 characters]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1303,18 +1288,33 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2487"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the Class ID field name&lt;/p&gt;&lt;p&gt;[max 10 characters]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="ui_semiautomaticclassificationplugin.ui" line="2497"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the ID field name&lt;/p&gt;&lt;p&gt;[max 10 characters]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the Macroclass ID field name&lt;/p&gt;&lt;p&gt;[max 10 characters]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="ui_semiautomaticclassificationplugin.ui" line="2513"/>
-        <source>Class ID field</source>
+        <source>C ID field</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2520"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the Macroclass information field name&lt;/p&gt;&lt;p&gt;[max 10 characters]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="ui_semiautomaticclassificationplugin.ui" line="2536"/>
-        <source>Macroclass ID field</source>
+        <source>MC ID field</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2549"/>
+        <source>MC Info field</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1576,18 +1576,18 @@ p, li { white-space: pre-wrap; }
 &lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Welcome to the Semi-Automatic Classification Plugin for QGIS&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-weight:600;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;The Semi-Automatic Classification Plugin allows for the semi-automatic supervised classification of remote sensing images, providing tools to expedite the creation of ROIs, the classification process, the pre processing and the post processing phases (accuracy assessment, land cover change).&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Please, visit the &lt;a href=&quot;http://fromgistors.blogspot.com/p/theinterface-2.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;user manual page&lt;/span&gt;&lt;/a&gt; for information about the plugin interface.&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Also, several &lt;a href=&quot;http://fromgistors.blogspot.com/search/label/Tutorial&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;tutorials&lt;/span&gt;&lt;/a&gt; are available about the use of this plugin.&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Please, visit the &lt;a href=&quot;http://fromgistors.blogspot.com/p/theinterface-2.html?spref=scp&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;user manual page&lt;/span&gt;&lt;/a&gt; for information about the plugin interface.&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Also, several &lt;a href=&quot;http://fromgistors.blogspot.com/search/label/Tutorial/?spref=scp&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;tutorials&lt;/span&gt;&lt;/a&gt; are available about the use of this plugin.&lt;/p&gt;
 &lt;p align=&quot;justify&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p align=&quot;right&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;http://fromgistors.blogspot.com/&quot;&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline; color:#0057ae;&quot;&gt;From GIS to Remote Sensing&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+&lt;p align=&quot;right&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;http://fromgistors.blogspot.com/?spref=scp&quot;&gt;&lt;span style=&quot; font-weight:600; text-decoration: underline; color:#0057ae;&quot;&gt;From GIS to Remote Sensing&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>semiautomaticclassificationplugin</name>
     <message>
-        <location filename="semiautomaticclassificationplugin.py" line="867"/>
+        <location filename="semiautomaticclassificationplugin.py" line="868"/>
         <source>Please, restart QGIS for executing the Semi-Automatic Classification Plugin</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1948,8 +1948,8 @@ Possible reason: selected rapid ROI band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="landcoverchange.py" line="117"/>
-        <source>Save land cover change raster output</source>
+        <location filename="accuracy.py" line="77"/>
+        <source>Save error matrix raster output</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2063,6 +2063,11 @@ Possible reason: selected rapid ROI band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="landcoverchange.py" line="117"/>
+        <source>Save land cover change raster output</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="landcoverchange.py" line="243"/>
         <source>ChangeCode</source>
         <translation type="unfinished"></translation>
@@ -2103,43 +2108,43 @@ Possible reason: selected rapid ROI band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="roidock.py" line="273"/>
+        <location filename="roidock.py" line="275"/>
         <source>Save shapefile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="roidock.py" line="666"/>
+        <location filename="roidock.py" line="668"/>
         <source>Add required fds</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="roidock.py" line="666"/>
+        <location filename="roidock.py" line="668"/>
         <source>It appears that the shapefile </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="roidock.py" line="666"/>
+        <location filename="roidock.py" line="668"/>
         <source> is missing some fields that are required for the signature calculation. 
 Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="roidock.py" line="779"/>
+        <location filename="roidock.py" line="781"/>
         <source>Delete ROIs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="roidock.py" line="779"/>
+        <location filename="roidock.py" line="781"/>
         <source>Are you sure you want to delete highlighted ROIs?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="roidock.py" line="1025"/>
+        <location filename="roidock.py" line="1027"/>
         <source>Undo save ROI</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="roidock.py" line="1025"/>
+        <location filename="roidock.py" line="1027"/>
         <source>Are you sure you want to delete the last saved ROI?</source>
         <translation type="unfinished"></translation>
     </message>

@@ -753,7 +753,7 @@
          <enum>QFrame::Sunken</enum>
         </property>
         <property name="text">
-         <string>Macroclass ID</string>
+         <string>MC ID</string>
         </property>
        </widget>
       </item>
@@ -795,7 +795,7 @@
          </size>
         </property>
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The ID of the signature macroclass&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The macroclass ID of the ROI signature&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -826,7 +826,7 @@
          </size>
         </property>
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The ID of the signature class&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The class ID of the ROI signature&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -870,7 +870,7 @@
          <enum>QFrame::Sunken</enum>
         </property>
         <property name="text">
-         <string>Class Information</string>
+         <string>C Info</string>
         </property>
        </widget>
       </item>
@@ -883,7 +883,7 @@
          <enum>QFrame::Sunken</enum>
         </property>
         <property name="text">
-         <string>Macroclass Information</string>
+         <string>MC Info</string>
         </property>
        </widget>
       </item>
@@ -982,7 +982,7 @@
          <enum>QFrame::Sunken</enum>
         </property>
         <property name="text">
-         <string>Class ID</string>
+         <string>C ID</string>
         </property>
        </widget>
       </item>

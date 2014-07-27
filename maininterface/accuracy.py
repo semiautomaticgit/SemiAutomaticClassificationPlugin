@@ -74,7 +74,7 @@ class Accuracy:
 			rstrCheck = "No"
 			cfg.mx.msgErr26()
 			return "No"
-		rstrOut = QFileDialog.getSaveFileName(None , QApplication.translate("semiautomaticclassificationplugin", "Save land cover change raster output"), "", "*.tif")
+		rstrOut = QFileDialog.getSaveFileName(None , QApplication.translate("semiautomaticclassificationplugin", "Save error matrix raster output"), "", "*.tif")
 		if len(rstrOut) > 0:
 			i = cfg.utls.selectLayerbyName(classification)
 			l = cfg.utls.selectLayerbyName(reference)
@@ -96,7 +96,7 @@ class Accuracy:
 				elif cfg.macroclassCheck == "Yes":
 					fd = cfg.fldMacroID_class
 				# convert reference layer to raster
-				cfg.utls.vectorToRaster(str(fd), unicode(l.source()), cfg.rstrNm, unicode(tRC))		
+				cfg.utls.vectorToRaster(str(fd), unicode(l.source()), classification, unicode(tRC))		
 				cfg.uiUtls.updateBar(10)
 				# open input with GDAL
 				refRstrDt = gdal.Open(unicode(tRC), GA_ReadOnly)

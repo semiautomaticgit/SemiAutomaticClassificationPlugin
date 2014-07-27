@@ -70,7 +70,7 @@ class LandCoverChange:
 			rstrCheck = "Yes"
 		except Exception, err:
 			# logger
-			if cfg.logSttngVal == "Yes": cfg.utls.logToFile(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			rstrCheck = "No"
 		newRstr = cfg.utls.selectLayerbyName(cfg.newClssfctnNm)
 		try:
@@ -78,7 +78,7 @@ class LandCoverChange:
 			rstrCheck = "Yes"
 		except Exception, err:
 			# logger
-			if cfg.logSttngVal == "Yes": cfg.utls.logToFile(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			rstrCheck = "No"
 		# check if numpy is updated
 		try:

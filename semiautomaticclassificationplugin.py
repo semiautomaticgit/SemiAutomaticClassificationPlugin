@@ -363,7 +363,9 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.activate_docks_pushButton.clicked.connect(self.activateDocks)
 			# reload layers in combos
 			cfg.ipt.refreshRasterLayer()
+			cfg.uid.ROI_tableWidget.blockSignals(True)
 			cfg.ROId.refreshShapeLayer()
+			cfg.uid.ROI_tableWidget.blockSignals(False)
 			cfg.clipMulti.refreshShapeClip()
 			# set ROI color
 			cfg.ui.color_mdiArea.setBackground(QColor(cfg.ROIClrVal))
@@ -661,7 +663,6 @@ class SemiAutomaticClassificationPlugin:
 		self.readVariables()
 		# reload layers in combos
 		cfg.ipt.refreshRasterLayer()
-		cfg.uid.ROI_tableWidget
 		cfg.uid.ROI_tableWidget.blockSignals(True)
 		cfg.ROId.refreshShapeLayer()
 		cfg.uid.ROI_tableWidget.blockSignals(False)

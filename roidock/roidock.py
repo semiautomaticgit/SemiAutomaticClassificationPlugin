@@ -68,8 +68,10 @@ class RoiDock:
 	def checkRefreshShapeLayer(self):
 		# check if other processes are active
 		if cfg.actionCheck == "No":
+			cfg.uid.ROI_tableWidget.blockSignals(True)
 			self.refreshShapeLayer()
-		
+			cfg.uid.ROI_tableWidget.blockSignals(False)
+
 	# left click
 	def clckL(self, pnt):
 		cfg.lastVrt.append(pnt)

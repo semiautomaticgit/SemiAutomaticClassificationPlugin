@@ -2431,7 +2431,7 @@ p, li { white-space: pre-wrap; }
             <enum>QFrame::Sunken</enum>
            </property>
            <property name="text">
-            <string>Information field</string>
+            <string>C Info field</string>
            </property>
           </widget>
          </item>
@@ -2448,7 +2448,7 @@ p, li { white-space: pre-wrap; }
          <item row="2" column="3">
           <widget class="QLineEdit" name="Info_field_name_lineEdit">
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the information field name&lt;/p&gt;&lt;p&gt;[max 10 characters]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the Class information field name&lt;/p&gt;&lt;p&gt;[max 10 characters]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="maxLength">
             <number>10</number>
@@ -2484,7 +2484,7 @@ p, li { white-space: pre-wrap; }
          <item row="2" column="2">
           <widget class="QLineEdit" name="ID_field_name_lineEdit">
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the ID field name&lt;/p&gt;&lt;p&gt;[max 10 characters]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the Class ID field name&lt;/p&gt;&lt;p&gt;[max 10 characters]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="maxLength">
             <number>10</number>
@@ -2494,7 +2494,7 @@ p, li { white-space: pre-wrap; }
          <item row="2" column="0">
           <widget class="QLineEdit" name="MID_field_name_lineEdit">
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the ID field name&lt;/p&gt;&lt;p&gt;[max 10 characters]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the Macroclass ID field name&lt;/p&gt;&lt;p&gt;[max 10 characters]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="maxLength">
             <number>10</number>
@@ -2510,14 +2510,14 @@ p, li { white-space: pre-wrap; }
             <enum>QFrame::Sunken</enum>
            </property>
            <property name="text">
-            <string>Class ID field</string>
+            <string>C ID field</string>
            </property>
           </widget>
          </item>
          <item row="2" column="1">
           <widget class="QLineEdit" name="MCInfo_field_name_lineEdit">
            <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the information field name&lt;/p&gt;&lt;p&gt;[max 10 characters]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the Macroclass information field name&lt;/p&gt;&lt;p&gt;[max 10 characters]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="maxLength">
             <number>10</number>
@@ -2533,7 +2533,7 @@ p, li { white-space: pre-wrap; }
             <enum>QFrame::Sunken</enum>
            </property>
            <property name="text">
-            <string>Macroclass ID field</string>
+            <string>MC ID field</string>
            </property>
           </widget>
          </item>
@@ -2546,7 +2546,7 @@ p, li { white-space: pre-wrap; }
             <enum>QFrame::Sunken</enum>
            </property>
            <property name="text">
-            <string>Information field</string>
+            <string>MC Info field</string>
            </property>
           </widget>
          </item>

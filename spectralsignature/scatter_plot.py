@@ -90,43 +90,44 @@ class Scatter_Plot:
 			
 	# Create scatter plot
 	def scatterPlot(self):
-		cfg.uiUtls.addProgressBar()
-		tW = cfg.uiscp.scatter_list_plot_tableWidget
-		# Clear plot
-		cfg.uiscp.Sig_Widget_2.sigCanvas.ax.clear()
-		cfg.uiscp.Sig_Widget_2.sigCanvas.draw()
-		bX = cfg.scatterBandX
-		bY = cfg.scatterBandY
-		# Set labels
-		cfg.uiscp.Sig_Widget_2.sigCanvas.ax.set_xlabel(QApplication.translate("semiautomaticclassificationplugin", "Band" + " " +  str(bX)))
-		cfg.uiscp.Sig_Widget_2.sigCanvas.ax.set_ylabel(QApplication.translate("semiautomaticclassificationplugin", "Band" + " " + str(bY)))
-		# Add plots and legend
-		pL = []
-		pLN = []
-		xP = []
-		yP = []
-		r = tW.rowCount()
-		for b in range(0, r):
-			if tW.item(b, 0).checkState() == 2:
-				i = int(tW.item(b, 6).text())
-				nm = tW.item(b, 1).text() + "#" + tW.item(b, 2).text() + " " + tW.item(b, 3).text() + "#" + tW.item(b, 4).text()
-				# color
-				c = str(tW.item(b, 5).background().color().toRgb().name())
-				xP = self.calculateScatter(cfg.shpLay, bX, i)
-				yP = self.calculateScatter(cfg.shpLay, bY, i)
-				p = cfg.uiscp.Sig_Widget_2.sigCanvas.ax.scatter(xP, yP, color=c, s=3)
-				# add plot to legend
-				pL.append(p)
-				pLN.append(nm[:cfg.roundCharList])
-		# place legend		
-		cfg.uiscp.Sig_Widget_2.sigCanvas.ax.legend(pL, pLN, bbox_to_anchor=(0.1, 0.0, 1.1, 1.1), loc=1, borderaxespad=0.)
-		# Grid for X and Y axes
-		cfg.uiscp.Sig_Widget_2.sigCanvas.ax.grid('on')
-		# Draw the plot
-		cfg.uiscp.Sig_Widget_2.sigCanvas.draw()
-		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " scatter plot created")
-		cfg.uiUtls.removeProgressBar()
+		if cfg.rstrNm is not None:
+			cfg.uiUtls.addProgressBar()
+			tW = cfg.uiscp.scatter_list_plot_tableWidget
+			# Clear plot
+			cfg.uiscp.Sig_Widget_2.sigCanvas.ax.clear()
+			cfg.uiscp.Sig_Widget_2.sigCanvas.draw()
+			bX = cfg.scatterBandX
+			bY = cfg.scatterBandY
+			# Set labels
+			cfg.uiscp.Sig_Widget_2.sigCanvas.ax.set_xlabel(QApplication.translate("semiautomaticclassificationplugin", "Band" + " " +  str(bX)))
+			cfg.uiscp.Sig_Widget_2.sigCanvas.ax.set_ylabel(QApplication.translate("semiautomaticclassificationplugin", "Band" + " " + str(bY)))
+			# Add plots and legend
+			pL = []
+			pLN = []
+			xP = []
+			yP = []
+			r = tW.rowCount()
+			for b in range(0, r):
+				if tW.item(b, 0).checkState() == 2:
+					i = int(tW.item(b, 6).text())
+					nm = tW.item(b, 1).text() + "#" + tW.item(b, 2).text() + " " + tW.item(b, 3).text() + "#" + tW.item(b, 4).text()
+					# color
+					c = str(tW.item(b, 5).background().color().toRgb().name())
+					xP = self.calculateScatter(cfg.shpLay, bX, i)
+					yP = self.calculateScatter(cfg.shpLay, bY, i)
+					p = cfg.uiscp.Sig_Widget_2.sigCanvas.ax.scatter(xP, yP, color=c, s=3)
+					# add plot to legend
+					pL.append(p)
+					pLN.append(nm[:cfg.roundCharList])
+			# place legend		
+			cfg.uiscp.Sig_Widget_2.sigCanvas.ax.legend(pL, pLN, bbox_to_anchor=(0.1, 0.0, 1.1, 1.1), loc=1, borderaxespad=0.).draggable()
+			# Grid for X and Y axes
+			cfg.uiscp.Sig_Widget_2.sigCanvas.ax.grid('on')
+			# Draw the plot
+			cfg.uiscp.Sig_Widget_2.sigCanvas.draw()
+			# logger
+			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " scatter plot created")
+			cfg.uiUtls.removeProgressBar()
 		
 	# calculate scatter statistics for selected ROIs
 	def calculateScatter(self, lyr, rasterBand, featureID):
