@@ -1485,7 +1485,7 @@ class Utils:
 				# get error
 				out, err = sP.communicate()
 				sP.stdout.close()
-				if len(err) > 0:
+				if len(err) > 0 and "Warning" not in err:
 					st = "Yes"
 					# logger
 					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " GDAL error:: " + str(err) )
