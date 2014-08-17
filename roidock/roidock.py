@@ -993,6 +993,8 @@ class RoiDock:
 					cfg.tblOut["WAVELENGTH_{0}".format(b)] = cfg.bndSetWvLn["WAVELENGTH_{0}".format(b)] 
 			cfg.uiUtls.updateBar(progress + int((3 / 4) * progresStep))
 			covMat = cfg.utls.calculateCovMatrix(ROIArray)
+			if covMat == "No":
+				cfg.mx.msgWar12(macroclassID, classID)
 			# remove temp layers
 			cfg.utls.removeLayer(tLN)
 			self.ROIStatisticsToSignature(covMat, macroclassID, macroclassInfo, classID, classInfo, cfg.bndSetUnit["UNIT"], plot)

@@ -131,7 +131,7 @@ class LandCoverChange:
 					qApp.processEvents()
 					# logger
 					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "change raster output: " + str(cfg.clssPth))	
-					if refRstPxlXSz != newRstPxlXSz or refRstPxlYSz != newRstPxlYSz:
+					if str(refRstPxlXSz) != str(newRstPxlXSz) or str(refRstPxlYSz) != str(newRstPxlYSz):
 						cfg.mx.msgWar5()
 					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " land cover change")
 					# get band

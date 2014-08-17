@@ -1908,7 +1908,7 @@ Possible reason: selected rapid ROI band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="messages.py" line="229"/>
+        <location filename="messages.py" line="232"/>
         <source>Warning</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2139,12 +2139,12 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="roidock.py" line="1027"/>
+        <location filename="roidock.py" line="1029"/>
         <source>Undo save ROI</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="roidock.py" line="1027"/>
+        <location filename="roidock.py" line="1029"/>
         <source>Are you sure you want to delete the last saved ROI?</source>
         <translation type="unfinished"></translation>
     </message>
