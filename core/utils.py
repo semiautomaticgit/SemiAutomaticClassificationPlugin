@@ -471,12 +471,17 @@ class Utils:
 		TMatrix = GMatrix.T
 		# covariance matrix (degree of freedom = 1 for unbiased estimate)
 		CovMatrix = np.cov(TMatrix, ddof=1)
-		if np.isnan(CovMatrix[0,0]):
-			CovMatrix = "No"
 		try:
-			np.linalg.inv(CovMatrix)
-		except:
+			if np.isnan(CovMatrix[0,0]):
+				CovMatrix = "No"
+			try:
+				np.linalg.inv(CovMatrix)
+			except:
+				CovMatrix = "No"
+		except Exception, err:
 			CovMatrix = "No"
+			# logger
+			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), " ERROR exception: " + str(err))
 		# logger
 		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "cov matrix: " + str(CovMatrix))
 		return CovMatrix
