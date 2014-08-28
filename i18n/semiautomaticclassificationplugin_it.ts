@@ -1747,7 +1747,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="landsatTab.py" line="740"/>
+        <location filename="landsatTab.py" line="746"/>
         <source>Select a directory</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1908,7 +1908,7 @@ Possible reason: selected rapid ROI band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="messages.py" line="232"/>
+        <location filename="messages.py" line="235"/>
         <source>Warning</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1943,7 +1943,12 @@ Possible reason: selected rapid ROI band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="utils.py" line="1385"/>
+        <location filename="messages.py" line="235"/>
+        <source>Unable to load the virtual raster. Please create it manually</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="utils.py" line="1401"/>
         <source>Calculating remaining time</source>
         <translation type="unfinished"></translation>
     </message>

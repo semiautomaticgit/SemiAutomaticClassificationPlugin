@@ -724,12 +724,18 @@ class LandsatTab:
 			# create virtual raster
 			if cfg.ui.create_VRT_checkBox.isChecked() is True and check == "Yes":
 				outVrt = out + "//" + cfg.landsatVrtNm + ".vrt"
-				cfg.utls.createVirtualRaster(rasterList, outVrt)
-				vrtRaster = cfg.iface.addRasterLayer(outVrt)
-				vrtRaster.setDrawingStyle('MultiBandColor')
-				vrtRaster.renderer().setRedBand(3)
-				vrtRaster.renderer().setGreenBand(2)
-				vrtRaster.renderer().setBlueBand(1)
+				vrtCheck = cfg.utls.createVirtualRaster(rasterList, outVrt)
+				if vrtCheck == "No":
+					vrtRaster = cfg.iface.addRasterLayer(outVrt)
+					if vrtRaster is not None:
+						vrtRaster.setDrawingStyle('MultiBandColor')
+						vrtRaster.renderer().setRedBand(3)
+						vrtRaster.renderer().setGreenBand(2)
+						vrtRaster.renderer().setBlueBand(1)
+					else:
+						cfg.mx.msgWar13()
+						# logger
+						if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "WARNING: unable to load virtual raster")
 			cfg.uiUtls.updateBar(100)
 			cfg.ui.label_26.setText("")
 			cfg.ui.label_27.setText("")

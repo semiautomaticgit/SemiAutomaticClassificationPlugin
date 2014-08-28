@@ -488,11 +488,22 @@ class Utils:
 		
 	def createVirtualRaster(self, inputRasterList, output):
 		r = ""
+		st = "No"
 		for i in inputRasterList:
-			r = r + " " + i
-		sP = subprocess.Popen("gdalbuildvrt -separate " + unicode(output) + " " + unicode(r), shell=True)
+			r = r + ' "' + i + '"'
+		sP = subprocess.Popen('gdalbuildvrt -separate "' + unicode(output) + '" ' + unicode(r), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 		sP.wait()
-		return sP
+		# get error
+		out, err = sP.communicate()
+		sP.stdout.close()
+		if len(err) > 0:
+			st = "Yes"
+			cfg.mx.msgWar13()
+			# logger
+			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " GDAL error:: " + str(err) )
+		# logger
+		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "virtual raster: " + str(output))
+		return st
 		
 	# convert list to covariance array
 	def listToCovarianceMatrix(self, list):

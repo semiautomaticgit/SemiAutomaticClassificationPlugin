@@ -231,3 +231,5 @@ class Messages:
 	def msgWar12(self, Macro_ID, Class_ID):
 		self.msgBarWarning(QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [10]", QApplication.translate("semiautomaticclassificationplugin", "The following signature will be excluded if using Maximum Likelihood (singular covariance matrix). Macro: " + str(Macro_ID) + " ID: " + str(Class_ID)))
 		
+	def msgWar13(self):
+		self.msgBarWarning(QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [7]", QApplication.translate("semiautomaticclassificationplugin", "Unable to load the virtual raster. Please create it manually"))
