@@ -444,6 +444,8 @@ class SemiAutomaticClassificationPlugin:
 			""" Multiple ROI tab """
 			# connect to add point
 			cfg.ui.add_point_pushButton.clicked.connect(cfg.multiROI.addPointToTable)
+			# connect to create random points
+			cfg.ui.add_random_point_pushButton.clicked.connect(cfg.multiROI.createRandomPoint)
 			# connect to remove point
 			cfg.ui.remove_point_pushButton.clicked.connect(cfg.multiROI.removePointFromTable)
 			# connect to save point ROIs

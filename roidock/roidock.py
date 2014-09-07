@@ -74,83 +74,89 @@ class RoiDock:
 
 	# left click
 	def clckL(self, pnt):
-		cfg.lastVrt.append(pnt)
-		cfg.rbbrBnd.addPoint(pnt)
-		v = QgsVertexMarker(cfg.cnvs)
-		v.setCenter(pnt)
-		self.mrctrVrtc.append(v)
+		cfg.utls.checkPointImage(cfg.rstrNm, pnt)
+		if cfg.pntCheck == "Yes":
+			cfg.lastVrt.append(pnt)
+			cfg.rbbrBnd.addPoint(pnt)
+			v = QgsVertexMarker(cfg.cnvs)
+			v.setCenter(pnt)
+			self.mrctrVrtc.append(v)
 		
 	# right click
 	def clckR(self, pnt):
-		self.clckL(pnt)
-		f = QgsFeature()
-		dT = cfg.utls.getTime()
-		# temp name
-		tN = cfg.subsTmpROI + dT
-		# band set
-		if cfg.bndSetPresent == "Yes" and cfg.rstrNm == cfg.bndSetNm:
-			# crs of loaded raster
-			bN = cfg.utls.selectLayerbyName(cfg.bndSet[0])
-			crs = cfg.utls.getCrs(bN)
-			ck = "Yes"
-		else:
-			try:
+		cfg.utls.checkPointImage(cfg.rstrNm, pnt)
+		if cfg.pntCheck == "Yes":
+			self.clckL(pnt)
+			f = QgsFeature()
+			dT = cfg.utls.getTime()
+			# temp name
+			tN = cfg.subsTmpROI + dT
+			# band set
+			if cfg.bndSetPresent == "Yes" and cfg.rstrNm == cfg.bndSetNm:
 				# crs of loaded raster
-				crs = cfg.utls.getCrs(cfg.rLay)
+				bN = cfg.utls.selectLayerbyName(cfg.bndSet[0])
+				crs = cfg.utls.getCrs(bN)
 				ck = "Yes"
-			except:
-				ck = "No"
-		if ck == "Yes":
-			mL = QgsVectorLayer("Polygon?crs=" + str(crs.toWkt()), tN, "memory")
-			mL.setCrs(crs) 
-			if not len(cfg.lastVrt) >= 3:
-				cfg.mx.msg16()
-				self.clearCanvas()
-				return
-			g = QgsGeometry().fromPolygon([cfg.lastVrt])
-			# no intersection
-			mL.removePolygonIntersections(g)
-			mL.addTopologicalPoints(g)
-			pr = mL.dataProvider()
-			# create temp ROI
-			mL.startEditing()		
-			# add fields
-			pr.addAttributes( [QgsField("ID",  QVariant.Int)] )
-			# add a feature
-			f.setGeometry(g)
-			f.setAttributes([1])
-			pr.addFeatures([f])
-			mL.commitChanges()
-			mL.updateExtents()
-			self.clearCanvas()
-			# semitransparent symbol and line for ROI
-			rT = cfg.ROITrnspVal * 255 / 100
-			rC = str(QColor(cfg.ROIClrVal).red()) + "," + str(QColor(cfg.ROIClrVal).green()) + "," + str(QColor(cfg.ROIClrVal).blue()) + "," + str(rT) 
-			sP = { 'color' : rC , 'color_border' : '0,255,255,50', 'offset' : '0,0', 'style' : 'solid', 'style_border' : 'dot', 'width_border' : '0.4' }
-			sL = QgsSymbolLayerV2Registry.instance().symbolLayerMetadata("SimpleFill").createSymbolLayer(sP)
-			# apply symbology
-			mL.setRendererV2(QgsSingleSymbolRendererV2(QgsFillSymbolV2([sL])))
-			# workaround for setRendererV2 crash
-			lS = mL.rendererV2().symbols()
-			fS = lS[0]
-			fS.appendSymbolLayer(sL)
-			# add ROI layer
-			cfg.uiUtls.updateBar(90)
-			cfg.utls.addLayerToMap(mL)
-			# create temp group
-			cfg.lstROI = mL
-			g = cfg.utls.groupIndex(cfg.grpNm)
-			if g is None:
-				g = cfg.lgnd.addGroup(cfg.grpNm, False) 
-				cfg.lgnd.moveLayer (cfg.lstROI, g)
 			else:
-				cfg.lgnd.moveLayer (cfg.lstROI, g)
-			cfg.uid.button_Save_ROI.setEnabled(True)
-			# logger
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "<<< ROI created: " + str(tN))
-		else:
-			cfg.mx.msg4()
-			self.clearCanvas()
+				try:
+					# crs of loaded raster
+					crs = cfg.utls.getCrs(cfg.rLay)
+					ck = "Yes"
+				except:
+					ck = "No"
+			if crs is None:
+				ck = "No"
+			if ck == "Yes":
+				mL = QgsVectorLayer("Polygon?crs=" + str(crs.toWkt()), tN, "memory")
+				mL.setCrs(crs) 
+				if not len(cfg.lastVrt) >= 3:
+					cfg.mx.msg16()
+					self.clearCanvas()
+					return
+				g = QgsGeometry().fromPolygon([cfg.lastVrt])
+				# no intersection
+				mL.removePolygonIntersections(g)
+				mL.addTopologicalPoints(g)
+				pr = mL.dataProvider()
+				# create temp ROI
+				mL.startEditing()		
+				# add fields
+				pr.addAttributes( [QgsField("ID",  QVariant.Int)] )
+				# add a feature
+				f.setGeometry(g)
+				f.setAttributes([1])
+				pr.addFeatures([f])
+				mL.commitChanges()
+				mL.updateExtents()
+				self.clearCanvas()
+				# semitransparent symbol and line for ROI
+				rT = cfg.ROITrnspVal * 255 / 100
+				rC = str(QColor(cfg.ROIClrVal).red()) + "," + str(QColor(cfg.ROIClrVal).green()) + "," + str(QColor(cfg.ROIClrVal).blue()) + "," + str(rT) 
+				sP = { 'color' : rC , 'color_border' : '0,255,255,50', 'offset' : '0,0', 'style' : 'solid', 'style_border' : 'dot', 'width_border' : '0.4' }
+				sL = QgsSymbolLayerV2Registry.instance().symbolLayerMetadata("SimpleFill").createSymbolLayer(sP)
+				# apply symbology
+				mL.setRendererV2(QgsSingleSymbolRendererV2(QgsFillSymbolV2([sL])))
+				# workaround for setRendererV2 crash
+				lS = mL.rendererV2().symbols()
+				fS = lS[0]
+				fS.appendSymbolLayer(sL)
+				# add ROI layer
+				cfg.uiUtls.updateBar(90)
+				cfg.utls.addLayerToMap(mL)
+				# create temp group
+				cfg.lstROI = mL
+				g = cfg.utls.groupIndex(cfg.grpNm)
+				if g is None:
+					g = cfg.lgnd.addGroup(cfg.grpNm, False) 
+					cfg.lgnd.moveLayer (cfg.lstROI, g)
+				else:
+					cfg.lgnd.moveLayer (cfg.lstROI, g)
+				cfg.uid.button_Save_ROI.setEnabled(True)
+				# logger
+				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "<<< ROI created: " + str(tN))
+			else:
+				cfg.mx.msg4()
+				self.clearCanvas()
 		
 	# clear canvas
 	def clearCanvas(self):
@@ -317,7 +323,7 @@ class RoiDock:
 			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			cfg.mx.msg4()
 
-	def createROI(self, point):
+	def createROI(self, point, progressbar = "Yes"):
 		if cfg.rstrNm is None:
 			cfg.mx.msg4()
 			cfg.pntROI = None
@@ -336,10 +342,12 @@ class RoiDock:
 				self.refreshRasterLayer()
 				cfg.pntROI = None
 		if cfg.pntROI != None:
-			cfg.uiUtls.addProgressBar()
+			if progressbar == "Yes":
+				cfg.uiUtls.addProgressBar()
 			# logger
 			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), ">>> ROI click")
-			cfg.uiUtls.updateBar(10)
+			if progressbar == "Yes":
+				cfg.uiUtls.updateBar(10)
 			# ROI date time for temp name
 			dT = cfg.utls.getTime()
 			# logger
@@ -354,7 +362,8 @@ class RoiDock:
 			# subprocess bands
 			dBs = {}
 			dBSP = {}
-			cfg.uiUtls.updateBar(20)
+			if progressbar == "Yes":
+				cfg.uiUtls.updateBar(20)
 			# band set
 			if cfg.bndSetPresent == "Yes" and cfg.rstrNm == cfg.bndSetNm:
 				if cfg.rpdROICheck == "No":
@@ -370,7 +379,8 @@ class RoiDock:
 							# logger
 							if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " Error: failed ROI creation, edge point")
 							cfg.pntROI = None
-							cfg.uiUtls.removeProgressBar()
+							if progressbar == "Yes":
+								cfg.uiUtls.removeProgressBar()
 							return dBSP["BAND_SUBPROCESS_{0}".format(b)]
 				else:
 					try:
@@ -383,7 +393,8 @@ class RoiDock:
 							# logger
 							if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " Error: failed ROI creation, edge point")
 							cfg.pntROI = None
-							cfg.uiUtls.removeProgressBar()
+							if progressbar == "Yes":
+								cfg.uiUtls.removeProgressBar()
 							return pr
 						dBs["BANDS_{0}".format(b)] = tR
 					except Exception, err:
@@ -401,7 +412,8 @@ class RoiDock:
 						# logger
 						if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " Error: failed ROI creation, edge point")
 						cfg.pntROI = None
-						cfg.uiUtls.removeProgressBar()
+						if progressbar == "Yes":
+							cfg.uiUtls.removeProgressBar()
 						return pr
 					dBs["BANDS_{0}".format(1)] = tR
 				else:
@@ -418,7 +430,8 @@ class RoiDock:
 							# logger
 							if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " Error: failed ROI creation, edge point")
 							cfg.pntROI = None
-							cfg.uiUtls.removeProgressBar()
+							if progressbar == "Yes":
+								cfg.uiUtls.removeProgressBar()
 							return pr
 						cfg.utls.getRasterBandByBandNumber(tR2, int(cfg.ROIband), tR)
 						dBs["BANDS_{0}".format(1)] = tR
@@ -426,12 +439,14 @@ class RoiDock:
 						# logger
 						if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 						cfg.mx.msgErr7
-			cfg.uiUtls.updateBar(40)
+			if progressbar == "Yes":
+				cfg.uiUtls.updateBar(40)
 			# run segmentation
 			self.regionGrowing(dBs, point.x(), point.y(), cfg.rngRad, int(cfg.minROISz), tS)
 			# logger
 			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "output segmentation: " + str(tSN))
-			cfg.uiUtls.updateBar(60)
+			if progressbar == "Yes":
+				cfg.uiUtls.updateBar(60)
 			tSS = cfg.utls.addVectorLayer(tS, tSN, "ogr")
 			# check if segmentation went wrong
 			if tSS is None:
@@ -440,11 +455,13 @@ class RoiDock:
 				# logger
 				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " Error: failed ROI creation")
 				cfg.pntROI = None
-				cfg.uiUtls.removeProgressBar()
+				if progressbar == "Yes":
+					cfg.uiUtls.removeProgressBar()
 				cfg.mx.msgErr2()
 			else:
 				cfg.lgnd.setLayerVisible(tSS, False)
-				cfg.uiUtls.updateBar(70)
+				if progressbar == "Yes":
+					cfg.uiUtls.updateBar(70)
 				# logger
 				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "temp roi saved in " + str(tS))
 				# semitransparent symbol and line for ROI
@@ -454,13 +471,15 @@ class RoiDock:
 				sL = QgsSymbolLayerV2Registry.instance().symbolLayerMetadata("SimpleFill").createSymbolLayer(sP)
 				# apply symbology
 				tSS.setRendererV2(QgsSingleSymbolRendererV2(QgsFillSymbolV2([sL])))
-				cfg.uiUtls.updateBar(70)
+				if progressbar == "Yes":
+					cfg.uiUtls.updateBar(70)
 				# workaround for setRendererV2 crash
 				lS = tSS.rendererV2().symbols()
 				fS = lS[0]
 				fS.appendSymbolLayer(sL)
 				# add ROI layer
-				cfg.uiUtls.updateBar(90)
+				if progressbar == "Yes":
+					cfg.uiUtls.updateBar(90)
 				cfg.utls.addLayerToMap(tSS)
 				# create temp group
 				cfg.lstROI = tSS
@@ -470,7 +489,8 @@ class RoiDock:
 					cfg.lgnd.moveLayer (cfg.lstROI, g)
 				else:
 					cfg.lgnd.moveLayer (cfg.lstROI, g)
-				cfg.uiUtls.updateBar(100)
+				if progressbar == "Yes":
+					cfg.uiUtls.updateBar(100)
 				cfg.uid.button_Save_ROI.setEnabled(True)
 				# enable map canvas render
 				cfg.cnvs.setRenderFlag(True)
@@ -478,7 +498,8 @@ class RoiDock:
 				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "<<< ROI created: " + str(tSS.name()))
 				# enable Redo button
 				cfg.uid.redo_ROI_Button.setEnabled(True)
-				cfg.uiUtls.removeProgressBar()
+				if progressbar == "Yes":
+					cfg.uiUtls.removeProgressBar()
 			
 	# region growing
 	def regionGrowing(self, rasterDictionary, seedX, seedY, spectralRange, minimumSize, outputVector):
@@ -619,7 +640,9 @@ class RoiDock:
 		return r
 			
 	# Save last ROI to shapefile 
-	def saveROItoShapefile(self):		
+	def saveROItoShapefile(self, progressbar = "Yes"):
+		if progressbar is False:
+			progressbar = "Yes"
 		# check if layer was removed ## there is an issue if the removed layer was already saved in the project ##
 		try:
 			sN = str(cfg.shpLay.name())
@@ -635,8 +658,9 @@ class RoiDock:
 		elif cfg.lstROI is None:
 			cfg.mx.msg6()
 		else:
-			cfg.uiUtls.addProgressBar()
-			cfg.uiUtls.updateBar(10)
+			if progressbar == "Yes":
+				cfg.uiUtls.addProgressBar()
+				cfg.uiUtls.updateBar(10)
 			# get polygon from ROI
 			try:
 				# region growing ROI
@@ -645,7 +669,8 @@ class RoiDock:
 				# manual ROI
 				cfg.utls.copyFeatureToLayer(cfg.lstROI, 1, cfg.shpLay)
 			self.ROILastID = cfg.utls.getLastFeatureID(cfg.shpLay)
-			cfg.uiUtls.updateBar(30)
+			if progressbar == "Yes":
+				cfg.uiUtls.updateBar(30)
 			tW = cfg.uid.ROI_tableWidget
 			tW.blockSignals(True)
 			try:
@@ -673,10 +698,12 @@ class RoiDock:
 					aF = cfg.shpLay.dataProvider().addAttributes(fds)
 					# commit changes
 					cfg.shpLay.commitChanges()
-					cfg.uiUtls.removeProgressBar()
+					if progressbar == "Yes":
+						cfg.uiUtls.removeProgressBar()
 					return 1
 				else:
-					cfg.uiUtls.removeProgressBar()
+					if progressbar == "Yes":
+						cfg.uiUtls.removeProgressBar()
 					return 0
 			# set ROI Class info attribute
 			fdInfo = cfg.utls.fieldID(cfg.shpLay, str(cfg.fldROI_info))
@@ -690,18 +717,24 @@ class RoiDock:
 			cfg.ROITabEdited == "No"
 			self.ROIListTable(cfg.trnLay, cfg.uid.ROI_tableWidget)
 			self.ROIScatterPlotListTable(cfg.trnLay, cfg.uiscp.scatter_list_plot_tableWidget)
-			cfg.uiUtls.updateBar(40)
+			if progressbar == "Yes":
+				cfg.uiUtls.updateBar(40)
 			tW.blockSignals(False)
 			# logger
 			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "roi: " + str(cfg.ROIID) + ", " + str(cfg.ROIInfo) + " saved to shapefile: " + str(cfg.shpLay.name()))
 			# calculate signature if checkbox is yes
 			if cfg.uid.signature_checkBox.isChecked() is True:
-				cfg.uiUtls.updateBar(50)
-				self.calculateSignature(cfg.shpLay, cfg.rstrNm, [self.ROILastID], cfg.ROIMacroID, cfg.ROIMacroClassInfo, cfg.ROIID, cfg.ROIInfo, 50, 40)
-				cfg.uiUtls.updateBar(90)
+				if progressbar == "Yes":
+					cfg.uiUtls.updateBar(50)
+					self.calculateSignature(cfg.shpLay, cfg.rstrNm, [self.ROILastID], cfg.ROIMacroID, cfg.ROIMacroClassInfo, cfg.ROIID, cfg.ROIInfo, 50, 40)
+				else:
+					self.calculateSignature(cfg.shpLay, cfg.rstrNm, [self.ROILastID], cfg.ROIMacroID, cfg.ROIMacroClassInfo, cfg.ROIID, cfg.ROIInfo)
+				if progressbar == "Yes":
+					cfg.uiUtls.updateBar(90)
 				cfg.classD.signatureListTable(cfg.uidc.signature_list_tableWidget)
-			cfg.uiUtls.updateBar(100)
-			cfg.uiUtls.removeProgressBar()
+			if progressbar == "Yes":
+				cfg.uiUtls.updateBar(100)
+				cfg.uiUtls.removeProgressBar()
 		
 	# Create ROI list
 	def ROIListTable(self, layerName, table, checkstate=0):
@@ -930,7 +963,8 @@ class RoiDock:
 			if progress is not None:
 				cfg.uiUtls.updateBar(progress + int((1 / 4) * progresStep))
 			else:
-				cfg.uiUtls.updateBar(0)
+				#cfg.uiUtls.updateBar(0)
+				pass
 			# disable map canvas render for speed
 			cfg.cnvs.setRenderFlag(False)
 			# date time for temp name
@@ -952,7 +986,8 @@ class RoiDock:
 				cfg.utls.copyFeatureToLayer(lyr, x, mL)
 			# calculate ROI center, height and width
 			rCX, rCY, rW, rH = cfg.utls.getShapefileRectangleBox(lyr)
-			cfg.uiUtls.updateBar(progress + int((2 / 4) * progresStep))
+			if progress is not None:
+				cfg.uiUtls.updateBar(progress + int((2 / 4) * progresStep))
 			cfg.tblOut = {}
 			ROIArray = []
 			# band set
@@ -969,6 +1004,9 @@ class RoiDock:
 						return pr
 					bX = cfg.utls.clipRasterByShapefile(tLP, tS)
 					rStat, ar = cfg.utls.getRasterBandStatistics(bX, 1)
+					rStatStr = str(rStat)
+					rStatStr = rStatStr.replace("nan", "0")
+					rStat = eval(rStatStr)
 					ROIArray.append(ar)
 					cfg.bndSetLst = cfg.bndSetLst + str(tS) + ";"
 					cfg.tblOut["BAND_{0}".format(b+1)] = rStat
@@ -988,10 +1026,14 @@ class RoiDock:
 				bCount = rL.bandCount()	
 				for b in range(1, bCount + 1):
 					rStat, ar = cfg.utls.getRasterBandStatistics(bX, b)
+					rStatStr = str(rStat)
+					rStatStr = rStatStr.replace("nan", "0")
+					rStat = eval(rStatStr)
 					ROIArray.append(ar)
 					cfg.tblOut["BAND_{0}".format(b)] = rStat
 					cfg.tblOut["WAVELENGTH_{0}".format(b)] = cfg.bndSetWvLn["WAVELENGTH_{0}".format(b)] 
-			cfg.uiUtls.updateBar(progress + int((3 / 4) * progresStep))
+			if progress is not None:
+				cfg.uiUtls.updateBar(progress + int((3 / 4) * progresStep))
 			covMat = cfg.utls.calculateCovMatrix(ROIArray)
 			if covMat == "No":
 				cfg.mx.msgWar12(macroclassID, classID)
@@ -1000,7 +1042,8 @@ class RoiDock:
 			self.ROIStatisticsToSignature(covMat, macroclassID, macroclassInfo, classID, classInfo, cfg.bndSetUnit["UNIT"], plot)
 			# enable map canvas render
 			cfg.cnvs.setRenderFlag(True)
-			cfg.uiUtls.updateBar(progress + int((4 / 4) * progresStep))
+			if progress is not None:
+				cfg.uiUtls.updateBar(progress + int((4 / 4) * progresStep))
 			# logger
 			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "roi signature calculated")
 		else:

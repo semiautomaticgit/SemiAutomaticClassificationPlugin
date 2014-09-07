@@ -57,6 +57,7 @@ import SemiAutomaticClassificationPlugin.core.config as cfg
 try:
 	from scipy import spatial
 	import scipy.stats.distributions as dist
+	from scipy.spatial.distance import cdist
 	cfg.scipyCheck = "Yes"
 except:
 	cfg.scipyCheck = "No"
@@ -491,16 +492,21 @@ class Utils:
 		st = "No"
 		for i in inputRasterList:
 			r = r + ' "' + i + '"'
-		sP = subprocess.Popen('gdalbuildvrt -separate "' + unicode(output) + '" ' + unicode(r), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-		sP.wait()
-		# get error
-		out, err = sP.communicate()
-		sP.stdout.close()
-		if len(err) > 0:
-			st = "Yes"
-			cfg.mx.msgWar13()
-			# logger
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " GDAL error:: " + str(err) )
+		try:
+			sP = subprocess.Popen('gdalbuildvrt -separate "' + unicode(output) + '" ' + unicode(r), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+			sP.wait()
+			# get error
+			out, err = sP.communicate()
+			sP.stdout.close()
+			if len(err) > 0:
+				st = "Yes"
+				cfg.mx.msgWar13()
+				# logger
+				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " GDAL error:: " + str(err) )
+		# in case of errors
+		except Exception, err:
+			sP = subprocess.Popen('gdalbuildvrt -separate "' + unicode(output) + '" ' + unicode(r), shell=True)
+			sP.wait()
 		# logger
 		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "virtual raster: " + str(output))
 		return st
@@ -1426,7 +1432,7 @@ class Utils:
 			# logger
 			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "color")
 			return c
-			
+	
 	# Define raster symbology
 	def rasterSymbolGeneric(self, rasterLayer):
 		rasterLayer.setDrawingStyle("SingleBandPseudoColor")
@@ -1680,6 +1686,19 @@ class Utils:
 		# logger
 		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "tab selected")
 		
+	# calculate random points
+	def randomPoints(self, pointNumber, Xmin, Xmax, Ymin, Ymax, minDistance = None):
+		XCoords = np.random.uniform(Xmin,Xmax,pointNumber).reshape(pointNumber, 1)
+		YCoords = np.random.uniform(Ymin,Ymax,pointNumber).reshape(pointNumber, 1)
+		points = np.hstack((XCoords,YCoords))
+		if minDistance is not None:
+			for i in range(0, pointNumber):
+				distance = cdist(points, points)
+				if i < distance.shape[0]:
+					index = np.where((distance[i,:] <= minDistance)  & (distance[i,:] > 0))
+					points = np.delete(points, index, 0)
+		return points
+		
 	# select settings tab
 	def settingsTab(self):
 		cfg.dlg.close()
@@ -1858,5 +1877,28 @@ class Utils:
 		for s in range(0, len(list)):
 			x.append(float(list[s]))
 		return x
+		
+	# raster contrast enhancement
+	def rasterContrastEnhancement(self, rasterLayer):
+		redBand = rasterLayer.renderer().redBand()
+		redEnhancement = self.bandContrastEnhancement(rasterLayer, redBand)
+		rasterLayer.renderer().setRedContrastEnhancement(redEnhancement)
+		greenBand = rasterLayer.renderer().greenBand()
+		greenEnhancement = self.bandContrastEnhancement(rasterLayer, greenBand)
+		rasterLayer.renderer().setGreenContrastEnhancement(greenEnhancement)
+		blueBand = rasterLayer.renderer().blueBand()
+		blueEnhancement = self.bandContrastEnhancement(rasterLayer, blueBand)
+		rasterLayer.renderer().setBlueContrastEnhancement(blueEnhancement)
+		
+	# band contrast enhancement
+	def bandContrastEnhancement(self, rasterLayer, band):
+		dataType = rasterLayer.renderer().dataType(band)
+		enhancement = QgsContrastEnhancement(dataType)
+		contrastEnhancement = QgsContrastEnhancement.StretchToMinimumMaximum
+		enhancement.setContrastEnhancementAlgorithm(contrastEnhancement, True)
+		min,max = rasterLayer.dataProvider().cumulativeCut(band, 0.02, 0.98)
+		enhancement.setMinimumValue(min)
+		enhancement.setMaximumValue(max)
+		return enhancement
 		
 """

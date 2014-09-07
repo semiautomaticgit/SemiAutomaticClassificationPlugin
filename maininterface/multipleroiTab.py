@@ -34,6 +34,7 @@
 
 import os
 import inspect
+import numpy as np
 # Import the PyQt and QGIS libraries
 from PyQt4.QtCore import *
 from PyQt4.QtCore import QCoreApplication
@@ -56,7 +57,92 @@ class MultipleROITab:
 		it = QTableWidgetItem(str(c + 1))
 		# logger
 		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "added point " + str(c + 1))
-			
+		
+	def addRandomPointToTable(self, point):
+		tW = cfg.ui.point_tableWidget
+		# add item to table
+		c = tW.rowCount()
+		# add list items to table
+		tW.setRowCount(c + 1)
+		it = QTableWidgetItem(str(c + 1))
+		X = QTableWidgetItem(str(point[0]))
+		Y = QTableWidgetItem(str(point[1]))
+		MID = QTableWidgetItem(str(cfg.ROIMacroID))
+		MInf = QTableWidgetItem(str(cfg.ROIMacroClassInfo))
+		CID = QTableWidgetItem(str(cfg.ROIID))
+		CInf = QTableWidgetItem(str(cfg.ROIInfo))
+		MinSize = QTableWidgetItem(str(cfg.minROISz))
+		MaxWidth = QTableWidgetItem(str(cfg.maxROIWdth))
+		RangRad = QTableWidgetItem(str(cfg.rngRad))
+		if cfg.uid.rapid_ROI_checkBox.isChecked() is True:
+			RBand = QTableWidgetItem(str(cfg.ROIband))
+		else:
+			RBand = QTableWidgetItem(str(""))
+		# add list items to table
+		tW.setRowCount(c + 1)
+		tW.setItem(c, 0, X)
+		tW.setItem(c, 1, Y)
+		tW.setItem(c, 2, MID)
+		tW.setItem(c, 3, MInf)
+		tW.setItem(c, 4, CID)
+		tW.setItem(c, 5, CInf)
+		tW.setItem(c, 6, MinSize)
+		tW.setItem(c, 7, MaxWidth)
+		tW.setItem(c, 8, RangRad)
+		tW.setItem(c, 9, RBand)
+		# logger
+		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "added point " + str(c + 1))
+				
+	def createRandomPoint(self):
+		if cfg.bndSetPresent == "Yes" and cfg.rstrNm == cfg.bndSetNm:
+			imageName = cfg.bndSet[0]
+		else:
+			if cfg.utls.selectLayerbyName(cfg.rstrNm) is None:
+				cfg.mx.msg4()
+				return "No"
+			else:
+				imageName = cfg.rstrNm	
+				# logger
+				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "No image selected")
+		img = cfg.utls.selectLayerbyName(imageName)
+		crs = cfg.utls.getCrs(img)
+		geographicFlag = crs.geographicFlag()
+		if geographicFlag is False:
+			cfg.uiUtls.addProgressBar()
+			tLX, tLY, lRX, lRY, pS = cfg.utls.imageInformationSize(imageName)
+			Xmin = int(round(min(tLX, lRX)))
+			Xmax = int(round(max(tLX, lRX)))
+			Ymin = int(round(min(tLY, lRY)))
+			Ymax = int(round(max(tLY, lRY)))
+			pointNumber = int(cfg.ui.point_number_spinBox.value())
+			cfg.uiUtls.updateBar(10)
+			minDistance = None
+			points = None
+			if cfg.ui.point_distance_checkBox.isChecked() is True:
+				minDistance = int(cfg.ui.point_distance_spinBox.value())
+			if cfg.ui.point_grid_checkBox.isChecked() is True:
+				gridSize = int(cfg.ui.point_grid_spinBox.value())
+				XRange = range(Xmin, Xmax, gridSize)
+				YRange = range(Ymin, Ymax, gridSize)
+				for x in XRange:
+					if XRange.index(x) < (len(XRange) - 1):
+						for y in YRange:
+							if YRange.index(y) < (len(YRange) - 1):
+								newpoints = cfg.utls.randomPoints(pointNumber, x, XRange[XRange.index(x)+1], y, YRange[YRange.index(y)+1], minDistance)
+								if points is None:
+									points = newpoints
+								else:
+									points = np.concatenate((points, newpoints), axis=0)
+			else:
+				points = cfg.utls.randomPoints(pointNumber, Xmin, Xmax, Ymin, Ymax, minDistance)
+			cfg.uiUtls.updateBar(50)
+			for i in range(0, points.shape[0]):
+				self.addRandomPointToTable(points[i])
+			cfg.uiUtls.updateBar(100)
+			cfg.uiUtls.removeProgressBar()
+		else:
+			cfg.mx.msgWar14()
+		
 	def createROIfromPoint(self):
 		tW = cfg.ui.point_tableWidget
 		c = tW.rowCount()
@@ -65,48 +151,52 @@ class MultipleROITab:
 			pP = cfg.lstPnt
 		except:
 			pass
+		cfg.uiUtls.addProgressBar()
 		for i in range(0, c):
-			try:
-				X = tW.item(i,0).text()
-				Y = tW.item(i,1).text()
-			except Exception, err:
-				# logger
-				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-				cfg.mx.msg6()
-			try:
-				p = QgsPoint(float(X), float(Y))
-				cfg.utls.checkPointImage(cfg.rstrNm, p)
-				if cfg.pntCheck == "Yes":
-					cfg.pntROI = cfg.lstPnt
-					# create ROI
-					if len(tW.item(i,6).text()) > 0:
-						v = int(tW.item(i,6).text())
-						cfg.minROISz = v
-					if len(tW.item(i,7).text()) > 0:
-						v = int(tW.item(i,7).text())
-						cfg.maxROIWdth = v
-					if len(tW.item(i,8).text()) > 0:
-						v = float(tW.item(i,8).text())
-						cfg.rngRad = v
-					if len(tW.item(i,9).text()) > 0:
-						v = int(tW.item(i,9).text())
-						cfg.ROIband = v
-						cfg.rpdROICheck = "Yes"
-					cfg.ROId.createROI(cfg.pntROI)
-					# save ROI
-					v = int(tW.item(i, 2).text())
-					cfg.ROIMacroID = v
-					cfg.ROIMacroClassInfo = tW.item(i, 3).text()
-					v = int(tW.item(i, 4).text())
-					cfg.ROIID = v
-					cfg.ROIInfo = tW.item(i, 5).text()
-					cfg.ROId.saveROItoShapefile()
-					# disable undo save ROI
-					cfg.uid.undo_save_Button.setEnabled(False)
-			except Exception, err:
-				# logger
-				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-				cfg.mx.msgErr20()
+			qApp.processEvents()
+			if cfg.actionCheck != "No":
+				cfg.uiUtls.updateBar((i+1) * 100 / (c + 1))
+				try:
+					X = tW.item(i,0).text()
+					Y = tW.item(i,1).text()
+				except Exception, err:
+					# logger
+					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					cfg.mx.msg6()
+				try:
+					p = QgsPoint(float(X), float(Y))
+					cfg.utls.checkPointImage(cfg.rstrNm, p)
+					if cfg.pntCheck == "Yes":
+						cfg.pntROI = cfg.lstPnt
+						# create ROI
+						if len(tW.item(i,6).text()) > 0:
+							v = int(tW.item(i,6).text())
+							cfg.minROISz = v
+						if len(tW.item(i,7).text()) > 0:
+							v = int(tW.item(i,7).text())
+							cfg.maxROIWdth = v
+						if len(tW.item(i,8).text()) > 0:
+							v = float(tW.item(i,8).text())
+							cfg.rngRad = v
+						if len(tW.item(i,9).text()) > 0:
+							v = int(tW.item(i,9).text())
+							cfg.ROIband = v
+							cfg.rpdROICheck = "Yes"
+						cfg.ROId.createROI(cfg.pntROI, "No")
+						# save ROI
+						v = int(tW.item(i, 2).text())
+						cfg.ROIMacroID = v
+						cfg.ROIMacroClassInfo = tW.item(i, 3).text()
+						v = int(tW.item(i, 4).text())
+						cfg.ROIID = v
+						cfg.ROIInfo = tW.item(i, 5).text()
+						cfg.ROId.saveROItoShapefile("No")
+						# disable undo save ROI
+						cfg.uid.undo_save_Button.setEnabled(False)
+				except Exception, err:
+					# logger
+					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					cfg.mx.msgErr20()
 			# restore settings for single ROI 
 			cfg.ROId.setROIMacroID()
 			cfg.ROId.roiMacroclassInfo()
@@ -117,7 +207,8 @@ class MultipleROITab:
 			cfg.ROId.rangeRadius()
 			cfg.ROId.rapidROIband()
 			cfg.ROId.rapidROICheckbox()
-		# restore previous point for single ROI
+		cfg.uiUtls.removeProgressBar()
+			# restore previous point for single ROI
 		try:
 			cfg.lstPnt = pP
 		except:

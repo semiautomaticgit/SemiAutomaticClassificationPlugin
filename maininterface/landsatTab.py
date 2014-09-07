@@ -732,6 +732,8 @@ class LandsatTab:
 						vrtRaster.renderer().setRedBand(3)
 						vrtRaster.renderer().setGreenBand(2)
 						vrtRaster.renderer().setBlueBand(1)
+						vrtRaster.setContrastEnhancement(QgsContrastEnhancement.StretchToMinimumMaximum, QgsRaster.ContrastEnhancementCumulativeCut)
+						vrtRaster.triggerRepaint()
 					else:
 						cfg.mx.msgWar13()
 						# logger

@@ -229,7 +229,10 @@ class Messages:
 		self.msgBarWarning(QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [11]", QApplication.translate("semiautomaticclassificationplugin", "RAM value was too high. Value has been decreased automatically"))
 		
 	def msgWar12(self, Macro_ID, Class_ID):
-		self.msgBarWarning(QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [10]", QApplication.translate("semiautomaticclassificationplugin", "The following signature will be excluded if using Maximum Likelihood (singular covariance matrix). Macro: " + str(Macro_ID) + " ID: " + str(Class_ID)))
+		self.msgBarWarning(QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [12]", QApplication.translate("semiautomaticclassificationplugin", "The following signature will be excluded if using Maximum Likelihood (singular covariance matrix). Macro: " + str(Macro_ID) + " ID: " + str(Class_ID)))
 		
 	def msgWar13(self):
-		self.msgBarWarning(QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [7]", QApplication.translate("semiautomaticclassificationplugin", "Unable to load the virtual raster. Please create it manually"))
+		self.msgBarWarning(QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [13]", QApplication.translate("semiautomaticclassificationplugin", "Unable to load the virtual raster. Please create it manually"))
+		
+	def msgWar14(self):
+		self.msgBarWarning(QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [14]", QApplication.translate("semiautomaticclassificationplugin", "Unable to proceed. The raster must be in projected coordinates"))
