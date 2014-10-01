@@ -189,7 +189,7 @@ class Messages:
 		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [25]", QApplication.translate("semiautomaticclassificationplugin", "Error reading raster. Possibly the raster path contains unicode characters"))
 			
 	def msgErr26(self):
-		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [26]", QApplication.translate("semiautomaticclassificationplugin", "The version of Numpy is outdated. Please install QGIS using OSGEO4W for an updated version of Numpy"))
+		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [26]", QApplication.translate("semiautomaticclassificationplugin", "The version of Numpy is outdated. Please install QGIS using OSGEO4W for an updated version of Numpy or visit http://fromgistors.blogspot.com/p/frequently-asked-questions.html#numpy_version"))
 
 	def msgErr27(self):
 		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [27]", QApplication.translate("semiautomaticclassificationplugin", "Unable to perform operation. Possibly OGR is missinig drivers. Please repeat QGIS installation."))
@@ -199,13 +199,16 @@ class Messages:
 					
 	def msgErr29(self):
 		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [29]", QApplication.translate("semiautomaticclassificationplugin", "Edge error. Reduce the ROI width or draw a ROI manually (recommended installation of GDAL >= 1.10)"))
+		
+	def msgErr30(self):
+		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [14]", QApplication.translate("semiautomaticclassificationplugin", "Unable to proceed. Rename the Landsat bands with a file name ending with the band number (e.g. rename B20 to B2)"))
 					
 	""" Warnings """
 	def msgWar2Windows(self):
-		self.msgBoxWarning(QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [2]", QApplication.translate("semiautomaticclassificationplugin", "It appears that SciPy is not correctly installed. Please, see this page for information about SciPy installation ") + " http://semiautomaticclassificationmanual.readthedocs.org/en/latest/installation_win64.html#scipy-installation")
+		self.msgBoxWarning(QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [2]", QApplication.translate("semiautomaticclassificationplugin", "It appears that SciPy is not correctly installed. Please, see this page for information about SciPy installation ") + " http://semiautomaticclassificationmanual-v3.readthedocs.org/en/latest/installation_win64.html")
 		
 	def msgWar2Linux(self):
-		self.msgBoxWarning(QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [2]", QApplication.translate("semiautomaticclassificationplugin", "It appears that SciPy is not correctly installed. Please, see this page for information about SciPy installation ") + " http://semiautomaticclassificationmanual.readthedocs.org/en/latest/installation_ubuntu.html#qgis-download-and-installation")
+		self.msgBoxWarning(QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [2]", QApplication.translate("semiautomaticclassificationplugin", "It appears that SciPy is not correctly installed. Please, see this page for information about SciPy installation ") + " http://semiautomaticclassificationmanual-v3.readthedocs.org/en/latest/installation_ubuntu.html#qgis-download-and-installation")
 		
 	def msgWar5(self):
 		self.msgBarWarning(QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [5]", QApplication.translate("semiautomaticclassificationplugin", "rasters have different pixel sizes that can lead to incorrect results. Please, consider to resample rasters to the same pixel size"))
@@ -236,3 +239,4 @@ class Messages:
 		
 	def msgWar14(self):
 		self.msgBarWarning(QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [14]", QApplication.translate("semiautomaticclassificationplugin", "Unable to proceed. The raster must be in projected coordinates"))
+		

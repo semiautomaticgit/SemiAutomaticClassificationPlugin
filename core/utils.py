@@ -1477,6 +1477,29 @@ class Utils:
 		# logger
 		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "")
 		
+### Create group
+	def createGroup(self, groupName):
+		g = cfg.lgnd.addGroup(groupName, False)
+		self.moveGroup(groupName)
+		# logger
+		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "group: " + str(groupName))
+		return g		
+	
+### Move group to top layers
+	def moveGroup(self, groupName):
+		try:
+			p = QgsProject.instance()
+			root = p.layerTreeRoot()
+			g = root.findGroup(groupName)
+			cG = g.clone()
+			root.insertChildNode(0, cG)
+			root.removeChildNode(g)
+			# logger
+			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "group: " + str(groupName))
+		except Exception, err:
+			# logger
+			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), " ERROR exception: " + str(err))
+		
 ### Select layer by name thereof
 	def selectLayerbyName(self, layerName):
 	 	ls = cfg.lgnd.layers()

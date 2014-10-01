@@ -147,7 +147,7 @@ class RoiDock:
 				cfg.lstROI = mL
 				g = cfg.utls.groupIndex(cfg.grpNm)
 				if g is None:
-					g = cfg.lgnd.addGroup(cfg.grpNm, False) 
+					g = cfg.utls.createGroup(cfg.grpNm)
 					cfg.lgnd.moveLayer (cfg.lstROI, g)
 				else:
 					cfg.lgnd.moveLayer (cfg.lstROI, g)
@@ -485,7 +485,7 @@ class RoiDock:
 				cfg.lstROI = tSS
 				g = cfg.utls.groupIndex(cfg.grpNm)
 				if g is None:
-					g = cfg.lgnd.addGroup(cfg.grpNm, False) 
+					g = cfg.utls.createGroup(cfg.grpNm)
 					cfg.lgnd.moveLayer (cfg.lstROI, g)
 				else:
 					cfg.lgnd.moveLayer (cfg.lstROI, g)

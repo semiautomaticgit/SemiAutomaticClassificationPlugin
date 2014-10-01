@@ -161,7 +161,7 @@ class ClassificationDock:
 						# move to group
 						g = cfg.utls.groupIndex(cfg.grpNm)
 						if g is None:
-							g = cfg.lgnd.addGroup(cfg.grpNm, False) 
+							g = cfg.utls.createGroup(cfg.grpNm)
 							cfg.lgnd.moveLayer (r, g)
 						else:
 							cfg.lgnd.moveLayer (r, g)

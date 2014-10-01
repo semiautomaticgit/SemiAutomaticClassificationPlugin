@@ -118,6 +118,15 @@ class LandsatTab:
 						dNBsN["BANDNAME{0}".format(nm[len(nm) - 1])] =  pre + str(f)
 				if f.lower().endswith(".txt") and "mtl" in f.lower():
 						MTLFile = inp + "/" + str(f)
+				# for compatibility with glcf images
+				if f.lower().endswith(".met"):
+						MTLFile = inp + "/" + str(f)
+						
+			# check band name
+			if "BAND20" in dBs or "BAND30" in dBs or "BAND40" in dBs or "BAND50" in dBs or "BAND60" in dBs :
+				cfg.mx.msgErr30()
+				cfg.uiUtls.removeProgressBar()
+				return "No"
 			# logger
 			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "Bands found: " + str(dBs))
 			if len(dNBsN) == 0:
@@ -135,6 +144,7 @@ class LandsatTab:
 			# radiance and reflectance maximum band
 			dRadMxB = {}
 			dRefMxB = {}
+			dRad = {}
 			sat = "No"
 			# open MTL file
 			try:
@@ -184,6 +194,20 @@ class LandsatTab:
 					if "RADIANCE_MAXIMUM_BAND_" + str(x) in r.split():
 						rV = r.split()[2]
 						dRadMxB["RADIANCE_MAXIMUM_BAND{0}".format(x)] = float(rV)
+					# for compatibility with glcf images
+					if "LMAX_BAND" + str(x) in r.split():
+						rV = r.split()[2]
+						dRad["LMAX_BAND{0}".format(x)] = float(rV)
+					if "LMIN_BAND" + str(x) in r.split():
+						rV = r.split()[2]
+						dRad["LMIN_BAND{0}".format(x)] = float(rV)
+					if "QCALMAX_BAND" + str(x) in r.split():
+						rV = r.split()[2]
+						dRad["QCALMAX_BAND{0}".format(x)] = float(rV)
+					if "QCALMIN_BAND" + str(x) in r.split():
+						rV = r.split()[2]
+						dRad["QCALMIN_BAND{0}".format(x)] = float(rV)
+						
 					if "REFLECTANCE_MAXIMUM_BAND_" + str(x) in r.split():
 						rV = r.split()[2]
 						dRefMxB["REFLECTANCE_MAXIMUM_BAND{0}".format(x)] = float(rV)
@@ -203,6 +227,15 @@ class LandsatTab:
 			except Exception, err:
 				# logger
 				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			# for compatibility with glcf images
+			if dRad:
+				for imT in range(1, 12):
+					try:
+						dRadMB["RADIANCE_MULT_BAND{0}".format(imT)] = (dRad["LMAX_BAND" + str(imT)] - dRad["LMIN_BAND" + str(imT)]) / (dRad["QCALMAX_BAND" + str(imT)] - dRad["QCALMIN_BAND" + str(imT)])
+						dRadAB["RADIANCE_ADD_BAND{0}".format(imT)] = dRad["LMIN_BAND" + str(imT)] - dRad["QCALMIN_BAND" + str(imT)] * (dRad["LMAX_BAND" + str(imT)] - dRad["LMIN_BAND" + str(imT)]) / (dRad["QCALMAX_BAND" + str(imT)] - dRad["QCALMIN_BAND" + str(imT)])
+					except Exception, err:
+						# logger
+						if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			# DOS atmospheric correction
 			DOS = "No"
 			if cfg.ui.DOS1_checkBox.isChecked() is True:
