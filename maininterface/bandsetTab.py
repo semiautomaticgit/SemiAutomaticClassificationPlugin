@@ -318,10 +318,10 @@ class BandsetTab:
 					o.write(f)
 					o.close()
 					# logger
-					if cfg.logSetVal == "Yes": cfg.logToFile(str(inspect.stack()[0][3])+ " " + cfg.lineOfCode(), " band set exported")
+					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " band set exported")
 			except Exception, err:
 				# logger
-				if cfg.logSetVal == "Yes": cfg.logToFile(str(inspect.stack()[0][3])+ " " + cfg.lineOfCode(), " ERROR exception: " + str(err))
+				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 		
 	# import band set from file
 	def importBandSet(self):
@@ -367,10 +367,10 @@ class BandsetTab:
 				self.readBandSet(bandset)
 				cfg.BandTabEdited = "Yes"
 				# logger
-				if cfg.logSetVal == "Yes": cfg.logToFile(str(inspect.stack()[0][3])+ " " + cfg.lineOfCode(), " band set imported")		
+				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " band set imported")		
 			except Exception, err:
 				# logger
-				if cfg.logSetVal == "Yes": cfg.logToFile(str(inspect.stack()[0][3])+ " " + cfg.lineOfCode(), " ERROR exception: " + str(err))
+				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				cfg.mx.msgErr5()
 			
 	# move down selected band
