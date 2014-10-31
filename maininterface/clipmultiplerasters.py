@@ -130,16 +130,23 @@ class ClipMultipleRasters:
 						sP.wait()
 					# using shapefile
 					elif uS == 1:
-						sP = subprocess.Popen("gdalwarp -dstnodata " + str(noDt) + " -cutline \"" + s + "\" -crop_to_cutline -of GTiff " + cL + " \"" + str(oD) + "/" + cfg.clipNm + "_" + os.path.basename(str(l)) + "\"", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-						sP.wait()
-						# get error
-						out, err = sP.communicate()
-						sP.stdout.close()
-						if len(err) > 0:
-							cfg.mx.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error"), err)
-							st = "Yes"
+						try:
+							sP = subprocess.Popen("gdalwarp -dstnodata " + str(noDt) + " -cutline \"" + s + "\" -crop_to_cutline -of GTiff " + cL + " \"" + str(oD) + "/" + cfg.clipNm + "_" + os.path.basename(str(l)) + "\"", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+							sP.wait()
+							# get error
+							out, err = sP.communicate()
+							sP.stdout.close()
+							if len(err) > 0:
+								cfg.mx.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error"), err)
+								st = "Yes"
+								# logger
+								if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " GDAL error:: " + str(err) )
+						# in case of errors
+						except Exception, err:
 							# logger
-							if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " GDAL error:: " + str(err) )
+							if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+							sP = subprocess.Popen("gdalwarp -dstnodata " + str(noDt) + " -cutline \"" + s + "\" -crop_to_cutline -of GTiff " + cL + " \"" + str(oD) + "/" + cfg.clipNm + "_" + os.path.basename(str(l)) + "\"", shell=True)
+							sP.wait()	
 					else:
 						return "No"
 					try:
