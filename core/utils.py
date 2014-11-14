@@ -78,7 +78,7 @@ class Utils:
 		if cfg.bndSetPresent == "Yes" and cfg.rstrNm == cfg.bndSetNm:
 			b = len(cfg.bndSet)
 		else:
-			i = cfg.utls.selectLayerbyName(cfg.rstrNm)
+			i = cfg.utls.selectLayerbyName(cfg.rstrNm, "Yes")
 			b = i.bandCount()
 		fds = []
 		# add field for each image band
@@ -150,7 +150,7 @@ class Utils:
 		if cfg.bndSetPresent == "Yes" and imageName == cfg.bndSetNm:
 			imageName = cfg.bndSet[0]
 			# image CRS
-			bN0 = self.selectLayerbyName(imageName)
+			bN0 = self.selectLayerbyName(imageName, "Yes")
 			iCrs = self.getCrs(bN0)
 			if iCrs is None:
 				iCrs = cfg.cnvs.mapRenderer().destinationCrs()
@@ -176,7 +176,7 @@ class Utils:
 			cfg.lstPnt = QgsPoint(point.x() / float(1), point.y() / float(1))
 			pX = point.x()
 			pY = point.y()
-			i = self.selectLayerbyName(imageName)
+			i = self.selectLayerbyName(imageName, "Yes")
 			if i is not None:
 				# Point Check	
 				cfg.pntCheck = None
@@ -193,14 +193,14 @@ class Utils:
 				cfg.mx.msg4()
 				cfg.pntCheck = "No"
 		else:
-			if self.selectLayerbyName(imageName) is None:
+			if self.selectLayerbyName(imageName, "Yes") is None:
 				cfg.mx.msg4()
 				#cfg.ipt.refreshRasterLayer()
 				self.pntROI = None
 				cfg.pntCheck = "No"
 			else:
 				# image CRS
-				bN0 = self.selectLayerbyName(imageName)
+				bN0 = self.selectLayerbyName(imageName, "Yes")
 				iCrs = self.getCrs(bN0)
 				if iCrs is None:
 					iCrs = None
@@ -225,7 +225,7 @@ class Utils:
 				cfg.lstPnt = QgsPoint(point.x() / float(1), point.y() / float(1))
 				pX = point.x()
 				pY = point.y()
-				i = self.selectLayerbyName(imageName)
+				i = self.selectLayerbyName(imageName, "Yes")
 				# Point Check	
 				cfg.pntCheck = None
 				if pX > i.extent().xMaximum() or pX < i.extent().xMinimum() or pY > i.extent().yMaximum() or pY < i.extent().yMinimum() :
@@ -444,13 +444,17 @@ class Utils:
 		gdal.AllRegister()
 		# open input with GDAL
 		rD = gdal.Open(inputRaster, GA_ReadOnly)
-		iRB = rD.GetRasterBand(band)
-		bSt = iRB.GetStatistics(True, True)
-		a =  iRB.ReadAsArray()
-		# close band
-		iRB = None
-		# close raster
-		rD = None
+		if rD is None:
+			bSt = None
+			a = None
+		else:
+			iRB = rD.GetRasterBand(band)
+			bSt = iRB.GetStatistics(True, True)
+			a =  iRB.ReadAsArray()
+			# close band
+			iRB = None
+			# close raster
+			rD = None
 		# logger
 		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "get band: " + str(band))
 		return bSt, a
@@ -555,15 +559,29 @@ class Utils:
 			out, err = sP.communicate()
 			sP.stdout.close()
 			if len(err) > 0:
-				st = "Yes"
 				# logger
 				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " GDAL error:: " + str(err) )
 		# in case of errors
-		except Exception, err:
+		except Exception, err:	
 			# logger
 			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), " ERROR exception: " + str(err))
 			sP = subprocess.Popen("gdalwarp -ot Float64 -dstnodata " + str(cfg.NoDataVal) + " -cutline \"" + unicode(shapefile) + "\" -crop_to_cutline -of GTiff " + unicode(raster) + " " + str(tR) , shell=True)
 			sP.wait()
+		if os.path.isfile(tR) is False:
+		# if shapefile is too small try to convert to raster then to polygon
+			tRNxs = cfg.copyTmpROI + dT + "xs.tif"
+			tRxs = str(cfg.tmpDir + "//" + tRNxs)
+			tSHPxs = cfg.copyTmpROI + dT + "xs.shp"
+			tSxs = str(cfg.tmpDir + "//" + tSHPxs)
+			self.vectorToRaster(cfg.emptyFN, unicode(shapefile), cfg.emptyFN, tRxs, unicode(raster), "Yes")
+			self.rasterToVector(tRxs, tSxs)
+			try:
+				sP = subprocess.Popen("gdalwarp -ot Float64 -dstnodata " + str(cfg.NoDataVal) + " -cutline \"" + tSxs + "\" -crop_to_cutline -of GTiff " + unicode(raster) + " " + str(tR) , shell=True)
+				sP.wait()
+			# in case of errors
+			except Exception, err:
+				# logger
+				if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), " ERROR exception: " + str(err))
 		# logger
 		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "sP " + str(sP) + "shapefile " + str(shapefile) + "raster " + str(raster) + "tR " + str(tR))
 		return tR
@@ -581,7 +599,7 @@ class Utils:
 		sR = osr.SpatialReference()
 		sR.ImportFromWkt(crsWkt)
 		rL = dS.CreateLayer('NewLayer', sR, ogr.wkbPolygon)
-		fN = "DN"
+		fN = cfg.emptyFN
 		fd = ogr.FieldDefn(fN, ogr.OFTInteger)
 		rL.CreateField(fd)
 		rL = None
@@ -591,7 +609,7 @@ class Utils:
 	def createEmptyShapefileQGIS(self, crs, outputVector):
 		fields = QgsFields()
 		# add field
-		fN = "DN"
+		fN = cfg.emptyFN
 		fields.append(QgsField(fN, QVariant.Int))	
 		QgsVectorFileWriter(outputVector.encode(cfg.fSEnc), "CP1250", fields, QGis.WKBPolygon, crs, "ESRI Shapefile")
 		
@@ -611,7 +629,7 @@ class Utils:
 ### Raster top left origin and pixel size
 	def imageInformation(self, imageName):
 		try:
-			i = self.selectLayerbyName(imageName)
+			i = self.selectLayerbyName(imageName, "Yes")
 			# TopLeft X coord
 			tLX = i.extent().xMinimum()
 			# TopLeft Y coord
@@ -630,7 +648,7 @@ class Utils:
 ### Raster size
 	def imageInformationSize(self, imageName):
 		try:
-			i = self.selectLayerbyName(imageName)
+			i = self.selectLayerbyName(imageName, "Yes")
 			# TopLeft X coord
 			tLX = i.extent().xMinimum()
 			# TopLeft Y coord
@@ -775,7 +793,7 @@ class Utils:
 ### Split raster into single bands, and return a list of images
 	def rasterToBands(self, raster, outputFolder):
 		dT = self.getTime()
-		i = self.selectLayerbyName(raster)
+		i = self.selectLayerbyName(raster, "Yes")
 		iBC = i.bandCount()
 		iL = ""
 		for x in range(1, iBC+1):
@@ -1501,18 +1519,22 @@ class Utils:
 			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), " ERROR exception: " + str(err))
 		
 ### Select layer by name thereof
-	def selectLayerbyName(self, layerName):
+	def selectLayerbyName(self, layerName, filterRaster=None):
 	 	ls = cfg.lgnd.layers()
 		for l in ls:
 			lN = l.name()
 			if lN == layerName:
-				return l
+				if filterRaster is None:
+					return l
+				else:
+					if l.type() == 1:
+						return l
 		# logger
 		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "layer selected: " + str(layerName))
 			
 ### Subset an image, given an origin point and a subset width
 	def subsetImage(self, imageName, XCoord, YCoord, Width, Height, output):
-		i = self.selectLayerbyName(imageName)
+		i = self.selectLayerbyName(imageName, "Yes")
 		# output variable
 		st = "No"
 		# raster top left origin and pixel size
@@ -1545,62 +1567,74 @@ class Utils:
 			return st
 			
 ### convert reference layer to raster based on the resolution of a raster
-	def vectorToRaster(self, fieldName, layerPath, referenceRasterName, outputRaster):
-		# band set
-		if cfg.bndSetPresent == "Yes" and referenceRasterName == cfg.bndSetNm:
-			referenceRasterName = cfg.bndSet[0]
-			# input
-			r = self.selectLayerbyName(referenceRasterName)
-		else:
-			if self.selectLayerbyName(referenceRasterName) is None:
-				cfg.mx.msg4()
-				cfg.ipt.refreshRasterLayer()
-			else:
-				# input
-				r = self.selectLayerbyName(referenceRasterName)
+	def vectorToRaster(self, fieldName, layerPath, referenceRasterName, outputRaster, referenceRasterPath=None, ALL_TOUCHED=None):
 		# register drivers
 		gdal.AllRegister()
+		if referenceRasterPath is None:
+			# band set
+			if cfg.bndSetPresent == "Yes" and referenceRasterName == cfg.bndSetNm:
+				referenceRasterName = cfg.bndSet[0]
+				# input
+				r = self.selectLayerbyName(referenceRasterName, "Yes")
+			else:
+				if self.selectLayerbyName(referenceRasterName, "Yes") is None:
+					cfg.mx.msg4()
+					cfg.ipt.refreshRasterLayer()
+				else:
+					# input
+					r = self.selectLayerbyName(referenceRasterName, "Yes")
+			try:
+				rS = r.source().encode(cfg.fSEnc)
+				ck = "Yes"
+			except Exception, err:
+				# logger
+				if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), " ERROR exception: " + str(err))
+				ck = "No"
+				cfg.mx.msg4()
+				return ck
+		else:
+			rS = referenceRasterPath
 		try:
-			rS = r.source().encode(cfg.fSEnc)
-			ck = "Yes"
+			# open input with GDAL
+			rD = gdal.Open(rS, GA_ReadOnly)
+		# in case of errors
 		except Exception, err:
 			# logger
 			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), " ERROR exception: " + str(err))
-			ck = "No"
-		if ck == "No":
 			cfg.mx.msg4()
-		else:
-			# open input with GDAL
-			rD = gdal.Open(rS, GA_ReadOnly)
-			# number of x pixels
-			rC = rD.RasterXSize
-			# number of y pixels
-			rR = rD.RasterYSize
-			# check projections
-			rP = rD.GetProjection()
-			# pixel size and origin
-			rGT = rD.GetGeoTransform()
-			tD = gdal.GetDriverByName( "GTiff" )
-			oR = tD.Create(outputRaster, rC, rR, 1, GDT_Int32)
-			oRB = oR.GetRasterBand(1)
-			# set raster projection from reference
-			oR.SetGeoTransform( [ rGT[0] , rGT[1] , 0 , rGT[3] , 0 , rGT[5] ] )
-			oR.SetProjection(rP)
-			oRB.SetNoDataValue(cfg.NoDataVal)
-			m = np.zeros((rR, rC), dtype='int32')
-			m.fill(cfg.NoDataVal)
-			oRB.WriteArray(m, 0, 0)
-			oRB.FlushCache()
-			l = ogr.Open(layerPath)
-			gL = l.GetLayer()
-			# convert reference layer to raster
+			return "No"
+		# number of x pixels
+		rC = rD.RasterXSize
+		# number of y pixels
+		rR = rD.RasterYSize
+		# check projections
+		rP = rD.GetProjection()
+		# pixel size and origin
+		rGT = rD.GetGeoTransform()
+		tD = gdal.GetDriverByName( "GTiff" )
+		oR = tD.Create(outputRaster, rC, rR, 1, GDT_Int32)
+		oRB = oR.GetRasterBand(1)
+		# set raster projection from reference
+		oR.SetGeoTransform( [ rGT[0] , rGT[1] , 0 , rGT[3] , 0 , rGT[5] ] )
+		oR.SetProjection(rP)
+		oRB.SetNoDataValue(cfg.NoDataVal)
+		m = np.zeros((rR, rC), dtype='int32')
+		m.fill(cfg.NoDataVal)
+		oRB.WriteArray(m, 0, 0)
+		oRB.FlushCache()
+		l = ogr.Open(layerPath)
+		gL = l.GetLayer()
+		# convert reference layer to raster
+		if ALL_TOUCHED is None:
 			oC = gdal.RasterizeLayer(oR, [1], gL, options = ["ATTRIBUTE=" + str(fieldName)])
-			# close bands
-			oRB = None
-			# close rasters
-			oR = None
-			# logger
-			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "vector to raster check: " + str(oC))
+		else:
+			oC = gdal.RasterizeLayer(oR, [1], gL, options = ["ATTRIBUTE=" + str(fieldName), "ALL_TOUCHED=TRUE"])
+		# close bands
+		oRB = None
+		# close rasters
+		oR = None
+		# logger
+		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "vector to raster check: " + str(oC))
 			
 	# convert raster to shapefile
 	def rasterToVector(self, rasterPath, outputShapefilePath):

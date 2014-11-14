@@ -97,14 +97,14 @@ class MultipleROITab:
 		if cfg.bndSetPresent == "Yes" and cfg.rstrNm == cfg.bndSetNm:
 			imageName = cfg.bndSet[0]
 		else:
-			if cfg.utls.selectLayerbyName(cfg.rstrNm) is None:
+			if cfg.utls.selectLayerbyName(cfg.rstrNm, "Yes") is None:
 				cfg.mx.msg4()
 				return "No"
 			else:
 				imageName = cfg.rstrNm	
 				# logger
 				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "No image selected")
-		img = cfg.utls.selectLayerbyName(imageName)
+		img = cfg.utls.selectLayerbyName(imageName, "Yes")
 		crs = cfg.utls.getCrs(img)
 		geographicFlag = crs.geographicFlag()
 		if geographicFlag is False:

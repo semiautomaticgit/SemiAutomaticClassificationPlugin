@@ -94,7 +94,7 @@ class RoiDock:
 			# band set
 			if cfg.bndSetPresent == "Yes" and cfg.rstrNm == cfg.bndSetNm:
 				# crs of loaded raster
-				bN = cfg.utls.selectLayerbyName(cfg.bndSet[0])
+				bN = cfg.utls.selectLayerbyName(cfg.bndSet[0], "Yes")
 				crs = cfg.utls.getCrs(bN)
 				ck = "Yes"
 			else:
@@ -216,7 +216,9 @@ class RoiDock:
 
 	# set ROI class info
 	def roiClassInfo(self):
-		cfg.ROIInfo = str(cfg.uid.ROI_Class_line.text())
+		iTxt = str(cfg.uid.ROI_Class_line.text().encode('ascii','replace'))
+		cfg.ROIInfo = str(iTxt)
+		cfg.uid.ROI_Class_line.setText(cfg.ROIInfo)
 		cfg.utls.writeProjectVariable("ROIInfoField", str(cfg.ROIInfo))
 		self.roiInfoCompleter()
 		# logger
@@ -232,7 +234,9 @@ class RoiDock:
 			
 	# set ROI class info
 	def roiMacroclassInfo(self):
-		cfg.ROIMacroClassInfo = str(cfg.uid.ROI_Macroclass_line.text())
+		iTxt = str(cfg.uid.ROI_Macroclass_line.text().encode('ascii','replace'))
+		cfg.ROIMacroClassInfo = str(iTxt)
+		cfg.uid.ROI_Macroclass_line.setText(cfg.ROIMacroClassInfo)
 		cfg.utls.writeProjectVariable("ROIMacroclassInfoField", str(cfg.ROIMacroClassInfo))
 		self.roiMacroclassInfoCompleter()
 		# logger
@@ -284,7 +288,7 @@ class RoiDock:
 					if cfg.bndSetPresent == "Yes" and cfg.rstrNm == cfg.bndSetNm:
 						iB = len(cfg.bndSet)
 						# crs of loaded raster
-						b = cfg.utls.selectLayerbyName(cfg.bndSet[0])
+						b = cfg.utls.selectLayerbyName(cfg.bndSet[0], "Yes")
 						crs = cfg.utls.getCrs(b)
 					else:
 						# crs of loaded raster
@@ -333,7 +337,7 @@ class RoiDock:
 			else:
 				cfg.mx.msgWar2Linux()
 			cfg.pntROI = None
-		elif cfg.utls.selectLayerbyName(cfg.rstrNm) is None:
+		elif cfg.utls.selectLayerbyName(cfg.rstrNm, "Yes") is None:
 			# if band set then pass
 			if cfg.rstrNm == cfg.bndSetNm:
 				pass
@@ -931,8 +935,8 @@ class RoiDock:
 				except:
 					tW.setItem(row, column, QTableWidgetItem(str(cfg.ROI_MC_ID[id])))
 			elif column == 1:
-				cfg.ROI_MC_Info[id] = str(v)
-				v = str(v)
+				cfg.ROI_MC_Info[id] = str(v.encode('ascii','replace'))
+				v = str(v.encode('ascii','replace'))
 				f = cfg.fldROIMC_info
 			elif column == 2:
 				try:
@@ -942,8 +946,8 @@ class RoiDock:
 				except:
 					tW.setItem(row, column, QTableWidgetItem(str(cfg.ROI_C_ID[id])))
 			elif column == 3:
-				cfg.ROI_C_Info[id] = str(v)
-				v = str(v)
+				cfg.ROI_C_Info[id] = str(v.encode('ascii','replace'))
+				v = str(v.encode('ascii','replace'))
 				f = cfg.fldROI_info
 			if f is not None:
 				cfg.utls.editFeatureShapefile(l, id, str(f), v)
@@ -1001,16 +1005,24 @@ class RoiDock:
 					if pr == "Yes":
 						# logger
 						if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " Error edge")
+						# enable map canvas render
+						cfg.cnvs.setRenderFlag(True)
 						return pr
 					bX = cfg.utls.clipRasterByShapefile(tLP, tS)
 					rStat, ar = cfg.utls.getRasterBandStatistics(bX, 1)
-					rStatStr = str(rStat)
-					rStatStr = rStatStr.replace("nan", "0")
-					rStat = eval(rStatStr)
-					ROIArray.append(ar)
-					cfg.bndSetLst = cfg.bndSetLst + str(tS) + ";"
-					cfg.tblOut["BAND_{0}".format(b+1)] = rStat
-					cfg.tblOut["WAVELENGTH_{0}".format(b + 1)] = cfg.bndSetWvLn["WAVELENGTH_{0}".format(b + 1)]
+					if rStat is None:
+						cfg.mx.msgErr31()
+						# enable map canvas render
+						cfg.cnvs.setRenderFlag(True)
+						return "No"
+					else:
+						rStatStr = str(rStat)
+						rStatStr = rStatStr.replace("nan", "0")
+						rStat = eval(rStatStr)
+						ROIArray.append(ar)
+						cfg.bndSetLst = cfg.bndSetLst + str(tS) + ";"
+						cfg.tblOut["BAND_{0}".format(b+1)] = rStat
+						cfg.tblOut["WAVELENGTH_{0}".format(b + 1)] = cfg.bndSetWvLn["WAVELENGTH_{0}".format(b + 1)]
 				cfg.bndSetLst = cfg.bndSetLst.rstrip(';')
 			else:
 				# subset 
@@ -1020,18 +1032,26 @@ class RoiDock:
 				if pr == "Yes":
 					# logger
 					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " Error edge")
+					# enable map canvas render
+					cfg.cnvs.setRenderFlag(True)
 					return pr
 				bX = cfg.utls.clipRasterByShapefile(tLP, tS)
-				rL = cfg.utls.selectLayerbyName(rasterName)
+				rL = cfg.utls.selectLayerbyName(rasterName, "Yes")
 				bCount = rL.bandCount()	
 				for b in range(1, bCount + 1):
 					rStat, ar = cfg.utls.getRasterBandStatistics(bX, b)
-					rStatStr = str(rStat)
-					rStatStr = rStatStr.replace("nan", "0")
-					rStat = eval(rStatStr)
-					ROIArray.append(ar)
-					cfg.tblOut["BAND_{0}".format(b)] = rStat
-					cfg.tblOut["WAVELENGTH_{0}".format(b)] = cfg.bndSetWvLn["WAVELENGTH_{0}".format(b)] 
+					if rStat is None:
+						cfg.mx.msgErr31()
+						# enable map canvas render
+						cfg.cnvs.setRenderFlag(True)
+						return "No"
+					else:
+						rStatStr = str(rStat)
+						rStatStr = rStatStr.replace("nan", "0")
+						rStat = eval(rStatStr)
+						ROIArray.append(ar)
+						cfg.tblOut["BAND_{0}".format(b)] = rStat
+						cfg.tblOut["WAVELENGTH_{0}".format(b)] = cfg.bndSetWvLn["WAVELENGTH_{0}".format(b)] 
 			if progress is not None:
 				cfg.uiUtls.updateBar(progress + int((3 / 4) * progresStep))
 			covMat = cfg.utls.calculateCovMatrix(ROIArray)
@@ -1109,7 +1129,7 @@ class RoiDock:
 		if cfg.bndSetPresent == "Yes" and cfg.rstrNm == cfg.bndSetNm:
 			iB = len(cfg.bndSet)
 		else:
-			i = cfg.utls.selectLayerbyName(cfg.rstrNm)
+			i = cfg.utls.selectLayerbyName(cfg.rstrNm, "Yes")
 			try:
 				iB = i.bandCount()
 			except Exception, err:
@@ -1151,7 +1171,7 @@ class RoiDock:
 			if cfg.bndSetPresent == "Yes" and cfg.rstrNm == cfg.bndSetNm:
 				iB = len(cfg.bndSet)
 			else:
-				i = cfg.utls.selectLayerbyName(cfg.rstrNm)
+				i = cfg.utls.selectLayerbyName(cfg.rstrNm, "Yes")
 				iB = i.bandCount()
 			wvl = []
 			val = []

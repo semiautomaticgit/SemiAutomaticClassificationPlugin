@@ -115,7 +115,7 @@ class ClassificationDock:
 			cfg.mx.msg4()
 			cfg.pntPrvw = None
 		# check if image is None
-		elif cfg.utls.selectLayerbyName(cfg.imgNm) is None:
+		elif cfg.utls.selectLayerbyName(cfg.imgNm, "Yes") is None:
 			# if band set then pass
 			if cfg.imgNm == cfg.bndSetNm:
 				pass
@@ -220,7 +220,7 @@ class ClassificationDock:
 		# list of bands for algorithm
 		cfg.bndSetLst = []
 		for x in range(0, len(cfg.bndSet)):
-			b = cfg.utls.selectLayerbyName(cfg.bndSet[x])
+			b = cfg.utls.selectLayerbyName(cfg.bndSet[x], "Yes")
 			if b is not None:
 				cfg.bndSetLst.append(b.source())
 			else:
@@ -341,7 +341,7 @@ class ClassificationDock:
 			if imageName == cfg.maskRasterNm:
 				iR = cfg.maskRstSrc
 			else:
-				r = cfg.utls.selectLayerbyName(imageName)
+				r = cfg.utls.selectLayerbyName(imageName, "Yes")
 				iR = r.source()
 			# open input with GDAL
 			rD = gdal.Open(iR, GA_ReadOnly)
@@ -425,7 +425,7 @@ class ClassificationDock:
 			cfg.mx.msg12()
 			ckC = "No"
 		# check if image is None
-		elif cfg.utls.selectLayerbyName(cfg.imgNm) is None:
+		elif cfg.utls.selectLayerbyName(cfg.imgNm, "Yes") is None:
 			# if band set then pass
 			if cfg.imgNm != cfg.bndSetNm:
 				cfg.mx.msg4()
@@ -571,12 +571,16 @@ class ClassificationDock:
 					cfg.signList["MACROCLASSID_" + str(id)] = int(tW.item(row, 1).text())
 				except:
 					tW.setItem(row, column, QTableWidgetItem(str(cfg.signList["MACROCLASSID_" + str(id)])))
-				cfg.signList["MACROCLASSINFO_" + str(id)] = tW.item(row, 2).text()
+				iTxt = tW.item(row, 2).text().encode('ascii','replace')
+				cfg.signList["MACROCLASSINFO_" + str(id)] = iTxt
+				tW.item(row, 2).setText(iTxt)
 				try:
 					cfg.signList["CLASSID_" + str(id)] = int(tW.item(row, 3).text())
 				except:
 					tW.setItem(row, column, QTableWidgetItem(str(cfg.signList["CLASSID_" + str(id)])))
-				cfg.signList["CLASSINFO_" + str(id)] = tW.item(row, 4).text()
+				iTxt2 = tW.item(row, 4).text().encode('ascii','replace')
+				cfg.signList["CLASSINFO_" + str(id)] = iTxt2
+				tW.item(row, 4).setText(iTxt2)
 			# logger
 			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "edited cell" + str(row) + ";" + str(column))
 

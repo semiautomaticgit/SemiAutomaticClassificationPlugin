@@ -465,7 +465,7 @@ class BandsetTab:
 	# Set raster to single band names for wavelength definition
 	def rasterToBandName(self, rasterName, bandset = "No"):
 		tW = cfg.ui.tableWidget
-		r = cfg.utls.selectLayerbyName(rasterName)
+		r = cfg.utls.selectLayerbyName(rasterName, "Yes")
 		b = r.bandCount()
 		cfg.BandTabEdited == "No"
 		tW.blockSignals(True)

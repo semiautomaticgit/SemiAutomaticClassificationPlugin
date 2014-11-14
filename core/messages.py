@@ -201,7 +201,10 @@ class Messages:
 		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [29]", QApplication.translate("semiautomaticclassificationplugin", "Edge error. Reduce the ROI width or draw a ROI manually (recommended installation of GDAL >= 1.10)"))
 		
 	def msgErr30(self):
-		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [14]", QApplication.translate("semiautomaticclassificationplugin", "Unable to proceed. Rename the Landsat bands with a file name ending with the band number (e.g. rename B20 to B2)"))
+		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [30]", QApplication.translate("semiautomaticclassificationplugin", "Unable to proceed. Rename the Landsat bands with a file name ending with the band number (e.g. rename B20 to B2)"))
+		
+	def msgErr31(self):
+		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [31]", QApplication.translate("semiautomaticclassificationplugin", "Error calculating signature. Possibly ROI is too small"))
 					
 	""" Warnings """
 	def msgWar2Windows(self):

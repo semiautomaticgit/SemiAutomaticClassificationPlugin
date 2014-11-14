@@ -76,8 +76,8 @@ class Accuracy:
 			return "No"
 		rstrOut = QFileDialog.getSaveFileName(None , QApplication.translate("semiautomaticclassificationplugin", "Save error matrix raster output"), "", "*.tif")
 		if len(rstrOut) > 0:
-			i = cfg.utls.selectLayerbyName(classification)
-			l = cfg.utls.selectLayerbyName(reference)
+			i = cfg.utls.selectLayerbyName(classification, "Yes")
+			l = cfg.utls.selectLayerbyName(reference, "Yes")
 			if i is not None and l is not None:
 				cfg.uiUtls.addProgressBar()
 				# disable map canvas render for speed
@@ -302,7 +302,7 @@ class Accuracy:
 					newRstrDt = None
 					# add raster to layers
 					cfg.iface.addRasterLayer(unicode(rstrOut), unicode(os.path.basename(rstrOut)))
-					rstr = cfg.utls.selectLayerbyName(unicode(os.path.basename(rstrOut)))
+					rstr = cfg.utls.selectLayerbyName(unicode(os.path.basename(rstrOut)), "Yes")
 					cfg.utls.rasterSymbolGeneric(rstr)	
 					try:
 						f = open(tblOut)

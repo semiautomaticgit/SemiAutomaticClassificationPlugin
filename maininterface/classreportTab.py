@@ -187,7 +187,7 @@ class ClassReportTab:
 		# logger
 		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " calculate classification report")
 		c = str(cfg.ui.classification_report_name_combo.currentText())
-		r = cfg.utls.selectLayerbyName(c)
+		r = cfg.utls.selectLayerbyName(c, "Yes")
 		if r is not None:
 			self.calculateClassificationReport(r.source())
 		else:

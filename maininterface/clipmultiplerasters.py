@@ -111,7 +111,7 @@ class ClipMultipleRasters:
 			LX = cfg.ui.LX_lineEdit.text()
 			LY = cfg.ui.LY_lineEdit.text()
 			for l in rT:
-				lC = cfg.utls.selectLayerbyName(l)
+				lC = cfg.utls.selectLayerbyName(l, "Yes")
 				if str(l).endswith(".tif"):
 					pass
 				else:

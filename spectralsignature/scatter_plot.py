@@ -165,7 +165,7 @@ class Scatter_Plot:
 		# band set
 		if cfg.bndSetPresent == "Yes" and cfg.rstrNm == cfg.bndSetNm:
 			rB = rasterBand - 1
-			rL = cfg.utls.selectLayerbyName(str(cfg.bndSet[rB]))
+			rL = cfg.utls.selectLayerbyName(str(cfg.bndSet[rB]), "Yes")
 			sP = subprocess.Popen("gdal_translate -a_nodata -999 -projwin " + str(xMn) + " " + str(yM) + " " + str(xM) + " " + str(yMn) + " -of GTiff \"" + rL.source().encode(cfg.fSEnc) + "\" " + str(tSD), shell=True)
 			sP.wait()
 			sP = subprocess.Popen("gdalwarp -dstnodata  -999 -cutline " + str(tLD) + " -of GTiff " + str(tSD) + " " + cD, shell=True)
@@ -174,7 +174,7 @@ class Scatter_Plot:
 			# temp files
 			tRN = cfg.subsTmpROI + dT + ".tif"
 			tRD = str(cfg.tmpDir + "//" + tRN)
-			i = cfg.utls.selectLayerbyName(str(cfg.rstrNm))		
+			i = cfg.utls.selectLayerbyName(str(cfg.rstrNm), "Yes")		
 			cfg.utls.getRasterBandByBandNumber(i.source().encode(cfg.fSEnc), rasterBand, tRD)
 			sP = subprocess.Popen("gdal_translate -a_nodata -999 -projwin " + str(xMn) + " " + str(yM) + " " + str(xM) + " " + str(yMn) + " -of GTiff " + str(tRD) + " " + str(tSD), shell=True)
 			sP.wait()
@@ -215,7 +215,7 @@ class Scatter_Plot:
 		if cfg.bndSetPresent == "Yes" and cfg.rstrNm == cfg.bndSetNm:
 			b = len(cfg.bndSet)
 		else:
-			i = cfg.utls.selectLayerbyName(cfg.rstrNm)
+			i = cfg.utls.selectLayerbyName(cfg.rstrNm, "Yes")
 			try:
 				b = i.bandCount()
 			except Exception, err:
@@ -234,7 +234,7 @@ class Scatter_Plot:
 		if cfg.bndSetPresent == "Yes" and cfg.rstrNm == cfg.bndSetNm:
 			b = len(cfg.bndSet)
 		else:
-			i = cfg.utls.selectLayerbyName(cfg.rstrNm)
+			i = cfg.utls.selectLayerbyName(cfg.rstrNm, "Yes")
 			try:
 				b = i.bandCount()
 			except Exception, err:

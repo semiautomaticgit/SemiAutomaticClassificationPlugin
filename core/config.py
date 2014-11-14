@@ -155,6 +155,8 @@ scatterBandY = 2
 pF = []
 # virtual raster
 landsatVrtNm = "landsat"
+# empty field name
+emptyFN = "DN"
 
 """ Project variables """
 qmlFl = None

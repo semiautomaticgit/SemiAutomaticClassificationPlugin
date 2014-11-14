@@ -64,7 +64,7 @@ class LandCoverChange:
 		# register drivers
 		gdal.AllRegister()
 		# input
-		refRstr = cfg.utls.selectLayerbyName(cfg.refClssfctnNm)
+		refRstr = cfg.utls.selectLayerbyName(cfg.refClssfctnNm, "Yes")
 		try:
 			refRstrSrc = refRstr.source()
 			rstrCheck = "Yes"
@@ -72,7 +72,7 @@ class LandCoverChange:
 			# logger
 			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			rstrCheck = "No"
-		newRstr = cfg.utls.selectLayerbyName(cfg.newClssfctnNm)
+		newRstr = cfg.utls.selectLayerbyName(cfg.newClssfctnNm, "Yes")
 		try:
 			newRstrSrc = newRstr.source()
 			rstrCheck = "Yes"
@@ -256,7 +256,7 @@ class LandCoverChange:
 					newRstrDt = None
 					# add raster to layers
 					cfg.iface.addRasterLayer(unicode(rstrOut), unicode(os.path.basename(rstrOut)))
-					rstr = cfg.utls.selectLayerbyName(unicode(os.path.basename(rstrOut)))
+					rstr = cfg.utls.selectLayerbyName(unicode(os.path.basename(rstrOut)), "Yes")
 					cfg.utls.rasterSymbolGeneric(rstr)
 					# open csv
 					try:
