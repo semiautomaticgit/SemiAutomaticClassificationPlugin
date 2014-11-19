@@ -77,7 +77,7 @@ class Accuracy:
 		rstrOut = QFileDialog.getSaveFileName(None , QApplication.translate("semiautomaticclassificationplugin", "Save error matrix raster output"), "", "*.tif")
 		if len(rstrOut) > 0:
 			i = cfg.utls.selectLayerbyName(classification, "Yes")
-			l = cfg.utls.selectLayerbyName(reference, "Yes")
+			l = cfg.utls.selectLayerbyName(reference)
 			if i is not None and l is not None:
 				cfg.uiUtls.addProgressBar()
 				# disable map canvas render for speed
