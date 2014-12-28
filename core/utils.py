@@ -497,7 +497,8 @@ class Utils:
 		for i in inputRasterList:
 			r = r + ' "' + i + '"'
 		try:
-			sP = subprocess.Popen('gdalbuildvrt -separate "' + unicode(output) + '" ' + unicode(r), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+			cfg.utls.getGDALForMac()
+			sP = subprocess.Popen(cfg.gdalPath + 'gdalbuildvrt -separate "' + unicode(output) + '" ' + unicode(r), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 			sP.wait()
 			# get error
 			out, err = sP.communicate()
@@ -509,7 +510,8 @@ class Utils:
 				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " GDAL error:: " + str(err) )
 		# in case of errors
 		except Exception, err:
-			sP = subprocess.Popen('gdalbuildvrt -separate "' + unicode(output) + '" ' + unicode(r), shell=True)
+			cfg.utls.getGDALForMac()
+			sP = subprocess.Popen(cfg.gdalPath + 'gdalbuildvrt -separate "' + unicode(output) + '" ' + unicode(r), shell=True)
 			sP.wait()
 		# logger
 		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "virtual raster: " + str(output))
@@ -553,7 +555,8 @@ class Utils:
 		else:
 			tR = str(outputRaster)
 		try:
-			sP = subprocess.Popen("gdalwarp -ot Float64 -dstnodata " + str(cfg.NoDataVal) + " -cutline \"" + unicode(shapefile) + "\" -crop_to_cutline -of GTiff " + unicode(raster) + " " + str(tR) , shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+			cfg.utls.getGDALForMac()
+			sP = subprocess.Popen(cfg.gdalPath + "gdalwarp -ot Float64 -dstnodata " + str(cfg.NoDataVal) + " -cutline \"" + unicode(shapefile) + "\" -crop_to_cutline -of GTiff " + unicode(raster) + " " + str(tR) , shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 			sP.wait()
 			# get error
 			out, err = sP.communicate()
@@ -565,7 +568,8 @@ class Utils:
 		except Exception, err:	
 			# logger
 			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), " ERROR exception: " + str(err))
-			sP = subprocess.Popen("gdalwarp -ot Float64 -dstnodata " + str(cfg.NoDataVal) + " -cutline \"" + unicode(shapefile) + "\" -crop_to_cutline -of GTiff " + unicode(raster) + " " + str(tR) , shell=True)
+			cfg.utls.getGDALForMac()
+			sP = subprocess.Popen(cfg.gdalPath + "gdalwarp -ot Float64 -dstnodata " + str(cfg.NoDataVal) + " -cutline \"" + unicode(shapefile) + "\" -crop_to_cutline -of GTiff " + unicode(raster) + " " + str(tR) , shell=True)
 			sP.wait()
 		if os.path.isfile(tR) is False:
 		# if shapefile is too small try to convert to raster then to polygon
@@ -576,10 +580,14 @@ class Utils:
 			self.vectorToRaster(cfg.emptyFN, unicode(shapefile), cfg.emptyFN, tRxs, unicode(raster), "Yes")
 			self.rasterToVector(tRxs, tSxs)
 			try:
-				sP = subprocess.Popen("gdalwarp -ot Float64 -dstnodata " + str(cfg.NoDataVal) + " -cutline \"" + tSxs + "\" -crop_to_cutline -of GTiff " + unicode(raster) + " " + str(tR) , shell=True)
+				cfg.utls.getGDALForMac()
+				sP = subprocess.Popen(cfg.gdalPath + "gdalwarp -ot Float64 -dstnodata " + str(cfg.NoDataVal) + " -cutline \"" + tSxs + "\" -crop_to_cutline -of GTiff " + unicode(raster) + " " + str(tR) , shell=True)
 				sP.wait()
 			# in case of errors
 			except Exception, err:
+				cfg.utls.getGDALForMac()
+				sP = subprocess.Popen(cfg.gdalPath + "gdalwarp -ot Float64 -dstnodata " + str(cfg.NoDataVal) + " -cutline \"" + tSxs + "\" -crop_to_cutline -of GTiff " + unicode(raster) + " " + str(tR) , shell=True)
+				sP.wait()
 				# logger
 				if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), " ERROR exception: " + str(err))
 		# logger
@@ -590,6 +598,20 @@ class Utils:
 	def getTime(self):
 		t = datetime.datetime.now().strftime("%Y%m%d_%H%M%S%f")
 		return t
+		
+### Try to get GDAL for Mac
+	def getGDALForMac(self):
+		if cfg.sysNm == "Darwin":
+			v = cfg.utls.getGDALVersion()
+			cfg.gdalPath = '/Library/Frameworks/GDAL.framework/Versions/' + v[0] + '.' + v[1] + '/Programs/'
+			# logger
+			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), " getGDALForMac: " + str(v))
+
+			
+### Get GDAL version
+	def getGDALVersion(self):
+		v = gdal.VersionInfo("RELEASE_NAME").split('.')
+		return v
 		
 	# create a polygon shapefile with OGR
 	def createEmptyShapefile(self, crsWkt, outputVector):
@@ -1547,7 +1569,8 @@ class Utils:
 			sX = (int((XCoord - tLX) / pS)) - int(Width / 2) 
 			sY = (int((tLY - YCoord) / pS)) - int(Height / 2)
 			try:
-				sP = subprocess.Popen("gdal_translate -ot Float64 -a_nodata " + str(cfg.NoDataVal) + " -srcwin " + str(sX) + " " + str(sY) + " " + str(Width) + " " + str(Height) + " -of GTiff \"" + i.source().encode(cfg.fSEnc) + "\" " + output, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+				cfg.utls.getGDALForMac()
+				sP = subprocess.Popen(cfg.gdalPath + "gdal_translate -ot Float64 -a_nodata " + str(cfg.NoDataVal) + " -srcwin " + str(sX) + " " + str(sY) + " " + str(Width) + " " + str(Height) + " -of GTiff \"" + i.source().encode(cfg.fSEnc) + "\" " + output, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 				sP.wait()
 				# get error
 				out, err = sP.communicate()
@@ -1560,7 +1583,8 @@ class Utils:
 			except Exception, err:
 				# logger
 				if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), " ERROR exception: " + str(err))
-				sP = subprocess.Popen("gdal_translate -ot Float64 -a_nodata " + str(cfg.NoDataVal) + " -srcwin " + str(sX) + " " + str(sY) + " " + str(Width) + " " + str(Height) + " -of GTiff \"" + i.source().encode(cfg.fSEnc) + "\" " + output, shell=True)
+				cfg.utls.getGDALForMac()
+				sP = subprocess.Popen(cfg.gdalPath + "gdal_translate -ot Float64 -a_nodata " + str(cfg.NoDataVal) + " -srcwin " + str(sX) + " " + str(sY) + " " + str(Width) + " " + str(Height) + " -of GTiff \"" + i.source().encode(cfg.fSEnc) + "\" " + output, shell=True)
 				sP.wait()
 			# logger
 			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "image: " + str(imageName) + " subset origin: (" + str(XCoord) + ","+ str(YCoord) + ") width: " + str(Width))

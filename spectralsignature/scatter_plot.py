@@ -166,20 +166,36 @@ class Scatter_Plot:
 		if cfg.bndSetPresent == "Yes" and cfg.rstrNm == cfg.bndSetNm:
 			rB = rasterBand - 1
 			rL = cfg.utls.selectLayerbyName(str(cfg.bndSet[rB]), "Yes")
-			sP = subprocess.Popen("gdal_translate -a_nodata -999 -projwin " + str(xMn) + " " + str(yM) + " " + str(xM) + " " + str(yMn) + " -of GTiff \"" + rL.source().encode(cfg.fSEnc) + "\" " + str(tSD), shell=True)
-			sP.wait()
-			sP = subprocess.Popen("gdalwarp -dstnodata  -999 -cutline " + str(tLD) + " -of GTiff " + str(tSD) + " " + cD, shell=True)
-			sP.wait()
+			try:
+				cfg.utls.getGDALForMac()
+				sP = subprocess.Popen(cfg.gdalPath + "gdal_translate -a_nodata -999 -projwin " + str(xMn) + " " + str(yM) + " " + str(xM) + " " + str(yMn) + " -of GTiff \"" + rL.source().encode(cfg.fSEnc) + "\" " + str(tSD), shell=True)
+				sP.wait()
+				sP = subprocess.Popen(cfg.gdalPath + "gdalwarp -dstnodata  -999 -cutline " + str(tLD) + " -of GTiff " + str(tSD) + " " + cD, shell=True)
+				sP.wait()
+			except:
+				cfg.utls.getGDALForMac()
+				sP = subprocess.Popen(cfg.gdalPath + "gdal_translate -a_nodata -999 -projwin " + str(xMn) + " " + str(yM) + " " + str(xM) + " " + str(yMn) + " -of GTiff \"" + rL.source().encode(cfg.fSEnc) + "\" " + str(tSD), shell=True)
+				sP.wait()
+				sP = subprocess.Popen(cfg.gdalPath + "gdalwarp -dstnodata  -999 -cutline " + str(tLD) + " -of GTiff " + str(tSD) + " " + cD, shell=True)
+				sP.wait()
 		else:
 			# temp files
 			tRN = cfg.subsTmpROI + dT + ".tif"
 			tRD = str(cfg.tmpDir + "//" + tRN)
 			i = cfg.utls.selectLayerbyName(str(cfg.rstrNm), "Yes")		
 			cfg.utls.getRasterBandByBandNumber(i.source().encode(cfg.fSEnc), rasterBand, tRD)
-			sP = subprocess.Popen("gdal_translate -a_nodata -999 -projwin " + str(xMn) + " " + str(yM) + " " + str(xM) + " " + str(yMn) + " -of GTiff " + str(tRD) + " " + str(tSD), shell=True)
-			sP.wait()
-			sP = subprocess.Popen("gdalwarp -dstnodata  -999 -cutline " + str(tLD) + " -of GTiff " + str(tSD) + " " + cD, shell=True)
-			sP.wait()
+			try:
+				cfg.utls.getGDALForMac()
+				sP = subprocess.Popen(cfg.gdalPath + "gdal_translate -a_nodata -999 -projwin " + str(xMn) + " " + str(yM) + " " + str(xM) + " " + str(yMn) + " -of GTiff " + str(tRD) + " " + str(tSD), shell=True)
+				sP.wait()
+				sP = subprocess.Popen(cfg.gdalPath + "gdalwarp -dstnodata  -999 -cutline " + str(tLD) + " -of GTiff " + str(tSD) + " " + cD, shell=True)
+				sP.wait()
+			except:
+				cfg.utls.getGDALForMac()
+				sP = subprocess.Popen(cfg.gdalPath + "gdal_translate -a_nodata -999 -projwin " + str(xMn) + " " + str(yM) + " " + str(xM) + " " + str(yMn) + " -of GTiff " + str(tRD) + " " + str(tSD), shell=True)
+				sP.wait()
+				sP = subprocess.Popen(cfg.gdalPath + "gdalwarp -dstnodata  -999 -cutline " + str(tLD) + " -of GTiff " + str(tSD) + " " + cD, shell=True)
+				sP.wait()
 		# register drivers
 		gdal.AllRegister()
 		# open input with GDAL

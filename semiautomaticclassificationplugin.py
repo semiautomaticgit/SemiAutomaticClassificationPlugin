@@ -34,6 +34,7 @@
 
 import os
 import sys
+import platform
 # for moving files
 import shutil
 # Import the PyQt and QGIS libraries
@@ -192,6 +193,7 @@ class SemiAutomaticClassificationPlugin:
 			""" info """
 			# QGIS version
 			cfg.QGISVer = QGis.QGIS_VERSION_INT
+			cfg.sysNm = str(platform.system())
 			# system information
 			cfg.sysInfo = str(" SemiAutomaticClass " + semiautomaticclassVersion() + " - QGIS v. " + str(cfg.QGISVer) + " - OS " + str(os.name))
 		

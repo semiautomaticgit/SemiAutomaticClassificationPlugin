@@ -74,6 +74,8 @@ uiUtls = None
 acc = None
 # system platform
 sys64bit = None
+sysNm = None
+gdalPath = ""
 # signature importer
 sigImport = None
 QGISVer = None

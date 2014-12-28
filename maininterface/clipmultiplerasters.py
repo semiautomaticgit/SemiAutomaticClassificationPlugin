@@ -126,12 +126,22 @@ class ClipMultipleRasters:
 				if  st != "Yes":
 					# no shapefile
 					if uS == 0 and len(UX) > 0 and len(UY) > 0 and len(LX) > 0 and len(LY) > 0:
-						sP = subprocess.Popen("gdal_translate -a_nodata " + str(noDt) + " -projwin " + str(UX) + " " + str(UY) + " " + str(LX) + " " + str(LY) + " -of GTiff " + cL + " \"" + str(oD) + "/" + cfg.clipNm + "_" + os.path.basename(str(l)) + "\"", shell=True)
-						sP.wait()
+						try:
+							cfg.utls.getGDALForMac()
+							sP = subprocess.Popen(cfg.gdalPath + "gdal_translate -a_nodata " + str(noDt) + " -projwin " + str(UX) + " " + str(UY) + " " + str(LX) + " " + str(LY) + " -of GTiff " + cL + " \"" + str(oD) + "/" + cfg.clipNm + "_" + os.path.basename(str(l)) + "\"", shell=True)
+							sP.wait()
+						# in case of errors
+						except Exception, err:
+							# logger
+							if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+							cfg.utls.getGDALForMac()
+							sP = subprocess.Popen(cfg.gdalPath + "gdal_translate -a_nodata " + str(noDt) + " -projwin " + str(UX) + " " + str(UY) + " " + str(LX) + " " + str(LY) + " -of GTiff " + cL + " \"" + str(oD) + "/" + cfg.clipNm + "_" + os.path.basename(str(l)) + "\"", shell=True)
+							sP.wait()
 					# using shapefile
 					elif uS == 1:
 						try:
-							sP = subprocess.Popen("gdalwarp -dstnodata " + str(noDt) + " -cutline \"" + s + "\" -crop_to_cutline -of GTiff " + cL + " \"" + str(oD) + "/" + cfg.clipNm + "_" + os.path.basename(str(l)) + "\"", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+							cfg.utls.getGDALForMac()
+							sP = subprocess.Popen(cfg.gdalPath + "gdalwarp -dstnodata " + str(noDt) + " -cutline \"" + s + "\" -crop_to_cutline -of GTiff " + cL + " \"" + str(oD) + "/" + cfg.clipNm + "_" + os.path.basename(str(l)) + "\"", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 							sP.wait()
 							# get error
 							out, err = sP.communicate()
@@ -145,7 +155,8 @@ class ClipMultipleRasters:
 						except Exception, err:
 							# logger
 							if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-							sP = subprocess.Popen("gdalwarp -dstnodata " + str(noDt) + " -cutline \"" + s + "\" -crop_to_cutline -of GTiff " + cL + " \"" + str(oD) + "/" + cfg.clipNm + "_" + os.path.basename(str(l)) + "\"", shell=True)
+							cfg.utls.getGDALForMac()
+							sP = subprocess.Popen(cfg.gdalPath + "gdalwarp -dstnodata " + str(noDt) + " -cutline \"" + s + "\" -crop_to_cutline -of GTiff " + cL + " \"" + str(oD) + "/" + cfg.clipNm + "_" + os.path.basename(str(l)) + "\"", shell=True)
 							sP.wait()	
 					else:
 						return "No"
