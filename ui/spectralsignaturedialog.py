@@ -8,7 +8,7 @@
  the collection of training areas (ROIs), and rapidly performing the classification process (or a preview).
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012 by Luca Congedo
+		copyright			: (C) 2012-2015 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  

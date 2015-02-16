@@ -8,7 +8,7 @@
  the collection of training areas (ROIs), and rapidly performing the classification process (or a preview).
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012 by Luca Congedo
+		copyright			: (C) 2012-2015 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -65,15 +65,15 @@ class ClassReportTab:
 		rN = QApplication.translate("semiautomaticclassificationplugin", "report") + dT + ".csv"
 		cfg.reportPth = str(cfg.tmpDir + "/" + rN)
 		try:
-			clssRstrSrc = classificationPath.encode(cfg.fSEnc)
+			clssRstrSrc = unicode(classificationPath)
 			ck = "Yes"
 		except Exception, err:
 			# logger
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			ck = "No"
 		if ck == "No":
 			cfg.mx.msg4()
-			cfg.acc.refreshClassificationLayer()
+			cfg.utls.refreshClassificationLayer()
 		else:
 			# open input with GDAL
 			cR = gdal.Open(clssRstrSrc, GA_ReadOnly)
@@ -175,24 +175,25 @@ class ClassReportTab:
 				if os.path.isfile(cfg.reportPth):
 					reportTxt = f.read()
 					cfg.ui.report_textBrowser.setText(str(reportTxt))
+				cfg.utls.finishSound()
 			except Exception, err:
 				# logger
-				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				cfg.uiUtls.removeProgressBar()
 			cfg.uiUtls.removeProgressBar()
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " report calculated")
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " report calculated")
 					
 	# calculate classification report if click on button
 	def calculateClassReport(self):
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " calculate classification report")
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " calculate classification report")
 		c = str(cfg.ui.classification_report_name_combo.currentText())
 		r = cfg.utls.selectLayerbyName(c, "Yes")
 		if r is not None:
 			self.calculateClassificationReport(r.source())
 		else:
 			cfg.mx.msg4()
-			cfg.acc.refreshClassificationLayer()
+			cfg.utls.refreshClassificationLayer()
 					
 	def saveReport(self):
 		r = QFileDialog.getSaveFileName(None , QApplication.translate("semiautomaticclassificationplugin", "Save classification report"), "", "Text (*.csv)")
@@ -200,8 +201,8 @@ class ClassReportTab:
 			if len(r) > 0:
 				shutil.copy(cfg.reportPth, r)
 				# logger
-				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " report saved")
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " report saved")
 		except Exception, err:
 			# logger
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 					

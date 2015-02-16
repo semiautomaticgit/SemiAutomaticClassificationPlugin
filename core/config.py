@@ -8,7 +8,7 @@
  the collection of training areas (ROIs), and rapidly performing the classification process (or a preview).
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012 by Luca Congedo
+		copyright			: (C) 2012-2015 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -36,6 +36,13 @@
 iface = None
 cnvs = None
 mainAction = None
+menu = None
+tools_menu = None
+preprocessing_menu = None
+postprocessing_menu = None
+settings_menu = None
+toolBar = None
+projPath = ""
 # main interface
 ui = None
 dlg = None
@@ -75,6 +82,7 @@ acc = None
 # system platform
 sys64bit = None
 sysNm = None
+# GDAL path
 gdalPath = ""
 # signature importer
 sigImport = None
@@ -99,6 +107,8 @@ clickROI = None
 pntPrvw = None
 lstROI = None
 pntROI = None
+origPoint = None
+ROITime = None
 lstPrvw = None
 prvwSz = None
 lastVrt = []
@@ -108,6 +118,7 @@ bndMdls = None
 newClssfctnNm = None
 refClssfctnNm = None
 rbbrBnd = None
+rbbrBndPol = None
 ROISigNm = None
 ROI_MC_ID = None
 ROI_MC_Info = None
@@ -120,18 +131,22 @@ reportPth = None
 errMtrxPth = None
 bndSetMaskList = None
 mnlROI = None
+regionROI = None
 allSignCheck = "No"
 signList = {}
 signIDs = {}
 # spectral plot
 spectrPlotList = {}
 signPlotIDs = {}
+tmpROIID = None
+tmpROIColor = None
 # set classification path
 clssPth = None
 arrayUnitMemory = 0.000016
 tableColString = "ID"
 ROITabEdited = "No"
 SigTabEdited = "No"
+ReclassTabEdited = "No"
 # classification variables
 # threshold
 algThrshld = 0
@@ -148,6 +163,24 @@ remainingTime = 0
 sigmaCheck = "No"
 # numpy logarithm
 logn = "np.log"
+# numpy logarithm
+numpySqrt = "np.sqrt"
+# numpy cos
+numpyCos = "np.cos"
+# numpy acos
+numpyArcCos = "np.arccos"
+# numpy sin
+numpySin = "np.sin"
+# numpy asin
+numpyArcSin = "np.arcsin"
+# numpy tan
+numpyTan = "np.tan"
+# numpy atan
+numpyArcTan = "np.arctan"
+# numpy exp
+numpyExp = "np.exp"
+# numpy pi
+numpyPi = "np.pi"
 # land cover change variables	
 unchngMaskCheck = True
 # scatter plot variables
@@ -157,13 +190,37 @@ scatterBandY = 2
 pF = []
 # virtual raster
 landsatVrtNm = "landsat"
+tmpVrtNm = "band_set"
+tmpVrt = None
+# pixel signature names
+pixelNm = "pixel"
+pixelCoords = "Coords"
 # empty field name
 emptyFN = "DN"
+# band number variable
+BLUEBand = None
+REDBand = None
+NIRBand = None
+BLUECenterBand = 0.475
+BLUEThreshold = 0.2
+REDCenterBand = 0.65
+REDThreshold = 0.04
+NIRCenterBand = 0.85
+NIRThreshold = 0.15
+# settings
+testGDALV = None
+testMatplotlibV = None
+testScipyV = None
+testNumpyV = None
+# debug
+debugRasterPath = "/debug/roi_raster.tif"
+absolutePath = False
 
 """ Project variables """
 qmlFl = None
 sigClcCheck = None
 rpdROICheck = None
+vegIndexCheck = None
 bndSet = {}
 bndSetWvLn = {}
 bndSetPresent = None
@@ -178,6 +235,8 @@ ROIID = 1
 ROIInfo = "Class_1"
 ROIMacroClassInfo = "Macroclass_1"
 ROIMacroID = 1
+# RGB list
+RGBList = str(["-", "3-2-1", "4-3-2"])
 
 """ QGIS variables """
 # registry key for log setting
@@ -188,41 +247,62 @@ regSound = "SemiAutomaticClassificationPlugin/useSound"
 soundVal = "Yes"
 # registry key for ROI color setting
 regROIClr = "SemiAutomaticClassificationPlugin/ROIColour"
-ROIClrVal = "#ffaa00"
+ROIClrValDefault = "#ffaa00"
+ROIClrOutlineValDefault = "#53d4e7"
+ROIClrVal = ROIClrValDefault
 # registry key for ROI transparency setting
-regROITransp = "SemiAutomaticClassificationPlugin/ROITransparency"
+regROITransp = "SemiAutomaticClassificationPlugin/ROITransparency4"
 # registry key for algorithm files
 regAlgFiles = "SemiAutomaticClassificationPlugin/algFiles"
 algFilesCheck = "No"
-ROITrnspVal = 20
+ROITrnspValDefault = 45
+ROITrnspVal = ROITrnspValDefault
+# registry key for temporary raster format
+regTempRasterFormat = "SemiAutomaticClassificationPlugin/tempRastFormat"
 # registry key for RAM value setting
 regRAMValue = "SemiAutomaticClassificationPlugin/RAMValue"
 RAMValue = 512
 # field names for shapefile
 regIDFieldName = "SemiAutomaticClassificationPlugin/IDFieldName"
-fldID_class = "C_ID"
+fldMacroID_class_def = "MC_ID"
+fldID_class_def = "C_ID"
+fldROI_info_def = "C_info"
+fldROIMC_info_def = "MC_info"
+variableName_def = "raster"
+variableBandsetName_def = "bandset"
+merged_name = "merged_"
+fldID_class = fldID_class_def
 # macroclass ID
 regMacroIDFieldName = "SemiAutomaticClassificationPlugin/MCIDFieldName"
-fldMacroID_class = "MC_ID"
+fldMacroID_class = fldMacroID_class_def
 # macroclass check
 regConsiderMacroclass = "SemiAutomaticClassificationPlugin/ConsiderMacroclass"
 macroclassCheck = "No"
 # info field
 regInfoFieldName = "SemiAutomaticClassificationPlugin/InfoFieldName"
 regMCInfoFieldName = "SemiAutomaticClassificationPlugin/MCInfoFieldName"
-fldROI_info = "C_info"
-fldROIMC_info = "MC_info"
+fldROI_info = fldROI_info_def
+fldROIMC_info = fldROIMC_info_def
+# variable name
+regVariableName = "SemiAutomaticClassificationPlugin/VariableName"
+variableName = variableName_def
+# variable band set name
+regVariableBandsetName = "SemiAutomaticClassificationPlugin/VariableBandsetName"
+variableBandsetName = variableBandsetName_def
 # band set name
 regBandSetName = "SemiAutomaticClassificationPlugin/BandSetName"
 bndSetNm = "<< band set >>"
 # plot variables
 regRoundCharList = "SemiAutomaticClassificationPlugin/roundCharList"
-roundCharList=25
+roundCharList = 25
 # group name for temp ROI and Preview
 regGroupName = "SemiAutomaticClassificationPlugin/groupName"
-grpNm = "Class_temp_group"
+grpNm_def = "Class_temp_group"
+grpNm = grpNm_def
 # clip prefix
 clipNm = "clip"
+# output temp raster format
+outTempRastFormat = "GTiff"
 
 """ Names """
 uncls = "Unclassified"
@@ -239,8 +319,11 @@ subsTmpRaster = "subset_temp_b"
 subsTmpROI = "ROI_tmp_copy"
 copyTmpROI = "ROI_rast_temp"
 tmpRegionNm = "region_temp"
+tmpROINm = "temp_ROI"
+splitBndNm = "splitBand_"
 reflectanceRasterNm = "reflectance_temp"
 NoDataVal = -999
+unclassifiedVal = -1000
 maxLikeNoDataVal = -999999999900000
 referenceLayer = None
 rstrNm = None
@@ -249,17 +332,33 @@ algName = "Minimum Distance"
 algMinDist = "Minimum Distance"
 algML = "Maximum Likelihood"
 algSAM = "Spectral Angle Mapping"
+#index name
+indName = "NDVI"
+indNDVI = "NDVI"
+indEVI = "EVI"
 # set mask variable
 maskCheck = "No"
 # prefix for ROI signature fields
 ROIFieldMean = "ROIm_b"
 ROISigma = "ROIs_b"
 ROINBands = "ROI_NBands"
+# spectral plot
+wavelenNm = "Wavelength"
+valNm = "Values"
+standDevNm = "Standard deviation"
+# distances
+euclideanDistNm = "Euclidean distance"
+brayCurtisSimNm = "Bray-Curtis similarity [%]"
+spectralAngleNm = "Spectral angle"
+jeffriesMatusitaDistNm = "Jeffries-Matusita distance"
+transformedDivergenceNm = "Transformed divergence"
+notAvailable = "n/a"
 
 """ band set """
 bndSetUnit = None
 # list of satellites for wavelength
 NoSatellite = "Band order"
+satGeoEye1 = "GeoEye-1 [bands 1, 2, 3, 4]"
 satLandsat8 = "Landsat 8 OLI [bands 2, 3, 4, 5, 6, 7]"
 satLandsat7 = "Landsat 7 ETM+ [bands 1, 2, 3, 4, 5, 7]"
 satLandsat45 = "Landsat 4-5 TM [bands 1, 2, 3, 4, 5, 7]"
@@ -269,7 +368,8 @@ satSPOT5 = "SPOT 5 [bands 1, 2, 3, 4]"
 satSPOT6 = "SPOT 6 [bands 1, 2, 3, 4]"
 satPleiades = "Pleiades [bands 1, 2, 3, 4]"
 satQuickBird = "QuickBird [bands 1, 2, 3, 4]"
-satWlList = ["", NoSatellite, satLandsat8, satLandsat7, satLandsat45, satPleiades, satQuickBird, satRapidEye, satSPOT4, satSPOT5, satSPOT6]
+satWorldView23 = "WorldView-2 -3 Multispectral [bands 1, 2, 3, 4, 5, 6, 7, 8]"
+satWlList = ["", NoSatellite, satGeoEye1, satLandsat8, satLandsat7, satLandsat45, satPleiades, satQuickBird, satRapidEye, satSPOT4, satSPOT5, satSPOT6, satWorldView23]
 # unit list
 noUnit = "band number"
 wlMicro = u"µm (1 E-6m)"

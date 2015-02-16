@@ -8,7 +8,7 @@
  the collection of training areas (ROIs), and rapidly performing the classification process (or a preview).
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012 by Luca Congedo
+		copyright			: (C) 2012-2015 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -55,21 +55,25 @@ class BandsetTab:
 		for i in satelliteList:
 			cfg.ui.wavelength_sat_combo.addItem(i)
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " satellites added")
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " satellites added")
 			
 	# add unit list to combo
 	def addUnitToCombo(self, unitList):
 		for i in unitList:
 			cfg.ui.unit_combo.addItem(i)
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " units added")
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " units added")
 			
 	def setBandUnit(self):
 		self.readBandSet(cfg.bndSetPresent)
 			
+	def satelliteWavelength(self):
+		self.setSatelliteWavelength()
+			
 	# set satellite wavelengths
-	def setSatelliteWavelength(self):
-		satelliteName = cfg.ui.wavelength_sat_combo.currentText()
+	def setSatelliteWavelength(self, satelliteName = None, bandList = None):
+		if satelliteName is None:
+			satelliteName = cfg.ui.wavelength_sat_combo.currentText()
 		tW = cfg.ui.tableWidget
 		c = tW.rowCount()
 		wl = []
@@ -108,20 +112,35 @@ class BandsetTab:
 		elif satelliteName == cfg.satQuickBird:
 			wl = [0.4875, 0.543, 0.65, 0.8165]
 			id = cfg.ui.unit_combo.findText(cfg.wlMicro)
-		cfg.ui.unit_combo.setCurrentIndex(id)
+		# WorldView-2 center wavelength calculated from http://www.digitalglobe.com/resources/satellite-information
+		elif satelliteName == cfg.satWorldView23:
+			wl = [0.425, 0.48, 0.545, 0.605, 0.66, 0.725, 0.8325, 0.95]
+			id = cfg.ui.unit_combo.findText(cfg.wlMicro)
+		# GeoEye-1 center wavelength calculated from http://www.digitalglobe.com/resources/satellite-information
+		elif satelliteName == cfg.satGeoEye1:
+			wl = [0.48, 0.545, 0.6725, 0.85]
+			id = cfg.ui.unit_combo.findText(cfg.wlMicro)
+		
 		cfg.BandTabEdited = "No"
 		b = 0
-		for i in wl:
-			if b < c:
+		if bandList is None:
+			for i in wl:
+				if b < c:
+					tW.item(b, 1).setText(str(float(i)))
+					b = b + 1
+		else:
+			for n in bandList:
+				i = wl[n - 1]
 				tW.item(b, 1).setText(str(float(i)))
 				b = b + 1
 		tW.blockSignals(False)
 		cfg.BandTabEdited = "Yes"
+		cfg.ui.unit_combo.setCurrentIndex(id)
 		self.readBandSet(cfg.bndSetPresent)
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " satellite" + str(satelliteName))
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " satellite" + str(satelliteName))
 			
-	def  addBandToSet(self):
+	def addBandToSet(self):
 		tW = cfg.ui.tableWidget
 		c = tW.rowCount()
 		# check if single raster
@@ -159,7 +178,7 @@ class BandsetTab:
 			cfg.imgNm = cfg.rstrNm
 			cfg.BandTabEdited = "Yes"
 			# logger
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " band set changed n. of bands" + str(lc))
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " band set changed n. of bands" + str(lc))
 		
 	# set all bands to state 0 or 2
 	def allBandSetState(self, value):
@@ -173,7 +192,7 @@ class BandsetTab:
 				cfg.uiUtls.updateBar((b+1) * 100 / (c))
 			else:
 				# logger
-				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " all bands cancelled")
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " all bands cancelled")
 				
 	# clear the band set
 	def clearBandSet(self, question = "Yes", refresh = "Yes"):
@@ -198,7 +217,7 @@ class BandsetTab:
 				# read band set
 				self.readBandSet("No", refresh)
 			# logger
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " band set cleared")
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " band set cleared")
 		
 	# band set edited
 	def editedBandSet(self, row, column):
@@ -208,7 +227,14 @@ class BandsetTab:
 			c = tW.rowCount()
 			cfg.BandTabEdited = "No"
 			w = QTableWidgetItem(str(row))
-			w.setText(str(float(tW.item(row, column).text())))
+			try:
+				w.setText(str(float(tW.item(row, column).text())))
+			except:
+				w = QTableWidgetItem(str(row))
+				w.setText(str(float(cfg.bndSetWvLn["WAVELENGTH_" + str(row + 1)])))
+				tW.setItem(row, 1, w)
+				tW.show()
+				cfg.BandTabEdited = "Yes"
 			tW.setItem(row, column, w)
 			tW.show()
 			if c == 0:
@@ -244,10 +270,10 @@ class BandsetTab:
 						tW.setItem(b, 1, w)
 						b = b + 1
 					tW.show()
-					self.readBandSet()
+					self.readBandSet(cfg.bndSetPresent)
 					cfg.BandTabEdited = "Yes"
 					# logger
-					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " band edited; bands n. " + str(c))
+					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " band edited; bands n. " + str(c))
 		
 	def readBandSet(self, bandset = "Yes", refresh = "Yes"):
 		tW = cfg.ui.tableWidget
@@ -270,6 +296,15 @@ class BandsetTab:
 				cfg.ipt.refreshRasterLayer()
 		# read unit
 		cfg.bndSetUnit["UNIT"] = self.unitNameConversion(cfg.ui.unit_combo.currentText())
+		# find band number
+		cfg.utls.findBandNumber()
+		cfg.utls.checkBandSet()
+		cfg.tmpVrt = None
+		tPMN = cfg.tmpVrtNm + ".vrt"
+		try:
+			cfg.utls.removeLayer(tPMN)
+		except:
+			pass
 		# write project variables
 		cfg.utls.writeProjectVariable("bandSetPresent", str(cfg.bndSetPresent))
 		cfg.utls.writeProjectVariable("bandSet", str(cfg.bndSet))
@@ -318,10 +353,10 @@ class BandsetTab:
 					o.write(f)
 					o.close()
 					# logger
-					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " band set exported")
+					cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " band set exported")
 			except Exception, err:
 				# logger
-				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 		
 	# import band set from file
 	def importBandSet(self):
@@ -347,8 +382,8 @@ class BandsetTab:
 				for child in root:
 					n = int(child.get("number"))
 					bN.append(n)
-					bs[n] = str(child.find("name").text)
-					wl[n] = float(child.find("wavelength").text)
+					bs[n] = str(child.find("name").text).strip()
+					wl[n] = float(child.find("wavelength").text.strip())
 				tW = cfg.ui.tableWidget
 				cfg.BandTabEdited = "No"
 				while tW.rowCount() > 0:
@@ -367,11 +402,38 @@ class BandsetTab:
 				self.readBandSet(bandset)
 				cfg.BandTabEdited = "Yes"
 				# logger
-				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " band set imported")		
+				cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " band set imported")		
 			except Exception, err:
 				# logger
-				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				cfg.mx.msgErr5()
+				
+	# set band set
+	def setBandSet(self, bandNameList):
+		tW = cfg.ui.tableWidget
+		cfg.BandTabEdited = "No"
+		while tW.rowCount() > 0:
+			tW.removeRow(0)
+		for x in bandNameList:
+			c = tW.rowCount()
+			# add list items to table
+			tW.setRowCount(c + 1)
+			i = QTableWidgetItem(str(c + 1))
+			i.setFlags(Qt.ItemIsEnabled)
+			i.setText(x)
+			tW.setItem(c, 0, i)
+			w = QTableWidgetItem(str(c + 1))
+			w.setText("")
+			tW.setItem(c, 1, w)
+		cfg.BandTabEdited = "Yes"
+		# logger
+		cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " band set set")
+		try:
+			pass
+		except Exception, err:
+			# logger
+			cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.mx.msgErr5()
 			
 	# move down selected band
 	def moveDownBand(self):
@@ -395,17 +457,18 @@ class BandsetTab:
 						tW.item(b, 0).setText(str(bND))
 						tW.item(b + 1, 0).setText(str(bNU))
 				tW.clearSelection()
-				for i in range (0, len(ns)):
-					tW.selectRow(ns[i])
+				v = list(set(ns))
+				for i in range (0, len(v)):
+					tW.selectRow(v[i])
 			except Exception, err:
 				# logger
-				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				tW.clearSelection()
 			# update band set
 			self.readBandSet()
 			cfg.BandTabEdited = "Yes"
 			# logger
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " band moved")
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " band moved")
 	
 	# move up selected band
 	def moveUpBand(self):
@@ -427,19 +490,20 @@ class BandsetTab:
 						bNU = tW.item(b, 0).text()
 						bND = tW.item(b - 1, 0).text()
 						tW.item(b, 0).setText(str(bND))
-						tW.item(b - 1, 0).setText(str(bNU))
+						tW.item(b - 1, 0).setText(str(bNU))					
 				tW.clearSelection()
-				for i in range (0, len(ns)):
-					tW.selectRow(ns[i])
+				v = list(set(ns))
+				for i in range (0, len(v)):
+					tW.selectRow(v[i])
 			except Exception, err:
 				# logger
-				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				tW.clearSelection()
 			# update band set
 			self.readBandSet()
 			cfg.BandTabEdited = "Yes"
 			# logger
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " band moved")
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " band moved")
 				
 	# Set raster band checklist
 	def rasterBandName(self):
@@ -460,7 +524,7 @@ class BandsetTab:
 				# Add band to model
 				cfg.bndMdl.appendRow(it)
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " raster band name checklist created")
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " raster band name checklist created")
 		
 	# Set raster to single band names for wavelength definition
 	def rasterToBandName(self, rasterName, bandset = "No"):
@@ -512,7 +576,7 @@ class BandsetTab:
 				self.readBandSet()
 				cfg.BandTabEdited = "Yes"
 				# logger
-				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " band removed; bands n. " + str(c))
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " band removed; bands n. " + str(c))
 		
 	# select all bands for set
 	def selectAllBands(self):
@@ -536,9 +600,42 @@ class BandsetTab:
 				self.allBandsCheck = "No"
 			except Exception, err:
 				# logger
-				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				pass
 		cfg.uiUtls.removeProgressBar()
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " all bands clicked")
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " all bands clicked")
 		
+	def virtualRasterBandSet(self):
+		if cfg.bndSetPresent == "Yes" and cfg.rstrNm == cfg.bndSetNm:
+			ck = cfg.utls.checkBandSet()
+			rstrOut = QFileDialog.getSaveFileName(None , QApplication.translate("semiautomaticclassificationplugin", "Save virtual raster"), "", "*.vrt")
+			if len(rstrOut) > 0 and ck == "Yes":
+				if unicode(rstrOut).endswith(".vrt"):
+					rstrOut = rstrOut
+				else:
+					rstrOut = rstrOut + ".vrt"
+				st = cfg.utls.createVirtualRaster(cfg.bndSetLst, rstrOut)
+				# add virtual raster to layers
+				cfg.iface.addRasterLayer(unicode(rstrOut), unicode(os.path.basename(rstrOut)))
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " virtual raster: " + str(st))
+			elif ck == "No":
+				cfg.mx.msgErr33()
+			
+	def stackBandSet(self):
+		if cfg.bndSetPresent == "Yes" and cfg.rstrNm == cfg.bndSetNm:
+			ck = cfg.utls.checkBandSet()
+			rstrOut = QFileDialog.getSaveFileName(None , QApplication.translate("semiautomaticclassificationplugin", "Save raster"), "", "*.tif")
+			if len(rstrOut) > 0 and ck == "Yes":
+				if unicode(rstrOut).endswith(".tif"):
+					rstrOut = rstrOut
+				else:
+					rstrOut = rstrOut + ".tif"
+				st = cfg.utls.mergeRasterBands(cfg.bndSetLst, rstrOut)
+				# add raster to layers
+				cfg.iface.addRasterLayer(unicode(rstrOut), unicode(os.path.basename(rstrOut)))
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " raster: " + str(st))
+			elif ck == "No":
+				cfg.mx.msgErr33()

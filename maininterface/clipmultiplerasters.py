@@ -8,7 +8,7 @@
  the collection of training areas (ROIs), and rapidly performing the classification process (or a preview).
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012 by Luca Congedo
+		copyright			: (C) 2012-2015 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -34,6 +34,7 @@
 
 import os
 import subprocess
+import sys
 # for debugging
 import inspect
 # Import the PyQt and QGIS libraries
@@ -56,6 +57,34 @@ class ClipMultipleRasters:
 		# connect to pointerClick when map is clicked
 		self.clickLR.canvasClicked.connect(self.pointerClickLR)
 		
+	# add rubber band
+	def addRubberBandPolygon(self, pointUL, pointLR):
+		try:
+			self.clearCanvasPoly()
+		except:
+			pass
+		self.rbbrBndPol = QgsRubberBand(cfg.cnvs, 2)
+		rectangle = [[pointUL, QgsPoint(pointLR.x(), pointUL.y()), pointLR, QgsPoint(pointUL.x(), pointLR.y())]]
+		self.rbbrBndPol.setToGeometry(QgsGeometry.fromPolygon(rectangle), None)
+		clr = QColor(cfg.ROIClrVal)
+		clr.setAlpha(50)
+		try:
+			# QGIS 2.6
+			self.rbbrBndPol.setFillColor(clr)
+			#self.rbbrBndPol.setBorderColor(QColor(cfg.ROIClrOutlineValDefault))
+			#self.rbbrBndPol.setLineStyle(Qt.DotLine)
+			self.rbbrBndPol.setWidth(3)
+		except:
+			# QGIS < 2.6
+			self.rbbrBndPol.setColor(clr)
+			#self.rbbrBndPol.setLineStyle(Qt.DotLine)
+			self.rbbrBndPol.setWidth(3)
+		
+	# clear canvas
+	def clearCanvasPoly(self):
+		self.rbbrBndPol.reset(True)
+		cfg.cnvs.refresh()	
+		
 	# set all bands to state 0 or 2
 	def allRasterSetState(self, value):
 		# checklist
@@ -68,11 +97,14 @@ class ClipMultipleRasters:
 				cfg.uiUtls.updateBar((b+1) * 100 / (c))
 			else:
 				# logger
-				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " all rasters cancelled")
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " all rasters cancelled")
 		
 	# clip multiple rasters
 	def clipRasters(self):
-		oD = QFileDialog.getExistingDirectory(None , QApplication.translate("semiautomaticclassificationplugin", "Select a directory where to save clipped rasters"))
+		UX = ""
+		UY = ""
+		LX = ""
+		LY = ""
 		# creation of the required table of reclassification
 		rT = []
 		# st variable
@@ -87,29 +119,58 @@ class ClipMultipleRasters:
 				# name of item of list
 				itN = cfg.bndMdls.item(x).text()
 				rT.append(itN)
+		if len(rT) == 0:
+			cfg.mx.msgWar15()
+			return "No"
+		oD = QFileDialog.getExistingDirectory(None , QApplication.translate("semiautomaticclassificationplugin", "Select a directory where to save clipped rasters"))
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " rasters to be clipped" + str(rT))
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " rasters to be clipped" + unicode(rT))
 		if cfg.ui.shapefile_checkBox.isChecked() is True:
 			# use shape
 			uS = 1
-			sN = str(cfg.ui.shapefile_comboBox.currentText())
+			sN = cfg.ui.shapefile_comboBox.currentText()
 			sL = cfg.utls.selectLayerbyName(sN)
 			try:
-				s = str(sL.source())
+				s = sL.source()
 			except Exception, err:
 				st = "Yes"
 				cfg.mx.msgErr11()
 				# logger
-				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 		else:
 			uS = 0
 		# No data value
 		noDt = cfg.ui.nodata_spinBox.value()
 		if len(oD) > 0:
-			UX = cfg.ui.UX_lineEdit.text()
-			UY = cfg.ui.UY_lineEdit.text()
-			LX = cfg.ui.LX_lineEdit.text()
-			LY = cfg.ui.LY_lineEdit.text()
+			outputName = cfg.ui.output_clip_name_lineEdit.text()
+			if len(outputName) > 0:
+				outputName = str(outputName.encode('ascii','replace'))
+			else:
+				outputName = cfg.clipNm
+			# no shapefile
+			if uS == 0:
+				try:
+					self.clearCanvasPoly()
+					UX = cfg.ui.UX_lineEdit.text()
+					UY = cfg.ui.UY_lineEdit.text()
+					LX = cfg.ui.LX_lineEdit.text()
+					LY = cfg.ui.LY_lineEdit.text()
+					UL = QgsPoint(float(UX), float(UY))
+					LR = QgsPoint(float(LX), float(LY))
+					ULP = cfg.utls.checkPointImage(rT[0], UL, "Yes")
+					if str(cfg.pntCheck) == "No":
+						cfg.mx.msgErr34()
+						return "No"
+					LRP = cfg.utls.checkPointImage(rT[0], LR, "Yes")
+					if str(cfg.pntCheck) == "No":
+						cfg.mx.msgErr34()
+						return "No"
+					UX = str(ULP.x())
+					UY = str(ULP.y())
+					LX = str(LRP.x())
+					LY = str(LRP.y())
+				except:
+					pass
 			for l in rT:
 				lC = cfg.utls.selectLayerbyName(l, "Yes")
 				if str(l).endswith(".tif"):
@@ -117,31 +178,48 @@ class ClipMultipleRasters:
 				else:
 					l = l + ".tif"
 				try:
-					cL = "\"" + str(lC.source()) + "\""
+					cL = "\"" + lC.source().encode(sys.getfilesystemencoding()) + "\""
 				except Exception, err:
 					st = "Yes"
 					cfg.mx.msgErr11()
 					# logger
-					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				if  st != "Yes":
 					# no shapefile
 					if uS == 0 and len(UX) > 0 and len(UY) > 0 and len(LX) > 0 and len(LY) > 0:
 						try:
 							cfg.utls.getGDALForMac()
-							sP = subprocess.Popen(cfg.gdalPath + "gdal_translate -a_nodata " + str(noDt) + " -projwin " + str(UX) + " " + str(UY) + " " + str(LX) + " " + str(LY) + " -of GTiff " + cL + " \"" + str(oD) + "/" + cfg.clipNm + "_" + os.path.basename(str(l)) + "\"", shell=True)
+							a = cfg.gdalPath + "gdal_translate -a_nodata " + str(noDt) + " -projwin " + str(UX) + " " + str(UY) + " " + str(LX) + " " + str(LY) + " -of GTiff "
+							b = cL + " \"" 
+							c = oD.encode(sys.getfilesystemencoding()) + "/" 
+							d = outputName + "_" 
+							e = os.path.basename(l.encode(sys.getfilesystemencoding())) + "\""
+							f = a + b + c + d + e
+							sP = subprocess.Popen(f, shell=True)
 							sP.wait()
 						# in case of errors
 						except Exception, err:
 							# logger
-							if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+							cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 							cfg.utls.getGDALForMac()
-							sP = subprocess.Popen(cfg.gdalPath + "gdal_translate -a_nodata " + str(noDt) + " -projwin " + str(UX) + " " + str(UY) + " " + str(LX) + " " + str(LY) + " -of GTiff " + cL + " \"" + str(oD) + "/" + cfg.clipNm + "_" + os.path.basename(str(l)) + "\"", shell=True)
+							a = cfg.gdalPath + "gdal_translate -a_nodata " + str(noDt) + " -projwin " + str(UX) + " " + str(UY) + " " + str(LX) + " " + str(LY) + " -of GTiff "
+							b = cL + " \"" 
+							c = oD.encode(sys.getfilesystemencoding()) + "/" 
+							d = outputName + "_" 
+							e = os.path.basename(l.encode(sys.getfilesystemencoding())) + "\""
+							f = a + b + c + d + e
+							sP = subprocess.Popen(f, shell=True)
 							sP.wait()
 					# using shapefile
 					elif uS == 1:
 						try:
 							cfg.utls.getGDALForMac()
-							sP = subprocess.Popen(cfg.gdalPath + "gdalwarp -dstnodata " + str(noDt) + " -cutline \"" + s + "\" -crop_to_cutline -of GTiff " + cL + " \"" + str(oD) + "/" + cfg.clipNm + "_" + os.path.basename(str(l)) + "\"", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+							a = cfg.gdalPath + "gdalwarp -dstnodata " + str(noDt) + " -cutline \"" + s.encode(sys.getfilesystemencoding()) + "\" -crop_to_cutline -of GTiff " + cL + " \"" 
+							b = oD.encode(sys.getfilesystemencoding()) + "/" 
+							c = outputName + "_" 
+							d = os.path.basename(l.encode(sys.getfilesystemencoding())) + "\""
+							e = a + b + c + d
+							sP = subprocess.Popen(e, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 							sP.wait()
 							# get error
 							out, err = sP.communicate()
@@ -150,57 +228,63 @@ class ClipMultipleRasters:
 								cfg.mx.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error"), err)
 								st = "Yes"
 								# logger
-								if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " GDAL error:: " + str(err) )
+								cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " GDAL error:: " + str(err) )
 						# in case of errors
 						except Exception, err:
 							# logger
-							if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+							cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 							cfg.utls.getGDALForMac()
-							sP = subprocess.Popen(cfg.gdalPath + "gdalwarp -dstnodata " + str(noDt) + " -cutline \"" + s + "\" -crop_to_cutline -of GTiff " + cL + " \"" + str(oD) + "/" + cfg.clipNm + "_" + os.path.basename(str(l)) + "\"", shell=True)
+							a = cfg.gdalPath + "gdalwarp -dstnodata " + str(noDt) + " -cutline \"" + s.encode(sys.getfilesystemencoding()) + "\" -crop_to_cutline -of GTiff " + cL + " \"" 
+							b = oD.encode(sys.getfilesystemencoding()) + "/" 
+							c = outputName + "_" 
+							d = os.path.basename(l.encode(sys.getfilesystemencoding())) + "\""
+							e = a + b + c + d
+							sP = subprocess.Popen(e, shell=True)
 							sP.wait()	
 					else:
 						return "No"
 					try:
 						if  st != "Yes":
-							cfg.iface.addRasterLayer(str(str(oD.encode(cfg.fSEnc)) + "/clip_" + str(os.path.basename(str(l)).encode(cfg.fSEnc))), str("clip_" + str(os.path.basename(str(l)).encode(cfg.fSEnc))))
+							cfg.iface.addRasterLayer(unicode(oD) + "/" + outputName + "_" + unicode(os.path.basename(unicode(l))), unicode(outputName + "_" + unicode(os.path.basename(unicode(l)))))
 							# logger
-							if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " rasters clipped" )
+							cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " rasters clipped" )
 					except Exception, err:
 						st = "Yes"
 						# logger
-						if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+						cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 						cfg.mx.msgErr10()
-		
-	def clipSetTab(self):
-		# select clip tab
-		cfg.ui.tabWidget_preprocessing.setCurrentIndex(0)
-		# show the dialog
-		cfg.dlg.show()
+			if  st != "Yes":
+				cfg.utls.finishSound()
 		
 	# set coordinates
 	def pointerClickLR(self, point):
-		cfg.utls.pan()
 		cfg.ui.LX_lineEdit.setText(str(point.x()))
-		cfg.ui.LY_lineEdit .setText(str(point.y()))
+		cfg.ui.LY_lineEdit.setText(str(point.y()))
+		try:
+			self.addRubberBandPolygon(QgsPoint(float(cfg.ui.UX_lineEdit.text()), float(cfg.ui.UY_lineEdit.text())), QgsPoint(float(cfg.ui.LX_lineEdit.text()), float(cfg.ui.LY_lineEdit.text())))
+		except:
+			pass
 		
 	# set coordinates
 	def pointerClickUL(self, point):
-		cfg.utls.pan()
 		cfg.ui.UX_lineEdit.setText(str(point.x()))
-		cfg.ui.UY_lineEdit .setText(str(point.y()))
-		self.clipSetTab()
+		cfg.ui.UY_lineEdit.setText(str(point.y()))
+		try:
+			self.addRubberBandPolygon(QgsPoint(float(cfg.ui.UX_lineEdit.text()), float(cfg.ui.UY_lineEdit.text())), QgsPoint(float(cfg.ui.LX_lineEdit.text()), float(cfg.ui.LY_lineEdit.text())))
+		except:
+			pass
 		
 	# connect to pointer
 	def pointerLRActive(self):
 		cfg.cnvs.setMapTool(self.clickLR)
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "pointer active: LR")
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "pointer active: LR")
 		
 	# connect to pointer
 	def pointerULActive(self):
 		cfg.cnvs.setMapTool(self.clickUL)
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "pointer active: UL")
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "pointer active: UL")
 		
 	# Set rasters checklist
 	def rasterNameList(self):
@@ -222,7 +306,7 @@ class ClipMultipleRasters:
 					# Add band to model
 					cfg.bndMdls.appendRow(it)
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " raster name checklist created")
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " raster name checklist created")
 		
 	# refresh shape and training list	
 	def refreshShapeClip(self):
@@ -233,7 +317,7 @@ class ClipMultipleRasters:
 				if (l.geometryType() == QGis.Polygon):
 					cfg.dlg.shape_clip_combo(l.name())
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "shape layers refreshed")
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "shape layers refreshed")
 		
 	# select all rasters
 	def selectAllRasters(self):
@@ -257,9 +341,9 @@ class ClipMultipleRasters:
 				self.allRastersCheck = "No"
 			except Exception, err:
 				# logger
-				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				pass
 		cfg.uiUtls.removeProgressBar()
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " all rasters clicked")
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " all rasters clicked")
 	

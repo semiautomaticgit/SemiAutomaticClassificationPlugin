@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/ui_semiautomaticclassificationplugin_welcome.ui'
 #
-# Created: Wed Dec 24 22:13:56 2014
+# Created: Sat Feb 14 14:47:06 2015
 #      by: PyQt4 UI code generator 4.10
 #
 # WARNING! All changes made in this file will be lost!
@@ -26,14 +26,14 @@ except AttributeError:
 class Ui_Welcome(object):
     def setupUi(self, Welcome):
         Welcome.setObjectName(_fromUtf8("Welcome"))
-        Welcome.resize(600, 300)
+        Welcome.resize(650, 400)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(Welcome.sizePolicy().hasHeightForWidth())
         Welcome.setSizePolicy(sizePolicy)
-        Welcome.setMinimumSize(QtCore.QSize(600, 300))
-        Welcome.setMaximumSize(QtCore.QSize(600, 300))
+        Welcome.setMinimumSize(QtCore.QSize(650, 350))
+        Welcome.setMaximumSize(QtCore.QSize(650, 400))
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/plugins/semiautomaticclassificationplugin/semiautomaticclassificationplugin.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         Welcome.setWindowIcon(icon)
@@ -64,12 +64,17 @@ class Ui_Welcome(object):
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt; font-weight:600;\">Welcome to the Semi-Automatic Classification Plugin for QGIS</span></p>\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-weight:600;\"><br /></p>\n"
-"<p align=\"justify\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">The Semi-Automatic Classification Plugin allows for the semi-automatic supervised classification of remote sensing images, providing tools to expedite the creation of ROIs, the classification process, the pre processing and the post processing phases (accuracy assessment, land cover change).</p>\n"
-"<p align=\"justify\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Please, visit the <a href=\"http://fromgistors.blogspot.com/p/theinterface-2.html?spref=scp\"><span style=\" text-decoration: underline; color:#0057ae;\">user manual page</span></a> for information about the plugin interface.</p>\n"
-"<p align=\"justify\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Also, several <a href=\"http://fromgistors.blogspot.com/search/label/Tutorial/?spref=scp\"><span style=\" text-decoration: underline; color:#0057ae;\">tutorials</span></a> are available about the use of this plugin.</p>\n"
+"<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-weight:600;\"><br /></p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><img src=\":/plugins/semiautomaticclassificationplugin/icons/fromGIStoRS.png\" />  <a href=\"http://fromgistors.blogspot.com/?spref=scp\"><span style=\" font-weight:600; text-decoration: underline; color:#0057ae;\">From GIS to Remote Sensing</span></a></p>\n"
+"<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-weight:600; text-decoration: underline; color:#0057ae;\"><br /></p>\n"
+"<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-weight:600; text-decoration: underline; color:#0057ae;\"><br /></p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Please, visit the <a href=\"http://fromgistors.blogspot.com/p/theinterface-2.html?spref=scp\"><span style=\" font-weight:600; text-decoration: underline; color:#0057ae;\">user manual page</span></a> for information about the plugin interface.</p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Also, several <a href=\"http://fromgistors.blogspot.com/search/label/Tutorial/?spref=scp\"><span style=\" font-weight:600; text-decoration: underline; color:#0057ae;\">tutorials</span></a> are available about the use of this plugin.</p>\n"
 "<p align=\"justify\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
-"<p align=\"right\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"http://fromgistors.blogspot.com/?spref=scp\"><span style=\" font-weight:600; text-decoration: underline; color:#0057ae;\">From GIS to Remote Sensing</span></a></p></body></html>", None))
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"https://www.facebook.com/groups/661271663969035/\"><span style=\" text-decoration: underline; color:#0057ae;\">Semi-Automatic Classification Plugin group in Facebook</span></a></p>\n"
+"<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; text-decoration: underline; color:#0057ae;\"><br /></p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"https://plus.google.com/u/0/communities/107833394986612468374\"><span style=\" text-decoration: underline; color:#0057ae;\">Semi-Automatic Classification Plugin community in Google+</span></a></p>\n"
+"<p align=\"justify\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
+"<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", None))
 
 import resources_rc

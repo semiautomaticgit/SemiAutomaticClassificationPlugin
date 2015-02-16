@@ -8,7 +8,7 @@
  the collection of training areas (ROIs), and rapidly performing the classification process (or a preview).
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012 by Luca Congedo
+		copyright			: (C) 2012-2015 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -67,25 +67,31 @@ from ui.dockclassdialog import DockClassDialog
 # Import plugin version
 from __init__ import version as semiautomaticclassVersion
 global PluginCheck
+PluginCheck = "Yes"
 try:
 	import core.messages as msgs
 	import core.config as cfg
 	from core.utils import Utils
 	from core.signature_importer import Signature_Importer
-	PluginCheck = "Yes"
 	from roidock.manualroi import ManualROI
+	from roidock.regionroi import RegionROI
 	from roidock.roidock import RoiDock
 	from spectralsignature.spectralsignatureplot import SpectralSignaturePlot
 	from spectralsignature.scatter_plot import Scatter_Plot
 	from classificationdock.classificationdock import ClassificationDock
+	from classificationdock.classificationpreview import ClassificationPreview
 	from maininterface.multipleroiTab import MultipleROITab
 	from spectralsignature.usgs_spectral_lib import USGS_Spectral_Lib
 	from maininterface.landsatTab import LandsatTab
 	from maininterface.accuracy import Accuracy
+	from maininterface.splitTab import SplitTab
 	from maininterface.bandsetTab import BandsetTab
+	from maininterface.bandcalcTab import BandCalcTab
 	from maininterface.clipmultiplerasters import ClipMultipleRasters
 	from maininterface.landcoverchange import LandCoverChange
 	from maininterface.classreportTab import ClassReportTab
+	from maininterface.classtovectorTab import ClassToVectorTab
+	from maininterface.reclassificationTab import ReclassificationTab
 	from maininterface.settings import Settings
 	from core.input import Input
 	from ui.ui_utils import Ui_Utils
@@ -127,21 +133,32 @@ class SemiAutomaticClassificationPlugin:
 			cfg.utls = Utils()
 			cfg.ROId = RoiDock()
 			cfg.classD = ClassificationDock()
+			cfg.classPrev = ClassificationPreview(cfg.cnvs)
 			cfg.spSigPlot = SpectralSignaturePlot()
 			cfg.scaPlT = Scatter_Plot()
 			cfg.multiROI = MultipleROITab()
 			cfg.usgsLib = USGS_Spectral_Lib()
 			cfg.acc = Accuracy()
+			cfg.splitT = SplitTab()
 			cfg.bst = BandsetTab()
+			cfg.bCalc = BandCalcTab()
 			cfg.clipMulti = ClipMultipleRasters()
 			cfg.landsatT = LandsatTab()
 			cfg.landCC = LandCoverChange()
 			cfg.classRep = ClassReportTab()
+			cfg.classVect = ClassToVectorTab()
+			cfg.reclassification = ReclassificationTab()
 			cfg.sigImport = Signature_Importer()
 			cfg.mnlROI = ManualROI(cfg.cnvs)
+			cfg.regionROI = RegionROI(cfg.cnvs)
 			# connect when map is clicked
 			cfg.iface.connect(cfg.mnlROI , SIGNAL("leftClicked") , cfg.ROId.clckL)
 			cfg.iface.connect(cfg.mnlROI , SIGNAL("rightClicked") , cfg.ROId.clckR)
+			cfg.iface.connect(cfg.regionROI , SIGNAL("ROIleftClicked") , cfg.ROId.pointerClickROI)
+			cfg.iface.connect(cfg.regionROI , SIGNAL("ROIrightClicked") , cfg.ROId.pointerRightClickROI)
+			cfg.iface.connect(cfg.regionROI , SIGNAL("moved") , cfg.ROId.movedPointer)
+			cfg.iface.connect(cfg.classPrev , SIGNAL("leftClicked") , cfg.classD.pointerClickPreview)
+			cfg.iface.connect(cfg.classPrev , SIGNAL("rightClicked") , cfg.classD.pointerRightClickPreview)
 			cfg.sets = Settings()
 			cfg.uiUtls = Ui_Utils()
 			cfg.ipt = Input()
@@ -171,12 +188,14 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ROIClrVal = rK.value(cfg.regROIClr, cfg.ROIClrVal)
 			cfg.ROITrnspVal = int(rK.value(cfg.regROITransp, cfg.ROITrnspVal))
 			cfg.algFilesCheck = rK.value(cfg.regAlgFiles, str(cfg.algFilesCheck))
+			cfg.outTempRastFormat = rK.value(cfg.regTempRasterFormat, str(cfg.outTempRastFormat))
 			cfg.RAMValue = int(rK.value(cfg.regRAMValue, str(cfg.RAMValue)))
 			cfg.fldID_class = rK.value(cfg.regIDFieldName, cfg.fldID_class)
 			cfg.fldMacroID_class = rK.value(cfg.regMacroIDFieldName, cfg.fldMacroID_class)
 			cfg.macroclassCheck = rK.value(cfg.regConsiderMacroclass, cfg.macroclassCheck)
 			cfg.fldROI_info = rK.value(cfg.regInfoFieldName, cfg.fldROI_info)
 			cfg.fldROIMC_info = rK.value(cfg.regMCInfoFieldName, cfg.fldROIMC_info)
+			cfg.variableName = rK.value(cfg.regVariableName, cfg.variableName)
 			cfg.bndSetNm = rK.value(cfg.regBandSetName, cfg.bndSetNm)
 			cfg.roundCharList = rK.value(cfg.regRoundCharList, cfg.roundCharList)
 			cfg.grpNm = rK.value(cfg.regGroupName, cfg.grpNm)
@@ -193,99 +212,244 @@ class SemiAutomaticClassificationPlugin:
 			""" info """
 			# QGIS version
 			cfg.QGISVer = QGis.QGIS_VERSION_INT
-			cfg.sysNm = str(platform.system())
 			# system information
-			cfg.sysInfo = str(" SemiAutomaticClass " + semiautomaticclassVersion() + " - QGIS v. " + str(cfg.QGISVer) + " - OS " + str(os.name))
-		
+			cfg.sysNm = platform.system()
+			cfg.sysInfo = str(" SemiAutomaticClass " + semiautomaticclassVersion() + " - QGIS v. " + str(cfg.QGISVer) + " - OS " + str(cfg.sysNm))
+			
+	# load SCP menu
+	def loadMenu(self):
+		cfg.menu = QMenu(cfg.iface.mainWindow())
+		cfg.menu.setObjectName('semiautomaticclassificationplugin')
+		cfg.menu.setTitle(QApplication.translate("semiautomaticclassificationplugin", "SCP"))
+		menuBar = cfg.iface.mainWindow().menuBar()
+		menuBar.insertMenu(cfg.iface.firstRightStandardMenu().menuAction(), cfg.menu)
+		# main action
+		cfg.menu.addAction(cfg.mainAction)
+		# Band set
+		self.bandset_action = QAction(QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_bandset_tool.png"), "Band set", cfg.iface.mainWindow())
+		self.bandset_action.setObjectName("bandset_action")
+		QObject.connect(self.bandset_action, SIGNAL("triggered()"), cfg.utls.bandSetTab)
+		cfg.menu.addAction(self.bandset_action)
+		# Spectral plot
+		self.spectral_plot_action = QAction(QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_sign_tool.png"), "Spectral plot", cfg.iface.mainWindow())
+		self.spectral_plot_action.setObjectName("spectral_plot_action")
+		QObject.connect(self.spectral_plot_action, SIGNAL("triggered()"), cfg.utls.spectralPlotTab)
+		cfg.menu.addAction(self.spectral_plot_action)
+		# scatter plot
+		self.scatter_plot_action = QAction(QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_scatter_tool.png"), "Scatter plot", cfg.iface.mainWindow())
+		self.scatter_plot_action.setObjectName("scatter_plot_action")
+		QObject.connect(self.scatter_plot_action, SIGNAL("triggered()"), cfg.utls.scatterPlotTab)
+		cfg.menu.addAction(self.scatter_plot_action)
+		# Tools
+		cfg.tools_menu = cfg.menu.addMenu(QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_roi_tool.png"), QApplication.translate("semiautomaticclassificationplugin", "Tools"))
+		# Multiple ROI creation
+		self.multiple_ROI_creation_action = QAction(QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_roi_multiple.png"), "Multiple ROI creation", cfg.iface.mainWindow())
+		self.multiple_ROI_creation_action.setObjectName("multiple_ROI_creation_action")
+		QObject.connect(self.multiple_ROI_creation_action, SIGNAL("triggered()"), cfg.utls.mutlipleROITab)
+		cfg.tools_menu.addAction(self.multiple_ROI_creation_action)
+		# USGS Spectral Library
+		self.USGS_spectral_library_action = QAction(QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_import_USGS_spectral_library.png"), "USGS Spectral Library", cfg.iface.mainWindow())
+		self.USGS_spectral_library_action.setObjectName("USGS_spectral_library_action")
+		QObject.connect(self.USGS_spectral_library_action, SIGNAL("triggered()"), cfg.utls.importUSGSLibraryTab)
+		cfg.tools_menu.addAction(self.USGS_spectral_library_action)
+		# Pre processing
+		cfg.preprocessing_menu = cfg.menu.addMenu(QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_class_tool.png"), QApplication.translate("semiautomaticclassificationplugin", "Pre processing"))
+		# Landsat
+		self.landsat_action = QAction(QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_landsat8_tool.png"), "Landsat", cfg.iface.mainWindow())
+		self.landsat_action.setObjectName("landsat_action")
+		QObject.connect(self.landsat_action, SIGNAL("triggered()"), cfg.utls.landsatTab)
+		cfg.preprocessing_menu.addAction(self.landsat_action)
+		# Clip multiple rasters
+		self.clip_multiple_rasters_action = QAction(QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_clip_tool.png"), "Clip multiple rasters", cfg.iface.mainWindow())
+		self.clip_multiple_rasters_action.setObjectName("clip_multiple_rasters_action")
+		QObject.connect(self.clip_multiple_rasters_action, SIGNAL("triggered()"), cfg.utls.clipMultipleRastersTab)
+		cfg.preprocessing_menu.addAction(self.clip_multiple_rasters_action)
+		# Split raster bands
+		self.split_raster_bands_action = QAction(QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_split_raster.png"), "Split raster bands", cfg.iface.mainWindow())
+		self.split_raster_bands_action.setObjectName("split_raster_bands_action")
+		QObject.connect(self.split_raster_bands_action, SIGNAL("triggered()"), cfg.utls.splitrasterbandsTab)
+		cfg.preprocessing_menu.addAction(self.split_raster_bands_action)
+		# Post processing
+		cfg.postprocessing_menu = cfg.menu.addMenu(QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_post_process.png"), QApplication.translate("semiautomaticclassificationplugin", "Post processing"))
+		# Accuracy
+		self.accuracy_action = QAction(QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_accuracy_tool.png"), "Accuracy", cfg.iface.mainWindow())
+		self.accuracy_action.setObjectName("accuracy_action")
+		QObject.connect(self.accuracy_action, SIGNAL("triggered()"), cfg.utls.accuracyTab)
+		cfg.postprocessing_menu.addAction(self.accuracy_action)
+		# Land cover change
+		self.land_cover_change_action = QAction(QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_land_cover_change.png"), "Land cover change", cfg.iface.mainWindow())
+		self.land_cover_change_action.setObjectName("land_cover_change_action")
+		QObject.connect(self.land_cover_change_action, SIGNAL("triggered()"), cfg.utls.landCoverChangeTab)
+		cfg.postprocessing_menu.addAction(self.land_cover_change_action)
+		# Classification report
+		self.classification_report_action = QAction(QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_report_tool.png"), "Classification report", cfg.iface.mainWindow())
+		self.classification_report_action.setObjectName("classification_report_action")
+		QObject.connect(self.classification_report_action, SIGNAL("triggered()"), cfg.utls.classificationReportTab)
+		cfg.postprocessing_menu.addAction(self.classification_report_action)
+		# Classification to vector
+		self.class_to_vector_action = QAction(QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_class_to_vector_tool.png"), "Classification to vector", cfg.iface.mainWindow())
+		self.class_to_vector_action.setObjectName("class_to_vector_action")
+		QObject.connect(self.class_to_vector_action, SIGNAL("triggered()"), cfg.utls.classToVectorTab)
+		cfg.postprocessing_menu.addAction(self.class_to_vector_action)
+		# Reclassification
+		self.reclassification_action = QAction(QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_reclassification_tool.png"), "Reclassification", cfg.iface.mainWindow())
+		self.reclassification_action.setObjectName("reclassification_action")
+		QObject.connect(self.reclassification_action, SIGNAL("triggered()"), cfg.utls.reclassificationTab)
+		cfg.postprocessing_menu.addAction(self.reclassification_action)
+		# Band calc
+		self.bandcalc_action = QAction(QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_bandcalc_tool.png"), "Band calc", cfg.iface.mainWindow())
+		self.bandcalc_action.setObjectName("bandcalc_action")
+		QObject.connect(self.bandcalc_action, SIGNAL("triggered()"), cfg.utls.bandCalcTab)
+		cfg.menu.addAction(self.bandcalc_action)
+		# Settings
+		cfg.settings_menu = cfg.menu.addMenu(QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_settings_tool.png"), QApplication.translate("semiautomaticclassificationplugin", "Settings"))
+		# Settings interface
+		self.settings_interface_action = QAction("Interface", cfg.iface.mainWindow())
+		self.settings_interface_action.setObjectName("settings_interface_action")
+		QObject.connect(self.settings_interface_action, SIGNAL("triggered()"), cfg.utls.settingsInterfaceTab)
+		cfg.settings_menu.addAction(self.settings_interface_action)
+		# Settings processing
+		self.settings_processing_action = QAction("Processing", cfg.iface.mainWindow())
+		self.settings_processing_action.setObjectName("settings_processing_action")
+		QObject.connect(self.settings_processing_action, SIGNAL("triggered()"), cfg.utls.settingsProcessingTab)
+		cfg.settings_menu.addAction(self.settings_processing_action)
+		# Settings debug
+		self.settings_debug_action = QAction("Debug", cfg.iface.mainWindow())
+		self.settings_debug_action.setObjectName("settings_debug_action")
+		QObject.connect(self.settings_debug_action, SIGNAL("triggered()"), cfg.utls.settingsDebugTab)
+		cfg.settings_menu.addAction(self.settings_debug_action)
+		# user guide
+		self.userguide_action = QAction(QIcon(":/plugins/semiautomaticclassificationplugin/icons/guide.png"), "User guide", cfg.iface.mainWindow())
+		self.userguide_action.setObjectName("userguide_action")
+		QObject.connect(self.userguide_action, SIGNAL("triggered()"), self.quickGuide)
+		cfg.menu.addAction(self.userguide_action)
+		# help
+		self.help_action = QAction(QIcon(":/plugins/semiautomaticclassificationplugin/icons/help.png"), "Online help", cfg.iface.mainWindow())
+		self.help_action.setObjectName("help_action")
+		QObject.connect(self.help_action, SIGNAL("triggered()"), self.askHelp)
+		cfg.menu.addAction(self.help_action)
+		# About
+		self.about_action = QAction(QIcon(":/plugins/semiautomaticclassificationplugin/icons/fromGIStoRS.png"), "About", cfg.iface.mainWindow())
+		self.about_action.setObjectName("about_action")
+		QObject.connect(self.about_action, SIGNAL("triggered()"), cfg.utls.aboutTab)
+		cfg.menu.addAction(self.about_action)
+			
 	def initGui(self):
 		if PluginCheck == "Yes":
 			""" toolbar """
-			self.toolBar = cfg.iface.addToolBar("SCP Toolbar")
-			self.toolBar.setObjectName("SCP Toolbar")
+			cfg.toolBar = cfg.iface.addToolBar("SCP Toolbar")
+			cfg.toolBar.setObjectName("SCP Toolbar")
 			# main tool
 			cfg.main_toolButton = QPushButton(QIcon(":/plugins/semiautomaticclassificationplugin/semiautomaticclassificationplugin.png"), u"")
 			cfg.main_toolButton.setStyleSheet(" border: none;margin: 2px;icon-size: 24px; color: black")
 			cfg.main_toolButton.setToolTip(QApplication.translate("semiautomaticclassificationplugin", "Semi-Automatic Classification Plugin"))
-			self.toolBar.addWidget(cfg.main_toolButton)
+			cfg.toolBar.addWidget(cfg.main_toolButton)
 			cfg.main_toolButton.clicked.connect(self.showPlugin)
 			cfg.iface.addDockWidget(Qt.RightDockWidgetArea, cfg.dockdlg)
 			cfg.iface.addDockWidget(Qt.LeftDockWidgetArea, cfg.dockclassdlg)
 			# add toolbar button and menu item
 			cfg.mainAction = QAction(QIcon(":/plugins/semiautomaticclassificationplugin/semiautomaticclassificationplugin.png"), u"Semi-Automatic Classification Plugin", cfg.iface.mainWindow())
 			cfg.mainAction.triggered.connect(self.showPlugin)
-			cfg.iface.addPluginToRasterMenu(u"&Semi-Automatic Classification Plugin", cfg.mainAction)
-			self.lblInput = QLabel(cfg.iface.mainWindow())
 			font = QFont()
 			font.setFamily(_fromUtf8("FreeSans"))
 			font.setBold(True)
 			font.setWeight(75)
 			# label Input
+			self.lblInput = QLabel(cfg.iface.mainWindow())
 			self.lblInput.setFont(font)
 			self.lblInput.setStyleSheet(_fromUtf8("background-color : qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #243a4e, stop:1 rgba(0, 0, 0, 0)); color : white"))
 			self.lblInput.setObjectName(_fromUtf8("lblInput"))
 			self.lblInput.setFixedWidth(90)
 			self.lblInput.setMaximumHeight(18)
 			self.lblInput.setText(QApplication.translate("SemiAutomaticClassificationPlugin", " Input image", None))
-			self.toolBar.addWidget(self.lblInput)
+			cfg.toolBar.addWidget(self.lblInput)
 			# combo layer
 			cfg.raster_name_combo = QComboBox(cfg.iface.mainWindow())
 			cfg.raster_name_combo.setFixedWidth(200)
-			raster_name_comboAction = self.toolBar.addWidget(cfg.raster_name_combo)
+			raster_name_comboAction = cfg.toolBar.addWidget(cfg.raster_name_combo)
 			cfg.raster_name_combo.setToolTip(QApplication.translate("semiautomaticclassificationplugin", "Select an image"))
 			cfg.raster_name_combo.currentIndexChanged.connect(cfg.ipt.rasterLayerName)
 			# button reload raster
 			cfg.toolButton_reload = QPushButton(u"↺")
 			cfg.toolButton_reload.setToolTip(QApplication.translate("semiautomaticclassificationplugin", "Refresh list"))
-			self.toolBar.addWidget(cfg.toolButton_reload)
+			cfg.toolBar.addWidget(cfg.toolButton_reload)
 			cfg.toolButton_reload.clicked.connect(cfg.ipt.checkRefreshRasterLayer)
+			# label RGB
+			self.lblRGB = QLabel(cfg.iface.mainWindow())
+			self.lblRGB.setFont(font)
+			self.lblRGB.setStyleSheet(_fromUtf8("background-color : qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #243a4e, stop:1 rgba(0, 0, 0, 0)); color : white"))
+			self.lblRGB.setObjectName(_fromUtf8("lblRGB"))
+			self.lblRGB.setFixedWidth(50)
+			self.lblRGB.setMaximumHeight(18)
+			self.lblRGB.setText(QApplication.translate("SemiAutomaticClassificationPlugin", " RGB=", None))
+			cfg.toolBar.addWidget(self.lblRGB)
+			# combo RGB composite
+			cfg.rgb_combo = QComboBox(cfg.iface.mainWindow())
+			cfg.rgb_combo.setFixedWidth(70)
+			cfg.rgb_combo.setEditable(True)
+			#cfg.rgb_combo.lineEdit().setMaxLength(3)
+			rgb_comboAction = cfg.toolBar.addWidget(cfg.rgb_combo)
+			cfg.rgb_combo.setToolTip(QApplication.translate("semiautomaticclassificationplugin", "Select a RGB color composite"))
+			cfg.rgb_combo.addItem("-")
+			cfg.rgb_combo.addItem("3-2-1")
+			cfg.rgb_combo.addItem("4-3-2")
+			cfg.rgb_combo.currentIndexChanged.connect(cfg.utls.setRGBColorComposite)
 			# band set button
 			cfg.bandset_toolButton = QPushButton(QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_bandset_tool.png"), u"")
 			cfg.bandset_toolButton.setStyleSheet(" border: none;margin: 2px;icon-size: 24px; color: black")
 			cfg.bandset_toolButton.setToolTip(QApplication.translate("semiautomaticclassificationplugin", "Band set"))
-			self.toolBar.addWidget(cfg.bandset_toolButton)
+			cfg.toolBar.addWidget(cfg.bandset_toolButton)
 			cfg.bandset_toolButton.clicked.connect(cfg.utls.bandSetTab)
 			# spectral signature plot button
 			cfg.spectral_plot_toolButton = QPushButton(QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_sign_tool.png"), u"")
 			cfg.spectral_plot_toolButton.setStyleSheet(" border: none;margin: 2px;icon-size: 24px; color: black")
 			cfg.spectral_plot_toolButton.setToolTip(QApplication.translate("semiautomaticclassificationplugin", "Spectral plot"))
-			self.toolBar.addWidget(cfg.spectral_plot_toolButton)
+			cfg.toolBar.addWidget(cfg.spectral_plot_toolButton)
 			cfg.spectral_plot_toolButton.clicked.connect(cfg.utls.spectralPlotTab)
 			# ROI tools button
 			cfg.ROItools_toolButton = QPushButton(QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_roi_tool.png"), u"")
 			cfg.ROItools_toolButton.setStyleSheet(" border: none;margin: 2px;icon-size: 24px; color: black")
 			cfg.ROItools_toolButton.setToolTip(QApplication.translate("semiautomaticclassificationplugin", "ROI tools"))
-			self.toolBar.addWidget(cfg.ROItools_toolButton)
+			cfg.toolBar.addWidget(cfg.ROItools_toolButton)
 			cfg.ROItools_toolButton.clicked.connect(cfg.utls.roiToolsTab)
 			# Pre processing button
 			cfg.preprocessing_toolButton = QPushButton(QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_class_tool.png"), u"")
 			cfg.preprocessing_toolButton.setStyleSheet(" border: none;margin: 2px;icon-size: 24px; color: black")
 			cfg.preprocessing_toolButton.setToolTip(QApplication.translate("semiautomaticclassificationplugin", "Pre processing"))
-			self.toolBar.addWidget(cfg.preprocessing_toolButton)
+			cfg.toolBar.addWidget(cfg.preprocessing_toolButton)
 			cfg.preprocessing_toolButton.clicked.connect(cfg.utls.preProcessingTab)
 			# Post processing button
 			cfg.postprocessing_toolButton = QPushButton(QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_post_process.png"), u"")
 			cfg.postprocessing_toolButton.setStyleSheet(" border: none;margin: 2px;icon-size: 24px; color: black")
 			cfg.postprocessing_toolButton.setToolTip(QApplication.translate("semiautomaticclassificationplugin", "Post processing"))
-			self.toolBar.addWidget(cfg.postprocessing_toolButton)
+			cfg.toolBar.addWidget(cfg.postprocessing_toolButton)
 			cfg.postprocessing_toolButton.clicked.connect(cfg.utls.postProcessingTab)
+			# Band calc button
+			cfg.bandcalc_toolButton = QPushButton(QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_bandcalc_tool.png"), u"")
+			cfg.bandcalc_toolButton.setStyleSheet(" border: none;margin: 2px;icon-size: 24px; color: black")
+			cfg.bandcalc_toolButton.setToolTip(QApplication.translate("semiautomaticclassificationplugin", "Band calc"))
+			cfg.toolBar.addWidget(cfg.bandcalc_toolButton)
+			cfg.bandcalc_toolButton.clicked.connect(cfg.utls.bandCalcTab)			
 			# Settings button
 			cfg.settings_toolButton = QPushButton(QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_settings_tool.png"), u"")
 			cfg.settings_toolButton.setStyleSheet(" border: none;margin: 2px;icon-size: 24px; color: black")
 			cfg.settings_toolButton.setToolTip(QApplication.translate("semiautomaticclassificationplugin", "Settings"))
-			self.toolBar.addWidget(cfg.settings_toolButton)
+			cfg.toolBar.addWidget(cfg.settings_toolButton)
 			cfg.settings_toolButton.clicked.connect(cfg.utls.settingsTab)
 			# User guide button
 			cfg.userguide_toolButton = QPushButton(QIcon(":/plugins/semiautomaticclassificationplugin/icons/guide.png"), u"")
 			cfg.userguide_toolButton.setStyleSheet(" border: none;margin: 2px;icon-size: 24px; color: black")
 			cfg.userguide_toolButton.setToolTip(QApplication.translate("semiautomaticclassificationplugin", "User guide"))
-			self.toolBar.addWidget(cfg.userguide_toolButton)
+			cfg.toolBar.addWidget(cfg.userguide_toolButton)
 			cfg.userguide_toolButton.clicked.connect(self.quickGuide)
 			# Help button
 			cfg.help_toolButton = QPushButton(QIcon(":/plugins/semiautomaticclassificationplugin/icons/help.png"), u"")
 			cfg.help_toolButton.setStyleSheet(" border: none;margin: 2px;icon-size: 24px; color: black")
 			cfg.help_toolButton.setToolTip(QApplication.translate("semiautomaticclassificationplugin", "Online help"))
-			self.toolBar.addWidget(cfg.help_toolButton)
+			cfg.toolBar.addWidget(cfg.help_toolButton)
 			cfg.help_toolButton.clicked.connect(self.askHelp)
+			""" menu """
+			self.loadMenu()
 			# set plugin version
 			cfg.ui.plugin_version_label.setText(semiautomaticclassVersion())
 			# ROI list ID column
@@ -295,6 +459,11 @@ class SemiAutomaticClassificationPlugin:
 			cfg.utls.sortTableColumn(cfg.uid.ROI_tableWidget, 4)
 			cfg.uid.ROI_tableWidget.setColumnWidth(0, 40)
 			cfg.uid.ROI_tableWidget.setColumnWidth(2, 40)
+			try:
+				cfg.uid.ROI_tableWidget.horizontalHeader().setResizeMode(1, QHeaderView.Stretch)
+				cfg.uid.ROI_tableWidget.horizontalHeader().setResizeMode(3, QHeaderView.Stretch)
+			except:
+				pass
 			# signature list
 			cfg.uidc.signature_list_tableWidget.insertColumn(6)
 			cfg.uidc.signature_list_tableWidget.setHorizontalHeaderItem(6, QTableWidgetItem(cfg.tableColString))
@@ -304,6 +473,11 @@ class SemiAutomaticClassificationPlugin:
 			cfg.uidc.signature_list_tableWidget.setColumnWidth(1, 40)
 			cfg.uidc.signature_list_tableWidget.setColumnWidth(3, 40)
 			cfg.uidc.signature_list_tableWidget.setColumnWidth(5, 30)
+			try:
+				cfg.uidc.signature_list_tableWidget.horizontalHeader().setResizeMode(2, QHeaderView.Stretch)
+				cfg.uidc.signature_list_tableWidget.horizontalHeader().setResizeMode(4, QHeaderView.Stretch)
+			except:
+				pass
 			# spectral signature plot list
 			cfg.uisp.signature_list_plot_tableWidget.insertColumn(6)
 			cfg.uisp.signature_list_plot_tableWidget.setHorizontalHeaderItem(6, QTableWidgetItem(cfg.tableColString))
@@ -315,6 +489,11 @@ class SemiAutomaticClassificationPlugin:
 			cfg.uisp.signature_list_plot_tableWidget.setColumnWidth(3, 40)
 			cfg.uisp.signature_list_plot_tableWidget.setColumnWidth(4, 100)
 			cfg.uisp.signature_list_plot_tableWidget.setColumnWidth(5, 30)
+			try:
+				cfg.uisp.signature_list_plot_tableWidget.horizontalHeader().setResizeMode(2, QHeaderView.Stretch)
+				cfg.uisp.signature_list_plot_tableWidget.horizontalHeader().setResizeMode(4, QHeaderView.Stretch)
+			except:
+				pass
 			# scatter plot list
 			cfg.uiscp.scatter_list_plot_tableWidget.insertColumn(6)
 			cfg.uiscp.scatter_list_plot_tableWidget.setHorizontalHeaderItem(6, QTableWidgetItem(cfg.tableColString))
@@ -326,6 +505,11 @@ class SemiAutomaticClassificationPlugin:
 			cfg.uiscp.scatter_list_plot_tableWidget.setColumnWidth(3, 40)
 			cfg.uiscp.scatter_list_plot_tableWidget.setColumnWidth(4, 100)
 			cfg.uiscp.scatter_list_plot_tableWidget.setColumnWidth(5, 30)
+			try:
+				cfg.uiscp.scatter_list_plot_tableWidget.horizontalHeader().setResizeMode(2, QHeaderView.Stretch)
+				cfg.uiscp.scatter_list_plot_tableWidget.horizontalHeader().setResizeMode(4, QHeaderView.Stretch)
+			except:
+				pass
 			# band set list
 			cfg.ui.tableWidget.setColumnWidth(0, 220)
 			cfg.ui.tableWidget.setColumnWidth(1, 80)
@@ -343,6 +527,7 @@ class SemiAutomaticClassificationPlugin:
 			# set log state
 			if cfg.logSetVal == "Yes":
 				cfg.ui.log_checkBox.setCheckState(2)
+				cfg.mx.msg19()
 			elif cfg.logSetVal == "No":
 				cfg.ui.log_checkBox.setCheckState(0)
 			# set alg files state
@@ -350,6 +535,11 @@ class SemiAutomaticClassificationPlugin:
 				cfg.ui.alg_files_checkBox.setCheckState(2)
 			elif cfg.algFilesCheck == "No":
 				cfg.ui.alg_files_checkBox.setCheckState(0)
+			# set alg files state
+			if cfg.outTempRastFormat == "VRT":
+				cfg.ui.virtual_raster_checkBox.setCheckState(2)
+			elif cfg.outTempRastFormat == "GTiff":
+				cfg.ui.virtual_raster_checkBox.setCheckState(0)
 			# set sound state
 			if cfg.soundVal == "Yes":
 				cfg.ui.sound_checkBox.setCheckState(2)
@@ -386,8 +576,10 @@ class SemiAutomaticClassificationPlugin:
 			# set Info field name line
 			cfg.ui.Info_field_name_lineEdit.setText(cfg.fldROI_info)
 			cfg.ui.MCInfo_field_name_lineEdit.setText(cfg.fldROIMC_info)
+			cfg.ui.variable_name_lineEdit.setText(cfg.variableName)
+			cfg.ui.group_name_lineEdit.setText(cfg.grpNm)
 			# reload layers in combos
-			cfg.acc.refreshClassificationLayer()
+			cfg.utls.refreshClassificationLayer()
 			cfg.acc.refreshReferenceLayer()
 			cfg.landCC.refreshClassificationReferenceLayer()
 			cfg.landCC.refreshNewClassificationLayer()
@@ -414,19 +606,25 @@ class SemiAutomaticClassificationPlugin:
 			# connect to activate ROI pointer 
 			cfg.uid.polygonROI_Button.clicked.connect(cfg.ROId.pointerManualROIActive)
 			# connect to pointerClick when map is clicked
-			cfg.clickROI.canvasClicked.connect(cfg.ROId.pointerClickROI)
+			#cfg.clickROI.canvasClicked.connect(cfg.ROId.pointerClickROI)
 			# connect to redo ROI 
 			cfg.uid.redo_ROI_Button.clicked.connect(cfg.ROId.redoROI)
 			# connect to multiple ROI creation
 			cfg.uid.mutlipleROI_Button.clicked.connect(cfg.utls.mutlipleROITab)
 			# connect to undo save ROI 
 			cfg.uid.undo_save_Button.clicked.connect(cfg.ROId.undoSaveROI)
+			# connect the vegetation index combo	
+			cfg.uid.vegetation_index_comboBox.currentIndexChanged.connect(cfg.ROId.vegetationIndexName)
 			# connect the Min ROI size spin	
 			cfg.uid.Min_region_size_spin.valueChanged.connect(cfg.ROId.minROISize)
 			# connect the Max ROI width spin	
 			cfg.uid.Max_ROI_width_spin.valueChanged.connect(cfg.ROId.maxROIWidth)
 			# connect the Range Radius	
 			cfg.uid.Range_radius_spin.valueChanged.connect(cfg.ROId.rangeRadius)
+			# connect to show ROI radio button
+			cfg.uid.show_ROI_radioButton.clicked.connect(cfg.ROId.showHideROI)
+			# connect to automatic refresh ROI radio button
+			cfg.uid.auto_refresh_ROI_radioButton.clicked.connect(cfg.ROId.automaticRefreshROI)
 			# connect to save to shapefile 
 			cfg.uid.button_Save_ROI.clicked.connect(cfg.ROId.saveROItoShapefile)
 			# connect the ROI Class 
@@ -441,7 +639,9 @@ class SemiAutomaticClassificationPlugin:
 			cfg.uid.signature_checkBox.stateChanged.connect(cfg.ROId.signatureCheckbox)
 			# connect the rapid ROI checkBox
 			cfg.uid.rapid_ROI_checkBox.stateChanged.connect(cfg.ROId.rapidROICheckbox)
-			# connect the rapid ROI band
+			# connect the rapid ROI checkBox
+			cfg.uid.display_cursor_checkBox.stateChanged.connect(cfg.ROId.vegetationIndexCheckbox)
+			# connect the vegetation index display checkbox
 			cfg.uid.rapidROI_band_spinBox.valueChanged.connect(cfg.ROId.rapidROIband)
 			""" Multiple ROI tab """
 			# connect to add point
@@ -465,9 +665,11 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.usgs_library_comboBox.currentIndexChanged.connect(cfg.usgsLib.libraryChanged)
 			# connect the close library
 			cfg.ui.add_usgs_library_pushButton.clicked.connect(cfg.usgsLib.addSignatureToList)
-			""" Classification tab """
+			""" Classification dock """
 			# connect to save signature list to file
 			cfg.uidc.save_signature_list_toolButton.clicked.connect(cfg.classD.saveSignatureListToFile)
+			# connect to save signature list to file
+			cfg.uidc.reset_signature_toolButton.clicked.connect(cfg.classD.resetSignatureList)
 			# connect to open signature list
 			cfg.uidc.open_signature_list_toolButton.clicked.connect(cfg.classD.openSignatureList)
 			# connect to export signature list file
@@ -488,10 +690,14 @@ class SemiAutomaticClassificationPlugin:
 			cfg.uidc.signature_list_tableWidget.doubleClicked.connect(cfg.classD.signatureListDoubleClick)
 			# connect to delete signature
 			cfg.uidc.delete_Signature_Button.clicked.connect(cfg.classD.removeSelectedSignatures)
+			# connect to merge signatures
+			cfg.uidc.merge_signature_toolButton.clicked.connect(cfg.classD.mergeSelectedSignatures)
 			# connect to activate preview pointer 
 			cfg.uidc.pointerButton_preview.clicked.connect(cfg.classD.pointerPreviewActive)
 			# connect to redo preview 
 			cfg.uidc.redo_Preview_Button.clicked.connect(cfg.classD.redoPreview)
+			# connect to show preview radio button
+			cfg.uidc.show_preview_radioButton.clicked.connect(cfg.classD.showHidePreview)
 			# connect the algorithm combo	
 			cfg.uidc.algorithm_combo.currentIndexChanged.connect(cfg.classD.algorithmName)
 			# connect the algorithm threshold
@@ -554,9 +760,13 @@ class SemiAutomaticClassificationPlugin:
 			# connect to export band set button
 			cfg.ui.export_bandset_toolButton.clicked.connect(cfg.bst.exportBandSet)
 			# connect to satellite wavelength combo
-			cfg.ui.wavelength_sat_combo.currentIndexChanged.connect(cfg.bst.setSatelliteWavelength)
+			cfg.ui.wavelength_sat_combo.currentIndexChanged.connect(cfg.bst.satelliteWavelength)
 			# connect to unit combo
 			cfg.ui.unit_combo.currentIndexChanged.connect(cfg.bst.setBandUnit)
+			# connect to Create virtual raster button
+			cfg.ui.virtual_raster_bandset_toolButton.clicked.connect(cfg.bst.virtualRasterBandSet)
+			# connect to Create virtual raster button
+			cfg.ui.stack_bandset_toolButton.clicked.connect(cfg.bst.stackBandSet)
 			""" Pre processing tab """
 			""" Clip multiple rasters """
 			# connect to clip button
@@ -574,14 +784,27 @@ class SemiAutomaticClassificationPlugin:
 			""" Landsat tab """
 			# connect to refresh button
 			cfg.ui.toolButton_directoryInput.clicked.connect(cfg.landsatT.inputLandsat)
-			cfg.ui.toolButton_directoryOutput.clicked.connect(cfg.landsatT.outputLandsat)
+			cfg.ui.toolButton_directoryInput_MTL.clicked.connect(cfg.landsatT.inputMTL)
 			cfg.ui.pushButton_Conversion.clicked.connect(cfg.landsatT.performLandsatCorrection)
+			cfg.ui.pushButton_remove_band.clicked.connect(cfg.landsatT.removeHighlightedBand)
+			cfg.ui.landsat_tableWidget.cellChanged.connect(cfg.landsatT.editedCell)
+			cfg.ui.earth_sun_dist_lineEdit.textChanged.connect(cfg.landsatT.editedEarthSunDist)
+			cfg.ui.sun_elev_lineEdit.textChanged.connect(cfg.landsatT.editedSunElevation)
+			cfg.ui.date_lineEdit.textChanged.connect(cfg.landsatT.editedDate)
+			cfg.ui.satellite_lineEdit.textChanged.connect(cfg.landsatT.editedSatellite)
+			""" Split tab """
+			# connect the classification combo
+			cfg.ui.raster_name_combo.currentIndexChanged.connect(cfg.splitT.rasterLayerName)
+			# connect to refresh button
+			cfg.ui.toolButton_reload_9.clicked.connect(cfg.splitT.refreshClassificationLayer)
+			# connect to split raster button
+			cfg.ui.split_Button.clicked.connect(cfg.splitT.splitRaster)
 			""" Post processing tab """
 			""" accuracy tab """
 			# connect the classification combo
 			cfg.ui.classification_name_combo.currentIndexChanged.connect(cfg.acc.classificationLayerName)
 			# connect to refresh button
-			cfg.ui.toolButton_reload_4.clicked.connect(cfg.acc.refreshClassificationLayer)
+			cfg.ui.toolButton_reload_4.clicked.connect(cfg.utls.refreshClassificationLayer)
 			# connect the reference combo
 			cfg.ui.reference_name_combo.currentIndexChanged.connect(cfg.acc.referenceLayerName)
 			# connect to refresh button
@@ -603,11 +826,56 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.calculateLandCoverChange_toolButton.clicked.connect(cfg.landCC.landCoverChange)
 			""" Classification report """
 			# connect to refresh button
-			cfg.ui.toolButton_reload_10.clicked.connect(cfg.acc.refreshClassificationLayer)
+			cfg.ui.toolButton_reload_10.clicked.connect(cfg.utls.refreshClassificationLayer)
 			# connect to calculate button
 			cfg.ui.calculateReport_toolButton.clicked.connect(cfg.classRep.calculateClassReport)
 			# connect to calculate button
 			cfg.ui.saveReport_toolButton.clicked.connect(cfg.classRep.saveReport)
+			""" Classification to vector """
+			# connect to refresh button
+			cfg.ui.toolButton_reload_12.clicked.connect(cfg.utls.refreshClassificationLayer)
+			# connect to convert button
+			cfg.ui.convert_toolButton.clicked.connect(cfg.classVect.convertClassificationToVector)
+			""" Reclassification """
+			# connect to refresh button
+			cfg.ui.toolButton_reload_11.clicked.connect(cfg.utls.refreshClassificationLayer)
+			# connect to reclassify button
+			cfg.ui.reclassify_toolButton.clicked.connect(cfg.reclassification.reclassify)
+			# connect to calculate unique values button
+			cfg.ui.calculate_unique_values_toolButton.clicked.connect(cfg.reclassification.calculateUniqueValues)
+			# connect to add value button
+			cfg.ui.add_value_pushButton.clicked.connect(cfg.reclassification.addRowToTable)
+			# connect to remove point
+			cfg.ui.remove_row_pushButton.clicked.connect(cfg.reclassification.removePointFromTable)
+			# connect to edited cell
+			cfg.ui.reclass_values_tableWidget.cellChanged.connect(cfg.reclassification.editedCell)
+			""" Band Calc tab """
+			# connect to refresh button
+			cfg.ui.toolButton_reload_13.clicked.connect(cfg.bCalc.rasterBandName)
+			# connect to reclassify button
+			cfg.ui.toolButton_calculate.clicked.connect(cfg.bCalc.calculate)
+			# connect the expression text
+			cfg.ui.plainTextEdit_calc.textChanged.connect(cfg.bCalc.textChanged)
+			# connect double click table
+			cfg.ui.tableWidget_band_calc.doubleClicked.connect(cfg.bCalc.doubleClick)
+			# connect to expression buttons
+			cfg.ui.toolButton_plus.clicked.connect(cfg.bCalc.buttonPlus)
+			cfg.ui.toolButton_minus.clicked.connect(cfg.bCalc.buttonMinus)
+			cfg.ui.toolButton_product.clicked.connect(cfg.bCalc.buttonProduct)
+			cfg.ui.toolButton_ratio.clicked.connect(cfg.bCalc.buttonRatio)
+			cfg.ui.toolButton_power.clicked.connect(cfg.bCalc.buttonPower)
+			cfg.ui.toolButton_sqrt.clicked.connect(cfg.bCalc.buttonSQRT)
+			cfg.ui.toolButton_lbracket.clicked.connect(cfg.bCalc.buttonLbracket)
+			cfg.ui.toolButton_rbracket.clicked.connect(cfg.bCalc.buttonRbracket)
+			cfg.ui.toolButton_sin.clicked.connect(cfg.bCalc.buttonSin)
+			cfg.ui.toolButton_asin.clicked.connect(cfg.bCalc.buttonASin)
+			cfg.ui.toolButton_cos.clicked.connect(cfg.bCalc.buttonCos)
+			cfg.ui.toolButton_acos.clicked.connect(cfg.bCalc.buttonACos)
+			cfg.ui.toolButton_tan.clicked.connect(cfg.bCalc.buttonTan)
+			cfg.ui.toolButton_atan.clicked.connect(cfg.bCalc.buttonATan)
+			cfg.ui.toolButton_exponential.clicked.connect(cfg.bCalc.buttonExp)
+			cfg.ui.toolButton_log.clicked.connect(cfg.bCalc.buttonLog)
+			cfg.ui.toolButton_pi.clicked.connect(cfg.bCalc.buttonPi)
 			""" Settings tab """
 			# connect the ID field name line
 			cfg.ui.ID_field_name_lineEdit.textChanged.connect(cfg.sets.IDFieldNameChange)
@@ -617,18 +885,30 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.MCInfo_field_name_lineEdit.textChanged.connect(cfg.sets.MacroInfoFieldNameChange)
 			# connect the Info field name line
 			cfg.ui.Info_field_name_lineEdit.textChanged.connect(cfg.sets.InfoFieldNameChange)
+			# connect the variable name line
+			cfg.ui.variable_name_lineEdit.textChanged.connect(cfg.sets.VariableNameChange)
+			# connect the group name line
+			cfg.ui.group_name_lineEdit.textChanged.connect(cfg.sets.GroupNameChange)
 			# connect to reset field names button
 			cfg.ui.reset_field_names_Button.clicked.connect(cfg.sets.resetFieldNames)
+			# connect to reset variable name button
+			cfg.ui.reset_variable_name_Button.clicked.connect(cfg.sets.resetVariableName)
+			# connect to reset group name button
+			cfg.ui.reset_group_name_Button.clicked.connect(cfg.sets.resetGroupName)
 			# connect the log file checkBox
 			cfg.ui.log_checkBox.stateChanged.connect(cfg.sets.logCheckbox)
 			# connect the sound checkBox
 			cfg.ui.sound_checkBox.stateChanged.connect(cfg.sets.soundCheckbox)
 			# connect the alg files checkBox
 			cfg.ui.alg_files_checkBox.stateChanged.connect(cfg.sets.algFilesCheckbox)
+			# connect the virtual raster format checkBox
+			cfg.ui.virtual_raster_checkBox.stateChanged.connect(cfg.sets.virtualRasterFormatCheckbox)
 			# connect to clear log button
 			cfg.ui.clearLog_Button.clicked.connect(cfg.utls.clearLogFile)
 			# connect to export log button
 			cfg.ui.exportLog_Button.clicked.connect(cfg.sets.copyLogFile)
+			# connect to test dependencies button
+			cfg.ui.test_dependencies_Button.clicked.connect(cfg.sets.testDependencies)
 			# connect to RAM spinbox
 			cfg.ui.RAM_spinBox.valueChanged.connect(cfg.sets.RAMSettingChange)
 			# connect to plot spinbox
@@ -658,6 +938,7 @@ class SemiAutomaticClassificationPlugin:
 		
 	# read project variables
 	def projectLoaded(self):
+		cfg.projPath = QgsProject.instance().fileName()
 		# clear band set
 		tW = cfg.ui.tableWidget
 		cfg.utls.clearTable(tW)
@@ -700,6 +981,11 @@ class SemiAutomaticClassificationPlugin:
 			cfg.uid.rapid_ROI_checkBox.setCheckState(2)
 		elif cfg.rpdROICheck == "No":
 			cfg.uid.rapid_ROI_checkBox.setCheckState(0)
+		# set vegetation index calculation checkbox state
+		if cfg.vegIndexCheck == "Yes":
+			cfg.uid.display_cursor_checkBox.setCheckState(2)
+		elif cfg.vegIndexCheck == "No":
+			cfg.uid.display_cursor_checkBox.setCheckState(0)
 		# set signature calculation checkbox state
 		if cfg.sigClcCheck == "Yes":
 			cfg.uid.signature_checkBox.setCheckState(2)
@@ -713,8 +999,10 @@ class SemiAutomaticClassificationPlugin:
 		# set Info field name line
 		cfg.ui.Info_field_name_lineEdit.setText(cfg.fldROI_info)
 		cfg.ui.MCInfo_field_name_lineEdit.setText(cfg.fldROIMC_info)
+		cfg.ui.variable_name_lineEdit.setText(cfg.variableName)
+		cfg.ui.group_name_lineEdit.setText(cfg.grpNm)
 		# reload layers in combos
-		cfg.acc.refreshClassificationLayer()
+		cfg.utls.refreshClassificationLayer()
 		cfg.acc.refreshReferenceLayer()
 		cfg.landCC.refreshClassificationReferenceLayer()
 		cfg.landCC.refreshNewClassificationLayer()
@@ -722,6 +1010,7 @@ class SemiAutomaticClassificationPlugin:
 		cfg.bst.rasterBandName()
 		# reload rasters in checklist
 		cfg.clipMulti.rasterNameList()
+		cfg.bCalc.rasterBandName()
 		if cfg.bndSetPresent == "No":
 			# get wavelength
 			bSW = cfg.utls.readProjectVariable("bndSetWvLn", "")
@@ -751,7 +1040,7 @@ class SemiAutomaticClassificationPlugin:
 				t.blockSignals(False)
 			except Exception, err:
 				# logger
-				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			cfg.bst.readBandSet("No")
 			cfg.BandTabEdited = "Yes"
 		cfg.rasterComboEdited = "Yes"
@@ -761,10 +1050,27 @@ class SemiAutomaticClassificationPlugin:
 		cfg.signList = {}
 		cfg.signIDs = {}
 		signPath = cfg.utls.readProjectVariable("signatureFilePath", "")
-		cfg.uidc.signatureFile_lineEdit.setText(unicode(signPath))
 		if len(signPath) > 0:
-			cfg.classD.openSignatureListFile(signPath)
-		
+			cfg.utls.readQGISVariablePath()
+			absolutePath = cfg.utls.readProjectVariable("signatureFilePathAbsolute", str(cfg.absolutePath))
+			if cfg.absolutePath == "false" and absolutePath != "false":
+				cfg.classD.openSignatureListFile(signPath)
+				signPath = cfg.utls.qgisAbsolutePathToRelativePath(signPath, cfg.projPath)
+				cfg.uidc.signatureFile_lineEdit.setText(unicode(signPath))
+			elif cfg.absolutePath != "false" and absolutePath == "false":
+				signPath = cfg.utls.qgisRelativePathToAbsolutePath(signPath, cfg.projPath)
+				cfg.classD.openSignatureListFile(signPath)
+				cfg.uidc.signatureFile_lineEdit.setText(unicode(signPath))
+			elif cfg.absolutePath == "false" and absolutePath == "false":
+				cfg.uidc.signatureFile_lineEdit.setText(unicode(signPath))
+				signPath = cfg.utls.qgisRelativePathToAbsolutePath(signPath, cfg.projPath)
+				cfg.classD.openSignatureListFile(signPath)
+			elif cfg.absolutePath != "false" and absolutePath != "false":
+				cfg.classD.openSignatureListFile(signPath)
+				cfg.uidc.signatureFile_lineEdit.setText(unicode(signPath))
+			cfg.utls.writeProjectVariable("signatureFilePath", unicode(signPath))
+			cfg.utls.writeProjectVariable("signatureFilePathAbsolute", str(cfg.absolutePath))
+
 	# read variables from project instance
 	def readVariables(self):
 		# read qml path from project instance	
@@ -775,6 +1081,7 @@ class SemiAutomaticClassificationPlugin:
 		cfg.sigClcCheck = cfg.utls.readProjectVariable("calculateSignature", "Yes")
 		# read rapid ROI checkbox from project instance
 		cfg.rpdROICheck = cfg.utls.readProjectVariable("rapidROI", "No")
+		cfg.vegIndexCheck = cfg.utls.readProjectVariable("vegetationIndex", "Yes")
 		cfg.ROIband = cfg.utls.readProjectVariable("rapidROIBand", str(cfg.ROIband))
 		cfg.minROISz = cfg.utls.readProjectVariable("minROISize", str(cfg.minROISz))
 		cfg.maxROIWdth = cfg.utls.readProjectVariable("maxROIWidth", str(cfg.maxROIWdth))
@@ -824,11 +1131,18 @@ class SemiAutomaticClassificationPlugin:
 			t.blockSignals(False)
 			cfg.bst.readBandSet("Yes")
 			cfg.BandTabEdited = "Yes"
+		# read RGB list
+		rgbList = cfg.utls.readProjectVariable("SCP_RGBList", str(cfg.RGBList))
+		cfg.RGBList = eval(rgbList)
+		try:
+			cfg.utls.setComboboxItems(cfg.rgb_combo, cfg.RGBList)
+		except:
+			pass
 				
 	# run
 	def run(self):
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "OPEN SESSION" + cfg.sysInfo)
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "OPEN SESSION" + cfg.sysInfo)
 		# show the dialog
 		cfg.dlg.show()
 		# reload raster bands in checklist
@@ -838,7 +1152,7 @@ class SemiAutomaticClassificationPlugin:
 		# Run the dialog event loop
 		pointer_result = cfg.dlg.exec_()
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "CLOSE SESSION")
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "CLOSE SESSION")
 		
 	def showPlugin(self):
 		# show the dialog
@@ -861,7 +1175,8 @@ class SemiAutomaticClassificationPlugin:
 			cfg.iface.removePluginMenu(u"&Semi-Automatic Classification Plugin", cfg.mainAction)
 			cfg.iface.removeToolBarIcon(cfg.mainAction)
 			qgisUtils.iface.removeDockWidget(cfg.dockdlg)
-			qgisUtils.iface.removeDockWidget(cfg.dockclassdlg)	
+			qgisUtils.iface.removeDockWidget(cfg.dockclassdlg)
+			cfg.menu.deleteLater()
 			# remove temp files
 			if cfg.tmpDir is not None and QDir(cfg.tmpDir).exists():
 				shutil.rmtree(cfg.tmpDir, True)

@@ -8,7 +8,7 @@
  the collection of training areas (ROIs), and rapidly performing the classification process (or a preview).
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012 by Luca Congedo
+		copyright			: (C) 2012-2015 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -91,7 +91,7 @@ class Utils:
 		# commit changes
 		l.commitChanges()
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), " fields added")
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " fields added")
 		
 ### Add layer to map
 	def addLayerToMap(self, layer):
@@ -101,6 +101,11 @@ class Utils:
 	def addVectorLayer(self, path, name, format):
 		l = QgsVectorLayer(path, name, format)
 		return l
+		
+### Add raster layer
+	def addRasterLayer(self, path, name):
+		r = cfg.iface.addRasterLayer(path, name)
+		return r
 		
 	# set all items to state 0 or 2
 	def allItemsSetState(self, tableWidget, value):
@@ -112,7 +117,7 @@ class Utils:
 				cfg.uiUtls.updateBar((b+1) * 100 / r)
 			else:
 				# logger
-				if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), " cancelled")
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " cancelled")
 		
 	# calculation of earth sun distance
 	def calculateEarthSunDistance(self, date, dateFormat):
@@ -144,8 +149,195 @@ class Utils:
 		eSD = dL[day - 1]	
 		return eSD
 	
+### calculate NDVI
+	def calculateNDVI(self, NIR, RED):
+		NDVI = (NIR - RED) / (NIR + RED)
+		if NDVI > 1:
+			NDVI = 1
+		elif NDVI < -1:
+			NDVI = -1
+		return NDVI
+		
+### calculate EVI
+	def calculateEVI(self, NIR, RED, BLUE):
+		EVI = 2.5 * (NIR - RED) / (NIR + 6 * RED - 7.5 * BLUE + 1)
+		if EVI > 1:
+			EVI = 1
+		elif EVI < -1:
+			EVI = -1
+		return EVI
+		
+### NDVI calculator from image
+	def NDVIcalculator(self, imageName, point):
+		NDVI = None
+		gdal.AllRegister()
+		# band set
+		if cfg.bndSetPresent == "Yes" and imageName == cfg.bndSetNm:
+			if cfg.NIRBand is None or cfg.REDBand is None:
+				return "No"
+			else:
+				NIRRaster = cfg.utls.selectLayerbyName(cfg.bndSet[int(cfg.NIRBand) - 1], "Yes")	
+				REDRaster = cfg.utls.selectLayerbyName(cfg.bndSet[int(cfg.REDBand) - 1], "Yes")
+				# open input with GDAL
+				try:
+					NIRr = gdal.Open(NIRRaster.source(), GA_ReadOnly)
+					REDr = gdal.Open(REDRaster.source(), GA_ReadOnly)
+				except Exception, err:
+					# logger
+					cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					return "No"
+				NIRB = NIRr.GetRasterBand(1)
+				REDB = REDr.GetRasterBand(1)
+				geoT = NIRr.GetGeoTransform()
+		else:
+			inputRaster = cfg.utls.selectLayerbyName(imageName, "Yes")	
+			# open input with GDAL
+			try:
+				rD = gdal.Open(inputRaster.source(), GA_ReadOnly)
+			except Exception, err:
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				return "No"
+			if rD is None or cfg.NIRBand is None or cfg.REDBand is None:
+				return "No"
+			else:
+				NIRB = rD.GetRasterBand(int(cfg.NIRBand))
+				REDB = rD.GetRasterBand(int(cfg.REDBand))
+			geoT = rD.GetGeoTransform()
+		tLX = geoT[0]
+		tLY = geoT[3]
+		pSX = geoT[1]
+		pSY = geoT[5]
+		# start and end pixels
+		pixelStartColumn = (int((point.x() - tLX) / pSX))
+		pixelStartRow = -(int((tLY - point.y()) / pSY))
+		NIR = self.readArrayBlock(NIRB, pixelStartColumn, pixelStartRow, 1, 1)
+		RED = self.readArrayBlock(REDB, pixelStartColumn, pixelStartRow, 1, 1)
+		if NIR is not None and RED is not None:
+			try:
+				NDVI = self.calculateNDVI(float(NIR), float(RED))
+			except Exception, err:
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+		# close bands
+		NIRB = None
+		REDB = None
+		# close raster
+		rD = None
+		return round(NDVI, 2)
+		
+### EVI calculator from image
+	def EVIcalculator(self, imageName, point):
+		EVI = None
+		gdal.AllRegister()
+		# band set
+		if cfg.bndSetPresent == "Yes" and imageName == cfg.bndSetNm:
+			if cfg.NIRBand is None or cfg.REDBand is None or cfg.BLUEBand is None:
+				return "No"
+			else:
+				NIRRaster = cfg.utls.selectLayerbyName(cfg.bndSet[int(cfg.NIRBand) - 1], "Yes")	
+				REDRaster = cfg.utls.selectLayerbyName(cfg.bndSet[int(cfg.REDBand) - 1], "Yes")
+				BLUERaster = cfg.utls.selectLayerbyName(cfg.bndSet[int(cfg.BLUEBand) - 1], "Yes")
+				# open input with GDAL
+				try:
+					NIRr = gdal.Open(NIRRaster.source(), GA_ReadOnly)
+					REDr = gdal.Open(REDRaster.source(), GA_ReadOnly)
+					BLUEr = gdal.Open(BLUERaster.source(), GA_ReadOnly)
+				except Exception, err:
+					# logger
+					cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					return "No"
+				NIRB = NIRr.GetRasterBand(1)
+				REDB = REDr.GetRasterBand(1)
+				BLUEB = REDr.GetRasterBand(1)
+				geoT = NIRr.GetGeoTransform()
+		else:
+			inputRaster = cfg.utls.selectLayerbyName(imageName, "Yes")	
+			# open input with GDAL
+			try:
+				rD = gdal.Open(inputRaster.source(), GA_ReadOnly)
+			except Exception, err:
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				return "No"
+			if rD is None or cfg.NIRBand is None or cfg.REDBand is None or cfg.BLUEBand is None:
+				return "No"
+			else:
+				NIRB = rD.GetRasterBand(int(cfg.NIRBand))
+				REDB = rD.GetRasterBand(int(cfg.REDBand))
+				BLUEB = rD.GetRasterBand(int(cfg.BLUEBand))
+			geoT = rD.GetGeoTransform()
+		tLX = geoT[0]
+		tLY = geoT[3]
+		pSX = geoT[1]
+		pSY = geoT[5]
+		# start and end pixels
+		pixelStartColumn = (int((point.x() - tLX) / pSX))
+		pixelStartRow = -(int((tLY - point.y()) / pSY))
+		NIR = self.readArrayBlock(NIRB, pixelStartColumn, pixelStartRow, 1, 1)
+		RED = self.readArrayBlock(REDB, pixelStartColumn, pixelStartRow, 1, 1)
+		BLUE = self.readArrayBlock(BLUEB, pixelStartColumn, pixelStartRow, 1, 1)
+		if NIR is not None and RED is not None and BLUE is not None:
+			if NIR <= 1 and RED <= 1 and BLUE <= 1:
+				try:
+					EVI = self.calculateEVI(float(NIR), float(RED), float(BLUE))
+				except Exception, err:
+					# logger
+					cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+		# close bands
+		NIRB = None
+		REDB = None
+		BLUEB = None
+		# close raster
+		rD = None
+		return round(EVI, 2)
+		
+### find band set number used for vegetation index calculation
+	def findBandNumber(self):
+		cfg.REDBand = None
+		cfg.NIRBand = None
+		cfg.BLUEBand = None
+		if cfg.bndSetUnit["UNIT"] != cfg.noUnit:
+			if cfg.bndSetUnit["UNIT"] == cfg.unitNano:
+				RED = self.findNearestValueinList(cfg.bndSetWvLn.values(), cfg.REDCenterBand*1000, cfg.REDThreshold*1000)
+				NIR = self.findNearestValueinList(cfg.bndSetWvLn.values(), cfg.NIRCenterBand*1000, cfg.NIRThreshold*1000)
+				BLUE = self.findNearestValueinList(cfg.bndSetWvLn.values(), cfg.BLUECenterBand*1000, cfg.BLUEThreshold*1000)
+			elif cfg.bndSetUnit["UNIT"] == cfg.unitMicro:
+				RED = self.findNearestValueinList(cfg.bndSetWvLn.values(), cfg.REDCenterBand, cfg.REDThreshold)
+				NIR = self.findNearestValueinList(cfg.bndSetWvLn.values(), cfg.NIRCenterBand, cfg.NIRThreshold)
+				BLUE = self.findNearestValueinList(cfg.bndSetWvLn.values(), cfg.BLUECenterBand, cfg.BLUEThreshold)
+			if RED is not None and NIR is not None:
+				for band, value in cfg.bndSetWvLn.items():
+					if value == RED:
+						bN = band.replace("WAVELENGTH_", "")
+						cfg.REDBand = int(bN)
+					elif value == NIR:
+						bN = band.replace("WAVELENGTH_", "")
+						cfg.NIRBand = int(bN)
+			if BLUE is not None:
+				for band, value in cfg.bndSetWvLn.items():
+					if value == BLUE:
+						bN = band.replace("WAVELENGTH_", "")
+						cfg.BLUEBand = int(bN)
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "RED =" + unicode(cfg.REDBand) + ", NIR =" + unicode(cfg.NIRBand))
+		
+### find nearest value in list
+	def findNearestValueinList(self, list, value, threshold):
+		if len(list) > 0:
+			arr = np.asarray(list)
+			v = (np.abs(arr - value)).argmin()
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "find nearest" + unicode(value))
+			if np.abs(arr[v] - value) < threshold:
+				return arr[v]
+			else:
+				return None
+		else:
+			return None
+
 ### check if the clicked point is inside the image
-	def checkPointImage(self, imageName, point):
+	def checkPointImage(self, imageName, point, quiet = "No"):
 		# band set
 		if cfg.bndSetPresent == "Yes" and imageName == cfg.bndSetNm:
 			imageName = cfg.bndSet[0]
@@ -153,26 +345,24 @@ class Utils:
 			bN0 = self.selectLayerbyName(imageName, "Yes")
 			iCrs = self.getCrs(bN0)
 			if iCrs is None:
-				iCrs = cfg.cnvs.mapRenderer().destinationCrs()
-				pCrs = cfg.cnvs.mapRenderer().destinationCrs()
+				iCrs = cfg.utls.getQGISCrs()
+				pCrs = iCrs
 			else:
 				# projection of input point from project's crs to raster's crs
-				pCrs = cfg.cnvs.mapRenderer().destinationCrs()
+				pCrs = cfg.utls.getQGISCrs()
 				if pCrs != iCrs:
 					try:
-						t = QgsCoordinateTransform(pCrs, iCrs)
-						point = t.transform(point)
+						point = cfg.utls.projectPointCoordinates(point, pCrs, iCrs)
 					# Error latitude or longitude exceeded limits
 					except Exception, err:
 						# logger
-						if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), " ERROR exception: " + str(err))
+						cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 						crs = None
 						# logger
-						if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), QApplication.translate("semiautomaticclassificationplugin", "Error") + ": latitude or longitude exceeded limits")
-						pass
+						cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), QApplication.translate("semiautomaticclassificationplugin", "Error") + ": latitude or longitude exceeded limits")
 			# workaround coordinates issue
 			# logger
-			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "project crs: " + str(pCrs.toProj4()) + " - raster " + str(imageName) + " crs: " + str(iCrs.toProj4()))
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "project crs: " + unicode(pCrs.toProj4()) + " - raster " + unicode(imageName) + " crs: " + unicode(iCrs.toProj4()))
 			cfg.lstPnt = QgsPoint(point.x() / float(1), point.y() / float(1))
 			pX = point.x()
 			pY = point.y()
@@ -182,19 +372,23 @@ class Utils:
 				cfg.pntCheck = None
 				if pX > i.extent().xMaximum() or pX < i.extent().xMinimum() or pY > i.extent().yMaximum() or pY < i.extent().yMinimum() :
 					# logger
-					if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "point outside the image area")
-					cfg.mx.msg6()
+					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "point outside the image area")
+					if quiet == "No":
+						cfg.mx.msg6()
 					cfg.pntCheck = "No"
 				else :
 					cfg.pntCheck = "Yes"
+					return cfg.lstPnt
 			else:
 				# logger
-				if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), " image missing")
-				cfg.mx.msg4()
-				cfg.pntCheck = "No"
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " image missing")
+				if quiet == "No":
+					cfg.mx.msg4()
+					cfg.pntCheck = "No"
 		else:
 			if self.selectLayerbyName(imageName, "Yes") is None:
-				cfg.mx.msg4()
+				if quiet == "No":
+					cfg.mx.msg4()
 				#cfg.ipt.refreshRasterLayer()
 				self.pntROI = None
 				cfg.pntCheck = "No"
@@ -206,22 +400,20 @@ class Utils:
 					iCrs = None
 				else:
 					# projection of input point from project's crs to raster's crs
-					pCrs = cfg.cnvs.mapRenderer().destinationCrs()
+					pCrs = cfg.utls.getQGISCrs()
 					if pCrs != iCrs:
 						try:
-							t = QgsCoordinateTransform(pCrs, iCrs)
-							point = t.transform(point)
+							point = cfg.utls.projectPointCoordinates(point, pCrs, iCrs)
 						# Error latitude or longitude exceeded limits
 						except Exception, err:
 							# logger
-							if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), " ERROR exception: " + str(err))
+							cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 							crs = None
 							# logger
-							if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), QApplication.translate("semiautomaticclassificationplugin", "Error") + ": latitude or longitude exceeded limits")
-							pass
+							cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), QApplication.translate("semiautomaticclassificationplugin", "Error") + ": latitude or longitude exceeded limits")
 				# workaround coordinates issue
 				# logger
-				if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "project crs: " + str(pCrs.toProj4()) + " - raster " + str(imageName) + " crs: " + str(iCrs.toProj4()))
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "project crs: " + unicode(pCrs.toProj4()) + " - raster " + unicode(imageName) + " crs: " + unicode(iCrs.toProj4()))
 				cfg.lstPnt = QgsPoint(point.x() / float(1), point.y() / float(1))
 				pX = point.x()
 				pY = point.y()
@@ -230,11 +422,19 @@ class Utils:
 				cfg.pntCheck = None
 				if pX > i.extent().xMaximum() or pX < i.extent().xMinimum() or pY > i.extent().yMaximum() or pY < i.extent().yMinimum() :
 					# logger
-					if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "point outside the image area")
-					cfg.mx.msg6()
+					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "point outside the image area")
+					if quiet == "No":
+						cfg.mx.msg6()
 					cfg.pntCheck = "No"
 				else :
 					cfg.pntCheck = "Yes"
+					return cfg.lstPnt
+		
+### Project point coordinates
+	def projectPointCoordinates(self, point, inputCoordinates, outputCoordinates):
+		t = QgsCoordinateTransform(inputCoordinates, outputCoordinates)
+		point = t.transform(point)
+		return point
 		
 ### Clear log file
 	def clearLogFile(self):
@@ -245,6 +445,7 @@ class Utils:
 				pass
 			try:
 				l.write("Date	Function	Message \n")
+				l.write(str(cfg.sysInfo)+"\n")
 				l.close()
 			except:
 				cfg.mx.msg2()
@@ -260,7 +461,7 @@ class Utils:
 		if f.geometry() is None:
 			cfg.mx.msg6()
 			# logger
-			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "feature geometry is none")			
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "feature geometry is none")			
 		else:	
 			# copy polygon to shapefile
 			targetLayer.startEditing()
@@ -268,7 +469,7 @@ class Utils:
 			targetLayer.commitChanges()
 			targetLayer.dataProvider().createSpatialIndex()
 			# logger
-			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "feature copied")
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "feature copied")
 				
 ### Delete a field from a shapefile by its name
 	def deleteFieldShapefile(self, layerPath, fieldName):
@@ -279,13 +480,13 @@ class Utils:
 		l.DeleteField(i)
 		s = None
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "deleted field: " + str(fieldName) + " for layer: " + str(l.name()))
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "deleted field: " + unicode(fieldName) + " for layer: " + unicode(l.name()))
 				
 ### Find field ID by name
 	def fieldID(self, layer, fieldName):
-		fID = layer.fieldNameIndex(str(fieldName))
+		fID = layer.fieldNameIndex(fieldName)
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "ID: " + str(fID) + " for layer: " + str(layer.name()))
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "ID: " + str(fID) + " for layer: " + unicode(layer.name()))
 		return fID
 				
 ### Get field names of a shapefile
@@ -296,7 +497,7 @@ class Utils:
 		fN = [lD.GetFieldDefn(i).GetName() for i in range(lD.GetFieldCount())]
 		s = None
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "shapefile field " + str(l.name()))
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "shapefile field " + unicode(l.name()))
 		return fN
 				
 	def getFieldAttributeList(self, layer, field):
@@ -316,9 +517,17 @@ class Utils:
 		else:
 			rP = lddRstr.dataProvider()
 			crs = rP.crs()
-		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "crs for " + str(lddRstr.name()) + ": " + str(crs.toProj4 ()))
 		return crs
+		
+### Get QGIS project CRS
+	def getQGISCrs(self):
+		# QGIS < 2.4
+		try:
+			pCrs = cfg.cnvs.mapRenderer().destinationCrs()
+		# QGIS >= 2.4
+		except:
+			pCrs = cfg.cnvs.mapSettings().destinationCrs()
+		return pCrs
 				
 ### Get a feature from a shapefile by feature ID
 	def getFeaturebyID(self, layer, ID):
@@ -329,12 +538,12 @@ class Utils:
 			f = layer.getFeatures(fR)
 			f = f.next()
 			# logger
-			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "get feature " + str(ID) + " from shapefile: " + str(layer.name()))
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "get feature " + str(ID) + " from shapefile: " + unicode(layer.name()))
 			return f
 		# if empty shapefile
 		except Exception, err:
 			# logger
-			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			return False
 				
 ### Get a feature box by feature ID
@@ -357,15 +566,28 @@ class Utils:
 		dr = None
 		return centerX, centerY, width, heigth
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "roi bounding box: center " + str(r.center()) + " width: " + str(r.width())+ " height: " + str(r.height()))
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "roi bounding box: center " + str(r.center()) + " width: " + str(r.width())+ " height: " + str(r.height()))
 		try:
 			pass
 		except Exception, err:
 			# logger
-			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			pass
 			
-### Get extentof a shapefile
+### Try to get GDAL for Mac
+	def getGDALForMac(self):
+		if cfg.sysNm == "Darwin":
+			v = cfg.utls.getGDALVersion()
+			cfg.gdalPath = '/Library/Frameworks/GDAL.framework/Versions/' + v[0] + '.' + v[1] + '/Programs/'
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " getGDALForMac: " + unicode(v))
+			
+### Get GDAL version
+	def getGDALVersion(self):
+		v = gdal.VersionInfo("RELEASE_NAME").split('.')
+		return v
+			
+### Get extent of a shapefile
 	def getShapefileRectangleBox(self, layer):
 		d = ogr.GetDriverByName("ESRI Shapefile")
 		dr = d.Open(layer.source(), 1)
@@ -383,12 +605,12 @@ class Utils:
 		dr = None
 		return centerX, centerY, width, heigth
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "roi bounding box: center " + str(r.center()) + " width: " + str(r.width())+ " height: " + str(r.height()))
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "roi bounding box: center " + str(r.center()) + " width: " + str(r.width())+ " height: " + str(r.height()))
 		try:
 			pass
 		except Exception, err:
 			# logger
-			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			pass				
 ### get ID by attributes
 	def getIDByAttributes(self, layer, field, attribute):
@@ -396,7 +618,7 @@ class Utils:
 		for f in layer.getFeatures(QgsFeatureRequest( str(field) + " = " + str(attribute))):
 			IDs.append(f.id())
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), " ID: " + str(IDs))
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ID: " + str(IDs))
 		return IDs
 		
 ### Get last feauture id
@@ -405,39 +627,43 @@ class Utils:
 		for f in layer.getFeatures():
 			ID = f.id()
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), " ID: " + str(ID))
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ID: " + str(ID))
 		return ID
 		
 ### get a raster band from a multi band raster
-	def getRasterBandByBandNumber(self, inputRaster, band, outputRaster):
-		gdal.AllRegister()
-		# open input with GDAL
-		rD = gdal.Open(inputRaster, GA_ReadOnly)
-		# number of x pixels
-		rC = rD.RasterXSize
-		# number of y pixels
-		rR = rD.RasterYSize
-		# check projections
-		rP = rD.GetProjection()
-		# pixel size and origin
-		rGT = rD.GetGeoTransform()
-		tD = gdal.GetDriverByName( "GTiff" )
-		iRB = rD.GetRasterBand(int(band))
-		bDT = iRB.DataType
-		a =  iRB.ReadAsArray()
-		oR = tD.Create(outputRaster, rC, rR, 1, bDT)
-		oR.SetGeoTransform( [ rGT[0] , rGT[1] , 0 , rGT[3] , 0 , rGT[5] ] )
-		oR.SetProjection(rP)
-		oRB = oR.GetRasterBand(1)
-		oRB.WriteArray(a)
-		# close bands
-		oRB = None
-		iRB = None
-		# close rasters
-		oR = None
-		rD = None
+	def getRasterBandByBandNumber(self, inputRaster, band, outputRaster, virtualRaster = "No"):
+		if virtualRaster == "No":
+			gdal.AllRegister()
+			# open input with GDAL
+			rD = gdal.Open(inputRaster, GA_ReadOnly)
+			# number of x pixels
+			rC = rD.RasterXSize
+			# number of y pixels
+			rR = rD.RasterYSize
+			# check projections
+			rP = rD.GetProjection()
+			# pixel size and origin
+			rGT = rD.GetGeoTransform()
+			tD = gdal.GetDriverByName( "GTiff" )
+			iRB = rD.GetRasterBand(int(band))
+			bDT = iRB.DataType
+			a =  iRB.ReadAsArray()
+			oR = tD.Create(outputRaster, rC, rR, 1, bDT)
+			oR.SetGeoTransform( [ rGT[0] , rGT[1] , 0 , rGT[3] , 0 , rGT[5] ] )
+			oR.SetProjection(rP)
+			oRB = oR.GetRasterBand(1)
+			oRB.WriteArray(a)
+			# close bands
+			oRB = None
+			iRB = None
+			# close rasters
+			oR = None
+			rD = None
+		else:
+			vrtCheck = cfg.utls.createVirtualRaster([inputRaster], outputRaster, band)
+			time.sleep(1)
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "get band: " + str(band))
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "get band: " + unicode(band))
 		
 ### get a raster band statistic
 	def getRasterBandStatistics(self, inputRaster, band):
@@ -456,7 +682,7 @@ class Utils:
 			# close raster
 			rD = None
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "get band: " + str(band))
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "get band: " + unicode(band))
 		return bSt, a
 		
 ### calculate covariance matrix from array list
@@ -486,37 +712,104 @@ class Utils:
 		except Exception, err:
 			CovMatrix = "No"
 			# logger
-			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "cov matrix: " + str(CovMatrix))
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "cov matrix: " + str(CovMatrix))
 		return CovMatrix
 		
-	def createVirtualRaster(self, inputRasterList, output):
+	def createVirtualRaster(self, inputRasterList, output, bandNumber = "No", quiet = "No"):
 		r = ""
 		st = "No"
 		for i in inputRasterList:
 			r = r + ' "' + i + '"'
+		if bandNumber == "No":
+			bndOption = " -separate"
+		else:
+			bndOption = "-b " + str(bandNumber)
 		try:
 			cfg.utls.getGDALForMac()
-			sP = subprocess.Popen(cfg.gdalPath + 'gdalbuildvrt -separate "' + unicode(output) + '" ' + unicode(r), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+			sP = subprocess.Popen(cfg.gdalPath + 'gdalbuildvrt ' + bndOption + ' "' + output.encode(sys.getfilesystemencoding()) + '" ' + r.encode(sys.getfilesystemencoding()), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 			sP.wait()
 			# get error
 			out, err = sP.communicate()
 			sP.stdout.close()
 			if len(err) > 0:
 				st = "Yes"
-				cfg.mx.msgWar13()
+				if quiet == "No": 
+					cfg.mx.msgWar13()
 				# logger
-				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " GDAL error:: " + str(err) )
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " GDAL error: " + str(err) )
 		# in case of errors
 		except Exception, err:
 			cfg.utls.getGDALForMac()
-			sP = subprocess.Popen(cfg.gdalPath + 'gdalbuildvrt -separate "' + unicode(output) + '" ' + unicode(r), shell=True)
+			sP = subprocess.Popen(cfg.gdalPath + 'gdalbuildvrt ' + bndOption + ' "' + output.encode(sys.getfilesystemencoding()) + '" ' + r.encode(sys.getfilesystemencoding()), shell=True)
 			sP.wait()
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "virtual raster: " + str(output))
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "virtual raster: " + unicode(output))
 		return st
-		
+			
+	# create virtual raster with Python
+	def createVirtualRaster2(self, inputRasterList, output, bandNumberList = "No", quiet = "No", NoDataVal = "No", relativeToVRT = 0):
+		# create virtual raster
+		gdal.AllRegister()
+		drv = gdal.GetDriverByName("VRT")
+		raster = inputRasterList[0]
+		gdalRaster = gdal.Open(raster, GA_ReadOnly)
+		# number of x pixels
+		rX = gdalRaster.RasterXSize
+		# number of y pixels
+		rY = gdalRaster.RasterYSize
+		geoT = gdalRaster.GetGeoTransform()
+		rP = gdalRaster.GetProjection()
+		tLX = geoT[0]
+		tLY = geoT[3]
+		pSX = geoT[1]
+		pSY = geoT[5]
+		band = gdalRaster.GetRasterBand(1)  
+		bsize = band.GetBlockSize()
+		x_block = bsize[0]
+		y_block = bsize[1]
+		vRast = drv.Create(output, rX, rY, 0)
+		# set raster projection from reference
+		vRast.SetGeoTransform(geoT)
+		vRast.SetProjection(rP)
+		x = 0
+		for b in inputRasterList:
+			vRast.AddBand(gdal.GDT_Float64)
+			if bandNumberList == "No":
+				bandNumber = 1
+			else:
+				bandNumber = bandNumberList[x]
+			band = vRast.GetRasterBand(x + 1)
+			source_path = b
+			# set metadata xml
+			xml = """
+			<SimpleSource>
+			  <SourceFilename relativeToVRT="%i">%s</SourceFilename>
+			  <SourceBand>%i</SourceBand>
+			  <SourceProperties RasterXSize="%i" RasterYSize="%i" DataType=%s BlockXSize="%i" BlockYSize="%i" />
+			  <SrcRect xOff="%i" yOff="%i" xSize="%i" ySize="%i" />
+			  <DstRect xOff="%i" yOff="%i" xSize="%i" ySize="%i" />
+			</SimpleSource>
+			"""
+			source = xml % (relativeToVRT, source_path.encode(sys.getfilesystemencoding()), bandNumber, rX, rY, "Float64", x_block, y_block, 0, 0, rX, rY, 0, 0, rX, rY)
+			if NoDataVal != "No":
+				xml = """
+				<ComplexSource>
+				  <SourceFilename relativeToVRT="%i">%s</SourceFilename>
+				  <SourceBand>%i</SourceBand>
+				  <SourceProperties RasterXSize="%i" RasterYSize="%i" DataType=%s BlockXSize="%i" BlockYSize="%i" />
+				  <SrcRect xOff="%i" yOff="%i" xSize="%i" ySize="%i" />
+				  <DstRect xOff="%i" yOff="%i" xSize="%i" ySize="%i" />
+				  <NODATA>%i</NODATA>
+				</ComplexSource>
+				"""
+				source = xml % (relativeToVRT, source_path.encode(sys.getfilesystemencoding()), bandNumber, rX, rY, "Float64", x_block, y_block, 0, 0, rX, rY, 0, 0, rX, rY, NoDataVal)
+			band.SetMetadataItem("SimpleSource", source, "new_vrt_sources")
+			band = None
+			x = x + 1
+		vRast = None
+			
 	# convert list to covariance array
 	def listToCovarianceMatrix(self, list):
 		try:
@@ -529,7 +822,7 @@ class Utils:
 		except Exception, err:
 			list = "No"
 			# logger
-			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 		return "No"
 		
 	# convert covariance array to list
@@ -542,34 +835,34 @@ class Utils:
 		except Exception, err:
 			list = "No"
 			# logger
-			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 		return list
 		
 	# clip a raster using a shapefile
-	def clipRasterByShapefile(self,  shapefile, raster, outputRaster = None):
+	def clipRasterByShapefile(self,  shapefile, raster, outputRaster = None, outFormat = "GTiff"):
+		dT = self.getTime()
 		if outputRaster is None:
 			# temp files
-			dT = self.getTime()
 			tRN = cfg.copyTmpROI + dT + ".tif"
 			tR = str(cfg.tmpDir + "//" + tRN)
 		else:
 			tR = str(outputRaster)
 		try:
 			cfg.utls.getGDALForMac()
-			sP = subprocess.Popen(cfg.gdalPath + "gdalwarp -ot Float64 -dstnodata " + str(cfg.NoDataVal) + " -cutline \"" + unicode(shapefile) + "\" -crop_to_cutline -of GTiff " + unicode(raster) + " " + str(tR) , shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+			sP = subprocess.Popen(cfg.gdalPath + "gdalwarp -ot Float64 -dstnodata " + str(cfg.NoDataVal) + " -cutline \"" + unicode(shapefile) + "\" -crop_to_cutline -of "  + outFormat + " " + unicode(raster) + " " + str(tR) , shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 			sP.wait()
 			# get error
 			out, err = sP.communicate()
 			sP.stdout.close()
 			if len(err) > 0:
 				# logger
-				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " GDAL error:: " + str(err) )
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " GDAL error:: " + str(err) )
 		# in case of errors
 		except Exception, err:	
 			# logger
-			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			cfg.utls.getGDALForMac()
-			sP = subprocess.Popen(cfg.gdalPath + "gdalwarp -ot Float64 -dstnodata " + str(cfg.NoDataVal) + " -cutline \"" + unicode(shapefile) + "\" -crop_to_cutline -of GTiff " + unicode(raster) + " " + str(tR) , shell=True)
+			sP = subprocess.Popen(cfg.gdalPath + "gdalwarp -ot Float64 -dstnodata " + str(cfg.NoDataVal) + " -cutline \"" + unicode(shapefile) + "\" -crop_to_cutline -of "  + outFormat + " " + unicode(raster) + " " + str(tR) , shell=True)
 			sP.wait()
 		if os.path.isfile(tR) is False:
 		# if shapefile is too small try to convert to raster then to polygon
@@ -577,7 +870,7 @@ class Utils:
 			tRxs = str(cfg.tmpDir + "//" + tRNxs)
 			tSHPxs = cfg.copyTmpROI + dT + "xs.shp"
 			tSxs = str(cfg.tmpDir + "//" + tSHPxs)
-			self.vectorToRaster(cfg.emptyFN, unicode(shapefile), cfg.emptyFN, tRxs, unicode(raster), "Yes")
+			self.vectorToRaster(cfg.emptyFN, unicode(shapefile), cfg.emptyFN, tRxs, unicode(raster), "Yes", outFormat)
 			self.rasterToVector(tRxs, tSxs)
 			try:
 				cfg.utls.getGDALForMac()
@@ -585,33 +878,25 @@ class Utils:
 				sP.wait()
 			# in case of errors
 			except Exception, err:
-				cfg.utls.getGDALForMac()
-				sP = subprocess.Popen(cfg.gdalPath + "gdalwarp -ot Float64 -dstnodata " + str(cfg.NoDataVal) + " -cutline \"" + tSxs + "\" -crop_to_cutline -of GTiff " + unicode(raster) + " " + str(tR) , shell=True)
-				sP.wait()
 				# logger
-				if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.utls.getGDALForMac()
+				try:
+					cfg.utls.getGDALForMac()
+					sP = subprocess.Popen(cfg.gdalPath + "gdalwarp -ot Float64 -dstnodata " + str(cfg.NoDataVal) + " -cutline \"" + tSxs + "\" -crop_to_cutline -of GTiff " + unicode(raster) + " " + str(tR) , shell=True)
+					sP.wait()
+				# in case of errors
+				except Exception, err:
+					# logger
+					cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "sP " + str(sP) + "shapefile " + str(shapefile) + "raster " + str(raster) + "tR " + str(tR))
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "sP " + unicode(sP) + "shapefile " + unicode(shapefile) + "raster " + unicode(raster) + "tR " + unicode(tR))
 		return tR
 		
 	# get  time
 	def getTime(self):
 		t = datetime.datetime.now().strftime("%Y%m%d_%H%M%S%f")
 		return t
-		
-### Try to get GDAL for Mac
-	def getGDALForMac(self):
-		if cfg.sysNm == "Darwin":
-			v = cfg.utls.getGDALVersion()
-			cfg.gdalPath = '/Library/Frameworks/GDAL.framework/Versions/' + v[0] + '.' + v[1] + '/Programs/'
-			# logger
-			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), " getGDALForMac: " + str(v))
-
-			
-### Get GDAL version
-	def getGDALVersion(self):
-		v = gdal.VersionInfo("RELEASE_NAME").split('.')
-		return v
 		
 	# create a polygon shapefile with OGR
 	def createEmptyShapefile(self, crsWkt, outputVector):
@@ -633,7 +918,7 @@ class Utils:
 		# add field
 		fN = cfg.emptyFN
 		fields.append(QgsField(fN, QVariant.Int))	
-		QgsVectorFileWriter(outputVector.encode(cfg.fSEnc), "CP1250", fields, QGis.WKBPolygon, crs, "ESRI Shapefile")
+		QgsVectorFileWriter(unicode(outputVector), "CP1250", fields, QGis.WKBPolygon, crs, "ESRI Shapefile")
 		
 ### Group index by its name
 	def groupIndex(self, groupName):
@@ -646,7 +931,7 @@ class Utils:
 						# group position
 						return p
 						# logger
-						if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "group " + str(groupName) + " Position: " + str(p))
+						cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "group " + unicode(groupName) + " Position: " + unicode(p))
 
 ### Raster top left origin and pixel size
 	def imageInformation(self, imageName):
@@ -659,12 +944,12 @@ class Utils:
 			# pixel size
 			pS = i.rasterUnitsPerPixelX()
 			# logger
-			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "image: " + str(imageName) + " topleft: (" + str(tLX) + ","+ str(tLY) + ")")
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "image: " + unicode(imageName) + " topleft: (" + str(tLX) + ","+ str(tLY) + ")")
 			# return a tuple TopLeft X, TopLeft Y, and Pixel size
 			return tLX, tLY, pS
 		except Exception, err:
 			# logger
-			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			return None, None, None
 			
 ### Raster size
@@ -682,12 +967,12 @@ class Utils:
 			# pixel size
 			pS = i.rasterUnitsPerPixelX()
 			# logger
-			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "image: " + str(imageName) + " topleft: (" + str(tLX) + ","+ str(tLY) + ")")
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "image: " + unicode(imageName) + " topleft: (" + str(tLX) + ","+ str(tLY) + ")")
 			# return a tuple TopLeft X, TopLeft Y, and Pixel size
 			return tLX, tLY, lRX, lRY, pS
 		except Exception, err:
 			# logger
-			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			return None, None, None, None, None
 						
 ### Layer ID by its name
@@ -697,12 +982,17 @@ class Utils:
 			lN = l.name()
 			if lN == layerName:
 				# logger
-				if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "layer: " + str(layerName) + " ID: " + str(l.id()))
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "layer: " + unicode(layerName) + " ID: " + unicode(l.id()))
 				return l.id()
 						
 ### Get the code line number for log file
 	def lineOfCode(self):
 		return str(inspect.currentframe().f_back.f_lineno)
+		
+### logger condition
+	def logCondition(self, function, message):
+		if cfg.logSetVal == "Yes":
+			cfg.utls.logToFile(function, message)
 		
 ### Logger of functions
 	def logToFile(self, function, message):
@@ -732,7 +1022,7 @@ class Utils:
 		cfg.toolPan = QgsMapToolPan(cfg.cnvs)
 		cfg.cnvs.setMapTool(cfg.toolPan)
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "pan action")
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "pan action")
 		
 ### Question box
 	def questionBox(self, caption, message):
@@ -769,7 +1059,7 @@ class Utils:
 		r = QgsCategorizedSymbolRendererV2(f, c)
 		layer.setRendererV2(r)
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
 		
 	# Define class symbology
 	def rasterSymbol(self, classLayer, signatureList, macroclassCheck):
@@ -785,11 +1075,12 @@ class Utils:
 		cL.append(QgsColorRampShader.ColorRampItem(0, QColor("#000000"), "0 - " + cfg.uncls))
 		for i in range(0, len(v)):
 			if macroclassCheck == "Yes":
-				if int(v[i][0]) not in mc:
+				if int(v[i][0]) not in mc and int(v[i][0]) != 0:
 					mc.append(int(v[i][0]))
 					n.append([int(v[i][0]), v[i][6], str(v[i][1])])
 			else:
-				n.append([int(v[i][2]), v[i][6], str(v[i][3])])
+				if int(v[i][2]) != 0:
+					n.append([int(v[i][2]), v[i][6], str(v[i][3])])
 		for b in sorted(n, key=lambda c: c[0]):
 			cL.append(QgsColorRampShader.ColorRampItem(b[0], b[1], str(b[0]) + " - " + b[2]))
 		# Create the shader
@@ -810,24 +1101,92 @@ class Utils:
 		classLayer.triggerRepaint()
 		cfg.lgnd.refreshLayerSymbology(classLayer)
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "" + unicode(classLayer.source()))
+		
+	# Define class symbology
+	def rasterPreviewSymbol(self, previewLayer, algorithmName):
+		if algorithmName == cfg.algMinDist or algorithmName == cfg.algSAM:
+			cfg.utls.rasterSymbolPseudoColor(previewLayer)
+		elif algorithmName == cfg.algML:
+			cfg.utls.rasterSymbolSingleBandGray(previewLayer)
+			
+	# Define class symbology pseudo color
+	def rasterSymbolPseudoColor(self, layer):
+		layer.setDrawingStyle("SingleBandPseudoColor")
+		# Band statistics
+		bndStat = layer.dataProvider().bandStatistics(1)
+		max = bndStat.maximumValue
+		min = bndStat.minimumValue
+		# The band of layer
+		cLB = 1
+		# Color list for ramp
+		cL = []
+		colorMin = QColor("#ffffff")
+		colorMax = QColor("#000000")
+		cL.append(QgsColorRampShader.ColorRampItem(min, colorMin, str(min)))
+		cL.append(QgsColorRampShader.ColorRampItem(max, colorMax, str(max)))
+		# Create the shader
+		lS = QgsRasterShader()
+		# Create the color ramp function
+		cR = QgsColorRampShader()
+		cR.setColorRampType(QgsColorRampShader.INTERPOLATED)
+		cR.setColorRampItemList(cL)
+		# Set the raster shader function
+		lS.setRasterShaderFunction(cR)
+		# Create the renderer
+		lR = QgsSingleBandPseudoColorRenderer(layer.dataProvider(), cLB, lS)
+		# Apply the renderer to layer
+		layer.setRenderer(lR)
+		# refresh legend
+		if hasattr(layer, "setCacheImage"):
+			layer.setCacheImage(None)
+		layer.triggerRepaint()
+		cfg.lgnd.refreshLayerSymbology(layer)
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "" + unicode(layer.source()))
+		
+	# Define class symbology single band grey
+	def rasterSymbolSingleBandGray(self, layer):
+		layer.setDrawingStyle("SingleBandGray")
+		layer.setContrastEnhancement(QgsContrastEnhancement.StretchToMinimumMaximum, QgsRaster.ContrastEnhancementCumulativeCut)
+		# refresh legend
+		if hasattr(layer, "setCacheImage"):
+			layer.setCacheImage(None)
+		layer.triggerRepaint()
+		cfg.lgnd.refreshLayerSymbology(layer)
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "" + unicode(layer.source()))
 		
 ### Split raster into single bands, and return a list of images
-	def rasterToBands(self, raster, outputFolder):
+	def rasterToBands(self, rasterPath, outputFolder, outputName = None, progressBar = "No"):
 		dT = self.getTime()
-		i = self.selectLayerbyName(raster, "Yes")
-		iBC = i.bandCount()
-		iL = ""
+		iBC = cfg.utls.getNumberBandRaster(rasterPath)
+		iL = []
+		if outputName is None:
+			name = cfg.splitBndNm + dT
+		else:
+			name = outputName
+		progresStep = int(100 / iBC)
+		i = 1
 		for x in range(1, iBC+1):
-			xB = outputFolder + "/" + "xBand_" + dT + "_" + str(x) + ".tif"
-			self.getRasterBandByBandNumber(i.source().encode(cfg.fSEnc), x, xB)
-			iL = iL + xB + ";"
-		iL = iL.rstrip(';')
+			if cfg.actionCheck == "Yes":
+				xB = outputFolder + "/" + name + "_B" + str(x) + ".tif"
+				self.getRasterBandByBandNumber(rasterPath, x, xB)
+				iL.append(xB)
+				if progressBar == "Yes":
+					cfg.uiUtls.updateBar(progresStep * i)
+					i = i + 1
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "raster: " + str(raster) + " split to bands")
-		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "raster: " + unicode(rasterPath) + " split to bands")
 		return iL
+		
+### Get the number of bands of a raster
+	def getNumberBandRaster(self, raster):
+		gdal.AllRegister()
+		rD = gdal.Open(raster, GA_ReadOnly)
+		number = rD.RasterCount
+		rD = None
+		return number
 		
 	# delete all items in a table
 	def clearTable(self, table):
@@ -835,7 +1194,7 @@ class Utils:
 		for i in range(0, table.rowCount()):
 			table.removeRow(0)
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
 			
 	# calculate raster block ranges
 	def rasterBlocks(self, gdalRaster, blockSizeX = 1, blockSizeY = 1, previewSize = 0, previewPoint = None):
@@ -886,26 +1245,25 @@ class Utils:
 			pX = lX
 			pY = lY
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
 		return rX, rY, lX, lY, pX, pY
 		
 	# read a block of band as array
 	def readArrayBlock(self, gdalBand, pixelStartColumn, pixelStartRow, blockColumns, blockRow):
 		a = gdalBand.ReadAsArray(pixelStartColumn, pixelStartRow, blockColumns, blockRow)
-		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "")
 		return a
 		
 	# write an array to band
 	def writeArrayBlock(self, gdalRaster, bandNumber, dataArray, pixelStartColumn, pixelStartRow, nodataValue=None):
 		b = gdalRaster.GetRasterBand(bandNumber)
+		x = gdalRaster.RasterXSize - pixelStartColumn 
+		y = gdalRaster.RasterYSize - pixelStartRow
+		dataArray = dataArray[:y, :x]
 		b.WriteArray(dataArray, pixelStartColumn, pixelStartRow)
 		if nodataValue is not None:
 			b.SetNoDataValue(nodataValue)
 		b.FlushCache()
 		b = None
-		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "")
 		
 	def createRasterFromReference(self, gdalRasterRef, bandNumber, outputRasterList, nodataValue = None, driver = "GTiff", format = GDT_Float64, previewSize = 0, previewPoint = None, compress = "No"):
 		oRL = []
@@ -948,11 +1306,13 @@ class Utils:
 					b.Fill(nodataValue)
 					b = None
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "" + unicode(outputRasterList))
 		return oRL
 		
 	# create one raster for each signature class
 	def createSignatureClassRaster(self, signatureList, gdalRasterRef, outputDirectory, nodataValue = None, outputName = None, previewSize = 0, previewPoint = None):
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "start createSignatureClassRaster")	
 		dT = self.getTime()
 		outputRasterList = []
 		for s in range(0, len(signatureList)):
@@ -963,7 +1323,7 @@ class Utils:
 			outputRasterList.append(o)
 		oRL = self.createRasterFromReference(gdalRasterRef, 1, outputRasterList, nodataValue, "GTiff", GDT_Float64, previewSize, previewPoint)
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "end createSignatureClassRaster")
 		return oRL, outputRasterList
 		
 	# convert seconds to H M S
@@ -974,12 +1334,12 @@ class Utils:
 			m = str("%.f" % round(hour)) + " H " + str("%.f" % round(min)) + " min"
 		else:
 			m = str("%.f" % round(min)) + " min " + str("%.f" % round(sec)) + " sec"
-		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "")
 		return m
 		
 	# perform classification
-	def classification(self, gdalBandList, signatureList, algorithmName, rasterArray, columnNumber, rowNumber, pixelStartColumn, pixelStartRow, outputGdalRasterList, outputAlgorithmRaster, outputClassificationRaster, nodataValue, macroclassCheck, previewSize, pixelStartColumnPreview, pixelStartRowPreview, progressStart, progresStep, remainingBlocks):
+	def classification(self, gdalBandList, signatureList, algorithmName, rasterArray, columnNumber, rowNumber, pixelStartColumn, pixelStartRow, outputGdalRasterList, outputAlgorithmRaster, outputClassificationRaster, nodataValue, macroclassCheck, previewSize, pixelStartColumnPreview, pixelStartRowPreview, progressStart, progresStep, remainingBlocks, progressMessage):
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "start classification block")
 		sigArrayList = self.createArrayFromSignature(gdalBandList, signatureList)
 		bN = 0
 		minArray = None
@@ -1000,14 +1360,16 @@ class Utils:
 					if StartT != 0:
 						processT = EndT - StartT
 						cfg.remainingTime = (remainingBlocks * itTot  - itCount) * processT
-						cfg.uiUtls.updateBar(progress, self.timeToHMS(cfg.remainingTime) + " remaining")
+						cfg.uiUtls.updateBar(progress, progressMessage + self.timeToHMS(cfg.remainingTime) + " remaining")
 					elif cfg.remainingTime != 0:
-						cfg.uiUtls.updateBar(progress, self.timeToHMS(cfg.remainingTime) + " remaining")
+						cfg.uiUtls.updateBar(progress, progressMessage + self.timeToHMS(cfg.remainingTime) + " remaining")
 					else:
 						cfg.uiUtls.updateBar(progress)
 					StartT = time.clock()
 					# algorithm
 					c = self.algorithmMinimumDistance(rasterArray, s)
+					# logger
+					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "algorithmMinimumDistance signature" + str(itCount))
 					if type(c) is not int:
 						oR = outputGdalRasterList[bN]
 						if previewSize > 0:
@@ -1019,6 +1381,8 @@ class Utils:
 							minArray = c
 						else:
 							minArray = self.findMinimumArray(c, minArray)
+							# logger
+							cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "findMinimumArray signature" + str(itCount))
 						# minimum raster
 						self.writeArrayBlock(outputAlgorithmRaster, 1, minArray, pixelStartColumn, pixelStartRow, nodataValue)
 						# signature classification raster
@@ -1026,6 +1390,8 @@ class Utils:
 							clA = self.classifyClasses(c, minArray, signatureList[n][0])
 						else:
 							clA = self.classifyClasses(c, minArray, signatureList[n][2])
+						# logger
+						cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "classifyClasses signature" + str(itCount))
 						# classification raster
 						if classArray == None:
 							classArray = clA
@@ -1038,7 +1404,8 @@ class Utils:
 						if cfg.algThrshld > 0:
 							thr = self.minimumDistanceThreshold(minArray, cfg.algThrshld)
 							classArray = classArray * thr
-							thr = None		
+							thr = None
+						classArray[classArray == cfg.unclassifiedVal] = 0
 						# classification raster
 						self.writeArrayBlock(outputClassificationRaster, 1, classArray, pixelStartColumn, pixelStartRow, nodataValue)
 						bN = bN + 1
@@ -1057,15 +1424,17 @@ class Utils:
 					if StartT != 0:
 						processT = EndT - StartT
 						cfg.remainingTime = (remainingBlocks * itTot  - itCount) * processT
-						cfg.uiUtls.updateBar(progress, self.timeToHMS(cfg.remainingTime) + " remaining")
+						cfg.uiUtls.updateBar(progress, progressMessage + self.timeToHMS(cfg.remainingTime) + " remaining")
 					elif cfg.remainingTime != 0:
-						#cfg.uiUtls.updateBar(progress, self.timeToHMS(cfg.remainingTime) + " remaining")
+						#cfg.uiUtls.updateBar(progress, progressMessage + self.timeToHMS(cfg.remainingTime) + " remaining")
 						pass
 					else:
 						cfg.uiUtls.updateBar(progress)
 					StartT = time.clock()
 					# algorithm
 					c = self.algorithmSAM(rasterArray, s)
+					# logger
+					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "algorithmSAM signature" + str(itCount))
 					if type(c) is not int:
 						oR = outputGdalRasterList[bN]
 						if previewSize > 0:
@@ -1077,6 +1446,8 @@ class Utils:
 							minArray = c
 						else:
 							minArray = self.findMinimumArray(c, minArray)
+							# logger
+							cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "findMinimumArray signature" + str(itCount))
 						# minimum raster
 						self.writeArrayBlock(outputAlgorithmRaster, 1, minArray, pixelStartColumn, pixelStartRow, nodataValue)
 						# signature classification raster
@@ -1084,6 +1455,8 @@ class Utils:
 							clA = self.classifyClasses(c, minArray, signatureList[n][0])
 						else:
 							clA = self.classifyClasses(c, minArray, signatureList[n][2])
+						# logger
+						cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "classifyClasses signature" + str(itCount))
 						# classification raster
 						if classArray == None:
 							classArray = clA
@@ -1097,6 +1470,7 @@ class Utils:
 							thr = self.minimumDistanceThreshold(minArray, cfg.algThrshld)
 							classArray = classArray * thr
 							thr = None
+						classArray[classArray == cfg.unclassifiedVal] = 0
 						# classification raster
 						self.writeArrayBlock(outputClassificationRaster, 1, classArray, pixelStartColumn, pixelStartRow, nodataValue)
 						bN = bN + 1
@@ -1116,14 +1490,16 @@ class Utils:
 					if StartT != 0:
 						processT = EndT - StartT
 						cfg.remainingTime = (remainingBlocks * itTot  - itCount) * processT
-						cfg.uiUtls.updateBar(progress, self.timeToHMS(cfg.remainingTime) + " remaining")
+						cfg.uiUtls.updateBar(progress, progressMessage + self.timeToHMS(cfg.remainingTime) + " remaining")
 					elif cfg.remainingTime != 0:
-						cfg.uiUtls.updateBar(progress, self.timeToHMS(cfg.remainingTime) + " remaining")
+						cfg.uiUtls.updateBar(progress, progressMessage + self.timeToHMS(cfg.remainingTime) + " remaining")
 					else:
 						cfg.uiUtls.updateBar(progress)
 					StartT = time.clock()
 					# algorithm
-					c = self.algorithmMaximumLikelihood(rasterArray, s, covMatrList[n])		
+					c = self.algorithmMaximumLikelihood(rasterArray, s, covMatrList[n])
+					# logger
+					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "algorithmMaximumLikelihood signature" + str(itCount))					
 					if type(c) is not int:					
 						oR = outputGdalRasterList[bN]
 						if previewSize > 0:
@@ -1131,11 +1507,12 @@ class Utils:
 							pixelStartRow = int(pixelStartRowPreview)
 						# algorithm raster
 						self.writeArrayBlock(oR, 1, c, pixelStartColumn, pixelStartRow, nodataValue)
-						
 						if maxArray is None:
 							maxArray = c
 						else:
 							maxArray = self.findMaximumArray(c, maxArray)
+							# logger
+							cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "findMaximumArray signature" + str(itCount))
 						# minimum raster
 						self.writeArrayBlock(outputAlgorithmRaster, 1, maxArray, pixelStartColumn, pixelStartRow, nodataValue)
 						# signature classification raster
@@ -1143,6 +1520,8 @@ class Utils:
 							clA = self.classifyClasses(c, maxArray, signatureList[n][0])
 						else:
 							clA = self.classifyClasses(c, maxArray, signatureList[n][2])
+						# logger
+						cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "classifyClasses signature" + str(itCount))
 						# classification raster
 						if classArray == None:
 							classArray = clA
@@ -1156,6 +1535,7 @@ class Utils:
 							thr = self.maximumLikelihoodThreshold(maxArray)
 							classArray = classArray * thr
 							thr = None
+						classArray[classArray == cfg.unclassifiedVal] = 0
 						# classification raster
 						self.writeArrayBlock(outputClassificationRaster, 1, classArray, pixelStartColumn, pixelStartRow, nodataValue)
 						bN = bN + 1
@@ -1165,7 +1545,7 @@ class Utils:
 				else:
 					return "No"
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "end classification block")
 		return "Yes"
 				
 	def createRasterTable(self, rasterPath, bandNumber, signatureList):
@@ -1192,20 +1572,18 @@ class Utils:
 		b = None
 		r = None
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "" + unicode(rasterPath))
 				
 	# classify classes
 	def classifyClasses(self, algorithmArray, minimumArray, classID):
+		if int(classID) == 0:
+			classID = cfg.unclassifiedVal
 		cA = np.equal(algorithmArray, minimumArray) * int(classID)
-		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "")
 		return cA
 		
 	# find minimum array
 	def findMinimumArray(self, firstArray, secondArray):
 		m = np.minimum(firstArray, secondArray)
-		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "")
 		return m
 		
 	# find maximum array
@@ -1214,21 +1592,21 @@ class Utils:
 		s = np.ma.masked_equal(secondArray, - cfg.NoDataVal)
 		m = np.maximum(firstArray, secondArray)
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
 		return m
 		
 	# set threshold
 	def maximumLikelihoodThreshold(self, array):	
 		outArray = np.where(array > cfg.maxLikeNoDataVal, 1, 0)
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
 		return outArray
 		
 	# set threshold
 	def minimumDistanceThreshold(self, array, threshold):	
 		outArray = np.where(array < threshold, 1, 0)
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
 		return outArray
 		
 	def createArrayFromSignature(self, gdalBandList, signatureList):
@@ -1243,19 +1621,17 @@ class Utils:
 				i = i + 1
 			arrayList.append(array)
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
 		return arrayList
 	
 	# minimum Euclidean distance algorithm [ sqrt( sum( (r_i - s_i)^2 ) ) ]
 	def algorithmMinimumDistance(self, rasterArray, signatureArray):
 		try:
 			algArray = np.sqrt(((rasterArray - signatureArray)**2).sum(axis = 2))
-			# logger
-			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "")
 			return algArray
 		except Exception, err:
 			# logger
-			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			cfg.mx.msgErr28()
 			return 0
 		
@@ -1279,11 +1655,7 @@ class Utils:
 			(sign, logdet) = np.linalg.slogdet(covarianceMatrix)
 			invC = np.linalg.inv(covarianceMatrix)
 			d = rasterArray - signatureArray
-			v = rasterArray.shape
-			algArray = np.zeros((v[0], v[1]), dtype=np.float64)
-			for i in range(0, v[0]):
-				for j in range(0, v[1]):
-					algArray[i, j] = - logdet - np.dot(np.dot(d[i, j, :].T, invC), d[i, j, :])
+			algArray = - logdet - (np.dot(d, invC) * d).sum(axis = 2)
 			if cfg.algThrshld > 0:
 				chi = self.chisquare()
 				threshold = - chi - logdet
@@ -1292,7 +1664,7 @@ class Utils:
 			return algArray
 		except Exception, err:
 			# logger
-			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			cfg.mx.msgErr28()
 			return 0
 		
@@ -1301,13 +1673,99 @@ class Utils:
 		try:
 			algArray = np.arccos((rasterArray * signatureArray).sum(axis = 2) / np.sqrt((rasterArray**2).sum(axis = 2) * (signatureArray**2).sum())) * 180 / np.pi
 			# logger
-			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "")
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
 			return algArray
 		except Exception, err:
 			# logger
-			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			cfg.mx.msgErr28()
 			return 0
+			
+	# calculate Jeffries-Matusita distance Jij = 2[1 − e^(−B)] from Richards, J. A. & Jia, X. 2006. Remote Sensing Digital Image Analysis: An Introduction, Springer.
+	def jeffriesMatusitaDistance(self, signatureArrayI, signatureArrayJ, covarianceMatrixI, covarianceMatrixJ):
+		try:
+			I = np.array(signatureArrayI)
+			J = np.array(signatureArrayJ)
+			d = (I - J)
+			cI = covarianceMatrixI
+			cJ = covarianceMatrixJ
+			C = (cI + cJ)/2
+			invC = np.linalg.inv(C)
+			dInvC = np.dot(d.T, invC)
+			f = np.dot(dInvC, d) / 8.0
+			(signC, logdetC) = np.linalg.slogdet(C)
+			(signcI, logdetcI) = np.linalg.slogdet(cI)
+			(signcJ, logdetcJ) = np.linalg.slogdet(cJ)
+			s = np.log(signC * np.exp(logdetC) / (np.sqrt(signcI * np.exp(logdetcI)) * np.sqrt(signcJ * np.exp(logdetcJ)))) / 2.0
+			B = f + s
+			JM = 2 * (1 - np.exp(-B))
+		except Exception, err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			JM = cfg.notAvailable
+		return JM
+		
+	# calculate transformed divergence dij = 2[1 − e^(−dij/8)] from Richards, J. A. & Jia, X. 2006. Remote Sensing Digital Image Analysis: An Introduction, Springer.
+	def transformedDivergence(self, signatureArrayI, signatureArrayJ, covarianceMatrixI, covarianceMatrixJ):
+		try:
+			I = np.array(signatureArrayI)
+			J = np.array(signatureArrayJ)
+			d = (I - J)
+			cI = covarianceMatrixI
+			cJ = covarianceMatrixJ
+			invCI = np.linalg.inv(cI)
+			invCJ = np.linalg.inv(cJ)
+			p1 = (cI - cJ) * (invCI - invCJ)
+			t1 = 0.5 * np.trace(p1)
+			p2 = (invCI + invCJ) * d
+			p3 = p2 * d.T
+			t2 = 0.5 * np.trace(p3)
+			div = t1 + t2
+			TD = 2 * (1 - np.exp(-div/8.0))
+		except Exception, err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			TD = cfg.notAvailable
+		return TD
+		
+	# Bray-Curtis similarity (100 - 100 * sum(abs(x[ki]-x[kj]) / (sum(x[ki] + x[kj])))
+	def brayCurtisSimilarity(self, signatureArrayI, signatureArrayJ):
+		try:
+			I = np.array(signatureArrayI)
+			J = np.array(signatureArrayJ)
+			sumIJ = I.sum() + J.sum()
+			d = np.sqrt((I - J)**2)
+			sim = 100 - d.sum() / sumIJ * 100
+		except Exception, err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			sim = cfg.notAvailable
+		return sim
+			
+	# Euclidean distance sqrt(sum((x[ki] - x[kj])^2))
+	def euclideanDistance(self, signatureArrayI, signatureArrayJ):
+		try:
+			I = np.array(signatureArrayI)
+			J = np.array(signatureArrayJ)
+			d = (I - J)**2
+			dist = np.sqrt(d.sum())
+		except Exception, err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			dist = cfg.notAvailable
+		return dist		
+
+	# Spectral angle algorithm [ arccos( sum(r_i * s_i) / sqrt( sum(r_i**2) * sum(s_i**2) ) ) ]
+	def spectralAngle(self, signatureArrayI, signatureArrayJ):
+		try:
+			I = np.array(signatureArrayI)
+			J = np.array(signatureArrayJ)
+			angle = np.arccos((I * J).sum() / np.sqrt((I**2).sum() * (J**2).sum())) * 180 / np.pi
+		except Exception, err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			angle = cfg.notAvailable
+		return angle
 			
 	# read all raster from band
 	def readAllBandsFromRaster(self, gdalRaster):
@@ -1317,11 +1775,13 @@ class Utils:
 			rB = gdalRaster.GetRasterBand(b)
 			bandList.append(rB)
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
 		return bandList
 	
 	# process a raster with block size
-	def processRaster(self, gdalRaster, gdalBandList, signatureList = None, functionBand = None, functionRaster = None, algorithmName = None, outputRasterList = None, outputAlgorithmRaster = None, outputClassificationRaster = None, previewSize = 0, previewPoint = None, nodataValue = None, macroclassCheck = "No", functionBandArgument = None, functionVariable = None):
+	def processRaster(self, gdalRaster, gdalBandList, signatureList = None, functionBand = None, functionRaster = None, algorithmName = None, outputRasterList = None, outputAlgorithmRaster = None, outputClassificationRaster = None, previewSize = 0, previewPoint = None, nodataValue = None, macroclassCheck = "No", functionBandArgument = None, functionVariable = None, progressMessage = ""):
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "start processRaster")
 			blockSizeX = self.calculateBlockSize(len(gdalBandList))
 			blockSizeY = blockSizeX
 			# raster blocks
@@ -1334,7 +1794,8 @@ class Utils:
 			if blockSizeY > rY:
 				blockSizeY = rY
 			cfg.remainingTime = 0
-			remainingBlocks = len(lX) * len(lY) 
+			remainingBlocks = len(lX) * len(lY)
+			totBlocks = remainingBlocks
 			for y in lY:
 				bSY = blockSizeY
 				if previewSize > 0 and bSY > previewSize:
@@ -1358,21 +1819,31 @@ class Utils:
 							a = None
 							# set nodata value
 							array[::, ::, b][array[::, ::, b] == ndv] = np.nan
-							if functionBand is not None:
+							if functionBand is not None and functionBand != "No":
+								qApp.processEvents()
 								functionBand(b+1, array[::, ::, b].reshape(bSY, bSX), bSX, bSY, x, y, outputRasterList, functionBandArgument, functionVariable)
+								cfg.uiUtls.updateBar(progressStart, " (" + str(totBlocks - remainingBlocks) + "/" + str(totBlocks) + ") " + progressMessage)
 						c = array.reshape(bSY, bSX, len(gdalBandList))
 						array = None
 						if functionRaster is not None:
-							qApp.processEvents()
-							o = functionRaster(gdalBandList, signatureList, algorithmName, c, bSX, bSY, x, y, outputRasterList, outputAlgorithmRaster, outputClassificationRaster, nodataValue, macroclassCheck, previewSize, pX[lX.index(x)], pY[lY.index(y)], progressStart, progresStep, remainingBlocks)
-							if o == "No":
-								return "No"
+							if functionBand == "No":
+								qApp.processEvents()
+								o = functionRaster(gdalBandList, c, bSX, bSY, x, y, outputRasterList, functionBandArgument, functionVariable)
+								cfg.uiUtls.updateBar(progressStart, " (" + str(totBlocks - remainingBlocks) + "/" + str(totBlocks) + ") " + progressMessage)
+								if o == "No":
+									return "No"
+							else:
+								qApp.processEvents()
+								progressMessage = " (" + str(totBlocks - remainingBlocks) + "/" + str(totBlocks) + ") "
+								o = functionRaster(gdalBandList, signatureList, algorithmName, c, bSX, bSY, x, y, outputRasterList, outputAlgorithmRaster, outputClassificationRaster, nodataValue, macroclassCheck, previewSize, pX[lX.index(x)], pY[lY.index(y)], progressStart, progresStep, remainingBlocks, progressMessage)
+								if o == "No":
+									return "No"
 						remainingBlocks = (remainingBlocks - 1)
 					else:
 						return "No"
 			outputClassificationRaster = None
 			# logger
-			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "")
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "end processRaster")
 			return "Yes"
 
 	# calculate raster
@@ -1387,23 +1858,92 @@ class Utils:
 			# output raster
 			self.writeArrayBlock(oR, 1, o, pixelStartColumn, pixelStartRow)
 			# logger
-			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "")
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
 					
 	# reclassify raster
-	def reclassifyRaster(self, gdalBand, rasterArray, columnNumber, rowNumber, pixelStartColumn, pixelStartRow, outputGdalRasterList, functionBandArgument, functionVariable):
+	def reclassifyRaster(self, gdalBand, rasterSCPArrayfunctionBand, columnNumber, rowNumber, pixelStartColumn, pixelStartRow, outputGdalRasterList, functionBandArgument, functionVariable):
 		if cfg.actionCheck == "Yes":
-			o = rasterArray
+			# raster array
+			o = rasterSCPArrayfunctionBand
 			for i in functionBandArgument:
 				# create condition
-				c = i[0].replace(functionVariable, "rasterArray")
+				c = i[0].replace(functionVariable, "rasterSCPArrayfunctionBand")
 				f = "np.where(" + c + ", " + str(i[1]) + ", o)"
 				# perform operation
-				o = eval(f)
+				try:
+					o = eval(f)
+				except Exception, err:
+					# logger
+					cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			oR = outputGdalRasterList[0]
 			# output raster
 			self.writeArrayBlock(oR, 1, o, pixelStartColumn, pixelStartRow)
 			# logger
-			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "")
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+			
+	# band calculation
+	def bandCalculation(self, gdalBandList, rasterSCPArrayfunctionBand, columnNumber, rowNumber, pixelStartColumn, pixelStartRow, outputGdalRasterList, functionBandArgument, functionVariableList):
+		if cfg.actionCheck == "Yes":
+			f = functionBandArgument
+			# create function
+			b = 0
+			for i in functionVariableList:
+				f = f.replace(i[0], " rasterSCPArrayfunctionBand[::, ::," + str(b) + "] ")
+				f = f.replace(i[1], " rasterSCPArrayfunctionBand[::, ::," + str(b) + "] ")
+				b = b + 1
+			# replace numpy operators
+			f = cfg.utls.replaceNumpyOperators(f)
+			# perform operation
+			try:
+				o = eval(f)
+			except Exception, err:
+				cfg.mx.msgErr36()
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				return "No"
+			# create array if not
+			if not isinstance(o, np.ndarray):
+				a = np.zeros((rasterSCPArrayfunctionBand.shape[0], rasterSCPArrayfunctionBand.shape[1]), dtype=np.float64)
+				a.fill(o)
+				o = a
+			oR = outputGdalRasterList[0]
+			# output raster
+			try:
+				self.writeArrayBlock(oR, 1, o, pixelStartColumn, pixelStartRow)
+			except Exception, err:
+				cfg.mx.msgErr36()
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				return "No"
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+			
+	# replace numpy operators for expressions
+	def replaceNumpyOperators(self, expression):
+		f = expression
+		f = f.replace(" ln(", " " + cfg.logn + "(")
+		f = f.replace(" ln (", " " + cfg.logn + "(")
+		f = f.replace(" sqrt(", " " + cfg.numpySqrt + "(")
+		f = f.replace(" sqrt (", " " + cfg.numpySqrt + "(")
+		f = f.replace(" cos(", " " + cfg.numpyCos+ "(")
+		f = f.replace(" cos (", " " + cfg.numpyCos + "(")
+		f = f.replace(" acos(", " " + cfg.numpyArcCos + "(")
+		f = f.replace(" acos (", " " + cfg.numpyArcCos + "(")
+		f = f.replace(" sin(", " " + cfg.numpySin + "(")
+		f = f.replace(" sin (", " " + cfg.numpySin + "(")
+		f = f.replace(" asin(", " " + cfg.numpyArcSin + "(")
+		f = f.replace(" asin (", " " + cfg.numpyArcSin + "(")
+		f = f.replace(" tan(", " " + cfg.numpyTan + "(")
+		f = f.replace(" tan (", " " + cfg.numpyTan + "(")
+		f = f.replace(" atan(", " " + cfg.numpyArcTan + "(")
+		f = f.replace(" atan (", " " + cfg.numpyArcTan + "(")
+		f = f.replace(" exp(", " " + cfg.numpyExp + "(")
+		f = f.replace(" exp (", " " + cfg.numpyExp + "(")
+		f = f.replace("^", "**")
+		f = f.replace(" pi ", " " + cfg.numpyPi + " ")
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+		return f
 			
 	# calculate raster unique values
 	def rasterUniqueValues(self, gdalBand, rasterArray, columnNumber, rowNumber, pixelStartColumn, pixelStartRow, outputGdalRasterList, functionBandArgument, functionVariable):
@@ -1412,7 +1952,7 @@ class Utils:
 			cfg.rasterBandUniqueVal.extend(val)
 			cfg.rasterBandUniqueVal = list(set(cfg.rasterBandUniqueVal))
 			# logger
-			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "")
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
 			return cfg.rasterBandUniqueVal 
 			
 	# calculate raster unique values
@@ -1421,20 +1961,84 @@ class Utils:
 			val = (rasterArray == functionBandArgument).sum()
 			cfg.rasterPixelSum = cfg.rasterPixelSum + val
 			# logger
-			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "")
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+			
+	# get IDs of signature list dictionari
+	def signatureID(self):
+		i = 1
+		if len(cfg.signIDs.values()) > 0:
+			while i in cfg.signIDs.values():
+				i = i + 1
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ID" + str(i))
+		return i
+		
+	def calculateUnique_CID_MCID(self):
+		unique = []
+		if len(cfg.signIDs.values()) > 0:
+			for i in cfg.signIDs.values():
+				unique.append(str(cfg.signList["CLASSID_" + str(i)]) + "-" + str(cfg.signList["MACROCLASSID_" + str(i)]))
+			l = set(unique)
+			list = cfg.utls.uniqueToOrderedList(l)
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " unique" + str(list))
+			return list
+		else:
+			return "No"
+			
+	def uniqueToOrderedList(self, uniqueList):
+		list = []
+		for i in uniqueList:
+			v = i.split("-")
+			list.append([int(v[0]), int(v[1])])
+		sortedList = sorted(list, key=lambda list: (list[0], list[1]))
+		return sortedList
+		
+		
+	# highlight row in table
+	def highlightRowInTable(self, table, value, columnIndex):
+		tW = table
+		v = tW.rowCount()
+		for x in range(0, v):
+			id = tW.item(x, columnIndex).text()
+			if str(id) == str(value):
+				return x
+			
+	# remove rows from table
+	def removeRowsFromTable(self, table):
+		# ask for confirm
+		a = cfg.utls.questionBox("Remove rows", "Are you sure you want to remove highlighted rows from the table?")
+		if a == "Yes":
+			tW = table
+			c = tW.rowCount()
+			# list of item to remove
+			iR  = []
+			for i in tW.selectedIndexes():
+				iR.append(i.row())
+			v = list(set(iR))
+			# remove items
+			for i in reversed(range(0, len(v))):
+				tW.removeRow(v[i])
+			c = tW.rowCount()
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " row removed")
 			
 	# calculate block size
 	def calculateBlockSize(self, bandNumber):
-		b = int((cfg.RAMValue / (cfg.arrayUnitMemory * (bandNumber +  5) ))**.5)
+		if cfg.sys64bit == "No" and cfg.sysNm == "Windows":
+			mem = 512
+		else:
+			mem = cfg.RAMValue
+		b = int((mem / (cfg.arrayUnitMemory * (bandNumber +  5) ))**.5)
 		# set system memory max
 		if cfg.sys64bit == "No" and b > 2500:
 			b = 2500
 		# check memory
 		try:
 			a = np.zeros((b,b), dtype = np.float64)
-			cfg.uiUtls.updateBar(20,  QApplication.translate("semiautomaticclassificationplugin", "Calculating remaining time"))
+			cfg.uiUtls.updateBar(20,  QApplication.translate("semiautomaticclassificationplugin", "Please wait ..."))
 		except:
-			for i in reversed(range(128, cfg.RAMValue, int(cfg.RAMValue/10))):
+			for i in reversed(range(128, mem, int(mem/10))):
 				try:
 					b = int((i / (cfg.arrayUnitMemory * (bandNumber +  5) ))**.5)
 					# set system memory max
@@ -1444,15 +2048,15 @@ class Utils:
 					size = a.nbytes / 1048576
 					cfg.ui.RAM_spinBox.setValue(size * bandNumber)
 					cfg.mx.msgWar11()
-					cfg.uiUtls.updateBar(20,  QApplication.translate("semiautomaticclassificationplugin", "Calculating remaining time"))
+					cfg.uiUtls.updateBar(20,  QApplication.translate("semiautomaticclassificationplugin", "Please wait ..."))
 					# logger
-					if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "block = " + str(b))
+					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "block = " + str(b))
 					return b
 				except Exception, err:
 					# logger
-					if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), " ERROR exception: " + str(err))
+					cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "block = " + str(b))
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "block = " + str(b))
 		return b
 		
 	# get random color and complementary color
@@ -1470,7 +2074,7 @@ class Utils:
 		c = QColorDialog.getColor()
 		if c.isValid():
 			# logger
-			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "color")
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "color")
 			return c
 	
 	# Define raster symbology
@@ -1501,32 +2105,48 @@ class Utils:
 		rasterLayer.triggerRepaint()
 		cfg.lgnd.refreshLayerSymbology(rasterLayer)
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "symbology")
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "symbology")
 			
 	# read project variable
 	def readProjectVariable(self, variableName, value):
 		p = QgsProject.instance()
 		v = p.readEntry("SemiAutomaticClassificationPlugin", variableName, value)[0]
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "variable: " + unicode(variableName) + " - value: " + unicode(value))
 		return v
+		
+	# read QGIS path project variable
+	def readQGISVariablePath(self):
+		cfg.projPath = QgsProject.instance().fileName()
+		p = QgsProject.instance()
+		v = p.readEntry("Paths", "Absolute", "")[0]
+		cfg.absolutePath = v
+		
+	def qgisAbsolutePathToRelativePath(self, absolutePath, relativePath):
+		p = QgsApplication.absolutePathToRelativePath(absolutePath, relativePath)
+		return p
+		
+	def qgisRelativePathToAbsolutePath(self, relativePath, absolutePath):
+		p = QgsApplication.relativePathToAbsolutePath(relativePath, absolutePath)
+		return p
 		
 ### Remove layer from map
 	def removeLayer(self, layerName):
 		QgsMapLayerRegistry.instance().removeMapLayer(self.layerID(layerName))
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "layer: " + unicode(layerName))
 		
 ### Create group
 	def createGroup(self, groupName):
 		g = cfg.lgnd.addGroup(groupName, False)
-		self.moveGroup(groupName)
+		cfg.utls.moveGroup(groupName)
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "group: " + str(groupName))
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "group: " + unicode(groupName))
 		return g		
 	
 ### Move group to top layers
 	def moveGroup(self, groupName):
+		# QGIS >= 2.4
 		try:
 			p = QgsProject.instance()
 			root = p.layerTreeRoot()
@@ -1535,10 +2155,12 @@ class Utils:
 			root.insertChildNode(0, cG)
 			root.removeChildNode(g)
 			# logger
-			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "group: " + str(groupName))
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "group: " + unicode(groupName))
+		# QGIS < 2.4
 		except Exception, err:
-			# logger
-			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), " ERROR exception: " + str(err))
+			if "layerTreeRoot" not in str(err):
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 		
 ### Select layer by name thereof
 	def selectLayerbyName(self, layerName, filterRaster=None):
@@ -1552,25 +2174,74 @@ class Utils:
 					if l.type() == 1:
 						return l
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "layer selected: " + str(layerName))
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "layer selected: " + unicode(layerName))
+
+### Merge raster bands
+	def mergeRasterBands(self, bandList, output, outFormat = "GTiff", compress = "No"):
+		if compress == "No":
+			op = "-of " + outFormat
+		else:
+			op = "-co COMPRESS=LZW -of " + outFormat
+		input = ""
+		for b in bandList:
+			input = input + " " + b.encode(sys.getfilesystemencoding())
+		try:
+			cfg.utls.getGDALForMac()
+			if cfg.sysNm == "Windows":
+				gD = "gdal_merge.bat"
+			else:
+				gD = "gdal_merge.py"
+			a = cfg.gdalPath + gD + " -separate " + op + " -o "
+			b = output.encode(sys.getfilesystemencoding())
+			c = input
+			d = a + b + c
+			sP = subprocess.Popen(d, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+			sP.wait()
+			# get error
+			out, err = sP.communicate()
+			sP.stdout.close()
+			if len(err) > 0:
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " GDAL error:: " + str(err) )
+		# in case of errors
+		except Exception, err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.getGDALForMac()
+			if cfg.sysNm == "Windows":
+				gD = "gdal_merge.bat"
+			else:
+				gD = "gdal_merge.py"
+			a = cfg.gdalPath + gD + " -separate " + op + " -o "
+			b = output.encode(sys.getfilesystemencoding())
+			c = input
+			d = a + b + c
+			sP = subprocess.Popen(d, shell=True)
+			sP.wait()
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " image: " + unicode(output))
 			
 ### Subset an image, given an origin point and a subset width
-	def subsetImage(self, imageName, XCoord, YCoord, Width, Height, output):
+	def subsetImage(self, imageName, XCoord, YCoord, Width, Height, output, outFormat = "GTiff"):
 		i = self.selectLayerbyName(imageName, "Yes")
+		i = i.source().encode(sys.getfilesystemencoding())
 		# output variable
 		st = "No"
 		# raster top left origin and pixel size
 		tLX, tLY, lRX, lRY, pS = self.imageInformationSize(imageName)
 		if pS is None:
 			# logger
-			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), " image none or missing")
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " image none or missing")
 		else:			
 			# subset origin
 			sX = (int((XCoord - tLX) / pS)) - int(Width / 2) 
 			sY = (int((tLY - YCoord) / pS)) - int(Height / 2)
 			try:
 				cfg.utls.getGDALForMac()
-				sP = subprocess.Popen(cfg.gdalPath + "gdal_translate -ot Float64 -a_nodata " + str(cfg.NoDataVal) + " -srcwin " + str(sX) + " " + str(sY) + " " + str(Width) + " " + str(Height) + " -of GTiff \"" + i.source().encode(cfg.fSEnc) + "\" " + output, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+				a = cfg.gdalPath + "gdal_translate -ot Float64 -a_nodata " + str(cfg.NoDataVal) + " -srcwin " + str(sX) + " " + str(sY) + " " + str(Width) + " " + str(Height) + " -of " + outFormat + " \""
+				b = i + "\" " + output.encode(sys.getfilesystemencoding())
+				c = str(a) + b
+				sP = subprocess.Popen(c, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 				sP.wait()
 				# get error
 				out, err = sP.communicate()
@@ -1578,20 +2249,23 @@ class Utils:
 				if len(err) > 0 and "Warning" not in err:
 					st = "Yes"
 					# logger
-					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " GDAL error:: " + str(err) )
+					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " GDAL error:: " + str(err) )
 			# in case of errors
 			except Exception, err:
 				# logger
-				if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				cfg.utls.getGDALForMac()
-				sP = subprocess.Popen(cfg.gdalPath + "gdal_translate -ot Float64 -a_nodata " + str(cfg.NoDataVal) + " -srcwin " + str(sX) + " " + str(sY) + " " + str(Width) + " " + str(Height) + " -of GTiff \"" + i.source().encode(cfg.fSEnc) + "\" " + output, shell=True)
+				a = cfg.gdalPath + "gdal_translate -ot Float64 -a_nodata " + str(cfg.NoDataVal) + " -srcwin " + str(sX) + " " + str(sY) + " " + str(Width) + " " + str(Height) + " -of " + outFormat + " \""
+				b = i + "\" " + output.encode(sys.getfilesystemencoding())
+				c = str(a) + b
+				sP = subprocess.Popen(c, shell=True)
 				sP.wait()
 			# logger
-			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "image: " + str(imageName) + " subset origin: (" + str(XCoord) + ","+ str(YCoord) + ") width: " + str(Width))
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "image: " + unicode(imageName) + " subset origin: (" + str(XCoord) + ","+ str(YCoord) + ") width: " + str(Width))
 			return st
 			
 ### convert reference layer to raster based on the resolution of a raster
-	def vectorToRaster(self, fieldName, layerPath, referenceRasterName, outputRaster, referenceRasterPath=None, ALL_TOUCHED=None):
+	def vectorToRaster(self, fieldName, layerPath, referenceRasterName, outputRaster, referenceRasterPath=None, ALL_TOUCHED=None, outFormat = "GTiff"):
 		# register drivers
 		gdal.AllRegister()
 		if referenceRasterPath is None:
@@ -1608,11 +2282,11 @@ class Utils:
 					# input
 					r = self.selectLayerbyName(referenceRasterName, "Yes")
 			try:
-				rS = r.source().encode(cfg.fSEnc)
+				rS = r.source()
 				ck = "Yes"
 			except Exception, err:
 				# logger
-				if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				ck = "No"
 				cfg.mx.msg4()
 				return ck
@@ -1621,21 +2295,21 @@ class Utils:
 		try:
 			# open input with GDAL
 			rD = gdal.Open(rS, GA_ReadOnly)
+			# number of x pixels
+			rC = rD.RasterXSize
+			# number of y pixels
+			rR = rD.RasterYSize
 		# in case of errors
 		except Exception, err:
 			# logger
-			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			cfg.mx.msg4()
 			return "No"
-		# number of x pixels
-		rC = rD.RasterXSize
-		# number of y pixels
-		rR = rD.RasterYSize
 		# check projections
 		rP = rD.GetProjection()
 		# pixel size and origin
 		rGT = rD.GetGeoTransform()
-		tD = gdal.GetDriverByName( "GTiff" )
+		tD = gdal.GetDriverByName(outFormat)
 		oR = tD.Create(outputRaster, rC, rR, 1, GDT_Int32)
 		oRB = oR.GetRasterBand(1)
 		# set raster projection from reference
@@ -1658,14 +2332,22 @@ class Utils:
 		# close rasters
 		oR = None
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "vector to raster check: " + str(oC))
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "vector to raster check: " + unicode(oC))
 			
 	# convert raster to shapefile
-	def rasterToVector(self, rasterPath, outputShapefilePath):
+	def rasterToVector(self, rasterPath, outputShapefilePath, fieldName = "No"):
 		gdal.AllRegister()
 		tD = gdal.GetDriverByName( "GTiff" )
 		# open input with GDAL
-		rD = gdal.Open(rasterPath, GA_ReadOnly)
+		try:
+			rD = gdal.Open(rasterPath, GA_ReadOnly)
+			# number of x pixels
+			rC = rD.RasterXSize
+		# in case of errors
+		except Exception, err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			return "No"
 		# create a shapefile
 		d = ogr.GetDriverByName('ESRI Shapefile')
 		dS = d.CreateDataSource(outputShapefilePath)
@@ -1673,13 +2355,16 @@ class Utils:
 			# close rasters
 			rD = None
 			# logger
-			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), " failed: " + str(outputVector))
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " failed: " + unicode(outputShapefilePath))
 		else:
 			# shapefile
 			sR = osr.SpatialReference()
 			sR.ImportFromWkt(rD.GetProjectionRef())
-			rL = dS.CreateLayer(str(os.path.basename(rasterPath)), sR, ogr.wkbPolygon)
-			fN = str(cfg.fldID_class)
+			rL = dS.CreateLayer(os.path.basename(rasterPath).encode(sys.getfilesystemencoding()), sR, ogr.wkbPolygon)
+			if fieldName == "No":
+				fN = str(cfg.fldID_class)
+			else:
+				fN = fieldName
 			fd = ogr.FieldDefn(fN, ogr.OFTInteger)
 			rL.CreateField(fd)
 			fld = rL.GetLayerDefn().GetFieldIndex(fN)
@@ -1691,14 +2376,116 @@ class Utils:
 			rD = None			
 			dS = None							
 			# logger
-			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), " vector output performed")
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " vector output performed")
 
+	# set RGB color composite
+	def setRGBColorComposite(self):
+		if cfg.rgb_combo.currentText() != "-":
+			try:
+				rgb = cfg.rgb_combo.currentText()
+				check = self.createRGBColorComposite(rgb)
+				if check == "Yes":
+					listA = cfg.utls.getAllItemsInCombobox(cfg.rgb_combo)
+					cfg.RGBList = sorted(list(set(listA)))
+					cfg.utls.writeProjectVariable("SCP_RGBList", str(cfg.RGBList))
+					return "Yes"
+				else:
+					int(check)
+			except:
+				id = cfg.rgb_combo.findText(cfg.rgb_combo.currentText())
+				cfg.rgb_combo.removeItem(id)
+	
+	# create RGB color composite
+	def createRGBColorComposite(self, colorComposite):
+		if cfg.bndSetPresent == "Yes" and cfg.rstrNm == cfg.bndSetNm:
+			# if bandset create temporary virtual raster
+			tPMN = cfg.tmpVrtNm + ".vrt"
+			if cfg.tmpVrt is None:
+				try:
+					self.removeLayer(tPMN)
+				except:
+					pass
+				# date time for temp name
+				dT = cfg.utls.getTime()
+				tPMD = cfg.tmpDir + "/" + dT + tPMN
+				vrtCheck = cfg.utls.createVirtualRaster(cfg.bndSetLst, tPMD)
+				time.sleep(1)
+				i = self.addRasterLayer(tPMD, tPMN)
+				cfg.tmpVrt = i
+			else:
+				i = cfg.utls.selectLayerbyName(tPMN, "Yes")
+			c = str(colorComposite).split(",")
+			if len(c) == 1:
+				c = str(colorComposite).split("-")
+			if len(c) == 1:
+				c = str(colorComposite).split(";")
+			if len(c) == 1:
+				c = str(colorComposite)
+			if i is not None:
+				b = len(cfg.bndSet)
+				if int(c[0]) <= b and int(c[1]) <= b and int(c[2]) <= b:
+					cfg.utls.setRasterColorComposite(i, int(c[0]), int(c[1]), int(c[2]))
+					return "Yes"
+				else:
+					return "No"
+			else:
+				cfg.tmpVrt = None
+		else:
+			c = str(colorComposite).split(",")
+			if len(c) == 1:
+				c = str(colorComposite).split("-")
+			if len(c) == 1:
+				c = str(colorComposite).split(";")
+			if len(c) == 1:
+				c = str(colorComposite)
+			i = cfg.utls.selectLayerbyName(cfg.rstrNm, "Yes")
+			if i is not None:
+				b = len(cfg.bndSet)
+				if int(c[0]) <= b and int(c[1]) <= b and int(c[2]) <= b:
+					self.setRasterColorComposite(i, int(c[0]), int(c[1]), int(c[2]))
+					return "Yes"
+				else:
+					return "No"
+					
+	def setRasterColorComposite(sefl, raster, RedBandNumber, GreenBandNumber, BlueBandNumber):
+		raster.setDrawingStyle('MultiBandColor')
+		raster.renderer().setRedBand(RedBandNumber)
+		raster.renderer().setGreenBand(GreenBandNumber)
+		raster.renderer().setBlueBand(BlueBandNumber)
+		raster.setContrastEnhancement(QgsContrastEnhancement.StretchToMinimumMaximum, QgsRaster.ContrastEnhancementCumulativeCut)
+		raster.triggerRepaint()
+		
+	def getAllItemsInCombobox(self, combobox):
+		it = [combobox.itemText(i) for i in range(combobox.count())]
+		return it
+		
+	def setComboboxItems(self, combobox, itemList):
+		combobox.clear()
+		for i in itemList:
+			if len(i) > 0:
+				combobox.addItem(i)
+
+	# check band set and create band set list
+	def checkBandSet(self):
+		ck = "Yes"
+		# list of bands for algorithm
+		cfg.bndSetLst = []
+		for x in range(0, len(cfg.bndSet)):
+			b = cfg.utls.selectLayerbyName(cfg.bndSet[x], "Yes")
+			if b is not None:
+				cfg.bndSetLst.append(b.source())
+			else:
+				ck = "No"
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " raster is not loaded: " + unicode(cfg.bndSet[x]))
+		return ck
+			
 	# write project variable
 	def writeProjectVariable(self, variableName, value):
 		p = QgsProject.instance()
 		p.writeEntry("SemiAutomaticClassificationPlugin", variableName, value)
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + self.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "variable: " + unicode(variableName) + " - value: " + unicode(value))
 		
 ### Delete a feauture from a shapefile by its Id
 	def deleteFeatureShapefile(self, layer, feautureIds):
@@ -1707,7 +2494,7 @@ class Utils:
 		layer.commitChanges()
 		res2 = layer.dataProvider().createSpatialIndex()
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "feauture deleted: " + str(layer) + " " + str(feautureIds) )
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "feauture deleted: " + unicode(layer) + " " + str(feautureIds) )
 
 ### Edit a feauture in a shapefile by its Id
 	def editFeatureShapefile(self, layer, feautureId, fieldName, value):
@@ -1717,55 +2504,7 @@ class Utils:
 		layer.commitChanges()
 		res2 = layer.dataProvider().createSpatialIndex()
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "feauture edited: " + unicode(layer) + " " + str(feautureId) )
-		
-	# select band set tab
-	def bandSetTab(self):
-		cfg.dlg.close()
-		cfg.ui.toolButton_plugin.setCurrentIndex(3)
-		# reload raster bands in checklist
-		cfg.bst.rasterBandName()
-		# show the dialog
-		cfg.dlg.show()
-		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "tab selected")
-		
-	# select roi tools tab
-	def roiToolsTab(self):
-		cfg.dlg.close()
-		cfg.ui.toolButton_plugin.setCurrentIndex(0)
-		# show the dialog
-		cfg.dlg.show()
-		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "tab selected")
-
-	# select roi tools tab
-	def mutlipleROITab(self):
-		cfg.dlg.close()
-		cfg.ui.toolButton_plugin.setCurrentIndex(0)
-		cfg.ui.tabWidget.setCurrentIndex(0)
-		# show the dialog
-		cfg.dlg.show()
-		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "tab selected")
-		
-	# select pre processing tab
-	def preProcessingTab(self):
-		cfg.dlg.close()
-		cfg.ui.toolButton_plugin.setCurrentIndex(1)
-		# show the dialog
-		cfg.dlg.show()
-		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "tab selected")
-		
-	# select post processing tab
-	def postProcessingTab(self):
-		cfg.dlg.close()
-		cfg.ui.toolButton_plugin.setCurrentIndex(2)
-		# show the dialog
-		cfg.dlg.show()
-		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "tab selected")
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "feauture edited: " + unicode(layer) + " " + str(feautureId) )
 		
 	# calculate random points
 	def randomPoints(self, pointNumber, Xmin, Xmax, Ymin, Ymax, minDistance = None):
@@ -1780,31 +2519,30 @@ class Utils:
 					points = np.delete(points, index, 0)
 		return points
 		
-	# select settings tab
-	def settingsTab(self):
+	# save a qml style
+	def saveQmlStyle(self, layer, stylePath):
+		layer.saveNamedStyle(stylePath)
+		
+	""" tab selection """
+### tab 0
+	# select roi tools tab
+	def roiToolsTab(self):
 		cfg.dlg.close()
-		cfg.ui.toolButton_plugin.setCurrentIndex(4)
+		cfg.ui.toolButton_plugin.setCurrentIndex(0)
 		# show the dialog
 		cfg.dlg.show()
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "tab selected")
-		
-	def sortTableColumn(self, table, column, ascending = False):
-		table.sortItems(column, ascending)
-		
-	# spectral singature plot tab
-	def spectralPlotTab(self):
-		cfg.spectralplotdlg.close()
-		cfg.spectralplotdlg.show()
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "tab selected")
+
+	# select multiple roi tab
+	def mutlipleROITab(self):
+		cfg.dlg.close()
+		cfg.ui.toolButton_plugin.setCurrentIndex(0)
+		cfg.ui.tabWidget.setCurrentIndex(0)
+		# show the dialog
+		cfg.dlg.show()
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "tab selected")
-				
-	# scatter plot tab
-	def scatterPlotTab(self):
-		cfg.scatterplotdlg.close()
-		cfg.scatterplotdlg.show()
-		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "tab selected")
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "tab selected")
 		
 	# scatter plot tab
 	def importUSGSLibraryTab(self):
@@ -1814,7 +2552,193 @@ class Utils:
 		# show the dialog
 		cfg.dlg.show()
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "tab selected")
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "tab selected")
+
+### tab 1
+	# select pre processing tab
+	def preProcessingTab(self):
+		cfg.dlg.close()
+		cfg.ui.toolButton_plugin.setCurrentIndex(1)
+		# show the dialog
+		cfg.dlg.show()
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "tab selected")
+		
+	# select Clip multiple rasters tab
+	def clipMultipleRastersTab(self):
+		cfg.dlg.close()
+		cfg.ui.toolButton_plugin.setCurrentIndex(1)
+		cfg.ui.tabWidget_preprocessing.setCurrentIndex(1)
+		# show the dialog
+		cfg.dlg.show()
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "tab selected")
+		
+	# select Landsat tab
+	def landsatTab(self):
+		cfg.dlg.close()
+		cfg.ui.toolButton_plugin.setCurrentIndex(1)
+		cfg.ui.tabWidget_preprocessing.setCurrentIndex(0)
+		# show the dialog
+		cfg.dlg.show()
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "tab selected")
+		
+	# select Split raster bands tab
+	def splitrasterbandsTab(self):
+		cfg.dlg.close()
+		cfg.ui.toolButton_plugin.setCurrentIndex(1)
+		cfg.ui.tabWidget_preprocessing.setCurrentIndex(2)
+		# show the dialog
+		cfg.dlg.show()
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "tab selected")
+		
+### tab 2
+	# select post processing tab
+	def postProcessingTab(self):
+		cfg.dlg.close()
+		cfg.ui.toolButton_plugin.setCurrentIndex(2)
+		# show the dialog
+		cfg.dlg.show()
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "tab selected")
+		
+	# select Accuracy tab
+	def accuracyTab(self):
+		cfg.dlg.close()
+		cfg.ui.toolButton_plugin.setCurrentIndex(2)
+		cfg.ui.tabWidget_2.setCurrentIndex(0)
+		# show the dialog
+		cfg.dlg.show()
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "tab selected")
+		
+	# select Land cover change tab
+	def landCoverChangeTab(self):
+		cfg.dlg.close()
+		cfg.ui.toolButton_plugin.setCurrentIndex(2)
+		cfg.ui.tabWidget_2.setCurrentIndex(1)
+		# show the dialog
+		cfg.dlg.show()
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "tab selected")
+		
+	# select Classification report tab
+	def classificationReportTab(self):
+		cfg.dlg.close()
+		cfg.ui.toolButton_plugin.setCurrentIndex(2)
+		cfg.ui.tabWidget_2.setCurrentIndex(2)
+		# show the dialog
+		cfg.dlg.show()
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "tab selected")
+		
+	# select Classification report tab
+	def classToVectorTab(self):
+		cfg.dlg.close()
+		cfg.ui.toolButton_plugin.setCurrentIndex(2)
+		cfg.ui.tabWidget_2.setCurrentIndex(3)
+		# show the dialog
+		cfg.dlg.show()
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "tab selected")
+	
+	# select reclassification tab
+	def reclassificationTab(self):
+		cfg.dlg.close()
+		cfg.ui.toolButton_plugin.setCurrentIndex(2)
+		cfg.ui.tabWidget_2.setCurrentIndex(4)
+		# show the dialog
+		cfg.dlg.show()
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "tab selected")
+		
+### tab 3
+	# select Band calc tab
+	def bandCalcTab(self):
+		cfg.dlg.close()
+		cfg.ui.toolButton_plugin.setCurrentIndex(3)
+		# show the dialog
+		cfg.dlg.show()
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "tab selected")
+	
+### tab 4
+	# select band set tab
+	def bandSetTab(self):
+		cfg.dlg.close()
+		cfg.ui.toolButton_plugin.setCurrentIndex(4)
+		# reload raster bands in checklist
+		cfg.bst.rasterBandName()
+		# show the dialog
+		cfg.dlg.show()
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "tab selected")
+	
+### tab 5	
+	# select settings tab
+	def settingsTab(self):
+		cfg.dlg.close()
+		cfg.ui.toolButton_plugin.setCurrentIndex(5)
+		# show the dialog
+		cfg.dlg.show()
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "tab selected")
+		
+	# select settings interface tab
+	def settingsInterfaceTab(self):
+		cfg.dlg.close()
+		cfg.ui.toolButton_plugin.setCurrentIndex(5)
+		cfg.ui.toolBox.setCurrentIndex(0)
+		# show the dialog
+		cfg.dlg.show()
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "tab selected")
+		
+	# select settings Processing tab
+	def settingsProcessingTab(self):
+		cfg.dlg.close()
+		cfg.ui.toolButton_plugin.setCurrentIndex(5)
+		cfg.ui.toolBox.setCurrentIndex(1)
+		# show the dialog
+		cfg.dlg.show()
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "tab selected")
+		
+	# select settings debug tab
+	def settingsDebugTab(self):
+		cfg.dlg.close()
+		cfg.ui.toolButton_plugin.setCurrentIndex(5)
+		cfg.ui.toolBox.setCurrentIndex(2)
+		# show the dialog
+		cfg.dlg.show()
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "tab selected")
+
+### tab 6
+	# select bout tab
+	def aboutTab(self):
+		cfg.dlg.close()
+		cfg.ui.toolButton_plugin.setCurrentIndex(6)
+		# show the dialog
+		cfg.dlg.show()
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "tab selected")
+		
+	# spectral singature plot tab
+	def spectralPlotTab(self):
+		cfg.spectralplotdlg.close()
+		cfg.spectralplotdlg.show()
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "tab selected")
+
+	# scatter plot tab
+	def scatterPlotTab(self):
+		cfg.scatterplotdlg.close()
+		cfg.scatterplotdlg.show()
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "tab selected")
 		
 	# beep sound
 	def beepSound(self, frequency, duration):
@@ -1834,64 +2758,38 @@ class Utils:
 			self.beepSound(700, 0.5)
 		except Exception, err:
 			# logger
-			if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+		
+	def sortTableColumn(self, table, column, ascending = False):
+		table.sortItems(column, ascending)
+	
+	# refresh classification combo
+	def refreshClassificationLayer(self):
+		ls = cfg.lgnd.layers()
+		cfg.ui.classification_name_combo.clear()
+		cfg.ui.classification_report_name_combo.clear()
+		cfg.ui.classification_vector_name_combo.clear()
+		cfg.ui.reclassification_name_combo.clear()
+		# classification name
+		self.clssfctnNm = None
+		for l in ls:
+			if (l.type()==QgsMapLayer.RasterLayer):
+				if l.bandCount() == 1:
+					cfg.dlg.classification_layer_combo(l.name())
+					cfg.dlg.classification_report_combo(l.name())
+					cfg.dlg.classification_to_vector_combo(l.name())
+					cfg.dlg.reclassification_combo(l.name())
+		# logger
+		cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "classification layers refreshed")
+	
+### Zoom to selected feature of layer
+	def zoomToSelected(self, layer, featureID):
+		layer.removeSelection()
+		layer.select(featureID)
+		cfg.cnvs.zoomToSelected(layer)
+		layer.deselect(featureID)
 		
 """ deprecated
-		
-### Select a layer feature by point coordinates and return a temporary ROI
-	# def selectbyCoords(self, layer, XCoord, YCoord):
-		# # feature
-		# f = QgsFeature()
-		# ROI = QgsFeature()
-		# fID = None
-		# allF = layer.getFeatures()
-		# dT = datetime.datetime.now().strftime("%Y%m%d_%H%M%S%f")
-		# # temp name
-		# tmpShp2Nm = "ROI_temp" + dT
-		# while allF.nextFeature(f):
-			# if f.geometry().intersects(QgsRectangle(XCoord + 0.00000001, YCoord + 0.00000001, XCoord, YCoord)):
-				# fID = QgsFeature(f).id()
-				# f2Geometry = f.geometry().asPolygon()
-				# break
-		# if fID is None:
-			# cfg.mx.msg6()
-			# # logger
-			# if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), QApplication.translate("semiautomaticclassificationplugin", "Error") + ": point outside layer")
-		# else:
-			# # band set
-			# if cfg.bndSetPresent == "Yes" and cfg.rstrNm == cfg.bndSetNm:
-				# bN0 = self.selectLayerbyName(cfg.bndSet[0])
-				# # crs of loaded raster
-				# crs = self.getCrs(bN0)
-			# else:
-				# # crs of loaded raster
-				# crs = self.getCrs(cfg.rLay)
-			# # create layer
-			# memLyr = QgsVectorLayer("Polygon", tmpShp2Nm, "memory")
-			# memLyr.setCrs(crs) 
-			# prvdr = memLyr.dataProvider()
-			# memLyr.startEditing()		
-			# # add fields
-			# prvdr.addAttributes( [QgsField("ID",  QVariant.Int)] )
-			# # add a feature
-			# ROI.setGeometry(QgsGeometry.fromPolygon(f2Geometry))
-			# ROI.setAttributes([1])
-			# prvdr.addFeatures([ROI])
-			# memLyr.commitChanges()
-			# memLyr.updateExtents()
-			# return memLyr
-			# # logger
-			# if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "feauture selected at point: (" + str(XCoord) + "," + str(YCoord) + ") for layer: " + str(layer.name()))
-		
-### Check if training shapefile is empty
-	# def checkEmptyShapefile(self, layer):
-		# if self.getFeaturebyID(layer, 1) is False:
-			# return "No"
-			# cfg.mx.msg5()
-			# # logger
-			# if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "empty shapefile")
-		# else:
-			# return "Yes"
 
 ### Delete a feauture from a shapefile by its Id
 	def deleteFeatureShapefileOGR(self, layerPath, feautureId):
@@ -1906,7 +2804,7 @@ class Utils:
 		dr.ExecuteSQL("REPACK " + l.GetName())
 		dr = None
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "feauture deleted: " + str(layerPath) + " " + str(feautureId) )
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "feauture deleted: " + str(layerPath) + " " + str(feautureId) )
 		
 ### Edit a feauture in a shapefile by its Id
 	def editFeatureShapefileOGR(self, layerPath, feautureId, fieldName, value):
@@ -1919,67 +2817,6 @@ class Utils:
 		l.SetFeature(f)
 		dr = None
 		# logger
-		if cfg.logSetVal == "Yes": self.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + self.lineOfCode(), "feauture edited: " + unicode(layerPath) + " " + str(feautureId) )
-		
-	# Maximum Likelihood algorithm
-	def algorithmMaximumLikelihoodOLD(self, rasterArray, signatureArray, covarianceMatrix):
-		(sign, logdet) = np.linalg.slogdet(covarianceMatrix)
-		invC = np.linalg.inv(covarianceMatrix)
-		d = rasterArray - signatureArray
-		v = rasterArray.shape
-		algArray = np.zeros((v[0], v[1]), dtype=np.float64)
-		for i in range(0, v[0]):
-			tr = d[i, :, :]
-			o = np.tensordot(tr.transpose(),invC, axes=([0,0]))
-			p = np.tensordot(o, tr, axes=([1,1]))
-			dg = p.diagonal()
-			algArray[i, :] = - logdet - dg
-		if cfg.algThrshld > 0:
-			chi = self.chisquare()
-			threshold = - chi - logdet
-			e = np.ma.masked_less(algArray, threshold)
-			algArray = np.ma.filled(e, cfg.maxLikeNoDataVal)
-		return algArray
-			
-	# convert project variable to list
-	def projectVariableToList(self, variableString):
-		bs = str(variableString)
-		bs = bs.strip("[")
-		bs = bs.replace("u'", "")
-		bs = bs.replace("'", "")
-		bs = bs.replace(" ", "")
-		bs = bs.strip("']")
-		bs = bs.split(",")
-		return bs
-		
-	# convert string list to float list
-	def stringListToFloat(self, list):
-		x = []
-		for s in range(0, len(list)):
-			x.append(float(list[s]))
-		return x
-		
-	# raster contrast enhancement
-	def rasterContrastEnhancement(self, rasterLayer):
-		redBand = rasterLayer.renderer().redBand()
-		redEnhancement = self.bandContrastEnhancement(rasterLayer, redBand)
-		rasterLayer.renderer().setRedContrastEnhancement(redEnhancement)
-		greenBand = rasterLayer.renderer().greenBand()
-		greenEnhancement = self.bandContrastEnhancement(rasterLayer, greenBand)
-		rasterLayer.renderer().setGreenContrastEnhancement(greenEnhancement)
-		blueBand = rasterLayer.renderer().blueBand()
-		blueEnhancement = self.bandContrastEnhancement(rasterLayer, blueBand)
-		rasterLayer.renderer().setBlueContrastEnhancement(blueEnhancement)
-		
-	# band contrast enhancement
-	def bandContrastEnhancement(self, rasterLayer, band):
-		dataType = rasterLayer.renderer().dataType(band)
-		enhancement = QgsContrastEnhancement(dataType)
-		contrastEnhancement = QgsContrastEnhancement.StretchToMinimumMaximum
-		enhancement.setContrastEnhancementAlgorithm(contrastEnhancement, True)
-		min,max = rasterLayer.dataProvider().cumulativeCut(band, 0.02, 0.98)
-		enhancement.setMinimumValue(min)
-		enhancement.setMaximumValue(max)
-		return enhancement
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "feauture edited: " + unicode(layerPath) + " " + str(feautureId) )
 		
 """

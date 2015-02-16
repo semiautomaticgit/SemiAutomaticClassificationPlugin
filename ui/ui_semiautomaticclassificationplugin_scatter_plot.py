@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/ui_semiautomaticclassificationplugin_scatter_plot.ui'
 #
-# Created: Wed Dec 24 22:13:56 2014
+# Created: Sat Feb 14 14:47:06 2015
 #      by: PyQt4 UI code generator 4.10
 #
 # WARNING! All changes made in this file will be lost!

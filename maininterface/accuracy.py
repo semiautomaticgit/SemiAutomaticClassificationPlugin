@@ -8,7 +8,7 @@
  the collection of training areas (ROIs), and rapidly performing the classification process (or a preview).
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012 by Luca Congedo
+		copyright			: (C) 2012-2015 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -49,19 +49,19 @@ import SemiAutomaticClassificationPlugin.core.config as cfg
 class Accuracy:
 
 	def __init__(self):
-		pass
+		self.clssfctnNm = None
 		
 	# calculate error matrix if click on button
 	def calculateErrorMatrix(self):
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " calculate Error Matrix")
+		cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " calculate Error Matrix")
 		self.errorMatrix(self.clssfctnNm, cfg.referenceLayer)
 	
 	# classification name
 	def classificationLayerName(self):
-		self.clssfctnNm = str(cfg.ui.classification_name_combo.currentText())
+		self.clssfctnNm = cfg.ui.classification_name_combo.currentText()
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "classification name: " + str(self.clssfctnNm))
+		cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "classification name: " + unicode(self.clssfctnNm))
 	
 	# error matrix calculation
 	def errorMatrix(self, classification, reference):
@@ -70,9 +70,12 @@ class Accuracy:
 			np.count_nonzero([1,1,0])
 		except Exception, err:
 			# logger
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			rstrCheck = "No"
 			cfg.mx.msgErr26()
+			a = cfg.utls.questionBox("Semi-Automatic Classification Plugin", "NumPy version is outdated. Do you want to open the following site for help? http://fromgistors.blogspot.com/p/frequently-asked-questions.html#numpy_version ")
+			if a == "Yes":
+				QDesktopServices().openUrl(QUrl("http://fromgistors.blogspot.com/p/frequently-asked-questions.html#numpy_version"))
 			return "No"
 		rstrOut = QFileDialog.getSaveFileName(None , QApplication.translate("semiautomaticclassificationplugin", "Save error matrix raster output"), "", "*.tif")
 		if len(rstrOut) > 0:
@@ -310,36 +313,23 @@ class Accuracy:
 							eM = f.read()
 							cfg.ui.error_matrix_textBrowser.setText(str(eM))
 						# logger
-						if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " error matrix calculated")
+						cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " error matrix calculated")
 					except Exception, err:
 						# logger
-						if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+						cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 					cfg.uiUtls.updateBar(100)
 					# enable map canvas render
 					cfg.cnvs.setRenderFlag(True)
+					cfg.utls.finishSound()
 					cfg.uiUtls.removeProgressBar()
 					# logger
-					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "finished")
+					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "finished")
 	
 	# reference layer name
 	def referenceLayerName(self):
-		cfg.referenceLayer = str(cfg.ui.reference_name_combo.currentText())
+		cfg.referenceLayer = cfg.ui.reference_name_combo.currentText()
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "reference layer name: " + str(cfg.referenceLayer))
-	
-	def refreshClassificationLayer(self):
-		ls = cfg.lgnd.layers()
-		cfg.ui.classification_name_combo.clear()
-		cfg.ui.classification_report_name_combo.clear()
-		# classification name
-		self.clssfctnNm = None
-		for l in ls:
-			if (l.type()==QgsMapLayer.RasterLayer):
-				if l.bandCount() == 1:
-					cfg.dlg.classification_layer_combo(l.name())
-					cfg.dlg.classification_report_combo(l.name())
-		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "classification layers refreshed")
+		cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "reference layer name: " + unicode(cfg.referenceLayer))
 	
 	def refreshReferenceLayer(self):
 		ls = cfg.lgnd.layers()
@@ -351,7 +341,7 @@ class Accuracy:
 				if (l.geometryType() == QGis.Polygon):
 					# filter if shapefile has ID_class field
 					fds = l.dataProvider().fields()
-					if fds.indexFromName(str(cfg.fldID_class)) > -1:
+					if fds.indexFromName(cfg.fldID_class) > -1:
 						cfg.dlg.reference_layer_combo(l.name())
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "reference layers refreshed")
+		cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "reference layers refreshed")

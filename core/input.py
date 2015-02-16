@@ -8,7 +8,7 @@
  the collection of training areas (ROIs), and rapidly performing the classification process (or a preview).
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012 by Luca Congedo
+		copyright			: (C) 2012-2015 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -83,19 +83,19 @@ class Input:
 		cfg.rasterComboEdited = "Yes"
 		cfg.raster_name_combo.blockSignals(False)
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "raster layers refreshed")
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "raster layers refreshed")
 
 	# set raster name as ROI target
 	def rasterLayerName(self):
 		if cfg.rasterComboEdited == "Yes":
 			cfg.bst.clearBandSet("No", "No")
-			cfg.rstrNm = str(cfg.raster_name_combo.currentText())
+			cfg.rstrNm = cfg.raster_name_combo.currentText()
 			cfg.imgNm = cfg.rstrNm	
 			# set classification input
 			cfg.classD.algorithmThreshold()
 			cfg.classD.previewSize()
 			# set input
-			cfg.rLay = cfg.utls.selectLayerbyName(str(cfg.rstrNm))
+			cfg.rLay = cfg.utls.selectLayerbyName(cfg.rstrNm)
 			if cfg.rLay is not None:
 				id = cfg.raster_name_combo.findText(cfg.bndSetNm)
 				cfg.raster_name_combo.removeItem(id)
@@ -112,4 +112,4 @@ class Input:
 			# reset rapid ROI spinbox
 			cfg.uid.rapidROI_band_spinBox.setValue(1)
 			# logger
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "input raster: " + str(cfg.rstrNm))
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "input raster: " + unicode(cfg.rstrNm))

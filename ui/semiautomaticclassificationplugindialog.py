@@ -8,7 +8,7 @@
  the collection of training areas (ROIs), and rapidly performing the classification process (or a preview).
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012 by Luca Congedo
+		copyright			: (C) 2012-2015 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -74,6 +74,12 @@ class SemiAutomaticClassificationPluginDialog(QtGui.QDialog):
 	def classification_report_combo(self, layer):
 		self.ui.classification_report_name_combo.addItem(layer)
 		
+	def classification_to_vector_combo(self, layer):
+		self.ui.classification_vector_name_combo.addItem(layer)
+		
+	def reclassification_combo(self, layer):
+		self.ui.reclassification_name_combo.addItem(layer)
+		
 	def reference_layer_combo(self, shape):
 		self.ui.reference_name_combo.addItem(shape)
 		
@@ -83,3 +89,5 @@ class SemiAutomaticClassificationPluginDialog(QtGui.QDialog):
 	def new_classification_layer_combo(self, layer):
 		self.ui.new_classification_name_combo.addItem(layer)
 		
+	def raster_layer_combo(self, layer):
+		self.ui.raster_name_combo.addItem(layer)

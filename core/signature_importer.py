@@ -8,7 +8,7 @@
  the collection of training areas (ROIs), and rapidly performing the classification process (or a preview).
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012 by Luca Congedo
+		copyright			: (C) 2012-2015 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -79,11 +79,11 @@ class Signature_Importer:
 						b = b + 1
 					self.addLibraryToSignatureList()
 					# logger
-					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " spectral library imported" + str(file[0]))
+					cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " spectral library imported" + str(file[0]))
 				else:
 					cfg.mx.msgErr17()
 					# logger
-					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " spectral library " + str(file[0]))
+					cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " spectral library " + str(file[0]))
 					
 	# import ASTER spectral library (http://speclib.jpl.nasa.gov/search-1)
 	def ASTERLibrary(self, libraryPath):
@@ -121,11 +121,11 @@ class Signature_Importer:
 						b = b + 1
 					self.addLibraryToSignatureList()
 					# logger
-					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " spectral library imported" + str(file[0]))
+					cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " spectral library imported" + str(file[0]))
 				else:
 					cfg.mx.msgErr17()
 					# logger
-					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " spectral library " + str(file[0]))
+					cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " spectral library " + str(file[0]))
 		
 	# import generic CSV spectral library (first line: wavelength, reflectance, standardDeviation, waveLengthUnit)
 	def CSVLibrary(self, libraryPath):
@@ -176,7 +176,7 @@ class Signature_Importer:
 			except:
 				self.addLibraryToSignatureList()
 			# logger
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " spectral library imported" + str(file[0]))
+			cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " spectral library imported" + str(file[0]))
 
 	# add library values to signature list
 	def addLibraryToSignatureList(self, unit = None):

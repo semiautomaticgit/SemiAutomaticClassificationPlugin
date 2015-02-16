@@ -8,7 +8,7 @@
  the collection of training areas (ROIs), and rapidly performing the classification process (or a preview).
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012 by Luca Congedo
+		copyright			: (C) 2012-2015 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -56,7 +56,7 @@ class MultipleROITab:
 		tW.setRowCount(c + 1)
 		it = QTableWidgetItem(str(c + 1))
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "added point " + str(c + 1))
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "added point " + str(c + 1))
 		
 	def addRandomPointToTable(self, point):
 		tW = cfg.ui.point_tableWidget
@@ -91,7 +91,7 @@ class MultipleROITab:
 		tW.setItem(c, 8, RangRad)
 		tW.setItem(c, 9, RBand)
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "added point " + str(c + 1))
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "added point " + str(c + 1))
 				
 	def createRandomPoint(self):
 		if cfg.bndSetPresent == "Yes" and cfg.rstrNm == cfg.bndSetNm:
@@ -103,7 +103,7 @@ class MultipleROITab:
 			else:
 				imageName = cfg.rstrNm	
 				# logger
-				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "No image selected")
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "No image selected")
 		img = cfg.utls.selectLayerbyName(imageName, "Yes")
 		crs = cfg.utls.getCrs(img)
 		geographicFlag = crs.geographicFlag()
@@ -161,7 +161,7 @@ class MultipleROITab:
 					Y = tW.item(i,1).text()
 				except Exception, err:
 					# logger
-					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 					cfg.mx.msg6()
 				try:
 					p = QgsPoint(float(X), float(Y))
@@ -195,7 +195,7 @@ class MultipleROITab:
 						cfg.uid.undo_save_Button.setEnabled(False)
 				except Exception, err:
 					# logger
-					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 					cfg.mx.msgErr20()
 			# restore settings for single ROI 
 			cfg.ROId.setROIMacroID()
@@ -207,14 +207,15 @@ class MultipleROITab:
 			cfg.ROId.rangeRadius()
 			cfg.ROId.rapidROIband()
 			cfg.ROId.rapidROICheckbox()
+		cfg.utls.finishSound()
 		cfg.uiUtls.removeProgressBar()
-			# restore previous point for single ROI
+		# restore previous point for single ROI
 		try:
 			cfg.lstPnt = pP
 		except:
 			pass
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ROI created")
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ROI created")
 
 	# export point list to file
 	def exportPointList(self):
@@ -251,10 +252,10 @@ class MultipleROITab:
 				f.write(txt)
 				f.close()
 			# logger
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " point list exported")
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " point list exported")
 		except Exception, err:
 			# logger
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 		
 	# import points from file
 	def importPoints(self):
@@ -300,28 +301,14 @@ class MultipleROITab:
 					tW.setItem(c, 8, RangRad)
 					tW.setItem(c, 9, RBand)
 					# logger
-					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " points imported")
+					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " points imported")
 		except Exception, err:
 			cfg.mx.msgErr19()
 			# logger
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 
 	def removePointFromTable(self):
-		# ask for confirm
-		a = cfg.utls.questionBox("Remove points", "Are you sure you want to remove the selected points from the table?")
-		if a == "Yes":
-			tW = cfg.ui.point_tableWidget
-			c = tW.rowCount()
-			# list of item to remove
-			iR  = []
-			for i in tW.selectedIndexes():
-				iR.append(i.row())
-			# remove items
-			for i in reversed(range(0, len(iR))):
-				tW.removeRow(iR[i])
-			c = tW.rowCount()
-			# logger
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " points removed")
+		cfg.utls.removeRowsFromTable(cfg.ui.point_tableWidget)
 			
 	# Activate signature calculation checkbox2
 	def signatureCheckbox2(self):
@@ -334,5 +321,5 @@ class MultipleROITab:
 			p.writeEntry("SemiAutomaticClassificationPlugin", "calculateSignature", "No")
 			cfg.sigClcCheck = "No"
 			cfg.uid.signature_checkBox.setCheckState(0)
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " checkbox set: " + str(cfg.sigClcCheck))
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " checkbox set: " + str(cfg.sigClcCheck))
 	

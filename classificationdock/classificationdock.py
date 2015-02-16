@@ -8,7 +8,7 @@
  the collection of training areas (ROIs), and rapidly performing the classification process (or a preview).
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012 by Luca Congedo
+		copyright			: (C) 2012-2015 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -37,6 +37,7 @@ import os
 import inspect
 # for moving files
 import shutil
+import numpy as np
 # Import the PyQt and QGIS libraries
 from PyQt4.QtCore import *
 from PyQt4.QtCore import QCoreApplication
@@ -65,9 +66,9 @@ class ClassificationDock:
 		cfg.rbbrBnd.setColor(QColor(0,255,255))
 		cfg.rbbrBnd.setWidth(2)
 		# emit a QgsPoint on each click
-		self.clickPreview = QgsMapToolEmitPoint(cfg.cnvs)
+		#self.clickPreview = QgsMapToolEmitPoint(cfg.cnvs)
 		# connect to pointerClick when map is clicked
-		self.clickPreview.canvasClicked.connect(self.pointerClickPreview)
+		#self.clickPreview.canvasClicked.connect(self.pointerClickPreview)
 		
 	# set algorithm
 	def algorithmName(self):
@@ -81,7 +82,7 @@ class ClassificationDock:
 				cfg.mx.msg11()
 				cfg.uidc.alg_threshold_SpinBox.setValue(90)
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "training name: " + str(cfg.algName))
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "training name: " + unicode(cfg.algName))
 				
 	# set algorithm threshold
 	def algorithmThreshold(self):
@@ -93,7 +94,7 @@ class ClassificationDock:
 			if cfg.algThrshld > 90:
 				cfg.uidc.alg_threshold_SpinBox.setValue(90)
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "algorithm threshold: " + str(cfg.algThrshld))
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "algorithm threshold: " + str(cfg.algThrshld))
 		
 	# Apply qml style to classifications and previews
 	def applyQmlStyle(self, classLayer, stylePath):
@@ -107,10 +108,22 @@ class ClassificationDock:
 		classLayer.triggerRepaint()
 		cfg.lgnd.refreshLayerSymbology(classLayer)
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "classification symbology applied with qml: " + str(stylePath))
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "classification symbology applied with qml: " + unicode(stylePath))
+			
+	# show hide preview radio button
+	def showHidePreview(self):
+		try:
+			l = cfg.lgnd.groups().index(cfg.grpNm)
+			if cfg.uidc.show_preview_radioButton.isChecked():
+				cfg.lgnd.setGroupVisible(l, True)
+				cfg.utls.moveGroup(cfg.grpNm)
+			else:
+				cfg.lgnd.setGroupVisible(l, False)
+		except:
+			pass
 			
 	# create classification preview
-	def createPreview(self, point):
+	def createPreview(self, point, algorithmRaster = "No"):
 		if cfg.imgNm is None:
 			cfg.mx.msg4()
 			cfg.pntPrvw = None
@@ -126,7 +139,7 @@ class ClassificationDock:
 		if cfg.pntPrvw != None:
 			cfg.uiUtls.addProgressBar()
 			# logger
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), ">>> PREVIEW click")
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), ">>> PREVIEW click")
 			# disable map canvas render for speed
 			cfg.cnvs.setRenderFlag(False)
 			cfg.uiUtls.updateBar(10)
@@ -139,7 +152,7 @@ class ClassificationDock:
 			pN =  dT + cfg.prvwTempNm
 			pP = cfg.tmpDir + "/" + pN
 			# logger
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "point (X,Y) = (%s,%s)" % (cfg.pntPrvw.x() , cfg.pntPrvw.y()))
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "point (X,Y) = (%s,%s)" % (cfg.pntPrvw.x() , cfg.pntPrvw.y()))
 			# signature list
 			sL = self.getSignatureList()
 			# input image
@@ -147,17 +160,23 @@ class ClassificationDock:
 				# check band set
 				ckB = "Yes"
 				if cfg.bndSetPresent == "Yes" and cfg.imgNm == cfg.bndSetNm:
-					ckB = self.checkBandSet()
+					ckB = cfg.utls.checkBandSet()
 				if ckB == "Yes":
 					cfg.uiUtls.updateBar(20)
 					# compression
 					compress = "Yes"
 					ok, opOut, mOut = self.runAlgorithm(cfg.algName, cfg.imgNm, sL, pP, cfg.macroclassCheck, None, int(cfg.prvwSz), point, compress)
 					if ok == "Yes":
-						r = cfg.iface.addRasterLayer(pP, os.path.basename(str(pP)))
-						cfg.uiUtls.updateBar(80)
-						# apply symbology
-						self.applyClassSymbology(r, cfg.macroclassCheck, cfg.qmlFl, sL)
+						if algorithmRaster == "No":
+							r = cfg.iface.addRasterLayer(pP, os.path.basename(str(pP)))
+							cfg.uiUtls.updateBar(80)
+							# apply symbology
+							self.applyClassSymbology(r, cfg.macroclassCheck, cfg.qmlFl, sL)
+						else:
+							r = cfg.iface.addRasterLayer(mOut, os.path.basename(str(mOut)))
+							cfg.utls.rasterPreviewSymbol(r, cfg.algName)
+							cfg.uiUtls.updateBar(80)
+							# apply symbology
 						# move to group
 						g = cfg.utls.groupIndex(cfg.grpNm)
 						if g is None:
@@ -165,19 +184,22 @@ class ClassificationDock:
 							cfg.lgnd.moveLayer (r, g)
 						else:
 							cfg.lgnd.moveLayer (r, g)
+						cfg.uidc.show_preview_radioButton.setChecked(True)
 					cfg.uiUtls.updateBar(100)
 					# enable map canvas render
 					cfg.cnvs.setRenderFlag(True)
 					cfg.uiUtls.removeProgressBar()
 					# logger
-					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "<<< PREVIEW created: " + str(dT + pN))
+					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "<<< PREVIEW created: " + unicode(pN))
 					# enable Redo button
 					cfg.uidc.redo_Preview_Button.setEnabled(True)
 			else:
 				cfg.uiUtls.removeProgressBar()
+				if self.trainSigCheck == "No":
+					cfg.mx.msg18()
 				cfg.cnvs.setRenderFlag(True)
 				# logger
-				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "preview no")	
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "preview no")	
 			
 	def getSignatureList(self):
 		id = cfg.signIDs.values()
@@ -214,28 +236,14 @@ class ClassificationDock:
 			self.trainSigCheck = "No"
 		return signatureList
 			
-	# check band set and create band set list
-	def checkBandSet(self):
-		ck = "Yes"
-		# list of bands for algorithm
-		cfg.bndSetLst = []
-		for x in range(0, len(cfg.bndSet)):
-			b = cfg.utls.selectLayerbyName(cfg.bndSet[x], "Yes")
-			if b is not None:
-				cfg.bndSetLst.append(b.source())
-			else:
-				ck = "No"
-		return ck
-			
 	# set variable for macroclass classification
 	def macroclassCheckbox(self):
-		q = QSettings()
 		if cfg.uidc.macroclass_checkBox.isChecked() is True:
-			q.setValue(cfg.regConsiderMacroclass, "Yes")
+			cfg.sets.setQGISRegSetting(cfg.regConsiderMacroclass, "Yes")
 		else:
-			q.setValue(cfg.regConsiderMacroclass, "No")
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " checkbox set: " + str(cfg.macroclassCheck))
-		cfg.macroclassCheck = q.value(cfg.regConsiderMacroclass, "No")
+			cfg.sets.setQGISRegSetting(cfg.regConsiderMacroclass, "No")
+		cfg.macroclassCheck = cfg.sets.getQGISRegSetting(cfg.regConsiderMacroclass, "No")
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " checkbox set: " + str(cfg.macroclassCheck))
 			
 	# set variable for mask
 	def maskCheckbox(self):
@@ -253,7 +261,7 @@ class ClassificationDock:
 			cfg.mskFlState = 0
 		cfg.utls.writeProjectVariable("maskFilePath", unicode(cfg.mskFlPath))	
 		cfg.utls.writeProjectVariable("maskFileState", unicode(cfg.mskFlState))	
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " checkbox set: " + str(cfg.mskFlState))
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " checkbox set: " + str(cfg.mskFlState))
 		
 	# Reset mask path
 	def resetMask(self):
@@ -265,34 +273,48 @@ class ClassificationDock:
 		cfg.uidc.mask_lineEdit.setText(str(cfg.mskFlPath))
 		self.setMaskCheckbox()
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "reset mask")
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "reset mask")
 		
 	def setMaskCheckbox(self):	
 		cfg.uidc.mask_checkBox.blockSignals(True)
 		cfg.uidc.mask_checkBox.setCheckState(int(cfg.mskFlState))
 		cfg.uidc.mask_checkBox.blockSignals(False)
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "mask checkbox")
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "mask checkbox")
 		
+	# left click pointer for classification preview
 	def pointerClickPreview(self, point):
 		# check if other processes are active
 		if cfg.actionCheck == "No":
 			cfg.utls.checkPointImage(cfg.imgNm, point)
 			if cfg.pntCheck == "Yes":
 				cfg.pntPrvw = cfg.lstPnt
+				self.algRasterPrevw = "No"
 				self.createPreview(cfg.pntPrvw)
+				
+	# right click pointer for preview algorithm raster
+	def pointerRightClickPreview(self, point):
+		# check if other processes are active
+		if cfg.actionCheck == "No":
+			point = cfg.utls.checkPointImage(cfg.rstrNm, point)
+			if cfg.pntCheck == "Yes":
+				cfg.pntPrvw = cfg.lstPnt
+				self.algRasterPrevw = "Yes"
+				self.createPreview(cfg.pntPrvw, self.algRasterPrevw)
 		
 	# Activate pointer for classification preview
 	def pointerPreviewActive(self):
-		cfg.cnvs.setMapTool(self.clickPreview)
+		# connect to click
+		t = cfg.classPrev
+		cfg.cnvs.setMapTool(t)
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "pointer active: preview")
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "pointer active: preview")
 		
 	# set preview size
 	def previewSize(self):
 		cfg.prvwSz = cfg.uidc.preview_size_spinBox.value()
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "preview size: " + str(cfg.prvwSz))
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "preview size: " + str(cfg.prvwSz))
 		
 	# redo preview
 	def redoPreview(self):
@@ -301,9 +323,9 @@ class ClassificationDock:
 			if cfg.pntPrvw is None:
 				pass
 			else:
-				self.createPreview(cfg.pntPrvw)
+				self.createPreview(cfg.pntPrvw, self.algRasterPrevw)
 				# logger
-				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "REDO Preview")
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "REDO Preview")
 		
 	# set variable for report
 	def reportCheckbox(self):
@@ -311,7 +333,7 @@ class ClassificationDock:
 			cfg.reportCheck = "Yes"
 		else:
 			cfg.reportCheck = "No"
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " checkbox set: " + str(cfg.reportCheck))
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " checkbox set: " + str(cfg.reportCheck))
 		
 	# Reset qml style path
 	def resetQmlStyle(self):
@@ -320,7 +342,7 @@ class ClassificationDock:
 		cfg.uidc.qml_lineEdit.setText("")
 		cfg.qmlFl = ""
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "reset qml")
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "reset qml")
 		
 	# run classification algorithm
 	def runAlgorithm(self, algorithmName, imageName, signatureList, outputRasterPath, macroclassCheck = "No", algRasterPath = None, previewSize = 0, previewPoint = None, compress = "No"):
@@ -375,13 +397,13 @@ class ClassificationDock:
 				oCR[x] = None
 			for x in range(0, len(bL)):
 				bL[x] = None
-			# create raster table
-			cfg.utls.createRasterTable(outputRasterPath, 1, signatureList)
+			# create raster table (removed because of some issues)
+			#cfg.utls.createRasterTable(outputRasterPath, 1, signatureList)
 			return "Yes", opOut, tPMD
 		else:
 			cfg.mx.msgErr25()
 			# logger
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " error raster")
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " error raster")
 			return "No", None, None
 			
 	# select all signatures
@@ -400,52 +422,58 @@ class ClassificationDock:
 				cfg.allSignCheck = "Yes"
 			cfg.uiUtls.removeProgressBar()
 			# logger
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " all signatures")
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " all signatures")
 		except Exception, err:
 			# logger
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			cfg.uiUtls.removeProgressBar()
 
 	# perform classification
 	def runClassification(self):
-		clssOut = QFileDialog.getSaveFileName(None , QApplication.translate("semiautomaticclassificationplugin", "Save classification output"), "", "Image (*.tif)")
-		if len(clssOut) > 0:
-			clssOut = clssOut.replace('\\', '/')
-			clssOut = clssOut.replace('//', '/')
-			cfg.clssPth = clssOut
-		qApp.processEvents()
-		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "classification output: " + str(cfg.clssPth))	
-		# check if can run classification
-		ckC = "Yes"
-		if cfg.imgNm is None:
-			cfg.mx.msg4()
-			ckC = "No"
-		elif cfg.clssPth is None:
-			cfg.mx.msg12()
-			ckC = "No"
-		# check if image is None
-		elif cfg.utls.selectLayerbyName(cfg.imgNm, "Yes") is None:
-			# if band set then pass
-			if cfg.imgNm != cfg.bndSetNm:
-				cfg.mx.msg4()
-				cfg.ipt.refreshRasterLayer()
-				ckC = "No"
-		if ckC != "No":
+		sL = self.getSignatureList()
+		if self.trainSigCheck == "Yes":
+			clssOut = QFileDialog.getSaveFileName(None , QApplication.translate("semiautomaticclassificationplugin", "Save classification output"), "", "Image (*.tif)")
+			if len(clssOut) > 0:
+				clssOut = clssOut.replace('\\', '/')
+				clssOut = clssOut.replace('//', '/')
+				cfg.clssPth = clssOut
+				sN = os.path.basename(unicode(clssOut))
+				if unicode(sN).endswith(".tif"):
+					cfg.clssPth = clssOut
+				else:
+					nm = os.path.splitext(sN)[0]
+					cfg.clssPth = os.path.dirname(clssOut) + '/' + nm + ".tif"
+			qApp.processEvents()
 			# logger
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), ">>> CLASSIFICATION STARTED")
-			# disable map canvas render for speed
-			cfg.cnvs.setRenderFlag(False)
-			# base name
-			n = os.path.basename(cfg.clssPth)
-			nm = os.path.splitext(n)[0]
-			sL = self.getSignatureList()
-			if self.trainSigCheck == "Yes":
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "classification output: " + unicode(cfg.clssPth))	
+			# check if can run classification
+			ckC = "Yes"
+			if cfg.imgNm is None:
+				cfg.mx.msg4()
+				ckC = "No"
+			elif cfg.clssPth is None:
+				cfg.mx.msg12()
+				ckC = "No"
+			# check if image is None
+			elif cfg.utls.selectLayerbyName(cfg.imgNm, "Yes") is None:
+				# if band set then pass
+				if cfg.imgNm != cfg.bndSetNm:
+					cfg.mx.msg4()
+					cfg.ipt.refreshRasterLayer()
+					ckC = "No"
+			if ckC != "No":
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), ">>> CLASSIFICATION STARTED")
+				# disable map canvas render for speed
+				cfg.cnvs.setRenderFlag(False)
+				# base name
+				n = os.path.basename(cfg.clssPth)
+				nm = os.path.splitext(n)[0]
 				cfg.uiUtls.addProgressBar()
 				# check band set
 				ckB = "Yes"
 				if cfg.bndSetPresent == "Yes" and cfg.imgNm == cfg.bndSetNm:
-					ckB = self.checkBandSet()
+					ckB = cfg.utls.checkBandSet()
 				# date time for temp name
 				dT = cfg.utls.getTime()
 				cfg.uiUtls.updateBar(10)
@@ -463,11 +491,11 @@ class ClassificationDock:
 							for x in range(0, len(cfg.bndSetLst)):
 								tCD = cfg.tmpDir + "/" + str(x) + tCN 
 								cfg.bndSetMaskList.append(tCD)
-								cfg.utls.clipRasterByShapefile(m, cfg.bndSetLst[x], str(tCD))
+								cfg.utls.clipRasterByShapefile(m, cfg.bndSetLst[x], str(tCD), cfg.outTempRastFormat)
 						else:
 							# temp masked raster
 							cfg.maskRstSrc = cfg.tmpDir + "/" + tCN 
-							cfg.utls.clipRasterByShapefile(m, cfg.imgSrc, str(cfg.maskRstSrc))
+							cfg.utls.clipRasterByShapefile(m, cfg.imgSrc, str(cfg.maskRstSrc), cfg.outTempRastFormat)
 						img = cfg.maskRasterNm
 				### if not mask
 					cfg.uiUtls.updateBar(20)
@@ -479,8 +507,10 @@ class ClassificationDock:
 						cfg.uiUtls.updateBar(80)
 						# apply symbology
 						self.applyClassSymbology(c, cfg.macroclassCheck, cfg.qmlFl, sL)
+						# save qml file
+						cfg.utls.saveQmlStyle(c, os.path.dirname(clssOut) + '/' + nm + ".qml")
 						# logger
-						if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "<<< CLASSIFICATION PERFORMED: " + str(cfg.clssPth))
+						cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "<<< CLASSIFICATION PERFORMED: " + unicode(cfg.clssPth))
 				### calculate report
 					if cfg.reportCheck == "Yes":
 						cfg.classRep.calculateClassificationReport(cfg.clssPth, 0)
@@ -489,11 +519,12 @@ class ClassificationDock:
 							shutil.copy(cfg.reportPth, reportOut)
 						except Exception, err:
 							# logger
-							if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+							cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 							cfg.mx.msg7()
 				### convert classification to vector
 					cfg.uiUtls.updateBar(85)
 					if cfg.vectorOutputCheck == "Yes":
+						cfg.uiUtls.updateBar(85, QApplication.translate("semiautomaticclassificationplugin", " conversion to vector. Please wait ..."))
 						vO = os.path.dirname(cfg.clssPth) + "/" + nm + ".shp"
 						cfg.utls.rasterToVector(cfg.clssPth, vO)
 						vl = cfg.utls.addVectorLayer(str(vO), os.path.basename(vO), "ogr")
@@ -513,10 +544,10 @@ class ClassificationDock:
 							shutil.copy(mOut, rOBaseNm + "/" + mOutNm)
 							c = cfg.iface.addRasterLayer(rOBaseNm + "/" + mOutNm, mOutNm)
 							# logger
-							if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "files copied")
+							cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "files copied")
 						except Exception, err:
 							# logger
-							if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+							cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 							cfg.mx.msgErr23()
 				### ending
 					cfg.uiUtls.updateBar(100)
@@ -532,11 +563,12 @@ class ClassificationDock:
 					cfg.clssPth = None
 					cfg.bst.rasterBandName()
 					# logger
-					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "band set check failed")
-			else:
-				cfg.cnvs.setRenderFlag(True)
-				# logger
-				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "classification no")	
+					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "band set check failed")
+		else:
+			cfg.mx.msg18()
+			cfg.cnvs.setRenderFlag(True)
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "classification no")	
 			
 	# apply symbology to classification			
 	def applyClassSymbology(self, classificationRaster, macroclassCheck, qmlFile, signatureList = None):
@@ -548,7 +580,7 @@ class ClassificationDock:
 				self.applyQmlStyle(classificationRaster, qmlFile)
 			except Exception, err:
 				# logger
-				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 							
 	# Select qml style for classifications and previews
 	def selectQmlStyle(self):
@@ -558,7 +590,7 @@ class ClassificationDock:
 		p.writeEntry("SemiAutomaticClassificationPlugin", "qmlfile", cfg.qmlFl)
 		cfg.uidc.qml_lineEdit.setText(cfg.qmlFl)
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "qml file: " + str(cfg.qmlFl))
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "qml file: " + unicode(cfg.qmlFl))
 
 	def editedCell(self, row, column):
 		if cfg.SigTabEdited == "Yes":
@@ -566,25 +598,37 @@ class ClassificationDock:
 			id = tW.item(row, 6).text()
 			if column == 0:
 				cfg.signList["CHECKBOX_" + str(id)] = tW.item(row, 0).checkState()
+			elif column == 5:
+				tW.item(row, 5).setText("")
 			else:
 				try:
-					cfg.signList["MACROCLASSID_" + str(id)] = int(tW.item(row, 1).text())
+					v = int(tW.item(row, 1).text())
+					if v < 0:
+						v = 0
+						tW.setItem(row, column, QTableWidgetItem(str(0)))
+						cfg.mx.msg17()
+					cfg.signList["MACROCLASSID_" + str(id)] = v
 				except:
 					tW.setItem(row, column, QTableWidgetItem(str(cfg.signList["MACROCLASSID_" + str(id)])))
 				iTxt = tW.item(row, 2).text().encode('ascii','replace')
 				cfg.signList["MACROCLASSINFO_" + str(id)] = iTxt
 				tW.item(row, 2).setText(iTxt)
 				try:
-					cfg.signList["CLASSID_" + str(id)] = int(tW.item(row, 3).text())
+					v = int(tW.item(row, 3).text())
+					if v < 0:
+						v = 0
+						tW.setItem(row, column, QTableWidgetItem(str(0)))
+						cfg.mx.msg17()
+					cfg.signList["CLASSID_" + str(id)] = v
 				except:
 					tW.setItem(row, column, QTableWidgetItem(str(cfg.signList["CLASSID_" + str(id)])))
 				iTxt2 = tW.item(row, 4).text().encode('ascii','replace')
 				cfg.signList["CLASSINFO_" + str(id)] = iTxt2
 				tW.item(row, 4).setText(iTxt2)
 			# logger
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "edited cell" + str(row) + ";" + str(column))
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "edited cell" + str(row) + ";" + str(column))
 
-	# export band set to file
+	# export signature list to file
 	def saveSignatureList(self, signatureFile):
 		try:
 			root = ET.Element("signaturelist")
@@ -614,20 +658,27 @@ class ClassificationDock:
 			o.write(f)
 			o.close()
 			# logger
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " signatures saved in: " + str(signatureFile))
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " signatures saved in: " + unicode(signatureFile))
 		except Exception, err:
 			cfg.mx.msgErr15()
 			# logger
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 		
 	def openSignatureList(self):
-		signFile = QFileDialog.getOpenFileName(None , QApplication.translate("semiautomaticclassificationplugin", "Select a signature list file"), "", "XML (*.xml)")
-		if len(signFile) > 0:
+		signFilePath = QFileDialog.getOpenFileName(None , QApplication.translate("semiautomaticclassificationplugin", "Select a signature list file"), "", "XML (*.xml)")
+		if len(signFilePath) > 0:
+			# absolute path
+			cfg.utls.readQGISVariablePath()
+			if cfg.absolutePath == "false":
+				signFile = cfg.utls.qgisAbsolutePathToRelativePath(signFilePath, cfg.projPath)
+			else:
+				signFile = signFilePath
 			cfg.uidc.signatureFile_lineEdit.setText(unicode(signFile))
-			self.openSignatureListFile(signFile)
+			self.openSignatureListFile(signFilePath)
 			cfg.utls.writeProjectVariable("signatureFilePath", unicode(signFile))
+			cfg.utls.writeProjectVariable("signatureFilePathAbsolute", str(cfg.absolutePath))
 			# logger
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " signatures opened: " + str(signFile))
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " signatures opened: " + unicode(signFilePath))
 			
 	def importSignatureList(self):
 		try:
@@ -636,13 +687,13 @@ class ClassificationDock:
 				if len(signFile) > 0:
 					self.openSignatureListFile(signFile, "Yes")
 					# logger
-					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " signatures imported: " + str(signFile))
+					cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " signatures imported: " + unicode(signFile))
 			else:
 				cfg.mx.msgWar8()
 		except Exception, err:
 			cfg.mx.msgWar8()
 			# logger
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			
 	# open signature file
 	def openSignatureListFile(self, signatureFile, addToSignature = "No"):
@@ -654,26 +705,26 @@ class ClassificationDock:
 				cfg.signIDs = {}
 			for child in root:
 				if len(cfg.signIDs) > 0:
-					b = cfg.ROId.signatureID()
+					b = cfg.utls.signatureID()
 				else:
 					b = int(child.get("ID"))
-				cfg.signList["MACROCLASSID_" + str(b)] = str(child.find("MACROCLASSID").text)
-				cfg.signList["MACROCLASSINFO_" + str(b)] = str(child.find("MACROCLASSINFO").text)
-				cfg.signList["CLASSID_" + str(b)] = str(child.find("CLASSID").text)
-				cfg.signList["CLASSINFO_" + str(b)] = str(child.find("CLASSINFO").text)
-				cfg.signList["UNIT_" + str(b)] = str(child.find("WAVELENGTH_UNIT").text)
+				cfg.signList["MACROCLASSID_" + str(b)] = str(child.find("MACROCLASSID").text).strip()
+				cfg.signList["MACROCLASSINFO_" + str(b)] = str(child.find("MACROCLASSINFO").text).strip()
+				cfg.signList["CLASSID_" + str(b)] = str(child.find("CLASSID").text).strip()
+				cfg.signList["CLASSINFO_" + str(b)] = str(child.find("CLASSINFO").text).strip()
+				cfg.signList["UNIT_" + str(b)] = str(child.find("WAVELENGTH_UNIT").text).strip()
 				cfg.signIDs["ID_" + str(b)] = b
 				# get values
-				vls = str(child.find("VALUES").text)
+				vls = str(child.find("VALUES").text).strip()
 				x = eval(vls)
 				cfg.signList["VALUES_" + str(b)] = x
-				cfg.signList["WAVELENGTH_" + str(b)] = eval(str(child.find("WAVELENGTH").text))
+				cfg.signList["WAVELENGTH_" + str(b)] = eval(str(child.find("WAVELENGTH").text).strip())
 				cfg.signList["CHECKBOX_" + str(b)] = 2
 				c = QColor()
-				c.setNamedColor(str(child.find("COLOR").text))
+				c.setNamedColor(str(child.find("COLOR").text).strip())
 				cfg.signList["COLOR_" + str(b)] = c
 				# get covariance matrix
-				mt = str(child.find("COVARIANCE_MATRIX").text)
+				mt = str(child.find("COVARIANCE_MATRIX").text).strip()
 				try:
 					cm = eval(mt)
 				except:
@@ -695,25 +746,55 @@ class ClassificationDock:
 			self.saveSignatureList(signFile)
 		return signFile
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " signatures exported in: " + str(signFile))
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " signatures exported in: " + unicode(signFile))
 			
 	# export band set to file
 	def saveSignatureListToFile(self):
 		try:
-			signFile = cfg.uidc.signatureFile_lineEdit.text()
-			if len(signFile) > 0:
-				self.saveSignatureList(signFile)
-			elif len(signFile) == 0:
+			signFilePath = cfg.uidc.signatureFile_lineEdit.text()
+			cfg.utls.readQGISVariablePath()
+			if len(signFilePath) > 0:
+				absolutePath = cfg.utls.readProjectVariable("signatureFilePathAbsolute", "true")
+				if cfg.absolutePath == "false" and absolutePath != "false":
+					signFile = signFilePath
+					self.saveSignatureList(signFile)
+					signFilePath = cfg.utls.qgisAbsolutePathToRelativePath(signFilePath, cfg.projPath)
+					cfg.uidc.signatureFile_lineEdit.setText(unicode(signFilePath))
+				elif cfg.absolutePath != "false" and absolutePath == "false":
+					signFile = cfg.utls.qgisRelativePathToAbsolutePath(signFilePath, cfg.projPath)
+					self.saveSignatureList(signFile)
+					cfg.uidc.signatureFile_lineEdit.setText(unicode(signFile))
+				elif cfg.absolutePath == "false" and absolutePath == "false":
+					signFile = cfg.utls.qgisRelativePathToAbsolutePath(signFilePath, cfg.projPath)
+					self.saveSignatureList(signFile)
+					cfg.uidc.signatureFile_lineEdit.setText(unicode(signFilePath))
+					signFile = signFilePath
+				elif cfg.absolutePath != "false" and absolutePath != "false":
+					signFile = signFilePath
+					self.saveSignatureList(signFile)
+					cfg.uidc.signatureFile_lineEdit.setText(unicode(signFile))
+			elif len(signFilePath) == 0:
 				signFile = self.exportSignatureFile()
+				if cfg.absolutePath == "false":
+					signFile = cfg.utls.qgisAbsolutePathToRelativePath(signFile, cfg.projPath)
 				cfg.uidc.signatureFile_lineEdit.setText(unicode(signFile))
-				cfg.utls.writeProjectVariable("signatureFilePath", unicode(signFile))
+			cfg.utls.writeProjectVariable("signatureFilePath", unicode(signFile))
+			cfg.utls.writeProjectVariable("signatureFilePathAbsolute", unicode(cfg.absolutePath))
 			# logger
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " signatures saved in: " + str(signFile))
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " signatures saved in: " + unicode(signFile))
 		except Exception, err:
 			cfg.uidc.signatureFile_lineEdit.setText("")
 			cfg.mx.msgErr15()
 			# logger
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+		
+	# reset signature list
+	def resetSignatureList(self):
+		# ask for confirm
+		a = cfg.utls.questionBox(QApplication.translate("semiautomaticclassificationplugin", "Reset signature list"), QApplication.translate("semiautomaticclassificationplugin", "Are you sure you want to reset signature list?"))
+		if a == "Yes":
+			cfg.uidc.signatureFile_lineEdit.setText("")
+			cfg.utls.writeProjectVariable("signatureFilePath", "")
 		
 	# open signature file
 	def openLibraryFile(self, libraryFile):
@@ -730,75 +811,83 @@ class ClassificationDock:
 						cfg.sigImport.CSVLibrary(libFile)
 					cfg.uiUtls.removeProgressBar()
 					# logger
-					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " spectral library " + str(libFile))
+					cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " spectral library " + unicode(libFile))
 			else:
 				cfg.mx.msgWar8()
 		except Exception, err:
 			cfg.mx.msgWar8()
 			# logger
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 		
 	# export signatures to CSV library
 	def exportToCSVLibrary(self):
-		d = QFileDialog.getExistingDirectory(None , QApplication.translate("semiautomaticclassificationplugin", "Export the highlighted signatures to CSV library"))
-		if len(d) > 0:
-			tW = cfg.uidc.signature_list_tableWidget
-			r = []
-			for i in tW.selectedIndexes():
-				r.append(i.row())
+		tW = cfg.uidc.signature_list_tableWidget
+		r = []
+		for i in tW.selectedIndexes():
+			r.append(i.row())
+		if len(r) > 0:
 			v = list(set(r))
-			for b in v:
-				mID = tW.item(b, 1).text()
-				mC = tW.item(b, 2).text()
-				cID = tW.item(b, 3).text()
-				c = tW.item(b, 4).text()
-				signFile = d + "/" + str(mC) + str(mID) + "_" + str(c) + str(cID) + str(".csv")
-				# open file
-				l = open(signFile, 'w')
-				try:
-					l.write("wavelength;reflectance;standardDeviation;waveLengthUnit \n")
-					l.close()
-				except Exception, err:
-					cfg.mx.msgErr18()
-					# logger
-					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-				id = tW.item(b, 6).text()
-				u = str(cfg.signList["UNIT_" + str(id)])
-				# wavelength
-				a = str(cfg.signList["WAVELENGTH_" + str(id)])
-				wlg = eval(a)
-				# signature values
-				n = str(cfg.signList["VALUES_" + str(id)])
-				val = eval(n)
-				# open file
-				l = open(signFile, 'a')
-				for k in range(0, len(wlg)):
-					wl = wlg[k]
-					vl = val[k*2]
-					sD = val[k*2 + 1]
-					line = str(wl) + ";" + str(vl) + ";" + str(sD) + ";" + str(u) + "\n"
+			d = QFileDialog.getExistingDirectory(None , QApplication.translate("semiautomaticclassificationplugin", "Export the highlighted signatures to CSV library"))
+			if len(d) > 0:
+				for b in v:
+					mID = tW.item(b, 1).text()
+					mC = tW.item(b, 2).text()
+					cID = tW.item(b, 3).text()
+					c = tW.item(b, 4).text()
+					signFile = d + "/" + str(mC) + str(mID) + "_" + str(c) + str(cID) + str(".csv")
+					# open file
+					l = open(signFile, 'w')
 					try:
-						l.write(line)
+						l.write("wavelength;reflectance;standardDeviation;waveLengthUnit \n")
+						l.close()
 					except Exception, err:
 						cfg.mx.msgErr18()
 						# logger
-						if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-				l.close()
+						cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					id = tW.item(b, 6).text()
+					u = str(cfg.signList["UNIT_" + str(id)])
+					# wavelength
+					a = str(cfg.signList["WAVELENGTH_" + str(id)])
+					wlg = eval(a)
+					# signature values
+					n = str(cfg.signList["VALUES_" + str(id)])
+					val = eval(n)
+					# open file
+					l = open(signFile, 'a')
+					for k in range(0, len(wlg)):
+						wl = wlg[k]
+						vl = val[k*2]
+						sD = val[k*2 + 1]
+						line = str(wl) + ";" + str(vl) + ";" + str(sD) + ";" + str(u) + "\n"
+						try:
+							l.write(line)
+						except Exception, err:
+							cfg.mx.msgErr18()
+							# logger
+							cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					l.close()
 		
 	def signatureListDoubleClick(self, index):
 		if index.column() == 5:
 			c = cfg.utls.selectColor()
 			if c is not None:
-				k = cfg.uidc.signature_list_tableWidget.item(index.row(), 6).text()
-				cfg.signList["COLOR_" + str(k)] = c
-				cfg.uidc.signature_list_tableWidget.item(index.row(), 5).setBackground(c)
-		else:
+				tW = cfg.uidc.signature_list_tableWidget
+				r = []
+				for i in tW.selectedIndexes():
+					r.append(i.row())
+				v = list(set(r))
+				for x in v:
+					k = cfg.uidc.signature_list_tableWidget.item(x, 6).text()
+					cfg.signList["COLOR_" + str(k)] = c
+					cfg.uidc.signature_list_tableWidget.item(x, 5).setBackground(c)
+		elif index.column() == 0:
 			self.selectAllSignatures()
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " signatures index: " + str(index))
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " signatures index: " + str(index))
 		
 	# Create signature list for classification
 	def signatureListTable(self, table):
+		self.signatureListOrder()
 		# checklist
 		l = table
 		l.setSortingEnabled(False)
@@ -833,7 +922,29 @@ class ClassificationDock:
 		l.setSortingEnabled(True)
 		cfg.SigTabEdited = "Yes"
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " roi list table created")
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " roi list table created")
+		
+	def signatureListOrder(self):
+		signIDs_copy = {}
+		signList_copy = {}
+		i = 1
+		for k in sorted(cfg.signIDs.values()):
+			signIDs_copy["ID_" + str(i)] = i
+			signList_copy["MACROCLASSID_" + str(i)]  = cfg.signList["MACROCLASSID_" + str(k)]
+			signList_copy["MACROCLASSINFO_" + str(i)]  = cfg.signList["MACROCLASSINFO_" + str(k)]
+			signList_copy["CLASSID_" + str(i)]  = cfg.signList["CLASSID_" + str(k)]
+			signList_copy["CLASSINFO_" + str(i)]  = cfg.signList["CLASSINFO_" + str(k)]
+			signList_copy["WAVELENGTH_" + str(i)]  = cfg.signList["WAVELENGTH_" + str(k)]
+			signList_copy["VALUES_" + str(i)]  = cfg.signList["VALUES_" + str(k)]
+			signList_copy["COLOR_" + str(i)]  = cfg.signList["COLOR_" + str(k)]
+			signList_copy["UNIT_" + str(i)]  = cfg.signList["UNIT_" + str(k)]
+			signList_copy["CHECKBOX_" + str(i)]  = cfg.signList["CHECKBOX_" + str(k)]
+			signList_copy["COVMATRIX_" + str(i)]  = cfg.signList["COVMATRIX_" + str(k)]
+			i = i + 1
+		cfg.signIDs = {}
+		cfg.signList = {}
+		cfg.signIDs = signIDs_copy
+		cfg.signList = signList_copy
 		
 	def removeSelectedSignatures(self):
 		# ask for confirm
@@ -858,7 +969,65 @@ class ClassificationDock:
 				cfg.signList.pop("COVMATRIX_" + str(id))
 			self.signatureListTable(cfg.uidc.signature_list_tableWidget)
 			# logger
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " removed signatures: " + str(v))
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " removed signatures: " + str(v))
+		
+	# merge highlighted signatures
+	def mergeSelectedSignatures(self):
+		tW = cfg.uidc.signature_list_tableWidget
+		r = []
+		for i in tW.selectedIndexes():
+			r.append(i.row())
+		if len(set(r)) > 1:
+			# ask for confirm
+			a = cfg.utls.questionBox(QApplication.translate("semiautomaticclassificationplugin", "Merge signatures"), QApplication.translate("semiautomaticclassificationplugin", "Merge highlighted signatures?"))
+			if a == "Yes":
+				cfg.uiUtls.addProgressBar()
+				v = list(set(r))
+				wl = []
+				val = []
+				unit = []
+				for x in v:
+					id = tW.item(x, 6).text()
+					if len(wl) == 0:
+						wl = cfg.signList["WAVELENGTH_" + str(id)]
+						unit = cfg.signList["UNIT_" + str(id)]
+						MC_ID  = cfg.signList["MACROCLASSID_" + str(id)]
+						MC_Info  = cfg.merged_name + cfg.signList["MACROCLASSINFO_" + str(id)]
+						C_ID = cfg.signList["CLASSID_" + str(id)]
+						C_Info = cfg.merged_name + cfg.signList["CLASSINFO_" + str(id)]
+						color = cfg.signList["COLOR_" + str(id)]
+						checkbox  = cfg.signList["CHECKBOX_" + str(id)]
+						covMatrix  = "No"
+					elif wl != cfg.signList["WAVELENGTH_" + str(id)] or unit != cfg.signList["UNIT_" + str(id)]:
+						cfg.mx.msgErr35()
+						return "No"
+					val.append(cfg.signList["VALUES_" + str(id)])
+				cfg.uiUtls.updateBar(10)
+				# calculate mean
+				vals = np.array(val)
+				val_mean = np.mean(vals, axis=0).tolist()
+				# add spectral signature
+				i = cfg.utls.signatureID()
+				cfg.signList["CHECKBOX_{0}".format(i)] = Qt.Checked
+				cfg.signList["MACROCLASSID_{0}".format(i)] = MC_ID
+				cfg.signList["MACROCLASSINFO_{0}".format(i)] = MC_Info
+				cfg.signList["CLASSID_{0}".format(i)] = C_ID
+				cfg.signList["CLASSINFO_{0}".format(i)] = C_Info
+				cfg.signList["WAVELENGTH_{0}".format(i)] = wl
+				cfg.signList["VALUES_{0}".format(i)] = val_mean
+				cfg.signList["COVMATRIX_{0}".format(i)] = covMatrix
+				if unit is None:
+					unit = cfg.bndSetUnit["UNIT"]
+				cfg.signList["UNIT_{0}".format(i)] = unit
+				cfg.signList["COLOR_{0}".format(i)] = color
+				cfg.signIDs["ID_{0}".format(i)] = i
+				self.signatureListTable(tW)
+				# select row
+				row = cfg.utls.highlightRowInTable(tW, i, 6)
+				tW.selectRow(row)
+				cfg.uiUtls.removeProgressBar()
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " merged signatures: " + str(v))
 		
 	# set variable for vector classification
 	def vectorCheckbox(self):
@@ -867,7 +1036,7 @@ class ClassificationDock:
 		else:
 			cfg.vectorOutputCheck = "No"
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " checkbox set: " + str(cfg.vectorOutputCheck))
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " checkbox set: " + str(cfg.vectorOutputCheck))
 
 	# add signatures to spectral plot
 	def addSignatureToSpectralPlot(self):
@@ -889,6 +1058,7 @@ class ClassificationDock:
 			cfg.spectrPlotList["COLOR_" + str(b)] = cfg.signList["COLOR_" + str(id)]
 			cfg.spectrPlotList["CHECKBOX_" + str(b)] = 2
 			cfg.spectrPlotList["UNIT_" + str(b)] = cfg.signList["UNIT_" + str(id)] 
+			cfg.spectrPlotList["COVMATRIX_" + str(b)] = cfg.signList["COVMATRIX_" + str(id)]
 		cfg.spSigPlot.signatureListPlotTable(cfg.uisp.signature_list_plot_tableWidget)
 		cfg.spectralplotdlg.close()
 		cfg.spectralplotdlg.show()

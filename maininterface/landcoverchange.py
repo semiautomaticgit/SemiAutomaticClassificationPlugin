@@ -8,7 +8,7 @@
  the collection of training areas (ROIs), and rapidly performing the classification process (or a preview).
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012 by Luca Congedo
+		copyright			: (C) 2012-2015 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -55,9 +55,9 @@ class LandCoverChange:
 	
 	# reference classification name
 	def classificationReferenceLayerName(self):
-		cfg.refClssfctnNm = str(cfg.ui.classification_reference_name_combo.currentText())
+		cfg.refClssfctnNm = cfg.ui.classification_reference_name_combo.currentText()
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "reference classification name: " + str(cfg.refClssfctnNm))
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "reference classification name: " + unicode(cfg.refClssfctnNm))
 	
 	# start land cover change calculation
 	def landCoverChange(self):
@@ -70,7 +70,7 @@ class LandCoverChange:
 			rstrCheck = "Yes"
 		except Exception, err:
 			# logger
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			rstrCheck = "No"
 		newRstr = cfg.utls.selectLayerbyName(cfg.newClssfctnNm, "Yes")
 		try:
@@ -78,16 +78,19 @@ class LandCoverChange:
 			rstrCheck = "Yes"
 		except Exception, err:
 			# logger
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			rstrCheck = "No"
 		# check if numpy is updated
 		try:
 			np.count_nonzero([1,1,0])
 		except Exception, err:
 			# logger
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			rstrCheck = "No"
 			cfg.mx.msgErr26()
+			a = cfg.utls.questionBox("Semi-Automatic Classification Plugin", "NumPy version is outdated. Do you want to open the following site for help? http://fromgistors.blogspot.com/p/frequently-asked-questions.html#numpy_version ")
+			if a == "Yes":
+				QDesktopServices().openUrl(QUrl("http://fromgistors.blogspot.com/p/frequently-asked-questions.html#numpy_version"))
 			return "No"
 		if rstrCheck == "No":
 			cfg.mx.msg4()
@@ -130,10 +133,10 @@ class LandCoverChange:
 						chngRstPath = chngRstPath + ".tif"
 					qApp.processEvents()
 					# logger
-					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "change raster output: " + str(cfg.clssPth))	
+					cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "change raster output: " + unicode(cfg.clssPth))	
 					if str(refRstPxlXSz) != str(newRstPxlXSz) or str(refRstPxlYSz) != str(newRstPxlYSz):
 						cfg.mx.msgWar5()
-					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " land cover change")
+					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " land cover change")
 					# get band
 					refRstrBnd = refRstrDt.GetRasterBand(1)
 					newRstrBnd = newRstrDt.GetRasterBand(1)
@@ -266,13 +269,14 @@ class LandCoverChange:
 							cfg.ui.change_textBrowser.setText(str(changeTxt))
 					except Exception, err:
 						# logger
-						if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+						cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 					cfg.uiUtls.updateBar(100)
 					# enable map canvas render
 					cfg.cnvs.setRenderFlag(True)
+					cfg.utls.finishSound()
 					cfg.uiUtls.removeProgressBar()
 					# logger
-					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "finished")
+					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "finished")
 						
 	# state of checkbox for mask unchanged
 	def maskUnchangedCheckbox(self):
@@ -280,13 +284,13 @@ class LandCoverChange:
 			cfg.unchngMaskCheck = True
 		else:
 			cfg.unchngMaskCheck = False
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " checkbox set: " + str(cfg.unchngMaskCheck))
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " checkbox set: " + str(cfg.unchngMaskCheck))
 	
 	# new classification name
 	def newClassificationLayerName(self):
-		cfg.newClssfctnNm = str(cfg.ui.new_classification_name_combo.currentText())
+		cfg.newClssfctnNm = cfg.ui.new_classification_name_combo.currentText()
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "reference classification name: " + str(cfg.newClssfctnNm))
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "reference classification name: " + unicode(cfg.newClssfctnNm))
 	
 	# refresh reference classification name
 	def refreshClassificationReferenceLayer(self):
@@ -299,7 +303,7 @@ class LandCoverChange:
 				if l.bandCount() == 1:
 					cfg.dlg.classification_reference_layer_combo(l.name())
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "reference classification layers refreshed")
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "reference classification layers refreshed")
 	
 	# refresh new classification name
 	def refreshNewClassificationLayer(self):
@@ -312,4 +316,4 @@ class LandCoverChange:
 				if l.bandCount() == 1:
 					cfg.dlg.new_classification_layer_combo(l.name())
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "new classification layers refreshed")
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "new classification layers refreshed")

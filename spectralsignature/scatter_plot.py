@@ -9,7 +9,7 @@
  the collection of training areas (ROIs), and rapidly performing the classification process (or a preview).
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012 by Luca Congedo
+		copyright			: (C) 2012-2015 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -60,11 +60,17 @@ class Scatter_Plot:
 		if index.column() == 5:
 			c = cfg.utls.selectColor()
 			if c is not None:
-				cfg.uiscp.scatter_list_plot_tableWidget.item(index.row(), 5).setBackground(c)
-		else:
+				tW = cfg.uiscp.scatter_list_plot_tableWidget
+				r = []
+				for i in tW.selectedIndexes():
+					r.append(i.row())
+				v = list(set(r))
+				for x in v:
+					cfg.uiscp.scatter_list_plot_tableWidget.item(x, 5).setBackground(c)
+		elif index.column() == 0:
 			self.selectAllROIs()
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " signatures index: " + str(index))
+		cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " signatures index: " + str(index))
 		
 	# select all signatures
 	def selectAllROIs(self):
@@ -82,10 +88,10 @@ class Scatter_Plot:
 				cfg.allSignCheck = "Yes"
 			cfg.uiUtls.removeProgressBar()
 			# logger
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " all signatures")
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " all signatures")
 		except Exception, err:
 			# logger
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			cfg.uiUtls.removeProgressBar()
 			
 	# Create scatter plot
@@ -126,7 +132,7 @@ class Scatter_Plot:
 			# Draw the plot
 			cfg.uiscp.Sig_Widget_2.sigCanvas.draw()
 			# logger
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " scatter plot created")
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " scatter plot created")
 			cfg.uiUtls.removeProgressBar()
 		
 	# calculate scatter statistics for selected ROIs
@@ -172,7 +178,10 @@ class Scatter_Plot:
 				sP.wait()
 				sP = subprocess.Popen(cfg.gdalPath + "gdalwarp -dstnodata  -999 -cutline " + str(tLD) + " -of GTiff " + str(tSD) + " " + cD, shell=True)
 				sP.wait()
-			except:
+			# in case of errors
+			except Exception, err:
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				cfg.utls.getGDALForMac()
 				sP = subprocess.Popen(cfg.gdalPath + "gdal_translate -a_nodata -999 -projwin " + str(xMn) + " " + str(yM) + " " + str(xM) + " " + str(yMn) + " -of GTiff \"" + rL.source().encode(cfg.fSEnc) + "\" " + str(tSD), shell=True)
 				sP.wait()
@@ -183,14 +192,17 @@ class Scatter_Plot:
 			tRN = cfg.subsTmpROI + dT + ".tif"
 			tRD = str(cfg.tmpDir + "//" + tRN)
 			i = cfg.utls.selectLayerbyName(str(cfg.rstrNm), "Yes")		
-			cfg.utls.getRasterBandByBandNumber(i.source().encode(cfg.fSEnc), rasterBand, tRD)
+			cfg.utls.getRasterBandByBandNumber(unicode(i.source()), rasterBand, tRD)
 			try:
 				cfg.utls.getGDALForMac()
 				sP = subprocess.Popen(cfg.gdalPath + "gdal_translate -a_nodata -999 -projwin " + str(xMn) + " " + str(yM) + " " + str(xM) + " " + str(yMn) + " -of GTiff " + str(tRD) + " " + str(tSD), shell=True)
 				sP.wait()
 				sP = subprocess.Popen(cfg.gdalPath + "gdalwarp -dstnodata  -999 -cutline " + str(tLD) + " -of GTiff " + str(tSD) + " " + cD, shell=True)
 				sP.wait()
-			except:
+			# in case of errors
+			except Exception, err:
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				cfg.utls.getGDALForMac()
 				sP = subprocess.Popen(cfg.gdalPath + "gdal_translate -a_nodata -999 -projwin " + str(xMn) + " " + str(yM) + " " + str(xM) + " " + str(yMn) + " -of GTiff " + str(tRD) + " " + str(tSD), shell=True)
 				sP.wait()
@@ -222,7 +234,7 @@ class Scatter_Plot:
 		cfg.cnvs.setRenderFlag(True)
 		cfg.uiUtls.updateBar(100)
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " scatter plot calculated " + str(lyr) + " band " + str(rasterBand) + " ID " + str(featureID))
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " scatter plot calculated " + str(lyr) + " band " + str(rasterBand) + " ID " + str(featureID))
 		return lst
 		
 	# set band X
@@ -236,13 +248,13 @@ class Scatter_Plot:
 				b = i.bandCount()
 			except Exception, err:
 				# logger
-				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				b = 1
 		if cfg.uiscp.bandX_spinBox.value() > b:
 			cfg.uiscp.bandX_spinBox.setValue(b)
 		cfg.scatterBandX = cfg.uiscp.bandX_spinBox.value()
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "scatter band X: " + str(cfg.scatterBandX))
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "scatter band X: " + str(cfg.scatterBandX))
 		
 	# set band Y
 	def bandYPlot(self):
@@ -255,11 +267,11 @@ class Scatter_Plot:
 				b = i.bandCount()
 			except Exception, err:
 				# logger
-				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				b = 1
 		if cfg.uiscp.bandY_spinBox.value() > b:
 			cfg.uiscp.bandY_spinBox.setValue(b)
 		cfg.scatterBandY = cfg.uiscp.bandY_spinBox.value()
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "scatter band X: " + str(cfg.scatterBandY))
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "scatter band X: " + str(cfg.scatterBandY))
 		

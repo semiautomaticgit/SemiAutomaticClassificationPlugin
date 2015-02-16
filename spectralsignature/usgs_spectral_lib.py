@@ -9,7 +9,7 @@
  the collection of training areas (ROIs), and rapidly performing the classification process (or a preview).
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012 by Luca Congedo
+		copyright			: (C) 2012-2015 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -61,7 +61,7 @@ class USGS_Spectral_Lib:
 			cfg.ui.usgs_library_comboBox.addItem(i)
 		cfg.ui.usgs_library_comboBox.blockSignals(False)
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "add libraries")
+		cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "add libraries")
 				
 	# add signature to list
 	def addSignatureToList(self):
@@ -71,14 +71,14 @@ class USGS_Spectral_Lib:
 				if r is not None:
 					cfg.sigImport.USGSLibrary(r)
 					# logger
-					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "signature added: " + str(r))
+					cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "signature added: " + str(r))
 				
 	# add chapter list to combo
 	def addSpectralLibraryToCombo(self, libraryDB):
 		for i in cfg.usgs_lib_list:
 			cfg.ui.usgs_chapter_comboBox.addItem(i)
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "chapters added")
+		cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "chapters added")
 		
 	# selection of chapter
 	def chapterChanged(self):
@@ -108,7 +108,7 @@ class USGS_Spectral_Lib:
 		self.addLibrariesToCombo()
 		cfg.ui.USGS_library_textBrowser.setHtml("")
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "chapter: " + str(ch))
+		cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "chapter: " + str(ch))
 		
 	# download signature file
 	def downloadLibrary(self, link):
@@ -117,11 +117,11 @@ class USGS_Spectral_Lib:
 		try:
 			r, i = urllib.urlretrieve(link, cfg.tmpDir + "/" + dT + ".asc")
 			# logger
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "library downloaded: " + str(link))
+			cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "library downloaded: " + str(link))
 			return r
 		except Exception, err:
 			# logger
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			cfg.mx.msgErr21()
 		
 	# download signature description and display
@@ -135,10 +135,10 @@ class USGS_Spectral_Lib:
 			cfg.ui.USGS_library_textBrowser.setHtml(dHtml)
 		except Exception, err:
 			# logger
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			cfg.mx.msgErr21()
 		# logger
-		if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "library description: " + str(link))
+		cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "library description: " + str(link))
 		
 	# selection of library
 	def libraryChanged(self):
@@ -150,6 +150,6 @@ class USGS_Spectral_Lib:
 			self.getSignatureDescription(d)
 			self.library = l
 			# logger
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "library: " + str(l))
+			cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "library: " + str(l))
 		else:
 			cfg.ui.USGS_library_textBrowser.setHtml("")

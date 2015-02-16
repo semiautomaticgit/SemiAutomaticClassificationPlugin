@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>575</width>
-    <height>444</height>
+    <width>800</width>
+    <height>549</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -23,7 +23,7 @@
    <iconset resource="resources.qrc">
     <normaloff>:/plugins/semiautomaticclassificationplugin/semiautomaticclassificationplugin.png</normaloff>:/plugins/semiautomaticclassificationplugin/semiautomaticclassificationplugin.png</iconset>
   </property>
-  <layout class="QGridLayout" name="gridLayout_6">
+  <layout class="QGridLayout" name="gridLayout_7">
    <item row="0" column="0">
     <layout class="QGridLayout" name="gridLayout_4">
      <item row="0" column="0">
@@ -59,10 +59,16 @@
      <item row="0" column="0">
       <widget class="QTableWidget" name="signature_list_plot_tableWidget">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>150</height>
+        </size>
        </property>
        <property name="editTriggers">
         <set>QAbstractItemView::SelectedClicked</set>
@@ -139,7 +145,20 @@
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Automatically fit the plot to data&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="text">
-          <string>Fit to data</string>
+          <string>Fit plot to data</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QCheckBox" name="distances_checkBox">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Calculate spectral distances between signatures (Jeffries-Matusita distance, Euclidean distance, Spectral angle, etc.)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="text">
+          <string>Calculate spectral distances</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -148,15 +167,91 @@
     </layout>
    </item>
    <item row="2" column="0">
-    <layout class="QGridLayout" name="gridLayout_3">
+    <layout class="QGridLayout" name="gridLayout_6">
      <item row="0" column="0">
-      <widget class="SigWidget2" name="Sig_Widget" native="true">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
+      <widget class="QToolBox" name="toolBox">
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
        </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+       <property name="currentIndex">
+        <number>0</number>
+       </property>
+       <widget class="QWidget" name="page">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>780</width>
+          <height>241</height>
+         </rect>
+        </property>
+        <attribute name="label">
+         <string>Plot</string>
+        </attribute>
+        <layout class="QGridLayout" name="gridLayout_8">
+         <item row="0" column="0">
+          <layout class="QGridLayout" name="gridLayout_3">
+           <item row="0" column="0">
+            <widget class="SigWidget2" name="Sig_Widget" native="true">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="page_2">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>780</width>
+          <height>241</height>
+         </rect>
+        </property>
+        <attribute name="label">
+         <string>Signature details</string>
+        </attribute>
+        <layout class="QGridLayout" name="gridLayout_10">
+         <item row="0" column="0">
+          <layout class="QGridLayout" name="gridLayout_9">
+           <item row="0" column="0">
+            <widget class="QTextBrowser" name="value_textBrowser">
+             <property name="lineWrapMode">
+              <enum>QTextEdit::NoWrap</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="page_3">
+        <attribute name="label">
+         <string>Spectral distances</string>
+        </attribute>
+        <layout class="QGridLayout" name="gridLayout_12">
+         <item row="0" column="0">
+          <layout class="QGridLayout" name="gridLayout_11">
+           <item row="0" column="0">
+            <widget class="QTextBrowser" name="distance_textBrowser">
+             <property name="lineWrapMode">
+              <enum>QTextEdit::NoWrap</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
       </widget>
      </item>
     </layout>

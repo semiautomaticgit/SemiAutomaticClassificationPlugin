@@ -2,8 +2,8 @@
 name=Semi-Automatic Classification Plugin
 qgisMinimumVersion=2.0
 description= Plugin for the semi-automatic supervised classification designed to expedite the processing of multispectral or hyperspectral remote sensing images, which provides a set of tools for pre processing and post processing. 
-version=3.1.6
-about=Written by Luca Congedo, the Semi-Automatic Classification Plugin (SCP) allows for the semi-automatic supervised classification of remote sensing images, providing tools to expedite the creation of ROIs (training areas) through region growing or multiple ROI creation. The spectral signatures of training areas can be automatically calculated and displayed in a spectral signature plot. It is possible to import spectral signatures from external sources. Also, a tool allows for the selection and download of spectral signatures from the USGS Spectral Library (http://speclab.cr.usgs.gov/spectral-lib.html). Several tools are available for the pre processing phase (image clipping, Landsat conversion to reflectance), the classification process (Minimum Distance, Maximum Likelihood, Spectral Angle Mapping algorithms, and classification previews), and the post processing phase (conversion to vector, accuracy assessment, land cover change, classification report). This plugin requires the installation of GDAL, OGR, Numpy, SciPy and Matplotlib. Also, a virtual machine is available http://fromgistors.blogspot.com/p/semi-automatic-os.html . Keywords: 土地被覆分類 监督分类 土地覆盖分类 教師付き分類 تصنيف استخدام الأراضي Classificação da Cobertura do Solo Clasificación de la Cobertura de la Tierra Classification de la Couverture du Sol классификация землепользования Klassifizierung der Landbedeckung Classificazione della Copertura del Suolo. For more information please visit http://fromgistors.blogspot.com/
+version=4.0.0
+about=Written by Luca Congedo, the Semi-Automatic Classification Plugin (SCP) allows for the semi-automatic supervised classification of remote sensing images. It provides integrated tools to expedite the creation of ROIs (training areas) through region growing and the classification process. The spectral signatures of training areas can be automatically calculated and displayed in a spectral signature plot and a scatter plot is available. The following tools are available for ROI and spectral signature creation: multiple ROI creation using point coordinates, selection and download of spectral signatures from the USGS Spectral Library (http://speclab.cr.usgs.gov/spectral-lib.html). Also, it is possible to import spectral signatures from external sources. The following pre processing tools are available: Landsat conversion to reflectance, clipping multiple rasters at once, splitting raster bands. The following classification algorithms are available: Minimum Distance, Maximum Likelihood, Spectral Angle Mapping. The following post processing tools are available: accuracy assessment, land cover change, classification report, classification to vector, reclassification. This plugin requires the installation of GDAL, OGR, Numpy, SciPy, and Matplotlib. Also, a virtual machine is available http://fromgistors.blogspot.com/p/semi-automatic-os.html . Keywords: 土地被覆分類 监督分类 土地覆盖分类 教師付き分類 تصنيف استخدام الأراضي Classificação da Cobertura do Solo Clasificación de la Cobertura de la Tierra Classification de la Couverture du Sol классификация землепользования Klassifizierung der Landbedeckung Classificazione della Copertura del Suolo. For more information please visit http://fromgistors.blogspot.com/
 
 author=Luca Congedo
 email=ing.congedoluca@gmail.com
@@ -14,10 +14,41 @@ icon=semiautomaticclassificationplugin.png
 ; start of optional metadata
 changelog=
 
+	4.0.0
+	New version:
+	-new Band calculator for raster operations using NumPy functions
+	-new Landsat pre processing tab for editing metadata and option for creating band set
+	-new option for showing / hiding previews
+	-new SCP menu in the main menu bar
+	-enhanced the Maximum Likelihood algorithm which is now considerably faster
+	-temporary ROI are displayed as overlay (rubber band) with a + symbol on clicked pixel
+	-new option to hide and show the temporary ROIs
+	-in ROI dock new option for refreshing automatically the temporary ROI while changing ROI parameters
+	-in ROI dock new option for automatic plot of temporary ROI
+	-new option for displaying over the region growing cursor vegetation indexes such as NDVI and EVI (the latter only for images converted to reflectance)
+	-new function for displaying the pixel spectral signature with right click on map using ROI pointer
+	-new combo box in SCP toolbar for quickly displaying RGB color composites (e.g. RGB=432 or RGB=4,3,2 or RGB=4;3;2 or RGB=4-3-2) of input image (and automatic creation of a virtual raster for band set)
+	-now the window spectral signature plot allows for the display of signature values in table and calculation of signature distances (separability)
+	-new tool Split in Pre processing tab for splitting raster bands
+	-new tool Convert classification to vector in Post processing tab for creating a classification shapefile
+	-new tool Reclassification in Post processing tab for the easy reclassification from Class ID to Macroclass ID and Python expressions are allowed in the definition (e.g. raster < 3)
+	-enhanced function Clip multiple rasters
+	-new reset button for resetting the signature list file
+	-new button in the classification dock for merging spectral signatures obtaining a new one calculated as the average of signature values (without covariance matrix)
+	-now classes or macroclasses having ID = 0 are allowed and classified as 0 (unclassified) in the output which is useful for creating masks for classes
+	-in the signature list it is possible to set the color of multiple selected signatures at once (pressing shift and double click on a color) and check/uncheck all with a double click on the checkbox column (S)
+	-new function (right click with classification preview pointer) displays the algorithm raster of the preview (a raster where every pixel has the value calculated by the algorithm for the class assigned to the pixel thereof) useful for assessing spectral signatures (black pixels are distant from the spectral signatures and white pixels are closer to the spectral signatures)
+	-now a classification style (.qml file) is saved along with the classification output allowing for displaying classification colors when loading the classification in new qgis projects
+	-new buttons in tab Band set for exporting the band set to virtual raster or stacked raster (a multi-band .tif file)
+	-now the signature file path is stored in the project as absolute or relative path according to QGIS project settings
+	-in Settings added an option for the creation of virtual rasters for certain temporary data (which saves disk space)
+	-new button in Debug for testing SCP dependencies
+	-several bugs corrected
+	
 	3.1.6
 	Minor update:
 	-fixed Mac issue with GDAL subprocess
-
+	
 	3.1.5
 	Minor update:
 	-fixed regression in Accuracy tab

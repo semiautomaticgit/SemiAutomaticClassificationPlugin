@@ -8,7 +8,7 @@
  the collection of training areas (ROIs), and rapidly performing the classification process (or a preview).
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012 by Luca Congedo
+		copyright			: (C) 2012-2015 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -109,12 +109,4 @@ class Ui_Utils:
 		# main interface
 		cfg.dlg.setEnabled(state)
 		# toolbar
-		cfg.main_toolButton.setEnabled(state)
-		cfg.bandset_toolButton.setEnabled(state)
-		cfg.spectral_plot_toolButton.setEnabled(state)
-		cfg.ROItools_toolButton.setEnabled(state)
-		cfg.preprocessing_toolButton.setEnabled(state)
-		cfg.postprocessing_toolButton.setEnabled(state)
-		cfg.settings_toolButton.setEnabled(state)
-		cfg.raster_name_combo.setEnabled(state)
-		cfg.toolButton_reload.setEnabled(state)
+		cfg.toolBar.setEnabled(state)

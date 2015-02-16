@@ -9,7 +9,7 @@
  the collection of training areas (ROIs), and rapidly performing the classification process (or a preview).
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012 by Luca Congedo
+		copyright			: (C) 2012-2015 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -49,7 +49,7 @@ class Messages:
 		
 	# Message box information
 	def msgBox(self, title, message):
-		QMessageBox.information(cfg.iface.mainWindow(), title, message)
+		QMessageBox.information(cfg.iface.mainWindow(), unicode(title), unicode(message))
 		
 	# Message box error
 	def msgBoxError(self, title, message):
@@ -73,6 +73,9 @@ class Messages:
 		
 	""" Messages """
 	""" Information """
+	def msgTest(self, message):
+		self.msgBox(QApplication.translate("semiautomaticclassificationplugin", "Test results"), QApplication.translate("semiautomaticclassificationplugin", message))
+		
 	def msg1(self):
 		self.msgBox(QApplication.translate("semiautomaticclassificationplugin", "Information") + " [1]", QApplication.translate("semiautomaticclassificationplugin", "Default ROI style"))
 
@@ -111,6 +114,15 @@ class Messages:
 
 	def msg16(self):
 		self.msgBar(QApplication.translate("semiautomaticclassificationplugin", "Information") + " [16]", QApplication.translate("semiautomaticclassificationplugin", "At least 3 points are required"))
+		
+	def msg17(self):
+		self.msgBar(QApplication.translate("semiautomaticclassificationplugin", "Information") + " [17]", QApplication.translate("semiautomaticclassificationplugin", "Negative IDs are not allowed"))
+		
+	def msg18(self):
+		self.msgBar(QApplication.translate("semiautomaticclassificationplugin", "Information") + " [18]", QApplication.translate("semiautomaticclassificationplugin", "Select at least one signature"))
+		
+	def msg19(self):
+		self.msgBar(QApplication.translate("semiautomaticclassificationplugin", "Information") + " [19]", QApplication.translate("semiautomaticclassificationplugin", "SCP is recording the Log file"))
 		
 	""" Errors """
 	def msgErr1(self):
@@ -183,7 +195,7 @@ class Messages:
 		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [23]", QApplication.translate("semiautomaticclassificationplugin", "Unable to get ROI attributes; check training shapefiles field names"))
 
 	def msgErr24(self, Macro_ID, Class_ID):
-		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [24]", QApplication.translate("semiautomaticclassificationplugin", "The following signature does not match the band set. Macro: " + str(Macro_ID) + " ID: " + str(Class_ID)))
+		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [24]", QApplication.translate("semiautomaticclassificationplugin", "The following signature does not match the band set. MC_ID: " + str(Macro_ID) + " C_ID: " + str(Class_ID)))
 			
 	def msgErr25(self):
 		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [25]", QApplication.translate("semiautomaticclassificationplugin", "Error reading raster. Possibly the raster path contains unicode characters"))
@@ -192,7 +204,7 @@ class Messages:
 		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [26]", QApplication.translate("semiautomaticclassificationplugin", "The version of Numpy is outdated. Please install QGIS using OSGEO4W for an updated version of Numpy or visit http://fromgistors.blogspot.com/p/frequently-asked-questions.html#numpy_version"))
 
 	def msgErr27(self):
-		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [27]", QApplication.translate("semiautomaticclassificationplugin", "Unable to perform operation. Possibly OGR is missinig drivers. Please repeat QGIS installation."))
+		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [27]", QApplication.translate("semiautomaticclassificationplugin", "Unable to perform operation. Possibly OGR is missing drivers. Please repeat QGIS installation."))
 					
 	def msgErr28(self):
 		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [28]", QApplication.translate("semiautomaticclassificationplugin", "Memory error. Please, set a lower value of RAM in the tab Settings."))
@@ -201,11 +213,32 @@ class Messages:
 		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [29]", QApplication.translate("semiautomaticclassificationplugin", "Edge error. Reduce the ROI width or draw a ROI manually (recommended installation of GDAL >= 1.10)"))
 		
 	def msgErr30(self):
-		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [30]", QApplication.translate("semiautomaticclassificationplugin", "Unable to proceed. Rename the Landsat bands with a file name ending with the band number (e.g. rename B20 to B2)"))
+		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [30]", QApplication.translate("semiautomaticclassificationplugin", "Unable to proceed. Rename the Landsat bands with a file name ending with the band number (e.g. rename B20 to B2)"))
 		
 	def msgErr31(self):
 		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [31]", QApplication.translate("semiautomaticclassificationplugin", "Error calculating signature. Possibly ROI is too small"))
-					
+		
+	def msgErr32(self):
+		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [32]", QApplication.translate("semiautomaticclassificationplugin", "Unable to split bands"))
+		
+	def msgErr33(self):
+		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [33]", QApplication.translate("semiautomaticclassificationplugin", "Error reading band set. Possibly raster files are not loaded"))
+		
+	def msgErr34(self):
+		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [34]", QApplication.translate("semiautomaticclassificationplugin", "Clip area outside image. Check the raster projection"))
+		
+	def msgErr35(self):
+		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [35]", QApplication.translate("semiautomaticclassificationplugin", "Unable to merge. Signatures have different unit or wavelength"))
+		
+	def msgErr36(self):
+		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [36]", QApplication.translate("semiautomaticclassificationplugin", "Unable to calculate. Expression error"))
+
+	def msgErr37(self):
+		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [37]", QApplication.translate("semiautomaticclassificationplugin", "Unable to calculate. Metadata error"))
+		
+	def msgErr38(self, path):
+		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [38]", QApplication.translate("semiautomaticclassificationplugin", "Unable to load raster " + path))
+		
 	""" Warnings """
 	def msgWar2Windows(self):
 		self.msgBoxWarning(QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [2]", QApplication.translate("semiautomaticclassificationplugin", "It appears that SciPy is not correctly installed. Please, see this page for information about SciPy installation ") + " http://semiautomaticclassificationmanual-v3.readthedocs.org/en/latest/installation_win64.html")
@@ -242,4 +275,10 @@ class Messages:
 		
 	def msgWar14(self):
 		self.msgBarWarning(QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [14]", QApplication.translate("semiautomaticclassificationplugin", "Unable to proceed. The raster must be in projected coordinates"))
+		
+	def msgWar15(self):
+		self.msgBarWarning(QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [15]", QApplication.translate("semiautomaticclassificationplugin", "Select at least one raster"))
+	
+	def msgWar16(self):
+		self.msgBarWarning(QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [16]", QApplication.translate("semiautomaticclassificationplugin", "Incorrect expression"))
 		
