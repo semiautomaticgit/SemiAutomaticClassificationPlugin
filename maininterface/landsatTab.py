@@ -201,6 +201,7 @@ class LandsatTab:
 					except:
 						RADIANCE_ADD = ""
 				nm = os.path.splitext(bandName)[0]
+				
 				if str(sat).lower() in ['landsat_4', 'landsat4', 'landsat_5', 'landsat5', 'landsat_7', 'landsat7']:
 					# landsat bands (e.g. b10, b20, b61)
 					if nm[len(nm) - 2].isdigit() and nm[len(nm) - 1].isdigit():
@@ -238,8 +239,11 @@ class LandsatTab:
 					elif str(nm[len(nm) - 8: len(nm) - 1]) == "6_VCID_" and nm[len(nm) - 1].isdigit():
 						self.landsat457Temperature(sat, RADIANCE_MULT, RADIANCE_ADD, inputRaster, tempRaster)
 				elif str(sat).lower() in ['landsat8', 'landsat_8']:
+					# landsat thermal bands
+					if nm[len(nm) - 2: len(nm) - 0] in ["10", "11"]:
+						self.landsat8Temperature(RADIANCE_MULT, RADIANCE_ADD, K1_CONSTANT, K2_CONSTANT, inputRaster, tempRaster)
 					# for bands < 10
-					if str(nm[len(nm) - 8: len(nm) - 1]) != "6_VCID_" and nm[len(nm) - 1].isdigit():
+					elif str(nm[len(nm) - 8: len(nm) - 1]) != "6_VCID_" and nm[len(nm) - 1].isdigit():
 						ck = self.landsat8reflectance(sat, str(nm[len(nm) - 1]), REFLECTANCE_MULT, REFLECTANCE_ADD, RADIANCE_MULT, RADIANCE_ADD, RADIANCE_MAXIMUM, REFLECTANCE_MAXIMUM, inputRaster, tempRaster)
 						if ck != "No":
 							rasterList.append(outputRaster)
@@ -247,9 +251,7 @@ class LandsatTab:
 							if int(nm[len(nm) - 1]) in [2, 3, 4, 5, 6, 7]:
 								bandSetList.append(int(nm[len(nm) - 1]) - 1)
 								bandSetNameList.append(os.path.splitext(oNm)[0])
-					# landsat thermal bands
-					elif nm[len(nm) - 2].isdigit() and nm[len(nm) - 1].isdigit():
-						self.landsat8Temperature(RADIANCE_MULT, RADIANCE_ADD, K1_CONSTANT, K2_CONSTANT, inputRaster, tempRaster)
+
 		cfg.uiUtls.updateBar(90)
 		if cfg.actionCheck == "Yes":
 			# copy raster bands
@@ -757,14 +759,19 @@ class LandsatTab:
 							dBs["BAND_6_VCID_{0}".format(nm[len(nm) - 1])] = str(f)
 							bandNames.append(f)
 					elif str(sat).lower() in ['landsat_8', 'landsat8']:
-						# for bands < 10
-						if str(nm[len(nm) - 8: len(nm) - 1]) != "6_VCID_" and nm[len(nm) - 1].isdigit() and nm[len(nm) - 1] != "8":
-							dBs["BAND_{0}".format(nm[len(nm) - 1])] = str(f)
-							bandNames.append(f)
 						# for bands > 9
-						elif nm[len(nm) - 2].isdigit() and nm[len(nm) - 1].isdigit():
+						if nm[len(nm) - 2: len(nm) - 0] in ["10", "11"]:
+							dBs["BAND_" + nm[len(nm) - 2: len(nm) - 0]] = str(f)
+							bandNames.append(f)
+						# for bands < 10
+						elif str(nm[len(nm) - 8: len(nm) - 1]) != "6_VCID_" and nm[len(nm) - 1].isdigit() and nm[len(nm) - 1] != "8":
 							dBs["BAND_{0}".format(nm[len(nm) - 1])] = str(f)
 							bandNames.append(f)
+
+
+
+
+
 					else:
 						bandNames.append(f)
 			# add band items to table
@@ -831,50 +838,77 @@ class LandsatTab:
 					for key, band in dBs.iteritems():
 						if bandName == band:
 							if dRadMB:
-								itBand = QTableWidgetItem()
-								itBand.setData(Qt.DisplayRole, dRadMB["RADIANCE_MULT_" + str(key)])
-								l.setItem(b, 1, itBand)
+								try:
+									itBand = QTableWidgetItem()
+									itBand.setData(Qt.DisplayRole, dRadMB["RADIANCE_MULT_" + str(key)])
+									l.setItem(b, 1, itBand)
+								except:
+									pass
 							if dRadAB:
-								itBand = QTableWidgetItem()
-								itBand.setData(Qt.DisplayRole, dRadAB["RADIANCE_ADD_" + str(key)])
-								l.setItem(b, 2, itBand)
+								try:
+									itBand = QTableWidgetItem()
+									itBand.setData(Qt.DisplayRole, dRadAB["RADIANCE_ADD_" + str(key)])
+									l.setItem(b, 2, itBand)
+								except:
+									pass
 							if dRefMB:
-								itBand = QTableWidgetItem()
-								itBand.setData(Qt.DisplayRole, dRefMB["REFLECTANCE_MULT_" + str(key)])
-								l.setItem(b, 3, itBand)
+								try:
+									itBand = QTableWidgetItem()
+									itBand.setData(Qt.DisplayRole, dRefMB["REFLECTANCE_MULT_" + str(key)])
+									l.setItem(b, 3, itBand)
+								except:
+									pass
 							if dRefAB:
-								itBand = QTableWidgetItem()
-								itBand.setData(Qt.DisplayRole, dRefAB["REFLECTANCE_ADD_" + str(key)])
-								l.setItem(b, 4, itBand)
+								try:
+									itBand = QTableWidgetItem()
+									itBand.setData(Qt.DisplayRole, dRefAB["REFLECTANCE_ADD_" + str(key)])
+									l.setItem(b, 4, itBand)
+								except:
+									pass
 							if dRadMxB:
-								itBand = QTableWidgetItem()
-								itBand.setData(Qt.DisplayRole, dRadMxB["RADIANCE_MAXIMUM_" + str(key)])
-								l.setItem(b, 5, itBand)
+								try:
+									itBand = QTableWidgetItem()
+									itBand.setData(Qt.DisplayRole, dRadMxB["RADIANCE_MAXIMUM_" + str(key)])
+									l.setItem(b, 5, itBand)
+								except:
+									pass
 							if dRefMxB:
-								itBand = QTableWidgetItem()
-								itBand.setData(Qt.DisplayRole, dRefMxB["REFLECTANCE_MAXIMUM_" + str(key)])
-								l.setItem(b, 6, itBand)
+								try:
+									itBand = QTableWidgetItem()
+									itBand.setData(Qt.DisplayRole, dRefMxB["REFLECTANCE_MAXIMUM_" + str(key)])
+									l.setItem(b, 6, itBand)
+								except:
+									pass
 							if dK1B:
-								itBand = QTableWidgetItem()
-								itBand.setData(Qt.DisplayRole, dK1B["K1_CONSTANT_" + str(key)])
-								l.setItem(b, 7, itBand)
+								try:
+									itBand = QTableWidgetItem()
+									itBand.setData(Qt.DisplayRole, dK1B["K1_CONSTANT_" + str(key)])
+									l.setItem(b, 7, itBand)
+								except:
+									pass
 							if dK2B:
-								itBand = QTableWidgetItem()
-								itBand.setData(Qt.DisplayRole, dK2B["K2_CONSTANT_" + str(key)])
-								l.setItem(b, 8, itBand)
+								try:
+									itBand = QTableWidgetItem()
+									itBand.setData(Qt.DisplayRole, dK2B["K2_CONSTANT_" + str(key)])
+									l.setItem(b, 8, itBand)
+								except:
+									pass
 							if dRad:
-								itBand = QTableWidgetItem()
-								itBand.setData(Qt.DisplayRole, dRad["LMAX_" + str(key)])
-								l.setItem(b, 9, itBand)
-								itBand = QTableWidgetItem()
-								itBand.setData(Qt.DisplayRole, dRad["LMIN_" + str(key)])
-								l.setItem(b, 10, itBand)
-								itBand = QTableWidgetItem()
-								itBand.setData(Qt.DisplayRole, dRad["QCALMAX_" + str(key)])
-								l.setItem(b, 11, itBand)
-								itBand = QTableWidgetItem()
-								itBand.setData(Qt.DisplayRole, dRad["QCALMIN_" + str(key)])
-								l.setItem(b, 12, itBand)
+								try:
+									itBand = QTableWidgetItem()
+									itBand.setData(Qt.DisplayRole, dRad["LMAX_" + str(key)])
+									l.setItem(b, 9, itBand)
+									itBand = QTableWidgetItem()
+									itBand.setData(Qt.DisplayRole, dRad["LMIN_" + str(key)])
+									l.setItem(b, 10, itBand)
+									itBand = QTableWidgetItem()
+									itBand.setData(Qt.DisplayRole, dRad["QCALMAX_" + str(key)])
+									l.setItem(b, 11, itBand)
+									itBand = QTableWidgetItem()
+									itBand.setData(Qt.DisplayRole, dRad["QCALMIN_" + str(key)])
+									l.setItem(b, 12, itBand)
+								except:
+									pass
 					b = b + 1
 				cfg.uiUtls.removeProgressBar()			
 
