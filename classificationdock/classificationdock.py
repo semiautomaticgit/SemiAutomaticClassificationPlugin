@@ -596,7 +596,6 @@ class ClassificationDock:
 		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "qml file: " + unicode(cfg.qmlFl))
 
 	def editedCell(self, row, column):
-		cfg.mx.msgBox("", str(cfg.SigTabEdited))
 		if cfg.SigTabEdited == "Yes":
 			tW = cfg.uidc.signature_list_tableWidget
 			id = tW.item(row, 6).text()
