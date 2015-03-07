@@ -93,6 +93,8 @@ class ClassificationDock:
 		elif str(cfg.algName) == cfg.algSAM:
 			if cfg.algThrshld > 90:
 				cfg.uidc.alg_threshold_SpinBox.setValue(90)
+		cfg.algThrshld = cfg.uidc.alg_threshold_SpinBox.value()
+		cfg.signT.setAllWeights(cfg.algThrshld)
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "algorithm threshold: " + str(cfg.algThrshld))
 		
@@ -230,6 +232,7 @@ class ClassificationDock:
 					cfg.mx.msgErr24(cfg.signList["MACROCLASSID_" + str(i)], cfg.signList["CLASSID_" + str(i)])
 					self.trainSigCheck = "No"
 					return None
+				s.append(cfg.signList["SIG_THRESHOLD_" + str(i)])
 		if len(signatureList) > 0:
 			self.trainSigCheck = "Yes"
 		else:
@@ -593,6 +596,7 @@ class ClassificationDock:
 		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "qml file: " + unicode(cfg.qmlFl))
 
 	def editedCell(self, row, column):
+		cfg.mx.msgBox("", str(cfg.SigTabEdited))
 		if cfg.SigTabEdited == "Yes":
 			tW = cfg.uidc.signature_list_tableWidget
 			id = tW.item(row, 6).text()
@@ -923,6 +927,7 @@ class ClassificationDock:
 		cfg.SigTabEdited = "Yes"
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " roi list table created")
+		cfg.signT.signatureThresholdListTable()
 		
 	def signatureListOrder(self):
 		signIDs_copy = {}

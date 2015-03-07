@@ -286,10 +286,10 @@ class SpectralSignaturePlot:
 			cmb = list(itertools.combinations(sorted(IDList), 2))
 			for cB in cmb:
 				sim = cfg.utls.brayCurtisSimilarity(meanDict["ID_" + str(cB[0])], meanDict["ID_" + str(cB[1])])
-				JM = cfg.utls.jeffriesMatusitaDistance(meanDict["ID_" + str(cB[0])], meanDict["ID_" + str(cB[1])], covDict["ID_" + str(cB[0])], covDict["ID_" + str(cB[1])])
+				JM = cfg.utls.jeffriesMatusitaDistance(meanDict["ID_" + str(cB[0])], meanDict["ID_" + str(cB[1])], covDict["ID_" + str(cB[0])], covDict["ID_" + str(cB[1])], cfg.algBandWeigths)
 				#TD = cfg.utls.transformedDivergence(meanDict["ID_" + str(cB[0])], meanDict["ID_" + str(cB[1])], covDict["ID_" + str(cB[0])], covDict["ID_" + str(cB[1])])
-				dist = cfg.utls.euclideanDistance(meanDict["ID_" + str(cB[0])], meanDict["ID_" + str(cB[1])])
-				angle = cfg.utls.spectralAngle(meanDict["ID_" + str(cB[0])], meanDict["ID_" + str(cB[1])])
+				dist = cfg.utls.euclideanDistance(meanDict["ID_" + str(cB[0])], meanDict["ID_" + str(cB[1])], cfg.algBandWeigths)
+				angle = cfg.utls.spectralAngle(meanDict["ID_" + str(cB[0])], meanDict["ID_" + str(cB[1])], cfg.algBandWeigths)
 				self.signatureDistances(str(cfg.spectrPlotList["MACROCLASSID_" + str(cB[0])]), str(cfg.spectrPlotList["MACROCLASSINFO_" + str(cB[0])]), str(cfg.spectrPlotList["CLASSID_" + str(cB[0])]), str(cfg.spectrPlotList["CLASSINFO_" + str(cB[0])]), cfg.spectrPlotList["COLOR_" + str(cB[0])].toRgb().name(), cfg.spectrPlotList["MACROCLASSID_" + str(cB[1])], str(cfg.spectrPlotList["MACROCLASSINFO_" + str(cB[1])]), str(cfg.spectrPlotList["CLASSID_" + str(cB[1])]), str(cfg.spectrPlotList["CLASSINFO_" + str(cB[1])]), cfg.spectrPlotList["COLOR_" + str(cB[1])].toRgb().name(), JM, angle, dist, sim)
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " distances calculated")

@@ -86,6 +86,8 @@ try:
 	from maininterface.accuracy import Accuracy
 	from maininterface.splitTab import SplitTab
 	from maininterface.bandsetTab import BandsetTab
+	from maininterface.algorithmWeightTab import AlgWeightTab
+	from maininterface.signatureThresholdTab import SigThresholdTab
 	from maininterface.bandcalcTab import BandCalcTab
 	from maininterface.clipmultiplerasters import ClipMultipleRasters
 	from maininterface.landcoverchange import LandCoverChange
@@ -141,6 +143,8 @@ class SemiAutomaticClassificationPlugin:
 			cfg.acc = Accuracy()
 			cfg.splitT = SplitTab()
 			cfg.bst = BandsetTab()
+			cfg.algWT = AlgWeightTab()
+			cfg.signT = SigThresholdTab()
 			cfg.bCalc = BandCalcTab()
 			cfg.clipMulti = ClipMultipleRasters()
 			cfg.landsatT = LandsatTab()
@@ -252,6 +256,16 @@ class SemiAutomaticClassificationPlugin:
 		self.USGS_spectral_library_action.setObjectName("USGS_spectral_library_action")
 		QObject.connect(self.USGS_spectral_library_action, SIGNAL("triggered()"), cfg.utls.importUSGSLibraryTab)
 		cfg.tools_menu.addAction(self.USGS_spectral_library_action)
+		# Algorithm band weight
+		self.algorithm_weight_action = QAction(QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_weight_tool.png"), "Algorithm band weight", cfg.iface.mainWindow())
+		self.algorithm_weight_action.setObjectName("algorithm_weight_action")
+		QObject.connect(self.algorithm_weight_action, SIGNAL("triggered()"), cfg.utls.algorithmWeighTab)
+		cfg.tools_menu.addAction(self.algorithm_weight_action)
+		# Signature threshold
+		self.signature_threshold_action = QAction(QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_threshold_tool.png"), "Signature threshold", cfg.iface.mainWindow())
+		self.signature_threshold_action.setObjectName("signature_threshold_action")
+		QObject.connect(self.signature_threshold_action, SIGNAL("triggered()"), cfg.utls.algorithmThresholdTab)
+		cfg.tools_menu.addAction(self.signature_threshold_action)
 		# Pre processing
 		cfg.preprocessing_menu = cfg.menu.addMenu(QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_class_tool.png"), QApplication.translate("semiautomaticclassificationplugin", "Pre processing"))
 		# Landsat
@@ -510,6 +524,15 @@ class SemiAutomaticClassificationPlugin:
 				cfg.uiscp.scatter_list_plot_tableWidget.horizontalHeader().setResizeMode(4, QHeaderView.Stretch)
 			except:
 				pass
+			# signature threshold
+			cfg.ui.signature_threshold_tableWidget.insertColumn(5)
+			cfg.ui.signature_threshold_tableWidget.setHorizontalHeaderItem(5, QTableWidgetItem(cfg.tableColString))
+			cfg.ui.signature_threshold_tableWidget.hideColumn(5)
+			try:
+				cfg.ui.signature_threshold_tableWidget.horizontalHeader().setResizeMode(1, QHeaderView.Stretch)
+				cfg.ui.signature_threshold_tableWidget.horizontalHeader().setResizeMode(3, QHeaderView.Stretch)
+			except:
+				pass
 			# band set list
 			cfg.ui.tableWidget.setColumnWidth(0, 220)
 			cfg.ui.tableWidget.setColumnWidth(1, 80)
@@ -665,6 +688,16 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.usgs_library_comboBox.currentIndexChanged.connect(cfg.usgsLib.libraryChanged)
 			# connect the close library
 			cfg.ui.add_usgs_library_pushButton.clicked.connect(cfg.usgsLib.addSignatureToList)
+			""" Algorithm weight tab """
+			# edited cell
+			cfg.ui.tableWidget_weight.cellChanged.connect(cfg.algWT.editedWeightTable)
+			cfg.ui.reset_weights_pushButton.clicked.connect(cfg.algWT.resetWeights)
+			cfg.ui.set_weight_value_pushButton.clicked.connect(cfg.algWT.setWeights)
+			""" Signature threshold tab """
+			# edited cell
+			cfg.ui.signature_threshold_tableWidget.cellChanged.connect(cfg.signT.editedThresholdTable)
+			cfg.ui.reset_threshold_pushButton.clicked.connect(cfg.signT.resetThresholds)
+			cfg.ui.set_threshold_value_pushButton.clicked.connect(cfg.signT.setThresholds)
 			""" Classification dock """
 			# connect to save signature list to file
 			cfg.uidc.save_signature_list_toolButton.clicked.connect(cfg.classD.saveSignatureListToFile)
@@ -694,6 +727,10 @@ class SemiAutomaticClassificationPlugin:
 			cfg.uidc.merge_signature_toolButton.clicked.connect(cfg.classD.mergeSelectedSignatures)
 			# connect to activate preview pointer 
 			cfg.uidc.pointerButton_preview.clicked.connect(cfg.classD.pointerPreviewActive)
+			# connect to algorithm weight button 
+			cfg.uidc.algorithm_weight_button.clicked.connect(cfg.utls.algorithmWeighTab)
+			# connect to threshold button 
+			cfg.uidc.algorithm_threshold_button.clicked.connect(cfg.utls.algorithmThresholdTab)
 			# connect to redo preview 
 			cfg.uidc.redo_Preview_Button.clicked.connect(cfg.classD.redoPreview)
 			# connect to show preview radio button

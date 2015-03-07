@@ -1351,6 +1351,7 @@ class Utils:
 		itTot = len(sigArrayList)
 		progresStep = progresStep / len(sigArrayList)
 		if algorithmName == cfg.algMinDist:
+			tr = self.thresholdList(signatureList)
 			for s in sigArrayList:
 				if cfg.actionCheck == "Yes":
 					# progress bar
@@ -1367,9 +1368,14 @@ class Utils:
 						cfg.uiUtls.updateBar(progress)
 					StartT = time.clock()
 					# algorithm
-					c = self.algorithmMinimumDistance(rasterArray, s)
+					rasterArrayx = np.copy(rasterArray)
+					c = self.algorithmMinimumDistance(rasterArrayx, s, cfg.algBandWeigths)
 					# logger
 					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "algorithmMinimumDistance signature" + str(itCount))
+					# threshold
+					algThrshld = float(tr[n])
+					if algThrshld > 0:
+						c = self.minimumDistanceThreshold(c, algThrshld, nodataValue)
 					if type(c) is not int:
 						oR = outputGdalRasterList[bN]
 						if previewSize > 0:
@@ -1380,7 +1386,7 @@ class Utils:
 						if minArray is None:
 							minArray = c
 						else:
-							minArray = self.findMinimumArray(c, minArray)
+							minArray = self.findMinimumArray(c, minArray, nodataValue)
 							# logger
 							cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "findMinimumArray signature" + str(itCount))
 						# minimum raster
@@ -1400,11 +1406,6 @@ class Utils:
 							classArray =  e.mask * classArray + clA
 							e = None
 						clA = None
-						# threshold
-						if cfg.algThrshld > 0:
-							thr = self.minimumDistanceThreshold(minArray, cfg.algThrshld)
-							classArray = classArray * thr
-							thr = None
 						classArray[classArray == cfg.unclassifiedVal] = 0
 						# classification raster
 						self.writeArrayBlock(outputClassificationRaster, 1, classArray, pixelStartColumn, pixelStartRow, nodataValue)
@@ -1415,6 +1416,7 @@ class Utils:
 				else:
 					return "No"
 		elif algorithmName == cfg.algSAM:
+			tr = self.thresholdList(signatureList)
 			for s in sigArrayList:
 				if cfg.actionCheck == "Yes":
 					# progress bar
@@ -1432,9 +1434,14 @@ class Utils:
 						cfg.uiUtls.updateBar(progress)
 					StartT = time.clock()
 					# algorithm
-					c = self.algorithmSAM(rasterArray, s)
+					rasterArrayx = np.copy(rasterArray)
+					c = self.algorithmSAM(rasterArrayx, s, cfg.algBandWeigths)
 					# logger
 					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "algorithmSAM signature" + str(itCount))
+					# threshold
+					algThrshld = float(tr[n])
+					if algThrshld > 0:
+						c = self.minimumDistanceThreshold(c, algThrshld, nodataValue)
 					if type(c) is not int:
 						oR = outputGdalRasterList[bN]
 						if previewSize > 0:
@@ -1445,7 +1452,7 @@ class Utils:
 						if minArray is None:
 							minArray = c
 						else:
-							minArray = self.findMinimumArray(c, minArray)
+							minArray = self.findMinimumArray(c, minArray, nodataValue)
 							# logger
 							cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "findMinimumArray signature" + str(itCount))
 						# minimum raster
@@ -1465,11 +1472,6 @@ class Utils:
 							classArray =  e.mask * classArray + clA
 							e = None
 						clA = None
-						# threshold
-						if cfg.algThrshld > 0:
-							thr = self.minimumDistanceThreshold(minArray, cfg.algThrshld)
-							classArray = classArray * thr
-							thr = None
 						classArray[classArray == cfg.unclassifiedVal] = 0
 						# classification raster
 						self.writeArrayBlock(outputClassificationRaster, 1, classArray, pixelStartColumn, pixelStartRow, nodataValue)
@@ -1481,6 +1483,7 @@ class Utils:
 					return "No"
 		elif algorithmName == cfg.algML:
 			covMatrList = self.covarianceMatrixList(signatureList)
+			tr = self.thresholdList(signatureList)
 			for s in sigArrayList:
 				if cfg.actionCheck == "Yes":
 					# progress bar
@@ -1497,9 +1500,14 @@ class Utils:
 						cfg.uiUtls.updateBar(progress)
 					StartT = time.clock()
 					# algorithm
-					c = self.algorithmMaximumLikelihood(rasterArray, s, covMatrList[n])
+					rasterArrayx = np.copy(rasterArray)
+					# threshold
+					algThrshld = float(tr[n])
+					c = self.algorithmMaximumLikelihood(rasterArrayx, s, covMatrList[n], cfg.algBandWeigths, algThrshld)
 					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "algorithmMaximumLikelihood signature" + str(itCount))					
+					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "algorithmMaximumLikelihood signature" + str(itCount))
+					if algThrshld > 0:
+						c = self.maximumLikelihoodThreshold(c, nodataValue)
 					if type(c) is not int:					
 						oR = outputGdalRasterList[bN]
 						if previewSize > 0:
@@ -1510,10 +1518,10 @@ class Utils:
 						if maxArray is None:
 							maxArray = c
 						else:
-							maxArray = self.findMaximumArray(c, maxArray)
+							maxArray = self.findMaximumArray(c, maxArray, nodataValue)
 							# logger
 							cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "findMaximumArray signature" + str(itCount))
-						# minimum raster
+						# maximum raster
 						self.writeArrayBlock(outputAlgorithmRaster, 1, maxArray, pixelStartColumn, pixelStartRow, nodataValue)
 						# signature classification raster
 						if macroclassCheck == "Yes":
@@ -1530,11 +1538,6 @@ class Utils:
 							classArray =  e.mask * classArray + clA
 							e = None
 						clA = None
-						# threshold
-						if cfg.algThrshld > 0:
-							thr = self.maximumLikelihoodThreshold(maxArray)
-							classArray = classArray * thr
-							thr = None
 						classArray[classArray == cfg.unclassifiedVal] = 0
 						# classification raster
 						self.writeArrayBlock(outputClassificationRaster, 1, classArray, pixelStartColumn, pixelStartRow, nodataValue)
@@ -1575,36 +1578,40 @@ class Utils:
 		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "" + unicode(rasterPath))
 				
 	# classify classes
-	def classifyClasses(self, algorithmArray, minimumArray, classID):
+	def classifyClasses(self, algorithmArray, minimumArray, classID, nodataValue = -999):
 		if int(classID) == 0:
 			classID = cfg.unclassifiedVal
-		cA = np.equal(algorithmArray, minimumArray) * int(classID)
+		cB = np.equal(algorithmArray, minimumArray) * int(classID)
+		cA = np.where(minimumArray != nodataValue, cB, cfg.unclassifiedVal)
 		return cA
 		
 	# find minimum array
-	def findMinimumArray(self, firstArray, secondArray):
-		m = np.minimum(firstArray, secondArray)
+	def findMinimumArray(self, firstArray, secondArray, nodataValue = -999):
+		f = np.where(firstArray == nodataValue, cfg.maxValDt, firstArray)
+		s = np.where(secondArray == nodataValue, cfg.maxValDt, secondArray)
+		n = np.minimum(f, s)
+		m = np.where(n == cfg.maxValDt, nodataValue, n)
 		return m
 		
 	# find maximum array
-	def findMaximumArray(self, firstArray, secondArray):
-		f = np.ma.masked_equal(firstArray, cfg.NoDataVal)
-		s = np.ma.masked_equal(secondArray, - cfg.NoDataVal)
-		m = np.maximum(firstArray, secondArray)
+	def findMaximumArray(self, firstArray, secondArray, nodataValue = -999):
+		f = np.where(firstArray == nodataValue, cfg.maxLikeNoDataVal, firstArray)
+		s = np.where(secondArray == nodataValue, cfg.maxLikeNoDataVal, secondArray)
+		m = np.maximum(f, s)
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
 		return m
 		
 	# set threshold
-	def maximumLikelihoodThreshold(self, array):	
-		outArray = np.where(array > cfg.maxLikeNoDataVal, 1, 0)
+	def maximumLikelihoodThreshold(self, array, nodataValue = 0):	
+		outArray = np.where(array > cfg.maxLikeNoDataVal, array, nodataValue)
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
 		return outArray
 		
 	# set threshold
-	def minimumDistanceThreshold(self, array, threshold):	
-		outArray = np.where(array < threshold, 1, 0)
+	def minimumDistanceThreshold(self, array, threshold, nodataValue = 0):	
+		outArray = np.where(array < threshold, array, nodataValue)
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
 		return outArray
@@ -1625,8 +1632,14 @@ class Utils:
 		return arrayList
 	
 	# minimum Euclidean distance algorithm [ sqrt( sum( (r_i - s_i)^2 ) ) ]
-	def algorithmMinimumDistance(self, rasterArray, signatureArray):
+	def algorithmMinimumDistance(self, rasterArray, signatureArray, weightList = None):
 		try:
+			if weightList is not None:
+				c = 0
+				for w in weightList:
+					rasterArray[:,:,c] *= w
+					signatureArray[c] *= w
+					c = c + 1
 			algArray = np.sqrt(((rasterArray - signatureArray)**2).sum(axis = 2))
 			return algArray
 		except Exception, err:
@@ -1642,25 +1655,40 @@ class Utils:
 			cov = s[7]
 			c.append(cov)
 		return c
+
+	# create threshold list from signature list
+	def thresholdList(self, signatureList):
+		c = []
+		for s in signatureList:
+			t = s[8]
+			c.append(t)
+		return c
 		
 	# calculate critical chi square and threshold
-	def chisquare(self):
-		p = 1 - (cfg.algThrshld / 100)
+	def chisquare(self, algThrshld):
+		p = 1 - (algThrshld / 100)
 		chi = dist.chi2.isf(p, 4)
 		return chi
 		
 	# Maximum Likelihood algorithm
-	def algorithmMaximumLikelihood(self, rasterArray, signatureArray, covarianceMatrix):
+	def algorithmMaximumLikelihood(self, rasterArray, signatureArray, covarianceMatrixZ, weightList = None, algThrshld = 0):
 		try:
+			covarianceMatrix = np.copy(covarianceMatrixZ)
+			if weightList is not None:
+				c = 0
+				for w in weightList:
+					rasterArray[:,:,c] *= w
+					signatureArray[c] *= w
+					c = c + 1
 			(sign, logdet) = np.linalg.slogdet(covarianceMatrix)
 			invC = np.linalg.inv(covarianceMatrix)
 			d = rasterArray - signatureArray
 			algArray = - logdet - (np.dot(d, invC) * d).sum(axis = 2)
-			if cfg.algThrshld > 0:
-				chi = self.chisquare()
+			
+			if algThrshld > 0:
+				chi = self.chisquare(algThrshld)
 				threshold = - chi - logdet
-				e = np.ma.masked_less(algArray, threshold)
-				algArray = np.ma.filled(e, cfg.maxLikeNoDataVal)
+				algArray = np.where(algArray < threshold, cfg.maxLikeNoDataVal, algArray)
 			return algArray
 		except Exception, err:
 			# logger
@@ -1669,8 +1697,14 @@ class Utils:
 			return 0
 		
 	# spectral angle mapping algorithm [ arccos( sum(r_i * s_i) / ( sum(r_i**2) * sum(s_i**2) ) ) ]
-	def algorithmSAM(self, rasterArray, signatureArray):
+	def algorithmSAM(self, rasterArray, signatureArray, weightList = None):
 		try:
+			if weightList is not None:
+				c = 0
+				for w in weightList:
+					rasterArray[:,:,c] *= w
+					signatureArray[c] *= w
+					c = c + 1
 			algArray = np.arccos((rasterArray * signatureArray).sum(axis = 2) / np.sqrt((rasterArray**2).sum(axis = 2) * (signatureArray**2).sum())) * 180 / np.pi
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
@@ -1682,13 +1716,19 @@ class Utils:
 			return 0
 			
 	# calculate Jeffries-Matusita distance Jij = 2[1 − e^(−B)] from Richards, J. A. & Jia, X. 2006. Remote Sensing Digital Image Analysis: An Introduction, Springer.
-	def jeffriesMatusitaDistance(self, signatureArrayI, signatureArrayJ, covarianceMatrixI, covarianceMatrixJ):
+	def jeffriesMatusitaDistance(self, signatureArrayI, signatureArrayJ, covarianceMatrixI, covarianceMatrixJ, weightList = None):
 		try:
 			I = np.array(signatureArrayI)
 			J = np.array(signatureArrayJ)
+			cI = np.copy(covarianceMatrixI)
+			cJ = np.copy(covarianceMatrixJ)
+			if weightList is not None:
+				c = 0
+				for w in weightList:
+					I[c] *= w
+					J[c] *= w
+					c = c + 1
 			d = (I - J)
-			cI = covarianceMatrixI
-			cJ = covarianceMatrixJ
 			C = (cI + cJ)/2
 			invC = np.linalg.inv(C)
 			dInvC = np.dot(d.T, invC)
@@ -1743,10 +1783,16 @@ class Utils:
 		return sim
 			
 	# Euclidean distance sqrt(sum((x[ki] - x[kj])^2))
-	def euclideanDistance(self, signatureArrayI, signatureArrayJ):
+	def euclideanDistance(self, signatureArrayI, signatureArrayJ, weightList = None):
 		try:
 			I = np.array(signatureArrayI)
 			J = np.array(signatureArrayJ)
+			if weightList is not None:
+				c = 0
+				for w in weightList:
+					I[c] *= w
+					J[c] *= w
+					c = c + 1
 			d = (I - J)**2
 			dist = np.sqrt(d.sum())
 		except Exception, err:
@@ -1756,10 +1802,16 @@ class Utils:
 		return dist		
 
 	# Spectral angle algorithm [ arccos( sum(r_i * s_i) / sqrt( sum(r_i**2) * sum(s_i**2) ) ) ]
-	def spectralAngle(self, signatureArrayI, signatureArrayJ):
+	def spectralAngle(self, signatureArrayI, signatureArrayJ, weightList = None):
 		try:
 			I = np.array(signatureArrayI)
 			J = np.array(signatureArrayJ)
+			if weightList is not None:
+				c = 0
+				for w in weightList:
+					I[c] *= w
+					J[c] *= w
+					c = c + 1
 			angle = np.arccos((I * J).sum() / np.sqrt((I**2).sum() * (J**2).sum())) * 180 / np.pi
 		except Exception, err:
 			# logger
@@ -2549,6 +2601,26 @@ class Utils:
 		cfg.dlg.close()
 		cfg.ui.toolButton_plugin.setCurrentIndex(0)
 		cfg.ui.tabWidget.setCurrentIndex(1)
+		# show the dialog
+		cfg.dlg.show()
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "tab selected")
+		
+	# algorithm weight tab
+	def algorithmWeighTab(self):
+		cfg.dlg.close()
+		cfg.ui.toolButton_plugin.setCurrentIndex(0)
+		cfg.ui.tabWidget.setCurrentIndex(2)
+		# show the dialog
+		cfg.dlg.show()
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "tab selected")
+		
+	# signature threshold tab
+	def algorithmThresholdTab(self):
+		cfg.dlg.close()
+		cfg.ui.toolButton_plugin.setCurrentIndex(0)
+		cfg.ui.tabWidget.setCurrentIndex(3)
 		# show the dialog
 		cfg.dlg.show()
 		# logger

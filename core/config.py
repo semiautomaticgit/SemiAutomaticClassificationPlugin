@@ -140,6 +140,8 @@ spectrPlotList = {}
 signPlotIDs = {}
 tmpROIID = None
 tmpROIColor = None
+# weights
+algBandWeigths = {}
 # set classification path
 clssPth = None
 arrayUnitMemory = 0.000016
@@ -325,6 +327,7 @@ reflectanceRasterNm = "reflectance_temp"
 NoDataVal = -999
 unclassifiedVal = -1000
 maxLikeNoDataVal = -999999999900000
+maxValDt = 999999999900000
 referenceLayer = None
 rstrNm = None
 # alg name

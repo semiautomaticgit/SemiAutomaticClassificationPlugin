@@ -310,7 +310,9 @@ class BandsetTab:
 		cfg.utls.writeProjectVariable("bandSet", str(cfg.bndSet))
 		cfg.utls.writeProjectVariable("bndSetWvLn", str(cfg.bndSetWvLn.values()))
 		cfg.utls.writeProjectVariable("bndSetUnit", str(cfg.bndSetUnit["UNIT"]))
-	
+		# load algorithm weight table
+		cfg.algWT.loadAlgorithmTable(cfg.bndSet)
+		
 	# 	convert unit name string in combo
 	def unitNameConversion(self, unitName, reverse = "No"):
 		if reverse == "No":

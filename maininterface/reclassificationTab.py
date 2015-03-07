@@ -89,7 +89,7 @@ class ReclassificationTab:
 				oM = []
 				oM.append(out)
 				reclassList = self.createReclassificationStringFromList(list)
-				oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", GDT_Int32)
+				oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", GDT_Float64)
 				o = cfg.utls.processRaster(rD, bL, None, cfg.utls.reclassifyRaster, None, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", reclassList, cfg.variableName)
 				# close GDAL rasters
 				for b in range(0, len(oMR)):
@@ -210,7 +210,7 @@ class ReclassificationTab:
 	def createValueList(self, list):
 		unique = []
 		for i in list:
-			unique.append([int(i),int(i)])
+			unique.append([float(i),float(i)])
 		l = sorted(unique, key=lambda unique: (unique[0]))
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " unique" + str(l))
@@ -247,11 +247,11 @@ class ReclassificationTab:
 		reclassList = []
 		for i in list:
 			try:
-				old = int(i[0])
+				old = float(i[0])
 				cond = cfg.variableName + " == " + str(old)
 			except:
 				cond = str(i[0])
-			reclassList.append([cond, int(i[1])])
+			reclassList.append([cond, float(i[1])])
 		return reclassList
 			
 	def addRowToTable(self):
@@ -277,7 +277,7 @@ class ReclassificationTab:
 			val = tW.item(row, column).text()
 			if column == 1:
 				try:	
-					val = int(val)
+					val = float(val)
 				except:
 					cfg.ReclassTabEdited = "No"
 					tW.setItem(row, column, QTableWidgetItem(str(0)))
