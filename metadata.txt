@@ -2,8 +2,8 @@
 name=Semi-Automatic Classification Plugin
 qgisMinimumVersion=2.0
 description= Plugin for the semi-automatic supervised classification designed to expedite the processing of multispectral or hyperspectral remote sensing images, which provides a set of tools for pre processing and post processing. 
-version=4.1.0
-about=Written by Luca Congedo, the Semi-Automatic Classification Plugin (SCP) allows for the semi-automatic supervised classification of remote sensing images. It provides integrated tools to expedite the creation of ROIs (training areas) through region growing and the classification process. The spectral signatures of training areas can be automatically calculated and displayed in a spectral signature plot and a scatter plot is available. The following tools are available for ROI and spectral signature creation: multiple ROI creation using point coordinates, selection and download of spectral signatures from the USGS Spectral Library (http://speclab.cr.usgs.gov/spectral-lib.html). Also, it is possible to import spectral signatures from external sources. The following pre processing tools are available: Landsat conversion to reflectance, clipping multiple rasters at once, splitting raster bands. The following classification algorithms are available: Minimum Distance, Maximum Likelihood, Spectral Angle Mapping. The following post processing tools are available: accuracy assessment, land cover change, classification report, classification to vector, reclassification. This plugin requires the installation of GDAL, OGR, Numpy, SciPy, and Matplotlib. Also, a virtual machine is available http://fromgistors.blogspot.com/p/semi-automatic-os.html . Keywords: 土地被覆分類 监督分类 土地覆盖分类 教師付き分類 تصنيف استخدام الأراضي Classificação da Cobertura do Solo Clasificación de la Cobertura de la Tierra Classification de la Couverture du Sol классификация землепользования Klassifizierung der Landbedeckung Classificazione della Copertura del Suolo. For more information please visit http://fromgistors.blogspot.com/
+version=4.2.0
+about=Written by Luca Congedo, the Semi-Automatic Classification Plugin (SCP) allows for the semi-automatic supervised classification of remote sensing images. It provides integrated tools to expedite the creation of ROIs (training areas) through region growing and the classification process. The spectral signatures of training areas can be automatically calculated and displayed in a spectral signature plot and a scatter plot is available. The following tools are available for ROI and spectral signature creation: multiple ROI creation using point coordinates, selection and download of spectral signatures from the USGS Spectral Library (http://speclab.cr.usgs.gov/spectral-lib.html). Also, it is possible to import spectral signatures from external sources. The following pre processing tools are available: Landsat conversion to reflectance, clipping multiple rasters at once, splitting raster bands. It allows for the integrated download and pre processing of Landsat 8 images. The following classification algorithms are available: Minimum Distance, Maximum Likelihood, Spectral Angle Mapping. The following post processing tools are available: accuracy assessment, land cover change, classification report, classification to vector, reclassification. This plugin requires the installation of GDAL, OGR, Numpy, SciPy, and Matplotlib. Also, a virtual machine is available http://fromgistors.blogspot.com/p/semi-automatic-os.html . Keywords: 土地被覆分類 监督分类 土地覆盖分类 教師付き分類 تصنيف استخدام الأراضي Classificação da Cobertura do Solo Clasificación de la Cobertura de la Tierra Classification de la Couverture du Sol классификация землепользования Klassifizierung der Landbedeckung Classificazione della Copertura del Suolo. For more information please visit http://fromgistors.blogspot.com/
 
 author=Luca Congedo
 email=ing.congedoluca@gmail.com
@@ -13,7 +13,22 @@ icon=semiautomaticclassificationplugin.png
 
 ; start of optional metadata
 changelog=
+	4.2.0
+	Major update:
+	-added tab for download of Landsat images
+	
+	4.1.3
+	Minor update:
+	-fixed issue when deleting ROIs if ROI shapefile was already removed
+			
+	4.1.2
+	Minor update:
+	-fixed issue with multiple ROI creation
 		
+	4.1.1
+	Minor update:
+	-fixed issue with signature thresholds
+	
 	4.1.0
 	Major update:
 	-added tab for classification threshold for individual signatures

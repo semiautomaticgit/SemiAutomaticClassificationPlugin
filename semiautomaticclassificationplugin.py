@@ -90,6 +90,7 @@ try:
 	from maininterface.signatureThresholdTab import SigThresholdTab
 	from maininterface.bandcalcTab import BandCalcTab
 	from maininterface.clipmultiplerasters import ClipMultipleRasters
+	from maininterface.downloadlandsatimages import DownloadLandsatImages
 	from maininterface.landcoverchange import LandCoverChange
 	from maininterface.classreportTab import ClassReportTab
 	from maininterface.classtovectorTab import ClassToVectorTab
@@ -147,6 +148,7 @@ class SemiAutomaticClassificationPlugin:
 			cfg.signT = SigThresholdTab()
 			cfg.bCalc = BandCalcTab()
 			cfg.clipMulti = ClipMultipleRasters()
+			cfg.downLandsat = DownloadLandsatImages()
 			cfg.landsatT = LandsatTab()
 			cfg.landCC = LandCoverChange()
 			cfg.classRep = ClassReportTab()
@@ -185,6 +187,8 @@ class SemiAutomaticClassificationPlugin:
 			cfg.tmpDir = unicode(QDir.tempPath() + "/" + cfg.tempDirName)
 			if not QDir(cfg.tmpDir).exists():
 				os.makedirs(cfg.tmpDir)
+			# Landsat image database
+			cfg.LandsatImageDatabase = cfg.plgnDir + "/maininterface/scene_list.gz"	
 			""" registry keys """
 			# log setting
 			rK = QSettings()
@@ -266,6 +270,11 @@ class SemiAutomaticClassificationPlugin:
 		self.signature_threshold_action.setObjectName("signature_threshold_action")
 		QObject.connect(self.signature_threshold_action, SIGNAL("triggered()"), cfg.utls.algorithmThresholdTab)
 		cfg.tools_menu.addAction(self.signature_threshold_action)
+		# Download Landsat 8
+		self.download_landsat8_action = QAction(QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_landsat8_download_tool.png"), "Download Landsat 8", cfg.iface.mainWindow())
+		self.download_landsat8_action.setObjectName("download_landsat8_action")
+		QObject.connect(self.download_landsat8_action, SIGNAL("triggered()"), cfg.utls.downloadLandast8Tab)
+		cfg.tools_menu.addAction(self.download_landsat8_action)
 		# Pre processing
 		cfg.preprocessing_menu = cfg.menu.addMenu(QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_class_tool.png"), QApplication.translate("semiautomaticclassificationplugin", "Pre processing"))
 		# Landsat
@@ -698,6 +707,18 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.signature_threshold_tableWidget.cellChanged.connect(cfg.signT.editedThresholdTable)
 			cfg.ui.reset_threshold_pushButton.clicked.connect(cfg.signT.resetThresholds)
 			cfg.ui.set_threshold_value_pushButton.clicked.connect(cfg.signT.setThresholds)
+			""" Download Landsat 8 tab """
+			# connect to find images button
+			cfg.ui.find_images_toolButton.clicked.connect(cfg.downLandsat.findImages)
+			cfg.ui.selectUL_toolButton_3.clicked.connect(cfg.downLandsat.pointerULActive)
+			# connect to activate LR pointer 
+			cfg.ui.selectLR_toolButton_3.clicked.connect(cfg.downLandsat.pointerLRActive)
+			# connect to display button
+			cfg.ui.toolButton_display.clicked.connect(cfg.downLandsat.displayImages)
+			cfg.ui.update_image_database_toolButton.clicked.connect(cfg.downLandsat.updateImageDatabase)
+			cfg.ui.remove_image_toolButton.clicked.connect(cfg.downLandsat.removeImageFromTable)
+			cfg.ui.download_images_Button.clicked.connect(cfg.downLandsat.downloadImages)
+			cfg.ui.check_toolButton.clicked.connect(cfg.downLandsat.checkAllBands)
 			""" Classification dock """
 			# connect to save signature list to file
 			cfg.uidc.save_signature_list_toolButton.clicked.connect(cfg.classD.saveSignatureListToFile)
@@ -819,7 +840,7 @@ class SemiAutomaticClassificationPlugin:
 			# connect to refresh shape button
 			cfg.ui.toolButton_reload_8.clicked.connect(cfg.clipMulti.refreshShapeClip)		
 			""" Landsat tab """
-			# connect to refresh button
+			# connect to input button
 			cfg.ui.toolButton_directoryInput.clicked.connect(cfg.landsatT.inputLandsat)
 			cfg.ui.toolButton_directoryInput_MTL.clicked.connect(cfg.landsatT.inputMTL)
 			cfg.ui.pushButton_Conversion.clicked.connect(cfg.landsatT.performLandsatCorrection)

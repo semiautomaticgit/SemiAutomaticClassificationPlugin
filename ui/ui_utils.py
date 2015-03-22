@@ -46,17 +46,17 @@ class Ui_Utils:
 		pass
 		
 ### Add a progress bar and a cancel button
-	def addProgressBar(self, message = ""):
+	def addProgressBar(self, message = "", action = "Executing"):
 		# remove if bar already there
 		try:
 			self.removeProgressBar()
-			self.createProgressBar(message)
+			self.createProgressBar(message, action)
 		except:
 			self.createProgressBar()
 		
 	# Create a progress bar and a cancel button
-	def createProgressBar(self, message = ""):
-		self.widgetBar = cfg.iface.messageBar().createMessage(QApplication.translate("semiautomaticclassificationplugin","Executing"), message)
+	def createProgressBar(self, message = "", action = "Executing"):
+		self.widgetBar = cfg.iface.messageBar().createMessage(action, message)
 		cfg.progressBar = QProgressBar()
 		cfg.progressBar.setMinimum(0)
 		cfg.progressBar.setMaximum(100)
@@ -82,9 +82,9 @@ class Ui_Utils:
 		self.setInterface(True)
 			
 	# update bar value
-	def updateBar(self, value, message = ""):
+	def updateBar(self, value, message = "", action = "Executing"):
 		if cfg.actionCheck == "Yes":
-			self.addProgressBar(message)
+			self.addProgressBar(message, action)
 			cfg.progressBar.setValue(value)
 			#qApp.processEvents()
 			

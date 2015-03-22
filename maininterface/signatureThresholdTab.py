@@ -90,9 +90,12 @@ class SigThresholdTab:
 		tAW = cfg.ui.signature_threshold_tableWidget
 		c = tAW.rowCount()
 		for b in range(0, c):
-			wI = tAW.item(b, 4).text()
-			id = tAW.item(b, 5).text()
-			cfg.signList["SIG_THRESHOLD_" + str(id)] = wI
+			try:
+				wI = tAW.item(b, 4).text()
+				id = tAW.item(b, 5).text()
+				cfg.signList["SIG_THRESHOLD_" + str(id)] = wI
+			except:
+				pass
 
 	def editedThresholdTable(self, row, column):
 		if self.tableEdited == "Yes":
@@ -104,6 +107,8 @@ class SigThresholdTab:
 				w = QTableWidgetItem(str(row))
 				w.setText("0")
 				tW.setItem(row, 4, w)
+				cfg.signT.readThresholdTable()
+				return 0
 			if str(cfg.algName) == cfg.algML:
 				if tr > 100:
 					cfg.mx.msg10()

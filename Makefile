@@ -83,6 +83,7 @@ dclean:
 	find $(HOME)/.qgis2/python/plugins/$(PLUGINNAME) -iname "*.pyc" -delete
 	find $(HOME)/.qgis2/python/plugins/$(PLUGINNAME) -iname "*.directory" -delete
 	find $(HOME)/.qgis2/python/plugins/$(PLUGINNAME) -iname "__0semiautomaticclass.log" -delete
+	find $(HOME)/.qgis2/python/plugins/$(PLUGINNAME) -iname "scene_list.gz" -delete
 	find $(HOME)/.qgis2/python/plugins/$(PLUGINNAME) -iname ".svn" -prune -exec rm -Rf {} \;
 	echo "firstrun" > $(HOME)/.qgis2/python/plugins/$(PLUGINNAME)/firstrun
 

@@ -239,6 +239,8 @@ ROIMacroClassInfo = "Macroclass_1"
 ROIMacroID = 1
 # RGB list
 RGBList = str(["-", "3-2-1", "4-3-2"])
+# Landsat image database
+LandsatImageDatabase = None
 
 """ QGIS variables """
 # registry key for log setting

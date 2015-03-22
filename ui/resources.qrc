@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="/plugins/semiautomaticclassificationplugin">
+    <file>icons/semiautomaticclassificationplugin_landsat8_download_tool.png</file>
     <file>icons/semiautomaticclassificationplugin_threshold_tool.png</file>
     <file>icons/semiautomaticclassificationplugin_weight_tool.png</file>
     <file>icons/semiautomaticclassificationplugin_bandcalc_tool.png</file>

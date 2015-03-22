@@ -182,6 +182,7 @@ class MultipleROITab:
 							v = int(tW.item(i,9).text())
 							cfg.ROIband = v
 							cfg.rpdROICheck = "Yes"
+						cfg.origPoint = cfg.pntROI
 						cfg.ROId.createROI(cfg.pntROI, "No")
 						# save ROI
 						v = int(tW.item(i, 2).text())

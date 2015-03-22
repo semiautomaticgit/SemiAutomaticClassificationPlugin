@@ -254,7 +254,8 @@ class Settings:
 		testNumpy = self.testNumpy()
 		testScipy = self.testScipy()
 		testMatplotlib = self.testMatplotlib()
-		message = "-GDAL: " + testGDAL + "\n" + "-GDAL subprocess: " + testGDALSubprocess + "\n" + "-NumPy: " + testNumpy + "\n" + "-SciPy: " + testScipy + "\n" + "-Matplotlib: " + testMatplotlib + "\n"
+		testInternet = self.testInternetConnection()
+		message = "-GDAL: " + testGDAL + "\n" + "-GDAL subprocess: " + testGDALSubprocess + "\n" + "-NumPy: " + testNumpy + "\n" + "-SciPy: " + testScipy + "\n" + "-Matplotlib: " + testMatplotlib + "\n" + "-Internet connection: " + testInternet + "\n"
 		cfg.mx.msgTest(message)
 	
 	# test GDAL
@@ -303,6 +304,15 @@ class Settings:
 				test = "Fail"
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " test: " + str(test))
+		return test
+		
+	def testInternetConnection(self):
+		dT = cfg.utls.getTime()
+		check = cfg.utls.downloadFile("http://landsat-pds.s3.amazonaws.com/L8/139/045/LC81390452014295LGN00/LC81390452014295LGN00_thumb_small.jpg", cfg.tmpDir + "//" + dT + "_thumb_small.jpg", dT + "_thumb_small.jpg", 50)
+		if check == "Yes":
+			test = "Success"
+		else:
+			test = "Fail"
 		return test
 		
 	# test Numpy
@@ -354,3 +364,4 @@ class Settings:
 			cfg.outTempRastFormat = "GTiff"
 		self.setQGISRegSetting(cfg.regTempRasterFormat, cfg.outTempRastFormat)
 		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " checkbox set: " + str(cfg.outTempRastFormat))
+		

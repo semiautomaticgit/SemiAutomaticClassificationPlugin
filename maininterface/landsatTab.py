@@ -69,19 +69,21 @@ class LandsatTab:
 		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), unicode(m))
 
 	# landsat conversion to reflectance and temperature
-	def landsat(self, inputDirectory, outputDirectory):
+	def landsat(self, inputDirectory, outputDirectory, batch = "No"):
 		cfg.uiUtls.addProgressBar()
 		# disable map canvas render for speed
-		cfg.cnvs.setRenderFlag(False)
+		if batch == "No":
+			cfg.cnvs.setRenderFlag(False)
 		self.sA = ""
 		self.eSD = ""
 		sat = cfg.ui.satellite_lineEdit.text()
 		if str(sat) == "":
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " No satellite error")
-			cfg.uiUtls.removeProgressBar()
+			if batch == "No":
+				cfg.uiUtls.removeProgressBar()
+				cfg.cnvs.setRenderFlag(True)
 			cfg.mx.msgErr37()
-			cfg.cnvs.setRenderFlag(True)
 			return "No"
 		if len(cfg.ui.sun_elev_lineEdit.text()) > 0:
 			sE = float(cfg.ui.sun_elev_lineEdit.text())
@@ -90,7 +92,8 @@ class LandsatTab:
 		else:
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " No sun elevation error")
-			cfg.uiUtls.removeProgressBar()
+			if batch == "No":
+				cfg.uiUtls.removeProgressBar()
 			cfg.mx.msgErr37()
 			return "No"
 		# earth sun distance
@@ -100,9 +103,10 @@ class LandsatTab:
 			except Exception, err:
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " No earth sun distance error")
-				cfg.uiUtls.removeProgressBar()
+				if batch == "No":
+					cfg.uiUtls.removeProgressBar()
+					cfg.cnvs.setRenderFlag(True)
 				cfg.mx.msgErr37()
-				cfg.cnvs.setRenderFlag(True)
 				return "No"
 		if len(str(self.eSD)) == 0:
 			dFmt = "%Y-%m-%d"
@@ -112,9 +116,10 @@ class LandsatTab:
 			except Exception, err:
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-				cfg.uiUtls.removeProgressBar()
+				if batch == "No":
+					cfg.uiUtls.removeProgressBar()
+					cfg.cnvs.setRenderFlag(True)
 				cfg.mx.msgErr37()
-				cfg.cnvs.setRenderFlag(True)
 				return "No"
 		cfg.uiUtls.updateBar(5)	
 		l = cfg.ui.landsat_tableWidget
@@ -286,8 +291,6 @@ class LandsatTab:
 					cfg.bst.setBandSet(bandSetNameList)
 					cfg.bndSetPresent = "Yes"
 					cfg.bst.setSatelliteWavelength(satName, bandSetList)
-					
-					
 			# create virtual raster
 			if cfg.ui.create_VRT_checkBox.isChecked() is True:
 				outVrt = out + "//" + cfg.landsatVrtNm + ".vrt"
@@ -305,10 +308,11 @@ class LandsatTab:
 						cfg.mx.msgWar13()
 						# logger
 						cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "WARNING: unable to load virtual raster")
-			cfg.utls.finishSound()
 			cfg.uiUtls.updateBar(100)
-		cfg.cnvs.setRenderFlag(True)
-		cfg.uiUtls.removeProgressBar()
+		if batch == "No":
+			cfg.utls.finishSound()
+			cfg.cnvs.setRenderFlag(True)
+			cfg.uiUtls.removeProgressBar()
 
 	# landsat 8 conversion to Reflectance
 	def landsat8reflectance(self, satellite, bandNumber, REFLECTANCE_MULT_BAND, REFLECTANCE_ADD_BAND, RADIANCE_MULT_BAND, RADIANCE_ADD_BAND, RADIANCE_MAXIMUM_BAND, REFLECTANCE_MAXIMUM_BAND, inputRaster, outputRaster):

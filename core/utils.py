@@ -39,6 +39,7 @@ import inspect
 import time
 import datetime
 import numpy as np
+import urllib
 try:
 	import winsound
 except:
@@ -432,9 +433,15 @@ class Utils:
 		
 ### Project point coordinates
 	def projectPointCoordinates(self, point, inputCoordinates, outputCoordinates):
-		t = QgsCoordinateTransform(inputCoordinates, outputCoordinates)
-		point = t.transform(point)
-		return point
+		try:
+			t = QgsCoordinateTransform(inputCoordinates, outputCoordinates)
+			point = t.transform(point)
+			return point
+		# if empty shapefile
+		except Exception, err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			return False
 		
 ### Clear log file
 	def clearLogFile(self):
@@ -893,6 +900,29 @@ class Utils:
 		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "sP " + unicode(sP) + "shapefile " + unicode(shapefile) + "raster " + unicode(raster) + "tR " + unicode(tR))
 		return tR
 		
+	# download file
+	def downloadFile(self, urlIn, outputPath, fileName = None, progress = None):
+		try:
+			urllib.urlretrieve(urlIn, outputPath, lambda blocks_transferred, block_size, total_size, fileName=fileName: self.downloadReporthook(blocks_transferred, block_size, total_size, fileName, progress))
+			return "Yes"
+		# in case of errors
+		except Exception, err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			return "No"
+			
+	# download reportHook
+	def downloadReporthook(self, blocks_transferred, block_size, total_size, fileName = None, progress = None):
+		totalBlocks = total_size / block_size
+		blockList = range(1, totalBlocks, 100)
+		if blocks_transferred in blockList:
+			MB_transferred = int(blocks_transferred * block_size) / 1048576
+			MB_size = total_size/1048576
+			cfg.uiUtls.updateBar(progress, "(" + str(MB_transferred) + "/" + str(MB_size) + " MB) " +  fileName, "Downloading")
+			qApp.processEvents()
+			if cfg.actionCheck == "No":
+				raise ValueError('Cancel action')
+			
 	# get  time
 	def getTime(self):
 		t = datetime.datetime.now().strftime("%Y%m%d_%H%M%S%f")
@@ -2621,6 +2651,16 @@ class Utils:
 		cfg.dlg.close()
 		cfg.ui.toolButton_plugin.setCurrentIndex(0)
 		cfg.ui.tabWidget.setCurrentIndex(3)
+		# show the dialog
+		cfg.dlg.show()
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "tab selected")
+		
+	# download Landsat 8 tab
+	def downloadLandast8Tab(self):
+		cfg.dlg.close()
+		cfg.ui.toolButton_plugin.setCurrentIndex(0)
+		cfg.ui.tabWidget.setCurrentIndex(4)
 		# show the dialog
 		cfg.dlg.show()
 		# logger

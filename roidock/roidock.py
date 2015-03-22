@@ -759,6 +759,11 @@ class RoiDock:
 			
 	# Save last ROI to shapefile 
 	def saveROItoShapefile(self, progressbar = "Yes"):
+		l = cfg.utls.selectLayerbyName(cfg.trnLay)
+		if l is None:
+			cfg.mx.msg3()
+			self.refreshShapeLayer()
+			return 0
 		if progressbar is False:
 			progressbar = "Yes"
 		# check if layer was removed ## there is an issue if the removed layer was already saved in the project ##
@@ -935,21 +940,25 @@ class RoiDock:
 		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " roi list table created")
 		
 	def deleteSelectedROIs(self):
-		tW = cfg.uid.ROI_tableWidget
-		# ask for confirm
-		a = cfg.utls.questionBox(QApplication.translate("semiautomaticclassificationplugin", "Delete ROIs"), QApplication.translate("semiautomaticclassificationplugin", "Are you sure you want to delete highlighted ROIs?"))
-		if a == "Yes":
-			tW.blockSignals(True)
-			ids = []
-			for i in tW.selectedIndexes():
-				id = int(cfg.uid.ROI_tableWidget.item(i.row(), 4).text())
-				ids.append(id)
-			cfg.utls.deleteFeatureShapefile(cfg.shpLay, ids)
-			self.ROIListTable(cfg.trnLay, cfg.uid.ROI_tableWidget)
-			self.ROIScatterPlotListTable(cfg.trnLay, cfg.uiscp.scatter_list_plot_tableWidget)
-			cfg.uid.undo_save_Button.setEnabled(False)
-			tW.blockSignals(False)
-		cfg.cnvs.refresh()	
+		l = cfg.utls.selectLayerbyName(cfg.trnLay)
+		if l is not None:
+			tW = cfg.uid.ROI_tableWidget
+			# ask for confirm
+			a = cfg.utls.questionBox(QApplication.translate("semiautomaticclassificationplugin", "Delete ROIs"), QApplication.translate("semiautomaticclassificationplugin", "Are you sure you want to delete highlighted ROIs?"))
+			if a == "Yes":
+				tW.blockSignals(True)
+				ids = []
+				for i in tW.selectedIndexes():
+					id = int(cfg.uid.ROI_tableWidget.item(i.row(), 4).text())
+					ids.append(id)
+				cfg.utls.deleteFeatureShapefile(cfg.shpLay, ids)
+				self.ROIListTable(cfg.trnLay, cfg.uid.ROI_tableWidget)
+				self.ROIScatterPlotListTable(cfg.trnLay, cfg.uiscp.scatter_list_plot_tableWidget)
+				cfg.uid.undo_save_Button.setEnabled(False)
+				tW.blockSignals(False)
+			cfg.cnvs.refresh()
+		else:
+			self.refreshShapeLayer()
 		
 	# add signature to list
 	def addSelectedROIsToSignature(self, plot = "No"):
@@ -1204,6 +1213,11 @@ class RoiDock:
 			
 	# delete last saved ROI
 	def undoSaveROI(self):
+		l = cfg.utls.selectLayerbyName(cfg.trnLay)
+		if l is None:
+			cfg.mx.msg3()
+			self.refreshShapeLayer()
+			return 0
 		# check if layer was removed ## there is an issue if the removed layer was already saved in the project ##
 		try:
 			s = str(cfg.shpLay.name())

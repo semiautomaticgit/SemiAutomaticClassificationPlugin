@@ -238,6 +238,16 @@ class Messages:
 		
 	def msgErr38(self, path):
 		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [38]", QApplication.translate("semiautomaticclassificationplugin", "Unable to load raster " + path))
+
+	def msgErr39(self):
+		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [39]", QApplication.translate("semiautomaticclassificationplugin", "Unable to find images"))
+		
+	def msgErr40(self):
+		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [40]", QApplication.translate("semiautomaticclassificationplugin", "Unable to connect"))
+		
+	def msgErr41(self):
+		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [41]", QApplication.translate("semiautomaticclassificationplugin", "Unable to load image"))
+		
 		
 	""" Warnings """
 	def msgWar2Windows(self):
