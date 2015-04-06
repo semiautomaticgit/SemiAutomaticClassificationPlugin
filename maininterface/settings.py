@@ -69,7 +69,7 @@ except Exception, err:
 
 class Settings:
 
-	def __init__(self):
+	def __init__(self):	
 		pass
 		
 	# set variable for algorithm files
@@ -165,6 +165,13 @@ class Settings:
 		cfg.acc.refreshReferenceLayer()
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "IDFieldName changed to: " + unicode(cfg.fldROI_info))
+		
+	# raster data type change
+	def rasterDataTypeChange(self):
+		cfg.rasterDataType = cfg.ui.raster_precision_combo.currentText()
+		self.setQGISRegSetting(cfg.regRasterDataType, cfg.rasterDataType)
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "raster data type changed to: " + unicode(cfg.rasterDataType))
 		
 	# checkbox switch log
 	def logCheckbox(self):
@@ -313,6 +320,8 @@ class Settings:
 			test = "Success"
 		else:
 			test = "Fail"
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " test: " + str(test))
 		return test
 		
 	# test Numpy

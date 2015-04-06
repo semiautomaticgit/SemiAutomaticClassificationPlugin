@@ -241,6 +241,14 @@ ROIMacroID = 1
 RGBList = str(["-", "3-2-1", "4-3-2"])
 # Landsat image database
 LandsatImageDatabase = None
+Landsat7OnImageDatabase = None
+Landsat7OffImageDatabase = None
+LandsatTM80ImageDatabase = None
+LandsatTM90ImageDatabase = None
+LandsatTM00ImageDatabase = None
+LandsatTM10ImageDatabase = None
+Landsat8ImageDatabase = None
+LandsatTMImageDatabase2010 = None
 
 """ QGIS variables """
 # registry key for log setting
@@ -307,6 +315,12 @@ grpNm = grpNm_def
 clipNm = "clip"
 # output temp raster format
 outTempRastFormat = "GTiff"
+# Landsat database directory
+regLandsatDBDir = "SemiAutomaticClassificationPlugin/landsatDatabaseDir"
+LandsatDatabaseDirectory = ""
+# raster data type
+regRasterDataType = "SemiAutomaticClassificationPlugin/rasterDataType"
+rasterDataType = "Float32"
 
 """ Names """
 uncls = "Unclassified"

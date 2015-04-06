@@ -187,8 +187,6 @@ class SemiAutomaticClassificationPlugin:
 			cfg.tmpDir = unicode(QDir.tempPath() + "/" + cfg.tempDirName)
 			if not QDir(cfg.tmpDir).exists():
 				os.makedirs(cfg.tmpDir)
-			# Landsat image database
-			cfg.LandsatImageDatabase = cfg.plgnDir + "/maininterface/scene_list.gz"	
 			""" registry keys """
 			# log setting
 			rK = QSettings()
@@ -207,6 +205,8 @@ class SemiAutomaticClassificationPlugin:
 			cfg.bndSetNm = rK.value(cfg.regBandSetName, cfg.bndSetNm)
 			cfg.roundCharList = rK.value(cfg.regRoundCharList, cfg.roundCharList)
 			cfg.grpNm = rK.value(cfg.regGroupName, cfg.grpNm)
+			cfg.rasterDataType = rK.value(cfg.regRasterDataType, cfg.rasterDataType)
+			cfg.LandsatDatabaseDirectory = rK.value(cfg.regLandsatDBDir, cfg.LandsatDatabaseDirectory)
 			cfg.soundVal = rK.value(cfg.regSound, cfg.soundVal)
 			# path to locale
 			lclPth = "" 
@@ -270,8 +270,8 @@ class SemiAutomaticClassificationPlugin:
 		self.signature_threshold_action.setObjectName("signature_threshold_action")
 		QObject.connect(self.signature_threshold_action, SIGNAL("triggered()"), cfg.utls.algorithmThresholdTab)
 		cfg.tools_menu.addAction(self.signature_threshold_action)
-		# Download Landsat 8
-		self.download_landsat8_action = QAction(QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_landsat8_download_tool.png"), "Download Landsat 8", cfg.iface.mainWindow())
+		# Download Landsat
+		self.download_landsat8_action = QAction(QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_landsat8_download_tool.png"), "Download Landsat", cfg.iface.mainWindow())
 		self.download_landsat8_action.setObjectName("download_landsat8_action")
 		QObject.connect(self.download_landsat8_action, SIGNAL("triggered()"), cfg.utls.downloadLandast8Tab)
 		cfg.tools_menu.addAction(self.download_landsat8_action)
@@ -610,6 +610,13 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.MCInfo_field_name_lineEdit.setText(cfg.fldROIMC_info)
 			cfg.ui.variable_name_lineEdit.setText(cfg.variableName)
 			cfg.ui.group_name_lineEdit.setText(cfg.grpNm)
+			# raster data type
+			rDTid = cfg.ui.raster_precision_combo.findText(str(cfg.rasterDataType))
+			cfg.ui.raster_precision_combo.setCurrentIndex(rDTid)
+			if len(cfg.LandsatDatabaseDirectory) > 0:
+				cfg.downLandsat.setDatabaseDir(cfg.LandsatDatabaseDirectory)
+			else:
+				cfg.downLandsat.setDatabaseDir()
 			# reload layers in combos
 			cfg.utls.refreshClassificationLayer()
 			cfg.acc.refreshReferenceLayer()
@@ -707,7 +714,7 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.signature_threshold_tableWidget.cellChanged.connect(cfg.signT.editedThresholdTable)
 			cfg.ui.reset_threshold_pushButton.clicked.connect(cfg.signT.resetThresholds)
 			cfg.ui.set_threshold_value_pushButton.clicked.connect(cfg.signT.setThresholds)
-			""" Download Landsat 8 tab """
+			""" Download Landsat tab """
 			# connect to find images button
 			cfg.ui.find_images_toolButton.clicked.connect(cfg.downLandsat.findImages)
 			cfg.ui.selectUL_toolButton_3.clicked.connect(cfg.downLandsat.pointerULActive)
@@ -716,8 +723,11 @@ class SemiAutomaticClassificationPlugin:
 			# connect to display button
 			cfg.ui.toolButton_display.clicked.connect(cfg.downLandsat.displayImages)
 			cfg.ui.update_image_database_toolButton.clicked.connect(cfg.downLandsat.updateImageDatabase)
+			cfg.ui.select_database_dir_toolButton.clicked.connect(cfg.downLandsat.selectDatabaseDir)
+			cfg.ui.reset_database_dir_toolButton.clicked.connect(cfg.downLandsat.resetDatabaseDir)
 			cfg.ui.remove_image_toolButton.clicked.connect(cfg.downLandsat.removeImageFromTable)
 			cfg.ui.download_images_Button.clicked.connect(cfg.downLandsat.downloadImages)
+			cfg.ui.export_links_Button.clicked.connect(cfg.downLandsat.exportLinks)
 			cfg.ui.check_toolButton.clicked.connect(cfg.downLandsat.checkAllBands)
 			""" Classification dock """
 			# connect to save signature list to file
@@ -961,6 +971,8 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.alg_files_checkBox.stateChanged.connect(cfg.sets.algFilesCheckbox)
 			# connect the virtual raster format checkBox
 			cfg.ui.virtual_raster_checkBox.stateChanged.connect(cfg.sets.virtualRasterFormatCheckbox)
+			# connect to raster data type
+			cfg.ui.raster_precision_combo.currentIndexChanged.connect(cfg.sets.rasterDataTypeChange)
 			# connect to clear log button
 			cfg.ui.clearLog_Button.clicked.connect(cfg.utls.clearLogFile)
 			# connect to export log button
@@ -1059,6 +1071,13 @@ class SemiAutomaticClassificationPlugin:
 		cfg.ui.MCInfo_field_name_lineEdit.setText(cfg.fldROIMC_info)
 		cfg.ui.variable_name_lineEdit.setText(cfg.variableName)
 		cfg.ui.group_name_lineEdit.setText(cfg.grpNm)
+		# raster data type
+		rDTid = cfg.ui.raster_precision_combo.findText(str(cfg.rasterDataType))
+		cfg.ui.raster_precision_combo.setCurrentIndex(rDTid)
+		if len(cfg.LandsatDatabaseDirectory) > 0:
+			cfg.downLandsat.setDatabaseDir(cfg.LandsatDatabaseDirectory)
+		else:
+			cfg.downLandsat.setDatabaseDir()
 		# reload layers in combos
 		cfg.utls.refreshClassificationLayer()
 		cfg.acc.refreshReferenceLayer()

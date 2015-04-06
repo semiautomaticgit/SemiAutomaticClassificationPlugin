@@ -248,7 +248,10 @@ class Messages:
 	def msgErr41(self):
 		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [41]", QApplication.translate("semiautomaticclassificationplugin", "Unable to load image"))
 		
+	def msgErr42(self, imageID):
+		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [42]", QApplication.translate("semiautomaticclassificationplugin", "Unable to download image " + imageID + " . Please check the availability at http://earthexplorer.usgs.gov/"))
 		
+	
 	""" Warnings """
 	def msgWar2Windows(self):
 		self.msgBoxWarning(QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [2]", QApplication.translate("semiautomaticclassificationplugin", "It appears that SciPy is not correctly installed. Please, see this page for information about SciPy installation ") + " http://semiautomaticclassificationmanual-v3.readthedocs.org/en/latest/installation_win64.html")

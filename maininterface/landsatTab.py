@@ -206,21 +206,24 @@ class LandsatTab:
 					except:
 						RADIANCE_ADD = ""
 				nm = os.path.splitext(bandName)[0]
-				
+				# conversion
 				if str(sat).lower() in ['landsat_4', 'landsat4', 'landsat_5', 'landsat5', 'landsat_7', 'landsat7']:
 					# landsat bands (e.g. b10, b20, b61)
 					if nm[len(nm) - 2].isdigit() and nm[len(nm) - 1].isdigit():
 						if str(nm[len(nm) - 1]) == "0":
-							ck = self.landsat457reflectance(sat, str(nm[len(nm) - 2]), RADIANCE_MULT, RADIANCE_ADD, inputRaster, tempRaster)
-							if ck != "No":
-								rasterList.append(outputRaster)
-								# band list
-								if int(nm[len(nm) - 1]) in [1, 2, 3, 4, 5]:
-									bandSetList.append(int(nm[len(nm) - 1]))
-									bandSetNameList.append(os.path.splitext(oNm)[0])
-								elif int(nm[len(nm) - 1]) == 7:
-									bandSetList.append(6)
-									bandSetNameList.append(os.path.splitext(oNm)[0])
+							if str(nm[len(nm) - 2]) == "6":
+								self.landsat457Temperature(sat, RADIANCE_MULT, RADIANCE_ADD, inputRaster, tempRaster)
+							else:
+								ck = self.landsat457reflectance(sat, str(nm[len(nm) - 2]), RADIANCE_MULT, RADIANCE_ADD, inputRaster, tempRaster)
+								if ck != "No":
+									rasterList.append(outputRaster)
+									# band list
+									if int(nm[len(nm) - 2]) in [1, 2, 3, 4, 5]:
+										bandSetList.append(int(nm[len(nm) - 2]))
+										bandSetNameList.append(os.path.splitext(oNm)[0])
+									elif int(nm[len(nm) - 2]) == 7:
+										bandSetList.append(6)
+										bandSetNameList.append(os.path.splitext(oNm)[0])
 						# landsat thermal bands
 						elif str(nm[len(nm) - 2]) == "6":
 							self.landsat457Temperature(sat, RADIANCE_MULT, RADIANCE_ADD, inputRaster, tempRaster)
@@ -338,7 +341,7 @@ class LandsatTab:
 				# output rasters
 				oM = []
 				oM.append(tPMD)
-				oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", GDT_Float64)
+				oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType)
 				o = cfg.utls.processRaster(rD, bL, None, cfg.utls.calculateRaster, None, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", "( raster *" + str("%.16f" % m) + "+ (" + str("%.16f" % a) + ")) / (" + str(self.sA) + ")", "raster", "TOA b" + str(x))
 				# close GDAL rasters
 				for b in range(0, len(oMR)):
@@ -373,7 +376,7 @@ class LandsatTab:
 				# output rasters
 				oM = []
 				oM.append(tPMD)
-				oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", GDT_Float64)
+				oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType)
 				o = cfg.utls.processRaster(rD, bL, None, cfg.utls.calculateRaster, None, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", "(raster *" + str("%.16f" % m) + "+ (" + str("%.16f" % a) + "))", "raster", "radiance b" + str(x))
 				# close GDAL rasters
 				for b in range(0, len(oMR)):
@@ -390,7 +393,7 @@ class LandsatTab:
 				# output rasters
 				oM = []
 				oM.append(tPMD2)
-				oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", GDT_Float64)
+				oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType)
 				o = cfg.utls.processRaster(rD, bL, None, cfg.utls.calculateRaster, None, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", "( raster - (" + str("%.16f" % Lp) + " ) )* " + str("%.16f" % np.pi) + " * " + str("%.16f" % self.eSD) + " * " + str("%.16f" % self.eSD) + " / ( " + str("%.16f" % eS)+ " * " + str(self.sA) + " )", "raster", "DOS1 b" + str(x))
 				# close GDAL rasters
 				for b in range(0, len(oMR)):
@@ -417,7 +420,7 @@ class LandsatTab:
 		# output rasters
 		oM = []
 		oM.append(outputRaster)
-		oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", GDT_Float64)
+		oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType)
 		o = cfg.utls.processRaster(rD, bL, None, cfg.utls.reclassifyRaster, None, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", [["(raster < 0)", 0], ["(raster > 1)", 1]], "raster", "reflectance")
 		# close GDAL rasters
 		for b in range(0, len(oMR)):
@@ -468,7 +471,7 @@ class LandsatTab:
 				# output rasters
 				oM = []
 				oM.append(tPMD)
-				oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", GDT_Float64)
+				oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType)
 				o = cfg.utls.processRaster(rD, bL, None, cfg.utls.calculateRaster, None, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", "( ( raster *" + str("%.16f" % m) + "+ (" + str("%.16f" % a) + ")) * " + str("%.16f" % np.pi) + " * " + str("%.16f" % self.eSD) + " * " + str("%.16f" % self.eSD) + ") / ( " + str("%.16f" % eS)+ " * (" + str(self.sA) + ") )", "raster", "TOA b" + str(x))
 				# close GDAL rasters
 				for b in range(0, len(oMR)):
@@ -497,7 +500,7 @@ class LandsatTab:
 				# output rasters
 				oM = []
 				oM.append(tPMD)
-				oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", GDT_Float64)
+				oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType)
 				o = cfg.utls.processRaster(rD, bL, None, cfg.utls.calculateRaster, None, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", "(raster *" + str("%.16f" % m) + "+ (" + str("%.16f" % a) + "))", "raster", "radiance b" + str(x))
 				# close GDAL rasters
 				for b in range(0, len(oMR)):
@@ -514,7 +517,7 @@ class LandsatTab:
 				# output rasters
 				oM = []
 				oM.append(tPMD2)
-				oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", GDT_Float64)
+				oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType)
 				o = cfg.utls.processRaster(rD, bL, None, cfg.utls.calculateRaster, None, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", "( raster - (" + str("%.16f" % Lp) + ") ) * " + str("%.16f" % np.pi) + " * " + str("%.16f" % self.eSD) + " * " + str("%.16f" % self.eSD) + " / ( " + str("%.16f" % eS)+ " * (" + str(self.sA) + ") )", "raster", "DOS1 b" + str(x))
 				# close GDAL rasters
 				for b in range(0, len(oMR)):
@@ -612,7 +615,7 @@ class LandsatTab:
 			# output rasters
 			oM = []
 			oM.append(outputRaster)
-			oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", GDT_Float64)
+			oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType)
 			o = cfg.utls.processRaster(rD, bL, None, cfg.utls.calculateRaster, None, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", "((" + str("%.16f" % k2) + ") / ( ln( (" + str("%.16f" % k1) + " / ( raster * " + str("%.16f" % m) + "+ (" + str("%.16f" % a) + ")) ) + 1)) - " + str(cs) + ")", "raster", "temperature")
 			# close GDAL rasters
 			for b in range(0, len(oMR)):
@@ -644,7 +647,7 @@ class LandsatTab:
 			# output rasters
 			oM = []
 			oM.append(outputRaster)
-			oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", GDT_Float64)
+			oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType)
 			o = cfg.utls.processRaster(rD, bL, None, cfg.utls.calculateRaster, None, None, oMR, None, None, 0, None, cfg.NoDataVal, "No",  "((" + str("%.16f" % k2) + ") / ( ln( (" + str("%.16f" % k1) + " / ( raster *" + str("%.16f" % m) + "+ (" + str("%.16f" % a) + ")) ) + 1)) - " + str(cs) + ")", "raster", "temperature")
 			# close GDAL rasters
 			for b in range(0, len(oMR)):

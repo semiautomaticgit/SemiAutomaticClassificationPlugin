@@ -526,6 +526,13 @@ class Utils:
 			crs = rP.crs()
 		return crs
 		
+### Get raster data type name
+	def getRasterDataTypeName(self, inputRaster):
+		rD = gdal.Open(inputRaster, GA_ReadOnly)
+		b = rD.GetRasterBand(1)
+		dType = gdal.GetDataTypeName(b.DataType)
+		return dType
+
 ### Get QGIS project CRS
 	def getQGISCrs(self):
 		# QGIS < 2.4
@@ -855,8 +862,9 @@ class Utils:
 		else:
 			tR = str(outputRaster)
 		try:
+			dType = self.getRasterDataTypeName(raster)
 			cfg.utls.getGDALForMac()
-			sP = subprocess.Popen(cfg.gdalPath + "gdalwarp -ot Float64 -dstnodata " + str(cfg.NoDataVal) + " -cutline \"" + unicode(shapefile) + "\" -crop_to_cutline -of "  + outFormat + " " + unicode(raster) + " " + str(tR) , shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+			sP = subprocess.Popen(cfg.gdalPath + "gdalwarp -ot " + dType + " -dstnodata " + str(cfg.NoDataVal) + " -cutline \"" + unicode(shapefile) + "\" -crop_to_cutline -of "  + outFormat + " " + unicode(raster) + " " + str(tR) , shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 			sP.wait()
 			# get error
 			out, err = sP.communicate()
@@ -869,7 +877,7 @@ class Utils:
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			cfg.utls.getGDALForMac()
-			sP = subprocess.Popen(cfg.gdalPath + "gdalwarp -ot Float64 -dstnodata " + str(cfg.NoDataVal) + " -cutline \"" + unicode(shapefile) + "\" -crop_to_cutline -of "  + outFormat + " " + unicode(raster) + " " + str(tR) , shell=True)
+			sP = subprocess.Popen(cfg.gdalPath + "gdalwarp -ot " + dType + " -dstnodata " + str(cfg.NoDataVal) + " -cutline \"" + unicode(shapefile) + "\" -crop_to_cutline -of "  + outFormat + " " + unicode(raster) + " " + str(tR) , shell=True)
 			sP.wait()
 		if os.path.isfile(tR) is False:
 		# if shapefile is too small try to convert to raster then to polygon
@@ -880,8 +888,9 @@ class Utils:
 			self.vectorToRaster(cfg.emptyFN, unicode(shapefile), cfg.emptyFN, tRxs, unicode(raster), "Yes", outFormat)
 			self.rasterToVector(tRxs, tSxs)
 			try:
+				dType = self.getRasterDataTypeName(raster)
 				cfg.utls.getGDALForMac()
-				sP = subprocess.Popen(cfg.gdalPath + "gdalwarp -ot Float64 -dstnodata " + str(cfg.NoDataVal) + " -cutline \"" + tSxs + "\" -crop_to_cutline -of GTiff " + unicode(raster) + " " + str(tR) , shell=True)
+				sP = subprocess.Popen(cfg.gdalPath + "gdalwarp -ot " + dType + " -dstnodata " + str(cfg.NoDataVal) + " -cutline \"" + tSxs + "\" -crop_to_cutline -of GTiff " + unicode(raster) + " " + str(tR) , shell=True)
 				sP.wait()
 			# in case of errors
 			except Exception, err:
@@ -890,7 +899,7 @@ class Utils:
 				cfg.utls.getGDALForMac()
 				try:
 					cfg.utls.getGDALForMac()
-					sP = subprocess.Popen(cfg.gdalPath + "gdalwarp -ot Float64 -dstnodata " + str(cfg.NoDataVal) + " -cutline \"" + tSxs + "\" -crop_to_cutline -of GTiff " + unicode(raster) + " " + str(tR) , shell=True)
+					sP = subprocess.Popen(cfg.gdalPath + "gdalwarp -ot " + dType + " -dstnodata " + str(cfg.NoDataVal) + " -cutline \"" + tSxs + "\" -crop_to_cutline -of GTiff " + unicode(raster) + " " + str(tR) , shell=True)
 					sP.wait()
 				# in case of errors
 				except Exception, err:
@@ -1297,6 +1306,10 @@ class Utils:
 		
 	def createRasterFromReference(self, gdalRasterRef, bandNumber, outputRasterList, nodataValue = None, driver = "GTiff", format = GDT_Float64, previewSize = 0, previewPoint = None, compress = "No"):
 		oRL = []
+		if format == "Float64":
+			format = GDT_Float64
+		elif format == "Float32":
+			format = GDT_Float32
 		for o in outputRasterList:
 			# pixel size and origin from reference
 			rP = gdalRasterRef.GetProjection()
@@ -1351,7 +1364,7 @@ class Utils:
 			else:
 				o = outputDirectory + "/" + outputName + "_" + str(signatureList[s][0]) + "_" + str(signatureList[s][2]) + ".tif"
 			outputRasterList.append(o)
-		oRL = self.createRasterFromReference(gdalRasterRef, 1, outputRasterList, nodataValue, "GTiff", GDT_Float64, previewSize, previewPoint)
+		oRL = self.createRasterFromReference(gdalRasterRef, 1, outputRasterList, nodataValue, "GTiff", cfg.rasterDataType, previewSize, previewPoint)
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "end createSignatureClassRaster")
 		return oRL, outputRasterList
@@ -2315,12 +2328,13 @@ class Utils:
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " image none or missing")
 		else:			
+			dType = self.getRasterDataTypeName(i)
 			# subset origin
 			sX = (int((XCoord - tLX) / pS)) - int(Width / 2) 
 			sY = (int((tLY - YCoord) / pS)) - int(Height / 2)
 			try:
 				cfg.utls.getGDALForMac()
-				a = cfg.gdalPath + "gdal_translate -ot Float64 -a_nodata " + str(cfg.NoDataVal) + " -srcwin " + str(sX) + " " + str(sY) + " " + str(Width) + " " + str(Height) + " -of " + outFormat + " \""
+				a = cfg.gdalPath + "gdal_translate -ot " + dType + " -a_nodata " + str(cfg.NoDataVal) + " -srcwin " + str(sX) + " " + str(sY) + " " + str(Width) + " " + str(Height) + " -of " + outFormat + " \""
 				b = i + "\" " + output.encode(sys.getfilesystemencoding())
 				c = str(a) + b
 				sP = subprocess.Popen(c, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -2337,7 +2351,7 @@ class Utils:
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				cfg.utls.getGDALForMac()
-				a = cfg.gdalPath + "gdal_translate -ot Float64 -a_nodata " + str(cfg.NoDataVal) + " -srcwin " + str(sX) + " " + str(sY) + " " + str(Width) + " " + str(Height) + " -of " + outFormat + " \""
+				a = cfg.gdalPath + "gdal_translate -ot " + dType + " -a_nodata " + str(cfg.NoDataVal) + " -srcwin " + str(sX) + " " + str(sY) + " " + str(Width) + " " + str(Height) + " -of " + outFormat + " \""
 				b = i + "\" " + output.encode(sys.getfilesystemencoding())
 				c = str(a) + b
 				sP = subprocess.Popen(c, shell=True)

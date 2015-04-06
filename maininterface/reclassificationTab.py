@@ -89,7 +89,7 @@ class ReclassificationTab:
 				oM = []
 				oM.append(out)
 				reclassList = self.createReclassificationStringFromList(list)
-				oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", GDT_Float64)
+				oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType)
 				o = cfg.utls.processRaster(rD, bL, None, cfg.utls.reclassifyRaster, None, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", reclassList, cfg.variableName)
 				# close GDAL rasters
 				for b in range(0, len(oMR)):

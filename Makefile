@@ -84,6 +84,13 @@ dclean:
 	find $(HOME)/.qgis2/python/plugins/$(PLUGINNAME) -iname "*.directory" -delete
 	find $(HOME)/.qgis2/python/plugins/$(PLUGINNAME) -iname "__0semiautomaticclass.log" -delete
 	find $(HOME)/.qgis2/python/plugins/$(PLUGINNAME) -iname "scene_list.gz" -delete
+	find $(HOME)/.qgis2/python/plugins/$(PLUGINNAME) -iname "LANDSAT_8.csv.gz" -delete
+	find $(HOME)/.qgis2/python/plugins/$(PLUGINNAME) -iname "LANDSAT_ETM.csv.gz" -delete
+	find $(HOME)/.qgis2/python/plugins/$(PLUGINNAME) -iname "LANDSAT_ETM_SLC_OFF.csv.gz" -delete
+	find $(HOME)/.qgis2/python/plugins/$(PLUGINNAME) -iname "LANDSAT_TM-1980-1989.csv.gz" -delete
+	find $(HOME)/.qgis2/python/plugins/$(PLUGINNAME) -iname "LANDSAT_TM-1990-1999.csv.gz" -delete
+	find $(HOME)/.qgis2/python/plugins/$(PLUGINNAME) -iname "LANDSAT_TM-2000-2009.csv.gz" -delete
+	find $(HOME)/.qgis2/python/plugins/$(PLUGINNAME) -iname "LANDSAT_TM-2010-2012.csv.gz" -delete	
 	find $(HOME)/.qgis2/python/plugins/$(PLUGINNAME) -iname ".svn" -prune -exec rm -Rf {} \;
 	echo "firstrun" > $(HOME)/.qgis2/python/plugins/$(PLUGINNAME)/firstrun
 

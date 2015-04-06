@@ -387,7 +387,7 @@ class ClassificationDock:
 				tPMN = dT + cfg.algRasterNm + ".tif"
 				tPMD = cfg.tmpDir + "/" + tPMN
 				oM.append(tPMD)
-			oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", GDT_Float64, previewSize, previewPoint)
+			oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, previewSize, previewPoint)
 			oC.append(outputRasterPath)
 			oCR = cfg.utls.createRasterFromReference(rD, 1, oC, cfg.NoDataVal, "GTiff", GDT_Int32, previewSize, previewPoint, compress)
 			o = cfg.utls.processRaster(rD, bL, signatureList, None, cfg.utls.classification, algorithmName, oRL, oMR[0], oCR[0], previewSize, previewPoint, cfg.NoDataVal, macroclassCheck)

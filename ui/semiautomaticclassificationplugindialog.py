@@ -90,4 +90,7 @@ class SemiAutomaticClassificationPluginDialog(QtGui.QDialog):
 		self.ui.new_classification_name_combo.addItem(layer)
 		
 	def raster_layer_combo(self, layer):
-		self.ui.raster_name_combo.addItem(layer)
+		self.ui.raster_name_combo.addItem(layer)		
+		
+	def raster_data_type_combo(self, dataType):
+		self.ui.raster_precision_combo.addItem(dataType)

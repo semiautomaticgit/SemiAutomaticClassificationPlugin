@@ -204,7 +204,7 @@ class BandCalcTab:
 					# output rasters
 					oM = []
 					oM.append(out)
-					oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff")
+					oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType)
 					o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.bandCalculation, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", e, variableList, "calculation " + str(it))
 					# close GDAL rasters
 					for b in range(0, len(oMR)):
