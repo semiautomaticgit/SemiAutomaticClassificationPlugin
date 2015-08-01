@@ -95,7 +95,7 @@ class Messages:
 		self.msgBox(QApplication.translate("semiautomaticclassificationplugin", "Information") + " [7]", QApplication.translate("semiautomaticclassificationplugin", "No file found"))
 	
 	def msg9(self):	
-		self.msgBar(QApplication.translate("semiautomaticclassificationplugin", "Information") + " [9]", QApplication.translate("semiautomaticclassificationplugin", "Raster projections does not match. Reproject raster to the same projection"))
+		self.msgBar(QApplication.translate("semiautomaticclassificationplugin", "Information") + " [9]", QApplication.translate("semiautomaticclassificationplugin", "Data projections do not match. Reproject data to the same projection"))
 		
 	def msg10(self):	
 		self.msgBar(QApplication.translate("semiautomaticclassificationplugin", "Information") + " [10]", QApplication.translate("semiautomaticclassificationplugin", "Maximum Likelihood threshold must be less than 100"))
@@ -144,7 +144,7 @@ class Messages:
 		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [6]", QApplication.translate("semiautomaticclassificationplugin", "Classification failed. \r\nIt appears the one or more bands of the band set are missing"))
 		
 	def msgErr7(self):
-		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [7]", QApplication.translate("semiautomaticclassificationplugin", "ROI creation failed. \r\nPossible reason: selected rapid ROI band is not loaded"))
+		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [7]", QApplication.translate("semiautomaticclassificationplugin", "ROI creation failed. \r\nPossible reason: input is a virtual raster or band is not loaded"))
 	
 	def msgErr8(self):
 		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [8]", QApplication.translate("semiautomaticclassificationplugin", "No metadata found inside the input directory (a .txt file whose name contains MTL)"))
@@ -250,14 +250,22 @@ class Messages:
 		
 	def msgErr42(self, imageID):
 		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [42]", QApplication.translate("semiautomaticclassificationplugin", "Unable to download image " + imageID + " . Please check the availability at http://earthexplorer.usgs.gov/"))
-		
+
+	def msgErr43(self):
+		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [43]", QApplication.translate("semiautomaticclassificationplugin", "Attribute table error"))
+			
+	def msgErr44(self):
+		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [44]", QApplication.translate("semiautomaticclassificationplugin", "Unable to pansharpen: missing bands "))
+				
+	def msgErr45(self):
+		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [45]", QApplication.translate("semiautomaticclassificationplugin", "Unable to calculate"))
 	
 	""" Warnings """
 	def msgWar2Windows(self):
-		self.msgBoxWarning(QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [2]", QApplication.translate("semiautomaticclassificationplugin", "It appears that SciPy is not correctly installed. Please, see this page for information about SciPy installation ") + " http://semiautomaticclassificationmanual-v3.readthedocs.org/en/latest/installation_win64.html")
+		self.msgBoxWarning(QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [2]", QApplication.translate("semiautomaticclassificationplugin", "It appears that SciPy is not correctly installed. Please, update QGIS "))
 		
 	def msgWar2Linux(self):
-		self.msgBoxWarning(QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [2]", QApplication.translate("semiautomaticclassificationplugin", "It appears that SciPy is not correctly installed. Please, see this page for information about SciPy installation ") + " http://semiautomaticclassificationmanual-v3.readthedocs.org/en/latest/installation_ubuntu.html#qgis-download-and-installation")
+		self.msgBoxWarning(QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [2]", QApplication.translate("semiautomaticclassificationplugin", "It appears that SciPy is not correctly installed. Please, see this page for information about SciPy installation ") + " http://semiautomaticclassificationmanual-v4.readthedocs.org/en/latest/installation_ubuntu.html#qgis-download-and-installation ")
 		
 	def msgWar5(self):
 		self.msgBarWarning(QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [5]", QApplication.translate("semiautomaticclassificationplugin", "rasters have different pixel sizes that can lead to incorrect results. Please, consider to resample rasters to the same pixel size"))

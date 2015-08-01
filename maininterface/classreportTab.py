@@ -54,7 +54,7 @@ class ClassReportTab:
 
 	def __init__(self):
 		pass
-					
+	
 	# calculate classification report
 	def calculateClassificationReport(self, classificationPath, NoDataValue = None):
 		# register drivers
@@ -75,95 +75,57 @@ class ClassReportTab:
 			cfg.mx.msg4()
 			cfg.utls.refreshClassificationLayer()
 		else:
+			cfg.uiUtls.addProgressBar()
+			cfg.uiUtls.updateBar(10)				
+			DNm = 0
+			cfg.rasterBandUniqueVal = np.zeros((1, 1))
+			cfg.rasterBandUniqueVal = np.delete(cfg.rasterBandUniqueVal, 0, 1)
+			# register drivers
+			gdal.AllRegister()
 			# open input with GDAL
-			cR = gdal.Open(clssRstrSrc, GA_ReadOnly)
-			# number of x pixels
-			cRC = cR.RasterXSize
-			# number of y pixels
-			cRR = cR.RasterYSize
+			rD = gdal.Open(clssRstrSrc, GA_ReadOnly)
 			# pixel size
-			cRG = cR.GetGeoTransform()
+			cRG = rD.GetGeoTransform()
 			cRPX = abs(cRG[1])
 			cRPY = abs(cRG[5])
 			# check projections
-			cRP = cR.GetProjection()
+			cRP = rD.GetProjection()
 			cRSR = osr.SpatialReference(wkt=cRP)
 			un = QApplication.translate("semiautomaticclassificationplugin", "Unknown")
 			if cRSR.IsProjected:
 				un = cRSR.GetAttrValue('unit')
 			else:
 				pass
-			cfg.uiUtls.addProgressBar()
-			cfg.uiUtls.updateBar(10)
-			# get band
-			cRB = cR.GetRasterBand(1)
-			blockSizeX = cfg.utls.calculateBlockSize(5)
-			blockSizeY = blockSizeX
-			# raster range blocks
-			lX = range(0, cRC, blockSizeX)
-			lY = range(0, cRR, blockSizeY)
-			cfg.uiUtls.updateBar(20)
-			# set initial value for progress bar
-			progresStep = 60 / (len(lX) * len(lY))
-			progressStart = 20 - progresStep
-			# block size
-			if blockSizeX > cRC:
-				blockSizeX = cRC
-			if blockSizeY > cRR:
-				blockSizeY = cRR
-			if NoDataValue is None:
-				# No data value
+			# band list
+			bL = cfg.utls.readAllBandsFromRaster(rD)
+			# No data value
+			if NoDataValue is not None:
+				nD = NoDataValue
+			elif cfg.ui.nodata_checkBox.isChecked() is True:
 				nD = cfg.ui.nodata_spinBox_2.value()
 			else:
-				nD = NoDataValue
-			cmbntns = []
-			valSum = []
-			n = 1
-			# process
-			for y in lY:
-				bSY = blockSizeY
-				if y + bSY > cRR:
-					bSY = cRR - y
-				for x in lX:
-					if cfg.actionCheck == "Yes":
-						progress = progressStart + n * progresStep
-						cfg.uiUtls.updateBar(progress)
-						bSX = blockSizeX
-						if x + bSX > cRC:
-							bSX = cRC - x
-						# combinations of classes
-						refRstrArr = cRB.ReadAsArray(x, y, bSX, bSY)
-						refRstrVal = np.unique(refRstrArr).tolist()
-						for i in refRstrVal:
-							if i not in cmbntns:
-								if cfg.ui.nodata_checkBox.isChecked() is True or NoDataValue is not None:
-									if str(i) != str(nD):
-										cmbntns.append(i)
-										valSum.append(0)
-								else:
-									cmbntns.append(i)
-									valSum.append(0)
-						val = 1
-						changeArray = None
-						for i in cmbntns:
-							# sum
-							sum = (refRstrArr == i).sum()
-							valSum[val - 1] = valSum[val - 1] + sum
-							val = val + 1
-					n = n + 1
-			pixelTotal = np.sum(valSum)
-			cfg.uiUtls.updateBar(80)
+				nD = None
+			o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.rasterUniqueValues, None, None, None, None, 0, None, cfg.NoDataVal, "No", nD, None, "UniqueVal")
+			cfg.rasterBandUniqueVal = np.unique(cfg.rasterBandUniqueVal).tolist()
+			cfg.rasterBandUniqueVal = sorted(cfg.rasterBandUniqueVal)
+			try:
+				cfg.rasterBandUniqueVal.remove(nD)
+			except:
+				pass
+			cfg.rasterBandPixelCount = 0
+			o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.rasterValueCount, None, None, None, None, 0, None, cfg.NoDataVal, "No", nD, cfg.rasterBandUniqueVal[-1], "Sum")
+			sum = cfg.rasterBandPixelCount
 			# save combination to table
 			l = open(cfg.reportPth, 'w')
 			t = str(QApplication.translate("semiautomaticclassificationplugin", 'Class')) + "	" + str(QApplication.translate("semiautomaticclassificationplugin", 'PixelSum')) + "	" + str(QApplication.translate("semiautomaticclassificationplugin", 'Percentage %')) + "	" + str(QApplication.translate("semiautomaticclassificationplugin", 'Area [' + str(un) + "^2]") + str("\n"))
 			l.write(t)
-			val = 1
-			for i in cmbntns:
-				p = (float(valSum[val - 1]) /pixelTotal) * 100
-				t = str(i) + "	" + str(valSum[val - 1]) + "	" + str(p) + "	" + str(valSum[val - 1] * cRPX * cRPY) + str("\n")
+			for i in cfg.rasterBandUniqueVal:
+				cfg.rasterBandPixelCount = 0
+				o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.rasterEqualValueCount, None, None, None, None, 0, None, cfg.NoDataVal, "No", nD, i, "value " + str(i))
+				p = (float(cfg.rasterBandPixelCount) /float(sum)) * 100
+				t = str(i) + "	" + str(cfg.rasterBandPixelCount) + "	" + str(p) + "	" + str(cfg.rasterBandPixelCount * cRPX * cRPY) + str("\n")
 				l.write(t)
-				val = val + 1
-			l.close()	
+			l.close()			
 			# close bands
 			cRB = None
 			# close rasters

@@ -187,8 +187,16 @@ class BandCalcTab:
 									cfg.cnvs.setRenderFlag(True)
 									return "No"
 								bandNumberList.append(1)
-								bList.append(bPath)
-					vrtCheck = cfg.utls.createVirtualRaster2(bList, tPMD, bandNumberList, "Yes")
+								bList.append(bPath)	
+					if cfg.ui.nodata_checkBox_3.isChecked() is True:
+						NoDataValue = cfg.ui.nodata_spinBox_4.value()
+					else:
+						NoDataValue = cfg.NoDataVal
+					if cfg.ui.intersection_checkBox.isChecked() is True:
+						intersection = "Yes"
+					else:
+						intersection = "No"
+					vrtCheck = cfg.utls.createVirtualRaster2(bList, tPMD, bandNumberList, "Yes", "No", 0, "No", intersection)
 					# open input with GDAL
 					rD = gdal.Open(tPMD, GA_ReadOnly)
 					if rD is None:
@@ -204,7 +212,7 @@ class BandCalcTab:
 					# output rasters
 					oM = []
 					oM.append(out)
-					oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType)
+					oMR = cfg.utls.createRasterFromReference(rD, 1, oM, NoDataValue, "GTiff", cfg.rasterDataType)
 					o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.bandCalculation, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", e, variableList, "calculation " + str(it))
 					# close GDAL rasters
 					for b in range(0, len(oMR)):
@@ -331,6 +339,11 @@ class BandCalcTab:
 	def buttonExp(self):
 		cursor = cfg.ui.plainTextEdit_calc.textCursor()
 		cursor.insertText(" exp(")
+		
+	def buttonNpWhere(self):
+		cursor = cfg.ui.plainTextEdit_calc.textCursor()
+		cursor.insertText(" np.where(")
+
 
 	def buttonLog(self):
 		cursor = cfg.ui.plainTextEdit_calc.textCursor()

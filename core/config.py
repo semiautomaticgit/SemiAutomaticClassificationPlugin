@@ -157,8 +157,8 @@ vectorOutputCheck = "No"
 reportCheck = "No"
 # raster band unique values
 rasterBandUniqueVal = None
-# raster pixel sum
-rasterPixelSum = 0
+# raster band pixel count
+rasterBandPixelCount = None
 # remaining time
 remainingTime = 0
 # set variable for standard deviation plot
@@ -209,6 +209,9 @@ REDCenterBand = 0.65
 REDThreshold = 0.04
 NIRCenterBand = 0.85
 NIRThreshold = 0.15
+# pansharpening type
+IHS_panType = "Intensity-Hue-Saturation"
+BT_panType = "Brovey Transform"
 # settings
 testGDALV = None
 testMatplotlibV = None
@@ -381,6 +384,7 @@ satGeoEye1 = "GeoEye-1 [bands 1, 2, 3, 4]"
 satLandsat8 = "Landsat 8 OLI [bands 2, 3, 4, 5, 6, 7]"
 satLandsat7 = "Landsat 7 ETM+ [bands 1, 2, 3, 4, 5, 7]"
 satLandsat45 = "Landsat 4-5 TM [bands 1, 2, 3, 4, 5, 7]"
+satLandsat13 = "Landsat 1-3 MSS [bands 4, 5, 6, 7]"
 satRapidEye = "RapidEye [bands 1, 2, 3, 4, 5]"
 satSPOT4 = "SPOT 4 [bands 1, 2, 3, 4]"
 satSPOT5 = "SPOT 5 [bands 1, 2, 3, 4]"
@@ -388,7 +392,7 @@ satSPOT6 = "SPOT 6 [bands 1, 2, 3, 4]"
 satPleiades = "Pleiades [bands 1, 2, 3, 4]"
 satQuickBird = "QuickBird [bands 1, 2, 3, 4]"
 satWorldView23 = "WorldView-2 -3 Multispectral [bands 1, 2, 3, 4, 5, 6, 7, 8]"
-satWlList = ["", NoSatellite, satGeoEye1, satLandsat8, satLandsat7, satLandsat45, satPleiades, satQuickBird, satRapidEye, satSPOT4, satSPOT5, satSPOT6, satWorldView23]
+satWlList = ["", NoSatellite, satGeoEye1, satLandsat8, satLandsat7, satLandsat45, satLandsat13, satPleiades, satQuickBird, satRapidEye, satSPOT4, satSPOT5, satSPOT6, satWorldView23]
 # unit list
 noUnit = "band number"
 wlMicro = u"µm (1 E-6m)"

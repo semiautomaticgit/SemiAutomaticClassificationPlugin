@@ -429,10 +429,10 @@ class SemiAutomaticClassificationPlugin:
 			cfg.spectral_plot_toolButton.setToolTip(QApplication.translate("semiautomaticclassificationplugin", "Spectral plot"))
 			cfg.toolBar.addWidget(cfg.spectral_plot_toolButton)
 			cfg.spectral_plot_toolButton.clicked.connect(cfg.utls.spectralPlotTab)
-			# ROI tools button
+			# Tools button
 			cfg.ROItools_toolButton = QPushButton(QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_roi_tool.png"), u"")
 			cfg.ROItools_toolButton.setStyleSheet(" border: none;margin: 2px;icon-size: 24px; color: black")
-			cfg.ROItools_toolButton.setToolTip(QApplication.translate("semiautomaticclassificationplugin", "ROI tools"))
+			cfg.ROItools_toolButton.setToolTip(QApplication.translate("semiautomaticclassificationplugin", "Tools"))
 			cfg.toolBar.addWidget(cfg.ROItools_toolButton)
 			cfg.ROItools_toolButton.clicked.connect(cfg.utls.roiToolsTab)
 			# Pre processing button
@@ -942,6 +942,7 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.toolButton_tan.clicked.connect(cfg.bCalc.buttonTan)
 			cfg.ui.toolButton_atan.clicked.connect(cfg.bCalc.buttonATan)
 			cfg.ui.toolButton_exponential.clicked.connect(cfg.bCalc.buttonExp)
+			cfg.ui.toolButton_npWhere.clicked.connect(cfg.bCalc.buttonNpWhere)
 			cfg.ui.toolButton_log.clicked.connect(cfg.bCalc.buttonLog)
 			cfg.ui.toolButton_pi.clicked.connect(cfg.bCalc.buttonPi)
 			""" Settings tab """

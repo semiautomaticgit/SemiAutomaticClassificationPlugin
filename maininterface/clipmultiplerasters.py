@@ -43,6 +43,8 @@ from PyQt4.QtCore import QCoreApplication
 from PyQt4.QtGui import *
 from qgis.core import *
 from qgis.gui import *
+from osgeo import gdal
+from osgeo.gdalconst import *
 import SemiAutomaticClassificationPlugin.core.config as cfg
 
 class ClipMultipleRasters:
@@ -133,10 +135,10 @@ class ClipMultipleRasters:
 			try:
 				s = sL.source()
 			except Exception, err:
-				st = "Yes"
 				cfg.mx.msgErr11()
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				return "No"
 		else:
 			uS = 0
 		# No data value
@@ -169,91 +171,70 @@ class ClipMultipleRasters:
 					UY = str(ULP.y())
 					LX = str(LRP.x())
 					LY = str(LRP.y())
+					if float(UX) > float(LX):
+						UX = str(LRP.x())
+						LX = str(ULP.x())
+					if float(UY) < float(LY):
+						UY = str(LRP.y())
+						LY = str(ULP.y())
 				except:
 					pass
-			for l in rT:
-				lC = cfg.utls.selectLayerbyName(l, "Yes")
-				if str(l).endswith(".tif"):
-					pass
-				else:
-					l = l + ".tif"
-				try:
-					cL = "\"" + lC.source().encode(sys.getfilesystemencoding()) + "\""
-				except Exception, err:
-					st = "Yes"
-					cfg.mx.msgErr11()
-					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-				if  st != "Yes":
-					# no shapefile
-					if uS == 0 and len(UX) > 0 and len(UY) > 0 and len(LX) > 0 and len(LY) > 0:
-						try:
-							cfg.utls.getGDALForMac()
-							a = cfg.gdalPath + "gdal_translate -a_nodata " + str(noDt) + " -projwin " + str(UX) + " " + str(UY) + " " + str(LX) + " " + str(LY) + " -of GTiff "
-							b = cL + " \"" 
-							c = oD.encode(sys.getfilesystemencoding()) + "/" 
-							d = outputName + "_" 
-							e = os.path.basename(l.encode(sys.getfilesystemencoding())) + "\""
-							f = a + b + c + d + e
-							sP = subprocess.Popen(f, shell=True)
-							sP.wait()
-						# in case of errors
-						except Exception, err:
-							# logger
-							cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-							cfg.utls.getGDALForMac()
-							a = cfg.gdalPath + "gdal_translate -a_nodata " + str(noDt) + " -projwin " + str(UX) + " " + str(UY) + " " + str(LX) + " " + str(LY) + " -of GTiff "
-							b = cL + " \"" 
-							c = oD.encode(sys.getfilesystemencoding()) + "/" 
-							d = outputName + "_" 
-							e = os.path.basename(l.encode(sys.getfilesystemencoding())) + "\""
-							f = a + b + c + d + e
-							sP = subprocess.Popen(f, shell=True)
-							sP.wait()
-					# using shapefile
-					elif uS == 1:
-						try:
-							cfg.utls.getGDALForMac()
-							a = cfg.gdalPath + "gdalwarp -dstnodata " + str(noDt) + " -cutline \"" + s.encode(sys.getfilesystemencoding()) + "\" -crop_to_cutline -of GTiff " + cL + " \"" 
-							b = oD.encode(sys.getfilesystemencoding()) + "/" 
-							c = outputName + "_" 
-							d = os.path.basename(l.encode(sys.getfilesystemencoding())) + "\""
-							e = a + b + c + d
-							sP = subprocess.Popen(e, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-							sP.wait()
-							# get error
-							out, err = sP.communicate()
-							sP.stdout.close()
-							if len(err) > 0:
-								cfg.mx.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error"), err)
-								st = "Yes"
-								# logger
-								cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " GDAL error:: " + str(err) )
-						# in case of errors
-						except Exception, err:
-							# logger
-							cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-							cfg.utls.getGDALForMac()
-							a = cfg.gdalPath + "gdalwarp -dstnodata " + str(noDt) + " -cutline \"" + s.encode(sys.getfilesystemencoding()) + "\" -crop_to_cutline -of GTiff " + cL + " \"" 
-							b = oD.encode(sys.getfilesystemencoding()) + "/" 
-							c = outputName + "_" 
-							d = os.path.basename(l.encode(sys.getfilesystemencoding())) + "\""
-							e = a + b + c + d
-							sP = subprocess.Popen(e, shell=True)
-							sP.wait()	
+			cfg.uiUtls.addProgressBar()
+			# no shapefile
+			if uS == 0 and len(UX) > 0 and len(UY) > 0 and len(LX) > 0 and len(LY) > 0:
+				for l in rT:
+					lC = cfg.utls.selectLayerbyName(l, "Yes")
+					if str(l).lower().endswith(".tif"):
+						pass
 					else:
-						return "No"
-					try:
-						if  st != "Yes":
-							cfg.iface.addRasterLayer(unicode(oD) + "/" + outputName + "_" + unicode(os.path.basename(unicode(l))), unicode(outputName + "_" + unicode(os.path.basename(unicode(l)))))
-							# logger
-							cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " rasters clipped" )
-					except Exception, err:
-						st = "Yes"
+						l = l + ".tif"
+					cL = lC.source().encode(sys.getfilesystemencoding())
+					dT = cfg.utls.getTime()
+					c = oD.encode(sys.getfilesystemencoding()) + "/"
+					d = outputName + "_" 
+					e = os.path.basename(l.encode(sys.getfilesystemencoding()))
+					f = c + d + e
+					tPMN = cfg.tmpVrtNm + ".vrt"
+					tPMD = cfg.tmpDir + "/" + dT + tPMN
+					bList = [cL]
+					bandNumberList = [1]		
+					vrtCheck = cfg.utls.createVirtualRaster2(bList, tPMD, bandNumberList, "Yes", noDt, 0, "No", "Yes", [float(UX), float(UY), float(LX), float(LY)])
+					clipOutput = cfg.utls.copyRaster(tPMD, f, "GTiff", noDt)
+					cfg.iface.addRasterLayer(unicode(oD) + "/" + outputName + "_" + unicode(os.path.basename(unicode(l))), unicode(outputName + "_" + unicode(os.path.basename(unicode(l)))))
+					# logger
+					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " rasters clipped" )
+			# using shapefile
+			elif uS == 1:
+				for l in rT:
+					lC = cfg.utls.selectLayerbyName(l, "Yes")
+					if str(l).lower().endswith(".tif"):
+						pass
+					else:
+						l = l + ".tif"
+					cL = lC.source().encode(sys.getfilesystemencoding())
+					dT = cfg.utls.getTime()
+					# convert polygon to raster 
+					tRNxs = cfg.copyTmpROI + dT + "xs.tif"
+					tRxs = str(cfg.tmpDir + "//" + tRNxs)
+					check = cfg.utls.vectorToRaster(cfg.emptyFN, unicode(s), cfg.emptyFN, tRxs, unicode(cL), None, "GTiff", 1)
+					if check != "No":
+						b = oD.encode(sys.getfilesystemencoding()) + "/" 
+						c = outputName + "_" 
+						d = os.path.basename(l.encode(sys.getfilesystemencoding()))
+						e = b + c + d
+						s.encode(sys.getfilesystemencoding()) 
+						cfg.utls.clipRasterByRaster(cL, tRxs, e, "GTiff", noDt)
+						cfg.iface.addRasterLayer(unicode(oD) + "/" + outputName + "_" + unicode(os.path.basename(unicode(l))), unicode(outputName + "_" + unicode(os.path.basename(unicode(l)))))
 						# logger
-						cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-						cfg.mx.msgErr10()
+						cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " rasters clipped" )
+					else:
+						st = "Yes"
+						cfg.uiUtls.removeProgressBar()
+			else:
+				cfg.uiUtls.removeProgressBar()
+				return "No"
 			if  st != "Yes":
+				cfg.uiUtls.removeProgressBar()
 				cfg.utls.finishSound()
 		
 	# set coordinates

@@ -92,6 +92,9 @@ class BandsetTab:
 			id = cfg.ui.unit_combo.findText(cfg.wlMicro)
 		elif satelliteName == cfg.satLandsat45:
 			wl = [0.485, 0.56, 0.66, 0.83, 1.65, 2.215]
+			id = cfg.ui.unit_combo.findText(cfg.wlMicro)	
+		elif satelliteName == cfg.satLandsat13:
+			wl = [0.55, 0.65, 0.75, 0.95]
 			id = cfg.ui.unit_combo.findText(cfg.wlMicro)
 		# RapidEye center wavelength calculated from http://www.blackbridge.com/rapideye/products/ortho.htm
 		elif satelliteName == cfg.satRapidEye:

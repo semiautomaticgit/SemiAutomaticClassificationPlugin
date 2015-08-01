@@ -58,40 +58,23 @@ except:
 class RoiDock:
 
 	def __init__(self):
-		# rubber band
-		cfg.rbbrBnd = QgsRubberBand(cfg.cnvs)
-		cfg.rbbrBnd.setColor(QColor(0,255,255))
-		cfg.rbbrBnd.setWidth(2)
 		self.mrctrVrtc = []
 		
-	# add rubber band
-	def addRubberBandPolygon(self, sourceLayer, ID):
+	# add Highlight Polygon
+	def addHighlightPolygon(self, sourceLayer, ID):
 		try:
 			self.clearCanvasPoly()
 		except:
 			pass
-		cfg.rbbrBndPol = QgsRubberBand(cfg.cnvs, 2)
-		f = cfg.utls.getFeaturebyID(sourceLayer, ID)
-		cfg.rbbrBndPol.addGeometry(f.geometry(), sourceLayer)
-		rT = 255 - cfg.ROITrnspVal * 255 / 100
 		clr = QColor(cfg.ROIClrVal)
+		rT = 255 - cfg.ROITrnspVal * 255 / 100
 		clr.setAlpha(rT)
-		try:
-			# QGIS 2.6
-			cfg.rbbrBndPol.setFillColor(clr)
-			cfg.rbbrBndPol.setBorderColor(QColor(cfg.ROIClrOutlineValDefault))
-			cfg.rbbrBndPol.setLineStyle(Qt.DotLine)
-			cfg.rbbrBndPol.setWidth(3)
-		except:
-			# QGIS < 2.6
-			cfg.rbbrBndPol.setColor(clr)
-			cfg.rbbrBndPol.setLineStyle(Qt.DotLine)
-			cfg.rbbrBndPol.setWidth(0)
-			cfg.rbbrBndPolOut = QgsRubberBand(cfg.cnvs, 1)
-			cfg.rbbrBndPolOut.addGeometry(f.geometry(), sourceLayer)
-			cfg.rbbrBndPolOut.setColor(QColor(cfg.ROIClrOutlineValDefault))
-			cfg.rbbrBndPolOut.setLineStyle(Qt.DotLine)
-			cfg.rbbrBndPolOut.setWidth(3)
+		f = cfg.utls.getFeaturebyID(sourceLayer, ID)
+		cfg.rbbrBndPol = QgsHighlight(cfg.cnvs, f.geometry(), sourceLayer)
+		cfg.rbbrBndPol.setWidth(2)
+		cfg.rbbrBndPol.setColor(QColor(cfg.ROIClrOutlineValDefault))
+		cfg.rbbrBndPol.setFillColor(clr)
+		cfg.rbbrBndPol.show()
 		cfg.uid.show_ROI_radioButton.setChecked(True)
 		
 	def automaticRefreshROI(self):
@@ -167,7 +150,7 @@ class RoiDock:
 				cfg.uiUtls.updateBar(90)
 				# create temp group
 				cfg.lstROI = mL
-				self.addRubberBandPolygon(cfg.lstROI, 1)
+				self.addHighlightPolygon(cfg.lstROI, 1)
 				cfg.uid.button_Save_ROI.setEnabled(True)
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "<<< ROI created: " + str(tN))
@@ -221,6 +204,8 @@ class RoiDock:
 	# set Max ROI size
 	def maxROIWidth(self):
 		cfg.maxROIWdth = int(cfg.uid.Max_ROI_width_spin.value())
+		if (cfg.maxROIWdth % 2 == 0):
+			cfg.maxROIWdth = cfg.maxROIWdth + 1
 		cfg.utls.writeProjectVariable("maxROIWidth", str(cfg.maxROIWdth))
 		# auto refresh ROI
 		if cfg.uid.auto_refresh_ROI_radioButton.isChecked() and cfg.ROITime is not None:
@@ -439,6 +424,7 @@ class RoiDock:
 			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			cfg.mx.msg4()
 
+	# create a ROI
 	def createROI(self, point, progressbar = "Yes"):
 		if cfg.rstrNm is None:
 			cfg.mx.msg4()
@@ -486,9 +472,9 @@ class RoiDock:
 				if cfg.rpdROICheck == "No":
 					# subset and stack layers to tR
 					for b in range(0, len(cfg.bndSet)):
-						tmpSubset = str(cfg.tmpDir + "//" + cfg.subsTmpRaster + "_" + str(b) + "_" + dT + ".tif")
-						dBs["BANDS_{0}".format(b)] = str(cfg.tmpDir + "//" + cfg.subsTmpRaster + "_" + str(b) + "_" + dT + ".tif")
-						dBSP["BAND_SUBPROCESS_{0}".format(b)] = cfg.utls.subsetImage(cfg.bndSet[b], point.x(), point.y(), float(cfg.maxROIWdth), float(cfg.maxROIWdth), tmpSubset, cfg.outTempRastFormat)
+						tmpSubset = str(cfg.tmpDir + "//" + cfg.subsTmpRaster + "_" + str(b) + "_" + dT + ".vrt")
+						dBs["BANDS_{0}".format(b)] = str(cfg.tmpDir + "//" + cfg.subsTmpRaster + "_" + str(b) + "_" + dT + ".vrt")
+						dBSP["BAND_SUBPROCESS_{0}".format(b)] = cfg.utls.subsetImage(cfg.bndSet[b], point.x(), point.y(), float(cfg.maxROIWdth), float(cfg.maxROIWdth), tmpSubset, cfg.outTempRastFormat, "Yes")
 						if dBSP["BAND_SUBPROCESS_{0}".format(b)] == "Yes":
 							cfg.mx.msgErr29()
 							# enable map canvas render
@@ -502,7 +488,7 @@ class RoiDock:
 				else:
 					try:
 						b = int(cfg.ROIband) - 1
-						pr = cfg.utls.subsetImage(cfg.bndSet[b], point.x(), point.y(), int(cfg.maxROIWdth), int(cfg.maxROIWdth), tR, cfg.outTempRastFormat)
+						pr = cfg.utls.subsetImage(cfg.bndSet[b], point.x(), point.y(), int(cfg.maxROIWdth), int(cfg.maxROIWdth), tR, cfg.outTempRastFormat, "Yes")
 						if pr == "Yes":
 							cfg.mx.msgErr29()
 							# enable map canvas render
@@ -517,11 +503,11 @@ class RoiDock:
 					except Exception, err:
 						# logger
 						cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-						cfg.mx.msgErr7
+						cfg.mx.msgErr7()
 			else:
 				if cfg.rpdROICheck == "No":
 					# subset image
-					pr = cfg.utls.subsetImage(cfg.rstrNm, point.x(), point.y(), int(cfg.maxROIWdth), int(cfg.maxROIWdth), tR, cfg.outTempRastFormat)
+					pr = cfg.utls.subsetImage(cfg.rstrNm, point.x(), point.y(), int(cfg.maxROIWdth), int(cfg.maxROIWdth), tR, cfg.outTempRastFormat, "Yes")
 					if pr == "Yes":
 						cfg.mx.msgErr29()
 						# enable map canvas render
@@ -559,7 +545,12 @@ class RoiDock:
 					except Exception, err:
 						# logger
 						cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-						cfg.mx.msgErr7
+						cfg.pntROI = None
+						cfg.cnvs.setRenderFlag(True)
+						if progressbar == "Yes":
+							cfg.uiUtls.removeProgressBar()
+						cfg.mx.msgErr7()
+						return "No"
 			if progressbar == "Yes":
 				cfg.uiUtls.updateBar(40)
 			# run segmentation
@@ -574,6 +565,7 @@ class RoiDock:
 				if progressbar == "Yes":
 					cfg.uiUtls.removeProgressBar()
 				cfg.mx.msgErr2()
+				return "No"
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "output segmentation: " + str(tSN))
 			if progressbar == "Yes":
@@ -595,7 +587,7 @@ class RoiDock:
 					cfg.uiUtls.updateBar(90)
 				# create temp group
 				cfg.lstROI = tSS
-				self.addRubberBandPolygon(cfg.lstROI, 0)
+				self.addHighlightPolygon(cfg.lstROI, 0)
 				# add point marker
 				try:
 					self.clearROICanvas()
@@ -644,11 +636,13 @@ class RoiDock:
 		rGT = rD.GetGeoTransform()
 		UX = abs(rGT[0])
 		UY = abs(rGT[3])
+		pX =  abs(rGT[1])
+		pY = abs(rGT[5])
 		xSz = rD.RasterXSize
 		ySz = rD.RasterYSize
 		# seed pixel number
-		sPX = xSz / 2
-		sPY = ySz / 2
+		sPX = abs(int((abs(seedX) - UX)/ pX))
+		sPY = abs(int((UY - abs(seedY))/ pY))
 		# create a shapefile
 		d = ogr.GetDriverByName('ESRI Shapefile')
 		# use ogr
@@ -685,8 +679,17 @@ class RoiDock:
 				area = int(cfg.maxROIWdth) * int(cfg.maxROIWdth)
 				if area < minimumSize:
 					minimumSize = area
+				# array area
+				aBArea = (aB.shape[0] * aB.shape[1]) 
+				if aBArea < minimumSize:
+					minimumSize = aBArea
 				# region growing alg
-				r = self.regionGrowingAlg(aB, sPX, sPY, spectralRange, minimumSize)
+				try:
+					r = self.regionGrowingAlg(aB, sPX, sPY, spectralRange, minimumSize)
+				except Exception, err:
+					# logger
+					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					return "No"					
 				if len(rasterDictionary) > 1:
 					for raster in itRs:
 						iR = str(rasterDictionary[raster])
@@ -701,8 +704,13 @@ class RoiDock:
 						# input array
 						aB =  iRB.ReadAsArray()
 						# region growing alg
-						nR = self.regionGrowingAlg(aB, sPX, sPY, spectralRange, minimumSize)
-						r = r * nR
+						try:
+							nR = self.regionGrowingAlg(aB, sPX, sPY, spectralRange, minimumSize)
+							r = r * nR
+						except Exception, err:
+							# logger
+							cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+							return "No"
 						lR, num_features = label(r)
 						# value of ROI seed
 						rV = lR[sPX, sPY]
@@ -731,10 +739,7 @@ class RoiDock:
 	# region growing algorithm of an array and a seed
 	def regionGrowingAlg(self, array, seedX, seedY, spectralRange, minimumSize):
 		sA = np.zeros(array.shape)
-		sA.fill(array[seedX, seedY])
-		# no data mask
-		m = -9999 == array
-		m = m * (-1)
+		sA.fill(array[seedY, seedX])
 		# difference array
 		dA = abs(array - sA)
 		# calculate minimum difference
@@ -743,20 +748,18 @@ class RoiDock:
 		uDA = np.insert(uDB, 0, float(spectralRange))
 		r = None
 		for i in uDA:
-			iA = (dA <= i)
+			iA = np.where(dA <= i, 1, 0)
 			rL, num_features = label(iA)
 			# value of ROI seed
-			rV = rL[seedX,seedY]
-			rV_mask = np.ma.masked_where(rL != rV, rL)
-			if rV != 0 and rV_mask.count() >= minimumSize:
-				r = np.copy(rL)
-				r[rL == rV] = 1
-				r[rL != rV] = 0
+			rV = rL[seedY,seedX]
+			rV_mask = np.where(rL == rV, 1, 0)
+			if rV != 0 and rV_mask.sum() >= minimumSize:
+				r = np.copy(rV_mask)
 				break
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " region growing seed: " + str(seedX) + ";" + str(seedY))
 		return r
-			
+		
 	# Save last ROI to shapefile 
 	def saveROItoShapefile(self, progressbar = "Yes"):
 		l = cfg.utls.selectLayerbyName(cfg.trnLay)
@@ -883,15 +886,26 @@ class RoiDock:
 				if str(id) == str(b):
 					k = key
 			cfg.ROITabEdited = "No"
-			itMID = QTableWidgetItem()
-			itMID.setData(Qt.DisplayRole, int(cfg.ROI_MC_ID[k]))
-			l.setItem(b, 0, itMID)
-			l.setItem(b, 1, QTableWidgetItem(str(cfg.ROI_MC_Info[k])))
-			itID = QTableWidgetItem()
-			itID.setData(Qt.DisplayRole, int(cfg.ROI_C_ID[k]))
-			l.setItem(b, 2, itID)
-			l.setItem(b, 3, QTableWidgetItem(str(cfg.ROI_C_Info[k])))
-			l.setItem(b, 4, QTableWidgetItem(str(cfg.ROI_ShapeID[k])))
+			try:
+				itMID = QTableWidgetItem()
+				itMID.setData(Qt.DisplayRole, int(cfg.ROI_MC_ID[k]))
+				l.setItem(b, 0, itMID)
+				itMInfo =QTableWidgetItem()
+				itMInfo.setData(Qt.DisplayRole, str(cfg.ROI_MC_Info[k]))
+				l.setItem(b, 1, itMInfo)
+				itMInfo.setToolTip(str(cfg.ROI_MC_Info[k]))
+				itID = QTableWidgetItem()
+				itID.setData(Qt.DisplayRole, int(cfg.ROI_C_ID[k]))
+				l.setItem(b, 2, itID)				
+				itCInfo =QTableWidgetItem()
+				itCInfo.setData(Qt.DisplayRole, str(cfg.ROI_C_Info[k]))
+				l.setItem(b, 3, itCInfo)
+				itCInfo.setToolTip(str(cfg.ROI_C_Info[k]))
+				l.setItem(b, 4, QTableWidgetItem(str(cfg.ROI_ShapeID[k])))
+			except Exception, err:
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.mx.msgErr43()
 		l.show()
 		l.setColumnWidth(0, 40)
 		l.setColumnWidth(2, 40)
@@ -916,21 +930,26 @@ class RoiDock:
 				if str(id) == str(b):
 					k = key
 			cfg.ROITabEdited = "No"
-			cb = QTableWidgetItem("checkbox")
-			cb.setCheckState(checkstate)
-			l.setItem(b, 0, cb)
-			itMID = QTableWidgetItem()
-			itMID.setData(Qt.DisplayRole, int(cfg.ROI_MC_ID[k]))
-			l.setItem(b, 1, itMID)
-			l.setItem(b, 2, QTableWidgetItem(str(cfg.ROI_MC_Info[k])))
-			itID = QTableWidgetItem()
-			itID.setData(Qt.DisplayRole, int(cfg.ROI_C_ID[k]))
-			l.setItem(b, 3, itID)
-			l.setItem(b, 4, QTableWidgetItem(str(cfg.ROI_C_Info[k])))
-			l.setItem(b, 5, QTableWidgetItem(""))
-			c, cc = cfg.utls.randomColor()
-			l.item(b, 5).setBackground(c)
-			l.setItem(b, 6, QTableWidgetItem(str(cfg.ROI_ShapeID[k])))
+			try:
+				cb = QTableWidgetItem("checkbox")
+				cb.setCheckState(checkstate)
+				l.setItem(b, 0, cb)
+				itMID = QTableWidgetItem()
+				itMID.setData(Qt.DisplayRole, int(cfg.ROI_MC_ID[k]))
+				l.setItem(b, 1, itMID)
+				l.setItem(b, 2, QTableWidgetItem(str(cfg.ROI_MC_Info[k])))
+				itID = QTableWidgetItem()
+				itID.setData(Qt.DisplayRole, int(cfg.ROI_C_ID[k]))
+				l.setItem(b, 3, itID)
+				l.setItem(b, 4, QTableWidgetItem(str(cfg.ROI_C_Info[k])))
+				l.setItem(b, 5, QTableWidgetItem(""))
+				c, cc = cfg.utls.randomColor()
+				l.item(b, 5).setBackground(c)
+				l.setItem(b, 6, QTableWidgetItem(str(cfg.ROI_ShapeID[k])))
+			except Exception, err:
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.mx.msgErr43()
 		l.show()
 		l.setColumnWidth(0, 40)
 		l.setColumnWidth(2, 40)
@@ -1129,7 +1148,7 @@ class RoiDock:
 				# copy ROI to temp shapefile
 				cfg.utls.copyFeatureToLayer(lyr, x, mL)
 			# calculate ROI center, height and width
-			rCX, rCY, rW, rH = cfg.utls.getShapefileRectangleBox(lyr)
+			rCX, rCY, rW, rH = cfg.utls.getShapefileRectangleBox(mL)
 			if progress is not None:
 				cfg.uiUtls.updateBar(progress + int((2 / 4) * progresStep))
 			cfg.tblOut = {}
@@ -1175,11 +1194,13 @@ class RoiDock:
 					# enable map canvas render
 					cfg.cnvs.setRenderFlag(True)
 					return pr
-				bX = cfg.utls.clipRasterByShapefile(tLP, tS, None, cfg.outTempRastFormat)
+				oList = cfg.utls.rasterToBands(tS, cfg.tmpDir)
 				rL = cfg.utls.selectLayerbyName(rasterName, "Yes")
 				bCount = rL.bandCount()	
-				for b in range(1, bCount + 1):
-					rStat, ar = cfg.utls.getRasterBandStatistics(bX, b)
+				for b in range(0, bCount):
+					tS = str(cfg.tmpDir + "//" + cfg.subsTmpRaster + "_" + str(b) + "_" + dT + ".tif")
+					bX = cfg.utls.clipRasterByShapefile(tLP, oList[b], None, cfg.outTempRastFormat)
+					rStat, ar = cfg.utls.getRasterBandStatistics(bX, 1)
 					if rStat is None:
 						cfg.mx.msgErr31()
 						# enable map canvas render
@@ -1190,8 +1211,8 @@ class RoiDock:
 						rStatStr = rStatStr.replace("nan", "0")
 						rStat = eval(rStatStr)
 						ROIArray.append(ar)
-						cfg.tblOut["BAND_{0}".format(b)] = rStat
-						cfg.tblOut["WAVELENGTH_{0}".format(b)] = cfg.bndSetWvLn["WAVELENGTH_{0}".format(b)] 
+						cfg.tblOut["BAND_{0}".format(b+1)] = rStat
+						cfg.tblOut["WAVELENGTH_{0}".format(b + 1)] = cfg.bndSetWvLn["WAVELENGTH_{0}".format(b + 1)]
 			if progress is not None:
 				cfg.uiUtls.updateBar(progress + int((3 / 4) * progresStep))
 			covMat = cfg.utls.calculateCovMatrix(ROIArray)
@@ -1289,6 +1310,7 @@ class RoiDock:
 				cfg.rbbrBndPolOut.hide()
 				# ROI point
 				self.vx.hide()
+			cfg.cnvs.refresh()
 		except:
 			pass
 	

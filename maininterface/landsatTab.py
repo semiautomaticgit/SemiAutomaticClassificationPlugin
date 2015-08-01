@@ -115,7 +115,7 @@ class LandsatTab:
 				self.eSD = cfg.utls.calculateEarthSunDistance(dt, dFmt)
 			except Exception, err:
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + unicode(err))
 				if batch == "No":
 					cfg.uiUtls.removeProgressBar()
 					cfg.cnvs.setRenderFlag(True)
@@ -127,6 +127,7 @@ class LandsatTab:
 		out = outputDirectory
 		# name prefix
 		pre = "RT_"
+		prePAN = "PAN_"
 		# input bands
 		c = l.rowCount()
 		# date time for temp name
@@ -140,12 +141,16 @@ class LandsatTab:
 		# band list
 		bandSetList = []
 		bandSetNameList = []
+		bandNumberList = []
+		bandPansharpList = []
+		pansharpRasterList = []
 		for i in range(0, c):
 			if cfg.actionCheck == "Yes":
-				inputRaster = inp + "/" + l.item(i,0).text()
+				inputRaster = inp + "/" + l.item(i,0).text()				
 				oNm = pre + l.item(i,0).text()
 				outputRaster = out + "/" + oNm
 				outputRasterList.append(outputRaster)
+				panRaster = out + "/" + prePAN + l.item(i,0).text()
 				tempRaster = cfg.tmpDir + "/" + dT + l.item(i,0).text()
 				tempRasterList.append(tempRaster)
 				bandName = l.item(i,0).text()
@@ -207,23 +212,42 @@ class LandsatTab:
 						RADIANCE_ADD = ""
 				nm = os.path.splitext(bandName)[0]
 				# conversion
-				if str(sat).lower() in ['landsat_4', 'landsat4', 'landsat_5', 'landsat5', 'landsat_7', 'landsat7']:
+				if str(sat).lower() in ['landsat_1', 'landsat1','landsat_2', 'landsat2','landsat_3', 'landsat3']:
+					# landsat bands (e.g. b4, b4)
+					if nm[len(nm) - 1].isdigit():
+						ck = self.landsat1_7reflectance(sat, str(nm[len(nm) - 1]), RADIANCE_MULT, RADIANCE_ADD, inputRaster, tempRaster)
+						if ck != "No":
+							rasterList.append(outputRaster)
+							# band list
+							if int(nm[len(nm) - 1]) in [4, 5, 6, 7]:
+								bandSetList.append(int(nm[len(nm) - 1]))
+								bandSetNameList.append(os.path.splitext(oNm)[0])
+				elif str(sat).lower() in ['landsat_4', 'landsat4', 'landsat_5', 'landsat5', 'landsat_7', 'landsat7']:
 					# landsat bands (e.g. b10, b20, b61)
 					if nm[len(nm) - 2].isdigit() and nm[len(nm) - 1].isdigit():
 						if str(nm[len(nm) - 1]) == "0":
 							if str(nm[len(nm) - 2]) == "6":
 								self.landsat457Temperature(sat, RADIANCE_MULT, RADIANCE_ADD, inputRaster, tempRaster)
 							else:
-								ck = self.landsat457reflectance(sat, str(nm[len(nm) - 2]), RADIANCE_MULT, RADIANCE_ADD, inputRaster, tempRaster)
+								ck = self.landsat1_7reflectance(sat, str(nm[len(nm) - 2]), RADIANCE_MULT, RADIANCE_ADD, inputRaster, tempRaster)
 								if ck != "No":
 									rasterList.append(outputRaster)
 									# band list
 									if int(nm[len(nm) - 2]) in [1, 2, 3, 4, 5]:
 										bandSetList.append(int(nm[len(nm) - 2]))
 										bandSetNameList.append(os.path.splitext(oNm)[0])
+										bandNumberList.append(int(nm[len(nm) - 2]))
+										bandPansharpList.append(outputRaster)
+										pansharpRasterList.append(panRaster)
+									elif int(nm[len(nm) - 2]) == 8:
+										bandNumberList.insert(0, 8)
+										bandPansharpList.insert(0, outputRaster)
 									elif int(nm[len(nm) - 2]) == 7:
 										bandSetList.append(6)
 										bandSetNameList.append(os.path.splitext(oNm)[0])
+										bandNumberList.append(int(nm[len(nm) - 2]))
+										bandPansharpList.append(outputRaster)
+										pansharpRasterList.append(panRaster)
 						# landsat thermal bands
 						elif str(nm[len(nm) - 2]) == "6":
 							self.landsat457Temperature(sat, RADIANCE_MULT, RADIANCE_ADD, inputRaster, tempRaster)
@@ -233,16 +257,25 @@ class LandsatTab:
 						if str(nm[len(nm) -1]) == "6":
 							self.landsat457Temperature(sat, RADIANCE_MULT, RADIANCE_ADD, inputRaster, tempRaster)
 						else:
-							ck = self.landsat457reflectance(sat, str(nm[len(nm) - 1]), RADIANCE_MULT, RADIANCE_ADD, inputRaster, tempRaster)
+							ck = self.landsat1_7reflectance(sat, str(nm[len(nm) - 1]), RADIANCE_MULT, RADIANCE_ADD, inputRaster, tempRaster)
 							if ck != "No":
 								rasterList.append(outputRaster)
 								# band list
 								if int(nm[len(nm) - 1]) in [1, 2, 3, 4, 5]:
 									bandSetList.append(int(nm[len(nm) - 1]))
 									bandSetNameList.append(os.path.splitext(oNm)[0])
+									bandNumberList.append(int(nm[len(nm) - 1]))
+									bandPansharpList.append(outputRaster)
+									pansharpRasterList.append(panRaster)
+								elif int(nm[len(nm) - 1]) == 8:
+									bandNumberList.insert(0, 8)
+									bandPansharpList.insert(0, outputRaster)
 								elif int(nm[len(nm) - 1]) == 7:
 									bandSetList.append(6)
 									bandSetNameList.append(os.path.splitext(oNm)[0])
+									bandNumberList.append(int(nm[len(nm) - 1]))
+									bandPansharpList.append(outputRaster)
+									pansharpRasterList.append(panRaster)
 					# landsat thermal bands
 					elif str(nm[len(nm) - 8: len(nm) - 1]) == "6_VCID_" and nm[len(nm) - 1].isdigit():
 						self.landsat457Temperature(sat, RADIANCE_MULT, RADIANCE_ADD, inputRaster, tempRaster)
@@ -259,7 +292,12 @@ class LandsatTab:
 							if int(nm[len(nm) - 1]) in [2, 3, 4, 5, 6, 7]:
 								bandSetList.append(int(nm[len(nm) - 1]) - 1)
 								bandSetNameList.append(os.path.splitext(oNm)[0])
-
+								bandNumberList.append(int(nm[len(nm) - 1]))
+								bandPansharpList.append(outputRaster)
+								pansharpRasterList.append(panRaster)
+							elif int(nm[len(nm) - 1]) == 8:
+								bandNumberList.insert(0, 8)
+								bandPansharpList.insert(0, outputRaster)
 		cfg.uiUtls.updateBar(90)
 		if cfg.actionCheck == "Yes":
 			# copy raster bands
@@ -271,6 +309,16 @@ class LandsatTab:
 					# logger
 					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				bN = bN + 1
+		if cfg.actionCheck == "Yes" and cfg.ui.pansharpening_checkBox.isChecked() is True:
+			# type Brovey Transform
+			panType = cfg.BT_panType
+			if bandNumberList[0] == 8:
+				panCheck = self.landsat_Pansharp(bandPansharpList, [str(sat).lower(), panType], bandNumberList, pansharpRasterList)
+			else:
+				cfg.mx.msgErr44()
+				panCheck = "No"
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "Missing bands " + unicode(bandNumberList))
 		if cfg.actionCheck == "Yes":
 			# load raster bands
 			for outR in outputRasterList:
@@ -278,7 +326,19 @@ class LandsatTab:
 					cfg.iface.addRasterLayer(outR)
 				else:
 					cfg.mx.msgErr38(outR)
-					cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "WARNING: unable to load raster" + str(outR))
+					cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "WARNING: unable to load raster" + unicode(outR))
+			if cfg.ui.pansharpening_checkBox.isChecked() is True and panCheck != "No":
+				bandSetNameList = []
+				rasterList = []
+				# load raster bands
+				for outR in pansharpRasterList:
+					if os.path.isfile(outR):
+						cfg.iface.addRasterLayer(outR)
+						bandSetNameList.append(os.path.splitext(os.path.basename(outR))[0])
+						rasterList.append(outR)
+					else:
+						cfg.mx.msgErr38(outR)
+						cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "WARNING: unable to load raster" + unicode(outR))
 			# create band set
 			if cfg.ui.create_bandset_checkBox.isChecked() is True:
 				if str(sat).lower() in ['landsat8', 'landsat_8']:
@@ -287,13 +347,18 @@ class LandsatTab:
 					satName = cfg.satLandsat7
 				elif str(sat).lower() in ['landsat_4', 'landsat4', 'landsat_5', 'landsat5']:
 					satName = cfg.satLandsat45
+				elif str(sat).lower() in ['landsat_1', 'landsat1','landsat_2', 'landsat2','landsat_3', 'landsat3']:
+					satName = cfg.satLandsat13
 				else:
 					satName = "No"
 				if satName != "No":
 					cfg.bst.rasterBandName()
 					cfg.bst.setBandSet(bandSetNameList)
 					cfg.bndSetPresent = "Yes"
-					cfg.bst.setSatelliteWavelength(satName, bandSetList)
+					if str(sat).lower() in ['landsat_1', 'landsat1','landsat_2', 'landsat2','landsat_3', 'landsat3']:
+						cfg.bst.setSatelliteWavelength(satName)
+					else:
+						cfg.bst.setSatelliteWavelength(satName, bandSetList)
 			# create virtual raster
 			if cfg.ui.create_VRT_checkBox.isChecked() is True:
 				outVrt = out + "//" + cfg.landsatVrtNm + ".vrt"
@@ -407,7 +472,7 @@ class LandsatTab:
 				return "Yes"
 			except Exception, err:
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + unicode(err))
 				return "No"
 				
 	# raster reclassification <0 and >1
@@ -431,24 +496,31 @@ class LandsatTab:
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), unicode(inputRaster))
 						
-	# landsat 4, 5, 7 conversion to Reflectance
-	def landsat457reflectance(self, satellite, bandNumber, RADIANCE_MULT_BAND, RADIANCE_ADD_BAND, inputRaster, outputRaster):
+	# landsat 1 to 7 conversion to Reflectance
+	def landsat1_7reflectance(self, satellite, bandNumber, RADIANCE_MULT_BAND, RADIANCE_ADD_BAND, inputRaster, outputRaster):
 		sat = satellite
 		x = bandNumber
 		# Esun
 		dEsunB = {}
+		# Esun from Chander, G.; Markham, B. L. & Helder, D. L. Summary of current radiometric calibration coefficients for Landsat MSS, TM, ETM+, and EO-1 ALI sensors Remote Sensing of Environment, 2009, 113, 893 - 903
+		# landsat 1
+		if str(sat).lower() in ['landsat_1', 'landsat1']:
+			dEsunB = {"ESUN_BAND4": 1823, "ESUN_BAND5": 1559, "ESUN_BAND6": 1276, "ESUN_BAND7": 880.1}
+		# landsat 2
+		elif str(sat).lower() in ['landsat_2', 'landsat2']:
+			dEsunB = {"ESUN_BAND4": 1829, "ESUN_BAND5": 1539, "ESUN_BAND6": 1268, "ESUN_BAND7": 886.6}	
+		# landsat 3
+		elif str(sat).lower() in ['landsat_3', 'landsat3']:
+			dEsunB = {"ESUN_BAND4": 1839, "ESUN_BAND5": 1555, "ESUN_BAND6": 1291, "ESUN_BAND7": 887.9}
 		# landsat 4
-		if str(sat).lower() in ['landsat_4', 'landsat4']:
-			# Esun from Chander, G. & Markham, B. Revised landsat-5 TM radiometric calibration procedures and postcalibration dynamic ranges Geoscience and Remote Sensing, IEEE Transactions on, 2003, 41, 2674 - 2677
-			dEsunB = {"ESUN_BAND1": 1957, "ESUN_BAND2": 1825, "ESUN_BAND3": 1557, "ESUN_BAND4": 1033, "ESUN_BAND5": 214.9, "ESUN_BAND7": 80.72}
+		elif str(sat).lower() in ['landsat_4', 'landsat4']:
+			dEsunB = {"ESUN_BAND1": 1983, "ESUN_BAND2": 1795, "ESUN_BAND3": 1539, "ESUN_BAND4": 1028, "ESUN_BAND5": 219.8, "ESUN_BAND7": 83.49}
 		# landsat 5
 		elif str(sat).lower() in ['landsat_5', 'landsat5']:
-			# Esun from Finn, M.P., Reed, M.D, and Yamamoto, K.H. A Straight Forward Guide for Processing Radiance and Reflectance for EO-1 ALI, landsat 5 TM, landsat 7 ETM+, and ASTER. Unpublished Report from USGS/Center of Excellence for Geospatial Information Science, 8 p. 2012
 			dEsunB = {"ESUN_BAND1": 1983, "ESUN_BAND2": 1796, "ESUN_BAND3": 1536, "ESUN_BAND4": 1031, "ESUN_BAND5": 220, "ESUN_BAND7": 83.44}
 		# landsat 7
 		elif str(sat).lower() in ['landsat_7', 'landsat7']:
-			# Esun from Finn, M.P., Reed, M.D, and Yamamoto, K.H. A Straight Forward Guide for Processing Radiance and Reflectance for EO-1 ALI, landsat 5 TM, landsat 7 ETM+, and ASTER. Unpublished Report from USGS/Center of Excellence for Geospatial Information Science, 8 p. 2012
-			dEsunB = {"ESUN_BAND1": 1997, "ESUN_BAND2": 1812, "ESUN_BAND3": 1533, "ESUN_BAND4": 1039, "ESUN_BAND5": 230.08, "ESUN_BAND7": 84.9, "ESUN_BAND8": 1369}
+			dEsunB = {"ESUN_BAND1": 1997, "ESUN_BAND2": 1812, "ESUN_BAND3": 1533, "ESUN_BAND4": 1039, "ESUN_BAND5": 230.08, "ESUN_BAND7": 84.9, "ESUN_BAND8": 1362}
 		eS = float(dEsunB["ESUN_BAND" + str(x)])
 		m = float(RADIANCE_MULT_BAND)
 		a = float(RADIANCE_ADD_BAND)
@@ -485,7 +557,7 @@ class LandsatTab:
 				return "Yes"
 			except Exception, err:
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + unicode(err))
 				return "No"
 		# DOS atmospheric correction
 		elif cfg.ui.DOS1_checkBox.isChecked() is True:
@@ -531,53 +603,55 @@ class LandsatTab:
 				return "Yes"
 			except Exception, err:
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + unicode(err))
 				return "No"
 			
 	# find DNmin in raster
 	def findDNmin(self, inputRaster):
 		DNm = 0
+		cfg.rasterBandUniqueVal = np.zeros((1, 1))
+		cfg.rasterBandUniqueVal = np.delete(cfg.rasterBandUniqueVal, 0, 1)
 		# register drivers
 		gdal.AllRegister()
 		# open input with GDAL
 		rD = gdal.Open(inputRaster, GA_ReadOnly)
-		# number of x pixels
-		rC = rD.RasterXSize
-		# number of y pixels
-		rR = rD.RasterYSize
-		# get band
-		rB = rD.GetRasterBand(1)
-		# combinations of classes 
-		rBA = rB.ReadAsArray(0, 0, rC, rR)
-		rBUV = np.unique(rBA).tolist()
-		# pixel sum
-		pS = 0
+		# band list
+		bL = cfg.utls.readAllBandsFromRaster(rD)
 		# No data value
-		nD = cfg.ui.nodata_spinBox_3.value()
 		if cfg.ui.nodata_checkBox_2.isChecked() is True:
-			# pixel total
-			pT = rC * rR - (rBA == nD).sum()
-			pT1pc = pT * 0.0001
+			nD = cfg.ui.nodata_spinBox_3.value()
 		else:
-			pT = rC * rR
-			pT1pc = pT * 0.0001
-		for i in rBUV:
-			if cfg.ui.nodata_checkBox_2.isChecked() is True:
-				if str(i) != str(nD):
-					# calculate sum of pixels
-					pS = pS + (rBA == i).sum()
-					if pS > pT1pc:
-						DNm = i
-						break
+			nD = None
+		o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.rasterUniqueValues, None, None, None, None, 0, None, cfg.NoDataVal, "No", nD, None, "UniqueVal")
+		cfg.rasterBandUniqueVal = np.unique(cfg.rasterBandUniqueVal).tolist()
+		cfg.rasterBandUniqueVal = sorted(cfg.rasterBandUniqueVal)
+		try:
+			cfg.rasterBandUniqueVal.remove(nD)
+		except:
+			pass
+		cfg.rasterBandPixelCount = 0
+		o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.rasterValueCount, None, None, None, None, 0, None, cfg.NoDataVal, "No", nD, cfg.rasterBandUniqueVal[-1], "Sum")
+		sum = cfg.rasterBandPixelCount
+		pT1pc = sum * 0.0001
+		min = 0
+		max = len(cfg.rasterBandUniqueVal)
+		for i in range(0, len(cfg.rasterBandUniqueVal)):
+			if i == 0:
+				pos = int(round((max+min)/4))
 			else:
-				# calculate sum of pixels
-				pS = pS + (rBA == i).sum()
-				if pS > pT1pc:
-					DNm = i
-					break
-
+				pos = int(round((max+min)/2))
+			DNm = cfg.rasterBandUniqueVal[pos]
+			cfg.rasterBandPixelCount = 0
+			o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.rasterValueCount, None, None, None, None, 0, None, cfg.NoDataVal, "No", nD, DNm, "DNmin " + str(DNm))
+			newSum = cfg.rasterBandPixelCount
+			if newSum <= pT1pc:
+				min = pos
+			else:
+				max = pos
+			if int(round(max-min)) <= 1:
+				break
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " DNm " + str(DNm))
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " DNm " + unicode(DNm))
 		return DNm
 			
 	# landsat 4,5, or 7 temperature
@@ -626,7 +700,7 @@ class LandsatTab:
 			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), unicode(outputRaster))
 		except Exception, err:
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))		
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + unicode(err))		
 			
 	# landsat 8 temperature
 	def landsat8Temperature(self, RADIANCE_MULT_BAND, RADIANCE_ADD_BAND, K1_CONSTANT_BAND, K2_CONSTANT_BAND, inputRaster, outputRaster):
@@ -658,7 +732,7 @@ class LandsatTab:
 			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), unicode(outputRaster))
 		except Exception, err:
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + unicode(err))
 			
 	# landsat output
 	def outputLandsat(self):
@@ -678,7 +752,7 @@ class LandsatTab:
 			else:
 				self.landsat(cfg.ui.label_26.text(), o)
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "Perform landsat correction: " + str(cfg.ui.label_26.text()))
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "Perform landsat correction: " + unicode(cfg.ui.label_26.text()))
 		
 	def populateTable(self, input):
 		check = "Yes"
@@ -723,7 +797,7 @@ class LandsatTab:
 							dt = str(r.split()[2])
 			except Exception, err:
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + unicode(err))
 				cfg.uiUtls.removeProgressBar()
 				cfg.mx.msgErr8()
 				check = "No"						
@@ -734,7 +808,7 @@ class LandsatTab:
 					esd = str(cfg.utls.calculateEarthSunDistance(dt, dFmt))
 				except Exception, err:
 					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + unicode(err))
 			cfg.ui.satellite_lineEdit.setText(sat)
 			cfg.ui.date_lineEdit.setText(dt)
 			cfg.ui.sun_elev_lineEdit.setText(sE)
@@ -751,14 +825,14 @@ class LandsatTab:
 					if str(sat).lower() in ['landsat_4', 'landsat4', 'landsat_5', 'landsat5', 'landsat_7', 'landsat7']:
 						# landsat bands
 						if nm[len(nm) - 2].isdigit() and nm[len(nm) - 1].isdigit():
-							if str(nm[len(nm) - 1]) == "0" and nm[len(nm) - 2] != "8":
+							if str(nm[len(nm) - 1]) == "0":
 								dBs["BAND_{0}".format(nm[len(nm) - 2])] = str(f)
 								bandNames.append(f)
 							# landsat 7 thermal bands
 							elif str(nm[len(nm) - 2]) == "6":
 								dBs["BAND_6_VCID_{0}".format(nm[len(nm) - 1])] = str(f)
 								bandNames.append(f)
-						elif str(nm[len(nm) - 8: len(nm) - 1]) != "6_VCID_" and nm[len(nm) - 1].isdigit() and nm[len(nm) - 1] != "8":
+						elif str(nm[len(nm) - 8: len(nm) - 1]) != "6_VCID_" and nm[len(nm) - 1].isdigit():
 							dBs["BAND_{0}".format(nm[len(nm) - 1])] = str(f)
 							bandNames.append(f)
 						# landsat 7 thermal bands
@@ -771,14 +845,14 @@ class LandsatTab:
 							dBs["BAND_" + nm[len(nm) - 2: len(nm) - 0]] = str(f)
 							bandNames.append(f)
 						# for bands < 10
-						elif str(nm[len(nm) - 8: len(nm) - 1]) != "6_VCID_" and nm[len(nm) - 1].isdigit() and nm[len(nm) - 1] != "8":
+						elif str(nm[len(nm) - 8: len(nm) - 1]) != "6_VCID_" and nm[len(nm) - 1].isdigit() :
 							dBs["BAND_{0}".format(nm[len(nm) - 1])] = str(f)
 							bandNames.append(f)
-
-
-
-
-
+					elif str(sat).lower() in ['landsat_1', 'landsat1','landsat_2', 'landsat2','landsat_3', 'landsat3']:
+						#  landsat bands
+						if nm[len(nm) - 1].isdigit() :
+							dBs["BAND_{0}".format(nm[len(nm) - 1])] = str(f)
+							bandNames.append(f)
 					else:
 						bandNames.append(f)
 			# add band items to table
@@ -957,7 +1031,35 @@ class LandsatTab:
 		
 	def editedSatellite(self):
 		sat = cfg.ui.satellite_lineEdit.text()
-		if str(sat).lower() in ['landsat_4', 'landsat4', 'landsat_5', 'landsat5', 'landsat_7', 'landsat7', 'landsat_8', 'landsat8']:
+		if str(sat).lower() in ['landsat_1', 'landsat1','landsat_2', 'landsat2','landsat_3', 'landsat3','landsat_4', 'landsat4', 'landsat_5', 'landsat5', 'landsat_7', 'landsat7', 'landsat_8', 'landsat8']:
 			cfg.ui.satellite_lineEdit.setStyleSheet("color : black")
 		else:
 			cfg.ui.satellite_lineEdit.setStyleSheet("color : red")
+			
+	def landsat_Pansharp(self, inputList, satellite, bandNumberList, outputList):
+		tPMN = cfg.tmpVrtNm + ".vrt"
+		# date time for temp name
+		dT = cfg.utls.getTime()
+		tPMD = cfg.tmpDir + "/" + dT + tPMN
+		vrtCheck = cfg.utls.createVirtualRaster2(inputList, tPMD, "No", "Yes", "No", 0, "Yes")
+		# open input with GDAL
+		rD = gdal.Open(tPMD, GA_ReadOnly)
+		if rD is None:
+			cfg.mx.msg4()
+			self.rasterBandName()
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " None raster")
+			cfg.uiUtls.removeProgressBar()
+			cfg.cnvs.setRenderFlag(True)
+			return "No"
+		# band list
+		bL = cfg.utls.readAllBandsFromRaster(rD)
+		# create rasters
+		oMR = cfg.utls.createRasterFromReference(rD, 1, outputList, cfg.NoDataVal, "GTiff", cfg.rasterDataType)
+		o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.pansharpening, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", satellite, bandNumberList, "pansharpening ")
+		# close GDAL rasters
+		for b in range(0, len(oMR)):
+			oMR[b] = None
+		for b in range(0, len(bL)):
+			bL[b] = None
+		return o

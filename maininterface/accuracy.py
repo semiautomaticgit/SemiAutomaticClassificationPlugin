@@ -79,258 +79,223 @@ class Accuracy:
 			return "No"
 		rstrOut = QFileDialog.getSaveFileName(None , QApplication.translate("semiautomaticclassificationplugin", "Save error matrix raster output"), "", "*.tif")
 		if len(rstrOut) > 0:
-			i = cfg.utls.selectLayerbyName(classification, "Yes")
+			iClass = cfg.utls.selectLayerbyName(classification, "Yes")
 			l = cfg.utls.selectLayerbyName(reference)
-			if i is not None and l is not None:
-				cfg.uiUtls.addProgressBar()
-				# disable map canvas render for speed
-				cfg.cnvs.setRenderFlag(False)
-				qApp.processEvents()
-				# date time for temp name
-				dT = cfg.utls.getTime()
-				# temp raster layer
-				tRC= cfg.tmpDir + "/" + cfg.rclssTempNm + dT + ".tif"
-				# error matrix
-				eMN = dT + cfg.errMatrixNm
-				cfg.reportPth = str(cfg.tmpDir + "/" + eMN)
-				# field of reclassification
-				if cfg.macroclassCheck == "No":
-					fd = cfg.fldID_class
-				elif cfg.macroclassCheck == "Yes":
-					fd = cfg.fldMacroID_class
-				# convert reference layer to raster
-				cfg.utls.vectorToRaster(str(fd), unicode(l.source()), classification, unicode(tRC))		
-				cfg.uiUtls.updateBar(10)
-				# open input with GDAL
-				refRstrDt = gdal.Open(unicode(tRC), GA_ReadOnly)
-				newRstrDt = gdal.Open(i.source(), GA_ReadOnly)
-				# number of x pixels
-				refRstrCols = refRstrDt.RasterXSize
-				newRstrCols = newRstrDt.RasterXSize
-				# number of y pixels
-				refRstrRows = refRstrDt.RasterYSize
-				newRstrRows = newRstrDt.RasterYSize
+			if iClass is not None and l is not None:
 				# check projections
-				refRstrProj = refRstrDt.GetProjection()
-				newRstrProj = newRstrDt.GetProjection()
-				# pixel size and origin
-				refRstGeoTrnsf = refRstrDt.GetGeoTransform()
-				newRstGeoTrnsf = newRstrDt.GetGeoTransform()
-				refRstPxlXSz = abs(refRstGeoTrnsf[1])
-				newRstPxlXSz = abs(newRstGeoTrnsf[1])
-				refRstPxlYSz = abs(refRstGeoTrnsf[5])
-				newRstPxlYSz = abs(newRstGeoTrnsf[5])
+				newRstrProj = cfg.utls.getCrs(iClass)
+				refRstrProj = cfg.utls.getCrs(l)
 				if refRstrProj != newRstrProj:
 					cfg.mx.msg9()
+					return "No"
 				else:
+					cfg.uiUtls.addProgressBar()
+					# disable map canvas render for speed
+					cfg.cnvs.setRenderFlag(False)
+					qApp.processEvents()
+					# date time for temp name
+					dT = cfg.utls.getTime()
+					# temp raster layer
+					tRC= cfg.tmpDir + "/" + cfg.rclssTempNm + dT + ".tif"
+					# error matrix
+					eMN = dT + cfg.errMatrixNm
+					cfg.reportPth = str(cfg.tmpDir + "/" + eMN)
 					errorRstPath = rstrOut
 					errorRstPath = errorRstPath.replace('\\', '/')
 					errorRstPath = errorRstPath.replace('//', '/')
 					tblOut = os.path.dirname(errorRstPath) + "/" + os.path.basename(errorRstPath)
 					tblOut = os.path.splitext(tblOut)[0] + ".csv"
-					if unicode(errorRstPath).endswith(".tif"):
+					if unicode(errorRstPath).lower().endswith(".tif"):
 						pass
 					else:
 						errorRstPath = errorRstPath + ".tif"
-					if refRstPxlXSz != newRstPxlXSz or refRstPxlYSz != newRstPxlYSz:
-						cfg.mx.msgWar5()
-					# get band
-					refRstrBnd = refRstrDt.GetRasterBand(1)
-					newRstrBnd = newRstrDt.GetRasterBand(1)
-					# calculate raster offset
-					xOffst = int((refRstGeoTrnsf[0] - newRstGeoTrnsf[0]) / refRstPxlXSz) 
-					yOffst = int((refRstGeoTrnsf[3] - newRstGeoTrnsf[3]) / refRstPxlYSz)
-					# calculate overlapping origins, rows and columns
-					if xOffst <= 0:
-						refRstrXOrig = abs(xOffst)
-						newRstrXOrig = 0
-						if refRstrCols + xOffst < newRstrCols:
-							ovlpCols = refRstrCols +  xOffst
-						elif refRstrCols + xOffst >= newRstrCols:
-							ovlpCols = newRstrCols
-					if xOffst > 0:
-						refRstrXOrig = 0
-						newRstrXOrig = xOffst
-						if refRstrCols < newRstrCols - xOffst:
-							ovlpCols = refRstrCols
-						elif refRstrCols >= newRstrCols - xOffst:
-							ovlpCols = newRstrCols - xOffst
-					if yOffst >= 0:
-						refRstrYOrig = yOffst
-						newRstrYOrig = 0
-						if refRstrRows - yOffst <= newRstrRows:
-							ovlpRows = refRstrRows - yOffst
-						elif refRstrRows - yOffst > newRstrRows:
-							ovlpRows = newRstrRows
-					if yOffst < 0:
-						refRstrYOrig = 0
-						newRstrYOrig = abs(yOffst)
-						if refRstrRows < newRstrRows + yOffst:
-							ovlpRows = refRstrRows
-						elif refRstrRows >= newRstrRows + yOffst:
-							ovlpRows = newRstrRows + yOffst
-					blockSizeX = cfg.utls.calculateBlockSize(6)
-					blockSizeY = blockSizeX
-					# reference raster range blocks
-					lX = range(refRstrXOrig, refRstrXOrig + ovlpCols, blockSizeX)
-					lY = range(refRstrYOrig, refRstrYOrig + ovlpRows, blockSizeY)
-					# new raster range blocks
-					nlX = range(newRstrXOrig, newRstrXOrig + ovlpCols, blockSizeX)
-					nlY = range(newRstrYOrig, newRstrYOrig + ovlpRows, blockSizeY)
-					cfg.uiUtls.updateBar(20)
-					# set initial value for progress bar
-					progresStep = 60 / (len(lX) * len(lY))
-					progressStart = 20 - progresStep
-					# block size
-					if blockSizeX > ovlpCols:
-						blockSizeX = ovlpCols
-					if blockSizeY > ovlpRows:
-						blockSizeY = ovlpRows
-					# create output raster
-					oC = []
-					oC.append(rstrOut)
-					oCR = cfg.utls.createRasterFromReference(refRstrDt, 1, oC, cfg.NoDataVal, "GTiff", GDT_Int32)
-					cmbntns = []
-					valSum = []
-					n = 1
-					# process
-					for y in lY:
-						bSY = blockSizeY
-						for x in lX:
-							if cfg.actionCheck == "Yes":
-								progress = progressStart + n * progresStep
-								cfg.uiUtls.updateBar(progress)
-								bSX = blockSizeX
-								if bSY + y > refRstrYOrig + ovlpRows:
-									bSY = ovlpRows - y
-								if x + bSX > refRstrXOrig + ovlpCols:
-									bSX = ovlpCols - x
-								# combinations of classes
-								refRstrArr = refRstrBnd.ReadAsArray(x, y, bSX, bSY)
-								newRstrArr = newRstrBnd.ReadAsArray(nlX[lX.index(x)], nlY[lY.index(y)], bSX, bSY)
-								refRstrVal = np.unique(refRstrArr).tolist()
-								newRstrVal = np.unique(newRstrArr).tolist()
-								cmb = list(itertools.product(refRstrVal, newRstrVal))
-								for i in cmb:
-									if i not in cmbntns:
-										if str(i[0]) != str(cfg.NoDataVal):
-											cmbntns.extend([i])
-											valSum.append(0)
-								val = 1
-								changeArray = None
-								for i in cmbntns:
-									# change conditions
-									cmbsArr = val * np.logical_and(refRstrArr == i[0], newRstrArr == i[1])
-									sum = np.count_nonzero(cmbsArr)
-									# change raster
-									if changeArray == None:
-										changeArray = cmbsArr
-									else:
-										e = np.ma.masked_equal(cmbsArr, 0)
-										changeArray =  e.mask * changeArray + cmbsArr
-										e = None
-									valSum[val - 1] = valSum[val - 1] + sum
-									cfg.utls.writeArrayBlock(oCR[0], 1, changeArray, x, y, cfg.NoDataVal)
-									val = val + 1
-							n = n + 1
-					cfg.uiUtls.updateBar(80)
-					# error matrix
-					col = []
-					row = []
-					for k in cmbntns:
-						col.append(k[0])
-						row.append(k[1])
-					cols = sorted(np.unique(col).tolist())
-					rows = sorted(np.unique(row).tolist())
-					totX = cols
-					totX.extend(rows)
-					total = sorted(np.unique(totX).tolist())
-					errMatrix = np.zeros((len(total), len(total)))
-					cList = "V " + str(QApplication.translate("semiautomaticclassificationplugin", 'Classification')) + "\t"
-					l = open(tblOut, 'w')
-					t = str(QApplication.translate("semiautomaticclassificationplugin", 'ErrMatrixCode')) + "	" + str(QApplication.translate("semiautomaticclassificationplugin", 'Reference')) + "	" + str(QApplication.translate("semiautomaticclassificationplugin", 'Classification')) + "	" + str(QApplication.translate("semiautomaticclassificationplugin", 'PixelSum') + str("\n"))
+				cfg.uiUtls.updateBar(10)
+				# if reference shapefile
+				if l.type()== 0:
+					fd = cfg.ui.class_field_comboBox.currentText()
+					# convert reference layer to raster
+					cfg.utls.vectorToRaster(fd, unicode(l.source()), classification, unicode(tRC))
+					referenceRaster = tRC
+				# if reference raster
+				elif l.type()== 1:
+					referenceRaster = l.source()
+				# open input with GDAL
+				refRstrDt = gdal.Open(unicode(referenceRaster), GA_ReadOnly)
+				newRstrDt = gdal.Open(iClass.source(), GA_ReadOnly)
+				# combination finder
+				# band list
+				bLR = cfg.utls.readAllBandsFromRaster(refRstrDt)
+				cfg.rasterBandUniqueVal = np.zeros((1, 1))
+				cfg.rasterBandUniqueVal = np.delete(cfg.rasterBandUniqueVal, 0, 1)
+				o = cfg.utls.processRaster(refRstrDt, bLR, None, "No", cfg.utls.rasterUniqueValues, None, None, None, None, 0, None, cfg.NoDataVal, "No", None, None, "UniqueVal")
+				cfg.rasterBandUniqueVal = np.unique(cfg.rasterBandUniqueVal).tolist()
+				refRasterBandUniqueVal = sorted(cfg.rasterBandUniqueVal)
+				# band list
+				bLN = cfg.utls.readAllBandsFromRaster(newRstrDt)
+				cfg.rasterBandUniqueVal = np.zeros((1, 1))
+				cfg.rasterBandUniqueVal = np.delete(cfg.rasterBandUniqueVal, 0, 1)
+				o = cfg.utls.processRaster(newRstrDt, bLN, None, "No", cfg.utls.rasterUniqueValues, None, None, None, None, 0, None, cfg.NoDataVal, "No", None, None, "UniqueVal")
+				for b in range(0, len(bLR)):
+					bLR[b] = None
+				refRstrDt = None
+				for b in range(0, len(bLN)):
+					bLN[b] = None
+				newRstrDt = None		
+				cfg.rasterBandUniqueVal = np.unique(cfg.rasterBandUniqueVal).tolist()
+				newRasterBandUniqueVal = sorted(cfg.rasterBandUniqueVal)	
+				cmb = list(itertools.product(refRasterBandUniqueVal, newRasterBandUniqueVal))
+				# error matrix
+				col = []
+				row = []
+				cmbntns = {}
+				# expression builder
+				n = 1
+				cPar = " "
+				e = "np.where( "
+				for i in cmb:
+					if str(i[0]) == "nan" or str(i[1]) == "nan" :
+						pass
+					else:
+						e = e + "(a == " + str(i[0]) + ") & (b == " + str(i[1]) + "), " + str(n) + ", (np.where( "
+						cPar = cPar + "))"
+						cmbntns["combination_" + str(i[0]) + "_"+ str(i[1])] = n
+						col.append(i[0])
+						row.append(i[1])
+						n = n + 1
+				e = e[:-11] + str(cfg.NoDataVal) + cPar[:-1]
+				# virtual raster
+				tPMN = cfg.tmpVrtNm + ".vrt"
+				# date time for temp name
+				dT = cfg.utls.getTime()
+				tPMD = cfg.tmpDir + "/" + dT + tPMN
+				bList = [unicode(referenceRaster), iClass.source()]
+				bandNumberList = [1, 1]
+				vrtCheck = cfg.utls.createVirtualRaster2(bList, tPMD, bandNumberList, "Yes", cfg.NoDataVal, 0, "No", "No")
+				# open input with GDAL
+				rD = gdal.Open(tPMD, GA_ReadOnly)
+				# output rasters
+				oM = []
+				oM.append(errorRstPath)
+				oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0, None, "Yes")
+				# band list
+				bL = cfg.utls.readAllBandsFromRaster(rD)
+				# calculation
+				variableList = [["im1", "a"], ["im2", "b"]]
+				o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.bandCalculation, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", e, variableList, "No")
+				# logger
+				cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "accuracy raster output: " + unicode(rstrOut))
+				# close GDAL rasters
+				for b in range(0, len(oMR)):
+					oMR[b] = None
+				for b in range(0, len(bL)):
+					bL[b] = None
+				rD = None
+				cfg.uiUtls.updateBar(80)
+				cols = sorted(np.unique(col).tolist())
+				rows = sorted(np.unique(row).tolist())
+				totX = cols
+				totX.extend(rows)
+				total = sorted(np.unique(totX).tolist())
+				errMatrix = np.zeros((len(total), len(total)))
+				cList = "V " + str(QApplication.translate("semiautomaticclassificationplugin", 'Classification')) + "\t"
+				l = open(tblOut, 'w')
+				t = str(QApplication.translate("semiautomaticclassificationplugin", 'ErrMatrixCode')) + "	" + str(QApplication.translate("semiautomaticclassificationplugin", 'Reference')) + "	" + str(QApplication.translate("semiautomaticclassificationplugin", 'Classification')) + "	" + str(QApplication.translate("semiautomaticclassificationplugin", 'PixelSum') + str("\n"))
+				l.write(t)
+				# open error raster
+				rDC = gdal.Open(errorRstPath, GA_ReadOnly)
+				bLC = cfg.utls.readAllBandsFromRaster(rDC)
+				for c in total:
+					cList = cList + str(c) + "\t"
+					for r in total:
+						cfg.rasterBandPixelCount = 0
+						try:
+							v = cmbntns["combination_" + str(c) + "_"+ str(r)]
+							o = cfg.utls.processRaster(rDC, bLC, None, "No", cfg.utls.rasterEqualValueCount, None, None, None, None, 0, None, cfg.NoDataVal, "No", None, v, "value " + str(v))
+							t = str(v) + "\t" + str(c) + "\t" + str(r) + "\t" + str(cfg.rasterBandPixelCount) + str("\n")
+							l.write(t)
+							errMatrix[total.index(r), total.index(c)] = cfg.rasterBandPixelCount
+						except:
+							errMatrix[total.index(r), total.index(c)] = cfg.rasterBandPixelCount
+				# save combination to table
+				l.write(str("\n"))
+				l.write(str(QApplication.translate("semiautomaticclassificationplugin", 'ERROR MATRIX')) + str("\n"))
+				l.write("\t" + "> " + str(QApplication.translate("semiautomaticclassificationplugin", 'Reference')) + str("\n"))
+				l.write(cList + str(QApplication.translate("semiautomaticclassificationplugin", 'Total') + str("\n")))
+				# temp matrix
+				tmpMtrx= cfg.tmpDir + "/" + cfg.tempMtrxNm + dT + ".txt"
+				np.savetxt(tmpMtrx, errMatrix, delimiter="\t", fmt="%i")
+				tM = open(tmpMtrx, 'r')
+				# write matrix
+				ix = 0
+				for j in tM:
+					tMR = str(total[ix]) + "\t" + j.rstrip('\n') + "\t" + str(int(errMatrix[ix, :].sum())) + str("\n")
+					l.write(tMR)
+					ix = ix + 1
+				# last line
+				lL = str(QApplication.translate("semiautomaticclassificationplugin", 'Total'))
+				for c in range(0, len(total)):
+					lL = lL + "\t" + str(int(errMatrix[:, c].sum()))
+				totMat = int(errMatrix.sum())
+				lL = lL + "\t" + str(totMat) + str("\n")
+				l.write(lL)
+				l.write(str("\n"))
+				# overall accuracy
+				oA = 100 * errMatrix.trace() / totMat
+				t = str(QApplication.translate("semiautomaticclassificationplugin", 'Overall accuracy [%] = ')) + str(oA) + str("\n")
+				l.write(t)
+				# producer's accuracy
+				for g in range(0, len(total)):
+					p = 100 * errMatrix[g,g] / errMatrix[:, g].sum()
+					u = 100 * errMatrix[g,g] / errMatrix[g, :].sum()
+					t = QApplication.translate("semiautomaticclassificationplugin", 'Class ') + str(total[g]) + QApplication.translate("semiautomaticclassificationplugin", ' producer accuracy [%] = ') + str(p) + "\t" + QApplication.translate("semiautomaticclassificationplugin", ' user accuracy [%] = ') + str(u) + str("\n")
 					l.write(t)
-					v = 1
-					# append total
-					total.append(str(QApplication.translate("semiautomaticclassificationplugin", 'Total')))
-					for c in total:
-						cList = cList + str(c) + "\t"
-						for r in total:
-							try:
-								t = str(v) + "\t" + str(c) + "\t" + str(r) + "\t" + str(valSum[cmbntns.index((c, r))]) + str("\n")
-								l.write(t)
-								errMatrix[total.index(r), total.index(c)] = valSum[cmbntns.index((c, r))]
-								v = v + 1
-							except:
-								pass
-					# save combination to table
-					l.write(str("\n"))
-					l.write(str(QApplication.translate("semiautomaticclassificationplugin", 'ERROR MATRIX')) + str("\n"))
-					l.write("\t" + "> " + str(QApplication.translate("semiautomaticclassificationplugin", 'Reference')) + str("\n"))
-					l.write(cList + str("\n"))
-					# temp matrix
-					tmpMtrx= cfg.tmpDir + "/" + cfg.tempMtrxNm + dT + ".txt"
-					np.savetxt(tmpMtrx, errMatrix, delimiter="\t", fmt="%i")
-					tM = open(tmpMtrx, 'r')
-					# write matrix
-					ix = 0
-					for j in tM:
-						tMR = str(total[ix]) + "\t" + j.rstrip('\n') + "\t" + str(int(errMatrix[ix, :].sum())) + str("\n")
-						l.write(tMR)
-						ix = ix + 1
-					# last line
-					lL = str(QApplication.translate("semiautomaticclassificationplugin", 'Total'))
-					for c in range(0, len(total) - 1):
-						lL = lL + "\t" + str(int(errMatrix[:, c].sum()))
-					totMat = int(errMatrix.sum())
-					lL = lL + "\t" + str(totMat) + str("\n")
-					l.write(lL)
-					l.write(str("\n"))
-					# overall accuracy
-					oA = 100 * errMatrix.trace() / totMat
-					t = str(QApplication.translate("semiautomaticclassificationplugin", 'Overall accuracy [%] = ')) + str(oA) + str("\n")
-					l.write(t)
-					# producer's accuracy
-					for g in range(0, len(total) - 1):
-						p = 100 * errMatrix[g,g] / errMatrix[:, g].sum()
-						u = 100 * errMatrix[g,g] / errMatrix[g, :].sum()
-						t = QApplication.translate("semiautomaticclassificationplugin", 'Class ') + str(total[g]) + QApplication.translate("semiautomaticclassificationplugin", ' producer accuracy [%] = ') + str(p) + "\t" + QApplication.translate("semiautomaticclassificationplugin", ' user accuracy [%] = ') + str(u) + str("\n")
-						l.write(t)
-					l.close()
-					# close bands
-					refRstrBnd = None
-					newRstrBnd = None
-					oCR[0] = None
-					refRstrDt = None
-					newRstrDt = None
-					# add raster to layers
-					cfg.iface.addRasterLayer(unicode(rstrOut), unicode(os.path.basename(rstrOut)))
-					rstr = cfg.utls.selectLayerbyName(unicode(os.path.basename(rstrOut)), "Yes")
-					cfg.utls.rasterSymbolGeneric(rstr)	
-					try:
-						f = open(tblOut)
-						if os.path.isfile(tblOut):
-							eM = f.read()
-							cfg.ui.error_matrix_textBrowser.setText(str(eM))
-						# logger
-						cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " error matrix calculated")
-					except Exception, err:
-						# logger
-						cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-					cfg.uiUtls.updateBar(100)
-					# enable map canvas render
-					cfg.cnvs.setRenderFlag(True)
-					cfg.utls.finishSound()
-					cfg.uiUtls.removeProgressBar()
+				l.close()
+				# close bands
+				for b in range(0, len(bLC)):
+					bLC[b] = None
+				rDC = None
+				# add raster to layers
+				cfg.iface.addRasterLayer(unicode(errorRstPath), unicode(os.path.basename(errorRstPath)))
+				rstr = cfg.utls.selectLayerbyName(unicode(os.path.basename(errorRstPath)), "Yes")
+				cfg.utls.rasterSymbolGeneric(rstr, "NoData")	
+				try:
+					f = open(tblOut)
+					if os.path.isfile(tblOut):
+						eM = f.read()
+						cfg.ui.error_matrix_textBrowser.setText(str(eM))
 					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "finished")
-	
+					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " error matrix calculated")
+				except Exception, err:
+					# logger
+					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.uiUtls.updateBar(100)
+				# enable map canvas render
+				cfg.cnvs.setRenderFlag(True)
+				cfg.utls.finishSound()
+				cfg.uiUtls.removeProgressBar()
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "finished")
+			else:
+				self.refreshReferenceLayer()
+				cfg.utls.refreshClassificationLayer()
+				
 	# reference layer name
 	def referenceLayerName(self):
 		cfg.referenceLayer = cfg.ui.reference_name_combo.currentText()
+		cfg.ui.class_field_comboBox.clear()
+		l = cfg.utls.selectLayerbyName(cfg.referenceLayer)
+		try:
+			if l.type()== 0:
+				f = l.dataProvider().fields()
+				for i in f:
+					if i.typeName() != "String":
+						cfg.dlg.class_field_combo(unicode(i.name()))
+		except:
+			pass
 		# logger
 		cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "reference layer name: " + unicode(cfg.referenceLayer))
 	
+	# refresh reference layer name
 	def refreshReferenceLayer(self):
 		ls = cfg.lgnd.layers()
 		cfg.ui.reference_name_combo.clear()
@@ -339,9 +304,9 @@ class Accuracy:
 		for l in ls:
 			if (l.type()==QgsMapLayer.VectorLayer):
 				if (l.geometryType() == QGis.Polygon):
-					# filter if shapefile has ID_class field
-					fds = l.dataProvider().fields()
-					if fds.indexFromName(cfg.fldID_class) > -1:
-						cfg.dlg.reference_layer_combo(l.name())
+					cfg.dlg.reference_layer_combo(l.name())
+			elif (l.type()==QgsMapLayer.RasterLayer):
+				if l.bandCount() == 1:
+					cfg.dlg.reference_layer_combo(l.name())
 		# logger
 		cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "reference layers refreshed")
