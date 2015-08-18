@@ -178,7 +178,7 @@ class Scatter_Plot:
 			tRN = cfg.subsTmpROI + dT + ".tif"
 			tRD = str(cfg.tmpDir + "//" + tRN)
 			i = cfg.utls.selectLayerbyName(str(cfg.rstrNm), "Yes")		
-			cfg.utls.getRasterBandByBandNumber(unicode(i.source()), rasterBand, tRD)
+			cfg.utls.getRasterBandByBandNumber(unicode(i.source()), rasterBand, tRD, "No", cfg.rasterDataType, [cfg.bndSetMultiFactorsList[int(rasterBand) - 1], cfg.bndSetAddFactorsList[int(rasterBand) - 1]])
 			bX = cfg.utls.clipRasterByShapefile(tLD, tRD, cD)				
 		# register drivers
 		gdal.AllRegister()

@@ -50,39 +50,42 @@ class SigThresholdTab:
 
 	# Create signature list table
 	def signatureThresholdListTable(self):
-		self.tableEdited = "No"
 		l = cfg.ui.signature_threshold_tableWidget
+		self.tableEdited = "No"
+		l.blockSignals(True)
 		cfg.utls.clearTable(l)
+		l.blockSignals(True)
+		cfg.utls.sortTableColumn(l, 5)
 		x = 0
 		for k in cfg.signIDs.values():
 			l.insertRow(x)
 			l.setRowHeight(x, 20)
-			itMID = QTableWidgetItem(str(x + 1))
+			itMID = QTableWidgetItem()
 			itMID.setFlags(Qt.ItemIsEnabled)
-			itMID.setText(str(cfg.signList["MACROCLASSID_" + str(k)]))
+			itMID.setData(Qt.DisplayRole, int(cfg.signList["MACROCLASSID_" + str(k)]))
 			l.setItem(x, 0, itMID)
-			itMInfo = QTableWidgetItem(str(x + 1))
+			itMInfo = QTableWidgetItem()
 			itMInfo.setFlags(Qt.ItemIsEnabled)
-			itMInfo.setText(str(cfg.signList["MACROCLASSINFO_" + str(k)]))
+			itMInfo.setData(Qt.DisplayRole, str(cfg.signList["MACROCLASSINFO_" + str(k)]))
 			l.setItem(x, 1, itMInfo)
-			itID = QTableWidgetItem(str(x + 1))
+			itID = QTableWidgetItem()
 			itID.setFlags(Qt.ItemIsEnabled)
-			itID.setText(str(cfg.signList["CLASSID_" + str(k)]))
+			itID.setData(Qt.DisplayRole, int(cfg.signList["CLASSID_" + str(k)]))
 			l.setItem(x, 2, itID)			
-			itInfo = QTableWidgetItem(str(x + 1))
+			itInfo = QTableWidgetItem()
 			itInfo.setFlags(Qt.ItemIsEnabled)
-			itInfo.setText(str(cfg.signList["CLASSINFO_" + str(k)]))
+			itInfo.setData(Qt.DisplayRole, str(cfg.signList["CLASSINFO_" + str(k)]))
 			l.setItem(x, 3, itInfo)	
-			itT = QTableWidgetItem(str(x + 1))
-			itT.setText("0")
+			itT = QTableWidgetItem()
+			itT.setData(Qt.DisplayRole, cfg.signList["SIG_THRESHOLD_" + str(k)])
 			l.setItem(x, 4, itT)
-			itI = QTableWidgetItem(str(x + 1))
+			itI = QTableWidgetItem()
 			itI.setFlags(Qt.ItemIsEnabled)
-			itI.setText(str(cfg.signIDs["ID_" + str(k)]))
+			itI.setData(Qt.DisplayRole, str(cfg.signIDs["ID_" + str(k)]))
 			l.setItem(x, 5, itI)			
 			x = x + 1
+		l.blockSignals(False)
 		self.tableEdited = "Yes"
-		self.readThresholdTable()
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " signature list threshold created")
 		
@@ -127,8 +130,13 @@ class SigThresholdTab:
 		# ask for confirm
 		a = cfg.utls.questionBox(QApplication.translate("semiautomaticclassificationplugin", "Reset thresholds"), QApplication.translate("semiautomaticclassificationplugin", "Are you sure you want to reset thresholds?"))
 		if a == "Yes":
-			self.signatureThresholdListTable()
-			
+			tAW = cfg.ui.signature_threshold_tableWidget
+			v = tAW.rowCount()
+			for c in range(0, v):
+				w = QTableWidgetItem(str(0))
+				w.setText(str(0))
+				tAW.setItem(c, 4, w)
+				
 	def setThresholds(self):
 		self.tableEdited = "No"
 		tAW = cfg.ui.signature_threshold_tableWidget
@@ -161,15 +169,56 @@ class SigThresholdTab:
 		self.tableEdited = "Yes"
 		self.readThresholdTable()
 		
-		
 	# set all weights
 	def setAllWeights(self, value):
 		self.tableEdited = "No"
 		tAW = cfg.ui.signature_threshold_tableWidget
 		v = tAW.rowCount()
-		for c in range(0, v):
+		for c in reversed(range(0, v)):
 			w = QTableWidgetItem(str(c))
 			w.setText(str(value))
 			tAW.setItem(c, 4, w)
 		self.tableEdited = "Yes"
 		self.readThresholdTable()
+		
+	# set weights based on variance
+	def setAllWeightsVariance(self):
+		tAW = cfg.ui.signature_threshold_tableWidget
+		iR = []
+		for i in tAW.selectedIndexes():
+			iR.append(i.row())
+		v = list(set(iR))
+		if len(v) == 0:
+			count = tAW.rowCount()
+			v = range(0, count)
+		for c in reversed(v):
+			id = tAW.item(c, 5).text()
+			# wavelength
+			wlg = cfg.signList["WAVELENGTH_" + str(id)]
+			val = cfg.signList["VALUES_" + str(id)]
+			# counter
+			n = 0
+			m = []
+			# mean plus standard deviation
+			mPS = []
+			mMS = []
+			for i in wlg:
+				m.append(val[n * 2])
+				sd = val[n * 2 +1]
+				mPS.append(val[n * 2] + sd)
+				mMS.append(val[n * 2] - sd)
+				n = n + 1
+			if str(cfg.algName) == cfg.algMinDist:
+				distP = cfg.utls.euclideanDistance(m, mPS)
+				distM = cfg.utls.euclideanDistance(m, mMS)
+				valueT = cfg.ui.multiplicative_threshold_doubleSpinBox.value() * max([distP, distM])
+			elif str(cfg.algName) == cfg.algSAM:
+				angleP = cfg.utls.spectralAngle(m, mPS)
+				angleM = cfg.utls.spectralAngle(m, mMS)
+				valueT = cfg.ui.multiplicative_threshold_doubleSpinBox.value() * max([angleP, angleM])
+			else:
+				return "No"
+			w = QTableWidgetItem(str(valueT))
+			w.setText(str(valueT))
+			tAW.setItem(c, 4, w)
+			

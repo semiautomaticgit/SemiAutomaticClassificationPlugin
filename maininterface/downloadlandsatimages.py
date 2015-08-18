@@ -345,9 +345,12 @@ class DownloadLandsatImages:
 					
 	# download images in table
 	def downloadImages(self):
-		d = QFileDialog.getExistingDirectory(None , QApplication.translate("semiautomaticclassificationplugin", "Download the images in the table (requires internet connection)"))
-		if len(d) > 0:
-			self.downloadLandsatImages(d)
+		tW = cfg.ui.landsat_images_tableWidget
+		c = tW.rowCount()
+		if c > 0:
+			d = QFileDialog.getExistingDirectory(None , QApplication.translate("semiautomaticclassificationplugin", "Download the images in the table (requires internet connection)"))
+			if len(d) > 0:
+				self.downloadLandsatImages(d)
 		
 	# download Landsat 8 data using the service http://aws.amazon.com/public-data-sets/landsat/
 	def downloadLandsatImages(self, outputDirectory, exporter = "No"):
@@ -466,11 +469,15 @@ class DownloadLandsatImages:
 							tarFile.extract(f, outputDirectory)
 						elif f.name.lower().endswith(".tif"):
 							tarFile.extract(f, outputDirectory)
+					tarFile.close()
+					os.remove(cfg.tmpDir + "//" + imageID + ".tar.bz")
 					return url
 				else:
 					cfg.mx.msgErr42(imageID)
 					return "No"
-			except:
+			except Exception, err:
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				return "No"
 					
 	def exportLinks(self):
@@ -756,6 +763,13 @@ class DownloadLandsatImages:
 			cfg.ui.database_lineEdit.setText(directory)
 		cfg.LandsatDatabaseDirectory = cfg.ui.database_lineEdit.text()
 		cfg.sets.setQGISRegSetting(cfg.regLandsatDBDir, cfg.LandsatDatabaseDirectory)
+		
+	def clearTable(self):
+		# ask for confirm
+		a = cfg.utls.questionBox(QApplication.translate("semiautomaticclassificationplugin", "Reset signature list"), QApplication.translate("semiautomaticclassificationplugin", "Are you sure you want to clear the table?"))
+		if a == "Yes":
+			tW = cfg.ui.landsat_images_tableWidget
+			cfg.utls.clearTable(tW)
 			
 """ deprecated	
 	# read database from http://storage.googleapis.com/earthengine-public/landsat/ 

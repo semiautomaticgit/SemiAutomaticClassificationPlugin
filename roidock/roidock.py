@@ -58,6 +58,9 @@ except:
 class RoiDock:
 
 	def __init__(self):
+		cfg.rbbrBnd = QgsRubberBand(cfg.cnvs, False)
+		cfg.rbbrBnd.setColor(QColor(0,255,255))
+		cfg.rbbrBnd.setWidth(2)
 		self.mrctrVrtc = []
 		
 	# add Highlight Polygon
@@ -93,11 +96,21 @@ class RoiDock:
 		pntO = pnt
 		pnt = cfg.utls.checkPointImage(cfg.rstrNm, pnt)
 		if cfg.pntCheck == "Yes":
+			dT = cfg.utls.getTime()
+			# temp name
+			tN = cfg.subsTmpROI + dT
+			# crs
+			pCrs = cfg.utls.getQGISCrs()
+			mL = QgsVectorLayer("Polygon?crs=" + str(pCrs.toWkt()), tN, "memory")
+			mL.setCrs(pCrs) 
 			cfg.lastVrt.append(pnt)
-			cfg.rbbrBnd.addPoint(pnt)
+			cfg.rbbrBnd.addPoint(QgsPoint(pntO))
+			geom = cfg.rbbrBnd.asGeometry()
 			v = QgsVertexMarker(cfg.cnvs)
 			v.setCenter(pntO)
 			self.mrctrVrtc.append(v)
+			cfg.rbbrBnd.setToGeometry(geom, mL)
+			cfg.rbbrBnd.show()
 		
 	# right click
 	def clckR(self, pnt):
@@ -465,6 +478,7 @@ class RoiDock:
 			# subprocess bands
 			dBs = {}
 			dBSP = {}
+			dBMA = {}
 			if progressbar == "Yes":
 				cfg.uiUtls.updateBar(20)
 			# band set
@@ -474,6 +488,7 @@ class RoiDock:
 					for b in range(0, len(cfg.bndSet)):
 						tmpSubset = str(cfg.tmpDir + "//" + cfg.subsTmpRaster + "_" + str(b) + "_" + dT + ".vrt")
 						dBs["BANDS_{0}".format(b)] = str(cfg.tmpDir + "//" + cfg.subsTmpRaster + "_" + str(b) + "_" + dT + ".vrt")
+						dBMA["BANDS_{0}".format(b)] = [cfg.bndSetMultiFactorsList[b], cfg.bndSetAddFactorsList[b]]
 						dBSP["BAND_SUBPROCESS_{0}".format(b)] = cfg.utls.subsetImage(cfg.bndSet[b], point.x(), point.y(), float(cfg.maxROIWdth), float(cfg.maxROIWdth), tmpSubset, cfg.outTempRastFormat, "Yes")
 						if dBSP["BAND_SUBPROCESS_{0}".format(b)] == "Yes":
 							cfg.mx.msgErr29()
@@ -500,6 +515,7 @@ class RoiDock:
 								cfg.uiUtls.removeProgressBar()
 							return pr
 						dBs["BANDS_{0}".format(b)] = tR
+						dBMA["BANDS_{0}".format(b)] = [cfg.bndSetMultiFactorsList[b], cfg.bndSetAddFactorsList[b]]
 					except Exception, err:
 						# logger
 						cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
@@ -522,6 +538,7 @@ class RoiDock:
 					bLC = 1
 					for b in oList:
 						dBs["BANDS_{0}".format(bLC)] = str(b)
+						dBMA["BANDS_{0}".format(bLC)] = [cfg.bndSetMultiFactorsList[bLC - 1], cfg.bndSetAddFactorsList[bLC - 1]]
 						bLC = bLC + 1
 				else:
 					try:
@@ -529,7 +546,7 @@ class RoiDock:
 						tRN2 = cfg.copyTmpROI + dT + ".tif"
 						tR2 = str(cfg.tmpDir + "//" + tRN2)
 						# subset image
-						pr = cfg.utls.subsetImage(cfg.rstrNm, point.x(), point.y(), int(cfg.maxROIWdth), int(cfg.maxROIWdth), tR2, cfg.outTempRastFormat)
+						pr = cfg.utls.subsetImage(cfg.rstrNm, point.x(), point.y(), int(cfg.maxROIWdth), int(cfg.maxROIWdth), tR2)
 						if pr == "Yes":
 							cfg.mx.msgErr29()
 							# enable map canvas render
@@ -540,8 +557,9 @@ class RoiDock:
 							if progressbar == "Yes":
 								cfg.uiUtls.removeProgressBar()
 							return pr
-						cfg.utls.getRasterBandByBandNumber(tR2, str(cfg.ROIband), tR) # issue if using virtual raster option
+						cfg.utls.getRasterBandByBandNumber(tR2, str(cfg.ROIband), tR,  "No", cfg.rasterDataType, [cfg.bndSetMultiFactorsList[int(cfg.ROIband) - 1], cfg.bndSetAddFactorsList[int(cfg.ROIband) - 1]]) # issue if using virtual raster option
 						dBs["BANDS_{0}".format(1)] = tR
+						dBMA["BANDS_{0}".format(1)] = [cfg.bndSetMultiFactorsList[0], cfg.bndSetAddFactorsList[0]]
 					except Exception, err:
 						# logger
 						cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
@@ -554,7 +572,7 @@ class RoiDock:
 			if progressbar == "Yes":
 				cfg.uiUtls.updateBar(40)
 			# run segmentation
-			rGC = self.regionGrowing(dBs, point.x(), point.y(), cfg.rngRad, int(cfg.minROISz), tS)
+			rGC = self.regionGrowing(dBs, point.x(), point.y(), cfg.rngRad, int(cfg.minROISz), tS, dBMA)
 			# check if region growing failed
 			if rGC == "No":
 				# enable map canvas render
@@ -614,11 +632,13 @@ class RoiDock:
 					cfg.uiUtls.removeProgressBar()
 			
 	# region growing
-	def regionGrowing(self, rasterDictionary, seedX, seedY, spectralRange, minimumSize, outputVector):
+	def regionGrowing(self, rasterDictionary, seedX, seedY, spectralRange, minimumSize, outputVector, multiAddDictionary = None):
 		gdal.AllRegister()
 		tD = gdal.GetDriverByName( "GTiff" )
 		itRs = iter(rasterDictionary)
-		iR = str(rasterDictionary[next(itRs)])
+		itRs1 = next(itRs)
+		dBand = str(itRs1)
+		iR = str(rasterDictionary[itRs1])
 		# open input with GDAL
 		try:
 			rD = gdal.Open(iR, GA_ReadOnly)
@@ -676,6 +696,9 @@ class RoiDock:
 				rRB.SetNoDataValue(0)
 				# input array
 				aB =  iRB.ReadAsArray()
+				if multiAddDictionary is not None:
+					multiAdd = multiAddDictionary[dBand]
+					aB = cfg.utls.arrayMultiplicativeAdditiveFactors(aB, multiAdd[0], multiAdd[1])
 				area = int(cfg.maxROIWdth) * int(cfg.maxROIWdth)
 				if area < minimumSize:
 					minimumSize = area
@@ -703,6 +726,9 @@ class RoiDock:
 							return "No"
 						# input array
 						aB =  iRB.ReadAsArray()
+						if multiAddDictionary is not None:
+							multiAdd = multiAddDictionary[raster]
+							aB = cfg.utls.arrayMultiplicativeAdditiveFactors(aB, multiAdd[0], multiAdd[1])
 						# region growing alg
 						try:
 							nR = self.regionGrowingAlg(aB, sPX, sPY, spectralRange, minimumSize)
@@ -1068,7 +1094,8 @@ class RoiDock:
 	def zoomToROI(self, index):
 		id = int(cfg.uid.ROI_tableWidget.item(index.row(), 4).text())
 		l = cfg.utls.selectLayerbyName(cfg.trnLay)
-		cfg.utls.zoomToSelected(l, id)
+		if l is not None:
+			cfg.utls.zoomToSelected(l, id)
 		
 	def editedCell(self, row, column):
 		tW = cfg.uid.ROI_tableWidget
@@ -1160,15 +1187,15 @@ class RoiDock:
 				# subset 
 				for b in range(0, len(cfg.bndSet)):
 					tS = str(cfg.tmpDir + "//" + cfg.subsTmpRaster + "_" + str(b) + "_" + dT + ".tif")
-					pr = cfg.utls.subsetImage(cfg.bndSet[b], rCX, rCY, rW/pS + 3,  rH/pS + 3, tS, cfg.outTempRastFormat)
+					pr = cfg.utls.subsetImage(cfg.bndSet[b], rCX, rCY, rW/pS + 3,  rH/pS + 3, tS)
 					if pr == "Yes":
 						# logger
 						cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " Error edge")
 						# enable map canvas render
 						cfg.cnvs.setRenderFlag(True)
 						return pr
-					bX = cfg.utls.clipRasterByShapefile(tLP, tS, None, cfg.outTempRastFormat)
-					rStat, ar = cfg.utls.getRasterBandStatistics(bX, 1)
+					bX = cfg.utls.clipRasterByShapefile(tLP, tS, None)
+					rStat, ar = cfg.utls.getRasterBandStatistics(bX, 1, cfg.bndSetMultAddFactorsList[b])
 					if rStat is None:
 						cfg.mx.msgErr31()
 						# enable map canvas render
@@ -1187,19 +1214,19 @@ class RoiDock:
 				# subset 
 				tLX, tLY, pS = cfg.utls.imageInformation(rasterName)
 				tS = str(cfg.tmpDir + "//" + cfg.subsTmpRaster + "_" + dT + ".tif")
-				pr = cfg.utls.subsetImage(rasterName, rCX, rCY, rW/pS + 3 , rH/pS + 3, str(tS), cfg.outTempRastFormat)
+				pr = cfg.utls.subsetImage(rasterName, rCX, rCY, rW/pS + 3 , rH/pS + 3, str(tS))
 				if pr == "Yes":
 					# logger
 					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " Error edge")
 					# enable map canvas render
 					cfg.cnvs.setRenderFlag(True)
 					return pr
-				oList = cfg.utls.rasterToBands(tS, cfg.tmpDir)
+				oList = cfg.utls.rasterToBands(tS, cfg.tmpDir, None, "No", cfg.bndSetMultAddFactorsList)
 				rL = cfg.utls.selectLayerbyName(rasterName, "Yes")
-				bCount = rL.bandCount()	
+				bCount = rL.bandCount()
 				for b in range(0, bCount):
 					tS = str(cfg.tmpDir + "//" + cfg.subsTmpRaster + "_" + str(b) + "_" + dT + ".tif")
-					bX = cfg.utls.clipRasterByShapefile(tLP, oList[b], None, cfg.outTempRastFormat)
+					bX = cfg.utls.clipRasterByShapefile(tLP, oList[b], None)
 					rStat, ar = cfg.utls.getRasterBandStatistics(bX, 1)
 					if rStat is None:
 						cfg.mx.msgErr31()
@@ -1310,7 +1337,9 @@ class RoiDock:
 				cfg.rbbrBndPolOut.hide()
 				# ROI point
 				self.vx.hide()
+			cfg.cnvs.setRenderFlag(False)
 			cfg.cnvs.refresh()
+			cfg.cnvs.setRenderFlag(True)
 		except:
 			pass
 	
@@ -1408,7 +1437,7 @@ class RoiDock:
 					# start and end pixels
 					pixelStartColumn = (int((point.x() - tLX) / pSX))
 					pixelStartRow = -(int((tLY - point.y()) / pSY))
-					bVal = float(cfg.utls.readArrayBlock(OrB, pixelStartColumn, pixelStartRow, 1, 1))
+					bVal = float(cfg.utls.readArrayBlock(OrB, pixelStartColumn, pixelStartRow, 1, 1)) * cfg.bndSetMultiFactorsList[b] + cfg.bndSetAddFactorsList[b]
 					rStat = [bVal, bVal, bVal, 0]
 					cfg.tblOut["BAND_{0}".format(b + 1)] = rStat
 					cfg.tblOut["WAVELENGTH_{0}".format(b + 1)] = cfg.bndSetWvLn["WAVELENGTH_{0}".format(b + 1)] 
@@ -1433,7 +1462,7 @@ class RoiDock:
 					# start and end pixels
 					pixelStartColumn = (int((point.x() - tLX) / pSX))
 					pixelStartRow = -(int((tLY - point.y()) / pSY))
-					bVal = float(cfg.utls.readArrayBlock(OrB, pixelStartColumn, pixelStartRow, 1, 1))
+					bVal = float(cfg.utls.readArrayBlock(OrB, pixelStartColumn, pixelStartRow, 1, 1))  * cfg.bndSetMultiFactorsList[b-1] + cfg.bndSetAddFactorsList[b-1]
 					rStat = [bVal, bVal, bVal, 0]
 					cfg.tblOut["BAND_{0}".format(b)] = rStat
 					cfg.tblOut["WAVELENGTH_{0}".format(b)] = cfg.bndSetWvLn["WAVELENGTH_{0}".format(b)] 
@@ -1476,6 +1505,7 @@ class RoiDock:
 				cfg.signList["WAVELENGTH_{0}".format(i)] = wvl
 				cfg.signList["VALUES_{0}".format(i)] = val
 				cfg.signList["COVMATRIX_{0}".format(i)] = covarianceMatrix
+				cfg.signList["SIG_THRESHOLD_{0}".format(i)] = cfg.algThrshld
 				if unit is None:
 					unit = cfg.bndSetUnit["UNIT"]
 				cfg.signList["UNIT_{0}".format(i)] = unit
@@ -1526,3 +1556,8 @@ class RoiDock:
 			cfg.ui.signature_checkBox2.setCheckState(0)
 		cfg.utls.writeProjectVariable("calculateSignature", cfg.sigClcCheck)
 		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " checkbox set: " + str(cfg.sigClcCheck))
+		
+	# zoom to ROI
+	def zoomToROI(self):
+		if cfg.lstROI is not None:
+			cfg.utls.setMapExtentFromLayer(cfg.lstROI)

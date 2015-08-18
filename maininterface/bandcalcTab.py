@@ -58,6 +58,7 @@ class BandCalcTab:
 		
 	# Set raster band table
 	def rasterBandName(self):
+		cfg.utls.refreshClassificationLayer()
 		ls = cfg.lgnd.layers()
 		l = cfg.ui.tableWidget_band_calc
 		l.setSortingEnabled(False)
@@ -152,7 +153,7 @@ class BandCalcTab:
 					for b in range(0, c):
 						bV = tW.item(b, 0).text()
 						bN = tW.item(b, 1).text()
-						if bV in e or bN in e:
+						if str('"' +  bV +'"') in e or str('"' + bN +'"') in e:
 							variableList.append(['"' + bV + '"', '"' + bN + '"'])
 							if cfg.variableBandsetName in bN:
 								bandNumber = bN.split("#b")
@@ -193,10 +194,13 @@ class BandCalcTab:
 					else:
 						NoDataValue = cfg.NoDataVal
 					if cfg.ui.intersection_checkBox.isChecked() is True:
-						intersection = "Yes"
+						vrtCheck = cfg.utls.createVirtualRaster2(bList, tPMD, bandNumberList, "Yes", "No", 0, "No", "Yes")
+					elif cfg.ui.extent_checkBox.isChecked() is True:
+						extRaster = cfg.ui.raster_extent_combo.currentText()
+						tLX, tLY, lRX, lRY, pS = cfg.utls.imageInformationSize(extRaster)
+						vrtCheck = cfg.utls.createVirtualRaster2(bList, tPMD, bandNumberList, "Yes", "No", 0, "No", "No", [float(tLX), float(tLY), float(lRX), float(lRY), "Yes"])
 					else:
-						intersection = "No"
-					vrtCheck = cfg.utls.createVirtualRaster2(bList, tPMD, bandNumberList, "Yes", "No", 0, "No", intersection)
+						vrtCheck = cfg.utls.createVirtualRaster2(bList, tPMD, bandNumberList, "Yes", "No", 0, "No", "No")
 					# open input with GDAL
 					rD = gdal.Open(tPMD, GA_ReadOnly)
 					if rD is None:
@@ -272,6 +276,21 @@ class BandCalcTab:
 					return "No"
 		return ex
 			
+	# extent checkbox
+	def extentCheckbox(self):
+		if cfg.ui.extent_checkBox.isChecked() is True:
+			if cfg.ui.intersection_checkBox.isChecked() is True:
+				cfg.ui.intersection_checkBox.blockSignals(True)
+				cfg.ui.intersection_checkBox.setCheckState(0)
+				cfg.ui.intersection_checkBox.blockSignals(False)
+			
+	def intersectionCheckbox(self):
+		if cfg.ui.intersection_checkBox.isChecked() is True:
+			if cfg.ui.extent_checkBox.isChecked() is True:
+				cfg.ui.extent_checkBox.blockSignals(True)
+				cfg.ui.extent_checkBox.setCheckState(0)
+				cfg.ui.extent_checkBox.blockSignals(False)
+		
 	def doubleClick(self, index):
 		tW = cfg.ui.tableWidget_band_calc
 		k = tW.item(index.row(), index.column()).text()

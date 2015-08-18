@@ -258,7 +258,16 @@ class Messages:
 		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [44]", QApplication.translate("semiautomaticclassificationplugin", "Unable to pansharpen: missing bands "))
 				
 	def msgErr45(self):
-		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [45]", QApplication.translate("semiautomaticclassificationplugin", "Unable to calculate"))
+		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [45]", QApplication.translate("semiautomaticclassificationplugin", "Unable to calculate"))	
+		
+	def msgErr46(self):
+		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [46]", QApplication.translate("semiautomaticclassificationplugin", "Error reading raster. Possibly bands are not aligned"))
+		
+	def msgErr47(self):
+		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [47]", QApplication.translate("semiautomaticclassificationplugin", "Unable to get raster projection. Try to reproject the raster"))
+			
+	def msgErr48(self):
+		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [48]", QApplication.translate("semiautomaticclassificationplugin", "Error calculating accuracy. Possibly shapefile polygons are outside classification"))
 	
 	""" Warnings """
 	def msgWar2Windows(self):

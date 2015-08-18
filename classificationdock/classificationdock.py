@@ -112,15 +112,34 @@ class ClassificationDock:
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "classification symbology applied with qml: " + unicode(stylePath))
 			
+	# set preview transparency
+	def changePreviewTransparency(self, value):
+		#try:
+		l = cfg.utls.selectLayerbyName(cfg.lastPrev)
+		if l is not None:
+			cfg.cnvs.setRenderFlag(False)
+			l.renderer().setOpacity(float(1) - float(value) / 100)
+			if hasattr(l, "setCacheImage"):
+				l.setCacheImage(None)
+			l.triggerRepaint()
+			cfg.cnvs.setRenderFlag(True)
+			cfg.cnvs.refresh()
+		try:
+			pass
+		except Exception, err:
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+		
 	# show hide preview radio button
 	def showHidePreview(self):
 		try:
-			l = cfg.lgnd.groups().index(cfg.grpNm)
-			if cfg.uidc.show_preview_radioButton.isChecked():
-				cfg.lgnd.setGroupVisible(l, True)
-				cfg.utls.moveGroup(cfg.grpNm)
-			else:
-				cfg.lgnd.setGroupVisible(l, False)
+			l = cfg.utls.selectLayerbyName(cfg.lastPrev)
+			if l is not None:
+				if cfg.uidc.show_preview_radioButton.isChecked():				
+					cfg.lgnd.setLayerVisible(l, True)
+					cfg.utls.moveLayerTop(l)
+				else:
+					cfg.lgnd.setLayerVisible(l, False)
 		except:
 			pass
 			
@@ -145,6 +164,14 @@ class ClassificationDock:
 			# disable map canvas render for speed
 			cfg.cnvs.setRenderFlag(False)
 			cfg.uiUtls.updateBar(10)
+			# move previous preview to group
+			g = cfg.utls.groupIndex(cfg.grpNm)
+			if g is None:
+				g = cfg.utls.createGroup(cfg.grpNm)
+			preP = cfg.utls.selectLayerbyName(cfg.lastPrev)
+			if preP is not None:
+				cfg.lgnd.moveLayer(preP, g)
+			cfg.lgnd.setGroupVisible(g, False)
 			# date time for temp name
 			dT = cfg.utls.getTime()
 			# temp files
@@ -152,6 +179,7 @@ class ClassificationDock:
 			tPMD = cfg.tmpDir + "/" + tPMN
 			# preview name and path
 			pN =  dT + cfg.prvwTempNm
+			cfg.lastPrev = pN
 			pP = cfg.tmpDir + "/" + pN
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "point (X,Y) = (%s,%s)" % (cfg.pntPrvw.x() , cfg.pntPrvw.y()))
@@ -179,14 +207,9 @@ class ClassificationDock:
 							cfg.utls.rasterPreviewSymbol(r, cfg.algName)
 							cfg.uiUtls.updateBar(80)
 							# apply symbology
-						# move to group
-						g = cfg.utls.groupIndex(cfg.grpNm)
-						if g is None:
-							g = cfg.utls.createGroup(cfg.grpNm)
-							cfg.lgnd.moveLayer (r, g)
-						else:
-							cfg.lgnd.moveLayer (r, g)
+						cfg.utls.moveLayerTop(r)
 						cfg.uidc.show_preview_radioButton.setChecked(True)
+						cfg.uidc.preview_transparency_slider.setValue(0)
 					cfg.uiUtls.updateBar(100)
 					# enable map canvas render
 					cfg.cnvs.setRenderFlag(True)
@@ -195,6 +218,12 @@ class ClassificationDock:
 					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "<<< PREVIEW created: " + unicode(pN))
 					# enable Redo button
 					cfg.uidc.redo_Preview_Button.setEnabled(True)
+				else:
+					cfg.uiUtls.removeProgressBar()
+					cfg.cnvs.setRenderFlag(True)
+					cfg.mx.msgErr6()
+					# logger
+					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "preview no")	
 			else:
 				cfg.uiUtls.removeProgressBar()
 				if self.trainSigCheck == "No":
@@ -390,7 +419,7 @@ class ClassificationDock:
 			oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, previewSize, previewPoint)
 			oC.append(outputRasterPath)
 			oCR = cfg.utls.createRasterFromReference(rD, 1, oC, cfg.NoDataVal, "GTiff", GDT_Int32, previewSize, previewPoint, compress)
-			o = cfg.utls.processRaster(rD, bL, signatureList, None, cfg.utls.classification, algorithmName, oRL, oMR[0], oCR[0], previewSize, previewPoint, cfg.NoDataVal, macroclassCheck)
+			o = cfg.utls.processRaster(rD, bL, signatureList, None, cfg.utls.classification, algorithmName, oRL, oMR[0], oCR[0], previewSize, previewPoint, cfg.NoDataVal, macroclassCheck, cfg.multiAddFactorsVar, cfg.bndSetMultAddFactorsList)
 			if o == "No":
 				return "No", opOut, tPMD
 			# close GDAL rasters
@@ -484,7 +513,7 @@ class ClassificationDock:
 					cfg.bndSetMaskList = []
 					img = cfg.imgNm
 				### if mask
-					if cfg.mskFlState == 2:
+					if cfg.uidc.mask_checkBox.isChecked() is True:
 						# mask shapefile path
 						m = cfg.uidc.mask_lineEdit.text()
 						dT = cfg.utls.getTime()
@@ -552,6 +581,15 @@ class ClassificationDock:
 							# logger
 							cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 							cfg.mx.msgErr23()
+					try:
+						for r in opOut:
+							os.remove(r)
+						os.remove(mOut)
+						# logger
+						cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "files deleted")
+					except Exception, err:
+						# logger
+						cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				### ending
 					cfg.uiUtls.updateBar(100)
 					cfg.uiUtls.removeProgressBar()
@@ -656,6 +694,8 @@ class ClassificationDock:
 				colorField.text = str(cfg.signList["COLOR_" + str(k)].toRgb().name())
 				covMatrField = ET.SubElement(sigItem, "COVARIANCE_MATRIX")
 				covMatrField.text = str(cfg.utls.covarianceMatrixToList(cfg.signList["COVMATRIX_" + str(k)]))
+				sigThrField = ET.SubElement(sigItem, "SIGNATURE_THRESHOLD")
+				sigThrField.text = str(cfg.signList["SIG_THRESHOLD_" + str(k)])
 			o = open(signatureFile, 'w')
 			f = minidom.parseString(ET.tostring(root)).toprettyxml()
 			o.write(f)
@@ -733,6 +773,10 @@ class ClassificationDock:
 				except:
 					cm = "No"
 				cfg.signList["COVMATRIX_" + str(b)] = cfg.utls.listToCovarianceMatrix(cm)
+				try:
+					cfg.signList["SIG_THRESHOLD_" + str(b)] = float((child.find("SIGNATURE_THRESHOLD").text).strip())
+				except:
+					cfg.signList["SIG_THRESHOLD_" + str(b)] = 0
 			self.signatureListTable(cfg.uidc.signature_list_tableWidget)
 			# logger
 			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " opened signature " + str(len(cfg.signIDs)))
@@ -950,6 +994,7 @@ class ClassificationDock:
 			signList_copy["UNIT_" + str(i)]  = cfg.signList["UNIT_" + str(k)]
 			signList_copy["CHECKBOX_" + str(i)]  = cfg.signList["CHECKBOX_" + str(k)]
 			signList_copy["COVMATRIX_" + str(i)]  = cfg.signList["COVMATRIX_" + str(k)]
+			signList_copy["SIG_THRESHOLD_" + str(i)]  = cfg.signList["SIG_THRESHOLD_" + str(k)]
 			i = i + 1
 		cfg.signIDs = {}
 		cfg.signList = {}
@@ -977,6 +1022,7 @@ class ClassificationDock:
 				cfg.signList.pop("COLOR_" + str(id))
 				cfg.signList.pop("UNIT_" + str(id))
 				cfg.signList.pop("COVMATRIX_" + str(id))
+				cfg.signList.pop("SIG_THRESHOLD_" + str(id))
 			self.signatureListTable(cfg.uidc.signature_list_tableWidget)
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " removed signatures: " + str(v))
@@ -1007,6 +1053,7 @@ class ClassificationDock:
 						C_Info = cfg.merged_name + cfg.signList["CLASSINFO_" + str(id)]
 						color = cfg.signList["COLOR_" + str(id)]
 						checkbox  = cfg.signList["CHECKBOX_" + str(id)]
+						sigThr  = cfg.signList["SIG_THRESHOLD_" + str(id)]
 						covMatrix  = "No"
 					elif wl != cfg.signList["WAVELENGTH_" + str(id)] or unit != cfg.signList["UNIT_" + str(id)]:
 						cfg.mx.msgErr35()
@@ -1026,6 +1073,7 @@ class ClassificationDock:
 				cfg.signList["WAVELENGTH_{0}".format(i)] = wl
 				cfg.signList["VALUES_{0}".format(i)] = val_mean
 				cfg.signList["COVMATRIX_{0}".format(i)] = covMatrix
+				cfg.signList["SIG_THRESHOLD_{0}".format(i)] = sigThr
 				if unit is None:
 					unit = cfg.bndSetUnit["UNIT"]
 				cfg.signList["UNIT_{0}".format(i)] = unit
@@ -1073,3 +1121,10 @@ class ClassificationDock:
 		cfg.spectralplotdlg.close()
 		cfg.spectralplotdlg.show()
 		
+	# zoom to preview
+	def zoomToPreview(self):
+		preP = cfg.utls.selectLayerbyName(cfg.lastPrev)
+		if preP is not None:
+			cfg.utls.setMapExtentFromLayer(preP)
+			preP.triggerRepaint()
+			cfg.cnvs.refresh()

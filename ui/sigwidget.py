@@ -35,6 +35,11 @@
 # Import PyQt libraries
 from PyQt4 import QtGui
 # Import FigureCanvas
+import matplotlib
+try:
+	matplotlib.use("Qt4Agg")
+except:
+	pass
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
 # Import Figure

@@ -150,19 +150,16 @@ class Accuracy:
 				cmbntns = {}
 				# expression builder
 				n = 1
-				cPar = " "
-				e = "np.where( "
+				e = []
 				for i in cmb:
 					if str(i[0]) == "nan" or str(i[1]) == "nan" :
 						pass
 					else:
-						e = e + "(a == " + str(i[0]) + ") & (b == " + str(i[1]) + "), " + str(n) + ", (np.where( "
-						cPar = cPar + "))"
+						e.append("np.where( (a == " + str(i[0]) + ") & (b == " + str(i[1]) + "), " + str(n) + ", 0)")
 						cmbntns["combination_" + str(i[0]) + "_"+ str(i[1])] = n
 						col.append(i[0])
 						row.append(i[1])
 						n = n + 1
-				e = e[:-11] + str(cfg.NoDataVal) + cPar[:-1]
 				# virtual raster
 				tPMN = cfg.tmpVrtNm + ".vrt"
 				# date time for temp name
@@ -181,7 +178,13 @@ class Accuracy:
 				bL = cfg.utls.readAllBandsFromRaster(rD)
 				# calculation
 				variableList = [["im1", "a"], ["im2", "b"]]
-				o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.bandCalculation, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", e, variableList, "No")
+				o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.bandCalculationMultipleWhere, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", e, variableList, "No")
+				if o == "No":
+					cfg.uiUtls.removeProgressBar()
+					cfg.mx.msgErr48()
+					# logger
+					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "Error")
+					return "No"
 				# logger
 				cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "accuracy raster output: " + unicode(rstrOut))
 				# close GDAL rasters
@@ -243,12 +246,23 @@ class Accuracy:
 				oA = 100 * errMatrix.trace() / totMat
 				t = str(QApplication.translate("semiautomaticclassificationplugin", 'Overall accuracy [%] = ')) + str(oA) + str("\n")
 				l.write(t)
-				# producer's accuracy
+				# user and producer's accuracy and kappa hat, equations from Congalton, R. & Green, K. (2009) Assessing the Accuracy of Remotely Sensed Data: Principles and Practices. CRC Press
+				nipXnpi = 0
+				niiTot = 0
 				for g in range(0, len(total)):
-					p = 100 * errMatrix[g,g] / errMatrix[:, g].sum()
-					u = 100 * errMatrix[g,g] / errMatrix[g, :].sum()
-					t = QApplication.translate("semiautomaticclassificationplugin", 'Class ') + str(total[g]) + QApplication.translate("semiautomaticclassificationplugin", ' producer accuracy [%] = ') + str(p) + "\t" + QApplication.translate("semiautomaticclassificationplugin", ' user accuracy [%] = ') + str(u) + str("\n")
+					nii = errMatrix[g,g]
+					niiTot = niiTot + nii
+					nip = errMatrix[g, :].sum()
+					npi = errMatrix[:, g].sum()
+					nipXnpi = nipXnpi + (nip * npi)
+					p = 100 * nii / npi
+					u = 100 * nii / nip
+					khatI = ((totMat * nii) - (nip * npi)) / ((totMat * nip) - (nip * npi))
+					t = QApplication.translate("semiautomaticclassificationplugin", 'Class ') + str(total[g]) + QApplication.translate("semiautomaticclassificationplugin", ' producer accuracy [%] = ') + str(p) + "\t" + QApplication.translate("semiautomaticclassificationplugin", ' user accuracy [%] = ') + str(u) + "\t" + QApplication.translate("semiautomaticclassificationplugin", 'Kappa hat = ') + str(khatI) + str("\n")
 					l.write(t)
+				khat = ((totMat * niiTot) - nipXnpi) / ((totMat * totMat) - nipXnpi)
+				t = str(QApplication.translate("semiautomaticclassificationplugin", 'Kappa hat classification = ')) + str(khat) + str("\n")
+				l.write(t)
 				l.close()
 				# close bands
 				for b in range(0, len(bLC)):

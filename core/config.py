@@ -212,6 +212,10 @@ NIRThreshold = 0.15
 # pansharpening type
 IHS_panType = "Intensity-Hue-Saturation"
 BT_panType = "Brovey Transform"
+# contrast type
+cumulativeCutContrast = "cumulativeCut"
+stdDevContrast =  "stdDev"
+defaultContrast = cumulativeCutContrast
 # settings
 testGDALV = None
 testMatplotlibV = None
@@ -228,6 +232,12 @@ rpdROICheck = None
 vegIndexCheck = None
 bndSet = {}
 bndSetWvLn = {}
+bndSetMultiFactors = {}
+bndSetAddFactors = {}
+bndSetMultiFactorsList = []
+bndSetAddFactorsList = []
+bndSetMultAddFactorsList = []
+multiAddFactorsVar = "multiplicativeAdditiveFactorsVar"
 bndSetPresent = None
 rasterName = None
 cmplClsNm = None
@@ -314,6 +324,7 @@ roundCharList = 25
 regGroupName = "SemiAutomaticClassificationPlugin/groupName"
 grpNm_def = "Class_temp_group"
 grpNm = grpNm_def
+lastPrev = None
 # clip prefix
 clipNm = "clip"
 # output temp raster format

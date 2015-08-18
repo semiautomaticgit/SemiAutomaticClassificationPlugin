@@ -212,8 +212,8 @@ class Utils:
 		# start and end pixels
 		pixelStartColumn = (int((point.x() - tLX) / pSX))
 		pixelStartRow = -(int((tLY - point.y()) / pSY))
-		NIR = self.readArrayBlock(NIRB, pixelStartColumn, pixelStartRow, 1, 1)
-		RED = self.readArrayBlock(REDB, pixelStartColumn, pixelStartRow, 1, 1)
+		NIR = self.readArrayBlock(NIRB, pixelStartColumn, pixelStartRow, 1, 1) * cfg.bndSetMultiFactorsList[int(cfg.NIRBand) - 1] + cfg.bndSetAddFactorsList[int(cfg.NIRBand) - 1]
+		RED = self.readArrayBlock(REDB, pixelStartColumn, pixelStartRow, 1, 1) * cfg.bndSetMultiFactorsList[int(cfg.REDBand) - 1] + cfg.bndSetAddFactorsList[int(cfg.REDBand) - 1]
 		if NIR is not None and RED is not None:
 			try:
 				NDVI = self.calculateNDVI(float(NIR), float(RED))
@@ -286,9 +286,9 @@ class Utils:
 		# start and end pixels
 		pixelStartColumn = (int((point.x() - tLX) / pSX))
 		pixelStartRow = -(int((tLY - point.y()) / pSY))
-		NIR = self.readArrayBlock(NIRB, pixelStartColumn, pixelStartRow, 1, 1)
-		RED = self.readArrayBlock(REDB, pixelStartColumn, pixelStartRow, 1, 1)
-		BLUE = self.readArrayBlock(BLUEB, pixelStartColumn, pixelStartRow, 1, 1)
+		NIR = self.readArrayBlock(NIRB, pixelStartColumn, pixelStartRow, 1, 1) * cfg.bndSetMultiFactorsList[int(cfg.NIRBand) - 1] + cfg.bndSetAddFactorsList[int(cfg.NIRBand) - 1]
+		RED = self.readArrayBlock(REDB, pixelStartColumn, pixelStartRow, 1, 1) * cfg.bndSetMultiFactorsList[int(cfg.REDBand) - 1] + cfg.bndSetAddFactorsList[int(cfg.REDBand) - 1]
+		BLUE = self.readArrayBlock(BLUEB, pixelStartColumn, pixelStartRow, 1, 1) * cfg.bndSetMultiFactorsList[int(cfg.BLUEBand) - 1] + cfg.bndSetAddFactorsList[int(cfg.BLUEBand) - 1]
 		if NIR is not None and RED is not None and BLUE is not None:
 			if NIR <= 1 and RED <= 1 and BLUE <= 1:
 				try:
@@ -378,6 +378,10 @@ class Utils:
 				if pCrs != iCrs:
 					try:
 						point = cfg.utls.projectPointCoordinates(point, pCrs, iCrs)
+						if point is False:
+							cfg.pntCheck = "No"
+							cfg.utls.setQGISCrs(iCrs)
+							return "No"
 					# Error latitude or longitude exceeded limits
 					except Exception, err:
 						# logger
@@ -385,6 +389,8 @@ class Utils:
 						crs = None
 						# logger
 						cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), QApplication.translate("semiautomaticclassificationplugin", "Error") + ": latitude or longitude exceeded limits")
+						cfg.pntCheck = "No"
+						return "No"
 			# workaround coordinates issue
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "project crs: " + unicode(pCrs.toProj4()) + " - raster " + unicode(imageName) + " crs: " + unicode(iCrs.toProj4()))
@@ -429,6 +435,10 @@ class Utils:
 					if pCrs != iCrs:
 						try:
 							point = cfg.utls.projectPointCoordinates(point, pCrs, iCrs)
+							if point is False:
+								cfg.pntCheck = "No"
+								cfg.utls.setQGISCrs(iCrs)
+								return "No"
 						# Error latitude or longitude exceeded limits
 						except Exception, err:
 							# logger
@@ -436,9 +446,12 @@ class Utils:
 							crs = None
 							# logger
 							cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), QApplication.translate("semiautomaticclassificationplugin", "Error") + ": latitude or longitude exceeded limits")
+							cfg.pntCheck = "No"
+							return "No"
 				# workaround coordinates issue
-				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "project crs: " + unicode(pCrs.toProj4()) + " - raster " + unicode(imageName) + " crs: " + unicode(iCrs.toProj4()))
+				if quiet == "No":
+					# logger
+					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "project crs: " + unicode(pCrs.toProj4()) + " - raster " + unicode(imageName) + " crs: " + unicode(iCrs.toProj4()))
 				cfg.lstPnt = QgsPoint(point.x() / float(1), point.y() / float(1))
 				pX = point.x()
 				pY = point.y()
@@ -446,10 +459,10 @@ class Utils:
 				# Point Check	
 				cfg.pntCheck = None
 				if pX > i.extent().xMaximum() or pX < i.extent().xMinimum() or pY > i.extent().yMaximum() or pY < i.extent().yMinimum() :
-					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "point outside the image area")
 					if quiet == "No":
 						cfg.mx.msg6()
+						# logger
+						cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "point outside the image area")
 					cfg.pntCheck = "No"
 				else :
 					cfg.pntCheck = "Yes"
@@ -566,6 +579,16 @@ class Utils:
 		except:
 			pCrs = cfg.cnvs.mapSettings().destinationCrs()
 		return pCrs
+		
+		
+### Set QGIS project CRS
+	def setQGISCrs(self, crs):
+		# QGIS < 2.4
+		try:
+			cfg.cnvs.mapRenderer().setDestinationCrs(crs)
+		# QGIS >= 2.4
+		except:
+			cfg.cnvs.setDestinationCrs(crs)
 				
 ### Get a feature from a shapefile by feature ID
 	def getFeaturebyID(self, layer, ID):
@@ -668,8 +691,8 @@ class Utils:
 		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ID: " + str(ID))
 		return ID
 		
-### get a raster band from a multi band raster
-	def getRasterBandByBandNumber(self, inputRaster, band, outputRaster, virtualRaster = "No"):
+### copy a raster band from a multi band raster
+	def getRasterBandByBandNumber(self, inputRaster, band, outputRaster, virtualRaster = "No", GDALFormat = None, multiAddList = None):
 		if virtualRaster == "No":
 			gdal.AllRegister()
 			# open input with GDAL
@@ -684,8 +707,16 @@ class Utils:
 			rGT = rD.GetGeoTransform()
 			tD = gdal.GetDriverByName( "GTiff" )
 			iRB = rD.GetRasterBand(int(band))
-			bDT = iRB.DataType
+			if GDALFormat is None:
+				bDT = iRB.DataType
+			else:
+				if GDALFormat == "Float64":
+					bDT = GDT_Float64
+				elif GDALFormat == "Float32":
+					bDT = GDT_Float32
 			a =  iRB.ReadAsArray()
+			if multiAddList is not None:
+				a = cfg.utls.arrayMultiplicativeAdditiveFactors(a, multiAddList[0], multiAddList[1])
 			oR = tD.Create(outputRaster, rC, rR, 1, bDT)
 			oR.SetGeoTransform( [ rGT[0] , rGT[1] , 0 , rGT[3] , 0 , rGT[5] ] )
 			oR.SetProjection(rP)
@@ -704,7 +735,7 @@ class Utils:
 		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "get band: " + unicode(band))
 		
 ### get a raster band statistic
-	def getRasterBandStatistics(self, inputRaster, band):
+	def getRasterBandStatistics(self, inputRaster, band, multiAddList = None):
 		gdal.AllRegister()
 		# open input with GDAL
 		rD = gdal.Open(inputRaster, GA_ReadOnly)
@@ -715,6 +746,9 @@ class Utils:
 			iRB = rD.GetRasterBand(band)
 			bSt = iRB.GetStatistics(True, True)
 			a =  iRB.ReadAsArray()
+			if multiAddList is not None:
+				a = cfg.utls.arrayMultiplicativeAdditiveFactors(a, multiAddList[0], multiAddList[1])
+				bSt = [bSt[0] * multiAddList[0] + multiAddList[1], bSt[1] * multiAddList[0] + multiAddList[1], bSt[2] * multiAddList[0] + multiAddList[1], bSt[3] * multiAddList[0]]
 			# close band
 			iRB = None
 			# close raster
@@ -790,6 +824,30 @@ class Utils:
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "virtual raster: " + unicode(output))
 		return st
+					
+	# build GDAL overviews
+	def buildOverviewsGDAL(self, inputRaster):
+		try:
+			cfg.utls.getGDALForMac()
+			sP = subprocess.Popen(cfg.gdalPath + 'gdaladdo -r NEAREST -ro "' + inputRaster + '" 8 16 32 64 ', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+			sP.wait()
+			# get error
+			out, err = sP.communicate()
+			sP.stdout.close()
+			if len(err) > 0:
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " GDAL error: " + str(err) )
+			else:
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "build overviews" + unicode(i))
+		# in case of errors
+		except Exception, err:
+			cfg.utls.getGDALForMac()
+			sP = subprocess.Popen(cfg.gdalPath + 'gdaladdo -r NEAREST -ro "' + inputRaster + '" 8 16 32 64 ', shell=True)
+			sP.wait()
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "build overviews" + unicode(inputRaster))
+
 			
 	# create virtual raster with Python
 	def createVirtualRaster2(self, inputRasterList, output, bandNumberList = "No", quiet = "No", NoDataVal = "No", relativeToVRT = 0, pansharp = "No", intersection = "Yes", boxCoordList = None):
@@ -808,6 +866,9 @@ class Utils:
 			gdalRaster = gdal.Open(b, GA_ReadOnly)	
 			gt = gdalRaster.GetGeoTransform()
 			rP = gdalRaster.GetProjection()
+			if rP == "":
+				cfg.mx.msgErr47()
+				return "Yes"
 			pXSizeList.append(abs(gt[1]))
 			pYSizeList.append(abs(gt[5]))
 			leftList.append(gt[0])
@@ -832,24 +893,46 @@ class Utils:
 		pXSize = min(pXSizeList)
 		pYSize = min(pYSizeList)
 		if boxCoordList is not None:
-			# find raster box
-			if iLeft < boxCoordList[0]:
-				iLeft = iLeft +abs(int(round((iLeft - boxCoordList[0]) / pXSize))) * pXSize
-			if iTop > boxCoordList[1]:
-				iTop= iTop - abs(int(round((iTop -boxCoordList[1]) / pYSize))) * pYSize
-			if iRight > boxCoordList[2]:
-				iRight = iRight - abs(int(round((iRight - boxCoordList[2])  / pXSize))) * pXSize
-			if iBottom < boxCoordList[3]:
-				iBottom = iBottom + abs(int(round((iBottom - boxCoordList[3]) / pYSize))) * pYSize
-			# find intersection box
-			if xLeft < boxCoordList[0]:
-				xLeft =  xLeft +abs(int(round((xLeft - boxCoordList[0]) / pXSize))) * pXSize				
-			if xTop > boxCoordList[1]:
-				xTop= xTop - abs(int(round((xTop -boxCoordList[1]) / pYSize))) * pYSize
-			if xRight > boxCoordList[2]:
-				xRight= xRight - abs(int(round((xRight - boxCoordList[2])  / pXSize))) * pXSize
-			if xBottom < boxCoordList[3]:
-				xBottom = xBottom + abs(int(round((xBottom - boxCoordList[3]) / pYSize))) * pYSize
+			try:
+				override = boxCoordList[4]
+				if override == "Yes":
+					# find raster box
+					if iLeft < boxCoordList[0]:
+						iLeft = iLeft +abs(int(round((iLeft - boxCoordList[0]) / pXSize))) * pXSize
+					else:
+						iLeft = iLeft - abs(int(round((iLeft - boxCoordList[0]) / pXSize))) * pXSize
+					if iTop > boxCoordList[1]:
+						iTop= iTop - abs(int(round((iTop -boxCoordList[1]) / pYSize))) * pYSize
+					else:
+						iTop= iTop + abs(int(round((iTop -boxCoordList[1]) / pYSize))) * pYSize
+					if iRight > boxCoordList[2]:
+						iRight = iRight - abs(int(round((iRight - boxCoordList[2])  / pXSize))) * pXSize
+					else:
+						iRight = iRight + abs(int(round((iRight - boxCoordList[2])  / pXSize))) * pXSize
+					if iBottom < boxCoordList[3]:
+						iBottom = iBottom + abs(int(round((iBottom - boxCoordList[3]) / pYSize))) * pYSize
+					else:
+						iBottom = iBottom - abs(int(round((iBottom - boxCoordList[3]) / pYSize))) * pYSize
+			except:
+				# find raster box
+				if iLeft < boxCoordList[0]:
+					iLeft = iLeft +abs(int(round((iLeft - boxCoordList[0]) / pXSize))) * pXSize
+				if iTop > boxCoordList[1]:
+					iTop= iTop - abs(int(round((iTop -boxCoordList[1]) / pYSize))) * pYSize
+				if iRight > boxCoordList[2]:
+					iRight = iRight - abs(int(round((iRight - boxCoordList[2])  / pXSize))) * pXSize
+				if iBottom < boxCoordList[3]:
+					iBottom = iBottom + abs(int(round((iBottom - boxCoordList[3]) / pYSize))) * pYSize
+				# find intersection box
+				if xLeft < boxCoordList[0]:
+					xLeft =  xLeft +abs(int(round((xLeft - boxCoordList[0]) / pXSize))) * pXSize				
+				if xTop > boxCoordList[1]:
+					xTop= xTop - abs(int(round((xTop -boxCoordList[1]) / pYSize))) * pYSize
+				if xRight > boxCoordList[2]:
+					xRight= xRight - abs(int(round((xRight - boxCoordList[2])  / pXSize))) * pXSize
+				if xBottom < boxCoordList[3]:
+					xBottom = xBottom + abs(int(round((xBottom - boxCoordList[3]) / pYSize))) * pYSize
+
 		# number of x pixels
 		if intersection == "Yes":
 			rX = abs(int(round((xRight - xLeft) / pXSize)))
@@ -864,64 +947,163 @@ class Utils:
 			vRast.SetGeoTransform((xLeft, pXSize, 0, xTop, 0, -pYSize))
 		else:
 			vRast.SetGeoTransform((iLeft, pXSize, 0, iTop, 0, -pYSize))
-		vRast.SetProjection(rP)	
-		x = 0
-		for b in inputRasterList:
+		vRast.SetProjection(rP)
+		if len(inputRasterList) == 1 and bandNumberList != "No":
+			x = 0
 			gdalRaster2 = gdal.Open(b, GA_ReadOnly)
-			gBand2 = gdalRaster2.GetRasterBand(1) 
-			noData = gBand2.GetNoDataValue()
-			if noData is None:
-				noData = cfg.NoDataVal
-			gt = gdalRaster2.GetGeoTransform()
-			pX =  abs(gt[1])
-			pY = abs(gt[5])
-			left = gt[0]
-			top = gt[3]
-			bsize2 = gBand2.GetBlockSize()
-			x_block = bsize2[0]
-			y_block = bsize2[1]
-			# number of x pixels
-			rX2 = gdalRaster2.RasterXSize * int(round(pX / pXSize))
-			# number of y pixels
-			rY2 = gdalRaster2.RasterYSize * int(round(pY / pYSize))
-			# offset
-			if intersection == "Yes":
-				xoffX = abs(int(round((left - xLeft) / pX)))
-				xoffY = abs(int(round((xTop - top) / pY)))
-				offX = 0
-				offY = 0
-			else:
-				offX = abs(int(round((left - iLeft) / pXSize)))
-				offY = int(round((iTop - top) / pYSize))
-				xoffX = 0
-				xoffY = 0
-			vRast.AddBand(gdal.GDT_Float64)
-			if bandNumberList == "No":
-				bandNumber = 1
-			else:
+			for b in bandNumberList:
+				gBand2 = gdalRaster2.GetRasterBand(int(b)) 
+				noData = gBand2.GetNoDataValue()
+				if noData is None or str(noData) == "nan":
+					noData = cfg.NoDataVal
+				gt = gdalRaster2.GetGeoTransform()
+				pX =  abs(gt[1])
+				pY = abs(gt[5])
+				left = gt[0]
+				top = gt[3]
+				bsize2 = gBand2.GetBlockSize()
+				x_block = bsize2[0]
+				y_block = bsize2[1]
+				# number of x pixels
+				rX2 = gdalRaster2.RasterXSize * int(round(pX / pXSize))
+				# number of y pixels
+				rY2 = gdalRaster2.RasterYSize * int(round(pY / pYSize))
+				# offset
+				if intersection == "Yes":
+					xoffX = abs(int(round((left - xLeft) / pX)))
+					xoffY = abs(int(round((xTop - top) / pY)))
+					offX = 0
+					offY = 0
+				else:
+					offX = abs(int(round((left - iLeft) / pXSize)))
+					offY = int(round((iTop - top) / pYSize))
+					xoffX = 0
+					xoffY = 0
+				try:
+					override = boxCoordList[4]
+					if override == "Yes":
+						if iLeft < left:
+							xoffX = 0
+							offX = abs(int(round((left - iLeft) / pXSize)))
+						else:
+							xoffX = abs(int(round((left - iLeft) / pX)))
+							offX = 0
+						if iTop > top:
+							xoffY = 0
+							offY = abs(int(round((iTop - top) / pYSize)))
+						else:
+							xoffY = abs(int(round((iTop - top) / pY)))
+							offY = 0
+				except:
+					pass
+				vRast.AddBand(gdal.GDT_Float64)
 				bandNumber = bandNumberList[x]
-			band = vRast.GetRasterBand(x + 1)
-			bsize = band.GetBlockSize()
-			x_block = bsize[0]
-			y_block = bsize[1]
-			source_path = b.replace("//", "/")
-			# set metadata xml
-			xml = """
-			<ComplexSource>
-			  <SourceFilename relativeToVRT="%i">%s</SourceFilename>
-			  <SourceBand>%i</SourceBand>
-			  <SourceProperties RasterXSize="%i" RasterYSize="%i" DataType=%s BlockXSize="%i" BlockYSize="%i" />
-			  <SrcRect xOff="%i" yOff="%i" xSize="%i" ySize="%i" />
-			  <DstRect xOff="%i" yOff="%i" xSize="%i" ySize="%i" />
-			  <NODATA>%i</NODATA>
-			</ComplexSource>
-			"""
-			source = xml % (relativeToVRT, source_path.encode(sys.getfilesystemencoding()), bandNumber, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, "Float64", x_block, y_block, xoffX, xoffY, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, offX, offY, rX2, rY2, noData)
-			band.SetMetadataItem("ComplexSource", source, "new_vrt_sources")
-			if NoDataVal != "No":
-				band.SetNoDataValue(NoDataVal)
-			band = None
-			x = x + 1
+				band = vRast.GetRasterBand(x + 1)
+				bsize = band.GetBlockSize()
+				x_block = bsize[0]
+				y_block = bsize[1]
+				source_path = inputRasterList[0]
+				# set metadata xml
+				xml = """
+				<ComplexSource>
+				  <SourceFilename relativeToVRT="%i">%s</SourceFilename>
+				  <SourceBand>%i</SourceBand>
+				  <SourceProperties RasterXSize="%i" RasterYSize="%i" DataType=%s BlockXSize="%i" BlockYSize="%i" />
+				  <SrcRect xOff="%i" yOff="%i" xSize="%i" ySize="%i" />
+				  <DstRect xOff="%i" yOff="%i" xSize="%i" ySize="%i" />
+				  <NODATA>%i</NODATA>
+				</ComplexSource>
+				"""
+				source = xml % (relativeToVRT, source_path.encode(sys.getfilesystemencoding()), bandNumber, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, "Float64", x_block, y_block, xoffX, xoffY, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, offX, offY, rX2, rY2, noData)
+				band.SetMetadataItem("ComplexSource", source, "new_vrt_sources")
+				if NoDataVal != "No":
+					band.SetNoDataValue(NoDataVal)
+				band = None
+				x = x + 1
+		else:
+			x = 0
+			for b in inputRasterList:
+				gdalRaster2 = gdal.Open(b, GA_ReadOnly)
+				gdalBandNumber = gdalRaster2.RasterCount
+				for bb in range(1, gdalBandNumber + 1):
+					gBand2 = gdalRaster2.GetRasterBand(bb) 
+					noData = gBand2.GetNoDataValue()
+					if noData is None:
+						noData = cfg.NoDataVal
+					gt = gdalRaster2.GetGeoTransform()
+					pX =  abs(gt[1])
+					pY = abs(gt[5])
+					left = gt[0]
+					top = gt[3]
+					bsize2 = gBand2.GetBlockSize()
+					x_block = bsize2[0]
+					y_block = bsize2[1]
+					# number of x pixels
+					rX2 = gdalRaster2.RasterXSize * int(round(pX / pXSize))
+					# number of y pixels
+					rY2 = gdalRaster2.RasterYSize * int(round(pY / pYSize))
+					# offset
+					if intersection == "Yes":
+						xoffX = abs(int(round((left - xLeft) / pX)))
+						xoffY = abs(int(round((xTop - top) / pY)))
+						offX = 0
+						offY = 0
+					else:
+						offX = abs(int(round((left - iLeft) / pXSize)))
+						offY = int(round((iTop - top) / pYSize))
+						xoffX = 0
+						xoffY = 0
+					try:
+						override = boxCoordList[4]
+						if override == "Yes":
+							if iLeft < left:
+								xoffX = 0
+								offX = abs(int(round((left - iLeft) / pXSize)))
+							else:
+								xoffX = abs(int(round((left - iLeft) / pX)))
+								offX = 0
+							if iTop > top:
+								xoffY = 0
+								offY = abs(int(round((iTop - top) / pYSize)))
+							else:
+								xoffY = abs(int(round((iTop - top) / pY)))
+								offY = 0
+					except:
+						pass
+					vRast.AddBand(gdal.GDT_Float64)
+					try:
+						errorCheck = "Yes"
+						if bandNumberList == "No":
+							bandNumber = 1
+						else:
+							bandNumber = bandNumberList[x]
+						errorCheck = "No"	
+						band = vRast.GetRasterBand(x + 1)
+						bsize = band.GetBlockSize()
+						x_block = bsize[0]
+						y_block = bsize[1]
+						source_path = b.replace("//", "/")
+						# set metadata xml
+						xml = """
+						<ComplexSource>
+						  <SourceFilename relativeToVRT="%i">%s</SourceFilename>
+						  <SourceBand>%i</SourceBand>
+						  <SourceProperties RasterXSize="%i" RasterYSize="%i" DataType=%s BlockXSize="%i" BlockYSize="%i" />
+						  <SrcRect xOff="%i" yOff="%i" xSize="%i" ySize="%i" />
+						  <DstRect xOff="%i" yOff="%i" xSize="%i" ySize="%i" />
+						  <NODATA>%i</NODATA>
+						</ComplexSource>
+						"""
+						source = xml % (relativeToVRT, source_path.encode(sys.getfilesystemencoding()), bandNumber, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, "Float64", x_block, y_block, xoffX, xoffY, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, offX, offY, rX2, rY2, noData)
+						band.SetMetadataItem("ComplexSource", source, "new_vrt_sources")
+						if NoDataVal != "No":
+							band.SetNoDataValue(NoDataVal)
+						band = None
+						x = x + 1
+					except Exception, err:
+						if errorCheck == "No":
+							# logger
+							cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "virtual raster: " + unicode(output))
 		return unicode(output)
@@ -983,7 +1165,12 @@ class Utils:
 		tPMN = cfg.tmpVrtNm + ".vrt"
 		tPMD = cfg.tmpDir + "/" + dT + tPMN
 		bList = [rasterClipped, rasterClipping]
-		bandNumberList = [1, 1]		
+		iBC = cfg.utls.getNumberBandRaster(rasterClipped)
+		# create band list of clipped bands and clipping band
+		bandNumberList = []
+		for cc in range(1, iBC + 1):
+			bandNumberList.append(cc)
+		bandNumberList.append(1)
 		vrtCheck = cfg.utls.createVirtualRaster2(bList, tPMD, bandNumberList, "Yes", cfg.NoDataVal, 0)
 		# open input with GDAL
 		rD = gdal.Open(tPMD, GA_ReadOnly)
@@ -997,13 +1184,15 @@ class Utils:
 		try:
 			# band list
 			bL = cfg.utls.readAllBandsFromRaster(rD)
+			bC = len(bL)
 			# output rasters
 			oM = []
 			oM.append(outputRaster)
-			oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0, None, "Yes")
-			e = str("a * b")
-			variableList = [["im1", "a"], ["im2", "b"]]
-			o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.bandCalculation, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", e, variableList, "No")
+			oMR = cfg.utls.createRasterFromReference(rD, bC - 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0, None, "Yes")
+			for bb in range(0, bC - 1):
+				e = str("a * b")
+				variableList = [["im1", "a"], ["im2", "b"]]
+				o = cfg.utls.processRaster(rD, [bL[bb], bL[bC - 1]], None, "No", cfg.utls.bandCalculation, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", e, variableList, "No")
 			# close GDAL rasters
 			for b in range(0, len(oMR)):
 				oMR[b] = None
@@ -1029,13 +1218,15 @@ class Utils:
 			return "No"
 		# band list
 		bL = cfg.utls.readAllBandsFromRaster(rD)
+		bC = len(bL)
 		# output rasters
 		oM = []
 		oM.append(outputRaster)
-		oMR = cfg.utls.createRasterFromReference(rD, 1, oM, nodataValue, outFormat, cfg.rasterDataType, 0,  None, "Yes")
-		e = str("a * 1")
-		variableList = [["im1", "a"]]
-		o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.bandCalculation, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", e, variableList, "No")
+		oMR = cfg.utls.createRasterFromReference(rD, bC, oM, nodataValue, outFormat, cfg.rasterDataType, 0,  None, "Yes")
+		for bb in range(0, bC):
+			e = str("a * 1")
+			variableList = [["im1", "a"]]
+			o = cfg.utls.processRaster(rD, [bL[bb]], None, "No", cfg.utls.bandCalculation, None, oMR , None, None, 0, None, cfg.NoDataVal, "No", e, variableList, "No")
 		# close GDAL rasters
 		for b in range(0, len(oMR)):
 			oMR[b] = None
@@ -1332,7 +1523,7 @@ class Utils:
 		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "" + unicode(layer.source()))
 		
 ### Split raster into single bands, and return a list of images
-	def rasterToBands(self, rasterPath, outputFolder, outputName = None, progressBar = "No"):
+	def rasterToBands(self, rasterPath, outputFolder, outputName = None, progressBar = "No", multiAddList = None):
 		dT = self.getTime()
 		iBC = cfg.utls.getNumberBandRaster(rasterPath)
 		iL = []
@@ -1345,7 +1536,10 @@ class Utils:
 		for x in range(1, iBC+1):
 			if cfg.actionCheck == "Yes":
 				xB = outputFolder + "/" + name + "_B" + str(x) + ".tif"
-				self.getRasterBandByBandNumber(rasterPath, x, xB)
+				if multiAddList is not None:
+					self.getRasterBandByBandNumber(rasterPath, x, xB, "No", None, multiAddList[x - 1])
+				else:
+					self.getRasterBandByBandNumber(rasterPath, x, xB, "No", None)
 				iL.append(xB)
 				if progressBar == "Yes":
 					cfg.uiUtls.updateBar(progresStep * i)
@@ -1425,6 +1619,11 @@ class Utils:
 	# read a block of band as array
 	def readArrayBlock(self, gdalBand, pixelStartColumn, pixelStartRow, blockColumns, blockRow):
 		a = gdalBand.ReadAsArray(pixelStartColumn, pixelStartRow, blockColumns, blockRow)
+		return a
+		
+	# apply multiplicative and additivie factors to array
+	def arrayMultiplicativeAdditiveFactors(self, array, multiplicativeFactor, additiveFactor):
+		a = array * float(multiplicativeFactor) + float(additiveFactor)
 		return a
 		
 	# write an array to band
@@ -1621,6 +1820,8 @@ class Utils:
 					# threshold
 					algThrshld = float(tr[n])
 					if algThrshld > 0:
+						if algThrshld > 90:
+							algThrshld = 90
 						c = self.minimumDistanceThreshold(c, algThrshld, nodataValue)
 					if type(c) is not int:
 						oR = outputGdalRasterList[bN]
@@ -1683,6 +1884,8 @@ class Utils:
 					rasterArrayx = np.copy(rasterArray)
 					# threshold
 					algThrshld = float(tr[n])
+					if algThrshld > 100:
+						algThrshld = 100
 					c = self.algorithmMaximumLikelihood(rasterArrayx, s, covMatrList[n], cfg.algBandWeigths, algThrshld)
 					# logger
 					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "algorithmMaximumLikelihood signature" + str(itCount))
@@ -1864,7 +2067,6 @@ class Utils:
 			invC = np.linalg.inv(covarianceMatrix)
 			d = rasterArray - signatureArray
 			algArray = - logdet - (np.dot(d, invC) * d).sum(axis = 2)
-			
 			if algThrshld > 0:
 				chi = self.chisquare(algThrshld)
 				threshold = - chi - logdet
@@ -2047,7 +2249,16 @@ class Utils:
 						for b in range(0, len(gdalBandList)):
 							ndv = cfg.NoDataVal
 							a = self.readArrayBlock(gdalBandList[b], x, y, bSX, bSY)
-							array[::, ::, b] = a.reshape(bSX, bSY)
+							if a is not None:
+								if functionBandArgument == cfg.multiAddFactorsVar:
+									multiAdd = functionVariable[b]
+									a = cfg.utls.arrayMultiplicativeAdditiveFactors(a, multiAdd[0], multiAdd[1])
+								array[::, ::, b] = a.reshape(bSX, bSY)
+							else:
+								# logger
+								cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "error reading array")
+								cfg.mx.msgErr46()
+								return "No"
 							a = None
 							# set nodata value
 							array[::, ::, b][array[::, ::, b] == ndv] = np.nan
@@ -2142,8 +2353,58 @@ class Utils:
 				o = a
 			oR = outputGdalRasterList[0]
 			# output raster
+			band = gdalBandList[0].GetBand()
 			try:
-				self.writeArrayBlock(oR, 1, o, pixelStartColumn, pixelStartRow)
+				self.writeArrayBlock(oR, band, o, pixelStartColumn, pixelStartRow)
+			except Exception, err:
+				cfg.mx.msgErr36()
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				return "No"
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+			
+	# multiple where band calculation 
+	def bandCalculationMultipleWhere(self, gdalBandList, rasterSCPArrayfunctionBand, columnNumber, rowNumber, pixelStartColumn, pixelStartRow, outputGdalRasterList, functionBandArgument, functionVariableList):
+		if cfg.actionCheck == "Yes":
+			for f in functionBandArgument:
+				# create function
+				b = 0
+				for i in functionVariableList:
+					f = f.replace(i[0], " rasterSCPArrayfunctionBand[::, ::," + str(b) + "] ")
+					f = f.replace(i[1], " rasterSCPArrayfunctionBand[::, ::," + str(b) + "] ")
+					b = b + 1
+				# replace numpy operators
+				f = cfg.utls.replaceNumpyOperators(f)
+				# perform operation
+				try:
+					o = o + eval(f)
+				# first iteration
+				except:
+					try:
+						o = eval(f)
+					except Exception, err:
+						cfg.mx.msgErr36()
+						# logger
+						cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+						return "No"
+			# create array if not
+			try:
+				if not isinstance(o, np.ndarray):
+					o = np.where(o == 0, cfg.NoDataVal, o)
+					a = np.zeros((rasterSCPArrayfunctionBand.shape[0], rasterSCPArrayfunctionBand.shape[1]), dtype=np.float64)
+					a.fill(o)
+					o = a
+			except Exception, err:
+				cfg.mx.msgErr36()
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				return "No"
+			oR = outputGdalRasterList[0]
+			# output raster
+			band = gdalBandList[0].GetBand()
+			try:
+				self.writeArrayBlock(oR, band, o, pixelStartColumn, pixelStartRow)
 			except Exception, err:
 				cfg.mx.msgErr36()
 				# logger
@@ -2235,6 +2496,8 @@ class Utils:
 	def rasterUniqueValues(self, gdalBand, rasterArray, columnNumber, rowNumber, pixelStartColumn, pixelStartRow, outputGdalRasterList, functionBandArgumentNoData, functionVariable):
 		if cfg.actionCheck == "Yes":
 			val = np.unique(rasterArray)
+			# remove multiple nan
+			val = np.unique(val[~np.isnan(val)])
 			cfg.rasterBandUniqueVal = np.append(cfg.rasterBandUniqueVal, [val], axis =1)
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
@@ -2475,6 +2738,24 @@ class Utils:
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 		
+### Move layer to top layers
+	def moveLayerTop(self, layer):
+		# QGIS >= 2.4
+		try:
+			p = QgsProject.instance()
+			root = p.layerTreeRoot()
+			g = root.findLayer(layer.id())
+			cG = g.clone()
+			root.insertChildNode(0, cG)
+			root.removeChildNode(g)
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "layer: " + unicode(layer.name()))
+		# QGIS < 2.4
+		except Exception, err:
+			if "layerTreeRoot" not in str(err):
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+		
 ### Select layer by name thereof
 	def selectLayerbyName(self, layerName, filterRaster=None):
 	 	ls = cfg.lgnd.layers()
@@ -2497,15 +2778,16 @@ class Utils:
 			op = "-co COMPRESS=LZW -of " + outFormat
 		input = ""
 		for b in bandList:
-			input = input + " " + b.encode(sys.getfilesystemencoding())
+			input = input + '"' + b.encode(sys.getfilesystemencoding()) + '" '
+		input = input
 		try:
 			cfg.utls.getGDALForMac()
 			if cfg.sysNm == "Windows":
 				gD = "gdal_merge.bat"
 			else:
 				gD = "gdal_merge.py"
-			a = cfg.gdalPath + gD + " -separate " + op + " -o "
-			b = output.encode(sys.getfilesystemencoding())
+			a = cfg.gdalPath + gD + ' -separate ' + op + ' -o '
+			b = '"' + output.encode(sys.getfilesystemencoding()) + '" '
 			c = input
 			d = a + b + c
 			sP = subprocess.Popen(d, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -2525,8 +2807,8 @@ class Utils:
 				gD = "gdal_merge.bat"
 			else:
 				gD = "gdal_merge.py"
-			a = cfg.gdalPath + gD + " -separate " + op + " -o "
-			b = output.encode(sys.getfilesystemencoding())
+			a = cfg.gdalPath + gD + ' -separate ' + op + ' -o '
+			b = '"' + output.encode(sys.getfilesystemencoding()) + '" '
 			c = input
 			d = a + b + c
 			sP = subprocess.Popen(d, shell=True)
@@ -2537,40 +2819,45 @@ class Utils:
 ### Subset an image, given an origin point and a subset width
 	def subsetImage(self, imageName, XCoord, YCoord, Width, Height, output, outFormat = "GTiff", virtual = "No"):
 		i = self.selectLayerbyName(imageName, "Yes")
-		i = i.source().encode(sys.getfilesystemencoding())
 		# output variable
-		st = "No"
-		# raster top left origin and pixel size
-		tLX, tLY, lRX, lRY, pS = self.imageInformationSize(imageName)
-		if pS is None:
-			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " image none or missing")
-		else:		
-			try:
-				dType = self.getRasterDataTypeName(i)
-				# subset origin
-				UX = tLX + abs(int((tLX - XCoord) / pS )) * pS - (Width -1 )/ 2 * pS
-				UY = tLY - abs(int((tLY - YCoord) / pS )) * pS + (Height -1 )/ 2 * pS
-				LX = UX + Width * pS
-				LY = UY - Height * pS
-				dT = cfg.utls.getTime()
-				tPMN = cfg.tmpVrtNm + ".vrt"
-				tPMD = cfg.tmpDir + "/" + dT + tPMN
-				bList = [i]
-				bandNumberList = [1]
-				if virtual == "No":
-					vrtCheck = cfg.utls.createVirtualRaster2(bList, tPMD, bandNumberList, "Yes", cfg.NoDataVal, 0, "No", "Yes", [float(UX), float(UY), float(LX), float(LY)])
-					clipOutput = cfg.utls.copyRaster(tPMD, output, str(outFormat), cfg.NoDataVal)
-				else:
-					vrtCheck = cfg.utls.createVirtualRaster2(bList, output, bandNumberList, "Yes", cfg.NoDataVal, 0, "No", "Yes", [float(UX), float(UY), float(LX), float(LY)])
-			# in case of errors
-			except Exception, err:
+		st = "Yes"
+		if i is not None:
+			bandNumberList = []
+			for bb in range(1, i.bandCount()+1):
+				bandNumberList.append(bb)
+			i = i.source().encode(sys.getfilesystemencoding())
+			st = "No"
+			# raster top left origin and pixel size
+			tLX, tLY, lRX, lRY, pS = self.imageInformationSize(imageName)
+			if pS is None:
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-				st = "Yes"
-			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "image: " + unicode(imageName) + " subset origin: (" + str(XCoord) + ","+ str(YCoord) + ") width: " + str(Width))
-			return st
+				cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " image none or missing")
+			else:		
+				try:
+					dType = self.getRasterDataTypeName(i)
+					# subset origin
+					UX = tLX + abs(int((tLX - XCoord) / pS )) * pS - (Width -1 )/ 2 * pS
+					UY = tLY - abs(int((tLY - YCoord) / pS )) * pS + (Height -1 )/ 2 * pS
+					LX = UX + Width * pS
+					LY = UY - Height * pS
+					dT = cfg.utls.getTime()
+					tPMN = cfg.tmpVrtNm + ".vrt"
+					tPMD = cfg.tmpDir + "/" + dT + tPMN
+					bList = [i]
+					if virtual == "No":
+						st = cfg.utls.createVirtualRaster2(bList, tPMD, bandNumberList, "Yes", cfg.NoDataVal, 0, "No", "Yes", [float(UX), float(UY), float(LX), float(LY)])
+						clipOutput = cfg.utls.copyRaster(tPMD, output, str(outFormat), cfg.NoDataVal)
+						st = clipOutput
+					else:
+						st = cfg.utls.createVirtualRaster2(bList, output, bandNumberList, "Yes", cfg.NoDataVal, 0, "No", "Yes", [float(UX), float(UY), float(LX), float(LY)])
+				# in case of errors
+				except Exception, err:
+					# logger
+					cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					st = "Yes"
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "image: " + unicode(imageName) + " subset origin: (" + str(XCoord) + ","+ str(YCoord) + ") width: " + str(Width))
+		return st
 			
 ### convert reference layer to raster based on the resolution of a raster
 	def vectorToRaster(self, fieldName, layerPath, referenceRasterName, outputRaster, referenceRasterPath=None, ALL_TOUCHED=None, outFormat = "GTiff", burnValues = None):
@@ -2627,7 +2914,9 @@ class Utils:
 		rPSys =osr.SpatialReference(wkt=rP)
 		rPSys.AutoIdentifyEPSG()
 		rPRS = rPSys.GetAuthorityCode(None)
-		if lPRS == rPRS:
+		if lP != "":
+			if lPRS == None:
+				cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "lP: " + unicode(lP) + "rPRS: " + unicode(rPRS))
 			minX, maxX, minY, maxY = gL.GetExtent()
 			origX = rGT[0] +  rGT[1] * abs(int(round((minX - rGT[0]) / rGT[1])))
 			origY = rGT[3] + rGT[5] * abs(int(round((maxY - rGT[3]) / rGT[5])))
@@ -2670,6 +2959,7 @@ class Utils:
 			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "vector to raster check: " + unicode(oC))
 		else:
 			cfg.mx.msg9()
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "lP: " + unicode(lP) + "rPRS: " + unicode(rPRS))
 			return "No"
 			
 	# convert raster to shapefile
@@ -2729,7 +3019,9 @@ class Utils:
 					return "Yes"
 				else:
 					int(check)
-			except:
+			except Exception, err:
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				id = cfg.rgb_combo.findText(cfg.rgb_combo.currentText())
 				cfg.rgb_combo.removeItem(id)
 	
@@ -2749,6 +3041,7 @@ class Utils:
 				vrtCheck = cfg.utls.createVirtualRaster(cfg.bndSetLst, tPMD)
 				time.sleep(1)
 				i = self.addRasterLayer(tPMD, tPMN)
+				cfg.utls.setRasterColorComposite(i, 3, 2, 1)
 				cfg.tmpVrt = i
 			else:
 				i = cfg.utls.selectLayerbyName(tPMN, "Yes")
@@ -2785,13 +3078,111 @@ class Utils:
 				else:
 					return "No"
 					
-	def setRasterColorComposite(sefl, raster, RedBandNumber, GreenBandNumber, BlueBandNumber):
+	def setMapExtentFromLayer(self, layer):
+		ext = layer.extent()
+		tLPoint = QgsPoint(ext.xMinimum(), ext.yMaximum())
+		lRPoint = QgsPoint(ext.xMaximum(), ext.yMinimum())
+		point1 = tLPoint
+		point2 = lRPoint
+		# project extent
+		iCrs = cfg.utls.getCrs(layer)
+		pCrs = cfg.utls.getQGISCrs()
+		if iCrs is None:
+			iCrs = pCrs
+		# projection of input point from raster's crs to project's crs
+		if pCrs != iCrs:
+			try:
+				point1 = cfg.utls.projectPointCoordinates(tLPoint, iCrs, pCrs)
+				point2 = cfg.utls.projectPointCoordinates(lRPoint, iCrs, pCrs)
+				if point1 is False:
+					point1 = tLPoint
+					point2 = lRPoint
+			# Error latitude or longitude exceeded limits
+			except Exception, err:
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				point1 = tLPoint
+				point2 = lRPoint
+		cfg.cnvs.setExtent(QgsRectangle(point1, point2))
+	
+	# show hide input image
+	def showHideInputImage(self):
+		if cfg.bndSetPresent == "Yes" and cfg.rstrNm == cfg.bndSetNm:
+			i = cfg.tmpVrt
+		else:
+			i = cfg.utls.selectLayerbyName(cfg.rstrNm, "Yes")
+		try:
+			if i is not None:
+				if cfg.inputImageRadio.isChecked():
+					cfg.lgnd.setLayerVisible(i, True)
+					cfg.utls.moveLayerTop(i)
+				else:
+					cfg.lgnd.setLayerVisible(i, False)
+		except:
+			pass
+
+	# set raster color composite
+	def setRasterColorComposite(self, raster, RedBandNumber, GreenBandNumber, BlueBandNumber):
 		raster.setDrawingStyle('MultiBandColor')
 		raster.renderer().setRedBand(RedBandNumber)
 		raster.renderer().setGreenBand(GreenBandNumber)
 		raster.renderer().setBlueBand(BlueBandNumber)
-		raster.setContrastEnhancement(QgsContrastEnhancement.StretchToMinimumMaximum, QgsRaster.ContrastEnhancementCumulativeCut)
-		raster.triggerRepaint()
+		cfg.utls.setRasterContrastEnhancement(raster, cfg.defaultContrast )
+		
+	# set local cumulative cut stretch
+	def setRasterCumulativeStretch(self):
+		if cfg.bndSetPresent == "Yes" and cfg.rstrNm == cfg.bndSetNm:
+			i = cfg.tmpVrt
+		else:
+			i = cfg.utls.selectLayerbyName(cfg.rstrNm, "Yes")
+		cfg.utls.setRasterContrastEnhancement(i, cfg.cumulativeCutContrast)
+		cfg.defaultContrast = cfg.cumulativeCutContrast
+				
+	# set local standard deviation stretch
+	def setRasterStdDevStretch(self):
+		if cfg.bndSetPresent == "Yes" and cfg.rstrNm == cfg.bndSetNm:
+			i = cfg.tmpVrt
+		else:
+			i = cfg.utls.selectLayerbyName(cfg.rstrNm, "Yes")
+		cfg.utls.setRasterContrastEnhancement(i, cfg.stdDevContrast)
+		cfg.defaultContrast = cfg.stdDevContrast
+		
+	# set raster enhancement
+	def setRasterContrastEnhancement(self, QGISraster, contrastType = cfg.cumulativeCutContrast):
+		ext = cfg.cnvs.extent( )
+		tLPoint = QgsPoint(ext.xMinimum(), ext.yMaximum())
+		lRPoint = QgsPoint(ext.xMaximum(), ext.yMinimum())
+		point1 = tLPoint
+		point2 = lRPoint
+		# project extent
+		iCrs = cfg.utls.getCrs(QGISraster)
+		pCrs = cfg.utls.getQGISCrs()
+		if iCrs is None:
+			iCrs = pCrs
+		# projection of input point from project's crs to raster's crs
+		if pCrs != iCrs:
+			try:
+				point1 = cfg.utls.projectPointCoordinates(tLPoint, pCrs, iCrs)
+				point2 = cfg.utls.projectPointCoordinates(lRPoint, pCrs, iCrs)
+				if point1 is False:
+					point1 = tLPoint
+					point2 = lRPoint
+			# Error latitude or longitude exceeded limits
+			except Exception, err:
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				point1 = tLPoint
+				point2 = lRPoint
+		if contrastType == cfg.stdDevContrast:
+			contrast = QgsRaster.ContrastEnhancementStdDev
+		elif contrastType == cfg.cumulativeCutContrast:
+			contrast = QgsRaster.ContrastEnhancementCumulativeCut
+		try:
+			QGISraster.setContrastEnhancement(QgsContrastEnhancement.StretchToMinimumMaximum, contrast, QgsRectangle(point1, point2))
+			QGISraster.triggerRepaint()
+		except Exception, err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 		
 	def getAllItemsInCombobox(self, combobox):
 		it = [combobox.itemText(i) for i in range(combobox.count())]
@@ -2816,6 +3207,7 @@ class Utils:
 				ck = "No"
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " raster is not loaded: " + unicode(cfg.bndSet[x]))
+				return ck
 		return ck
 			
 	# write project variable
@@ -3138,10 +3530,12 @@ class Utils:
 		cfg.ui.classification_report_name_combo.clear()
 		cfg.ui.classification_vector_name_combo.clear()
 		cfg.ui.reclassification_name_combo.clear()
+		cfg.ui.raster_extent_combo.clear()
 		# classification name
 		self.clssfctnNm = None
 		for l in ls:
 			if (l.type()==QgsMapLayer.RasterLayer):
+				cfg.dlg.raster_extent_combo(l.name())
 				if l.bandCount() == 1:
 					cfg.dlg.classification_layer_combo(l.name())
 					cfg.dlg.classification_report_combo(l.name())

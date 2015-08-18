@@ -35,6 +35,7 @@
 import os
 # for debugging
 import inspect
+import re
 # Import the PyQt and QGIS libraries
 from PyQt4.QtCore import *
 from PyQt4.QtCore import QCoreApplication
@@ -175,6 +176,12 @@ class BandsetTab:
 						v = c + 1
 					wl.setText(str(float(v)))
 					tW.setItem(c, 1, wl)
+					multF = QTableWidgetItem()
+					multF.setData(Qt.DisplayRole, str(1))
+					tW.setItem(c, 2, multF)
+					addF = QTableWidgetItem()
+					addF.setData(Qt.DisplayRole, str(0))
+					tW.setItem(c, 3, addF)
 			tW.blockSignals(False)
 			self.readBandSet("Yes")
 			cfg.rstrNm = cfg.bndSetNm
@@ -216,6 +223,8 @@ class BandsetTab:
 			cfg.bndSet = []
 			# band set wavelength
 			cfg.bndSetWvLn = {}
+			cfg.bndSetMultiFactors = {}
+			cfg.bndSetAddFactors = {}
 			if refresh == "Yes":
 				# read band set
 				self.readBandSet("No", refresh)
@@ -224,8 +233,8 @@ class BandsetTab:
 		
 	# band set edited
 	def editedBandSet(self, row, column):
+		tW = cfg.ui.tableWidget
 		if cfg.BandTabEdited == "Yes" and column == 1:
-			tW = cfg.ui.tableWidget
 			# check if bandset is empty
 			c = tW.rowCount()
 			cfg.BandTabEdited = "No"
@@ -277,6 +286,48 @@ class BandsetTab:
 					cfg.BandTabEdited = "Yes"
 					# logger
 					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " band edited; bands n. " + str(c))
+		elif cfg.BandTabEdited == "Yes" and column == 2:
+			# check if bandset is empty
+			c = tW.rowCount()
+			if c == 0:
+				self.readBandSet()
+			else:
+				cfg.BandTabEdited = "No"
+				try:
+					w = QTableWidgetItem()
+					test = float(tW.item(row, column).text())
+					w.setData(Qt.DisplayRole, str(tW.item(row, column).text()))
+					tW.setItem(row, column, w)
+				except:
+					w = QTableWidgetItem()
+					w.setData(Qt.DisplayRole, str(cfg.bndSetMultiFactors["MULTIPLICATIVE_FACTOR_" + str(row + 1)]))
+					tW.setItem(row, column, w)
+				tW.show()
+				self.readBandSet(cfg.bndSetPresent)
+				cfg.BandTabEdited = "Yes"
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " band edited; bands n. " + str(c))
+		elif cfg.BandTabEdited == "Yes" and column == 3:
+			# check if bandset is empty
+			c = tW.rowCount()
+			if c == 0:
+				self.readBandSet()
+			else:
+				cfg.BandTabEdited = "No"
+				try:
+					w = QTableWidgetItem()
+					test = float(tW.item(row, column).text())
+					w.setData(Qt.DisplayRole, str(tW.item(row, column).text()))
+					tW.setItem(row, column, w)
+				except:
+					w = QTableWidgetItem()
+					w.setData(Qt.DisplayRole, str(cfg.bndSetAddFactors["ADDITIVE_FACTOR_" + str(row + 1)]))
+					tW.setItem(row, column, w)
+				tW.show()
+				self.readBandSet(cfg.bndSetPresent)
+				cfg.BandTabEdited = "Yes"
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " band edited; bands n. " + str(c))
 		
 	def readBandSet(self, bandset = "Yes", refresh = "Yes"):
 		tW = cfg.ui.tableWidget
@@ -287,6 +338,12 @@ class BandsetTab:
 		cfg.bndSet = []
 		# band set wavelength
 		cfg.bndSetWvLn = {}
+		# band set multiplicative and additive factors
+		cfg.bndSetMultiFactors = {}
+		cfg.bndSetAddFactors = {}
+		cfg.bndSetMultiFactorsList = []
+		cfg.bndSetAddFactorsList = []
+		cfg.bndSetMultAddFactorsList = []
 		if c == 0:
 			cfg.bndSetPresent = "No"
 			if refresh == "Yes":
@@ -295,6 +352,17 @@ class BandsetTab:
 			for b in range(0, c):
 				cfg.bndSet.append(tW.item(b, 0).text())
 				cfg.bndSetWvLn["WAVELENGTH_{0}".format(b + 1)] = float(tW.item(b, 1).text())
+				try:
+					cfg.bndSetMultiFactors["MULTIPLICATIVE_FACTOR_{0}".format(b + 1)] = float(tW.item(b, 2).text())
+				except:
+					cfg.bndSetMultiFactors["MULTIPLICATIVE_FACTOR_{0}".format(b + 1)] = 1
+				try:
+					cfg.bndSetAddFactors["ADDITIVE_FACTOR_{0}".format(b + 1)] = float(tW.item(b, 3).text())
+				except:
+					cfg.bndSetAddFactors["ADDITIVE_FACTOR_{0}".format(b + 1)] = 0
+				cfg.bndSetMultiFactorsList.append(cfg.bndSetMultiFactors["MULTIPLICATIVE_FACTOR_{0}".format(b + 1)])
+				cfg.bndSetAddFactorsList.append(cfg.bndSetAddFactors["ADDITIVE_FACTOR_{0}".format(b + 1)])
+				cfg.bndSetMultAddFactorsList.append([cfg.bndSetMultiFactors["MULTIPLICATIVE_FACTOR_{0}".format(b + 1)], cfg.bndSetAddFactors["ADDITIVE_FACTOR_{0}".format(b + 1)]])
 			if bandset == "Yes":
 				cfg.ipt.refreshRasterLayer()
 		# read unit
@@ -312,6 +380,8 @@ class BandsetTab:
 		cfg.utls.writeProjectVariable("bandSetPresent", str(cfg.bndSetPresent))
 		cfg.utls.writeProjectVariable("bandSet", str(cfg.bndSet))
 		cfg.utls.writeProjectVariable("bndSetWvLn", str(cfg.bndSetWvLn.values()))
+		cfg.utls.writeProjectVariable("bndSetMultF", str(cfg.bndSetMultiFactorsList))
+		cfg.utls.writeProjectVariable("bndSetAddF", str(cfg.bndSetAddFactorsList))
 		cfg.utls.writeProjectVariable("bndSetUnit", str(cfg.bndSetUnit["UNIT"]))
 		# load algorithm weight table
 		cfg.algWT.loadAlgorithmTable(cfg.bndSet)
@@ -353,6 +423,10 @@ class BandsetTab:
 						nameField.text = tW.item(b, 0).text()
 						rangeField = ET.SubElement(bandItem, "wavelength")
 						rangeField.text = tW.item(b, 1).text()
+						mutliplicativeField = ET.SubElement(bandItem, "multiplicative_factor")
+						mutliplicativeField.text = tW.item(b, 2).text()	
+						additiveField = ET.SubElement(bandItem, "additive_factor")
+						additiveField.text = tW.item(b, 3).text()
 					o = open(bndSetFile, 'w')
 					f = minidom.parseString(ET.tostring(root)).toprettyxml()
 					o.write(f)
@@ -374,6 +448,9 @@ class BandsetTab:
 				bs = {}
 				# wavelength
 				wl = {}
+				# multiplicative and additive factors
+				multF = {}
+				addF = {}
 				# band number
 				bN = []
 				unit = root.get("unit")
@@ -389,6 +466,8 @@ class BandsetTab:
 					bN.append(n)
 					bs[n] = str(child.find("name").text).strip()
 					wl[n] = float(child.find("wavelength").text.strip())
+					multF[n] = float(child.find("multiplicative_factor").text.strip())
+					addF[n] = float(child.find("additive_factor").text.strip())					
 				tW = cfg.ui.tableWidget
 				cfg.BandTabEdited = "No"
 				while tW.rowCount() > 0:
@@ -404,6 +483,12 @@ class BandsetTab:
 					w = QTableWidgetItem(str(c + 1))
 					w.setText(str(wl[x]))
 					tW.setItem(c, 1, w)
+					m = QTableWidgetItem()
+					m.setData(Qt.DisplayRole, str(str(multF[x])))
+					tW.setItem(c, 2, m)
+					a = QTableWidgetItem()
+					a.setData(Qt.DisplayRole, str(str(addF[x])))
+					tW.setItem(c, 3, a)
 				self.readBandSet(bandset)
 				cfg.BandTabEdited = "Yes"
 				# logger
@@ -430,6 +515,12 @@ class BandsetTab:
 			w = QTableWidgetItem(str(c + 1))
 			w.setText("")
 			tW.setItem(c, 1, w)
+			m = QTableWidgetItem()
+			m.setData(Qt.DisplayRole, "1")
+			tW.setItem(c, 2, m)
+			a = QTableWidgetItem()
+			a.setData(Qt.DisplayRole, "0")
+			tW.setItem(c, 3, a)
 		cfg.BandTabEdited = "Yes"
 		# logger
 		cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " band set set")
@@ -465,6 +556,52 @@ class BandsetTab:
 				v = list(set(ns))
 				for i in range (0, len(v)):
 					tW.selectRow(v[i])
+			except Exception, err:
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				tW.clearSelection()
+			# update band set
+			self.readBandSet()
+			cfg.BandTabEdited = "Yes"
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " band moved")
+
+	# sort band name
+	def sortBandName(self):
+		tW = cfg.ui.tableWidget
+		c = tW.rowCount()
+		# check if single raster
+		if c > 0 and cfg.bndSetPresent == "No":
+			pass
+		else:
+			cfg.BandTabEdited = "No"
+			try:
+				bN = []
+				bNL = []
+				for b in range(0, c):
+					bN.append(tW.item(b, 0).text())
+					split = re.split('([0-9]+)', tW.item(b, 0).text())
+					try:
+						bNL.append(int(split[-1]))
+					except:
+						try:
+							bNL.append(int(split[-2]))
+						except:
+							try:
+								bNL.append(int(split[-3]))
+							except:
+								bNL.append(tW.item(b, 0).text())
+				if len(list(set(bNL))) == len(bN):
+					sortBands = sorted(bNL)
+					bNsort = []
+					for k in sortBands:
+						q = bNL.index(k)
+						bNsort.append(bN[q])
+				else:
+					bNsort = sorted(bN)
+				for b in range(0, c):
+					tW.item(b, 0).setText(str(bNsort[b]))
+				tW.clearSelection()
 			except Exception, err:
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
@@ -536,7 +673,7 @@ class BandsetTab:
 		tW = cfg.ui.tableWidget
 		r = cfg.utls.selectLayerbyName(rasterName, "Yes")
 		b = r.bandCount()
-		cfg.BandTabEdited == "No"
+		cfg.BandTabEdited = "No"
 		tW.blockSignals(True)
 		for i in range(0, b):
 			# count table rows
@@ -555,9 +692,15 @@ class BandsetTab:
 				v = i + 1
 			wl.setText(str(float(v)))
 			tW.setItem(c, 1, wl)
+			multF = QTableWidgetItem()
+			multF.setData(Qt.DisplayRole, str(1))
+			tW.setItem(c, 2, multF)
+			addF = QTableWidgetItem()
+			addF.setData(Qt.DisplayRole, str(0))
+			tW.setItem(c, 3, addF)
 		self.readBandSet(bandset)
 		tW.blockSignals(False)
-		cfg.BandTabEdited == "Yes"
+		cfg.BandTabEdited = "Yes"
 	
 	# remove selected band
 	def removeBand(self):
@@ -633,14 +776,48 @@ class BandsetTab:
 			ck = cfg.utls.checkBandSet()
 			rstrOut = QFileDialog.getSaveFileName(None , QApplication.translate("semiautomaticclassificationplugin", "Save raster"), "", "*.tif")
 			if len(rstrOut) > 0 and ck == "Yes":
+				cfg.uiUtls.addProgressBar()
+				cfg.cnvs.setRenderFlag(False)
 				if unicode(rstrOut).endswith(".tif"):
 					rstrOut = rstrOut
 				else:
 					rstrOut = rstrOut + ".tif"
+				cfg.uiUtls.updateBar(10)
 				st = cfg.utls.mergeRasterBands(cfg.bndSetLst, rstrOut)
 				# add raster to layers
 				cfg.iface.addRasterLayer(unicode(rstrOut), unicode(os.path.basename(rstrOut)))
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " raster: " + str(st))
+				cfg.uiUtls.updateBar(100)
+				cfg.utls.finishSound()
+				cfg.uiUtls.removeProgressBar()
+				cfg.cnvs.setRenderFlag(True)
 			elif ck == "No":
 				cfg.mx.msgErr33()
+
+	# build band overviews
+	def buildOverviewsBandSet(self):
+		tW = cfg.ui.tableWidget
+		c = tW.rowCount()
+		# check if single raster
+		if c > 0:
+			# ask for confirm
+			a = cfg.utls.questionBox(QApplication.translate("semiautomaticclassificationplugin", "Build overviews"), QApplication.translate("semiautomaticclassificationplugin", "Do you want to build the external overviews of bands?"))
+			if a == "Yes":
+				cfg.uiUtls.addProgressBar()
+				if cfg.bndSetPresent == "Yes" and cfg.rstrNm == cfg.bndSetNm:
+					b = 1
+					for i in cfg.bndSetLst:
+						cfg.utls.buildOverviewsGDAL(i)
+						cfg.uiUtls.updateBar((b) * 100 / (len(cfg.bndSetLst)), QApplication.translate("semiautomaticclassificationplugin", " building overviews"))
+						b = b + 1
+				else:
+					image = cfg.utls.selectLayerbyName(cfg.rstrNm, "Yes")
+					i = image.source()
+					cfg.uiUtls.updateBar(50, QApplication.translate("semiautomaticclassificationplugin", " building overviews"))
+					cfg.utls.buildOverviewsGDAL(i)
+				cfg.uiUtls.updateBar(100)
+				cfg.utls.finishSound()
+				cfg.uiUtls.removeProgressBar()
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " all bands clicked")

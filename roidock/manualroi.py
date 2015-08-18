@@ -43,6 +43,10 @@ class ManualROI(QgsMapTool):
 		QgsMapTool.__init__(self, canvas)
 		self.cnvs = canvas	
 		
+	def canvasMoveEvent(self, event):
+		point = self.cnvs.getCoordinateTransform().toMapCoordinates(event.pos())
+		self.emit(SIGNAL("moved"), point)
+		
 	def canvasReleaseEvent(self, event):
 		pnt = self.cnvs.getCoordinateTransform().toMapCoordinates(event.pos())
 		# click

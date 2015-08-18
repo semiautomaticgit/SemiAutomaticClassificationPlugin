@@ -160,6 +160,7 @@ class SemiAutomaticClassificationPlugin:
 			# connect when map is clicked
 			cfg.iface.connect(cfg.mnlROI , SIGNAL("leftClicked") , cfg.ROId.clckL)
 			cfg.iface.connect(cfg.mnlROI , SIGNAL("rightClicked") , cfg.ROId.clckR)
+			cfg.iface.connect(cfg.mnlROI , SIGNAL("moved") , cfg.ROId.movedPointer)
 			cfg.iface.connect(cfg.regionROI , SIGNAL("ROIleftClicked") , cfg.ROId.pointerClickROI)
 			cfg.iface.connect(cfg.regionROI , SIGNAL("ROIrightClicked") , cfg.ROId.pointerRightClickROI)
 			cfg.iface.connect(cfg.regionROI , SIGNAL("moved") , cfg.ROId.movedPointer)
@@ -222,7 +223,7 @@ class SemiAutomaticClassificationPlugin:
 			cfg.QGISVer = QGis.QGIS_VERSION_INT
 			# system information
 			cfg.sysNm = platform.system()
-			cfg.sysInfo = str(" SemiAutomaticClass " + semiautomaticclassVersion() + " - QGIS v. " + str(cfg.QGISVer) + " - OS " + str(cfg.sysNm))
+			cfg.sysInfo = str(" SemiAutomaticClass " + semiautomaticclassVersion() + " - QGIS v. " + str(cfg.QGISVer) + " - OS " + str(cfg.sysNm) + " - 64bit =" + cfg.sys64bit)
 			
 	# load SCP menu
 	def loadMenu(self):
@@ -377,6 +378,12 @@ class SemiAutomaticClassificationPlugin:
 			font.setFamily(_fromUtf8("FreeSans"))
 			font.setBold(True)
 			font.setWeight(75)
+			# band set button
+			cfg.bandset_toolButton = QPushButton(QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_bandset_tool.png"), u"")
+			cfg.bandset_toolButton.setStyleSheet(" border: none;margin: 2px;icon-size: 24px; color: black")
+			cfg.bandset_toolButton.setToolTip(QApplication.translate("semiautomaticclassificationplugin", "Band set"))
+			cfg.toolBar.addWidget(cfg.bandset_toolButton)
+			cfg.bandset_toolButton.clicked.connect(cfg.utls.bandSetTab)
 			# label Input
 			self.lblInput = QLabel(cfg.iface.mainWindow())
 			self.lblInput.setFont(font)
@@ -416,13 +423,27 @@ class SemiAutomaticClassificationPlugin:
 			cfg.rgb_combo.addItem("-")
 			cfg.rgb_combo.addItem("3-2-1")
 			cfg.rgb_combo.addItem("4-3-2")
-			cfg.rgb_combo.currentIndexChanged.connect(cfg.utls.setRGBColorComposite)
-			# band set button
-			cfg.bandset_toolButton = QPushButton(QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_bandset_tool.png"), u"")
-			cfg.bandset_toolButton.setStyleSheet(" border: none;margin: 2px;icon-size: 24px; color: black")
-			cfg.bandset_toolButton.setToolTip(QApplication.translate("semiautomaticclassificationplugin", "Band set"))
-			cfg.toolBar.addWidget(cfg.bandset_toolButton)
-			cfg.bandset_toolButton.clicked.connect(cfg.utls.bandSetTab)
+			cfg.rgb_combo.currentIndexChanged.connect(cfg.utls.setRGBColorComposite)	
+			# radio button show hide input image
+			cfg.inputImageRadio = QtGui.QRadioButton(cfg.iface.mainWindow())
+			inputImageRadio_comboAction = cfg.toolBar.addWidget(cfg.inputImageRadio)
+			cfg.inputImageRadio.setToolTip(QApplication.translate("semiautomaticclassificationplugin", "Show/hide the input image"))
+			cfg.inputImageRadio.setText(QApplication.translate("SemiAutomaticClassificationPlugin", " Show", None))
+			cfg.inputImageRadio.setChecked(True)
+			cfg.inputImageRadio.setAutoExclusive(False)
+			cfg.inputImageRadio.clicked.connect(cfg.utls.showHideInputImage)
+			# local cumulative cut stretch button
+			cfg.local_cumulative_stretch_toolButton = QPushButton(QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_bandset_cumulative_stretch_tool.png"), u"")
+			cfg.local_cumulative_stretch_toolButton.setStyleSheet(" border: none;margin: 2px;icon-size: 24px; color: black")
+			cfg.local_cumulative_stretch_toolButton.setToolTip(QApplication.translate("semiautomaticclassificationplugin", "Local cumulative cut stretch of band set"))
+			cfg.toolBar.addWidget(cfg.local_cumulative_stretch_toolButton)
+			cfg.local_cumulative_stretch_toolButton.clicked.connect(cfg.utls.setRasterCumulativeStretch)
+			# local standard deviation stretch button
+			cfg.local_std_dev_stretch_toolButton = QPushButton(QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_bandset_std_dev_stretch_tool.png"), u"")
+			cfg.local_std_dev_stretch_toolButton.setStyleSheet(" border: none;margin: 2px;icon-size: 24px; color: black")
+			cfg.local_std_dev_stretch_toolButton.setToolTip(QApplication.translate("semiautomaticclassificationplugin", "Local standard deviation stretch of band set"))
+			cfg.toolBar.addWidget(cfg.local_std_dev_stretch_toolButton)
+			cfg.local_std_dev_stretch_toolButton.clicked.connect(cfg.utls.setRasterStdDevStretch)
 			# spectral signature plot button
 			cfg.spectral_plot_toolButton = QPushButton(QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_sign_tool.png"), u"")
 			cfg.spectral_plot_toolButton.setStyleSheet(" border: none;margin: 2px;icon-size: 24px; color: black")
@@ -543,8 +564,10 @@ class SemiAutomaticClassificationPlugin:
 			except:
 				pass
 			# band set list
-			cfg.ui.tableWidget.setColumnWidth(0, 220)
-			cfg.ui.tableWidget.setColumnWidth(1, 80)
+			cfg.ui.tableWidget.setColumnWidth(0, 350)
+			cfg.ui.tableWidget.setColumnWidth(1, 150)
+			cfg.ui.tableWidget.setColumnWidth(2, 150)
+			cfg.ui.tableWidget.setColumnWidth(3, 150)
 			# USGS spectral lbrary
 			cfg.usgsLib.addSpectralLibraryToCombo(cfg.usgs_lib_list)
 			cfg.usgs_C1p = cfg.plgnDir + "/spectralsignature/usgs_spectral_library/minerals.csv"
@@ -580,6 +603,7 @@ class SemiAutomaticClassificationPlugin:
 			# connect to project loaded
 			QObject.connect(QgsProject.instance(), SIGNAL("readProject(const QDomDocument &)"), self.projectLoaded)
 			QObject.connect(QgsProject.instance(), SIGNAL("projectSaved()"), self.projectSaved)
+			cfg.iface.newProjectCreated.connect(self.newProjectLoaded)
 			cfg.ui.quick_guide_pushButton.clicked.connect(self.quickGuide)
 			cfg.ui.help_pushButton.clicked.connect(self.askHelp)
 			""" Docks """
@@ -662,6 +686,8 @@ class SemiAutomaticClassificationPlugin:
 			cfg.uid.Range_radius_spin.valueChanged.connect(cfg.ROId.rangeRadius)
 			# connect to show ROI radio button
 			cfg.uid.show_ROI_radioButton.clicked.connect(cfg.ROId.showHideROI)
+			# connect to zoom to ROI button
+			cfg.uid.zoom_ROI_button.clicked.connect(cfg.ROId.zoomToROI)
 			# connect to automatic refresh ROI radio button
 			cfg.uid.auto_refresh_ROI_radioButton.clicked.connect(cfg.ROId.automaticRefreshROI)
 			# connect to save to shapefile 
@@ -713,6 +739,7 @@ class SemiAutomaticClassificationPlugin:
 			# edited cell
 			cfg.ui.signature_threshold_tableWidget.cellChanged.connect(cfg.signT.editedThresholdTable)
 			cfg.ui.reset_threshold_pushButton.clicked.connect(cfg.signT.resetThresholds)
+			cfg.ui.automatic_threshold_pushButton.clicked.connect(cfg.signT.setAllWeightsVariance)
 			cfg.ui.set_threshold_value_pushButton.clicked.connect(cfg.signT.setThresholds)
 			""" Download Landsat tab """
 			# connect to find images button
@@ -726,6 +753,7 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.select_database_dir_toolButton.clicked.connect(cfg.downLandsat.selectDatabaseDir)
 			cfg.ui.reset_database_dir_toolButton.clicked.connect(cfg.downLandsat.resetDatabaseDir)
 			cfg.ui.remove_image_toolButton.clicked.connect(cfg.downLandsat.removeImageFromTable)
+			cfg.ui.clear_table_toolButton.clicked.connect(cfg.downLandsat.clearTable)
 			cfg.ui.download_images_Button.clicked.connect(cfg.downLandsat.downloadImages)
 			cfg.ui.export_links_Button.clicked.connect(cfg.downLandsat.exportLinks)
 			cfg.ui.check_toolButton.clicked.connect(cfg.downLandsat.checkAllBands)
@@ -766,6 +794,9 @@ class SemiAutomaticClassificationPlugin:
 			cfg.uidc.redo_Preview_Button.clicked.connect(cfg.classD.redoPreview)
 			# connect to show preview radio button
 			cfg.uidc.show_preview_radioButton.clicked.connect(cfg.classD.showHidePreview)
+			# connect to zoom to preview
+			cfg.uidc.zoom_preview_button.clicked.connect(cfg.classD.zoomToPreview)
+			cfg.uidc.preview_transparency_slider.valueChanged.connect(cfg.classD.changePreviewTransparency)
 			# connect the algorithm combo	
 			cfg.uidc.algorithm_combo.currentIndexChanged.connect(cfg.classD.algorithmName)
 			# connect the algorithm threshold
@@ -821,6 +852,8 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.move_up_toolButton.clicked.connect(cfg.bst.moveUpBand)
 			# connect to move down band button
 			cfg.ui.move_down_toolButton.clicked.connect(cfg.bst.moveDownBand)
+			# connect to sort by name button
+			cfg.ui.sort_by_name_toolButton.clicked.connect(cfg.bst.sortBandName)
 			# connect to remove band button
 			cfg.ui.remove_toolButton.clicked.connect(cfg.bst.removeBand)
 			# connect to import band set button
@@ -833,8 +866,10 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.unit_combo.currentIndexChanged.connect(cfg.bst.setBandUnit)
 			# connect to Create virtual raster button
 			cfg.ui.virtual_raster_bandset_toolButton.clicked.connect(cfg.bst.virtualRasterBandSet)
-			# connect to Create virtual raster button
+			# connect to stack bands button
 			cfg.ui.stack_bandset_toolButton.clicked.connect(cfg.bst.stackBandSet)
+			# connect to build overviews button
+			cfg.ui.band_overview_bandset_toolButton.clicked.connect(cfg.bst.buildOverviewsBandSet)
 			""" Pre processing tab """
 			""" Clip multiple rasters """
 			# connect to clip button
@@ -926,6 +961,10 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.plainTextEdit_calc.textChanged.connect(cfg.bCalc.textChanged)
 			# connect double click table
 			cfg.ui.tableWidget_band_calc.doubleClicked.connect(cfg.bCalc.doubleClick)
+			# connect the intersection checkBox
+			cfg.ui.intersection_checkBox.stateChanged.connect(cfg.bCalc.intersectionCheckbox)
+			# connect the extent checkBox
+			cfg.ui.extent_checkBox.stateChanged.connect(cfg.bCalc.extentCheckbox)
 			# connect to expression buttons
 			cfg.ui.toolButton_plus.clicked.connect(cfg.bCalc.buttonPlus)
 			cfg.ui.toolButton_minus.clicked.connect(cfg.bCalc.buttonMinus)
@@ -1007,6 +1046,39 @@ class SemiAutomaticClassificationPlugin:
 		if len(cfg.signIDs) > 0:
 			cfg.classD.saveSignatureListToFile()
 		
+	# new project
+	def newProjectLoaded(self):
+		cfg.projPath = QgsProject.instance().fileName()
+		# clear band set
+		tW = cfg.ui.tableWidget
+		cfg.utls.clearTable(tW)
+		# signature table
+		cfg.utls.clearTable(cfg.uidc.signature_list_tableWidget)
+		# reload layers in combos
+		cfg.ipt.refreshRasterLayer()
+		cfg.raster_name_combo.clear()
+		# image name
+		cfg.imgNm = None
+		# raster name
+		cfg.rstrNm = None
+		# empty item for new band set
+		cfg.ipt.raster_layer_combo("")
+		cfg.uid.ROI_tableWidget.blockSignals(True)
+		cfg.ROId.refreshShapeLayer()
+		cfg.uid.ROI_tableWidget.blockSignals(False)
+		cfg.clipMulti.refreshShapeClip()
+		# reload layers in combos
+		cfg.utls.refreshClassificationLayer()
+		cfg.acc.refreshReferenceLayer()
+		cfg.landCC.refreshClassificationReferenceLayer()
+		cfg.landCC.refreshNewClassificationLayer()
+		# reload raster bands in checklist
+		cfg.bst.rasterBandName()
+		# reload rasters in checklist
+		cfg.clipMulti.rasterNameList()
+		cfg.bCalc.rasterBandName()
+		cfg.uidc.signatureFile_lineEdit.setText("")
+				
 	# read project variables
 	def projectLoaded(self):
 		cfg.projPath = QgsProject.instance().fileName()
@@ -1092,6 +1164,8 @@ class SemiAutomaticClassificationPlugin:
 		if cfg.bndSetPresent == "No":
 			# get wavelength
 			bSW = cfg.utls.readProjectVariable("bndSetWvLn", "")
+			bSM = cfg.utls.readProjectVariable("bndSetMultF", "")
+			bSA = cfg.utls.readProjectVariable("bndSetAddF", "")
 			# get unit
 			un = cfg.utls.readProjectVariable("bndSetUnit", cfg.noUnit)
 			bSU = cfg.bst.unitNameConversion(un, "Yes")
@@ -1103,6 +1177,11 @@ class SemiAutomaticClassificationPlugin:
 			try:
 				# set wavelength
 				wlg = eval(bSW)
+				try:
+					multF = eval(bSM)
+					addF = eval(bSA)
+				except:
+					pass
 				t = cfg.ui.tableWidget
 				cfg.BandTabEdited = "No"
 				t.blockSignals(True)
@@ -1111,12 +1190,30 @@ class SemiAutomaticClassificationPlugin:
 					b = wlg.index(x)
 					# add item to table
 					t.item(it, 1).setText(str(wlg[b]))
+					try:
+						mF = QTableWidgetItem()
+						mF.setData(Qt.DisplayRole, str(str(multF[it])))
+						t.setItem(it, 2, mF)
+					except:
+						mF = QTableWidgetItem()
+						mF.setData(Qt.DisplayRole, str(1))
+						t.setItem(it, 2, mF)		
+					try:
+						aF = QTableWidgetItem()
+						aF.setData(Qt.DisplayRole, str(str(addF[it])))
+						t.setItem(it, 3, aF)
+					except:
+						aF = QTableWidgetItem()
+						aF.setData(Qt.DisplayRole, str(0))
+						t.setItem(it, 3, aF)
 					it = it + 1
 				# load project unit in combo
 				idU = cfg.ui.unit_combo.findText(bSU)
 				cfg.ui.unit_combo.setCurrentIndex(idU)
 				t.blockSignals(False)
 			except Exception, err:
+				t = cfg.ui.tableWidget
+				t.blockSignals(False)
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			cfg.bst.readBandSet("No")
@@ -1176,6 +1273,8 @@ class SemiAutomaticClassificationPlugin:
 		# band set
 		bSP = cfg.utls.readProjectVariable("bandSet", "")
 		bSW = cfg.utls.readProjectVariable("bndSetWvLn", "")
+		bSM = cfg.utls.readProjectVariable("bndSetMultF", "")
+		bSA = cfg.utls.readProjectVariable("bndSetAddF", "")
 		un = cfg.utls.readProjectVariable("bndSetUnit", cfg.noUnit)
 		bSU = cfg.bst.unitNameConversion(un, "Yes")
 		cfg.bndSetPresent = cfg.utls.readProjectVariable("bandSetPresent", "No")
@@ -1183,6 +1282,11 @@ class SemiAutomaticClassificationPlugin:
 			# add band set to table
 			bs = eval(bSP)
 			wlg = eval(bSW)
+			try:
+				multF = eval(bSM)
+				addF = eval(bSA)
+			except:
+				pass
 			t = cfg.ui.tableWidget
 			it = 0
 			cfg.BandTabEdited = "No"
@@ -1202,6 +1306,22 @@ class SemiAutomaticClassificationPlugin:
 				w = QTableWidgetItem(str(c + 1))
 				w.setText(str(wlg[b]))
 				t.setItem(c, 1, w)
+				try:
+					mF = QTableWidgetItem()
+					mF.setData(Qt.DisplayRole, str(str(multF[it])))
+					t.setItem(c, 2, mF)
+				except:
+					mF = QTableWidgetItem()
+					mF.setData(Qt.DisplayRole, str(1))
+					t.setItem(c, 2, mF)		
+				try:
+					aF = QTableWidgetItem()
+					aF.setData(Qt.DisplayRole, str(str(addF[it])))
+					t.setItem(c, 3, aF)
+				except:
+					aF = QTableWidgetItem()
+					aF.setData(Qt.DisplayRole, str(0))
+					t.setItem(c, 3, aF)
 				it = it + 1
 			# load project unit in combo
 			idU = cfg.ui.unit_combo.findText(bSU)

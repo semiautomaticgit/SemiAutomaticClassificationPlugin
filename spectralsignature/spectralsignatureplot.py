@@ -34,6 +34,11 @@
 """
 
 import inspect
+import matplotlib
+try:
+	matplotlib.use("Qt4Agg")
+except:
+	pass
 from matplotlib.ticker import MaxNLocator
 import itertools
 from PyQt4 import QtCore, QtGui
