@@ -171,7 +171,6 @@ class ClassificationDock:
 			preP = cfg.utls.selectLayerbyName(cfg.lastPrev)
 			if preP is not None:
 				cfg.lgnd.moveLayer(preP, g)
-			cfg.lgnd.setGroupVisible(g, False)
 			# date time for temp name
 			dT = cfg.utls.getTime()
 			# temp files
@@ -179,7 +178,6 @@ class ClassificationDock:
 			tPMD = cfg.tmpDir + "/" + tPMN
 			# preview name and path
 			pN =  dT + cfg.prvwTempNm
-			cfg.lastPrev = pN
 			pP = cfg.tmpDir + "/" + pN
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "point (X,Y) = (%s,%s)" % (cfg.pntPrvw.x() , cfg.pntPrvw.y()))
@@ -194,20 +192,26 @@ class ClassificationDock:
 				if ckB == "Yes":
 					cfg.uiUtls.updateBar(20)
 					# compression
-					compress = "Yes"
+					if int(cfg.prvwSz) <= 2000:
+						compress = "No"
+					else:
+						compress = cfg.rasterCompression
 					ok, opOut, mOut = self.runAlgorithm(cfg.algName, cfg.imgNm, sL, pP, cfg.macroclassCheck, None, int(cfg.prvwSz), point, compress)
 					if ok == "Yes":
 						if algorithmRaster == "No":
 							r = cfg.iface.addRasterLayer(pP, os.path.basename(str(pP)))
+							cfg.lastPrev = r.name()
 							cfg.uiUtls.updateBar(80)
 							# apply symbology
 							self.applyClassSymbology(r, cfg.macroclassCheck, cfg.qmlFl, sL)
 						else:
 							r = cfg.iface.addRasterLayer(mOut, os.path.basename(str(mOut)))
+							cfg.lastPrev = r.name()
 							cfg.utls.rasterPreviewSymbol(r, cfg.algName)
 							cfg.uiUtls.updateBar(80)
 							# apply symbology
 						cfg.utls.moveLayerTop(r)
+						cfg.lgnd.setGroupVisible(g, False)
 						cfg.uidc.show_preview_radioButton.setChecked(True)
 						cfg.uidc.preview_transparency_slider.setValue(0)
 					cfg.uiUtls.updateBar(100)
@@ -403,7 +407,7 @@ class ClassificationDock:
 			bL = cfg.utls.readAllBandsFromRaster(rD)
 		if rD is not None:
 			# signature rasters
-			oRL, opOut = cfg.utls.createSignatureClassRaster(signatureList, rD, cfg.tmpDir, cfg.NoDataVal, None, previewSize, previewPoint)
+			oRL, opOut = cfg.utls.createSignatureClassRaster(signatureList, rD, cfg.tmpDir, cfg.NoDataVal, None, previewSize, previewPoint, "No")
 			# output rasters
 			oM = []
 			oC = []
@@ -414,21 +418,45 @@ class ClassificationDock:
 				dT = cfg.utls.getTime()
 				# temp files
 				tPMN = dT + cfg.algRasterNm + ".tif"
-				tPMD = cfg.tmpDir + "/" + tPMN
+				tPMD = cfg.tmpDir + "/" + tPMN	
+				tPMN2 = dT + cfg.classRasterNm + ".tif"
+				tPMD2 = cfg.tmpDir + "/" + tPMN2
 				oM.append(tPMD)
-			oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, previewSize, previewPoint)
-			oC.append(outputRasterPath)
-			oCR = cfg.utls.createRasterFromReference(rD, 1, oC, cfg.NoDataVal, "GTiff", GDT_Int32, previewSize, previewPoint, compress)
+			oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, previewSize, previewPoint,  "No")
+			oC.append(tPMD2)
+			oCR = cfg.utls.createRasterFromReference(rD, 1, oC, cfg.NoDataVal, "GTiff", GDT_Int32, previewSize, previewPoint, compress, "DEFLATE")
 			o = cfg.utls.processRaster(rD, bL, signatureList, None, cfg.utls.classification, algorithmName, oRL, oMR[0], oCR[0], previewSize, previewPoint, cfg.NoDataVal, macroclassCheck, cfg.multiAddFactorsVar, cfg.bndSetMultAddFactorsList)
 			if o == "No":
 				return "No", opOut, tPMD
 			# close GDAL rasters
 			for x in range(0, len(oRL)):
+				fList = oRL[x].GetFileList()
 				oRL[x] = None
+				if previewSize > 0:
+					try:
+						for fL in fList:
+							os.remove(fL)
+					except:
+						pass
+			for x in range(0, len(oMR)):
+				oMR[x] = None
 			for x in range(0, len(oCR)):
 				oCR[x] = None
 			for x in range(0, len(bL)):
 				bL[x] = None
+			rD = None
+			if cfg.rasterCompression != "No":
+				try:
+					cfg.utls.GDALCopyRaster(tPMD2, outputRasterPath, "GTiff", cfg.rasterCompression, "DEFLATE -co PREDICTOR=2 -co ZLEVEL=1")
+					os.remove(tPMD2)
+				except Exception, err:
+					shutil.copy(tPMD2, outputRasterPath)
+					os.remove(tPMD2)
+					# logger
+					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			else:
+				shutil.copy(tPMD2, outputRasterPath)
+				os.remove(tPMD2)
 			# create raster table (removed because of some issues)
 			#cfg.utls.createRasterTable(outputRasterPath, 1, signatureList)
 			return "Yes", opOut, tPMD
@@ -532,7 +560,7 @@ class ClassificationDock:
 				### if not mask
 					cfg.uiUtls.updateBar(20)
 					# compression
-					compress = "Yes"
+					compress = cfg.rasterCompression
 					ok, opOut, mOut = self.runAlgorithm(cfg.algName, img, sL, cfg.clssPth, cfg.macroclassCheck, None, None, None, compress)
 					if ok == "Yes":
 						c = cfg.iface.addRasterLayer(cfg.clssPth, os.path.basename(unicode(cfg.clssPth)))
@@ -570,10 +598,26 @@ class ClassificationDock:
 							for r in opOut:
 								rNm = os.path.basename(r)[:7]
 								bNm = nm + "_" + rNm + ".tif"
-								shutil.copy(r, rOBaseNm + "/" + bNm)
+								if cfg.rasterCompression != "No":
+									try:
+										cfg.utls.GDALCopyRaster(r, rOBaseNm + "/" + bNm, "GTiff", cfg.rasterCompression, "DEFLATE -co PREDICTOR=2 -co ZLEVEL=1")
+									except Exception, err:
+										shutil.copy(r, rOBaseNm + "/" + bNm)
+										# logger
+										if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+								else:
+									shutil.copy(r, rOBaseNm + "/" + bNm)
 								c = cfg.iface.addRasterLayer(rOBaseNm + "/" + bNm, bNm)
 							mOutNm = nm + "_" + cfg.algRasterNm + ".tif"
-							shutil.copy(mOut, rOBaseNm + "/" + mOutNm)
+							if cfg.rasterCompression != "No":
+								try:
+									cfg.utls.GDALCopyRaster(mOut, rOBaseNm + "/" + mOutNm, "GTiff", cfg.rasterCompression, "DEFLATE -co PREDICTOR=2 -co ZLEVEL=1")
+								except Exception, err:
+									shutil.copy(mOut, rOBaseNm + "/" + mOutNm)
+									# logger
+									if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+							else:
+								shutil.copy(mOut, rOBaseNm + "/" + mOutNm)
 							c = cfg.iface.addRasterLayer(rOBaseNm + "/" + mOutNm, mOutNm)
 							# logger
 							cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "files copied")
@@ -591,10 +635,10 @@ class ClassificationDock:
 						# logger
 						cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				### ending
+					cfg.utls.finishSound()
 					cfg.uiUtls.updateBar(100)
 					cfg.uiUtls.removeProgressBar()
 					cfg.cnvs.setRenderFlag(True)
-					cfg.utls.finishSound()
 					cfg.clssPth = None
 			### band set check failed
 				else:
@@ -1042,6 +1086,7 @@ class ClassificationDock:
 				wl = []
 				val = []
 				unit = []
+				covMat = []
 				for x in v:
 					id = tW.item(x, 6).text()
 					if len(wl) == 0:
@@ -1054,11 +1099,19 @@ class ClassificationDock:
 						color = cfg.signList["COLOR_" + str(id)]
 						checkbox  = cfg.signList["CHECKBOX_" + str(id)]
 						sigThr  = cfg.signList["SIG_THRESHOLD_" + str(id)]
-						covMatrix  = "No"
 					elif wl != cfg.signList["WAVELENGTH_" + str(id)] or unit != cfg.signList["UNIT_" + str(id)]:
 						cfg.mx.msgErr35()
 						return "No"
 					val.append(cfg.signList["VALUES_" + str(id)])
+					covMat.append(cfg.signList["COVMATRIX_" + str(id)])
+				covMatrixSum = 0
+				try:
+					for cvm in covMat:
+						covMatrixSum = covMatrixSum + cvm
+					covMatrix = covMatrixSum / len(covMat)
+					np.linalg.inv(covMatrix)
+				except:
+					covMatrix = "No"
 				cfg.uiUtls.updateBar(10)
 				# calculate mean
 				vals = np.array(val)

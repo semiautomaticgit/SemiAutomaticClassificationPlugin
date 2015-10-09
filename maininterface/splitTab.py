@@ -36,6 +36,8 @@ import os
 import numpy as np
 import itertools
 import inspect
+# for moving files
+import shutil
 # Import the PyQt and QGIS libraries
 from PyQt4.QtCore import *
 from PyQt4.QtCore import QCoreApplication
@@ -95,9 +97,19 @@ class SplitTab:
 			cfg.uiUtls.addProgressBar()
 			i = cfg.utls.selectLayerbyName(rasterName, "Yes")
 			try:
-				iL = cfg.utls.rasterToBands(i.source(), o, outputName + rasterName, "Yes")
+				iL = cfg.utls.rasterToBands(i.source(), cfg.tmpDir, outputName + rasterName, "Yes")
 				for r in iL:
-					cfg.utls.addRasterLayer(r, os.path.basename(r))
+					if cfg.rasterCompression != "No":
+						try:
+							cfg.utls.GDALCopyRaster(r, o + "/" + os.path.basename(r), "GTiff", cfg.rasterCompression, "DEFLATE -co PREDICTOR=2 -co ZLEVEL=1")
+						except Exception, err:
+							shutil.copy(r, o + "/" + os.path.basename(r))
+							# logger
+							if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					else:
+						shutil.copy(r, o + "/" + os.path.basename(r))
+					cfg.utls.addRasterLayer(o + "/" + os.path.basename(r), os.path.basename(r))
+					os.remove(r)
 				cfg.utls.finishSound()
 				# enable map canvas render
 				cfg.cnvs.setRenderFlag(True)

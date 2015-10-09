@@ -35,6 +35,8 @@
 import os
 import numpy as np
 import itertools
+# for moving files
+import shutil
 # for debugging
 import inspect
 # Import the PyQt and QGIS libraries
@@ -62,7 +64,7 @@ class LandCoverChange:
 	# start land cover change calculation
 	def landCoverChange(self):
 		# register drivers
-		gdal.AllRegister()
+		#gdal.AllRegister()
 		# input
 		refRstr = cfg.utls.selectLayerbyName(cfg.refClssfctnNm, "Yes")
 		try:
@@ -138,7 +140,7 @@ class LandCoverChange:
 						bLN[b] = None
 					newRstrDt = None		
 					cfg.rasterBandUniqueVal = np.unique(cfg.rasterBandUniqueVal).tolist()
-					newRasterBandUniqueVal = sorted(cfg.rasterBandUniqueVal)	
+					newRasterBandUniqueVal = sorted(cfg.rasterBandUniqueVal)
 					cmb = list(itertools.product(refRasterBandUniqueVal, newRasterBandUniqueVal))
 					cmbntns = {}
 					# expression builder
@@ -151,12 +153,13 @@ class LandCoverChange:
 							e.append("np.where( (a == " + str(i[0]) + ") & (b == " + str(i[1]) + "), " + str(n) + ", 0)")
 							cmbntns["combination_" + str(i[0]) + "_"+ str(i[1])] = n
 							n = n + 1
-					
 					# virtual raster
 					tPMN = cfg.tmpVrtNm + ".vrt"
 					# date time for temp name
 					dT = cfg.utls.getTime()
 					tPMD = cfg.tmpDir + "/" + dT + tPMN
+					tPMN2 = dT + cfg.calcRasterNm + ".tif"
+					tPMD2 = cfg.tmpDir + "/" + tPMN2
 					bList = [refRstrSrc, newRstrSrc]
 					bandNumberList = [1, 1]
 					vrtCheck = cfg.utls.createVirtualRaster2(bList, tPMD, bandNumberList, "Yes", "No", 0, "No", "No")
@@ -164,8 +167,8 @@ class LandCoverChange:
 					rD = gdal.Open(tPMD, GA_ReadOnly)
 					# output rasters
 					oM = []
-					oM.append(chngRstPath)
-					oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0, None, "Yes")
+					oM.append(tPMD2)
+					oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0, None, cfg.rasterCompression)
 					# band list
 					bL = cfg.utls.readAllBandsFromRaster(rD)
 					# calculation
@@ -179,6 +182,18 @@ class LandCoverChange:
 					for b in range(0, len(bL)):
 						bL[b] = None
 					rD = None
+					if cfg.rasterCompression != "No":
+						try:
+							cfg.utls.GDALCopyRaster(tPMD2, chngRstPath, "GTiff", cfg.rasterCompression, "DEFLATE -co PREDICTOR=2 -co ZLEVEL=1")
+							os.remove(tPMD2)
+						except Exception, err:
+							shutil.copy(tPMD2, chngRstPath)
+							os.remove(tPMD2)
+							# logger
+							if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					else:
+						shutil.copy(tPMD2, chngRstPath)
+						os.remove(tPMD2)
 					# # save combination to table
 					l = open(tblOut, 'w')
 					t = str(QApplication.translate("semiautomaticclassificationplugin", 'ChangeCode')) + "	" + str(QApplication.translate("semiautomaticclassificationplugin", 'ReferenceClass')) + "	" + str(QApplication.translate("semiautomaticclassificationplugin", 'NewClass')) + "	" + str(QApplication.translate("semiautomaticclassificationplugin", 'PixelSum') + str("\n"))
@@ -187,10 +202,12 @@ class LandCoverChange:
 					rDC = gdal.Open(chngRstPath, GA_ReadOnly)
 					bLC = cfg.utls.readAllBandsFromRaster(rDC)
 					for i in cmb:
-						v = cmbntns["combination_" + str(i[0]) + "_"+ str(i[1])]
-						if cfg.unchngMaskCheck is False and str(i[0]) == str(i[1]):
-							pass
-						else:
+						try:
+							v = cmbntns["combination_" + str(i[0]) + "_"+ str(i[1])]
+							combOK = "Yes"
+						except:
+							combOK = "No"
+						if combOK == "Yes":
 							cfg.rasterBandPixelCount = 0
 							o = cfg.utls.processRaster(rDC, bLC, None, "No", cfg.utls.rasterEqualValueCount, None, None, None, None, 0, None, cfg.NoDataVal, "No", None, v, "value " + str(v))
 							t = str(v) + "	" + str(i[0]) + "	" + str(i[1]) + "	" + str(cfg.rasterBandPixelCount) + str("\n")

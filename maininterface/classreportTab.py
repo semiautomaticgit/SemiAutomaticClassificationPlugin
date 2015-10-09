@@ -58,7 +58,7 @@ class ClassReportTab:
 	# calculate classification report
 	def calculateClassificationReport(self, classificationPath, NoDataValue = None):
 		# register drivers
-		gdal.AllRegister()
+		#gdal.AllRegister()
 		# date time for temp name
 		dT = cfg.utls.getTime()
 		# temp report
@@ -81,7 +81,7 @@ class ClassReportTab:
 			cfg.rasterBandUniqueVal = np.zeros((1, 1))
 			cfg.rasterBandUniqueVal = np.delete(cfg.rasterBandUniqueVal, 0, 1)
 			# register drivers
-			gdal.AllRegister()
+			#gdal.AllRegister()
 			# open input with GDAL
 			rD = gdal.Open(clssRstrSrc, GA_ReadOnly)
 			# pixel size

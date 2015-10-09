@@ -268,7 +268,13 @@ class Messages:
 			
 	def msgErr48(self):
 		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [48]", QApplication.translate("semiautomaticclassificationplugin", "Error calculating accuracy. Possibly shapefile polygons are outside classification"))
-	
+		
+	def msgErr49(self):
+		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [49]", QApplication.translate("semiautomaticclassificationplugin", "Unable to connect. Check user name and password"))
+			
+	def msgErr50(self, imageID):
+		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [50]", QApplication.translate("semiautomaticclassificationplugin", "Unable to download image " + imageID ))
+
 	""" Warnings """
 	def msgWar2Windows(self):
 		self.msgBoxWarning(QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [2]", QApplication.translate("semiautomaticclassificationplugin", "It appears that SciPy is not correctly installed. Please, update QGIS "))
@@ -311,4 +317,10 @@ class Messages:
 	
 	def msgWar16(self):
 		self.msgBarWarning(QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [16]", QApplication.translate("semiautomaticclassificationplugin", "Incorrect expression"))
+			
+	def msgWar17(self):
+		self.msgBarWarning(QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [17]", QApplication.translate("semiautomaticclassificationplugin", "Unable to access the temporary directory"))
+			
+	def msgWar18(self):
+		self.msgBarWarning(QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [18]", QApplication.translate("semiautomaticclassificationplugin", "Reduce the search area extent within 10 degrees of latitude and 10 degrees of longitude"))
 		

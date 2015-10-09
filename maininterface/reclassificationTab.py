@@ -81,15 +81,19 @@ class ReclassificationTab:
 					out = out
 				else:
 					out = out + ".tif"
+				# date time for temp name
+				dT = cfg.utls.getTime()
+				tPMN2 = dT + cfg.calcRasterNm + ".tif"
+				tPMD2 = cfg.tmpDir + "/" + tPMN2
 				# open input with GDAL
 				rD = gdal.Open(classificationPath, GA_ReadOnly)
 				# band list
 				bL = cfg.utls.readAllBandsFromRaster(rD)
 				# output rasters
 				oM = []
-				oM.append(out)
+				oM.append(tPMD2)
 				reclassList = self.createReclassificationStringFromList(list)
-				oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType)
+				oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0, None, cfg.rasterCompression, "DEFLATE21")
 				o = cfg.utls.processRaster(rD, bL, None, cfg.utls.reclassifyRaster, None, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", reclassList, cfg.variableName)
 				# close GDAL rasters
 				for b in range(0, len(oMR)):
@@ -97,6 +101,18 @@ class ReclassificationTab:
 				for b in range(0, len(bL)):
 					bL[b] = None
 				rD = None
+				if cfg.rasterCompression != "No":
+					try:
+						cfg.utls.GDALCopyRaster(tPMD2, out, "GTiff", cfg.rasterCompression, "DEFLATE -co PREDICTOR=2 -co ZLEVEL=1")
+						os.remove(tPMD2)
+					except Exception, err:
+						shutil.copy(tPMD2, out)
+						os.remove(tPMD2)
+						# logger
+						if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				else:
+					shutil.copy(tPMD2, out)
+					os.remove(tPMD2)
 				r = cfg.utls.addRasterLayer(out, os.path.basename(out))
 				# create symbol
 				if cfg.ui.apply_symbology_checkBox.isChecked() is True:	
@@ -121,13 +137,6 @@ class ReclassificationTab:
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			return "No"
-		# register drivers
-		gdal.AllRegister()
-		# date time for temp name
-		dT = cfg.utls.getTime()
-		# temp report
-		rN = QApplication.translate("semiautomaticclassificationplugin", "report") + dT + ".csv"
-		cfg.reportPth = str(cfg.tmpDir + "/" + rN)
 		try:
 			clssRstrSrc = unicode(classificationPath)
 			ck = "Yes"
@@ -139,71 +148,29 @@ class ReclassificationTab:
 			cfg.mx.msg4()
 			cfg.utls.refreshClassificationLayer()
 		else:
-			# open input with GDAL
-			cR = gdal.Open(clssRstrSrc, GA_ReadOnly)
-			# number of x pixels
-			cRC = cR.RasterXSize
-			# number of y pixels
-			cRR = cR.RasterYSize
-			# pixel size
-			cRG = cR.GetGeoTransform()
-			cRPX = abs(cRG[1])
-			cRPY = abs(cRG[5])
-			# check projections
-			cRP = cR.GetProjection()
-			cRSR = osr.SpatialReference(wkt=cRP)
-			un = QApplication.translate("semiautomaticclassificationplugin", "Unknown")
-			if cRSR.IsProjected:
-				un = cRSR.GetAttrValue('unit')
-			else:
-				pass
 			cfg.uiUtls.addProgressBar()
 			cfg.uiUtls.updateBar(10)
-			# get band
-			cRB = cR.GetRasterBand(1)
-			blockSizeX = cfg.utls.calculateBlockSize(5)
-			blockSizeY = blockSizeX
-			# raster range blocks
-			lX = range(0, cRC, blockSizeX)
-			lY = range(0, cRR, blockSizeY)
-			cfg.uiUtls.updateBar(20)
-			# set initial value for progress bar
-			progresStep = 60 / (len(lX) * len(lY))
-			progressStart = 20 - progresStep
-			# block size
-			if blockSizeX > cRC:
-				blockSizeX = cRC
-			if blockSizeY > cRR:
-				blockSizeY = cRR
-			n = 1
-			# process
-			for y in lY:
-				bSY = blockSizeY
-				if y + bSY > cRR:
-					bSY = cRR - y
-				for x in lX:
-					if cfg.actionCheck == "Yes":
-						progress = progressStart + n * progresStep
-						cfg.uiUtls.updateBar(progress)
-						bSX = blockSizeX
-						if x + bSX > cRC:
-							bSX = cRC - x
-						# combinations of classes
-						refRstrArr = cRB.ReadAsArray(x, y, bSX, bSY)
-						refRstrVal = np.unique(refRstrArr).tolist()
-					n = n + 1
+			refRstrDt = gdal.Open(clssRstrSrc, GA_ReadOnly)
+			# combination finder
+			# band list
+			bLR = cfg.utls.readAllBandsFromRaster(refRstrDt)
+			cfg.rasterBandUniqueVal = np.zeros((1, 1))
+			cfg.rasterBandUniqueVal = np.delete(cfg.rasterBandUniqueVal, 0, 1)
+			o = cfg.utls.processRaster(refRstrDt, bLR, None, "No", cfg.utls.rasterUniqueValues, None, None, None, None, 0, None, cfg.NoDataVal, "No", None, None, "UniqueVal")
+			cfg.rasterBandUniqueVal = np.unique(cfg.rasterBandUniqueVal).tolist()
+			refRasterBandUniqueVal = sorted(cfg.rasterBandUniqueVal)	
+			cfg.uiUtls.updateBar(80)
 			if cfg.ui.CID_MCID_code_checkBox.isChecked() is True:
 				uniq = cfg.utls.calculateUnique_CID_MCID()
 				if uniq == "No":
-					uniq = self.createValueList(refRstrVal)
+					uniq = self.createValueList(cfg.rasterBandUniqueVal)
 			else:
-				uniq = self.createValueList(refRstrVal)
+				uniq = self.createValueList(cfg.rasterBandUniqueVal)
 			self.addValuesToTable(uniq)
-			cfg.uiUtls.updateBar(80)
-			# close bands
-			cRB = None
-			# close rasters
-			cR = None
+			for b in range(0, len(bLR)):
+				bLR[b] = None
+			refRstrDt = None
+			cfg.uiUtls.updateBar(100)
 			cfg.uiUtls.removeProgressBar()
 			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " values calculated")
 			

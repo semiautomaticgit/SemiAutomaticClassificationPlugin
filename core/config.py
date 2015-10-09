@@ -262,6 +262,7 @@ LandsatTM00ImageDatabase = None
 LandsatTM10ImageDatabase = None
 Landsat8ImageDatabase = None
 LandsatTMImageDatabase2010 = None
+RADIANCE_UNITS = None
 
 """ QGIS variables """
 # registry key for log setting
@@ -284,11 +285,19 @@ ROITrnspValDefault = 45
 ROITrnspVal = ROITrnspValDefault
 # registry key for temporary raster format
 regTempRasterFormat = "SemiAutomaticClassificationPlugin/tempRastFormat"
+# registry key for raster compression
+regRasterCompression = "SemiAutomaticClassificationPlugin/rasterCompression"
 # registry key for RAM value setting
 regRAMValue = "SemiAutomaticClassificationPlugin/RAMValue"
 RAMValue = 512
 # field names for shapefile
 regIDFieldName = "SemiAutomaticClassificationPlugin/IDFieldName"
+# registry key for temporary directory
+regTmpDir = "SemiAutomaticClassificationPlugin/TmpDir"
+regSciHubUser = "SemiAutomaticClassificationPlugin/SciHubUser"
+SciHubUser = ""
+regSciHubPass = "SemiAutomaticClassificationPlugin/SciHubPass"
+SciHubPass = ""
 fldMacroID_class_def = "MC_ID"
 fldID_class_def = "C_ID"
 fldROI_info_def = "C_info"
@@ -329,6 +338,7 @@ lastPrev = None
 clipNm = "clip"
 # output temp raster format
 outTempRastFormat = "GTiff"
+rasterCompression = "Yes"
 # Landsat database directory
 regLandsatDBDir = "SemiAutomaticClassificationPlugin/landsatDatabaseDir"
 LandsatDatabaseDirectory = ""
@@ -339,6 +349,8 @@ rasterDataType = "Float32"
 """ Names """
 uncls = "Unclassified"
 algRasterNm = "alg_raster"
+classRasterNm = "class_raster"
+calcRasterNm = "calc_raster"
 errMatrixNm = "_error_matrix.csv"
 tempMtrxNm = "tmp_error_matrix"
 reportNm = "_report.csv"
@@ -397,13 +409,14 @@ satLandsat7 = "Landsat 7 ETM+ [bands 1, 2, 3, 4, 5, 7]"
 satLandsat45 = "Landsat 4-5 TM [bands 1, 2, 3, 4, 5, 7]"
 satLandsat13 = "Landsat 1-3 MSS [bands 4, 5, 6, 7]"
 satRapidEye = "RapidEye [bands 1, 2, 3, 4, 5]"
+satSentinel2 = "Sentinel-2 [bands 2, 3, 4, 5, 6, 7, 8, 8B, 11, 12]"
 satSPOT4 = "SPOT 4 [bands 1, 2, 3, 4]"
 satSPOT5 = "SPOT 5 [bands 1, 2, 3, 4]"
 satSPOT6 = "SPOT 6 [bands 1, 2, 3, 4]"
 satPleiades = "Pleiades [bands 1, 2, 3, 4]"
 satQuickBird = "QuickBird [bands 1, 2, 3, 4]"
 satWorldView23 = "WorldView-2 -3 Multispectral [bands 1, 2, 3, 4, 5, 6, 7, 8]"
-satWlList = ["", NoSatellite, satGeoEye1, satLandsat8, satLandsat7, satLandsat45, satLandsat13, satPleiades, satQuickBird, satRapidEye, satSPOT4, satSPOT5, satSPOT6, satWorldView23]
+satWlList = ["", NoSatellite, satGeoEye1, satLandsat8, satLandsat7, satLandsat45, satLandsat13, satPleiades, satQuickBird, satRapidEye, satSentinel2, satSPOT4, satSPOT5, satSPOT6, satWorldView23]
 # unit list
 noUnit = "band number"
 wlMicro = u"µm (1 E-6m)"

@@ -36,6 +36,8 @@ import os
 import numpy as np
 import itertools
 import inspect
+# for moving files
+import shutil
 # Import the PyQt and QGIS libraries
 from PyQt4.QtCore import *
 from PyQt4.QtCore import QCoreApplication
@@ -165,6 +167,8 @@ class Accuracy:
 				# date time for temp name
 				dT = cfg.utls.getTime()
 				tPMD = cfg.tmpDir + "/" + dT + tPMN
+				tPMN2 = dT + cfg.calcRasterNm + ".tif"
+				tPMD2 = cfg.tmpDir + "/" + tPMN2
 				bList = [unicode(referenceRaster), iClass.source()]
 				bandNumberList = [1, 1]
 				vrtCheck = cfg.utls.createVirtualRaster2(bList, tPMD, bandNumberList, "Yes", cfg.NoDataVal, 0, "No", "No")
@@ -172,8 +176,8 @@ class Accuracy:
 				rD = gdal.Open(tPMD, GA_ReadOnly)
 				# output rasters
 				oM = []
-				oM.append(errorRstPath)
-				oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0, None, "Yes")
+				oM.append(tPMD2)
+				oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0, None, cfg.rasterCompression, "DEFLATE21")
 				# band list
 				bL = cfg.utls.readAllBandsFromRaster(rD)
 				# calculation
@@ -193,6 +197,18 @@ class Accuracy:
 				for b in range(0, len(bL)):
 					bL[b] = None
 				rD = None
+				if cfg.rasterCompression != "No":
+					try:
+						cfg.utls.GDALCopyRaster(tPMD2, errorRstPath, "GTiff", cfg.rasterCompression, "DEFLATE -co PREDICTOR=2 -co ZLEVEL=1")
+						os.remove(tPMD2)
+					except Exception, err:
+						shutil.copy(tPMD2, errorRstPath)
+						os.remove(tPMD2)
+						# logger
+						if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				else:
+					shutil.copy(tPMD2, errorRstPath)
+					os.remove(tPMD2)
 				cfg.uiUtls.updateBar(80)
 				cols = sorted(np.unique(col).tolist())
 				rows = sorted(np.unique(row).tolist())

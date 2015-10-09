@@ -181,7 +181,7 @@ class Scatter_Plot:
 			cfg.utls.getRasterBandByBandNumber(unicode(i.source()), rasterBand, tRD, "No", cfg.rasterDataType, [cfg.bndSetMultiFactorsList[int(rasterBand) - 1], cfg.bndSetAddFactorsList[int(rasterBand) - 1]])
 			bX = cfg.utls.clipRasterByShapefile(tLD, tRD, cD)				
 		# register drivers
-		gdal.AllRegister()
+		#gdal.AllRegister()
 		# open input with GDAL
 		rD = gdal.Open(cD, GA_ReadOnly)
 		# number of x pixels

@@ -91,6 +91,7 @@ try:
 	from maininterface.bandcalcTab import BandCalcTab
 	from maininterface.clipmultiplerasters import ClipMultipleRasters
 	from maininterface.downloadlandsatimages import DownloadLandsatImages
+	from maininterface.downloadsentinelimages import DownloadSentinelImages
 	from maininterface.landcoverchange import LandCoverChange
 	from maininterface.classreportTab import ClassReportTab
 	from maininterface.classtovectorTab import ClassToVectorTab
@@ -149,6 +150,7 @@ class SemiAutomaticClassificationPlugin:
 			cfg.bCalc = BandCalcTab()
 			cfg.clipMulti = ClipMultipleRasters()
 			cfg.downLandsat = DownloadLandsatImages()
+			cfg.downSentinel = DownloadSentinelImages()
 			cfg.landsatT = LandsatTab()
 			cfg.landCC = LandCoverChange()
 			cfg.classRep = ClassReportTab()
@@ -181,13 +183,6 @@ class SemiAutomaticClassificationPlugin:
 			cfg.plgnDir = QFileInfo(QgsApplication.qgisUserDbFilePath()).path() + "/python/plugins/SemiAutomaticClassificationPlugin"
 			# locale name
 			lclNm = QSettings().value("locale/userLocale")[0:2] 
-			""" temp names """
-			# date for names
-			dtTm = cfg.utls.getTime()
-			# temp directory
-			cfg.tmpDir = unicode(QDir.tempPath() + "/" + cfg.tempDirName)
-			if not QDir(cfg.tmpDir).exists():
-				os.makedirs(cfg.tmpDir)
 			""" registry keys """
 			# log setting
 			rK = QSettings()
@@ -196,19 +191,50 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ROITrnspVal = int(rK.value(cfg.regROITransp, cfg.ROITrnspVal))
 			cfg.algFilesCheck = rK.value(cfg.regAlgFiles, str(cfg.algFilesCheck))
 			cfg.outTempRastFormat = rK.value(cfg.regTempRasterFormat, str(cfg.outTempRastFormat))
+			cfg.rasterCompression = rK.value(cfg.regRasterCompression, str(cfg.rasterCompression))
 			cfg.RAMValue = int(rK.value(cfg.regRAMValue, str(cfg.RAMValue)))
+			cfg.tmpDir = rK.value(cfg.regTmpDir, cfg.tmpDir)
 			cfg.fldID_class = rK.value(cfg.regIDFieldName, cfg.fldID_class)
 			cfg.fldMacroID_class = rK.value(cfg.regMacroIDFieldName, cfg.fldMacroID_class)
 			cfg.macroclassCheck = rK.value(cfg.regConsiderMacroclass, cfg.macroclassCheck)
 			cfg.fldROI_info = rK.value(cfg.regInfoFieldName, cfg.fldROI_info)
 			cfg.fldROIMC_info = rK.value(cfg.regMCInfoFieldName, cfg.fldROIMC_info)
 			cfg.variableName = rK.value(cfg.regVariableName, cfg.variableName)
+			cfg.SciHubUser = rK.value(cfg.regSciHubUser, cfg.SciHubUser)
+			cfg.SciHubPass = rK.value(cfg.regSciHubPass, cfg.SciHubPass)
 			cfg.bndSetNm = rK.value(cfg.regBandSetName, cfg.bndSetNm)
 			cfg.roundCharList = rK.value(cfg.regRoundCharList, cfg.roundCharList)
 			cfg.grpNm = rK.value(cfg.regGroupName, cfg.grpNm)
 			cfg.rasterDataType = rK.value(cfg.regRasterDataType, cfg.rasterDataType)
 			cfg.LandsatDatabaseDirectory = rK.value(cfg.regLandsatDBDir, cfg.LandsatDatabaseDirectory)
 			cfg.soundVal = rK.value(cfg.regSound, cfg.soundVal)
+			""" temp names """
+			# temp directory
+			if cfg.tmpDir is None:
+				cfg.tmpDir = unicode(QDir.tempPath() + "/" + cfg.tempDirName)
+			if not QDir(cfg.tmpDir).exists():
+				try:
+					os.makedirs(cfg.tmpDir)
+				except Exception, err:
+					# logger
+					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					cfg.tmpDir = unicode(QDir.tempPath() + "/" + cfg.tempDirName)
+					cfg.sets.setQGISRegSetting(cfg.regTmpDir, cfg.tmpDir)
+					cfg.mx.msgWar17()
+					if not QDir(cfg.tmpDir).exists():
+						os.makedirs(cfg.tmpDir)
+			try:
+				dT = cfg.utls.getTime()
+				os.makedirs(cfg.tmpDir + "/" + dT)
+			except Exception, err:
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.tmpDir = unicode(QDir.tempPath() + "/" + cfg.tempDirName)
+				cfg.sets.setQGISRegSetting(cfg.regTmpDir, cfg.tmpDir)
+				cfg.mx.msgWar17()
+				if not QDir(cfg.tmpDir).exists():
+					os.makedirs(cfg.tmpDir)
+			cfg.ui.temp_directory_label.setText(cfg.tmpDir)
 			# path to locale
 			lclPth = "" 
 			if QFileInfo(cfg.plgnDir).exists(): 
@@ -276,6 +302,11 @@ class SemiAutomaticClassificationPlugin:
 		self.download_landsat8_action.setObjectName("download_landsat8_action")
 		QObject.connect(self.download_landsat8_action, SIGNAL("triggered()"), cfg.utls.downloadLandast8Tab)
 		cfg.tools_menu.addAction(self.download_landsat8_action)
+		# Download Sentinel
+		self.download_sentinel_action = QAction(QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_sentinel_download_tool.png"), "Download Sentinel", cfg.iface.mainWindow())
+		self.download_sentinel_action.setObjectName("download_sentinel_action")
+		QObject.connect(self.download_sentinel_action, SIGNAL("triggered()"), cfg.utls.downloadSentinelTab)
+		cfg.tools_menu.addAction(self.download_sentinel_action)
 		# Pre processing
 		cfg.preprocessing_menu = cfg.menu.addMenu(QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_class_tool.png"), QApplication.translate("semiautomaticclassificationplugin", "Pre processing"))
 		# Landsat
@@ -538,6 +569,7 @@ class SemiAutomaticClassificationPlugin:
 				cfg.uisp.signature_list_plot_tableWidget.horizontalHeader().setResizeMode(4, QHeaderView.Stretch)
 			except:
 				pass
+			cfg.ui.password_scihub_lineEdit.setEchoMode(QLineEdit.Password)
 			# scatter plot list
 			cfg.uiscp.scatter_list_plot_tableWidget.insertColumn(6)
 			cfg.uiscp.scatter_list_plot_tableWidget.setHorizontalHeaderItem(6, QTableWidgetItem(cfg.tableColString))
@@ -590,11 +622,16 @@ class SemiAutomaticClassificationPlugin:
 				cfg.ui.alg_files_checkBox.setCheckState(2)
 			elif cfg.algFilesCheck == "No":
 				cfg.ui.alg_files_checkBox.setCheckState(0)
-			# set alg files state
+			# set raster format
 			if cfg.outTempRastFormat == "VRT":
 				cfg.ui.virtual_raster_checkBox.setCheckState(2)
 			elif cfg.outTempRastFormat == "GTiff":
 				cfg.ui.virtual_raster_checkBox.setCheckState(0)
+			# set raster compression
+			if cfg.rasterCompression == "Yes":
+				cfg.ui.raster_compression_checkBox.setCheckState(2)
+			elif cfg.rasterCompression == "No":
+				cfg.ui.raster_compression_checkBox.setCheckState(0)
 			# set sound state
 			if cfg.soundVal == "Yes":
 				cfg.ui.sound_checkBox.setCheckState(2)
@@ -634,6 +671,10 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.MCInfo_field_name_lineEdit.setText(cfg.fldROIMC_info)
 			cfg.ui.variable_name_lineEdit.setText(cfg.variableName)
 			cfg.ui.group_name_lineEdit.setText(cfg.grpNm)
+			# set SciHub user and password
+			cfg.ui.user_scihub_lineEdit.setText(cfg.SciHubUser)
+			sciHubPsw = cfg.utls.decryptPassword(cfg.SciHubPass)
+			cfg.ui.password_scihub_lineEdit.setText(sciHubPsw)
 			# raster data type
 			rDTid = cfg.ui.raster_precision_combo.findText(str(cfg.rasterDataType))
 			cfg.ui.raster_precision_combo.setCurrentIndex(rDTid)
@@ -687,7 +728,7 @@ class SemiAutomaticClassificationPlugin:
 			# connect to show ROI radio button
 			cfg.uid.show_ROI_radioButton.clicked.connect(cfg.ROId.showHideROI)
 			# connect to zoom to ROI button
-			cfg.uid.zoom_ROI_button.clicked.connect(cfg.ROId.zoomToROI)
+			cfg.uid.zoom_ROI_button.clicked.connect(cfg.ROId.zoomToTempROI)
 			# connect to automatic refresh ROI radio button
 			cfg.uid.auto_refresh_ROI_radioButton.clicked.connect(cfg.ROId.automaticRefreshROI)
 			# connect to save to shapefile 
@@ -757,6 +798,20 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.download_images_Button.clicked.connect(cfg.downLandsat.downloadImages)
 			cfg.ui.export_links_Button.clicked.connect(cfg.downLandsat.exportLinks)
 			cfg.ui.check_toolButton.clicked.connect(cfg.downLandsat.checkAllBands)
+			""" Download Sentinel tab """
+			# connect to find images button
+			cfg.ui.find_images_toolButton_3.clicked.connect(cfg.downSentinel.findImages)
+			cfg.ui.selectUL_toolButton_5.clicked.connect(cfg.downSentinel.pointerULActive)
+			# connect to activate LR pointer 
+			cfg.ui.selectLR_toolButton_5.clicked.connect(cfg.downSentinel.pointerLRActive)
+			cfg.ui.clear_table_toolButton_3.clicked.connect(cfg.downSentinel.clearTable)
+			cfg.ui.export_links_Button_3.clicked.connect(cfg.downSentinel.exportLinks)
+			cfg.ui.toolButton_display_3.clicked.connect(cfg.downSentinel.displayImages)
+			cfg.ui.user_scihub_lineEdit.editingFinished.connect(cfg.downSentinel.rememberUser)
+			cfg.ui.password_scihub_lineEdit.editingFinished.connect(cfg.downSentinel.rememberUser)
+			cfg.ui.remember_user_checkBox.stateChanged.connect(cfg.downSentinel.rememberUserCheckbox)
+			cfg.ui.download_images_Button_3.clicked.connect(cfg.downSentinel.downloadImages)
+			cfg.ui.remove_image_toolButton_3.clicked.connect(cfg.downSentinel.removeImageFromTable)
 			""" Classification dock """
 			# connect to save signature list to file
 			cfg.uidc.save_signature_list_toolButton.clicked.connect(cfg.classD.saveSignatureListToFile)
@@ -1011,8 +1066,13 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.alg_files_checkBox.stateChanged.connect(cfg.sets.algFilesCheckbox)
 			# connect the virtual raster format checkBox
 			cfg.ui.virtual_raster_checkBox.stateChanged.connect(cfg.sets.virtualRasterFormatCheckbox)
+			# connect the raster compression checkBox
+			cfg.ui.raster_compression_checkBox.stateChanged.connect(cfg.sets.rasterCompressionCheckbox)
 			# connect to raster data type
 			cfg.ui.raster_precision_combo.currentIndexChanged.connect(cfg.sets.rasterDataTypeChange)
+			# connect to change temporary directory button
+			cfg.ui.temp_directory_Button.clicked.connect(cfg.sets.changeTempDir)
+			cfg.ui.reset_temp_directory_Button.clicked.connect(cfg.sets.resetTempDir)
 			# connect to clear log button
 			cfg.ui.clearLog_Button.clicked.connect(cfg.utls.clearLogFile)
 			# connect to export log button

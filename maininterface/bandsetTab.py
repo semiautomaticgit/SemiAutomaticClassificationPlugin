@@ -36,6 +36,8 @@ import os
 # for debugging
 import inspect
 import re
+# for moving files
+import shutil
 # Import the PyQt and QGIS libraries
 from PyQt4.QtCore import *
 from PyQt4.QtCore import QCoreApplication
@@ -124,7 +126,10 @@ class BandsetTab:
 		elif satelliteName == cfg.satGeoEye1:
 			wl = [0.48, 0.545, 0.6725, 0.85]
 			id = cfg.ui.unit_combo.findText(cfg.wlMicro)
-		
+		# Sentinel-2 center wavelength from https://sentinel.esa.int/documents/247904/685211/Sentinel-2A+MSI+Spectral+Responses
+		elif satelliteName == cfg.satSentinel2:
+			wl = [0.490, 0.560, 0.665, 0.705, 0.740, 0.783, 0.842, 0.865, 1.610, 2.190]
+			id = cfg.ui.unit_combo.findText(cfg.wlMicro)
 		cfg.BandTabEdited = "No"
 		b = 0
 		if bandList is None:
@@ -783,7 +788,23 @@ class BandsetTab:
 				else:
 					rstrOut = rstrOut + ".tif"
 				cfg.uiUtls.updateBar(10)
-				st = cfg.utls.mergeRasterBands(cfg.bndSetLst, rstrOut)
+				# date time for temp name
+				dT = cfg.utls.getTime()
+				tPMN2 = dT + cfg.calcRasterNm + ".tif"
+				tPMD2 = cfg.tmpDir + "/" + tPMN2
+				st = cfg.utls.mergeRasterBands(cfg.bndSetLst, tPMD2)
+				if cfg.rasterCompression != "No":
+					try:
+						cfg.utls.GDALCopyRaster(tPMD2, rstrOut, "GTiff", cfg.rasterCompression, "DEFLATE -co PREDICTOR=2 -co ZLEVEL=1")
+						os.remove(tPMD2)
+					except Exception, err:
+						shutil.copy(tPMD2, rstrOut)
+						os.remove(tPMD2)
+						# logger
+						if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				else:
+					shutil.copy(tPMD2, rstrOut)
+					os.remove(tPMD2)
 				# add raster to layers
 				cfg.iface.addRasterLayer(unicode(rstrOut), unicode(os.path.basename(rstrOut)))
 				# logger

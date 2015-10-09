@@ -35,6 +35,8 @@
 import os
 import subprocess
 import sys
+# for moving files
+import shutil
 # for debugging
 import inspect
 # Import the PyQt and QGIS libraries
@@ -196,10 +198,24 @@ class ClipMultipleRasters:
 					f = c + d + e
 					tPMN = cfg.tmpVrtNm + ".vrt"
 					tPMD = cfg.tmpDir + "/" + dT + tPMN
+					tPMN2 = dT + cfg.calcRasterNm + ".tif"
+					tPMD2 = cfg.tmpDir + "/" + tPMN2
 					bList = [cL]
 					bandNumberList = [1]		
 					vrtCheck = cfg.utls.createVirtualRaster2(bList, tPMD, bandNumberList, "Yes", noDt, 0, "No", "Yes", [float(UX), float(UY), float(LX), float(LY)])
-					clipOutput = cfg.utls.copyRaster(tPMD, f, "GTiff", noDt)
+					clipOutput = cfg.utls.copyRaster(tPMD, tPMD2, "GTiff", noDt)
+					if cfg.rasterCompression != "No":
+						try:
+							cfg.utls.GDALCopyRaster(tPMD2, f, "GTiff", cfg.rasterCompression, "DEFLATE -co PREDICTOR=2 -co ZLEVEL=1")
+							os.remove(tPMD2)
+						except Exception, err:
+							shutil.copy(tPMD2, f)
+							os.remove(tPMD2)
+							# logger
+							if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					else:
+						shutil.copy(tPMD2, f)
+						os.remove(tPMD2)
 					cfg.iface.addRasterLayer(unicode(oD) + "/" + outputName + "_" + unicode(os.path.basename(unicode(l))), unicode(outputName + "_" + unicode(os.path.basename(unicode(l)))))
 					# logger
 					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " rasters clipped" )
@@ -216,14 +232,28 @@ class ClipMultipleRasters:
 					# convert polygon to raster 
 					tRNxs = cfg.copyTmpROI + dT + "xs.tif"
 					tRxs = str(cfg.tmpDir + "//" + tRNxs)
+					tPMN2 = dT + cfg.calcRasterNm + ".tif"
+					tPMD2 = cfg.tmpDir + "/" + tPMN2
 					check = cfg.utls.vectorToRaster(cfg.emptyFN, unicode(s), cfg.emptyFN, tRxs, unicode(cL), None, "GTiff", 1)
 					if check != "No":
 						b = oD.encode(sys.getfilesystemencoding()) + "/" 
 						c = outputName + "_" 
 						d = os.path.basename(l.encode(sys.getfilesystemencoding()))
 						e = b + c + d
-						s.encode(sys.getfilesystemencoding()) 
-						cfg.utls.clipRasterByRaster(cL, tRxs, e, "GTiff", noDt)
+						cfg.utls.clipRasterByRaster(cL, tRxs, tPMD2, "GTiff", noDt)
+						if cfg.rasterCompression != "No":
+							try:
+								cfg.utls.GDALCopyRaster(tPMD2, e, "GTiff", cfg.rasterCompression, "DEFLATE -co PREDICTOR=2 -co ZLEVEL=1")
+								os.remove(tPMD2)
+							except Exception, err:
+								shutil.copy(tPMD2, e)
+								os.remove(tPMD2)
+								# logger
+								if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+						else:
+							shutil.copy(tPMD2, e)
+							os.remove(tPMD2)
+						os.remove(tRxs)
 						cfg.iface.addRasterLayer(unicode(oD) + "/" + outputName + "_" + unicode(os.path.basename(unicode(l))), unicode(outputName + "_" + unicode(os.path.basename(unicode(l)))))
 						# logger
 						cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " rasters clipped" )

@@ -304,8 +304,15 @@ class LandsatTab:
 			bN = 0
 			for temp in tempRasterList:
 				try:
-					shutil.copy(temp, outputRasterList[bN])
+					cfg.utls.GDALCopyRaster(temp, outputRasterList[bN], "GTiff", cfg.rasterCompression, "DEFLATE -co PREDICTOR=2 -co ZLEVEL=1")
+					os.remove(temp)
 				except Exception, err:
+					try:
+						shutil.copy(temp, outputRasterList[bN])
+						os.remove(temp)
+					except Exception, err:
+						# logger
+						if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 					# logger
 					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				bN = bN + 1
@@ -393,7 +400,7 @@ class LandsatTab:
 		tPMN2 = cfg.reflectanceRasterNm + "2.tif"
 		tPMD2 = cfg.tmpDir + "/" + dT + tPMN2
 		# register drivers
-		gdal.AllRegister()
+		#gdal.AllRegister()
 		# TOA reflectance
 		if cfg.ui.DOS1_checkBox.isChecked() is False:
 			try:
@@ -406,15 +413,24 @@ class LandsatTab:
 				# output rasters
 				oM = []
 				oM.append(tPMD)
-				oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType)
+				oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0,  None, "No")
 				o = cfg.utls.processRaster(rD, bL, None, cfg.utls.calculateRaster, None, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", "( raster *" + str("%.16f" % m) + "+ (" + str("%.16f" % a) + ")) / (" + str(self.sA) + ")", "raster", "TOA b" + str(x))
 				# close GDAL rasters
 				for b in range(0, len(oMR)):
 					oMR[b] = None
 				for b in range(0, len(bL)):
 					bL[b] = None
+				rD = None
 				# reclassification <0 and >1
 				self.reclassRaster0min1max(tPMD, outputRaster)
+				try:
+					os.remove(tPMD)
+					os.remove(tPMD2)
+					# logger
+					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "files deleted")
+				except Exception, err:
+					# logger
+					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), unicode(inputRaster))
 				return "Yes"
@@ -441,13 +457,14 @@ class LandsatTab:
 				# output rasters
 				oM = []
 				oM.append(tPMD)
-				oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType)
+				oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0,  None, "No")
 				o = cfg.utls.processRaster(rD, bL, None, cfg.utls.calculateRaster, None, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", "(raster *" + str("%.16f" % m) + "+ (" + str("%.16f" % a) + "))", "raster", "radiance b" + str(x))
 				# close GDAL rasters
 				for b in range(0, len(oMR)):
 					oMR[b] = None
 				for b in range(0, len(bL)):
 					bL[b] = None
+				rD = None
 				# path radiance Lp = ML* DNm + AL  – 0.01* ESUNλ * cosθs / (π * d^2)	
 				Lp = m * DNm + a - 0.01 * eS * self.sA / (np.pi * self.eSD * self.eSD)
 				# land surface reflectance ρ = [π * (Lλ - Lp) * d^2]/ (ESUNλ * cosθs)	
@@ -458,15 +475,24 @@ class LandsatTab:
 				# output rasters
 				oM = []
 				oM.append(tPMD2)
-				oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType)
+				oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0,  None, "No")
 				o = cfg.utls.processRaster(rD, bL, None, cfg.utls.calculateRaster, None, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", "( raster - (" + str("%.16f" % Lp) + " ) )* " + str("%.16f" % np.pi) + " * " + str("%.16f" % self.eSD) + " * " + str("%.16f" % self.eSD) + " / ( " + str("%.16f" % eS)+ " * " + str(self.sA) + " )", "raster", "DOS1 b" + str(x))
 				# close GDAL rasters
 				for b in range(0, len(oMR)):
 					oMR[b] = None
 				for b in range(0, len(bL)):
 					bL[b] = None
+				rD = None
 				# reclassification <0 and >1
 				self.reclassRaster0min1max(tPMD2, outputRaster)
+				try:
+					os.remove(tPMD)
+					os.remove(tPMD2)
+					# logger
+					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "files deleted")
+				except Exception, err:
+					# logger
+					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), unicode(inputRaster))
 				return "Yes"
@@ -478,14 +504,14 @@ class LandsatTab:
 	# raster reclassification <0 and >1
 	def reclassRaster0min1max(self, inputRaster, outputRaster):
 		# register drivers
-		gdal.AllRegister()
+		#gdal.AllRegister()
 		rD = gdal.Open(inputRaster, GA_ReadOnly)
 		# band list
 		bL = cfg.utls.readAllBandsFromRaster(rD)
 		# output rasters
 		oM = []
 		oM.append(outputRaster)
-		oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType)
+		oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0,  None, "No", "DEFLATE21")
 		o = cfg.utls.processRaster(rD, bL, None, cfg.utls.reclassifyRaster, None, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", [["(raster < 0)", 0], ["(raster > 1)", 1]], "raster", "reflectance")
 		# close GDAL rasters
 		for b in range(0, len(oMR)):
@@ -522,8 +548,16 @@ class LandsatTab:
 		elif str(sat).lower() in ['landsat_7', 'landsat7']:
 			dEsunB = {"ESUN_BAND1": 1997, "ESUN_BAND2": 1812, "ESUN_BAND3": 1533, "ESUN_BAND4": 1039, "ESUN_BAND5": 230.08, "ESUN_BAND7": 84.9, "ESUN_BAND8": 1362}
 		eS = float(dEsunB["ESUN_BAND" + str(x)])
-		m = float(RADIANCE_MULT_BAND)
-		a = float(RADIANCE_ADD_BAND)
+		multipFactor = 1
+		if str(cfg.RADIANCE_UNITS) == '"mW/cm^2/srad"':
+			multipFactor = 10
+		try:
+			m = float(RADIANCE_MULT_BAND) * multipFactor
+			a = float(RADIANCE_ADD_BAND) * multipFactor
+		except Exception, err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + unicode(err))
+			return "No"
 		# temp files
 		dT = cfg.utls.getTime()
 		tPMN = cfg.reflectanceRasterNm + ".tif"
@@ -531,7 +565,7 @@ class LandsatTab:
 		tPMN2 = cfg.reflectanceRasterNm + "2.tif"
 		tPMD2 = cfg.tmpDir + "/" + dT + tPMN2
 		# register drivers
-		gdal.AllRegister()
+		#gdal.AllRegister()
 		# TOA reflectance
 		if cfg.ui.DOS1_checkBox.isChecked() is False:
 			try:
@@ -543,15 +577,24 @@ class LandsatTab:
 				# output rasters
 				oM = []
 				oM.append(tPMD)
-				oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType)
+				oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0,  None, "No")
 				o = cfg.utls.processRaster(rD, bL, None, cfg.utls.calculateRaster, None, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", "( ( raster *" + str("%.16f" % m) + "+ (" + str("%.16f" % a) + ")) * " + str("%.16f" % np.pi) + " * " + str("%.16f" % self.eSD) + " * " + str("%.16f" % self.eSD) + ") / ( " + str("%.16f" % eS)+ " * (" + str(self.sA) + ") )", "raster", "TOA b" + str(x))
 				# close GDAL rasters
 				for b in range(0, len(oMR)):
 					oMR[b] = None
 				for b in range(0, len(bL)):
 					bL[b] = None
+				rD = None
 				# reclassification <0 and >1
 				self.reclassRaster0min1max(tPMD, outputRaster)
+				try:
+					os.remove(tPMD)
+					os.remove(tPMD2)
+					# logger
+					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "files deleted")
+				except Exception, err:
+					# logger
+					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), unicode(inputRaster))
 				return "Yes"
@@ -572,13 +615,14 @@ class LandsatTab:
 				# output rasters
 				oM = []
 				oM.append(tPMD)
-				oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType)
+				oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0,  None, "No")
 				o = cfg.utls.processRaster(rD, bL, None, cfg.utls.calculateRaster, None, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", "(raster *" + str("%.16f" % m) + "+ (" + str("%.16f" % a) + "))", "raster", "radiance b" + str(x))
 				# close GDAL rasters
 				for b in range(0, len(oMR)):
 					oMR[b] = None
 				for b in range(0, len(bL)):
 					bL[b] = None
+				rD = None
 				# path radiance Lp = ML* DNm + AL  – 0.01* ESUNλ * cosθs / (π * d^2)	
 				Lp = m * DNm + a - 0.01 * eS * self.sA / (np.pi * self.eSD * self.eSD)
 				# land surface reflectance ρ = [π * (Lλ - Lp) * d^2]/ (ESUNλ * cosθs)	
@@ -589,15 +633,24 @@ class LandsatTab:
 				# output rasters
 				oM = []
 				oM.append(tPMD2)
-				oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType)
+				oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0,  None, "No")
 				o = cfg.utls.processRaster(rD, bL, None, cfg.utls.calculateRaster, None, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", "( raster - (" + str("%.16f" % Lp) + ") ) * " + str("%.16f" % np.pi) + " * " + str("%.16f" % self.eSD) + " * " + str("%.16f" % self.eSD) + " / ( " + str("%.16f" % eS)+ " * (" + str(self.sA) + ") )", "raster", "DOS1 b" + str(x))
 				# close GDAL rasters
 				for b in range(0, len(oMR)):
 					oMR[b] = None
 				for b in range(0, len(bL)):
 					bL[b] = None
+				rD = None
 				# reclassification <0 and >1
 				self.reclassRaster0min1max(tPMD2, outputRaster)
+				try:
+					os.remove(tPMD)
+					os.remove(tPMD2)
+					# logger
+					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "files deleted")
+				except Exception, err:
+					# logger
+					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), unicode(inputRaster))
 				return "Yes"
@@ -612,7 +665,7 @@ class LandsatTab:
 		cfg.rasterBandUniqueVal = np.zeros((1, 1))
 		cfg.rasterBandUniqueVal = np.delete(cfg.rasterBandUniqueVal, 0, 1)
 		# register drivers
-		gdal.AllRegister()
+		#gdal.AllRegister()
 		# open input with GDAL
 		rD = gdal.Open(inputRaster, GA_ReadOnly)
 		# band list
@@ -650,6 +703,10 @@ class LandsatTab:
 				max = pos
 			if int(round(max-min)) <= 1:
 				break
+		for b in range(0, len(bL)):
+			bL[b] = None
+		rD = None
+		cfg.rasterBandUniqueVal = None
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " DNm " + unicode(DNm))
 		return DNm
@@ -681,7 +738,7 @@ class LandsatTab:
 			m = float(RADIANCE_MULT_BAND)
 			a = float(RADIANCE_ADD_BAND)
 			# register drivers
-			gdal.AllRegister()
+			#gdal.AllRegister()
 			# open input with GDAL
 			rD = gdal.Open(inputRaster, GA_ReadOnly)
 			# band list
@@ -689,13 +746,14 @@ class LandsatTab:
 			# output rasters
 			oM = []
 			oM.append(outputRaster)
-			oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType)
+			oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0,  None, "No", "DEFLATE21")
 			o = cfg.utls.processRaster(rD, bL, None, cfg.utls.calculateRaster, None, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", "((" + str("%.16f" % k2) + ") / ( ln( (" + str("%.16f" % k1) + " / ( raster * " + str("%.16f" % m) + "+ (" + str("%.16f" % a) + ")) ) + 1)) - " + str(cs) + ")", "raster", "temperature")
 			# close GDAL rasters
 			for b in range(0, len(oMR)):
 				oMR[b] = None
 			for b in range(0, len(bL)):
 				bL[b] = None
+			rD = None
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), unicode(outputRaster))
 		except Exception, err:
@@ -714,20 +772,21 @@ class LandsatTab:
 			k1 = float(K1_CONSTANT_BAND)
 			k2 = float(K2_CONSTANT_BAND)
 			# open input with GDAL
-			gdal.AllRegister()
+			#gdal.AllRegister()
 			rD = gdal.Open(inputRaster, GA_ReadOnly)
 			# band list
 			bL = cfg.utls.readAllBandsFromRaster(rD)
 			# output rasters
 			oM = []
 			oM.append(outputRaster)
-			oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType)
+			oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0,  None, "No", "DEFLATE21")
 			o = cfg.utls.processRaster(rD, bL, None, cfg.utls.calculateRaster, None, None, oMR, None, None, 0, None, cfg.NoDataVal, "No",  "((" + str("%.16f" % k2) + ") / ( ln( (" + str("%.16f" % k1) + " / ( raster *" + str("%.16f" % m) + "+ (" + str("%.16f" % a) + ")) ) + 1)) - " + str(cs) + ")", "raster", "temperature")
 			# close GDAL rasters
 			for b in range(0, len(oMR)):
 				oMR[b] = None
 			for b in range(0, len(bL)):
 				bL[b] = None
+			rD = None
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), unicode(outputRaster))
 		except Exception, err:
@@ -784,6 +843,7 @@ class LandsatTab:
 		#### open MTL file
 			try:
 				# get information from MTL
+				cfg.RADIANCE_UNITS = None
 				with open(MTLFile, "r") as MTL:
 					for r in MTL:
 						# satellite
@@ -795,6 +855,8 @@ class LandsatTab:
 							esd = str(r.split()[2])
 						if "DATE_ACQUIRED" in r.split() or "ACQUISITION_DATE" in r.split():
 							dt = str(r.split()[2])
+						if "RADIANCE_UNITS" in r.split():
+							cfg.RADIANCE_UNITS = str(r.split()[2])
 			except Exception, err:
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + unicode(err))
@@ -883,36 +945,44 @@ class LandsatTab:
 				with open(MTLFile, "r") as MTL:
 					for r in MTL:
 						for key, band in dBs.iteritems():
-							# for conversion to TOA Radiance from https://landsat.usgs.gov/landsat8_Using_Product.php
-							if "RADIANCE_MULT_" + str(key) in r.split():
-								dRadMB["RADIANCE_MULT_" + str(key)] = str(r.split()[2])
-							if "RADIANCE_ADD_" + str(key) in r.split():
-								dRadAB["RADIANCE_ADD_" + str(key)] = str(r.split()[2])
-							# for conversion to TOA Reflectance
-							if "REFLECTANCE_MULT_" + str(key) in r.split():
-								dRefMB["REFLECTANCE_MULT_" + str(key)] = str(r.split()[2])
-							if "REFLECTANCE_ADD_" + str(key) in r.split():
-								dRefAB["REFLECTANCE_ADD_" + str(key)] = str(r.split()[2])
-							# for Esun calculation
-							if "RADIANCE_MAXIMUM_" + str(key) in r.split():
-								dRadMxB["RADIANCE_MAXIMUM_" + str(key)] = str(r.split()[2])
-							if "REFLECTANCE_MAXIMUM_" + str(key) in r.split():
-								dRefMxB["REFLECTANCE_MAXIMUM_" + str(key)] = str(r.split()[2])
-							# for At-Satellite Brightness Temperature
-							if "K1_CONSTANT_" + str(key) in r.split():
-								dK1B["K1_CONSTANT_" + str(key)] = str(r.split()[2])
-							if "K2_CONSTANT_" + str(key) in r.split():
-								# rV = r.split()[2]
-								dK2B["K2_CONSTANT_" + str(key)] = str(r.split()[2])
-							# for compatibility with glcf images
-							if "LMAX_" + str(key.replace('_', '').replace('VCID', '')) in r.split():
-								dRad["LMAX_" + str(key)] = str(r.split()[2])
-							if "LMIN_" + str(key.replace('_', '').replace('VCID', '')) in r.split():
-								dRad["LMIN_" + str(key)] = str(r.split()[2])
-							if "QCALMAX_" + str(key.replace('_', '').replace('VCID', '')) in r.split():
-								dRad["QCALMAX_" + str(key)] = str(r.split()[2])
-							if "QCALMIN_" + str(key.replace('_', '').replace('VCID', '')) in r.split():
-								dRad["QCALMIN_" + str(key)] = str(r.split()[2])
+							try:
+								# for conversion to TOA Radiance from https://landsat.usgs.gov/landsat8_Using_Product.php
+								if "RADIANCE_MULT_" + str(key) in r.split():
+									dRadMB["RADIANCE_MULT_" + str(key)] = str(r.split()[2])
+								if "RADIANCE_ADD_" + str(key) in r.split():
+									dRadAB["RADIANCE_ADD_" + str(key)] = str(r.split()[2])
+								# for conversion to TOA Reflectance
+								if "REFLECTANCE_MULT_" + str(key) in r.split():
+									dRefMB["REFLECTANCE_MULT_" + str(key)] = str(r.split()[2])
+								if "REFLECTANCE_ADD_" + str(key) in r.split():
+									dRefAB["REFLECTANCE_ADD_" + str(key)] = str(r.split()[2])
+								# for Esun calculation
+								if "RADIANCE_MAXIMUM_" + str(key) in r.split():
+									dRadMxB["RADIANCE_MAXIMUM_" + str(key)] = str(r.split()[2])
+								if "REFLECTANCE_MAXIMUM_" + str(key) in r.split():
+									dRefMxB["REFLECTANCE_MAXIMUM_" + str(key)] = str(r.split()[2])
+								# for At-Satellite Brightness Temperature
+								if "K1_CONSTANT_" + str(key) in r.split():
+									dK1B["K1_CONSTANT_" + str(key)] = str(r.split()[2])
+								if "K2_CONSTANT_" + str(key) in r.split():
+									# rV = r.split()[2]
+									dK2B["K2_CONSTANT_" + str(key)] = str(r.split()[2])
+								# for compatibility with glcf images
+								if "LMAX_" + str(key.replace('_', '').replace('VCID', '')) in r.split():
+									dRad["LMAX_" + str(key)] = str(r.split()[2])
+								if "LMIN_" + str(key.replace('_', '').replace('VCID', '')) in r.split():
+									dRad["LMIN_" + str(key)] = str(r.split()[2])
+								if "QCALMAX_" + str(key.replace('_', '').replace('VCID', '')) in r.split():
+									dRad["QCALMAX_" + str(key)] = str(r.split()[2])
+								if "QCALMIN_" + str(key.replace('_', '').replace('VCID', '')) in r.split():
+									dRad["QCALMIN_" + str(key)] = str(r.split()[2])
+								if "GAIN_" + str(key) in r.split() or "GAIN_" + str(key).replace("BAND_", "BAND") in r.split():
+									dRadMB["RADIANCE_MULT_" + str(key)] = str(r.split()[2])
+								if "BIAS_" + str(key) in r.split() or ("BIAS_" + str(key)).replace("BAND_", "BAND") in r.split():
+									dRadAB["RADIANCE_ADD_" + str(key)] = str(r.split()[2])
+							except Exception, err:
+								# logger
+								cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + unicode(err))	
 				# add items to table
 				b = 0
 				for bandName in sorted(bandNames):	
@@ -1041,6 +1111,9 @@ class LandsatTab:
 		# date time for temp name
 		dT = cfg.utls.getTime()
 		tPMD = cfg.tmpDir + "/" + dT + tPMN
+		tempRasterList = []
+		for i in range(0, len(outputList)):
+			tempRasterList.append(cfg.tmpDir + "/" + dT + str(i) +"t.tif")
 		vrtCheck = cfg.utls.createVirtualRaster2(inputList, tPMD, "No", "Yes", "No", 0, "Yes")
 		# open input with GDAL
 		rD = gdal.Open(tPMD, GA_ReadOnly)
@@ -1055,11 +1128,27 @@ class LandsatTab:
 		# band list
 		bL = cfg.utls.readAllBandsFromRaster(rD)
 		# create rasters
-		oMR = cfg.utls.createRasterFromReference(rD, 1, outputList, cfg.NoDataVal, "GTiff", cfg.rasterDataType)
+		oMR = cfg.utls.createRasterFromReference(rD, 1, tempRasterList, cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0,  None, "No", "DEFLATE21")
 		o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.pansharpening, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", satellite, bandNumberList, "pansharpening ")
 		# close GDAL rasters
 		for b in range(0, len(oMR)):
 			oMR[b] = None
 		for b in range(0, len(bL)):
 			bL[b] = None
+		rD = None
+		bN = 0
+		for temp in tempRasterList:
+			try:
+				cfg.utls.GDALCopyRaster(temp, outputList[bN], "GTiff", cfg.rasterCompression, "DEFLATE -co PREDICTOR=2 -co ZLEVEL=1")
+				os.remove(temp)
+			except Exception, err:
+				try:
+					shutil.copy(temp, outputRasterList[bN])
+					os.remove(temp)
+				except Exception, err:
+					# logger
+					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				# logger
+				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			bN = bN + 1
 		return o

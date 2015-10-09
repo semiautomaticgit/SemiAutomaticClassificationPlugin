@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/ui_semiautomaticclassificationplugin_dock.ui'
 #
-# Created: Tue Aug 18 11:26:25 2015
+# Created: Thu Oct  8 23:02:25 2015
 #      by: PyQt4 UI code generator 4.11.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -554,7 +554,7 @@ class Ui_Dock(object):
         self.mutlipleROI_Button.setToolTip(_translate("Dock", "<html><head/><body><p><span style=\" font-size:9pt;\">Multiple ROI creation</span></p></body></html>", None))
         self.show_ROI_radioButton.setToolTip(_translate("Dock", "<html><head/><body><p>Show/hide the temporary ROI</p></body></html>", None))
         self.show_ROI_radioButton.setText(_translate("Dock", "Show", None))
-        self.zoom_ROI_button.setToolTip(_translate("Dock", "<html><head/><body><p><span style=\" font-size:9pt;\">Multiple ROI creation</span></p></body></html>", None))
+        self.zoom_ROI_button.setToolTip(_translate("Dock", "<html><head/><body><p><span style=\" font-size:9pt;\">Zoom to temporary ROI</span></p></body></html>", None))
         self.label_43.setText(_translate("Dock", " ROI Signature definition", None))
         self.label_44.setText(_translate("Dock", "MC ID", None))
         self.button_Save_ROI.setToolTip(_translate("Dock", "<html><head/><body><p>Save the last ROI to training shapefile</p></body></html>", None))

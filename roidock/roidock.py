@@ -194,7 +194,7 @@ class RoiDock:
 
 	# clear canvas
 	def clearCanvasPoly(self):
-		cfg.rbbrBndPol.reset(True)
+		cfg.rbbrBndPol.hide()
 		try:
 			cfg.rbbrBndPolOut.reset(True)
 		except:
@@ -574,7 +574,17 @@ class RoiDock:
 			# run segmentation
 			rGC = self.regionGrowing(dBs, point.x(), point.y(), cfg.rngRad, int(cfg.minROISz), tS, dBMA)
 			# check if region growing failed
-			if rGC == "No":
+			if rGC == "Out":
+				# enable map canvas render
+				cfg.cnvs.setRenderFlag(True)
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " Error: Point outside image")
+				cfg.pntROI = None
+				if progressbar == "Yes":
+					cfg.uiUtls.removeProgressBar()
+				cfg.mx.msg6()
+				return "No"
+			elif rGC == "No":
 				# enable map canvas render
 				cfg.cnvs.setRenderFlag(True)
 				# logger
@@ -633,7 +643,7 @@ class RoiDock:
 			
 	# region growing
 	def regionGrowing(self, rasterDictionary, seedX, seedY, spectralRange, minimumSize, outputVector, multiAddDictionary = None):
-		gdal.AllRegister()
+		#gdal.AllRegister()
 		tD = gdal.GetDriverByName( "GTiff" )
 		itRs = iter(rasterDictionary)
 		itRs1 = next(itRs)
@@ -696,67 +706,75 @@ class RoiDock:
 				rRB.SetNoDataValue(0)
 				# input array
 				aB =  iRB.ReadAsArray()
-				if multiAddDictionary is not None:
-					multiAdd = multiAddDictionary[dBand]
-					aB = cfg.utls.arrayMultiplicativeAdditiveFactors(aB, multiAdd[0], multiAdd[1])
-				area = int(cfg.maxROIWdth) * int(cfg.maxROIWdth)
-				if area < minimumSize:
-					minimumSize = area
-				# array area
-				aBArea = (aB.shape[0] * aB.shape[1]) 
-				if aBArea < minimumSize:
-					minimumSize = aBArea
-				# region growing alg
-				try:
-					r = self.regionGrowingAlg(aB, sPX, sPY, spectralRange, minimumSize)
-				except Exception, err:
+				if str(aB[sPY, sPX]) != "nan":
+					if multiAddDictionary is not None:
+						multiAdd = multiAddDictionary[dBand]
+						aB = cfg.utls.arrayMultiplicativeAdditiveFactors(aB, multiAdd[0], multiAdd[1])
+					area = int(cfg.maxROIWdth) * int(cfg.maxROIWdth)
+					if area < minimumSize:
+						minimumSize = area
+					# array area
+					aBArea = (aB.shape[0] * aB.shape[1]) 
+					if aBArea < minimumSize:
+						minimumSize = aBArea
+					# region growing alg
+					try:
+						r = self.regionGrowingAlg(aB, sPX, sPY, spectralRange, minimumSize)
+						if r is None:
+							return "No"
+					except Exception, err:
+						# logger
+						cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+						return "No"					
+					if len(rasterDictionary) > 1:
+						for raster in itRs:
+							iR = str(rasterDictionary[raster])
+							# open input with GDAL
+							try:
+								rD = gdal.Open(iR, GA_ReadOnly)
+								iRB = rD.GetRasterBand(1)
+							except Exception, err:
+								# logger
+								cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+								return "No"
+							# input array
+							aB =  iRB.ReadAsArray()
+							if multiAddDictionary is not None:
+								multiAdd = multiAddDictionary[raster]
+								aB = cfg.utls.arrayMultiplicativeAdditiveFactors(aB, multiAdd[0], multiAdd[1])
+							# region growing alg
+							try:
+								nR = self.regionGrowingAlg(aB, sPX, sPY, spectralRange, minimumSize)
+								if nR is not None:
+									r = r * nR
+								else:
+									return "No"
+							except Exception, err:
+								# logger
+								cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+								return "No"
+							lR, num_features = label(r)
+							# value of ROI seed
+							rV = lR[sPY, sPX]
+							r[lR == rV] = 1
+							r[lR != rV] = 0
+					# write array
+					rRB.WriteArray(r)
+					# raster to polygon
+					gdal.Polygonize(rRB, rRB.GetMaskBand(), rL, fld)
+					# close bands
+					rRB = None
+					# close rasters
+					rR = None
+					rD = None
+					dS = None
+					rL = None
+					d = None
 					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-					return "No"					
-				if len(rasterDictionary) > 1:
-					for raster in itRs:
-						iR = str(rasterDictionary[raster])
-						# open input with GDAL
-						try:
-							rD = gdal.Open(iR, GA_ReadOnly)
-							iRB = rD.GetRasterBand(1)
-						except Exception, err:
-							# logger
-							cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-							return "No"
-						# input array
-						aB =  iRB.ReadAsArray()
-						if multiAddDictionary is not None:
-							multiAdd = multiAddDictionary[raster]
-							aB = cfg.utls.arrayMultiplicativeAdditiveFactors(aB, multiAdd[0], multiAdd[1])
-						# region growing alg
-						try:
-							nR = self.regionGrowingAlg(aB, sPX, sPY, spectralRange, minimumSize)
-							r = r * nR
-						except Exception, err:
-							# logger
-							cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-							return "No"
-						lR, num_features = label(r)
-						# value of ROI seed
-						rV = lR[sPX, sPY]
-						r[lR == rV] = 1
-						r[lR != rV] = 0
-				# write array
-				rRB.WriteArray(r)
-				# raster to polygon
-				gdal.Polygonize(rRB, rRB.GetMaskBand(), rL, fld)
-				# close bands
-				rRB = None
-				# close rasters
-				rR = None
-				rD = None
-				dS = None
-				rL = None
-				d = None
-				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "region growing completed: " + str(iR) + " " + str(spectralRange))
-				return "Yes"
+					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "region growing completed: " + str(iR) + " " + str(spectralRange))
+					return "Yes"
+				else:
+					return "Out"
 		else:
 			# possibly ogr driver is missing
 			cfg.mx.msgErr27()
@@ -782,6 +800,8 @@ class RoiDock:
 			if rV != 0 and rV_mask.sum() >= minimumSize:
 				r = np.copy(rV_mask)
 				break
+		if r is None and rV != 0 :
+			r = np.copy(rV_mask)
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " region growing seed: " + str(seedX) + ";" + str(seedY))
 		return r
@@ -1415,7 +1435,7 @@ class RoiDock:
 		if rasterName is not None and len(rasterName) > 0:
 			cfg.tblOut = {}
 			rStat = []
-			gdal.AllRegister()
+			#gdal.AllRegister()
 			# band set
 			if cfg.bndSetPresent == "Yes" and rasterName == cfg.bndSetNm:
 				for b in range(0, len(cfg.bndSet)):
@@ -1558,6 +1578,6 @@ class RoiDock:
 		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " checkbox set: " + str(cfg.sigClcCheck))
 		
 	# zoom to ROI
-	def zoomToROI(self):
+	def zoomToTempROI(self):
 		if cfg.lstROI is not None:
 			cfg.utls.setMapExtentFromLayer(cfg.lstROI)

@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="/plugins/semiautomaticclassificationplugin">
+    <file>icons/semiautomaticclassificationplugin_sentinel_download_tool.png</file>
     <file>icons/semiautomaticclassificationplugin_zoom_to.png</file>
     <file>icons/semiautomaticclassificationplugin_bandset_std_dev_stretch_tool.png</file>
     <file>icons/semiautomaticclassificationplugin_bandset_cumulative_stretch_tool.png</file>

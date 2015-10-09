@@ -2,8 +2,8 @@
 name=Semi-Automatic Classification Plugin
 qgisMinimumVersion=2.0
 description= Plugin for the semi-automatic supervised classification designed to expedite the processing of multispectral or hyperspectral remote sensing images, which provides a set of tools for pre processing and post processing. 
-version=4.7.0
-about=Written by Luca Congedo, the Semi-Automatic Classification Plugin (SCP) allows for the semi-automatic supervised classification of remote sensing images. It provides integrated tools to expedite the creation of ROIs (training areas) through region growing and the classification process. The spectral signatures of training areas can be automatically calculated and displayed in a spectral signature plot and a scatter plot is available. The following tools are available for ROI and spectral signature creation: multiple ROI creation using point coordinates, selection and download of spectral signatures from the USGS Spectral Library (http://speclab.cr.usgs.gov/spectral-lib.html). Also, it is possible to import spectral signatures from external sources. The following pre processing tools are available: Landsat conversion to reflectance and pan-sharpening, clipping multiple rasters at once, splitting raster bands. It allows for the integrated download and pre processing of Landsat images. The following classification algorithms are available: Minimum Distance, Maximum Likelihood, Spectral Angle Mapping. The following post processing tools are available: accuracy assessment, land cover change, classification report, classification to vector, reclassification. This plugin requires the installation of GDAL, OGR, Numpy, SciPy, and Matplotlib. Also, a virtual machine is available http://fromgistors.blogspot.com/p/semi-automatic-os.html . Keywords: 土地被覆分類 监督分类 土地覆盖分类 教師付き分類 تصنيف استخدام الأراضي Classificação da Cobertura do Solo Clasificación de la Cobertura de la Tierra Classification de la Couverture du Sol классификация землепользования Klassifizierung der Landbedeckung Classificazione della Copertura del Suolo. For more information please visit http://fromgistors.blogspot.com/
+version=4.8.0
+about=Written by Luca Congedo, the Semi-Automatic Classification Plugin (SCP) allows for the semi-automatic supervised classification of remote sensing images. It provides integrated tools to expedite the creation of ROIs (training areas) through region growing and the classification process. The spectral signatures of training areas can be automatically calculated and displayed in a spectral signature plot and a scatter plot is available. The following tools are available for ROI and spectral signature creation: multiple ROI creation using point coordinates, selection and download of spectral signatures from the USGS Spectral Library (http://speclab.cr.usgs.gov/spectral-lib.html). Also, it is possible to import spectral signatures from external sources. The following pre processing tools are available: Landsat conversion to reflectance and pan-sharpening, clipping multiple rasters at once, splitting raster bands. It allows for the integrated download and pre processing of Landsat and Sentinel-2 images. The following classification algorithms are available: Minimum Distance, Maximum Likelihood, Spectral Angle Mapping. The following post processing tools are available: accuracy assessment, land cover change, classification report, classification to vector, reclassification. This plugin requires the installation of GDAL, OGR, Numpy, SciPy, and Matplotlib. Also, a virtual machine is available http://fromgistors.blogspot.com/p/semi-automatic-os.html . Keywords: 土地被覆分類 监督分类 土地覆盖分类 教師付き分類 تصنيف استخدام الأراضي Classificação da Cobertura do Solo Clasificación de la Cobertura de la Tierra Classification de la Couverture du Sol классификация землепользования Klassifizierung der Landbedeckung Classificazione della Copertura del Suolo. For more information please visit http://fromgistors.blogspot.com/
 
 author=Luca Congedo
 email=ing.congedoluca@gmail.com
@@ -13,6 +13,75 @@ icon=semiautomaticclassificationplugin.png
 
 ; start of optional metadata
 changelog=
+	4.8.0
+	Major update:
+	-added tab for searching and downloading Sentinel-2 images from https://scihub.esa.int/dhus/
+	
+	4.7.17
+	Minor update:
+	-bug fixing
+
+	4.7.16
+	Minor update:
+	-bug fixing
+	
+	4.7.14
+	Minor update:
+	-improved compatibility with GLC Landsat metadata
+	-bug fixing
+	
+	4.7.13
+	Minor update:
+	-calculate average of covariance matrices when merging signatures, which allows for Maximum Likelihood classifications
+	
+	4.7.12
+	Minor update:
+	-fixed issue with NoData values
+	
+	4.7.11
+	Minor update:
+	-other improvements in raster compression
+
+	4.7.10
+	Minor update:
+	-improved compression and managment of temp rasters
+	
+	4.7.8
+	Minor update:
+	-added settings for temporary directory
+
+	4.7.7
+	Minor update:
+	-added settings for GDAL cache max
+	-added Sentinel-2 central wavelength
+	-bug fixing
+	
+	4.7.6
+	Minor update:
+	-added option for raster compression (LZW)
+	-bug fixing
+	
+	4.7.5
+	Minor update:
+	-added option for raster compression (LZW)
+	-bug fixing
+	
+	4.7.4
+	Minor update:
+	-bug fixing
+	
+	4.7.3
+	Minor update:
+	-fixed bug during ROI creation of clipped images
+	
+	4.7.2
+	Minor update:
+	-bug fixing
+	
+	4.7.1
+	Minor update:
+	-bug fixing
+	
 	4.7.0
 	Major update:
 	-added multiplicative and additive factors in the band set tab, which allow for on the fly conversion to TOA

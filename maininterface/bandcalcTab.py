@@ -145,6 +145,8 @@ class BandCalcTab:
 					# date time for temp name
 					dT = cfg.utls.getTime()
 					tPMD = cfg.tmpDir + "/" + dT + tPMN
+					tPMN2 = dT + cfg.calcRasterNm + ".tif"
+					tPMD2 = cfg.tmpDir + "/" + tPMN2
 					# band list
 					bList = []
 					bandNumberList = []
@@ -215,8 +217,8 @@ class BandCalcTab:
 					bL = cfg.utls.readAllBandsFromRaster(rD)
 					# output rasters
 					oM = []
-					oM.append(out)
-					oMR = cfg.utls.createRasterFromReference(rD, 1, oM, NoDataValue, "GTiff", cfg.rasterDataType)
+					oM.append(tPMD2)
+					oMR = cfg.utls.createRasterFromReference(rD, 1, oM, NoDataValue, "GTiff", cfg.rasterDataType, 0, None, cfg.rasterCompression, "DEFLATE21")
 					o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.bandCalculation, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", e, variableList, "calculation " + str(it))
 					# close GDAL rasters
 					for b in range(0, len(oMR)):
@@ -225,6 +227,18 @@ class BandCalcTab:
 						bL[b] = None
 					rD = None
 					if o != "No":
+						if cfg.rasterCompression != "No":
+							try:
+								cfg.utls.GDALCopyRaster(tPMD2, out, "GTiff", cfg.rasterCompression, "DEFLATE -co PREDICTOR=2 -co ZLEVEL=1")
+								os.remove(tPMD2)
+							except Exception, err:
+								shutil.copy(tPMD2, out)
+								os.remove(tPMD2)
+								# logger
+								if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+						else:
+							shutil.copy(tPMD2, out)
+							os.remove(tPMD2)
 						r = cfg.utls.addRasterLayer(out, os.path.basename(out))
 						cfg.utls.rasterSymbolSingleBandGray(r)
 					it = it + 1

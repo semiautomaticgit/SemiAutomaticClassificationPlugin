@@ -230,7 +230,38 @@ class Settings:
 			cfg.ui.group_name_lineEdit.setText(cfg.grpNm_def)
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "group name reset")
-		
+					
+	# change temporary directory
+	def changeTempDir(self):
+		a = cfg.utls.questionBox(QApplication.translate("semiautomaticclassificationplugin", "Change temporary directory"), QApplication.translate("semiautomaticclassificationplugin", "Are you sure you want to change the temporary directory?"))
+		if a == "Yes":
+			o = QFileDialog.getExistingDirectory(None , QApplication.translate("semiautomaticclassificationplugin", "Select a directory"))
+			if len(o) != 0:
+				if QDir(o).exists():
+					try:
+						dT = cfg.utls.getTime()
+						os.makedirs(o + "/" + dT)
+					except Exception, err:
+						# logger
+						cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+						cfg.mx.msgWar17()
+						return "No"
+					cfg.tmpDir = o
+					cfg.ui.temp_directory_label.setText(cfg.tmpDir)
+					self.setQGISRegSetting(cfg.regTmpDir, cfg.tmpDir)
+					# logger
+					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "change temporary directory")
+							
+	# reset temporary directory
+	def resetTempDir(self):
+		a = cfg.utls.questionBox(QApplication.translate("semiautomaticclassificationplugin", "Change temporary directory"), QApplication.translate("semiautomaticclassificationplugin", "Are you sure you want to reset the temporary directory?"))
+		if a == "Yes":
+			cfg.tmpDir = unicode(QDir.tempPath() + "/" + cfg.tempDirName)
+			cfg.sets.setQGISRegSetting(cfg.regTmpDir, cfg.tmpDir)
+			cfg.ui.temp_directory_label.setText(cfg.tmpDir)
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "reset temporary directory")
+
 	# Reset qml style path
 	def resetROIStyle(self):
 		self.setQGISRegSetting(cfg.regROIClr, cfg.ROIClrValDefault)
@@ -373,4 +404,13 @@ class Settings:
 			cfg.outTempRastFormat = "GTiff"
 		self.setQGISRegSetting(cfg.regTempRasterFormat, cfg.outTempRastFormat)
 		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " checkbox set: " + str(cfg.outTempRastFormat))
+					
+	# set variable for raster compression
+	def rasterCompressionCheckbox(self):
+		if cfg.ui.raster_compression_checkBox.isChecked() is True:
+			cfg.rasterCompression = "Yes"
+		else:
+			cfg.rasterCompression = "No"
+		self.setQGISRegSetting(cfg.regRasterCompression, cfg.rasterCompression)
+		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " checkbox set: " + str(cfg.rasterCompression))
 		

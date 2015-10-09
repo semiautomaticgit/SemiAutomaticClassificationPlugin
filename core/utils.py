@@ -40,6 +40,8 @@ import time
 import datetime
 import numpy as np
 import urllib
+import urllib2
+import base64
 try:
 	import winsound
 except:
@@ -171,7 +173,7 @@ class Utils:
 ### NDVI calculator from image
 	def NDVIcalculator(self, imageName, point):
 		NDVI = None
-		gdal.AllRegister()
+		#gdal.AllRegister()
 		# band set
 		if cfg.bndSetPresent == "Yes" and imageName == cfg.bndSetNm:
 			if cfg.NIRBand is None or cfg.REDBand is None:
@@ -231,6 +233,8 @@ class Utils:
 		REDB = None
 		# close raster
 		rD = None
+		NIRr = None
+		REDr = None
 		try:
 			return round(NDVI, 2)
 		except Exception, err:
@@ -241,7 +245,7 @@ class Utils:
 ### EVI calculator from image
 	def EVIcalculator(self, imageName, point):
 		EVI = None
-		gdal.AllRegister()
+		#gdal.AllRegister()
 		# band set
 		if cfg.bndSetPresent == "Yes" and imageName == cfg.bndSetNm:
 			if cfg.NIRBand is None or cfg.REDBand is None or cfg.BLUEBand is None:
@@ -309,6 +313,9 @@ class Utils:
 		BLUEB = None
 		# close raster
 		rD = None
+		NIRr = None
+		REDr = None
+		BLUEr = None
 		try:
 			return round(EVI, 2)
 		except Exception, err:
@@ -568,6 +575,7 @@ class Utils:
 		rD = gdal.Open(inputRaster, GA_ReadOnly)
 		b = rD.GetRasterBand(1)
 		dType = gdal.GetDataTypeName(b.DataType)
+		rD = None
 		return dType
 
 ### Get QGIS project CRS
@@ -694,7 +702,7 @@ class Utils:
 ### copy a raster band from a multi band raster
 	def getRasterBandByBandNumber(self, inputRaster, band, outputRaster, virtualRaster = "No", GDALFormat = None, multiAddList = None):
 		if virtualRaster == "No":
-			gdal.AllRegister()
+			#gdal.AllRegister()
 			# open input with GDAL
 			rD = gdal.Open(inputRaster, GA_ReadOnly)
 			# number of x pixels
@@ -736,7 +744,7 @@ class Utils:
 		
 ### get a raster band statistic
 	def getRasterBandStatistics(self, inputRaster, band, multiAddList = None):
-		gdal.AllRegister()
+		#gdal.AllRegister()
 		# open input with GDAL
 		rD = gdal.Open(inputRaster, GA_ReadOnly)
 		if rD is None:
@@ -783,8 +791,11 @@ class Utils:
 			if np.isnan(CovMatrix[0,0]):
 				CovMatrix = "No"
 			try:
-				np.linalg.inv(CovMatrix)
+				inv = np.linalg.inv(CovMatrix)
+				if np.isnan(inv[0,0]):
+					CovMatrix = "No"
 			except:
+				cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "TEST matrix: " + str(CovMatrix))
 				CovMatrix = "No"
 		except Exception, err:
 			CovMatrix = "No"
@@ -852,7 +863,7 @@ class Utils:
 	# create virtual raster with Python
 	def createVirtualRaster2(self, inputRasterList, output, bandNumberList = "No", quiet = "No", NoDataVal = "No", relativeToVRT = 0, pansharp = "No", intersection = "Yes", boxCoordList = None):
 		# create virtual raster
-		gdal.AllRegister()
+		#gdal.AllRegister()
 		drv = gdal.GetDriverByName("VRT")
 		rXList = []
 		rYList = []
@@ -879,6 +890,7 @@ class Utils:
 			rXList.append(float(gdalRaster.RasterXSize))
 			# number of y pixels
 			rYList.append(float(gdalRaster.RasterYSize))
+			gdalRaster = None
 		# find raster box
 		iLeft = min(leftList)
 		iTop= max(topList)
@@ -951,75 +963,81 @@ class Utils:
 		if len(inputRasterList) == 1 and bandNumberList != "No":
 			x = 0
 			gdalRaster2 = gdal.Open(b, GA_ReadOnly)
-			for b in bandNumberList:
-				gBand2 = gdalRaster2.GetRasterBand(int(b)) 
-				noData = gBand2.GetNoDataValue()
-				if noData is None or str(noData) == "nan":
-					noData = cfg.NoDataVal
-				gt = gdalRaster2.GetGeoTransform()
-				pX =  abs(gt[1])
-				pY = abs(gt[5])
-				left = gt[0]
-				top = gt[3]
-				bsize2 = gBand2.GetBlockSize()
-				x_block = bsize2[0]
-				y_block = bsize2[1]
-				# number of x pixels
-				rX2 = gdalRaster2.RasterXSize * int(round(pX / pXSize))
-				# number of y pixels
-				rY2 = gdalRaster2.RasterYSize * int(round(pY / pYSize))
-				# offset
-				if intersection == "Yes":
-					xoffX = abs(int(round((left - xLeft) / pX)))
-					xoffY = abs(int(round((xTop - top) / pY)))
-					offX = 0
-					offY = 0
-				else:
-					offX = abs(int(round((left - iLeft) / pXSize)))
-					offY = int(round((iTop - top) / pYSize))
-					xoffX = 0
-					xoffY = 0
-				try:
-					override = boxCoordList[4]
-					if override == "Yes":
-						if iLeft < left:
-							xoffX = 0
-							offX = abs(int(round((left - iLeft) / pXSize)))
-						else:
-							xoffX = abs(int(round((left - iLeft) / pX)))
-							offX = 0
-						if iTop > top:
-							xoffY = 0
-							offY = abs(int(round((iTop - top) / pYSize)))
-						else:
-							xoffY = abs(int(round((iTop - top) / pY)))
-							offY = 0
-				except:
-					pass
-				vRast.AddBand(gdal.GDT_Float64)
-				bandNumber = bandNumberList[x]
-				band = vRast.GetRasterBand(x + 1)
-				bsize = band.GetBlockSize()
-				x_block = bsize[0]
-				y_block = bsize[1]
-				source_path = inputRasterList[0]
-				# set metadata xml
-				xml = """
-				<ComplexSource>
-				  <SourceFilename relativeToVRT="%i">%s</SourceFilename>
-				  <SourceBand>%i</SourceBand>
-				  <SourceProperties RasterXSize="%i" RasterYSize="%i" DataType=%s BlockXSize="%i" BlockYSize="%i" />
-				  <SrcRect xOff="%i" yOff="%i" xSize="%i" ySize="%i" />
-				  <DstRect xOff="%i" yOff="%i" xSize="%i" ySize="%i" />
-				  <NODATA>%i</NODATA>
-				</ComplexSource>
-				"""
-				source = xml % (relativeToVRT, source_path.encode(sys.getfilesystemencoding()), bandNumber, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, "Float64", x_block, y_block, xoffX, xoffY, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, offX, offY, rX2, rY2, noData)
-				band.SetMetadataItem("ComplexSource", source, "new_vrt_sources")
-				if NoDataVal != "No":
-					band.SetNoDataValue(NoDataVal)
-				band = None
-				x = x + 1
+			try:
+				for b in bandNumberList:
+					gBand2 = gdalRaster2.GetRasterBand(int(b)) 
+					noData = gBand2.GetNoDataValue()
+					if noData is None or str(noData) == "nan":
+						noData = cfg.NoDataVal
+					gt = gdalRaster2.GetGeoTransform()
+					pX =  abs(gt[1])
+					pY = abs(gt[5])
+					left = gt[0]
+					top = gt[3]
+					bsize2 = gBand2.GetBlockSize()
+					x_block = bsize2[0]
+					y_block = bsize2[1]
+					# number of x pixels
+					rX2 = gdalRaster2.RasterXSize * int(round(pX / pXSize))
+					# number of y pixels
+					rY2 = gdalRaster2.RasterYSize * int(round(pY / pYSize))
+					# offset
+					if intersection == "Yes":
+						xoffX = abs(int(round((left - xLeft) / pX)))
+						xoffY = abs(int(round((xTop - top) / pY)))
+						offX = 0
+						offY = 0
+					else:
+						offX = abs(int(round((left - iLeft) / pXSize)))
+						offY = int(round((iTop - top) / pYSize))
+						xoffX = 0
+						xoffY = 0
+					try:
+						override = boxCoordList[4]
+						if override == "Yes":
+							if iLeft < left:
+								xoffX = 0
+								offX = abs(int(round((left - iLeft) / pXSize)))
+							else:
+								xoffX = abs(int(round((left - iLeft) / pX)))
+								offX = 0
+							if iTop > top:
+								xoffY = 0
+								offY = abs(int(round((iTop - top) / pYSize)))
+							else:
+								xoffY = abs(int(round((iTop - top) / pY)))
+								offY = 0
+					except:
+						pass
+					vRast.AddBand(gdal.GDT_Float64)
+					bandNumber = bandNumberList[x]
+					band = vRast.GetRasterBand(x + 1)
+					bsize = band.GetBlockSize()
+					x_block = bsize[0]
+					y_block = bsize[1]
+					source_path = inputRasterList[0]
+					# set metadata xml
+					xml = """
+					<ComplexSource>
+					  <SourceFilename relativeToVRT="%i">%s</SourceFilename>
+					  <SourceBand>%i</SourceBand>
+					  <SourceProperties RasterXSize="%i" RasterYSize="%i" DataType=%s BlockXSize="%i" BlockYSize="%i" />
+					  <SrcRect xOff="%i" yOff="%i" xSize="%i" ySize="%i" />
+					  <DstRect xOff="%i" yOff="%i" xSize="%i" ySize="%i" />
+					  <NODATA>%i</NODATA>
+					</ComplexSource>
+					"""
+					source = xml % (relativeToVRT, source_path.encode(sys.getfilesystemencoding()), bandNumber, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, "Float64", x_block, y_block, xoffX, xoffY, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, offX, offY, rX2, rY2, noData)
+					band.SetMetadataItem("ComplexSource", source, "new_vrt_sources")
+					if NoDataVal != "No":
+						band.SetNoDataValue(NoDataVal)
+					band = None
+					gBand2 = None
+					x = x + 1
+			except Exception, err:
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			gdalRaster2 = None
 		else:
 			x = 0
 			for b in inputRasterList:
@@ -1070,6 +1088,7 @@ class Utils:
 								offY = 0
 					except:
 						pass
+					gBand2 = None
 					vRast.AddBand(gdal.GDT_Float64)
 					try:
 						errorCheck = "Yes"
@@ -1104,6 +1123,8 @@ class Utils:
 						if errorCheck == "No":
 							# logger
 							cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				gdalRaster2 = None
+		vRast = None
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "virtual raster: " + unicode(output))
 		return unicode(output)
@@ -1188,7 +1209,7 @@ class Utils:
 			# output rasters
 			oM = []
 			oM.append(outputRaster)
-			oMR = cfg.utls.createRasterFromReference(rD, bC - 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0, None, "Yes")
+			oMR = cfg.utls.createRasterFromReference(rD, bC - 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0, None, "No")
 			for bb in range(0, bC - 1):
 				e = str("a * b")
 				variableList = [["im1", "a"], ["im2", "b"]]
@@ -1222,7 +1243,7 @@ class Utils:
 		# output rasters
 		oM = []
 		oM.append(outputRaster)
-		oMR = cfg.utls.createRasterFromReference(rD, bC, oM, nodataValue, outFormat, cfg.rasterDataType, 0,  None, "Yes")
+		oMR = cfg.utls.createRasterFromReference(rD, bC, oM, nodataValue, outFormat, cfg.rasterDataType, 0,  None, "No")
 		for bb in range(0, bC):
 			e = str("a * 1")
 			variableList = [["im1", "a"]]
@@ -1235,6 +1256,50 @@ class Utils:
 		rD = None
 		return outputRaster
 		
+	# connect with password
+	def passwordConnect(self, user, password, url, topLevelUrl, outputPath = None, progress = None):
+		try:
+			pswMng = urllib2.HTTPPasswordMgrWithDefaultRealm()
+			pswMng.add_password(None, topLevelUrl, user, password)
+			handler = urllib2.HTTPBasicAuthHandler(pswMng)
+			opener = urllib2.build_opener(handler)
+			if outputPath is None:
+				response = opener.open(url)
+				return response
+			else:
+				urllib2.install_opener(opener)
+				f = urllib2.urlopen(url)
+				total_size = int(f.headers["Content-Length"])
+				MB_size = total_size/1048576
+				block_size = 64 * 1024
+				with open(outputPath, "wb") as file:
+					while True:
+						block = f.read(block_size)
+						dSize =  int(os.stat(outputPath).st_size)/1048576
+						cfg.uiUtls.updateBar(progress, "(" + str(dSize) + "/" + str(MB_size) + " MB) " +  url, "Downloading")
+						qApp.processEvents()
+						if not block:
+							break
+						file.write(block)
+						if cfg.actionCheck == "No":
+							raise ValueError('Cancel action')
+				return "Yes"
+		except Exception, err:
+			cfg.mx.msgErr49()
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			return "No"
+	
+	# encrypt password
+	def encryptPassword(self, password):
+		e = base64.b64encode(password)
+		return e
+		
+	# decrypt password
+	def decryptPassword(self, password):
+		d = base64.b64decode(password)
+		return d
+		
 	# download file
 	def downloadFile(self, urlIn, outputPath, fileName = None, progress = None):
 		try:
@@ -1245,6 +1310,7 @@ class Utils:
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			return "No"
+
 			
 	# download reportHook
 	def downloadReporthook(self, blocks_transferred, block_size, total_size, fileName = None, progress = None):
@@ -1258,6 +1324,11 @@ class Utils:
 			if cfg.actionCheck == "No":
 				raise ValueError('Cancel action')
 			
+	# set GDAL cache max
+	def setGDALCacheMax(self, value):
+		c = gdal.GetCacheMax()
+		gdal.SetCacheMax(value)
+		
 	# get  time
 	def getTime(self):
 		t = datetime.datetime.now().strftime("%Y%m%d_%H%M%S%f")
@@ -1550,7 +1621,7 @@ class Utils:
 		
 ### Get the number of bands of a raster
 	def getNumberBandRaster(self, raster):
-		gdal.AllRegister()
+		#gdal.AllRegister()
 		rD = gdal.Open(raster, GA_ReadOnly)
 		number = rD.RasterCount
 		rD = None
@@ -1637,9 +1708,9 @@ class Utils:
 			b.SetNoDataValue(nodataValue)
 		b.FlushCache()
 		b = None
-		
+	
 	# create raster from another raster
-	def createRasterFromReference(self, gdalRasterRef, bandNumber, outputRasterList, nodataValue = None, driver = "GTiff", format = GDT_Float64, previewSize = 0, previewPoint = None, compress = "No"):
+	def createRasterFromReference(self, gdalRasterRef, bandNumber, outputRasterList, nodataValue = None, driver = "GTiff", format = GDT_Float64, previewSize = 0, previewPoint = None, compress = "No", compressFormat = "DEFLATE21"):
 		oRL = []
 		if format == "Float64":
 			format = GDT_Float64
@@ -1672,8 +1743,10 @@ class Utils:
 				rGT = (lX, rGT[1], rGT[2], tY,  rGT[4],  rGT[5])
 			if compress == "No":
 				oR = tD.Create(o, c, r, bandNumber, format)
+			elif compress == "DEFLATE21":
+				oR = tD.Create(o, c, r, bandNumber, format, options = ['COMPRESS=DEFLATE', 'PREDICTOR=2', 'ZLEVEL=1'])
 			else:
-				oR = tD.Create(o, c, r, bandNumber, format, ['COMPRESS=LZW'])
+				oR = tD.Create(o, c, r, bandNumber, format, ['COMPRESS=' + compressFormat])
 			# set raster projection from reference
 			oR.SetGeoTransform(rGT)
 			oR.SetProjection(rP)
@@ -1689,7 +1762,7 @@ class Utils:
 		return oRL
 		
 	# create one raster for each signature class
-	def createSignatureClassRaster(self, signatureList, gdalRasterRef, outputDirectory, nodataValue = None, outputName = None, previewSize = 0, previewPoint = None):
+	def createSignatureClassRaster(self, signatureList, gdalRasterRef, outputDirectory, nodataValue = None, outputName = None, previewSize = 0, previewPoint = None, compress = "No", compressFormat = "DEFLATE21"):
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "start createSignatureClassRaster")	
 		dT = self.getTime()
@@ -1700,7 +1773,7 @@ class Utils:
 			else:
 				o = outputDirectory + "/" + outputName + "_" + str(signatureList[s][0]) + "_" + str(signatureList[s][2]) + ".tif"
 			outputRasterList.append(o)
-		oRL = self.createRasterFromReference(gdalRasterRef, 1, outputRasterList, nodataValue, "GTiff", cfg.rasterDataType, previewSize, previewPoint)
+		oRL = self.createRasterFromReference(gdalRasterRef, 1, outputRasterList, nodataValue, "GTiff", cfg.rasterDataType, previewSize, previewPoint, compress, compressFormat)
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "end createSignatureClassRaster")
 		return oRL, outputRasterList
@@ -1930,6 +2003,17 @@ class Utils:
 						return "No"
 				else:
 					return "No"
+		classArray = None
+		rasterArrayx = None
+		c = None
+		try:
+			minArray = None
+		except:
+			pass
+		try:
+			maxArray = None
+		except:
+			pass
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "end classification block")
 		return "Yes"
@@ -2217,7 +2301,7 @@ class Utils:
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "start processRaster")
 			blockSizeX = self.calculateBlockSize(len(gdalBandList))
-			blockSizeY = blockSizeX			
+			blockSizeY = blockSizeX
 			# raster blocks
 			rX, rY, lX, lY, pX, pY  = self.rasterBlocks(gdalRaster, blockSizeX, blockSizeY, previewSize, previewPoint)
 			# set initial value for progress bar
@@ -2249,6 +2333,14 @@ class Utils:
 						for b in range(0, len(gdalBandList)):
 							ndv = cfg.NoDataVal
 							a = self.readArrayBlock(gdalBandList[b], x, y, bSX, bSY)
+							try:
+								b0 = gdalBandList[b].GetRasterBand(1)
+								ndv2 = b0.GetNoDataValue()
+							except:
+								try:
+									ndv2 = gdalBandList[b].GetNoDataValue()
+								except:
+									ndv2 = None
 							if a is not None:
 								if functionBandArgument == cfg.multiAddFactorsVar:
 									multiAdd = functionVariable[b]
@@ -2261,7 +2353,10 @@ class Utils:
 								return "No"
 							a = None
 							# set nodata value
+							#noData = gBand2.GetNoDataValue()
 							array[::, ::, b][array[::, ::, b] == ndv] = np.nan
+							if ndv2 is not None:
+								array[::, ::, b][array[::, ::, b] == ndv2] = np.nan
 							if functionBand is not None and functionBand != "No":
 								qApp.processEvents()
 								functionBand(b+1, array[::, ::, b].reshape(bSY, bSX), bSX, bSY, x, y, outputRasterList, functionBandArgument, functionVariable)
@@ -2287,6 +2382,7 @@ class Utils:
 					else:
 						return "No"
 			outputClassificationRaster = None
+			c = None
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "end processRaster")
 			return "Yes"
@@ -2302,6 +2398,8 @@ class Utils:
 			oR = outputGdalRasterList[0]
 			# output raster
 			self.writeArrayBlock(oR, 1, o, pixelStartColumn, pixelStartRow)
+			o = None
+			oR = None
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
 					
@@ -2323,6 +2421,7 @@ class Utils:
 			oR = outputGdalRasterList[0]
 			# output raster
 			self.writeArrayBlock(oR, 1, o, pixelStartColumn, pixelStartRow)
+			o = None
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
 			
@@ -2462,6 +2561,8 @@ class Utils:
 					cfg.mx.msgErr45()
 					# logger
 					cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			I = None
+			o = None
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "Pansharpening")
 			
@@ -2770,6 +2871,42 @@ class Utils:
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "layer selected: " + unicode(layerName))
 
+### copy raster with GDAL
+	def GDALCopyRaster(self, input, output, outFormat = "GTiff", compress = "No", compressFormat = "DEFLATE"):
+		if compress == "No":
+			op = " -of " + outFormat
+		else:
+			op = " -co COMPRESS=" + compressFormat + " -of " + outFormat
+		try:
+			cfg.utls.getGDALForMac()
+			gD = "gdal_translate"
+			a = cfg.gdalPath + gD + op 
+			b = '"' + input + '" '
+			c = '"' + output + '" '
+			d = a + " " + b + " " + c
+			sP = subprocess.Popen(d, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+			sP.wait()
+			# get error
+			out, err = sP.communicate()
+			sP.stdout.close()
+			if len(err) > 0:
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " GDAL error:: " + str(err) )
+		# in case of errors
+		except Exception, err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.getGDALForMac()
+			gD = "gdal_translate"
+			a = cfg.gdalPath + gD + op 
+			b = '"' + input + '" '
+			c = '"' + output + '" '
+			d = a + " " + b + " " + c
+			sP = subprocess.Popen(d, shell=True)
+			sP.wait()
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " image: " + unicode(output))
+			
 ### Merge raster bands
 	def mergeRasterBands(self, bandList, output, outFormat = "GTiff", compress = "No"):
 		if compress == "No":
@@ -2862,7 +2999,7 @@ class Utils:
 ### convert reference layer to raster based on the resolution of a raster
 	def vectorToRaster(self, fieldName, layerPath, referenceRasterName, outputRaster, referenceRasterPath=None, ALL_TOUCHED=None, outFormat = "GTiff", burnValues = None):
 		# register drivers
-		gdal.AllRegister()
+		#gdal.AllRegister()
 		if referenceRasterPath is None:
 			# band set
 			if cfg.bndSetPresent == "Yes" and referenceRasterName == cfg.bndSetNm:
@@ -2955,6 +3092,7 @@ class Utils:
 			oRB = None
 			# close rasters
 			oR = None
+			rD = None
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "vector to raster check: " + unicode(oC))
 		else:
@@ -2964,7 +3102,7 @@ class Utils:
 			
 	# convert raster to shapefile
 	def rasterToVector(self, rasterPath, outputShapefilePath, fieldName = "No"):
-		gdal.AllRegister()
+		#gdal.AllRegister()
 		tD = gdal.GetDriverByName( "GTiff" )
 		# open input with GDAL
 		try:
@@ -3304,11 +3442,21 @@ class Utils:
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "tab selected")
 		
-	# download Landsat 8 tab
+	# download Landsat tab
 	def downloadLandast8Tab(self):
 		cfg.dlg.close()
 		cfg.ui.toolButton_plugin.setCurrentIndex(0)
 		cfg.ui.tabWidget.setCurrentIndex(4)
+		# show the dialog
+		cfg.dlg.show()
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "tab selected")
+		
+	# download Sentinel tab
+	def downloadSentinelTab(self):
+		cfg.dlg.close()
+		cfg.ui.toolButton_plugin.setCurrentIndex(0)
+		cfg.ui.tabWidget.setCurrentIndex(5)
 		# show the dialog
 		cfg.dlg.show()
 		# logger
