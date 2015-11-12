@@ -41,7 +41,10 @@ try:
 except:
 	pass
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigCanvas
-from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
+try:
+	from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
+except ImportError:
+	from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
 # Import Figure
 from matplotlib.figure import Figure
 
