@@ -76,7 +76,10 @@ class RoiDock:
 		cfg.rbbrBndPol = QgsHighlight(cfg.cnvs, f.geometry(), sourceLayer)
 		cfg.rbbrBndPol.setWidth(2)
 		cfg.rbbrBndPol.setColor(QColor(cfg.ROIClrOutlineValDefault))
-		cfg.rbbrBndPol.setFillColor(clr)
+		try:
+			cfg.rbbrBndPol.setFillColor(clr)
+		except:
+			pass
 		cfg.rbbrBndPol.show()
 		cfg.uid.show_ROI_radioButton.setChecked(True)
 		

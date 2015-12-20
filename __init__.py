@@ -42,7 +42,7 @@ def description():
 
 
 def version():
-    return "Version 4.8.0 - Frascati"
+    return "Version 4.9.0 - Frascati"
 
 
 def icon():

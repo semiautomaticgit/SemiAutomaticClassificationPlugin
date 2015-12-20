@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>817</width>
-    <height>630</height>
+    <width>767</width>
+    <height>575</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -1712,15 +1712,15 @@ p, li { white-space: pre-wrap; }
              <item row="0" column="0">
               <widget class="QToolBox" name="toolBox_2">
                <property name="currentIndex">
-                <number>0</number>
+                <number>1</number>
                </property>
                <widget class="QWidget" name="page_3">
                 <property name="geometry">
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>765</width>
-                  <height>207</height>
+                  <width>213</width>
+                  <height>124</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -1926,8 +1926,8 @@ p, li { white-space: pre-wrap; }
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>520</width>
-                  <height>110</height>
+                  <width>715</width>
+                  <height>152</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -2290,7 +2290,625 @@ p, li { white-space: pre-wrap; }
           <attribute name="title">
            <string>Download Sentinel</string>
           </attribute>
-          <layout class="QGridLayout" name="gridLayout_136">
+          <layout class="QGridLayout" name="gridLayout_142">
+           <item row="1" column="0">
+            <layout class="QGridLayout" name="gridLayout_160">
+             <item row="0" column="0">
+              <widget class="QToolBox" name="toolBox_3">
+               <property name="currentIndex">
+                <number>0</number>
+               </property>
+               <widget class="QWidget" name="page_7">
+                <property name="geometry">
+                 <rect>
+                  <x>0</x>
+                  <y>0</y>
+                  <width>715</width>
+                  <height>154</height>
+                 </rect>
+                </property>
+                <attribute name="label">
+                 <string>Sentinel images</string>
+                </attribute>
+                <layout class="QGridLayout" name="gridLayout_157">
+                 <item row="0" column="0">
+                  <layout class="QGridLayout" name="gridLayout_162">
+                   <item row="2" column="1">
+                    <layout class="QGridLayout" name="gridLayout_163">
+                     <item row="3" column="0">
+                      <widget class="QPushButton" name="remove_image_toolButton_3">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>121</width>
+                         <height>27</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>14000</width>
+                         <height>27</height>
+                        </size>
+                       </property>
+                       <property name="toolTip">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Remove highlighted images from the table&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="text">
+                        <string>Remove images from list</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="4" column="0">
+                      <widget class="QPushButton" name="clear_table_toolButton_3">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>121</width>
+                         <height>27</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>14000</width>
+                         <height>27</height>
+                        </size>
+                       </property>
+                       <property name="toolTip">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Clear all the table&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="text">
+                        <string>Clear table</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="0">
+                      <widget class="QPushButton" name="toolButton_granule_preview">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>121</width>
+                         <height>27</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>14000</width>
+                         <height>27</height>
+                        </size>
+                       </property>
+                       <property name="toolTip">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Display band preview of highlighted granules in QGIS&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="text">
+                        <string>Display granule preview</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="2" column="0">
+                      <widget class="QPushButton" name="toolButton_display_3">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>121</width>
+                         <height>27</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>14000</width>
+                         <height>27</height>
+                        </size>
+                       </property>
+                       <property name="toolTip">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Display preview of highlighted images in QGIS&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="text">
+                        <string>Display image overview</string>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item row="1" column="0" colspan="2">
+                    <widget class="QLabel" name="label_148">
+                     <property name="font">
+                      <font>
+                       <family>FreeSans</family>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">background-color : qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #243a4e, stop:1 rgba(0, 0, 0, 0)); color : white</string>
+                     </property>
+                     <property name="text">
+                      <string> Image list</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="0">
+                    <widget class="QTableWidget" name="sentinel_images_tableWidget">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="editTriggers">
+                      <set>QAbstractItemView::NoEditTriggers</set>
+                     </property>
+                     <property name="alternatingRowColors">
+                      <bool>true</bool>
+                     </property>
+                     <property name="selectionBehavior">
+                      <enum>QAbstractItemView::SelectRows</enum>
+                     </property>
+                     <property name="sortingEnabled">
+                      <bool>true</bool>
+                     </property>
+                     <attribute name="verticalHeaderDefaultSectionSize">
+                      <number>20</number>
+                     </attribute>
+                     <column>
+                      <property name="text">
+                       <string>ImageName</string>
+                      </property>
+                     </column>
+                     <column>
+                      <property name="text">
+                       <string>Granule</string>
+                      </property>
+                     </column>
+                     <column>
+                      <property name="text">
+                       <string>AcquisitionDate</string>
+                      </property>
+                     </column>
+                     <column>
+                      <property name="text">
+                       <string>Zone</string>
+                      </property>
+                     </column>
+                     <column>
+                      <property name="text">
+                       <string>CloudCover</string>
+                      </property>
+                     </column>
+                     <column>
+                      <property name="text">
+                       <string>min_lat</string>
+                      </property>
+                     </column>
+                     <column>
+                      <property name="text">
+                       <string>min_lon</string>
+                      </property>
+                     </column>
+                     <column>
+                      <property name="text">
+                       <string>max_lat</string>
+                      </property>
+                     </column>
+                     <column>
+                      <property name="text">
+                       <string>max_lon</string>
+                      </property>
+                     </column>
+                     <column>
+                      <property name="text">
+                       <string>Size</string>
+                      </property>
+                     </column>
+                     <column>
+                      <property name="text">
+                       <string>Preview</string>
+                      </property>
+                     </column>
+                     <column>
+                      <property name="text">
+                       <string>Granule Preview</string>
+                      </property>
+                     </column>
+                     <column>
+                      <property name="text">
+                       <string>ImageID</string>
+                      </property>
+                     </column>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
+               </widget>
+               <widget class="QWidget" name="page_5">
+                <property name="geometry">
+                 <rect>
+                  <x>0</x>
+                  <y>0</y>
+                  <width>715</width>
+                  <height>154</height>
+                 </rect>
+                </property>
+                <attribute name="label">
+                 <string>Download options</string>
+                </attribute>
+                <layout class="QGridLayout" name="gridLayout_141">
+                 <item row="0" column="0">
+                  <layout class="QGridLayout" name="gridLayout_136">
+                   <item row="1" column="6">
+                    <widget class="QCheckBox" name="checkBoxs_band_6">
+                     <property name="text">
+                      <string>Band 6</string>
+                     </property>
+                     <property name="checked">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="4">
+                    <widget class="QCheckBox" name="checkBoxs_band_11">
+                     <property name="text">
+                      <string>Band 10</string>
+                     </property>
+                     <property name="checked">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="0" colspan="7">
+                    <layout class="QGridLayout" name="gridLayout_140">
+                     <item row="0" column="0">
+                      <spacer name="horizontalSpacer_40">
+                       <property name="orientation">
+                        <enum>Qt::Horizontal</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>40</width>
+                         <height>20</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                     <item row="0" column="1">
+                      <widget class="QPushButton" name="check_toolButton_2">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>121</width>
+                         <height>27</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>14000</width>
+                         <height>27</height>
+                        </size>
+                       </property>
+                       <property name="toolTip">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select all bands&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="text">
+                        <string>Check/uncheck all bands</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="2">
+                      <spacer name="horizontalSpacer_41">
+                       <property name="orientation">
+                        <enum>Qt::Horizontal</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>40</width>
+                         <height>20</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                     <item row="1" column="1">
+                      <spacer name="verticalSpacer_20">
+                       <property name="orientation">
+                        <enum>Qt::Vertical</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>20</width>
+                         <height>40</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                    </layout>
+                   </item>
+                   <item row="1" column="4">
+                    <widget class="QCheckBox" name="checkBoxs_band_4">
+                     <property name="text">
+                      <string>Band 4</string>
+                     </property>
+                     <property name="checked">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1" colspan="2">
+                    <widget class="QCheckBox" name="checkBoxs_band_2">
+                     <property name="text">
+                      <string>Band 2</string>
+                     </property>
+                     <property name="checked">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QCheckBox" name="checkBoxs_band_1">
+                     <property name="text">
+                      <string>Band 1</string>
+                     </property>
+                     <property name="checked">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="0">
+                    <widget class="QCheckBox" name="checkBoxs_band_7">
+                     <property name="text">
+                      <string>Band 7</string>
+                     </property>
+                     <property name="checked">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="6">
+                    <widget class="QCheckBox" name="checkBoxs_band_13">
+                     <property name="text">
+                      <string>Band 12</string>
+                     </property>
+                     <property name="checked">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="QCheckBox" name="checkBoxs_band_8">
+                     <property name="text">
+                      <string>Band 8</string>
+                     </property>
+                     <property name="checked">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="5">
+                    <widget class="QCheckBox" name="checkBoxs_band_12">
+                     <property name="text">
+                      <string>Band 11</string>
+                     </property>
+                     <property name="checked">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="5">
+                    <widget class="QCheckBox" name="checkBoxs_band_5">
+                     <property name="text">
+                      <string>Band 5</string>
+                     </property>
+                     <property name="checked">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="0" colspan="7">
+                    <widget class="QLabel" name="label_118">
+                     <property name="font">
+                      <font>
+                       <family>FreeSans</family>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">background-color : qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #243a4e, stop:1 rgba(0, 0, 0, 0)); color : white</string>
+                     </property>
+                     <property name="text">
+                      <string> Sentinel-2 bands</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="2">
+                    <widget class="QCheckBox" name="checkBoxs_band_9">
+                     <property name="text">
+                      <string>Band 8A</string>
+                     </property>
+                     <property name="checked">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="3">
+                    <widget class="QCheckBox" name="checkBoxs_band_3">
+                     <property name="text">
+                      <string>Band 3</string>
+                     </property>
+                     <property name="checked">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="3">
+                    <widget class="QCheckBox" name="checkBoxs_band_10">
+                     <property name="text">
+                      <string>Band 9</string>
+                     </property>
+                     <property name="checked">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
+               </widget>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="2" column="0">
+            <layout class="QGridLayout" name="gridLayout_125">
+             <item row="1" column="0">
+              <widget class="QPushButton" name="export_links_Button_3">
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Export download links to a text file&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="text">
+                <string>Export links</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="4">
+              <spacer name="horizontalSpacer_35">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="1" column="7">
+              <widget class="QCheckBox" name="S2_load_in_QGIS_checkBox">
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Load images in QGIS after download&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="text">
+                <string>Load bands in QGIS</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="2">
+              <widget class="QPushButton" name="download_images_Button_3">
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Download images in image list table&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="text">
+                <string>Download granule from list</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0" colspan="9">
+              <widget class="QLabel" name="label_117">
+               <property name="font">
+                <font>
+                 <family>FreeSans</family>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color : qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #243a4e, stop:1 rgba(0, 0, 0, 0)); color : white</string>
+               </property>
+               <property name="frameShape">
+                <enum>QFrame::NoFrame</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Sunken</enum>
+               </property>
+               <property name="text">
+                <string> Download</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="8">
+              <spacer name="horizontalSpacer_37">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="1" column="6">
+              <widget class="QCheckBox" name="preprocess_Sentinel_checkBox">
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pre process Sentinel-2 images&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="text">
+                <string>Pre process images</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="5">
+              <widget class="QCheckBox" name="download_if_preview_in_legend_checkBox_3">
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Download images from list only if the corresponding previews are loaded in QGIS&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="text">
+                <string>only if preview in Layers</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <spacer name="horizontalSpacer_36">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </item>
            <item row="0" column="0">
             <layout class="QGridLayout" name="gridLayout_152">
              <item row="7" column="0" colspan="9">
@@ -2627,10 +3245,13 @@ p, li { white-space: pre-wrap; }
                   <enum>QFrame::Sunken</enum>
                  </property>
                  <property name="text">
-                  <string>Login Sentinels https://scihub.esa.int/dhus/</string>
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Login Sentinels &lt;a href=&quot;https://scihub.copernicus.eu/dhus&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#ffffff;&quot;&gt;https://scihub.copernicus.eu/dhus&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                 </property>
+                 <property name="openExternalLinks">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
@@ -2836,341 +3457,6 @@ p, li { white-space: pre-wrap; }
              </item>
             </layout>
            </item>
-           <item row="1" column="0">
-            <layout class="QGridLayout" name="gridLayout_160">
-             <item row="0" column="0">
-              <widget class="QToolBox" name="toolBox_3">
-               <property name="currentIndex">
-                <number>0</number>
-               </property>
-               <widget class="QWidget" name="page_7">
-                <property name="geometry">
-                 <rect>
-                  <x>0</x>
-                  <y>0</y>
-                  <width>765</width>
-                  <height>236</height>
-                 </rect>
-                </property>
-                <attribute name="label">
-                 <string>Sentinel images</string>
-                </attribute>
-                <layout class="QGridLayout" name="gridLayout_157">
-                 <item row="0" column="0">
-                  <layout class="QGridLayout" name="gridLayout_162">
-                   <item row="2" column="1">
-                    <layout class="QGridLayout" name="gridLayout_163">
-                     <item row="0" column="0">
-                      <widget class="QPushButton" name="toolButton_display_3">
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="minimumSize">
-                        <size>
-                         <width>121</width>
-                         <height>27</height>
-                        </size>
-                       </property>
-                       <property name="maximumSize">
-                        <size>
-                         <width>14000</width>
-                         <height>27</height>
-                        </size>
-                       </property>
-                       <property name="toolTip">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Display preview of highlighted images in QGIS&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                       </property>
-                       <property name="text">
-                        <string>Display image preview</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="1" column="0">
-                      <widget class="QPushButton" name="remove_image_toolButton_3">
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="minimumSize">
-                        <size>
-                         <width>121</width>
-                         <height>27</height>
-                        </size>
-                       </property>
-                       <property name="maximumSize">
-                        <size>
-                         <width>14000</width>
-                         <height>27</height>
-                        </size>
-                       </property>
-                       <property name="toolTip">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Remove highlighted images from the table&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                       </property>
-                       <property name="text">
-                        <string>Remove images from list</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="2" column="0">
-                      <widget class="QPushButton" name="clear_table_toolButton_3">
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="minimumSize">
-                        <size>
-                         <width>121</width>
-                         <height>27</height>
-                        </size>
-                       </property>
-                       <property name="maximumSize">
-                        <size>
-                         <width>14000</width>
-                         <height>27</height>
-                        </size>
-                       </property>
-                       <property name="toolTip">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Clear all the table&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                       </property>
-                       <property name="text">
-                        <string>Clear table</string>
-                       </property>
-                      </widget>
-                     </item>
-                    </layout>
-                   </item>
-                   <item row="1" column="0" colspan="2">
-                    <widget class="QLabel" name="label_148">
-                     <property name="font">
-                      <font>
-                       <family>FreeSans</family>
-                       <weight>75</weight>
-                       <bold>true</bold>
-                      </font>
-                     </property>
-                     <property name="styleSheet">
-                      <string notr="true">background-color : qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #243a4e, stop:1 rgba(0, 0, 0, 0)); color : white</string>
-                     </property>
-                     <property name="text">
-                      <string> Image list</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="2" column="0">
-                    <widget class="QTableWidget" name="sentinel_images_tableWidget">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="editTriggers">
-                      <set>QAbstractItemView::NoEditTriggers</set>
-                     </property>
-                     <property name="alternatingRowColors">
-                      <bool>true</bool>
-                     </property>
-                     <property name="selectionBehavior">
-                      <enum>QAbstractItemView::SelectRows</enum>
-                     </property>
-                     <property name="sortingEnabled">
-                      <bool>true</bool>
-                     </property>
-                     <attribute name="verticalHeaderDefaultSectionSize">
-                      <number>20</number>
-                     </attribute>
-                     <column>
-                      <property name="text">
-                       <string>ImageName</string>
-                      </property>
-                     </column>
-                     <column>
-                      <property name="text">
-                       <string>AcquisitionDate</string>
-                      </property>
-                     </column>
-                     <column>
-                      <property name="text">
-                       <string>CloudCover</string>
-                      </property>
-                     </column>
-                     <column>
-                      <property name="text">
-                       <string>Path</string>
-                      </property>
-                     </column>
-                     <column>
-                      <property name="text">
-                       <string>Row</string>
-                      </property>
-                     </column>
-                     <column>
-                      <property name="text">
-                       <string>min_lat</string>
-                      </property>
-                     </column>
-                     <column>
-                      <property name="text">
-                       <string>min_lon</string>
-                      </property>
-                     </column>
-                     <column>
-                      <property name="text">
-                       <string>max_lat</string>
-                      </property>
-                     </column>
-                     <column>
-                      <property name="text">
-                       <string>max_lon</string>
-                      </property>
-                     </column>
-                     <column>
-                      <property name="text">
-                       <string>Size</string>
-                      </property>
-                     </column>
-                     <column>
-                      <property name="text">
-                       <string>Preview</string>
-                      </property>
-                     </column>
-                     <column>
-                      <property name="text">
-                       <string>ImageID</string>
-                      </property>
-                     </column>
-                    </widget>
-                   </item>
-                  </layout>
-                 </item>
-                </layout>
-               </widget>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item row="2" column="0">
-            <layout class="QGridLayout" name="gridLayout_125">
-             <item row="1" column="0">
-              <widget class="QPushButton" name="export_links_Button_3">
-               <property name="toolTip">
-                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Export download links to a text file&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-               </property>
-               <property name="text">
-                <string>Export links</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="0" colspan="8">
-              <widget class="QLabel" name="label_117">
-               <property name="font">
-                <font>
-                 <family>FreeSans</family>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">background-color : qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #243a4e, stop:1 rgba(0, 0, 0, 0)); color : white</string>
-               </property>
-               <property name="frameShape">
-                <enum>QFrame::NoFrame</enum>
-               </property>
-               <property name="frameShadow">
-                <enum>QFrame::Sunken</enum>
-               </property>
-               <property name="text">
-                <string> Download</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="1">
-              <spacer name="horizontalSpacer_36">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item row="1" column="2">
-              <widget class="QPushButton" name="download_images_Button_3">
-               <property name="toolTip">
-                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Download images in image list table&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-               </property>
-               <property name="text">
-                <string>Download images from list</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="7">
-              <spacer name="horizontalSpacer_37">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item row="1" column="6">
-              <widget class="QCheckBox" name="load_in_QGIS_checkBox_3">
-               <property name="toolTip">
-                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Load images in QGIS after download&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-               </property>
-               <property name="text">
-                <string>Load bands in QGIS</string>
-               </property>
-               <property name="checked">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="4">
-              <spacer name="horizontalSpacer_35">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item row="1" column="5">
-              <widget class="QCheckBox" name="download_if_preview_in_legend_checkBox_3">
-               <property name="toolTip">
-                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Download images from list only if the corresponding previews are loaded in QGIS&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-               </property>
-               <property name="text">
-                <string>only if preview in Layers</string>
-               </property>
-               <property name="checked">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
           </layout>
          </widget>
         </widget>
@@ -3191,7 +3477,7 @@ p, li { white-space: pre-wrap; }
          <item row="0" column="0">
           <widget class="QTabWidget" name="tabWidget_preprocessing">
            <property name="currentIndex">
-            <number>0</number>
+            <number>1</number>
            </property>
            <widget class="QWidget" name="tab_Landsat">
             <attribute name="icon">
@@ -3792,6 +4078,475 @@ p, li { white-space: pre-wrap; }
                  <column>
                   <property name="text">
                    <string>QCALMIN</string>
+                  </property>
+                 </column>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="tab_Sentinel2">
+            <attribute name="icon">
+             <iconset resource="resources.qrc">
+              <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_sentinel_tool.png</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_sentinel_tool.png</iconset>
+            </attribute>
+            <attribute name="title">
+             <string>Sentinel-2</string>
+            </attribute>
+            <layout class="QGridLayout" name="gridLayout_148">
+             <item row="0" column="0">
+              <layout class="QGridLayout" name="gridLayout_137">
+               <item row="2" column="0">
+                <widget class="QLabel" name="label_88">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>229</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <family>FreeSans</family>
+                   <weight>50</weight>
+                   <bold>false</bold>
+                  </font>
+                 </property>
+                 <property name="frameShape">
+                  <enum>QFrame::Panel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Sunken</enum>
+                 </property>
+                 <property name="text">
+                  <string>Directory containing Sentinel-2 bands</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="1" colspan="2">
+                <layout class="QGridLayout" name="gridLayout_146">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="S2_label_86">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="frameShape">
+                    <enum>QFrame::Panel</enum>
+                   </property>
+                   <property name="frameShadow">
+                    <enum>QFrame::Sunken</enum>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QPushButton" name="S2_toolButton_directoryInput">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>100</width>
+                     <height>27</height>
+                    </size>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>110</width>
+                     <height>27</height>
+                    </size>
+                   </property>
+                   <property name="toolTip">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select directory containing Sentinel-2 bands&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                   <property name="text">
+                    <string>Select directory</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item row="5" column="1">
+                <spacer name="verticalSpacer">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="4" column="0">
+                <widget class="QCheckBox" name="DOS1_checkBox_S2">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enable/Disable the DOS1 atmospheric correction&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
+                 <property name="text">
+                  <string> Apply DOS1 atmospheric correction</string>
+                 </property>
+                 <property name="checked">
+                  <bool>false</bool>
+                 </property>
+                 <property name="tristate">
+                  <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="1" colspan="2">
+                <layout class="QGridLayout" name="gridLayout_138">
+                 <item row="0" column="2">
+                  <spacer name="horizontalSpacer_38">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QSpinBox" name="S2_nodata_spinBox">
+                   <property name="toolTip">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;No data value&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                   <property name="minimum">
+                    <number>-999</number>
+                   </property>
+                   <property name="maximum">
+                    <number>100000</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QCheckBox" name="S2_nodata_checkBox">
+                   <property name="text">
+                    <string>Use NoData value (image has black border)</string>
+                   </property>
+                   <property name="checked">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item row="0" column="0" colspan="3">
+                <widget class="QLabel" name="label_89">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <family>FreeSans</family>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background-color : qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #243a4e, stop:1 rgba(0, 0, 0, 0)); color : white</string>
+                 </property>
+                 <property name="text">
+                  <string> Sentinel-2 conversion</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QLabel" name="S2_label_93">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>229</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <family>FreeSans</family>
+                   <weight>50</weight>
+                   <bold>false</bold>
+                  </font>
+                 </property>
+                 <property name="frameShape">
+                  <enum>QFrame::Panel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Sunken</enum>
+                 </property>
+                 <property name="text">
+                  <string>Select metadata file (MTD_SAFL1C)</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="1" colspan="2">
+                <layout class="QGridLayout" name="gridLayout_147">
+                 <item row="0" column="1">
+                  <widget class="QPushButton" name="S2_toolButton_directoryInput_xml2">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>100</width>
+                     <height>27</height>
+                    </size>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>110</width>
+                     <height>27</height>
+                    </size>
+                   </property>
+                   <property name="toolTip">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select xml file&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                   <property name="text">
+                    <string>Select a xml file</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="S2_label_94">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="frameShape">
+                    <enum>QFrame::Panel</enum>
+                   </property>
+                   <property name="frameShadow">
+                    <enum>QFrame::Sunken</enum>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </item>
+             <item row="1" column="0">
+              <layout class="QGridLayout" name="gridLayout_139">
+               <item row="2" column="0">
+                <layout class="QGridLayout" name="gridLayout_143">
+                 <item row="0" column="2">
+                  <spacer name="horizontalSpacer_43">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QCheckBox" name="S2_create_VRT_checkBox">
+                   <property name="toolTip">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Create a virtual raster&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                   <property name="text">
+                    <string>Create Virtual Raster</string>
+                   </property>
+                   <property name="tristate">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="4">
+                  <spacer name="horizontalSpacer_42">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QCheckBox" name="S2_create_bandset_checkBox">
+                   <property name="toolTip">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Create the Band set automatically&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                   <property name="text">
+                    <string>Create Band set</string>
+                   </property>
+                   <property name="checked">
+                    <bool>true</bool>
+                   </property>
+                   <property name="tristate">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="3">
+                  <widget class="QPushButton" name="pushButton_Conversion_2">
+                   <property name="toolTip">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Perform band conversion&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                   <property name="text">
+                    <string>Perform conversion</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item row="0" column="0">
+                <layout class="QGridLayout" name="gridLayout_144">
+                 <item row="1" column="3">
+                  <widget class="QPushButton" name="S2_pushButton_remove_band">
+                   <property name="toolTip">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Remove highlighted bands&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                   <property name="text">
+                    <string>Remove band</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0" colspan="4">
+                  <widget class="QLabel" name="label_90">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="font">
+                    <font>
+                     <family>FreeSans</family>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">background-color : qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #243a4e, stop:1 rgba(0, 0, 0, 0)); color : white</string>
+                   </property>
+                   <property name="text">
+                    <string>Metadata</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QLineEdit" name="S2_satellite_lineEdit">
+                   <property name="toolTip">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Satellite (e.g. Sentinel-2A)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="satellite_label_5">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="font">
+                    <font>
+                     <family>FreeSans</family>
+                     <weight>50</weight>
+                     <bold>false</bold>
+                    </font>
+                   </property>
+                   <property name="frameShape">
+                    <enum>QFrame::Panel</enum>
+                   </property>
+                   <property name="frameShadow">
+                    <enum>QFrame::Sunken</enum>
+                   </property>
+                   <property name="text">
+                    <string>Satellite</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="2">
+                  <spacer name="horizontalSpacer_39">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                </layout>
+               </item>
+               <item row="1" column="0">
+                <widget class="QTableWidget" name="sentinel_2_tableWidget">
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Edit metadata&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
+                 <attribute name="horizontalHeaderDefaultSectionSize">
+                  <number>155</number>
+                 </attribute>
+                 <column>
+                  <property name="text">
+                   <string>Band</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>Quantification value</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>Solar irradiance</string>
                   </property>
                  </column>
                 </widget>
@@ -7012,8 +7767,8 @@ p, li { white-space: pre-wrap; }
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>783</width>
-            <height>464</height>
+            <width>733</width>
+            <height>409</height>
            </rect>
           </property>
           <attribute name="label">

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/ui_semiautomaticclassificationplugin_welcome.ui'
 #
-# Created: Thu Oct  8 23:02:26 2015
+# Created: Sat Dec 19 22:28:12 2015
 #      by: PyQt4 UI code generator 4.11.2
 #
 # WARNING! All changes made in this file will be lost!

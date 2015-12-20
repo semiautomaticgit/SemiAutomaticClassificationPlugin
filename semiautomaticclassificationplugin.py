@@ -83,6 +83,7 @@ try:
 	from maininterface.multipleroiTab import MultipleROITab
 	from spectralsignature.usgs_spectral_lib import USGS_Spectral_Lib
 	from maininterface.landsatTab import LandsatTab
+	from maininterface.sentinelTab import Sentinel2Tab
 	from maininterface.accuracy import Accuracy
 	from maininterface.splitTab import SplitTab
 	from maininterface.bandsetTab import BandsetTab
@@ -152,6 +153,7 @@ class SemiAutomaticClassificationPlugin:
 			cfg.downLandsat = DownloadLandsatImages()
 			cfg.downSentinel = DownloadSentinelImages()
 			cfg.landsatT = LandsatTab()
+			cfg.sentinel2T = Sentinel2Tab()
 			cfg.landCC = LandCoverChange()
 			cfg.classRep = ClassReportTab()
 			cfg.classVect = ClassToVectorTab()
@@ -314,6 +316,11 @@ class SemiAutomaticClassificationPlugin:
 		self.landsat_action.setObjectName("landsat_action")
 		QObject.connect(self.landsat_action, SIGNAL("triggered()"), cfg.utls.landsatTab)
 		cfg.preprocessing_menu.addAction(self.landsat_action)
+		# Sentinel-2
+		self.sentinel2_action = QAction(QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_sentinel_tool.png"), "Sentinel-2", cfg.iface.mainWindow())
+		self.sentinel2_action.setObjectName("sentinel2_action")
+		QObject.connect(self.sentinel2_action, SIGNAL("triggered()"), cfg.utls.sentinel2Tab)
+		cfg.preprocessing_menu.addAction(self.sentinel2_action)
 		# Clip multiple rasters
 		self.clip_multiple_rasters_action = QAction(QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_clip_tool.png"), "Clip multiple rasters", cfg.iface.mainWindow())
 		self.clip_multiple_rasters_action.setObjectName("clip_multiple_rasters_action")
@@ -807,6 +814,8 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.clear_table_toolButton_3.clicked.connect(cfg.downSentinel.clearTable)
 			cfg.ui.export_links_Button_3.clicked.connect(cfg.downSentinel.exportLinks)
 			cfg.ui.toolButton_display_3.clicked.connect(cfg.downSentinel.displayImages)
+			cfg.ui.toolButton_granule_preview.clicked.connect(cfg.downSentinel.displayGranules)
+			cfg.ui.check_toolButton_2.clicked.connect(cfg.downSentinel.checkAllBands)
 			cfg.ui.user_scihub_lineEdit.editingFinished.connect(cfg.downSentinel.rememberUser)
 			cfg.ui.password_scihub_lineEdit.editingFinished.connect(cfg.downSentinel.rememberUser)
 			cfg.ui.remember_user_checkBox.stateChanged.connect(cfg.downSentinel.rememberUserCheckbox)
@@ -950,6 +959,14 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.sun_elev_lineEdit.textChanged.connect(cfg.landsatT.editedSunElevation)
 			cfg.ui.date_lineEdit.textChanged.connect(cfg.landsatT.editedDate)
 			cfg.ui.satellite_lineEdit.textChanged.connect(cfg.landsatT.editedSatellite)
+			""" Sentinel-2 tab """
+			# connect to input button
+			cfg.ui.S2_toolButton_directoryInput.clicked.connect(cfg.sentinel2T.inputSentinel)
+			cfg.ui.pushButton_Conversion_2.clicked.connect(cfg.sentinel2T.performSentinelConversion)
+			cfg.ui.S2_satellite_lineEdit.textChanged.connect(cfg.sentinel2T.editedSatellite)
+			cfg.ui.S2_pushButton_remove_band.clicked.connect(cfg.sentinel2T.removeHighlightedBand)
+			cfg.ui.sentinel_2_tableWidget.cellChanged.connect(cfg.sentinel2T.editedCell)
+			cfg.ui.S2_toolButton_directoryInput_xml2.clicked.connect(cfg.sentinel2T.inputXML2)
 			""" Split tab """
 			# connect the classification combo
 			cfg.ui.raster_name_combo.currentIndexChanged.connect(cfg.splitT.rasterLayerName)

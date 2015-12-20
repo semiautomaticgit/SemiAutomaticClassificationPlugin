@@ -253,7 +253,10 @@ class ClipMultipleRasters:
 						else:
 							shutil.copy(tPMD2, e)
 							os.remove(tPMD2)
-						os.remove(tRxs)
+						try:
+							os.remove(tRxs)
+						except:
+							pass
 						cfg.iface.addRasterLayer(unicode(oD) + "/" + outputName + "_" + unicode(os.path.basename(unicode(l))), unicode(outputName + "_" + unicode(os.path.basename(unicode(l)))))
 						# logger
 						cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " rasters clipped" )

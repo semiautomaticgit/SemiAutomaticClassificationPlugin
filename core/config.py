@@ -192,6 +192,7 @@ scatterBandY = 2
 pF = []
 # virtual raster
 landsatVrtNm = "landsat"
+sentinel2VrtNm = "sentinel2"
 tmpVrtNm = "band_set"
 tmpVrt = None
 # pixel signature names
@@ -409,7 +410,7 @@ satLandsat7 = "Landsat 7 ETM+ [bands 1, 2, 3, 4, 5, 7]"
 satLandsat45 = "Landsat 4-5 TM [bands 1, 2, 3, 4, 5, 7]"
 satLandsat13 = "Landsat 1-3 MSS [bands 4, 5, 6, 7]"
 satRapidEye = "RapidEye [bands 1, 2, 3, 4, 5]"
-satSentinel2 = "Sentinel-2 [bands 2, 3, 4, 5, 6, 7, 8, 8B, 11, 12]"
+satSentinel2 = "Sentinel-2 [bands 2, 3, 4, 5, 6, 7, 8, 8A, 11, 12]"
 satSPOT4 = "SPOT 4 [bands 1, 2, 3, 4]"
 satSPOT5 = "SPOT 5 [bands 1, 2, 3, 4]"
 satSPOT6 = "SPOT 6 [bands 1, 2, 3, 4]"

@@ -274,6 +274,12 @@ class Messages:
 			
 	def msgErr50(self, imageID):
 		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [50]", QApplication.translate("semiautomaticclassificationplugin", "Unable to download image " + imageID ))
+		
+	def msgErr51(self):
+		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [8]", QApplication.translate("semiautomaticclassificationplugin", "No metadata found inside the input directory (a .xml file whose name contains MTD_L1C)"))
+		
+	def msgErr52(self):
+		self.msgBarError(QApplication.translate("semiautomaticclassificationplugin", "Error") + " [8]", QApplication.translate("semiautomaticclassificationplugin", "No metadata found inside the input directory (a .xml file whose name contains MTD_SAFL1C)"))
 
 	""" Warnings """
 	def msgWar2Windows(self):

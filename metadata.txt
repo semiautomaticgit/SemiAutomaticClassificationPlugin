@@ -2,7 +2,7 @@
 name=Semi-Automatic Classification Plugin
 qgisMinimumVersion=2.0
 description= Plugin for the semi-automatic supervised classification designed to expedite the processing of multispectral or hyperspectral remote sensing images, which provides a set of tools for pre processing and post processing. 
-version=4.8.0
+version=4.9.0
 about=Written by Luca Congedo, the Semi-Automatic Classification Plugin (SCP) allows for the semi-automatic supervised classification of remote sensing images. It provides integrated tools to expedite the creation of ROIs (training areas) through region growing and the classification process. The spectral signatures of training areas can be automatically calculated and displayed in a spectral signature plot and a scatter plot is available. The following tools are available for ROI and spectral signature creation: multiple ROI creation using point coordinates, selection and download of spectral signatures from the USGS Spectral Library (http://speclab.cr.usgs.gov/spectral-lib.html). Also, it is possible to import spectral signatures from external sources. The following pre processing tools are available: Landsat conversion to reflectance and pan-sharpening, clipping multiple rasters at once, splitting raster bands. It allows for the integrated download and pre processing of Landsat and Sentinel-2 images. The following classification algorithms are available: Minimum Distance, Maximum Likelihood, Spectral Angle Mapping. The following post processing tools are available: accuracy assessment, land cover change, classification report, classification to vector, reclassification. This plugin requires the installation of GDAL, OGR, Numpy, SciPy, and Matplotlib. Also, a virtual machine is available http://fromgistors.blogspot.com/p/semi-automatic-os.html . Keywords: 土地被覆分類 监督分类 土地覆盖分类 教師付き分類 تصنيف استخدام الأراضي Classificação da Cobertura do Solo Clasificación de la Cobertura de la Tierra Classification de la Couverture du Sol классификация землепользования Klassifizierung der Landbedeckung Classificazione della Copertura del Suolo. For more information please visit http://fromgistors.blogspot.com/
 
 author=Luca Congedo
@@ -13,6 +13,37 @@ icon=semiautomaticclassificationplugin.png
 
 ; start of optional metadata
 changelog=
+	4.9.0
+	Major update:
+	-updated the Sentinel-2 download for downloading single granules and selected bands
+	-updated the Sentinel-2 Pre processing tab for converting bands to TOA reflectance and surface reflectance (using DOS1)
+	
+	4.8.6
+	Minor update:
+	-updated links to the API hub scihub.copernicus.eu
+
+	4.8.5
+	Minor update:
+	-added tab for Sentinel-2 conversion
+	
+	4.8.4
+	Minor update:
+	-fixed matplotlib >1.5 import error (thanks to Donovan Cameron for the commit)
+	
+	4.8.3
+	Minor update:
+	-improved download speed of Sentinel-2 images 
+	-fixed issue of clipping multiple bands in Windows
+	
+	4.8.2
+	Minor update:
+	-fixing the long file name issue of downloaded Sentinel-2 images in Windows
+	-downloaded Sentinel bands are resampled to 10m and placed in the download directory
+	
+	4.8.1
+	Minor update:
+	-bug fixing
+	
 	4.8.0
 	Major update:
 	-added tab for searching and downloading Sentinel-2 images from https://scihub.esa.int/dhus/

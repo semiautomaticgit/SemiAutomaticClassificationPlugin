@@ -1271,7 +1271,7 @@ class Utils:
 				f = urllib2.urlopen(url)
 				total_size = int(f.headers["Content-Length"])
 				MB_size = total_size/1048576
-				block_size = 64 * 1024
+				block_size = 1024 * 1024
 				with open(outputPath, "wb") as file:
 					while True:
 						block = f.read(block_size)
@@ -2872,7 +2872,7 @@ class Utils:
 		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "layer selected: " + unicode(layerName))
 
 ### copy raster with GDAL
-	def GDALCopyRaster(self, input, output, outFormat = "GTiff", compress = "No", compressFormat = "DEFLATE"):
+	def GDALCopyRaster(self, input, output, outFormat = "GTiff", compress = "No", compressFormat = "DEFLATE", additionalParams = ""):
 		if compress == "No":
 			op = " -of " + outFormat
 		else:
@@ -2880,7 +2880,7 @@ class Utils:
 		try:
 			cfg.utls.getGDALForMac()
 			gD = "gdal_translate"
-			a = cfg.gdalPath + gD + op 
+			a = cfg.gdalPath + gD + " " + additionalParams + " " + op 
 			b = '"' + input + '" '
 			c = '"' + output + '" '
 			d = a + " " + b + " " + c
@@ -2898,7 +2898,7 @@ class Utils:
 			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			cfg.utls.getGDALForMac()
 			gD = "gdal_translate"
-			a = cfg.gdalPath + gD + op 
+			a = cfg.gdalPath + gD + " " + additionalParams + " " + op 
 			b = '"' + input + '" '
 			c = '"' + output + '" '
 			d = a + " " + b + " " + c
@@ -3476,7 +3476,7 @@ class Utils:
 	def clipMultipleRastersTab(self):
 		cfg.dlg.close()
 		cfg.ui.toolButton_plugin.setCurrentIndex(1)
-		cfg.ui.tabWidget_preprocessing.setCurrentIndex(1)
+		cfg.ui.tabWidget_preprocessing.setCurrentIndex(2)
 		# show the dialog
 		cfg.dlg.show()
 		# logger
@@ -3491,12 +3491,22 @@ class Utils:
 		cfg.dlg.show()
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "tab selected")
+				
+	# select Sentinel-2 tab
+	def sentinel2Tab(self):
+		cfg.dlg.close()
+		cfg.ui.toolButton_plugin.setCurrentIndex(1)
+		cfg.ui.tabWidget_preprocessing.setCurrentIndex(1)
+		# show the dialog
+		cfg.dlg.show()
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "tab selected")
 		
 	# select Split raster bands tab
 	def splitrasterbandsTab(self):
 		cfg.dlg.close()
 		cfg.ui.toolButton_plugin.setCurrentIndex(1)
-		cfg.ui.tabWidget_preprocessing.setCurrentIndex(2)
+		cfg.ui.tabWidget_preprocessing.setCurrentIndex(3)
 		# show the dialog
 		cfg.dlg.show()
 		# logger

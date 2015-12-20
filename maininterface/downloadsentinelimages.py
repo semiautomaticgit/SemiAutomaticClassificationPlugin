@@ -56,6 +56,8 @@ import SemiAutomaticClassificationPlugin.core.config as cfg
 class DownloadSentinelImages:
 
 	def __init__(self):
+		# check all bands
+		self.checkAll = "No"
 		# emit a QgsPoint on each click
 		self.clickUL = QgsMapToolEmitPoint(cfg.cnvs)
 		# connect to pointerClick when map is clicked
@@ -160,8 +162,39 @@ class DownloadSentinelImages:
 			cfg.sets.setQGISRegSetting(cfg.regSciHubUser, "")
 			cfg.sets.setQGISRegSetting(cfg.regSciHubPass, "")
 		
+	# display granule preview	
+	def displayGranules(self):
+		tW = cfg.ui.sentinel_images_tableWidget
+		ids = []
+		for i in tW.selectedIndexes():
+			ids.append(i.row())
+		id = set(ids)
+		if len(id) > 0:
+			progressStep = 100 / len(id)
+			cfg.uiUtls.addProgressBar()
+			# disable map canvas render for speed
+			cfg.cnvs.setRenderFlag(False)
+			progress = 0
+			for i in id:
+				imgNm = str(tW.item(i, 1).text())
+				imgID = imgNm[0:-7] + '_p.jp2'
+				url = str(tW.item(i, 11).text())
+				if os.path.isfile(cfg.tmpDir + "//" + imgID):
+					pass
+				else:
+					self.downloadFile(url, cfg.tmpDir + "//" + imgID, progress)
+				if os.path.isfile(cfg.tmpDir + "//" + imgID):
+					r = cfg.utls.addRasterLayer(cfg.tmpDir + "//" + imgID, imgID)
+				progress = progress + progressStep
+			cfg.uiUtls.removeProgressBar()
+			cfg.cnvs.setRenderFlag(True)
+			cfg.cnvs.refresh()
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " granules displayed")
+			
+	# display image preview	
 	def displayImages(self):
-		tW = cfg.ui.	sentinel_images_tableWidget
+		tW = cfg.ui.sentinel_images_tableWidget
 		ids = []
 		for i in tW.selectedIndexes():
 			ids.append(i.row())
@@ -193,8 +226,21 @@ class DownloadSentinelImages:
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " thumbnails displayed")
 		
+	# download file
+	def downloadFile(self, url, output, progress = None):
+		topLevelUrl = 'https://scihub.copernicus.eu'
+		user = cfg.ui.user_scihub_lineEdit.text()
+		password =cfg.ui.password_scihub_lineEdit.text()
+		check = cfg.utls.passwordConnect(user, password, url, topLevelUrl, output, progress)
+		if check == "Yes":
+			return output
+		else:
+			cfg.mx.msgErr40()
+			return "No"
+	
+	# download image preview
 	def downloadThumbnail(self, imgID, min_lat, min_lon, max_lat, max_lon, imageJPG, progress = None):
-		topLevelUrl = 'https://scihub.esa.int'
+		topLevelUrl = 'https://scihub.copernicus.eu'
 		user = cfg.ui.user_scihub_lineEdit.text()
 		password =cfg.ui.password_scihub_lineEdit.text()
 		check = cfg.utls.passwordConnect(user, password, imageJPG, topLevelUrl, cfg.tmpDir + "//" + imgID + "_thumb.jpg", progress)
@@ -253,77 +299,119 @@ class DownloadSentinelImages:
 	
 	# remove highlighted images from table
 	def removeImageFromTable(self):
-		tW = cfg.ui.	sentinel_images_tableWidget
+		tW = cfg.ui.sentinel_images_tableWidget
 		cfg.utls.removeRowsFromTable(tW)
 			
 	# download images in table
 	def downloadImages(self):
-		tW = cfg.ui.	sentinel_images_tableWidget
+		tW = cfg.ui.sentinel_images_tableWidget
 		c = tW.rowCount()
 		if c > 0:
 			d = QFileDialog.getExistingDirectory(None , QApplication.translate("semiautomaticclassificationplugin", "Download the images in the table (requires internet connection)"))
 			if len(d) > 0:
 				self.downloadSentinelImages(d)
 		
+	# check all bands
+	def checkAllBands(self):
+		if self.checkAll == "Yes":
+			for i in range(1, 14):
+				t = "cfg.ui.checkBoxs_band_" + str(i) + ".setCheckState(2)"
+				eval(t)
+			self.checkAll = "No"
+		else:
+			for i in range(1, 14):
+				t = "cfg.ui.checkBoxs_band_" + str(i) + ".setCheckState(0)"
+				eval(t)
+			self.checkAll = "Yes"
+		
+	# check band download
+	def checkImageBands(self, checkbox, bandNumber, imgID, imgName, imgName2, outputDirectory, exporter, progress, outFilesList, linksList):
+		if cfg.actionCheck == "Yes":
+			if checkbox.isChecked():
+				urlL = 'https://scihub.copernicus.eu/apihub/odata/v1/Products%28%27' +imgID  +'%27%29/Nodes%28%27' +imgName + '.SAFE%27%29/Nodes%28%27GRANULE%27%29/Nodes%28%27' + imgName2 + '%27%29/Nodes%28%27IMG_DATA%27%29/Nodes%28%27' + imgName2[0:-7] + '_B' + bandNumber + '.jp2%27%29/$value'
+				outFile = cfg.tmpDir + "//" + imgName2[0:-7] + '_B' + bandNumber + '.jp2'
+				outCopyFile = outputDirectory + "//" + imgName2[0:-7] + "//" + imgName2[0:-7] + '_B' + bandNumber
+				if exporter == "No":
+					self.downloadFile(urlL, outFile, progress)
+					outFilesList.append([outFile, outCopyFile])
+				else:
+					linksList.append(urlL)
+		else:
+			cfg.uiUtls.removeProgressBar()
+			return "No"
+				
 	# download images
 	def downloadSentinelImages(self, outputDirectory, exporter = "No"):
 		cfg.uiUtls.addProgressBar()
-		tW = cfg.ui.	sentinel_images_tableWidget
-		c = tW.rowCount()
-		progressStep = 100 / c
-		progress = 0
+		tW = cfg.ui.sentinel_images_tableWidget
 		outDirList = []
 		imgList = []
 		links = []
+		c = tW.rowCount()
+		progressStep = 100 / c
+		progress = 0
+		# disable map canvas render for speed
+		cfg.cnvs.setRenderFlag(False)
 		for i in range(0, c):
 			if cfg.actionCheck == "Yes":
 				imgName = str(tW.item(i, 0).text())
-				imgID = str(tW.item(i, 11).text())
-				if cfg.ui.download_if_preview_in_legend_checkBox_3.isChecked() and cfg.utls.selectLayerbyName(imgName + ".vrt", "Yes") is None:
+				imgID = str(tW.item(i, 12).text())
+				imgName2 = str(tW.item(i, 1).text())
+				imgJp2 = imgName2[0:-7] + '_p.jp2'
+				if cfg.ui.download_if_preview_in_legend_checkBox_3.isChecked() and cfg.utls.selectLayerbyName(imgJp2, "Yes") is None:
 					pass
 				else:
+					outFiles = []
+					outDirList.append(outputDirectory + "//" + imgName2[0:-7])
 					progress = progress + progressStep
-					urlL = "https://scihub.esa.int/dhus/odata/v1/Products('" + imgID + "')/$value"
-					outFile = cfg.tmpDir + "/" + imgName + ".zip"
+					#download metadata
+					urlL1 = 'https://scihub.copernicus.eu/apihub/odata/v1/Products%28%27' +imgID  +'%27%29/Nodes%28%27' +imgName + '.SAFE%27%29/Nodes%28%27' + imgName.replace('_PRD_MSIL1C_', '_MTD_SAFL1C_') + '.xml%27%29/$value'
+					outFile1 = outputDirectory + "//" + imgName2[0:-7] + "//" + imgName.replace('_PRD_MSIL1C_', '_MTD_SAFL1C_') + '.xml'
+					#urlL2 = 'https://scihub.copernicus.eu/apihub/odata/v1/Products%28%27' +imgID  +'%27%29/Nodes%28%27' +imgName + '.SAFE%27%29/Nodes%28%27GRANULE%27%29/Nodes%28%27' + imgName2 + '%27%29/Nodes%28%27' + imgName2[0:-7] .replace('_MSI_L1C_', '_MTD_L1C_') + '.xml%27%29/$value'
+					#outFile2 = outputDirectory + "//" + imgName2[0:-7] + "//" + imgName2[0:-7] .replace('_MSI_L1C_', '_MTD_L1C_')  + '.xml'
+					if not QDir(outputDirectory + "//" + imgName2[0:-7]).exists():
+						os.makedirs(outputDirectory + "//" + imgName2[0:-7])
 					if exporter == "No":
-						topLevelUrl = 'https://scihub.esa.int'
-						user = cfg.ui.user_scihub_lineEdit.text()
-						password =cfg.ui.password_scihub_lineEdit.text()
-						check = cfg.utls.passwordConnect(user, password, urlL, topLevelUrl, outFile, progress)
-						if check == "Yes":
-							try:
-								if os.path.getsize(outFile) > 10000:
-									with zipfile.ZipFile(outFile, "r") as zFile:
-										zFile.extractall(outputDirectory)										
-									os.remove(outFile)
-									outDirList.append(outputDirectory + "/" + imgName + ".SAFE/GRANULE")
-								else:
-									cfg.mx.msgErr50(imgName)
-							except Exception, err:
-								# logger
-								cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-								cfg.mx.msgErr50(imgName)
+						self.downloadFile(urlL1, outFile1, progress)
+						#self.downloadFile(urlL2, outFile2, progress)
 					else:
-						links.append(urlL)
+						links.append(urlL1)
+						#links.append(urlL2)
+					# download bands
+					self.checkImageBands(cfg.ui.checkBoxs_band_1, '01', imgID, imgName, imgName2, outputDirectory, exporter, progress, outFiles, links)							
+					self.checkImageBands(cfg.ui.checkBoxs_band_2, '02', imgID, imgName, imgName2, outputDirectory, exporter, progress, outFiles, links)
+					self.checkImageBands(cfg.ui.checkBoxs_band_3, '03', imgID, imgName, imgName2, outputDirectory, exporter, progress, outFiles, links)
+					self.checkImageBands(cfg.ui.checkBoxs_band_4, '04', imgID, imgName, imgName2, outputDirectory, exporter, progress, outFiles, links)
+					self.checkImageBands(cfg.ui.checkBoxs_band_5, '05', imgID, imgName, imgName2, outputDirectory, exporter, progress, outFiles, links)
+					self.checkImageBands(cfg.ui.checkBoxs_band_6, '06', imgID, imgName, imgName2, outputDirectory, exporter, progress, outFiles, links)
+					self.checkImageBands(cfg.ui.checkBoxs_band_7, '07', imgID, imgName, imgName2, outputDirectory, exporter, progress, outFiles, links)
+					self.checkImageBands(cfg.ui.checkBoxs_band_8, '08', imgID, imgName, imgName2, outputDirectory, exporter, progress, outFiles, links)
+					self.checkImageBands(cfg.ui.checkBoxs_band_9, '8A', imgID, imgName, imgName2, outputDirectory, exporter, progress, outFiles, links)
+					self.checkImageBands(cfg.ui.checkBoxs_band_10, '09', imgID, imgName, imgName2, outputDirectory, exporter, progress, outFiles, links)
+					self.checkImageBands(cfg.ui.checkBoxs_band_11, '10', imgID, imgName, imgName2, outputDirectory, exporter, progress, outFiles, links)
+					self.checkImageBands(cfg.ui.checkBoxs_band_12, '11', imgID, imgName, imgName2, outputDirectory, exporter, progress, outFiles, links)
+					self.checkImageBands(cfg.ui.checkBoxs_band_13, '12', imgID, imgName, imgName2, outputDirectory, exporter, progress, outFiles, links)
+					for oFile in outFiles:
+						shutil.copy(oFile[0], oFile[1] + '.jp2')
+						os.remove(oFile[0])
+						if cfg.ui.S2_load_in_QGIS_checkBox.isChecked() and cfg.ui.preprocess_Sentinel_checkBox.isChecked() is False:
+							c = cfg.iface.addRasterLayer(oFile[1] + '.jp2', os.path.basename(oFile[1] + '.jp2'))
 			else:
 				cfg.uiUtls.removeProgressBar()
+				cfg.cnvs.setRenderFlag(True)
 				return "No"
-		if exporter == "Yes":
-			return links
-		else:
-			cfg.cnvs.setRenderFlag(False)
-			if cfg.ui.load_in_QGIS_checkBox_3.isChecked():
-				for d in outDirList:
-					for g in os.listdir(d):
-						for f in os.listdir(d + "/" + g + '/IMG_DATA'):
-							if f.lower().endswith(".jp2"):
-								# convert jp2 to tif file
-								cfg.utls.GDALCopyRaster(d + "/" + g + '/IMG_DATA' + "/" + f, d + "/" + g + '/IMG_DATA' + "/" + os.path.splitext(f)[0] + ".tif", "GTiff", cfg.rasterCompression, "DEFLATE -co PREDICTOR=2 -co ZLEVEL=1")
-								r = cfg.utls.addRasterLayer(d + "/" + g + '/IMG_DATA' + "/" + os.path.splitext(f)[0] + ".tif", os.path.splitext(f)[0] + ".tif")
-								
-			cfg.uiUtls.removeProgressBar()
-			cfg.cnvs.setRenderFlag(True)
-			cfg.utls.finishSound()
+		if cfg.ui.preprocess_Sentinel_checkBox.isChecked():
+			for d in outDirList:
+				if cfg.actionCheck == "Yes":
+					cfg.sentinel2T.populateTable(d)
+					o = d + "_con"
+					if not QDir(o).exists():
+						os.makedirs(o)
+					cfg.sentinel2T.sentinel2(d, o, "Yes")
+		cfg.uiUtls.removeProgressBar()
+		cfg.cnvs.setRenderFlag(True)
+		cfg.utls.finishSound()
+		return links
 					
 	def exportLinks(self):
 		d = QFileDialog.getSaveFileName(None , QApplication.translate("semiautomaticclassificationplugin", "Export download links"), "", "*.txt")
@@ -359,13 +447,13 @@ class DownloadSentinelImages:
 				return "No"
 		cfg.uiUtls.addProgressBar()
 		cfg.cnvs.setRenderFlag(False)
-		tW = cfg.ui.	sentinel_images_tableWidget
+		tW = cfg.ui.sentinel_images_tableWidget
 		cfg.utls.clearTable(tW)
 		cfg.uiUtls.updateBar(30, QApplication.translate("semiautomaticclassificationplugin", "Searching ..."))
 		qApp.processEvents()
 		imageTableList = []
-		url = 'https://scihub.esa.int/dhus/search?q=' + imgQuery + '%20AND%20beginPosition:[' + str(dateFrom) + 'T00:00:00.000Z%20TO%20' + str(dateTo) + 'T23:59:59.999Z]%20AND%20footprint:"Intersects%28POLYGON%28%28' + cfg.ui.UX_lineEdit_5.text() + "%20" + cfg.ui.UY_lineEdit_5.text() + "," + cfg.ui.UX_lineEdit_5.text() + "%20" + cfg.ui.LY_lineEdit_5.text() + "," + cfg.ui.LX_lineEdit_5.text() + "%20" + cfg.ui.LY_lineEdit_5.text() + "," + cfg.ui.LX_lineEdit_5.text() + "%20" + cfg.ui.UY_lineEdit_5.text() + "," + cfg.ui.UX_lineEdit_5.text() + "%20" + cfg.ui.UY_lineEdit_5.text() + '%29%29%29%22'
-		topLevelUrl = 'https://scihub.esa.int'
+		url = 'https://scihub.copernicus.eu/apihub/search?q=' + imgQuery + '%20AND%20beginPosition:[' + str(dateFrom) + 'T00:00:00.000Z%20TO%20' + str(dateTo) + 'T23:59:59.999Z]%20AND%20footprint:"Intersects%28POLYGON%28%28' + cfg.ui.UX_lineEdit_5.text() + "%20" + cfg.ui.UY_lineEdit_5.text() + "," + cfg.ui.UX_lineEdit_5.text() + "%20" + cfg.ui.LY_lineEdit_5.text() + "," + cfg.ui.LX_lineEdit_5.text() + "%20" + cfg.ui.LY_lineEdit_5.text() + "," + cfg.ui.LX_lineEdit_5.text() + "%20" + cfg.ui.UY_lineEdit_5.text() + "," + cfg.ui.UX_lineEdit_5.text() + "%20" + cfg.ui.UY_lineEdit_5.text() + '%29%29%29%22'
+		topLevelUrl = 'https://scihub.copernicus.eu'
 		user = cfg.ui.user_scihub_lineEdit.text()
 		password =cfg.ui.password_scihub_lineEdit.text()
 		response = cfg.utls.passwordConnect(user, password, url, topLevelUrl)
@@ -378,22 +466,16 @@ class DownloadSentinelImages:
 		doc = minidom.parseString(xml)
 		entries = doc.getElementsByTagName("entry")
 		for entry in entries:
-			# add item to table
-			c = tW.rowCount()
-			# add list items to table
-			tW.setRowCount(c + 1)
 			imgNameTag = entry.getElementsByTagName("title")[0]
 			imgName = imgNameTag.firstChild.data
-			imgNm = QTableWidgetItem(imgName)
 			imgIDTag = entry.getElementsByTagName("id")[0]
 			imgID = imgIDTag.firstChild.data
-			imgIDtable = QTableWidgetItem(imgID)
 			summary = entry.getElementsByTagName("summary")[0]
 			infos = summary.firstChild.data.split(',')
 			for info in infos:
 				infoIt = info.strip().split(' ')
 				if infoIt[0] == "Date:":
-					acqDate = QTableWidgetItem(infoIt[1])
+					acqDateI = infoIt[1]
 				if infoIt[0] == "Satellite:":
 					print "Satellite " + infoIt[1]
 				if infoIt[0] == "Size:":
@@ -412,40 +494,55 @@ class DownloadSentinelImages:
 					max_lon = max(xList)
 					min_lat = min(yList)
 					max_lat = max(yList)
-			#path = QTableWidgetItem()
-			#path.setData(Qt.DisplayRole, int(p[4]))
-			#row = QTableWidgetItem()
-			#row.setData(Qt.DisplayRole, int(p[5]))
-			MinLat = QTableWidgetItem()
-			MinLat.setData(Qt.DisplayRole, float(min_lat))
-			MinLon = QTableWidgetItem()
-			MinLon.setData(Qt.DisplayRole, float(min_lon))
-			MaxLat = QTableWidgetItem()
-			MaxLat.setData(Qt.DisplayRole, float(max_lat))
-			MaxLon = QTableWidgetItem()
-			MaxLon.setData(Qt.DisplayRole, float(max_lon))
-			imgSize = QTableWidgetItem(size)
-			imgPreview = QTableWidgetItem("https://scihub.esa.int/dhus/odata/v1/Products%28'" +  imgID + "'%29/Products%28'Quicklook'%29/$value")
-			tW.setItem(c, 0, imgNm)
-			tW.setItem(c, 1, acqDate)
-			#tW.setItem(c, 3, path)
-			#tW.setItem(c, 4, row)
-			tW.setItem(c, 5, MinLat)
-			tW.setItem(c, 6, MinLon)
-			tW.setItem(c, 7, MaxLat)
-			tW.setItem(c, 8, MaxLon)
-			tW.setItem(c, 9, imgSize)
-			tW.setItem(c, 10, imgPreview)
-			tW.setItem(c, 11, imgIDtable)
-			tW.setColumnWidth(0, 200)
-			tW.setColumnWidth(1, 100)
-			tW.setColumnWidth(2, 100)
-			tW.setColumnWidth(3, 60)
-			tW.setColumnWidth(4, 60)
-			tW.setColumnWidth(5, 80)
-			tW.setColumnWidth(6, 80)
-			tW.setColumnWidth(7, 80)
-			tW.setColumnWidth(8, 80)
+			url2 = 'https://scihub.copernicus.eu/apihub/odata/v1/Products%28%27' +imgID  +'%27%29/Nodes%28%27' +imgName + '.SAFE%27%29/Nodes%28%27' + imgName.replace('_PRD_MSIL1C_', '_MTD_SAFL1C_') + '.xml%27%29/$value'
+			response2 = cfg.utls.passwordConnect(user, password, url2, topLevelUrl)
+			xml2 = response2.read()
+			doc2 = minidom.parseString(xml2)
+			entries2 = doc2.getElementsByTagName("Granules")
+			for entry2 in entries2:
+				imgName2 = entry2.attributes["granuleIdentifier"].value
+				imgNm2 = QTableWidgetItem(imgName2)
+				acZoneI = imgName2[-12:-7]
+				# add item to table
+				c = tW.rowCount()
+				# add list items to table
+				tW.setRowCount(c + 1)
+				imgNm = QTableWidgetItem(imgName)
+				imgIDtable = QTableWidgetItem(imgID)
+				acqDate = QTableWidgetItem(acqDateI)
+				acZone = QTableWidgetItem(acZoneI)
+				MinLat = QTableWidgetItem()
+				MinLat.setData(Qt.DisplayRole, float(min_lat))
+				MinLon = QTableWidgetItem()
+				MinLon.setData(Qt.DisplayRole, float(min_lon))
+				MaxLat = QTableWidgetItem()
+				MaxLat.setData(Qt.DisplayRole, float(max_lat))
+				MaxLon = QTableWidgetItem()
+				MaxLon.setData(Qt.DisplayRole, float(max_lon))
+				imgSize = QTableWidgetItem(size)
+				imgPreview = QTableWidgetItem("https://scihub.copernicus.eu/apihub/odata/v1/Products%28'" +  imgID + "'%29/Products%28'Quicklook'%29/$value")
+				imgPreview2 = QTableWidgetItem('https://scihub.copernicus.eu/apihub/odata/v1/Products%28%27' +imgID  +'%27%29/Nodes%28%27' +imgName + '.SAFE%27%29/Nodes%28%27GRANULE%27%29/Nodes%28%27' + imgName2 + '%27%29/Nodes%28%27IMG_DATA%27%29/Nodes%28%27' + imgName2[0:-7] + '_B01.jp2%27%29/$value')
+				tW.setItem(c, 0, imgNm)
+				tW.setItem(c, 1, imgNm2)
+				tW.setItem(c, 2, acqDate)
+				tW.setItem(c, 3, acZone)
+				tW.setItem(c, 5, MinLat)
+				tW.setItem(c, 6, MinLon)
+				tW.setItem(c, 7, MaxLat)
+				tW.setItem(c, 8, MaxLon)
+				#tW.setItem(c, 9, imgSize)
+				tW.setItem(c, 10, imgPreview)
+				tW.setItem(c, 11, imgPreview2)
+				tW.setItem(c, 12, imgIDtable)
+				tW.setColumnWidth(0, 200)
+				tW.setColumnWidth(1, 100)
+				tW.setColumnWidth(2, 100)
+				tW.setColumnWidth(3, 60)
+				tW.setColumnWidth(4, 60)
+				tW.setColumnWidth(5, 80)
+				tW.setColumnWidth(6, 80)
+				tW.setColumnWidth(7, 80)
+				tW.setColumnWidth(8, 80)
 		tW.setSortingEnabled(True)
 		cfg.cnvs.setRenderFlag(True)				
 		cfg.uiUtls.removeProgressBar()
@@ -457,6 +554,6 @@ class DownloadSentinelImages:
 		# ask for confirm
 		a = cfg.utls.questionBox(QApplication.translate("semiautomaticclassificationplugin", "Reset signature list"), QApplication.translate("semiautomaticclassificationplugin", "Are you sure you want to clear the table?"))
 		if a == "Yes":
-			tW = cfg.ui.	sentinel_images_tableWidget
+			tW = cfg.ui.sentinel_images_tableWidget
 			cfg.utls.clearTable(tW)
 			
