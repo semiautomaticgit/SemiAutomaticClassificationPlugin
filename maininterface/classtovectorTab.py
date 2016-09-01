@@ -2,13 +2,13 @@
 """
 /**************************************************************************************************************************
  SemiAutomaticClassificationPlugin
-								 A QGIS plugin
- A plugin which allows for the semi-automatic supervised classification of remote sensing images, 
- providing a tool for the region growing of image pixels, creating polygon shapefiles intended for
- the collection of training areas (ROIs), and rapidly performing the classification process (or a preview).
+
+ The Semi-Automatic Classification Plugin for QGIS allows for the supervised classification of remote sensing images, 
+ providing tools for the download, the preprocessing and postprocessing of images.
+
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2015 by Luca Congedo
+		copyright			: (C) 2012-2016 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -32,22 +32,8 @@
 
 """
 
-import os
-import numpy as np
-# for debugging
-import inspect
-# for moving files
-import shutil
-# Import the PyQt and QGIS libraries
-from PyQt4.QtCore import *
-from PyQt4.QtCore import QCoreApplication
-from PyQt4.QtGui import *
 from qgis.core import *
 from qgis.gui import *
-from osgeo import gdal
-from osgeo import ogr 
-from osgeo import osr
-from osgeo.gdalconst import *
 import SemiAutomaticClassificationPlugin.core.config as cfg
 
 class ClassToVectorTab:
@@ -56,47 +42,59 @@ class ClassToVectorTab:
 		pass
 					
 	# convert classification to vector
-	def convertClassificationToVector(self):
-		self.clssfctnNm = str(cfg.ui.classification_vector_name_combo.currentText())
-		i = cfg.utls.selectLayerbyName(self.clssfctnNm, "Yes")
-		try:
-			classificationPath = i.source()
-		except Exception, err:
-			cfg.mx.msg4()
-			cfg.utls.refreshClassificationLayer()
-			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-			return "No"
-		out = QFileDialog.getSaveFileName(None , QApplication.translate("semiautomaticclassificationplugin", "Save shapefile output"), "", "*.shp")
+	def convertClassificationToVectorAction(self):
+		self.convertClassificationToVector()
+		
+	# convert classification to vector
+	def convertClassificationToVector(self, batch = "No", inputRaster = None, outputVector = None,):
+		if batch == "No":
+			self.clssfctnNm = str(cfg.ui.classification_vector_name_combo.currentText())
+			i = cfg.utls.selectLayerbyName(self.clssfctnNm, "Yes")
+			try:
+				classificationPath = i.source()
+			except Exception, err:
+				cfg.mx.msg4()
+				cfg.utls.refreshClassificationLayer()
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				return "No"
+			out = cfg.utls.getSaveFileName(None , cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Save shapefile output"), "", "*.shp")
+		else:
+			if cfg.osSCP.path.isfile(inputRaster):
+				classificationPath = inputRaster
+			else:
+				return "No"
+			out = outputVector
 		if len(out) > 0:
-			cfg.uiUtls.addProgressBar()
+			if batch == "No":
+				cfg.uiUtls.addProgressBar()
+				# disable map canvas render
+				cfg.cnvs.setRenderFlag(False)
 			cfg.uiUtls.updateBar(10)
-			n = os.path.basename(out)
+			n = cfg.osSCP.path.basename(out)
 			if n.endswith(".shp"):
 				out = out
 			else:
 				out = out + ".shp"
 			cfg.uiUtls.updateBar(20)
-			if str(cfg.ui.class_macroclass_comboBox.currentText()) == "MC ID":
+			if str(cfg.ui.class_macroclass_comboBox.currentText()) == cfg.fldMacroID_class_def:
 				mc = "Yes"
+				sL = cfg.classD.createMCIDList()
 			else:
 				mc = "No"
+				sL = cfg.classD.getSignatureList()
 			cfg.utls.rasterToVector(classificationPath, out)
 			cfg.uiUtls.updateBar(80)
-			vl = cfg.utls.addVectorLayer(out, os.path.basename(out), "ogr")
-			sL = cfg.classD.getSignatureList()
+			vl = cfg.utls.addVectorLayer(out, cfg.osSCP.path.basename(out), "ogr")
 			if cfg.ui.use_class_code_checkBox.isChecked() is True:
 				cfg.utls.vectorSymbol(vl, sL, mc)
 				# save qml file
-				nm = os.path.splitext(n)[0]
-				cfg.utls.saveQmlStyle(vl, os.path.dirname(out) + '/' + nm + ".qml")
+				nm = cfg.osSCP.path.splitext(n)[0]
+				cfg.utls.saveQmlStyle(vl, cfg.osSCP.path.dirname(out) + '/' + nm + ".qml")
 			cfg.uiUtls.updateBar(100)
-			# disable map canvas render
-			cfg.cnvs.setRenderFlag(False)
 			cfg.utls.addLayerToMap(vl)
-			# enable map canvas render
-			cfg.cnvs.setRenderFlag(True)
-			cfg.utls.finishSound()
-			cfg.uiUtls.removeProgressBar()
-		else:
-			pass
+			if batch == "No":
+				# enable map canvas render
+				cfg.cnvs.setRenderFlag(True)
+				cfg.utls.finishSound()
+				cfg.uiUtls.removeProgressBar()

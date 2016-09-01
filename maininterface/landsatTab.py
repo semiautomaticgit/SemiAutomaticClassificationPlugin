@@ -2,13 +2,13 @@
 """
 /**************************************************************************************************************************
  SemiAutomaticClassificationPlugin
-								 A QGIS plugin
- A plugin which allows for the semi-automatic supervised classification of remote sensing images, 
- providing a tool for the region growing of image pixels, creating polygon shapefiles intended for
- the collection of training areas (ROIs), and rapidly performing the classification process (or a preview).
+
+ The Semi-Automatic Classification Plugin for QGIS allows for the supervised classification of remote sensing images, 
+ providing tools for the download, the preprocessing and postprocessing of images.
+
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2015 by Luca Congedo
+		copyright			: (C) 2012-2016 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -32,16 +32,6 @@
 
 """
 
-import os
-import inspect
-import shutil
-import numpy as np
-# Import the PyQt and QGIS libraries
-from PyQt4.QtCore import *
-from PyQt4.QtCore import QCoreApplication
-from PyQt4.QtGui import *
-from osgeo import gdal
-from osgeo.gdalconst import *
 from qgis.core import *
 from qgis.gui import *
 import SemiAutomaticClassificationPlugin.core.config as cfg
@@ -53,33 +43,33 @@ class LandsatTab:
 		
 	# landsat input
 	def inputLandsat(self):
-		i = QFileDialog.getExistingDirectory(None , QApplication.translate("semiautomaticclassificationplugin", "Select a directory"))
+		i = cfg.utls.getExistingDirectory(None , cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Select a directory"))
 		cfg.ui.label_26.setText(unicode(i))
 		self.populateTable(i)
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), unicode(i))
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), unicode(i))
 		
 	# MTL input
 	def inputMTL(self):
-		m = QFileDialog.getOpenFileName(None , QApplication.translate("semiautomaticclassificationplugin", "Select a MTL file"), "", "MTL file .txt (*.txt);;MTL file .met (*.met)")
+		m = cfg.utls.getOpenFileName(None , cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Select a MTL file"), "", "MTL file .txt (*.txt);;MTL file .met (*.met)")
 		cfg.ui.label_27.setText(unicode(m))
 		if len(cfg.ui.label_26.text()) > 0:
 			self.populateTable(cfg.ui.label_26.text())
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), unicode(m))
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), unicode(m))
 
 	# landsat conversion to reflectance and temperature
 	def landsat(self, inputDirectory, outputDirectory, batch = "No"):
-		cfg.uiUtls.addProgressBar()
-		# disable map canvas render for speed
 		if batch == "No":
+			cfg.uiUtls.addProgressBar()
+			# disable map canvas render for speed
 			cfg.cnvs.setRenderFlag(False)
 		self.sA = ""
 		self.eSD = ""
 		sat = cfg.ui.satellite_lineEdit.text()
 		if str(sat) == "":
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " No satellite error")
+			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " No satellite error")
 			if batch == "No":
 				cfg.uiUtls.removeProgressBar()
 				cfg.cnvs.setRenderFlag(True)
@@ -88,10 +78,10 @@ class LandsatTab:
 		if len(cfg.ui.sun_elev_lineEdit.text()) > 0:
 			sE = float(cfg.ui.sun_elev_lineEdit.text())
 			# sine sun elevation
-			self.sA = np.sin(sE * np.pi / 180)
+			self.sA = cfg.np.sin(sE * cfg.np.pi / 180)
 		else:
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " No sun elevation error")
+			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " No sun elevation error")
 			if batch == "No":
 				cfg.uiUtls.removeProgressBar()
 			cfg.mx.msgErr37()
@@ -102,7 +92,7 @@ class LandsatTab:
 				self.eSD = float(cfg.ui.earth_sun_dist_lineEdit.text())
 			except Exception, err:
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " No earth sun distance error")
+				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " No earth sun distance error")
 				if batch == "No":
 					cfg.uiUtls.removeProgressBar()
 					cfg.cnvs.setRenderFlag(True)
@@ -115,7 +105,7 @@ class LandsatTab:
 				self.eSD = cfg.utls.calculateEarthSunDistance(dt, dFmt)
 			except Exception, err:
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + unicode(err))
+				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + unicode(err))
 				if batch == "No":
 					cfg.uiUtls.removeProgressBar()
 					cfg.cnvs.setRenderFlag(True)
@@ -125,6 +115,15 @@ class LandsatTab:
 		l = cfg.ui.landsat_tableWidget
 		inp = inputDirectory
 		out = outputDirectory
+		if cfg.QDirSCP(out).exists():
+			pass
+		else:
+			try:
+				cfg.osSCP.makedirs(out)
+			# in case of errors
+			except Exception, err:
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 		# name prefix
 		pre = "RT_"
 		prePAN = "PAN_"
@@ -210,7 +209,7 @@ class LandsatTab:
 						RADIANCE_ADD = LMIN - QCALMIN * (LMAX - LMIN) / (QCALMAX - QCALMIN)
 					except:
 						RADIANCE_ADD = ""
-				nm = os.path.splitext(bandName)[0]
+				nm = cfg.osSCP.path.splitext(bandName)[0]
 				# conversion
 				if str(sat).lower() in ['landsat_1', 'landsat1','landsat_2', 'landsat2','landsat_3', 'landsat3']:
 					# landsat bands (e.g. b4, b4)
@@ -221,7 +220,7 @@ class LandsatTab:
 							# band list
 							if int(nm[len(nm) - 1]) in [4, 5, 6, 7]:
 								bandSetList.append(int(nm[len(nm) - 1]))
-								bandSetNameList.append(os.path.splitext(oNm)[0])
+								bandSetNameList.append(cfg.osSCP.path.splitext(oNm)[0])
 				elif str(sat).lower() in ['landsat_4', 'landsat4', 'landsat_5', 'landsat5', 'landsat_7', 'landsat7']:
 					# landsat bands (e.g. b10, b20, b61)
 					if nm[len(nm) - 2].isdigit() and nm[len(nm) - 1].isdigit():
@@ -235,7 +234,7 @@ class LandsatTab:
 									# band list
 									if int(nm[len(nm) - 2]) in [1, 2, 3, 4, 5]:
 										bandSetList.append(int(nm[len(nm) - 2]))
-										bandSetNameList.append(os.path.splitext(oNm)[0])
+										bandSetNameList.append(cfg.osSCP.path.splitext(oNm)[0])
 										bandNumberList.append(int(nm[len(nm) - 2]))
 										bandPansharpList.append(outputRaster)
 										pansharpRasterList.append(panRaster)
@@ -244,7 +243,7 @@ class LandsatTab:
 										bandPansharpList.insert(0, outputRaster)
 									elif int(nm[len(nm) - 2]) == 7:
 										bandSetList.append(6)
-										bandSetNameList.append(os.path.splitext(oNm)[0])
+										bandSetNameList.append(cfg.osSCP.path.splitext(oNm)[0])
 										bandNumberList.append(int(nm[len(nm) - 2]))
 										bandPansharpList.append(outputRaster)
 										pansharpRasterList.append(panRaster)
@@ -263,7 +262,7 @@ class LandsatTab:
 								# band list
 								if int(nm[len(nm) - 1]) in [1, 2, 3, 4, 5]:
 									bandSetList.append(int(nm[len(nm) - 1]))
-									bandSetNameList.append(os.path.splitext(oNm)[0])
+									bandSetNameList.append(cfg.osSCP.path.splitext(oNm)[0])
 									bandNumberList.append(int(nm[len(nm) - 1]))
 									bandPansharpList.append(outputRaster)
 									pansharpRasterList.append(panRaster)
@@ -272,7 +271,7 @@ class LandsatTab:
 									bandPansharpList.insert(0, outputRaster)
 								elif int(nm[len(nm) - 1]) == 7:
 									bandSetList.append(6)
-									bandSetNameList.append(os.path.splitext(oNm)[0])
+									bandSetNameList.append(cfg.osSCP.path.splitext(oNm)[0])
 									bandNumberList.append(int(nm[len(nm) - 1]))
 									bandPansharpList.append(outputRaster)
 									pansharpRasterList.append(panRaster)
@@ -291,7 +290,7 @@ class LandsatTab:
 							# band list
 							if int(nm[len(nm) - 1]) in [2, 3, 4, 5, 6, 7]:
 								bandSetList.append(int(nm[len(nm) - 1]) - 1)
-								bandSetNameList.append(os.path.splitext(oNm)[0])
+								bandSetNameList.append(cfg.osSCP.path.splitext(oNm)[0])
 								bandNumberList.append(int(nm[len(nm) - 1]))
 								bandPansharpList.append(outputRaster)
 								pansharpRasterList.append(panRaster)
@@ -305,16 +304,16 @@ class LandsatTab:
 			for temp in tempRasterList:
 				try:
 					cfg.utls.GDALCopyRaster(temp, outputRasterList[bN], "GTiff", cfg.rasterCompression, "DEFLATE -co PREDICTOR=2 -co ZLEVEL=1")
-					os.remove(temp)
+					cfg.osSCP.remove(temp)
 				except Exception, err:
 					try:
-						shutil.copy(temp, outputRasterList[bN])
-						os.remove(temp)
+						cfg.shutilSCP.copy(temp, outputRasterList[bN])
+						cfg.osSCP.remove(temp)
 					except Exception, err:
 						# logger
-						if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+						if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 					# logger
-					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				bN = bN + 1
 		if cfg.actionCheck == "Yes" and cfg.ui.pansharpening_checkBox.isChecked() is True:
 			# type Brovey Transform
@@ -325,27 +324,27 @@ class LandsatTab:
 				cfg.mx.msgErr44()
 				panCheck = "No"
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "Missing bands " + unicode(bandNumberList))
+				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "Missing bands " + unicode(bandNumberList))
 		if cfg.actionCheck == "Yes":
 			# load raster bands
 			for outR in outputRasterList:
-				if os.path.isfile(outR):
+				if cfg.osSCP.path.isfile(outR):
 					cfg.iface.addRasterLayer(outR)
 				else:
 					cfg.mx.msgErr38(outR)
-					cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "WARNING: unable to load raster" + unicode(outR))
+					cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "WARNING: unable to load raster" + unicode(outR))
 			if cfg.ui.pansharpening_checkBox.isChecked() is True and panCheck != "No":
 				bandSetNameList = []
 				rasterList = []
 				# load raster bands
 				for outR in pansharpRasterList:
-					if os.path.isfile(outR):
+					if cfg.osSCP.path.isfile(outR):
 						cfg.iface.addRasterLayer(outR)
-						bandSetNameList.append(os.path.splitext(os.path.basename(outR))[0])
+						bandSetNameList.append(cfg.osSCP.path.splitext(cfg.osSCP.path.basename(outR))[0])
 						rasterList.append(outR)
 					else:
 						cfg.mx.msgErr38(outR)
-						cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "WARNING: unable to load raster" + unicode(outR))
+						cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "WARNING: unable to load raster" + unicode(outR))
 			# create band set
 			if cfg.ui.create_bandset_checkBox.isChecked() is True:
 				if str(sat).lower() in ['landsat8', 'landsat_8']:
@@ -366,23 +365,7 @@ class LandsatTab:
 						cfg.bst.setSatelliteWavelength(satName)
 					else:
 						cfg.bst.setSatelliteWavelength(satName, bandSetList)
-			# create virtual raster
-			if cfg.ui.create_VRT_checkBox.isChecked() is True:
-				outVrt = out + "//" + cfg.landsatVrtNm + ".vrt"
-				vrtCheck = cfg.utls.createVirtualRaster(rasterList, outVrt)
-				if vrtCheck == "No":
-					vrtRaster = cfg.iface.addRasterLayer(outVrt)
-					if vrtRaster is not None:
-						vrtRaster.setDrawingStyle('MultiBandColor')
-						vrtRaster.renderer().setRedBand(3)
-						vrtRaster.renderer().setGreenBand(2)
-						vrtRaster.renderer().setBlueBand(1)
-						vrtRaster.setContrastEnhancement(QgsContrastEnhancement.StretchToMinimumMaximum, QgsRaster.ContrastEnhancementCumulativeCut)
-						vrtRaster.triggerRepaint()
-					else:
-						cfg.mx.msgWar13()
-						# logger
-						cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "WARNING: unable to load virtual raster")
+			cfg.bst.bandSetTools(out)
 			cfg.uiUtls.updateBar(100)
 		if batch == "No":
 			cfg.utls.finishSound()
@@ -399,22 +382,25 @@ class LandsatTab:
 		tPMD = cfg.tmpDir + "/" + dT + tPMN
 		tPMN2 = cfg.reflectanceRasterNm + "2.tif"
 		tPMD2 = cfg.tmpDir + "/" + dT + tPMN2
-		# register drivers
-		#gdal.AllRegister()
+		# No data value
+		if cfg.ui.nodata_checkBox_2.isChecked() is True:
+			nD = cfg.ui.nodata_spinBox_3.value()
+		else:
+			nD = cfg.NoDataVal
 		# TOA reflectance
 		if cfg.ui.DOS1_checkBox.isChecked() is False:
 			try:
 				m = float(REFLECTANCE_MULT_BAND)
 				a = float(REFLECTANCE_ADD_BAND)
 				# open input with GDAL
-				rD = gdal.Open(inputRaster, GA_ReadOnly)	
+				rD = cfg.gdalSCP.Open(inputRaster, cfg.gdalSCP.GA_ReadOnly)	
 				# band list
 				bL = cfg.utls.readAllBandsFromRaster(rD)
 				# output rasters
 				oM = []
 				oM.append(tPMD)
 				oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0,  None, "No")
-				o = cfg.utls.processRaster(rD, bL, None, cfg.utls.calculateRaster, None, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", "( raster *" + str("%.16f" % m) + "+ (" + str("%.16f" % a) + ")) / (" + str(self.sA) + ")", "raster", "TOA b" + str(x))
+				o = cfg.utls.processRaster(rD, bL, None, cfg.utls.calculateRaster, None, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", "cfg.np.where(raster == " + str(nD) + ", " + str(cfg.NoDataVal) + ", ( raster *" + str("%.16f" % m) + "+ (" + str("%.16f" % a) + ")) / (" + str(self.sA) + ") )", "raster", "TOA b" + str(x))
 				# close GDAL rasters
 				for b in range(0, len(oMR)):
 					oMR[b] = None
@@ -424,41 +410,41 @@ class LandsatTab:
 				# reclassification <0 and >1
 				self.reclassRaster0min1max(tPMD, outputRaster)
 				try:
-					os.remove(tPMD)
-					os.remove(tPMD2)
+					cfg.osSCP.remove(tPMD)
+					cfg.osSCP.remove(tPMD2)
 					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "files deleted")
+					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "files deleted")
 				except Exception, err:
 					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), unicode(inputRaster))
+				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), unicode(inputRaster))
 				return "Yes"
 			except Exception, err:
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + unicode(err))
+				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + unicode(err))
 				return "No"
 		# DOS atmospheric correction
 		elif cfg.ui.DOS1_checkBox.isChecked() is True:
-			DNm = self.findDNmin(inputRaster)
+			DNm = cfg.utls.findDNmin(inputRaster, nD)
 			# Esun calculation (see http://grass.osgeo.org/grass65/manuals/i.landsat.toar.html)
 			radM = float(RADIANCE_MAXIMUM_BAND)
 			refM = float(REFLECTANCE_MAXIMUM_BAND)
-			eS = (np.pi * self.eSD * self.eSD) * radM / refM
+			eS = (cfg.np.pi * self.eSD * self.eSD) * radM / refM
 			# calculate DOS1 corrected reflectance
 			try:
 				# radiance calculation
 				m = float(RADIANCE_MULT_BAND)
 				a = float(RADIANCE_ADD_BAND)
 				# open input with GDAL
-				rD = gdal.Open(inputRaster, GA_ReadOnly)
+				rD = cfg.gdalSCP.Open(inputRaster, cfg.gdalSCP.GA_ReadOnly)
 				# band list
 				bL = cfg.utls.readAllBandsFromRaster(rD)
 				# output rasters
 				oM = []
 				oM.append(tPMD)
 				oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0,  None, "No")
-				o = cfg.utls.processRaster(rD, bL, None, cfg.utls.calculateRaster, None, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", "(raster *" + str("%.16f" % m) + "+ (" + str("%.16f" % a) + "))", "raster", "radiance b" + str(x))
+				o = cfg.utls.processRaster(rD, bL, None, cfg.utls.calculateRaster, None, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", "cfg.np.where(raster == " + str(nD) + ", " + str(cfg.NoDataVal) + ", (raster *" + str("%.16f" % m) + "+ (" + str("%.16f" % a) + ")))", "raster", "radiance b" + str(x))
 				# close GDAL rasters
 				for b in range(0, len(oMR)):
 					oMR[b] = None
@@ -466,17 +452,17 @@ class LandsatTab:
 					bL[b] = None
 				rD = None
 				# path radiance Lp = ML* DNm + AL  – 0.01* ESUNλ * cosθs / (π * d^2)	
-				Lp = m * DNm + a - 0.01 * eS * self.sA / (np.pi * self.eSD * self.eSD)
+				Lp = m * DNm + a - 0.01 * eS * self.sA / (cfg.np.pi * self.eSD * self.eSD)
 				# land surface reflectance ρ = [π * (Lλ - Lp) * d^2]/ (ESUNλ * cosθs)	
 				# open input with GDAL
-				rD = gdal.Open(tPMD, GA_ReadOnly)
+				rD = cfg.gdalSCP.Open(tPMD, cfg.gdalSCP.GA_ReadOnly)
 				# band list
 				bL = cfg.utls.readAllBandsFromRaster(rD)
 				# output rasters
 				oM = []
 				oM.append(tPMD2)
 				oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0,  None, "No")
-				o = cfg.utls.processRaster(rD, bL, None, cfg.utls.calculateRaster, None, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", "( raster - (" + str("%.16f" % Lp) + " ) )* " + str("%.16f" % np.pi) + " * " + str("%.16f" % self.eSD) + " * " + str("%.16f" % self.eSD) + " / ( " + str("%.16f" % eS)+ " * " + str(self.sA) + " )", "raster", "DOS1 b" + str(x))
+				o = cfg.utls.processRaster(rD, bL, None, cfg.utls.calculateRaster, None, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", "( raster - (" + str("%.16f" % Lp) + " ) )* " + str("%.16f" % cfg.np.pi) + " * " + str("%.16f" % self.eSD) + " * " + str("%.16f" % self.eSD) + " / ( " + str("%.16f" % eS)+ " * " + str(self.sA) + " )", "raster", "DOS1 b" + str(x))
 				# close GDAL rasters
 				for b in range(0, len(oMR)):
 					oMR[b] = None
@@ -486,26 +472,24 @@ class LandsatTab:
 				# reclassification <0 and >1
 				self.reclassRaster0min1max(tPMD2, outputRaster)
 				try:
-					os.remove(tPMD)
-					os.remove(tPMD2)
+					cfg.osSCP.remove(tPMD)
+					cfg.osSCP.remove(tPMD2)
 					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "files deleted")
+					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "files deleted")
 				except Exception, err:
 					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), unicode(inputRaster))
+				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), unicode(inputRaster))
 				return "Yes"
 			except Exception, err:
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + unicode(err))
+				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + unicode(err))
 				return "No"
 				
 	# raster reclassification <0 and >1
 	def reclassRaster0min1max(self, inputRaster, outputRaster):
-		# register drivers
-		#gdal.AllRegister()
-		rD = gdal.Open(inputRaster, GA_ReadOnly)
+		rD = cfg.gdalSCP.Open(inputRaster, cfg.gdalSCP.GA_ReadOnly)
 		# band list
 		bL = cfg.utls.readAllBandsFromRaster(rD)
 		# output rasters
@@ -520,12 +504,17 @@ class LandsatTab:
 			bL[b] = None
 		rD = None
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), unicode(inputRaster))
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), unicode(inputRaster))
 						
 	# landsat 1 to 7 conversion to Reflectance
 	def landsat1_7reflectance(self, satellite, bandNumber, RADIANCE_MULT_BAND, RADIANCE_ADD_BAND, inputRaster, outputRaster):
 		sat = satellite
 		x = bandNumber
+		# No data value
+		if cfg.ui.nodata_checkBox_2.isChecked() is True:
+			nD = cfg.ui.nodata_spinBox_3.value()
+		else:
+			nD = cfg.NoDataVal
 		# Esun
 		dEsunB = {}
 		# Esun from Chander, G.; Markham, B. L. & Helder, D. L. Summary of current radiometric calibration coefficients for Landsat MSS, TM, ETM+, and EO-1 ALI sensors Remote Sensing of Environment, 2009, 113, 893 - 903
@@ -544,9 +533,9 @@ class LandsatTab:
 		# landsat 5
 		elif str(sat).lower() in ['landsat_5', 'landsat5']:
 			dEsunB = {"ESUN_BAND1": 1983, "ESUN_BAND2": 1796, "ESUN_BAND3": 1536, "ESUN_BAND4": 1031, "ESUN_BAND5": 220, "ESUN_BAND7": 83.44}
-		# landsat 7
+		# landsat 7 Esun from http://landsathandbook.gsfc.nasa.gov/data_prod/prog_sect11_3.html
 		elif str(sat).lower() in ['landsat_7', 'landsat7']:
-			dEsunB = {"ESUN_BAND1": 1997, "ESUN_BAND2": 1812, "ESUN_BAND3": 1533, "ESUN_BAND4": 1039, "ESUN_BAND5": 230.08, "ESUN_BAND7": 84.9, "ESUN_BAND8": 1362}
+			dEsunB = {"ESUN_BAND1": 1970, "ESUN_BAND2": 1842, "ESUN_BAND3": 1547, "ESUN_BAND4": 1044, "ESUN_BAND5": 225.7, "ESUN_BAND7": 82.06, "ESUN_BAND8": 1369}
 		eS = float(dEsunB["ESUN_BAND" + str(x)])
 		multipFactor = 1
 		if str(cfg.RADIANCE_UNITS) == '"mW/cm^2/srad"':
@@ -556,7 +545,7 @@ class LandsatTab:
 			a = float(RADIANCE_ADD_BAND) * multipFactor
 		except Exception, err:
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + unicode(err))
+			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + unicode(err))
 			return "No"
 		# temp files
 		dT = cfg.utls.getTime()
@@ -564,21 +553,19 @@ class LandsatTab:
 		tPMD = cfg.tmpDir + "/" + dT + tPMN
 		tPMN2 = cfg.reflectanceRasterNm + "2.tif"
 		tPMD2 = cfg.tmpDir + "/" + dT + tPMN2
-		# register drivers
-		#gdal.AllRegister()
 		# TOA reflectance
 		if cfg.ui.DOS1_checkBox.isChecked() is False:
 			try:
 				# TOA Reflectance
 				# open input with GDAL
-				rD = gdal.Open(inputRaster, GA_ReadOnly)
+				rD = cfg.gdalSCP.Open(inputRaster, cfg.gdalSCP.GA_ReadOnly)
 				# band list
 				bL = cfg.utls.readAllBandsFromRaster(rD)
 				# output rasters
 				oM = []
 				oM.append(tPMD)
 				oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0,  None, "No")
-				o = cfg.utls.processRaster(rD, bL, None, cfg.utls.calculateRaster, None, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", "( ( raster *" + str("%.16f" % m) + "+ (" + str("%.16f" % a) + ")) * " + str("%.16f" % np.pi) + " * " + str("%.16f" % self.eSD) + " * " + str("%.16f" % self.eSD) + ") / ( " + str("%.16f" % eS)+ " * (" + str(self.sA) + ") )", "raster", "TOA b" + str(x))
+				o = cfg.utls.processRaster(rD, bL, None, cfg.utls.calculateRaster, None, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", "cfg.np.where(raster == " + str(nD) + ", " + str(cfg.NoDataVal) + ", ( ( raster *" + str("%.16f" % m) + "+ (" + str("%.16f" % a) + ")) * " + str("%.16f" % cfg.np.pi) + " * " + str("%.16f" % self.eSD) + " * " + str("%.16f" % self.eSD) + ") / ( " + str("%.16f" % eS)+ " * (" + str(self.sA) + ") ) )", "raster", "TOA b" + str(x))
 				# close GDAL rasters
 				for b in range(0, len(oMR)):
 					oMR[b] = None
@@ -588,35 +575,38 @@ class LandsatTab:
 				# reclassification <0 and >1
 				self.reclassRaster0min1max(tPMD, outputRaster)
 				try:
-					os.remove(tPMD)
-					os.remove(tPMD2)
+					cfg.osSCP.remove(tPMD)
+					cfg.osSCP.remove(tPMD2)
 					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "files deleted")
+					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "files deleted")
 				except Exception, err:
 					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), unicode(inputRaster))
+				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), unicode(inputRaster))
 				return "Yes"
 			except Exception, err:
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + unicode(err))
+				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + unicode(err))
 				return "No"
 		# DOS atmospheric correction
 		elif cfg.ui.DOS1_checkBox.isChecked() is True:
-			DNm = self.findDNmin(inputRaster)
+			# No data value
+			if cfg.ui.nodata_checkBox_2.isChecked() is True:
+				nD = cfg.ui.nodata_spinBox_3.value()
+			DNm = cfg.utls.findDNmin(inputRaster, nD)
 			# calculate DOS1 corrected reflectance
 			try:
 				# radiance calculation
 				# open input with GDAL
-				rD = gdal.Open(inputRaster, GA_ReadOnly)
+				rD = cfg.gdalSCP.Open(inputRaster, cfg.gdalSCP.GA_ReadOnly)
 				# band list
 				bL = cfg.utls.readAllBandsFromRaster(rD)
 				# output rasters
 				oM = []
 				oM.append(tPMD)
 				oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0,  None, "No")
-				o = cfg.utls.processRaster(rD, bL, None, cfg.utls.calculateRaster, None, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", "(raster *" + str("%.16f" % m) + "+ (" + str("%.16f" % a) + "))", "raster", "radiance b" + str(x))
+				o = cfg.utls.processRaster(rD, bL, None, cfg.utls.calculateRaster, None, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", "cfg.np.where(raster == " + str(nD) + ", " + str(cfg.NoDataVal) + ", (raster *" + str("%.16f" % m) + "+ (" + str("%.16f" % a) + ")) )", "raster", "radiance b" + str(x))
 				# close GDAL rasters
 				for b in range(0, len(oMR)):
 					oMR[b] = None
@@ -624,17 +614,17 @@ class LandsatTab:
 					bL[b] = None
 				rD = None
 				# path radiance Lp = ML* DNm + AL  – 0.01* ESUNλ * cosθs / (π * d^2)	
-				Lp = m * DNm + a - 0.01 * eS * self.sA / (np.pi * self.eSD * self.eSD)
+				Lp = m * DNm + a - 0.01 * eS * self.sA / (cfg.np.pi * self.eSD * self.eSD)
 				# land surface reflectance ρ = [π * (Lλ - Lp) * d^2]/ (ESUNλ * cosθs)	
 				# open input with GDAL
-				rD = gdal.Open(tPMD, GA_ReadOnly)
+				rD = cfg.gdalSCP.Open(tPMD, cfg.gdalSCP.GA_ReadOnly)
 				# band list
 				bL = cfg.utls.readAllBandsFromRaster(rD)
 				# output rasters
 				oM = []
 				oM.append(tPMD2)
 				oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0,  None, "No")
-				o = cfg.utls.processRaster(rD, bL, None, cfg.utls.calculateRaster, None, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", "( raster - (" + str("%.16f" % Lp) + ") ) * " + str("%.16f" % np.pi) + " * " + str("%.16f" % self.eSD) + " * " + str("%.16f" % self.eSD) + " / ( " + str("%.16f" % eS)+ " * (" + str(self.sA) + ") )", "raster", "DOS1 b" + str(x))
+				o = cfg.utls.processRaster(rD, bL, None, cfg.utls.calculateRaster, None, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", "( raster - (" + str("%.16f" % Lp) + ") ) * " + str("%.16f" % cfg.np.pi) + " * " + str("%.16f" % self.eSD) + " * " + str("%.16f" % self.eSD) + " / ( " + str("%.16f" % eS)+ " * (" + str(self.sA) + ") )", "raster", "DOS1 b" + str(x))
 				# close GDAL rasters
 				for b in range(0, len(oMR)):
 					oMR[b] = None
@@ -644,76 +634,29 @@ class LandsatTab:
 				# reclassification <0 and >1
 				self.reclassRaster0min1max(tPMD2, outputRaster)
 				try:
-					os.remove(tPMD)
-					os.remove(tPMD2)
+					cfg.osSCP.remove(tPMD)
+					cfg.osSCP.remove(tPMD2)
 					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "files deleted")
+					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "files deleted")
 				except Exception, err:
 					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), unicode(inputRaster))
+				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), unicode(inputRaster))
 				return "Yes"
 			except Exception, err:
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + unicode(err))
+				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + unicode(err))
 				return "No"
-			
-	# find DNmin in raster
-	def findDNmin(self, inputRaster):
-		DNm = 0
-		cfg.rasterBandUniqueVal = np.zeros((1, 1))
-		cfg.rasterBandUniqueVal = np.delete(cfg.rasterBandUniqueVal, 0, 1)
-		# register drivers
-		#gdal.AllRegister()
-		# open input with GDAL
-		rD = gdal.Open(inputRaster, GA_ReadOnly)
-		# band list
-		bL = cfg.utls.readAllBandsFromRaster(rD)
-		# No data value
-		if cfg.ui.nodata_checkBox_2.isChecked() is True:
-			nD = cfg.ui.nodata_spinBox_3.value()
-		else:
-			nD = None
-		o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.rasterUniqueValues, None, None, None, None, 0, None, cfg.NoDataVal, "No", nD, None, "UniqueVal")
-		cfg.rasterBandUniqueVal = np.unique(cfg.rasterBandUniqueVal).tolist()
-		cfg.rasterBandUniqueVal = sorted(cfg.rasterBandUniqueVal)
-		try:
-			cfg.rasterBandUniqueVal.remove(nD)
-		except:
-			pass
-		cfg.rasterBandPixelCount = 0
-		o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.rasterValueCount, None, None, None, None, 0, None, cfg.NoDataVal, "No", nD, cfg.rasterBandUniqueVal[-1], "Sum")
-		sum = cfg.rasterBandPixelCount
-		pT1pc = sum * 0.0001
-		min = 0
-		max = len(cfg.rasterBandUniqueVal)
-		for i in range(0, len(cfg.rasterBandUniqueVal)):
-			if i == 0:
-				pos = int(round((max+min)/4))
-			else:
-				pos = int(round((max+min)/2))
-			DNm = cfg.rasterBandUniqueVal[pos]
-			cfg.rasterBandPixelCount = 0
-			o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.rasterValueCount, None, None, None, None, 0, None, cfg.NoDataVal, "No", nD, DNm, "DNmin " + str(DNm))
-			newSum = cfg.rasterBandPixelCount
-			if newSum <= pT1pc:
-				min = pos
-			else:
-				max = pos
-			if int(round(max-min)) <= 1:
-				break
-		for b in range(0, len(bL)):
-			bL[b] = None
-		rD = None
-		cfg.rasterBandUniqueVal = None
-		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " DNm " + unicode(DNm))
-		return DNm
 			
 	# landsat 4,5, or 7 temperature
 	def landsat457Temperature(self, satellite, RADIANCE_MULT_BAND, RADIANCE_ADD_BAND, inputRaster, outputRaster):
 		sat = satellite
+		# No data value
+		if cfg.ui.nodata_checkBox_2.isChecked() is True:
+			nD = cfg.ui.nodata_spinBox_3.value()
+		else:
+			nD = cfg.NoDataVal
 		# landsat 4
 		if str(sat).lower() in ['landsat_4', 'landsat4']:
 			# k1 and k2 from Chander, G. & Markham, B. Revised landsat-5 TM radiometric calibration procedures and postcalibration dynamic ranges Geoscience and Remote Sensing, IEEE Transactions on, 2003, 41, 2674 - 2677
@@ -737,17 +680,15 @@ class LandsatTab:
 		try:
 			m = float(RADIANCE_MULT_BAND)
 			a = float(RADIANCE_ADD_BAND)
-			# register drivers
-			#gdal.AllRegister()
 			# open input with GDAL
-			rD = gdal.Open(inputRaster, GA_ReadOnly)
+			rD = cfg.gdalSCP.Open(inputRaster, cfg.gdalSCP.GA_ReadOnly)
 			# band list
 			bL = cfg.utls.readAllBandsFromRaster(rD)
 			# output rasters
 			oM = []
 			oM.append(outputRaster)
 			oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0,  None, "No", "DEFLATE21")
-			o = cfg.utls.processRaster(rD, bL, None, cfg.utls.calculateRaster, None, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", "((" + str("%.16f" % k2) + ") / ( ln( (" + str("%.16f" % k1) + " / ( raster * " + str("%.16f" % m) + "+ (" + str("%.16f" % a) + ")) ) + 1)) - " + str(cs) + ")", "raster", "temperature")
+			o = cfg.utls.processRaster(rD, bL, None, cfg.utls.calculateRaster, None, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", "cfg.np.where(raster == " + str(nD) + ", " + str(cfg.NoDataVal) + ",  ((" + str("%.16f" % k2) + ") / ( ln( (" + str("%.16f" % k1) + " / ( raster * " + str("%.16f" % m) + "+ (" + str("%.16f" % a) + ")) ) + 1)) - " + str(cs) + ") )", "raster", "temperature")
 			# close GDAL rasters
 			for b in range(0, len(oMR)):
 				oMR[b] = None
@@ -755,13 +696,18 @@ class LandsatTab:
 				bL[b] = None
 			rD = None
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), unicode(outputRaster))
+			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), unicode(outputRaster))
 		except Exception, err:
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + unicode(err))		
+			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + unicode(err))		
 			
 	# landsat 8 temperature
 	def landsat8Temperature(self, RADIANCE_MULT_BAND, RADIANCE_ADD_BAND, K1_CONSTANT_BAND, K2_CONSTANT_BAND, inputRaster, outputRaster):
+		# No data value
+		if cfg.ui.nodata_checkBox_2.isChecked() is True:
+			nD = cfg.ui.nodata_spinBox_3.value()
+		else:
+			nD = cfg.NoDataVal
 		# Kelvin or cs
 		cs = 0
 		if cfg.ui.celsius_checkBox.isChecked() is True:
@@ -772,15 +718,14 @@ class LandsatTab:
 			k1 = float(K1_CONSTANT_BAND)
 			k2 = float(K2_CONSTANT_BAND)
 			# open input with GDAL
-			#gdal.AllRegister()
-			rD = gdal.Open(inputRaster, GA_ReadOnly)
+			rD = cfg.gdalSCP.Open(inputRaster, cfg.gdalSCP.GA_ReadOnly)
 			# band list
 			bL = cfg.utls.readAllBandsFromRaster(rD)
 			# output rasters
 			oM = []
 			oM.append(outputRaster)
 			oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0,  None, "No", "DEFLATE21")
-			o = cfg.utls.processRaster(rD, bL, None, cfg.utls.calculateRaster, None, None, oMR, None, None, 0, None, cfg.NoDataVal, "No",  "((" + str("%.16f" % k2) + ") / ( ln( (" + str("%.16f" % k1) + " / ( raster *" + str("%.16f" % m) + "+ (" + str("%.16f" % a) + ")) ) + 1)) - " + str(cs) + ")", "raster", "temperature")
+			o = cfg.utls.processRaster(rD, bL, None, cfg.utls.calculateRaster, None, None, oMR, None, None, 0, None, cfg.NoDataVal, "No",  "cfg.np.where(raster == " + str(nD) + ", " + str(cfg.NoDataVal) + ",  ((" + str("%.16f" % k2) + ") / ( ln( (" + str("%.16f" % k1) + " / ( raster *" + str("%.16f" % m) + "+ (" + str("%.16f" % a) + ")) ) + 1)) - " + str(cs) + ") )", "raster", "temperature")
 			# close GDAL rasters
 			for b in range(0, len(oMR)):
 				oMR[b] = None
@@ -788,32 +733,26 @@ class LandsatTab:
 				bL[b] = None
 			rD = None
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), unicode(outputRaster))
+			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), unicode(outputRaster))
 		except Exception, err:
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + unicode(err))
-			
-	# landsat output
-	def outputLandsat(self):
-		o = QFileDialog.getExistingDirectory(None , QApplication.translate("semiautomaticclassificationplugin", "Select a directory"))
-		cfg.ui.label_27.setText(unicode(o))
-		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), unicode(o))
-		
+			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + unicode(err))
+	
 	# landsat correction button
 	def performLandsatCorrection(self):
 		if len(cfg.ui.label_26.text()) == 0:
 			cfg.mx.msg14()
 		else:
-			o = QFileDialog.getExistingDirectory(None , QApplication.translate("semiautomaticclassificationplugin", "Select a directory"))
+			o = cfg.utls.getExistingDirectory(None , cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Select a directory"))
 			if len(o) == 0:
 				cfg.mx.msg14()
 			else:
 				self.landsat(cfg.ui.label_26.text(), o)
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "Perform landsat correction: " + unicode(cfg.ui.label_26.text()))
+				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "Perform landsat correction: " + unicode(cfg.ui.label_26.text()))
 		
-	def populateTable(self, input):
+	# populate table
+	def populateTable(self, input, batch = "No"):
 		check = "Yes"
 		sat = ""
 		dt = ""
@@ -824,15 +763,16 @@ class LandsatTab:
 		cfg.ui.sun_elev_lineEdit.setText(sE)
 		cfg.ui.earth_sun_dist_lineEdit.setText(esd)
 		l = cfg.ui.landsat_tableWidget
-		l.setColumnWidth(0, 250)
+		cfg.utls.setColumnWidthList(l, [[0, 250]])
 		cfg.utls.clearTable(l)
 		inp = input
 		if len(inp) == 0:
 			cfg.mx.msg14()
 		else:
-			cfg.uiUtls.addProgressBar()
+			if batch == "No":
+				cfg.uiUtls.addProgressBar()
 			if len(cfg.ui.label_27.text()) == 0:
-				for f in os.listdir(inp):
+				for f in cfg.osSCP.listdir(inp):
 					if f.lower().endswith(".txt") and "mtl" in f.lower():
 							MTLFile = inp + "/" + str(f)
 					# for compatibility with glcf images
@@ -859,8 +799,9 @@ class LandsatTab:
 							cfg.RADIANCE_UNITS = str(r.split()[2])
 			except Exception, err:
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + unicode(err))
-				cfg.uiUtls.removeProgressBar()
+				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + unicode(err))
+				if batch == "No":
+					cfg.uiUtls.removeProgressBar()
 				cfg.mx.msgErr8()
 				check = "No"						
 			if esd == "":
@@ -870,7 +811,7 @@ class LandsatTab:
 					esd = str(cfg.utls.calculateEarthSunDistance(dt, dFmt))
 				except Exception, err:
 					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + unicode(err))
+					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + unicode(err))
 			cfg.ui.satellite_lineEdit.setText(sat)
 			cfg.ui.date_lineEdit.setText(dt)
 			cfg.ui.sun_elev_lineEdit.setText(sE)
@@ -880,10 +821,10 @@ class LandsatTab:
 			dBs = {}
 			bandNames = []
 			# input dictionaries
-			for f in os.listdir(inp):
+			for f in cfg.osSCP.listdir(inp):
 				if f.lower().endswith(".tif") or f.lower().endswith(".TIF") or f.lower().endswith(".Tif"):
 					# name
-					nm = os.path.splitext(f)[0]
+					nm = cfg.osSCP.path.splitext(f)[0]
 					if str(sat).lower() in ['landsat_4', 'landsat4', 'landsat_5', 'landsat5', 'landsat_7', 'landsat7']:
 						# landsat bands
 						if nm[len(nm) - 2].isdigit() and nm[len(nm) - 1].isdigit():
@@ -922,10 +863,7 @@ class LandsatTab:
 			for band in sorted(bandNames):				
 				l.insertRow(b)
 				l.setRowHeight(b, 20)
-				itBand = QTableWidgetItem()
-				itBand.setData(Qt.DisplayRole, band)
-				itBand.setFlags(Qt.ItemIsEnabled)
-				l.setItem(b, 0, itBand)
+				cfg.utls.addTableItem(l, band, b, 0, "No")
 				b = b + 1
 			if check != "No":
 				# radiance
@@ -982,7 +920,7 @@ class LandsatTab:
 									dRadAB["RADIANCE_ADD_" + str(key)] = str(r.split()[2])
 							except Exception, err:
 								# logger
-								cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + unicode(err))	
+								cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + unicode(err))	
 				# add items to table
 				b = 0
 				for bandName in sorted(bandNames):	
@@ -990,78 +928,55 @@ class LandsatTab:
 						if bandName == band:
 							if dRadMB:
 								try:
-									itBand = QTableWidgetItem()
-									itBand.setData(Qt.DisplayRole, dRadMB["RADIANCE_MULT_" + str(key)])
-									l.setItem(b, 1, itBand)
+									cfg.utls.addTableItem(l, dRadMB["RADIANCE_MULT_" + str(key)], b, 1)
 								except:
 									pass
 							if dRadAB:
 								try:
-									itBand = QTableWidgetItem()
-									itBand.setData(Qt.DisplayRole, dRadAB["RADIANCE_ADD_" + str(key)])
-									l.setItem(b, 2, itBand)
+									cfg.utls.addTableItem(l, dRadAB["RADIANCE_ADD_" + str(key)], b, 2)
 								except:
 									pass
 							if dRefMB:
 								try:
-									itBand = QTableWidgetItem()
-									itBand.setData(Qt.DisplayRole, dRefMB["REFLECTANCE_MULT_" + str(key)])
-									l.setItem(b, 3, itBand)
+									cfg.utls.addTableItem(l, dRefMB["REFLECTANCE_MULT_" + str(key)], b, 3)
 								except:
 									pass
 							if dRefAB:
 								try:
-									itBand = QTableWidgetItem()
-									itBand.setData(Qt.DisplayRole, dRefAB["REFLECTANCE_ADD_" + str(key)])
-									l.setItem(b, 4, itBand)
+									cfg.utls.addTableItem(l, dRefAB["REFLECTANCE_ADD_" + str(key)], b, 4)
 								except:
 									pass
 							if dRadMxB:
 								try:
-									itBand = QTableWidgetItem()
-									itBand.setData(Qt.DisplayRole, dRadMxB["RADIANCE_MAXIMUM_" + str(key)])
-									l.setItem(b, 5, itBand)
+									cfg.utls.addTableItem(l, dRadMxB["RADIANCE_MAXIMUM_" + str(key)], b, 5)
 								except:
 									pass
 							if dRefMxB:
 								try:
-									itBand = QTableWidgetItem()
-									itBand.setData(Qt.DisplayRole, dRefMxB["REFLECTANCE_MAXIMUM_" + str(key)])
-									l.setItem(b, 6, itBand)
+									cfg.utls.addTableItem(l, dRefMxB["REFLECTANCE_MAXIMUM_" + str(key)], b, 6)
 								except:
 									pass
 							if dK1B:
 								try:
-									itBand = QTableWidgetItem()
-									itBand.setData(Qt.DisplayRole, dK1B["K1_CONSTANT_" + str(key)])
-									l.setItem(b, 7, itBand)
+									cfg.utls.addTableItem(l, dK1B["K1_CONSTANT_" + str(key)], b, 7)
 								except:
 									pass
 							if dK2B:
 								try:
-									itBand = QTableWidgetItem()
-									itBand.setData(Qt.DisplayRole, dK2B["K2_CONSTANT_" + str(key)])
-									l.setItem(b, 8, itBand)
+									cfg.utls.addTableItem(l, dK2B["K2_CONSTANT_" + str(key)], b, 8)
 								except:
 									pass
 							if dRad:
 								try:
-									itBand = QTableWidgetItem()
-									itBand.setData(Qt.DisplayRole, dRad["LMAX_" + str(key)])
-									l.setItem(b, 9, itBand)
-									itBand = QTableWidgetItem()
-									itBand.setData(Qt.DisplayRole, dRad["LMIN_" + str(key)])
-									l.setItem(b, 10, itBand)
-									itBand = QTableWidgetItem()
-									itBand.setData(Qt.DisplayRole, dRad["QCALMAX_" + str(key)])
-									l.setItem(b, 11, itBand)
-									itBand = QTableWidgetItem()
-									itBand.setData(Qt.DisplayRole, dRad["QCALMIN_" + str(key)])
-									l.setItem(b, 12, itBand)
+									cfg.utls.addTableItem(l, dRad["LMAX_" + str(key)], b, 9)
+									cfg.utls.addTableItem(l, dRad["LMIN_" + str(key)], b, 10)
+									cfg.utls.addTableItem(l, dRad["QCALMAX_" + str(key)], b, 11)
+									cfg.utls.addTableItem(l, dRad["QCALMIN_" + str(key)], b, 12)
 								except:
 									pass
 					b = b + 1
-				cfg.uiUtls.removeProgressBar()			
+				if batch == "No":
+					cfg.uiUtls.removeProgressBar()			
 
 	def editedCell(self, row, column):
 		if column != 0:
@@ -1116,12 +1031,12 @@ class LandsatTab:
 			tempRasterList.append(cfg.tmpDir + "/" + dT + str(i) +"t.tif")
 		vrtCheck = cfg.utls.createVirtualRaster2(inputList, tPMD, "No", "Yes", "No", 0, "Yes")
 		# open input with GDAL
-		rD = gdal.Open(tPMD, GA_ReadOnly)
+		rD = cfg.gdalSCP.Open(tPMD, cfg.gdalSCP.GA_ReadOnly)
 		if rD is None:
 			cfg.mx.msg4()
 			self.rasterBandName()
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " None raster")
+			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " None raster")
 			cfg.uiUtls.removeProgressBar()
 			cfg.cnvs.setRenderFlag(True)
 			return "No"
@@ -1140,15 +1055,15 @@ class LandsatTab:
 		for temp in tempRasterList:
 			try:
 				cfg.utls.GDALCopyRaster(temp, outputList[bN], "GTiff", cfg.rasterCompression, "DEFLATE -co PREDICTOR=2 -co ZLEVEL=1")
-				os.remove(temp)
+				cfg.osSCP.remove(temp)
 			except Exception, err:
 				try:
-					shutil.copy(temp, outputRasterList[bN])
-					os.remove(temp)
+					cfg.shutilSCP.copy(temp, outputRasterList[bN])
+					cfg.osSCP.remove(temp)
 				except Exception, err:
 					# logger
-					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				# logger
-				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			bN = bN + 1
 		return o

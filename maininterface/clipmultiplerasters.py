@@ -2,13 +2,13 @@
 """
 /**************************************************************************************************************************
  SemiAutomaticClassificationPlugin
-								 A QGIS plugin
- A plugin which allows for the semi-automatic supervised classification of remote sensing images, 
- providing a tool for the region growing of image pixels, creating polygon shapefiles intended for
- the collection of training areas (ROIs), and rapidly performing the classification process (or a preview).
+
+ The Semi-Automatic Classification Plugin for QGIS allows for the supervised classification of remote sensing images, 
+ providing tools for the download, the preprocessing and postprocessing of images.
+
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2015 by Luca Congedo
+		copyright			: (C) 2012-2016 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -32,21 +32,8 @@
 
 """
 
-import os
-import subprocess
-import sys
-# for moving files
-import shutil
-# for debugging
-import inspect
-# Import the PyQt and QGIS libraries
-from PyQt4.QtCore import *
-from PyQt4.QtCore import QCoreApplication
-from PyQt4.QtGui import *
 from qgis.core import *
 from qgis.gui import *
-from osgeo import gdal
-from osgeo.gdalconst import *
 import SemiAutomaticClassificationPlugin.core.config as cfg
 
 class ClipMultipleRasters:
@@ -70,18 +57,18 @@ class ClipMultipleRasters:
 		self.rbbrBndPol = QgsRubberBand(cfg.cnvs, 2)
 		rectangle = [[pointUL, QgsPoint(pointLR.x(), pointUL.y()), pointLR, QgsPoint(pointUL.x(), pointLR.y())]]
 		self.rbbrBndPol.setToGeometry(QgsGeometry.fromPolygon(rectangle), None)
-		clr = QColor(cfg.ROIClrVal)
+		clr = cfg.QtGuiSCP.QColor(cfg.ROIClrVal)
 		clr.setAlpha(50)
 		try:
 			# QGIS 2.6
 			self.rbbrBndPol.setFillColor(clr)
-			#self.rbbrBndPol.setBorderColor(QColor(cfg.ROIClrOutlineValDefault))
-			#self.rbbrBndPol.setLineStyle(Qt.DotLine)
+			#self.rbbrBndPol.setBorderColor(cfg.QtGuiSCP.QColor(cfg.ROIClrOutlineValDefault))
+			#self.rbbrBndPol.setLineStyle(cfg.QtSCP.DotLine)
 			self.rbbrBndPol.setWidth(3)
 		except:
 			# QGIS < 2.6
 			self.rbbrBndPol.setColor(clr)
-			#self.rbbrBndPol.setLineStyle(Qt.DotLine)
+			#self.rbbrBndPol.setLineStyle(cfg.QtSCP.DotLine)
 			self.rbbrBndPol.setWidth(3)
 		
 	# clear canvas
@@ -101,10 +88,14 @@ class ClipMultipleRasters:
 				cfg.uiUtls.updateBar((b+1) * 100 / (c))
 			else:
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " all rasters cancelled")
+				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " all rasters cancelled")
+		
+	# clip multiple rasters action
+	def clipRastersAction(self):
+		self.clipRasters()
 		
 	# clip multiple rasters
-	def clipRasters(self):
+	def clipRasters(self, batch = "No", fileListString = None, outputDirectory = None, shapefilePath = None):
 		UX = ""
 		UY = ""
 		LX = ""
@@ -113,36 +104,69 @@ class ClipMultipleRasters:
 		rT = []
 		# st variable
 		st = "No"
-		# checklist
-		lst = cfg.ui.raster_listView_2
-		# count rows in checklist
-		c = lst.model().rowCount()
-		for x in range(0, c):
-			# If checkbox is activated
-			if cfg.bndMdls.item(x).checkState() == 2:
-				# name of item of list
-				itN = cfg.bndMdls.item(x).text()
-				rT.append(itN)
-		if len(rT) == 0:
-			cfg.mx.msgWar15()
-			return "No"
-		oD = QFileDialog.getExistingDirectory(None , QApplication.translate("semiautomaticclassificationplugin", "Select a directory where to save clipped rasters"))
-		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " rasters to be clipped" + unicode(rT))
-		if cfg.ui.shapefile_checkBox.isChecked() is True:
-			# use shape
-			uS = 1
-			sN = cfg.ui.shapefile_comboBox.currentText()
-			sL = cfg.utls.selectLayerbyName(sN)
-			try:
-				s = sL.source()
-			except Exception, err:
-				cfg.mx.msgErr11()
-				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+		if batch == "No":
+			cfg.uiUtls.addProgressBar()
+			# checklist
+			lst = cfg.ui.raster_listView_2
+			# count rows in checklist
+			c = lst.model().rowCount()
+			for x in range(0, c):
+				# If checkbox is activated
+				if cfg.bndMdls.item(x).checkState() == 2:
+					# name of item of list
+					itN = cfg.bndMdls.item(x).text()
+					rT.append(itN)
+			if len(rT) == 0:
+				cfg.mx.msgWar15()
+				if batch == "No":
+					cfg.uiUtls.removeProgressBar()
 				return "No"
+			oD = cfg.utls.getExistingDirectory(None , cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Select a directory where to save clipped rasters"))
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " rasters to be clipped" + unicode(rT))
+			if cfg.ui.shapefile_checkBox.isChecked() is True:
+				# use shape
+				uS = 1
+				sN = cfg.ui.shapefile_comboBox.currentText()
+				sL = cfg.utls.selectLayerbyName(sN)
+				try:
+					s = sL.source()
+				except Exception, err:
+					cfg.mx.msgErr11()
+					# logger
+					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					if batch == "No":
+						cfg.uiUtls.removeProgressBar()
+					return "No"
+			elif cfg.ui.temporary_ROI_checkBox.isChecked() is True:
+				# use shape
+				uS = 1
+				if cfg.lstROI is not None:
+					s = cfg.lstROI
+				else:
+					cfg.mx.msgErr11()
+					# logger
+					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR: no vector" )
+					if batch == "No":
+						cfg.uiUtls.removeProgressBar()
+					return "No"
+			else:
+				uS = 0
 		else:
-			uS = 0
+			fileList = fileListString.split(",")
+			for f in fileList:
+				rT.append(f.strip())
+			oD = outputDirectory
+			if cfg.QDirSCP(oD).exists():
+				pass
+			else:
+				cfg.osSCP.makedirs(oD)
+			s = shapefilePath
+			if cfg.ui.shapefile_checkBox.isChecked() is True:
+				# use shape
+				uS = 1
+			else:
+				uS = 0
 		# No data value
 		noDt = cfg.ui.nodata_spinBox.value()
 		if len(oD) > 0:
@@ -153,48 +177,67 @@ class ClipMultipleRasters:
 				outputName = cfg.clipNm
 			# no shapefile
 			if uS == 0:
+				UX = cfg.ui.UX_lineEdit.text()
+				UY = cfg.ui.UY_lineEdit.text()
+				LX = cfg.ui.LX_lineEdit.text()
+				LY = cfg.ui.LY_lineEdit.text()
+				if batch == "No":
+					try:
+						self.clearCanvasPoly()
+						UL = QgsPoint(float(UX), float(UY))
+						LR = QgsPoint(float(LX), float(LY))
+						ULP = cfg.utls.checkPointImage(rT[0], UL, "Yes")
+						if str(cfg.pntCheck) == "No":
+							cfg.mx.msgErr34()
+							return "No"
+						LRP = cfg.utls.checkPointImage(rT[0], LR, "Yes")
+						if str(cfg.pntCheck) == "No":
+							cfg.mx.msgErr34()
+							return "No"
+						UX = str(ULP.x())
+						UY = str(ULP.y())
+						LX = str(LRP.x())
+						LY = str(LRP.y())
+						if float(UX) > float(LX):
+							UX = str(LRP.x())
+							LX = str(ULP.x())
+						if float(UY) < float(LY):
+							UY = str(LRP.y())
+							LY = str(ULP.y())
+					except:
+						pass
+			else:
 				try:
-					self.clearCanvasPoly()
-					UX = cfg.ui.UX_lineEdit.text()
-					UY = cfg.ui.UY_lineEdit.text()
-					LX = cfg.ui.LX_lineEdit.text()
-					LY = cfg.ui.LY_lineEdit.text()
-					UL = QgsPoint(float(UX), float(UY))
-					LR = QgsPoint(float(LX), float(LY))
-					ULP = cfg.utls.checkPointImage(rT[0], UL, "Yes")
-					if str(cfg.pntCheck) == "No":
-						cfg.mx.msgErr34()
-						return "No"
-					LRP = cfg.utls.checkPointImage(rT[0], LR, "Yes")
-					if str(cfg.pntCheck) == "No":
-						cfg.mx.msgErr34()
-						return "No"
-					UX = str(ULP.x())
-					UY = str(ULP.y())
-					LX = str(LRP.x())
-					LY = str(LRP.y())
 					if float(UX) > float(LX):
-						UX = str(LRP.x())
-						LX = str(ULP.x())
+						tUX = UX
+						UX = str(LX)
+						LX = str(tUX)
 					if float(UY) < float(LY):
-						UY = str(LRP.y())
-						LY = str(ULP.y())
+						tUY = UY
+						UY = str(LY)
+						LY = str(tUY)
 				except:
 					pass
-			cfg.uiUtls.addProgressBar()
 			# no shapefile
 			if uS == 0 and len(UX) > 0 and len(UY) > 0 and len(LX) > 0 and len(LY) > 0:
 				for l in rT:
-					lC = cfg.utls.selectLayerbyName(l, "Yes")
-					if str(l).lower().endswith(".tif"):
-						pass
+					if batch == "No":
+						lC = cfg.utls.selectLayerbyName(l, "Yes")
+						if str(l).lower().endswith(".tif"):
+							pass
+						else:
+							l = l + ".tif"
+						cL = lC.source().encode(cfg.sysSCP.getfilesystemencoding())
 					else:
-						l = l + ".tif"
-					cL = lC.source().encode(sys.getfilesystemencoding())
+						if str(l).lower().endswith(".tif"):
+							pass
+						else:
+							l = l + ".tif"
+						cL = l
 					dT = cfg.utls.getTime()
-					c = oD.encode(sys.getfilesystemencoding()) + "/"
+					c = oD.encode(cfg.sysSCP.getfilesystemencoding()) + "/"
 					d = outputName + "_" 
-					e = os.path.basename(l.encode(sys.getfilesystemencoding()))
+					e = cfg.osSCP.path.basename(l.encode(cfg.sysSCP.getfilesystemencoding()))
 					f = c + d + e
 					tPMN = cfg.tmpVrtNm + ".vrt"
 					tPMD = cfg.tmpDir + "/" + dT + tPMN
@@ -207,106 +250,165 @@ class ClipMultipleRasters:
 					if cfg.rasterCompression != "No":
 						try:
 							cfg.utls.GDALCopyRaster(tPMD2, f, "GTiff", cfg.rasterCompression, "DEFLATE -co PREDICTOR=2 -co ZLEVEL=1")
-							os.remove(tPMD2)
+							cfg.osSCP.remove(tPMD2)
 						except Exception, err:
-							shutil.copy(tPMD2, f)
-							os.remove(tPMD2)
+							cfg.shutilSCP.copy(tPMD2, f)
+							cfg.osSCP.remove(tPMD2)
 							# logger
-							if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+							if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 					else:
-						shutil.copy(tPMD2, f)
-						os.remove(tPMD2)
-					cfg.iface.addRasterLayer(unicode(oD) + "/" + outputName + "_" + unicode(os.path.basename(unicode(l))), unicode(outputName + "_" + unicode(os.path.basename(unicode(l)))))
+						cfg.shutilSCP.copy(tPMD2, f)
+						cfg.osSCP.remove(tPMD2)
+					cfg.iface.addRasterLayer(unicode(oD) + "/" + outputName + "_" + unicode(cfg.osSCP.path.basename(unicode(l))), unicode(outputName + "_" + unicode(cfg.osSCP.path.basename(unicode(l)))))
 					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " rasters clipped" )
+					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " rasters clipped" )
 			# using shapefile
 			elif uS == 1:
+				dT = cfg.utls.getTime()
+				# vector EPSG
+				if "MultiPolygon?crs=PROJCS" in str(s):
+					# temp shapefile
+					tSHP = cfg.tmpDir + "/" + sN + dT + ".shp"
+					s = cfg.utls.saveMemoryLayerToShapefile(sL, tSHP)
+					s = s.source()
+					vEPSG = cfg.utls.getEPSGVector(tSHP)
+				elif "QgsVectorLayer" in str(s):
+					# temporary layer
+					tLN = cfg.subsTmpROI + dT + ".shp"
+					tLP = cfg.tmpDir + "/" + dT + tLN
+					# get layer crs
+					crs = cfg.utls.getCrs(s)
+					# create a temp shapefile with a field
+					cfg.utls.createEmptyShapefileQGIS(crs, tLP)
+					mL = cfg.utls.addVectorLayer(tLP , tLN, "ogr")
+					f = QgsFeature()
+					for f in s.getFeatures():
+						ID = f.id()
+						# copy ROI to temp shapefile
+						cfg.utls.copyFeatureToLayer(s, ID, mL)
+					s = tLP
+					vEPSG = cfg.utls.getEPSGVector(s)
+				else:
+					vEPSG = cfg.utls.getEPSGVector(s)
+				# in case of reprojection
+				reprjShapefile = cfg.tmpDir + "/" + dT + cfg.osSCP.path.basename(s)
 				for l in rT:
-					lC = cfg.utls.selectLayerbyName(l, "Yes")
-					if str(l).lower().endswith(".tif"):
-						pass
+					if batch == "No":
+						lC = cfg.utls.selectLayerbyName(l, "Yes")
+						if str(l).lower().endswith(".tif"):
+							pass
+						else:
+							l = l + ".tif"
+						cL = lC.source().encode(cfg.sysSCP.getfilesystemencoding())
 					else:
-						l = l + ".tif"
-					cL = lC.source().encode(sys.getfilesystemencoding())
+						if str(l).lower().endswith(".tif"):
+							pass
+						else:
+							l = l + ".tif"
+						cL = l
 					dT = cfg.utls.getTime()
 					# convert polygon to raster 
 					tRNxs = cfg.copyTmpROI + dT + "xs.tif"
 					tRxs = str(cfg.tmpDir + "//" + tRNxs)
 					tPMN2 = dT + cfg.calcRasterNm + ".tif"
 					tPMD2 = cfg.tmpDir + "/" + tPMN2
-					check = cfg.utls.vectorToRaster(cfg.emptyFN, unicode(s), cfg.emptyFN, tRxs, unicode(cL), None, "GTiff", 1)
+					rEPSG = cfg.utls.getEPSGRaster(cL)
+					vect = s
+					if vEPSG != rEPSG:
+						if cfg.osSCP.path.isfile(reprjShapefile):
+							vect = reprjShapefile
+						else:
+							try:
+								cfg.utls.repojectShapefile(s, int(vEPSG), reprjShapefile, int(rEPSG))
+							except Exception, err:
+								# logger
+								cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+								return "No"
+							vect = reprjShapefile
+					check = cfg.utls.vectorToRaster(cfg.emptyFN, unicode(vect), cfg.emptyFN, tRxs, unicode(cL), None, "GTiff", 1)
 					if check != "No":
-						b = oD.encode(sys.getfilesystemencoding()) + "/" 
+						b = oD.encode(cfg.sysSCP.getfilesystemencoding()) + "/" 
 						c = outputName + "_" 
-						d = os.path.basename(l.encode(sys.getfilesystemencoding()))
+						d = cfg.osSCP.path.basename(l.encode(cfg.sysSCP.getfilesystemencoding()))
 						e = b + c + d
 						cfg.utls.clipRasterByRaster(cL, tRxs, tPMD2, "GTiff", noDt)
 						if cfg.rasterCompression != "No":
 							try:
 								cfg.utls.GDALCopyRaster(tPMD2, e, "GTiff", cfg.rasterCompression, "DEFLATE -co PREDICTOR=2 -co ZLEVEL=1")
-								os.remove(tPMD2)
+								cfg.osSCP.remove(tPMD2)
 							except Exception, err:
-								shutil.copy(tPMD2, e)
-								os.remove(tPMD2)
+								cfg.shutilSCP.copy(tPMD2, e)
+								cfg.osSCP.remove(tPMD2)
 								# logger
-								if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+								if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 						else:
-							shutil.copy(tPMD2, e)
-							os.remove(tPMD2)
+							cfg.shutilSCP.copy(tPMD2, e)
+							cfg.osSCP.remove(tPMD2)
 						try:
-							os.remove(tRxs)
+							cfg.osSCP.remove(tRxs)
 						except:
 							pass
-						cfg.iface.addRasterLayer(unicode(oD) + "/" + outputName + "_" + unicode(os.path.basename(unicode(l))), unicode(outputName + "_" + unicode(os.path.basename(unicode(l)))))
+						cfg.iface.addRasterLayer(unicode(oD) + "/" + outputName + "_" + unicode(cfg.osSCP.path.basename(unicode(l))), unicode(outputName + "_" + unicode(cfg.osSCP.path.basename(unicode(l)))))
 						# logger
-						cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " rasters clipped" )
+						cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " rasters clipped" )
 					else:
 						st = "Yes"
-						cfg.uiUtls.removeProgressBar()
+						if batch == "No":
+							cfg.uiUtls.removeProgressBar()
 			else:
-				cfg.uiUtls.removeProgressBar()
+				if batch == "No":
+					cfg.uiUtls.removeProgressBar()
 				return "No"
 			if  st != "Yes":
-				cfg.uiUtls.removeProgressBar()
-				cfg.utls.finishSound()
+				if batch == "No":
+					cfg.uiUtls.removeProgressBar()
+					cfg.utls.finishSound()
+		
+	# Activate pointer
+	def pointerActive(self):
+		# connect to click
+		t = cfg.clipMultiP
+		cfg.cnvs.setMapTool(t)
+		px = cfg.QtGuiSCP.QPixmap(":/pointer/icons/pointer/ROI_pointer.png")
+		c = cfg.QtGuiSCP.QCursor(px)
+		cfg.cnvs.setCursor(c)
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "pointer active")
+		
+	# left click pointer
+	def pointerLeftClick(self, point):
+		self.pointerClickUL(point)
+			
+	# right click pointer
+	def pointerRightClick(self, point):
+		self.pointerClickLR(point)
 		
 	# set coordinates
 	def pointerClickLR(self, point):
 		cfg.ui.LX_lineEdit.setText(str(point.x()))
 		cfg.ui.LY_lineEdit.setText(str(point.y()))
-		try:
-			self.addRubberBandPolygon(QgsPoint(float(cfg.ui.UX_lineEdit.text()), float(cfg.ui.UY_lineEdit.text())), QgsPoint(float(cfg.ui.LX_lineEdit.text()), float(cfg.ui.LY_lineEdit.text())))
-		except:
-			pass
+		self.showArea()
 		
 	# set coordinates
 	def pointerClickUL(self, point):
 		cfg.ui.UX_lineEdit.setText(str(point.x()))
 		cfg.ui.UY_lineEdit.setText(str(point.y()))
+		self.showArea()
+
+	# show area
+	def showArea(self):
 		try:
 			self.addRubberBandPolygon(QgsPoint(float(cfg.ui.UX_lineEdit.text()), float(cfg.ui.UY_lineEdit.text())), QgsPoint(float(cfg.ui.LX_lineEdit.text()), float(cfg.ui.LY_lineEdit.text())))
 		except:
 			pass
-		
-	# connect to pointer
-	def pointerLRActive(self):
-		cfg.cnvs.setMapTool(self.clickLR)
-		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "pointer active: LR")
-		
-	# connect to pointer
-	def pointerULActive(self):
-		cfg.cnvs.setMapTool(self.clickUL)
-		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "pointer active: UL")
-		
+			
 	# Set rasters checklist
 	def rasterNameList(self):
 		ls = cfg.lgnd.layers()
 		# checklist
 		lst = cfg.ui.raster_listView_2
 		# create band item model
-		cfg.bndMdls = QStandardItemModel(lst)
+		cfg.bndMdls = cfg.QtGuiSCP.QStandardItemModel(lst)
 		cfg.bndMdls.clear()
 		lst.setModel(cfg.bndMdls)
 		lst.show()
@@ -314,24 +416,17 @@ class ClipMultipleRasters:
 			if (l.type()==QgsMapLayer.RasterLayer):
 				if l.bandCount() == 1:
 					# band name
-					it = QStandardItem(l.name())
+					it = cfg.QtGuiSCP.QStandardItem(l.name())
 					# Create checkbox
 					it.setCheckable(True)
 					# Add band to model
 					cfg.bndMdls.appendRow(it)
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " raster name checklist created")
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " raster name checklist created")
 		
 	# refresh shape and training list	
 	def refreshShapeClip(self):
-		ls = cfg.lgnd.layers()
-		cfg.ui.shapefile_comboBox.clear()
-		for l in ls:
-			if (l.type()==QgsMapLayer.VectorLayer):
-				if (l.geometryType() == QGis.Polygon):
-					cfg.dlg.shape_clip_combo(l.name())
-		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "shape layers refreshed")
+		cfg.utls.refreshVectorLayer()
 		
 	# select all rasters
 	def selectAllRasters(self):
@@ -355,9 +450,18 @@ class ClipMultipleRasters:
 				self.allRastersCheck = "No"
 			except Exception, err:
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				pass
 		cfg.uiUtls.removeProgressBar()
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " all rasters clicked")
-	
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " all rasters clicked")
+			
+	# show hide area radio button
+	def showHideArea(self):
+		try:
+			if cfg.ui.show_area_radioButton_3.isChecked():				
+				self.showArea()
+			else:
+				self.clearCanvasPoly()
+		except:
+			pass

@@ -2,14 +2,14 @@
 """
 /**************************************************************************************************************************
  SemiAutomaticClassificationPlugin
-								 A QGIS plugin
- A plugin which allows for the semi-automatic supervised classification of remote sensing images, 
- A plugin which allows for the semi-automatic supervised classification of remote sensing images, 
- providing a tool for the region growing of image pixels, creating polygon shapefiles intended for
- the collection of training areas (ROIs), and rapidly performing the classification process (or a preview).
+
+ The Semi-Automatic Classification Plugin for QGIS allows for the supervised classification of remote sensing images, 
+ The Semi-Automatic Classification Plugin for QGIS allows for the supervised classification of remote sensing images, 
+ providing tools for the download, the preprocessing and postprocessing of images.
+
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2015 by Luca Congedo
+		copyright			: (C) 2012-2016 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -33,18 +33,8 @@
 
 """
 
-import os
-import datetime
-import urllib
-# for debugging
-import inspect
-# Import the PyQt and QGIS libraries
-from PyQt4.QtCore import *
-from PyQt4.QtCore import QCoreApplication
-from PyQt4.QtGui import *
 from qgis.core import *
 from qgis.gui import *
-import qgis.utils as qgisUtils
 import SemiAutomaticClassificationPlugin.core.config as cfg
 
 class USGS_Spectral_Lib:
@@ -61,7 +51,7 @@ class USGS_Spectral_Lib:
 			cfg.ui.usgs_library_comboBox.addItem(i)
 		cfg.ui.usgs_library_comboBox.blockSignals(False)
 		# logger
-		cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "add libraries")
+		cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "add libraries")
 				
 	# add signature to list
 	def addSignatureToList(self):
@@ -71,14 +61,14 @@ class USGS_Spectral_Lib:
 				if r is not None:
 					cfg.sigImport.USGSLibrary(r)
 					# logger
-					cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "signature added: " + str(r))
+					cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "signature added: " + str(r))
 				
 	# add chapter list to combo
 	def addSpectralLibraryToCombo(self, libraryDB):
 		for i in cfg.usgs_lib_list:
 			cfg.ui.usgs_chapter_comboBox.addItem(i)
 		# logger
-		cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "chapters added")
+		cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "chapters added")
 		
 	# selection of chapter
 	def chapterChanged(self):
@@ -108,20 +98,23 @@ class USGS_Spectral_Lib:
 		self.addLibrariesToCombo()
 		cfg.ui.USGS_library_textBrowser.setHtml("")
 		# logger
-		cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "chapter: " + str(ch))
+		cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "chapter: " + str(ch))
 		
 	# download signature file
 	def downloadLibrary(self, link):
 		# date time for temp name
 		dT = cfg.utls.getTime()
 		try:
-			r, i = urllib.urlretrieve(link, cfg.tmpDir + "/" + dT + ".asc")
+			check = cfg.utls.downloadFile(link, cfg.tmpDir + "/" + dT + ".asc", "query")
 			# logger
-			cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "library downloaded: " + str(link))
-			return r
+			cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "library downloaded: " + str(link))
+			if check == "Yes":
+				return cfg.tmpDir + "/" + dT + ".asc"
+			else:
+				raise ValueError('No')
 		except Exception, err:
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			cfg.mx.msgErr21()
 		
 	# download signature description and display
@@ -129,16 +122,21 @@ class USGS_Spectral_Lib:
 		# date time for temp name
 		dT = cfg.utls.getTime()
 		try:
-			r, i = urllib.urlretrieve(link, cfg.tmpDir + "/" + dT + ".html")
-			f =  open(r, 'r')
-			dHtml = f.read()
-			cfg.ui.USGS_library_textBrowser.setHtml(dHtml)
+			check = cfg.utls.downloadFile(link, cfg.tmpDir + "/" + dT + ".html", "query")
+			# logger
+			cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "library downloaded: " + str(link))
+			if check == "Yes":
+				f =  open(cfg.tmpDir + "/" + dT + ".html", 'r')
+				dHtml = f.read()
+				cfg.ui.USGS_library_textBrowser.setHtml(dHtml)
+			else:
+				raise ValueError('No')
 		except Exception, err:
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			cfg.mx.msgErr21()
 		# logger
-		cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "library description: " + str(link))
+		cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "library description: " + str(link))
 		
 	# selection of library
 	def libraryChanged(self):
@@ -150,6 +148,6 @@ class USGS_Spectral_Lib:
 			self.getSignatureDescription(d)
 			self.library = l
 			# logger
-			cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "library: " + str(l))
+			cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "library: " + str(l))
 		else:
 			cfg.ui.USGS_library_textBrowser.setHtml("")

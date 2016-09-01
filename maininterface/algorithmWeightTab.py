@@ -2,13 +2,13 @@
 """
 /**************************************************************************************************************************
  SemiAutomaticClassificationPlugin
-								 A QGIS plugin
- A plugin which allows for the semi-automatic supervised classification of remote sensing images, 
- providing a tool for the region growing of image pixels, creating polygon shapefiles intended for
- the collection of training areas (ROIs), and rapidly performing the classification process (or a preview).
+
+ The Semi-Automatic Classification Plugin for QGIS allows for the supervised classification of remote sensing images, 
+ providing tools for the download, the preprocessing and postprocessing of images.
+
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2015 by Luca Congedo
+		copyright			: (C) 2012-2016 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -32,13 +32,6 @@
 
 """
 
-import os
-# for debugging
-import inspect
-# Import the PyQt and QGIS libraries
-from PyQt4.QtCore import *
-from PyQt4.QtCore import QCoreApplication
-from PyQt4.QtGui import *
 from qgis.core import *
 from qgis.gui import *
 import SemiAutomaticClassificationPlugin.core.config as cfg
@@ -57,17 +50,9 @@ class AlgWeightTab:
 			c = tAW.rowCount()
 			# add list items to table
 			tAW.setRowCount(c + 1)
-			i = QTableWidgetItem(str(c + 1))
-			i.setFlags(Qt.ItemIsEnabled)
-			i.setText(str(c + 1))
-			tAW.setItem(c, 0, i)
-			b = QTableWidgetItem(str(c + 1))
-			b.setFlags(Qt.ItemIsEnabled)
-			b.setText(bd)
-			tAW.setItem(c, 1, b)	
-			w = QTableWidgetItem(str(c + 1))
-			w.setText("1")
-			tAW.setItem(c, 2, w)
+			cfg.utls.addTableItem(tAW, str(c + 1), c, 0, "No")
+			cfg.utls.addTableItem(tAW, bd, c, 1, "No")
+			cfg.utls.addTableItem(tAW, "1", c, 2)
 		self.tableEdited = "Yes"
 		self.readAlgorithmTable()
 
@@ -80,6 +65,8 @@ class AlgWeightTab:
 			wI = tAW.item(b, 2).text()
 			w.append(float(wI))
 		cfg.algBandWeigths = w
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode())
 		
 	# table edited
 	def editedWeightTable(self, row, column):
@@ -89,14 +76,12 @@ class AlgWeightTab:
 			try:
 				float(t)
 			except:
-				w = QTableWidgetItem(str(row))
-				w.setText("1")
-				tW.setItem(row, 2, w)
+				cfg.utls.setTableItem(tW, row, 2, "1")
 			cfg.algWT.readAlgorithmTable()
 			
 	def resetWeights(self):
 		# ask for confirm
-		a = cfg.utls.questionBox(QApplication.translate("semiautomaticclassificationplugin", "Reset weights"), QApplication.translate("semiautomaticclassificationplugin", "Are you sure you want to reset weights?"))
+		a = cfg.utls.questionBox(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Reset weights"), cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Are you sure you want to reset weights?"))
 		if a == "Yes":
 			self.loadAlgorithmTable(cfg.bndSet)
 		
@@ -111,14 +96,10 @@ class AlgWeightTab:
 		wv = cfg.ui.weight_doubleSpinBox.value()
 		if len(v) > 0:
 			for c in v:
-				w = QTableWidgetItem(str(c))
-				w.setText(str(wv))
-				tAW.setItem(c, 2, w)
+				cfg.utls.setTableItem(tAW, c, 2, str(wv))
 		else:
 			v = tAW.rowCount()
 			for c in range(0, v):
-				w = QTableWidgetItem(str(c))
-				w.setText(str(wv))
-				tAW.setItem(c, 2, w)
+				cfg.utls.setTableItem(tAW, c, 2, str(wv))
 		self.tableEdited = "Yes"
 		self.readAlgorithmTable()

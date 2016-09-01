@@ -2,13 +2,13 @@
 """
 /**************************************************************************************************************************
  SemiAutomaticClassificationPlugin
-								 A QGIS plugin
- A plugin which allows for the semi-automatic supervised classification of remote sensing images, 
- providing a tool for the region growing of image pixels, creating polygon shapefiles intended for
- the collection of training areas (ROIs), and rapidly performing the classification process (or a preview).
+
+ The Semi-Automatic Classification Plugin for QGIS allows for the supervised classification of remote sensing images, 
+ providing tools for the download, the preprocessing and postprocessing of images.
+
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2015 by Luca Congedo
+		copyright			: (C) 2012-2016 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -32,10 +32,6 @@
 
 """
 
-import os
-import sys
-import inspect
-import numpy as np
 import SemiAutomaticClassificationPlugin.core.config as cfg
 
 class Signature_Importer:
@@ -44,92 +40,92 @@ class Signature_Importer:
 		
 	# import USGS spectral library (http://speclab.cr.usgs.gov/spectral-lib.html)
 	def USGSLibrary(self, libraryPath):
-			if os.path.isfile(libraryPath):
-				f = open(libraryPath)
-				file = f.readlines()
-				if "USGS" in file[0]:
-					wl = []
-					ref = []
-					sD = []
-					for b in range(16, len(file)):
-						r = " ".join(file[b].split())
-						v = r.split()
-						wl.append(float(v[0]))
-						ref.append(float(v[1]))
-						sD.append(float(v[2]))
-					wavelength = np.array(wl)
-					a = cfg.bndSetWvLn.values()
-					s = sorted(a, key=float)
-					b = 0
-					cfg.tblOut = {}
-					for w in s:
-						i = (np.abs(wavelength - w)).argmin()
-						waveL = wl[i]
-						# empty value for obtaining the same structure as the ROI stats
-						zero = 0
-						reflectance = ref[i]
-						standardDeviation = sD[i]
-						val = []
-						val.append(waveL)
-						val.append(zero)
-						val.append(reflectance)
-						val.append(standardDeviation)
-						cfg.tblOut["BAND_{0}".format(b+1)] = val
-						cfg.tblOut["WAVELENGTH_{0}".format(b + 1)] = w
-						b = b + 1
-					self.addLibraryToSignatureList()
-					# logger
-					cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " spectral library imported" + str(file[0]))
-				else:
-					cfg.mx.msgErr17()
-					# logger
-					cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " spectral library " + str(file[0]))
+		if cfg.osSCP.path.isfile(libraryPath):
+			f = open(libraryPath)
+			file = f.readlines()
+			if "USGS" in file[0]:
+				wl = []
+				ref = []
+				sD = []
+				for b in range(16, len(file)):
+					r = " ".join(file[b].split())
+					v = r.split()
+					wl.append(float(v[0]))
+					ref.append(float(v[1]))
+					sD.append(float(v[2]))
+				wavelength = cfg.np.array(wl)
+				a = cfg.bndSetWvLn.values()
+				s = sorted(a, key=float)
+				b = 0
+				cfg.tblOut = {}
+				for w in s:
+					i = (cfg.np.abs(wavelength - w)).argmin()
+					waveL = wl[i]
+					# empty value for obtaining the same structure as the ROI stats
+					zero = 0
+					reflectance = ref[i]
+					standardDeviation = sD[i]
+					val = []
+					val.append(waveL)
+					val.append(zero)
+					val.append(reflectance)
+					val.append(standardDeviation)
+					cfg.tblOut["BAND_{0}".format(b+1)] = val
+					cfg.tblOut["WAVELENGTH_{0}".format(b + 1)] = w
+					b = b + 1
+				self.addLibraryToSignatureList()
+				# logger
+				cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " spectral library imported" + str(file[0]))
+			else:
+				cfg.mx.msgErr17()
+				# logger
+				cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " spectral library " + str(file[0]))
 					
 	# import ASTER spectral library (http://speclib.jpl.nasa.gov/search-1)
 	def ASTERLibrary(self, libraryPath):
-			if os.path.isfile(libraryPath):
-				f = open(libraryPath)
-				file = f.readlines()
-				if "Name" in file[0]:
-					wl = []
-					ref = []
-					sD = []
-					for b in range(26, len(file)):
-						v = file[b].split()
-						wl.append(float(v[0]))
-						ref.append(float(v[1]) / 100)
-						sD.append(float(0))
-					wavelength = np.array(wl)
-					a = cfg.bndSetWvLn.values()
-					s = sorted(a, key=float)
-					b = 0
-					cfg.tblOut = {}
-					for w in s:
-						i = (np.abs(wavelength - w)).argmin()
-						waveL = wl[i]
-						# empty value for obtaining the same structure as the ROI stats
-						zero = 0
-						reflectance = ref[i]
-						standardDeviation = sD[i]
-						val = []
-						val.append(waveL)
-						val.append(zero)
-						val.append(reflectance)
-						val.append(standardDeviation)
-						cfg.tblOut["BAND_{0}".format(b+1)] = val
-						cfg.tblOut["WAVELENGTH_{0}".format(b + 1)] = w
-						b = b + 1
-					self.addLibraryToSignatureList()
-					# logger
-					cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " spectral library imported" + str(file[0]))
-				else:
-					cfg.mx.msgErr17()
-					# logger
-					cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " spectral library " + str(file[0]))
+		if cfg.osSCP.path.isfile(libraryPath):
+			f = open(libraryPath)
+			file = f.readlines()
+			if "Name" in file[0]:
+				wl = []
+				ref = []
+				sD = []
+				for b in range(26, len(file)):
+					v = file[b].split()
+					wl.append(float(v[0]))
+					ref.append(float(v[1]) / 100)
+					sD.append(float(0))
+				wavelength = cfg.np.array(wl)
+				a = cfg.bndSetWvLn.values()
+				s = sorted(a, key=float)
+				b = 0
+				cfg.tblOut = {}
+				for w in s:
+					i = (cfg.np.abs(wavelength - w)).argmin()
+					waveL = wl[i]
+					# empty value for obtaining the same structure as the ROI stats
+					zero = 0
+					reflectance = ref[i]
+					standardDeviation = sD[i]
+					val = []
+					val.append(waveL)
+					val.append(zero)
+					val.append(reflectance)
+					val.append(standardDeviation)
+					cfg.tblOut["BAND_{0}".format(b+1)] = val
+					cfg.tblOut["WAVELENGTH_{0}".format(b + 1)] = w
+					b = b + 1
+				self.addLibraryToSignatureList()
+				# logger
+				cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " spectral library imported" + str(file[0]))
+			else:
+				cfg.mx.msgErr17()
+				# logger
+				cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " spectral library " + str(file[0]))
 		
 	# import generic CSV spectral library (first line: wavelength, reflectance, standardDeviation, waveLengthUnit)
 	def CSVLibrary(self, libraryPath):
-		if os.path.isfile(libraryPath):
+		if cfg.osSCP.path.isfile(libraryPath):
 			f = open(libraryPath)
 			file = f.readlines()
 			wl = []
@@ -151,13 +147,13 @@ class Signature_Importer:
 					sD.append(float(v[2]))
 				except:
 					sD.append(float(0))
-			wavelength = np.array(wl)
+			wavelength = cfg.np.array(wl)
 			a = cfg.bndSetWvLn.values()
 			s = sorted(a, key=float)
 			b = 0
 			cfg.tblOut = {}
 			for w in s:
-				i = (np.abs(wavelength - w)).argmin()
+				i = (cfg.np.abs(wavelength - w)).argmin()
 				waveL = wl[i]
 				# empty value for obtaining the same structure as the ROI stats
 				zero = 0
@@ -176,15 +172,34 @@ class Signature_Importer:
 			except:
 				self.addLibraryToSignatureList()
 			# logger
-			cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " spectral library imported" + str(file[0]))
+			cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " spectral library imported" + str(file[0]))
 
 	# add library values to signature list
 	def addLibraryToSignatureList(self, unit = None):
 		macroclassID = cfg.ROIMacroID
 		macroclassInfo = cfg.ROIMacroClassInfo
-		classID = 	cfg.ROIID
+		classID = cfg.ROIID
 		classInfo = cfg.ROIInfo
+		cfg.tblOut["ROI_SIZE"] = 0
 		if unit is None:
 			unit = cfg.unitMicro
-		cfg.ROId.ROIStatisticsToSignature("No", macroclassID, macroclassInfo, classID, classInfo, unit)
-		cfg.classD.signatureListTable(cfg.uidc.signature_list_tableWidget)
+		cfg.utls.ROIStatisticsToSignature("No", macroclassID, macroclassInfo, classID, classInfo, unit)
+		cfg.classD.ROIListTable(cfg.trnLay, cfg.uidc.signature_list_tableWidget)
+		
+	# open a shapefile
+	def openShapefileI(self):
+		shpFile = cfg.utls.getOpenFileName(None , cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Select a shapefile"), "", "Shapefile (*.shp)")
+		if len(shpFile) > 0:
+			fields = cfg.utls.fieldsShapefile(shpFile)
+			cfg.ui.MC_ID_combo.clear()
+			cfg.ui.MC_ID_combo.addItems(fields)
+			cfg.ui.MC_Info_combo.clear()
+			cfg.ui.MC_Info_combo.addItems(fields)
+			cfg.ui.C_ID_combo.clear()
+			cfg.ui.C_ID_combo.addItems(fields)
+			cfg.ui.C_Info_combo.clear()
+			cfg.ui.C_Info_combo.addItems(fields)
+			cfg.ui.select_shapefile_label.setText(shpFile)
+			# logger
+			cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " open Shapefile")
+			

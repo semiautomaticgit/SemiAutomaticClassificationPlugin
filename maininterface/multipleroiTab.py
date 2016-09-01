@@ -2,13 +2,13 @@
 """
 /**************************************************************************************************************************
  SemiAutomaticClassificationPlugin
-								 A QGIS plugin
- A plugin which allows for the semi-automatic supervised classification of remote sensing images, 
- providing a tool for the region growing of image pixels, creating polygon shapefiles intended for
- the collection of training areas (ROIs), and rapidly performing the classification process (or a preview).
+
+ The Semi-Automatic Classification Plugin for QGIS allows for the supervised classification of remote sensing images, 
+ providing tools for the download, the preprocessing and postprocessing of images.
+
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2015 by Luca Congedo
+		copyright			: (C) 2012-2016 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -32,13 +32,6 @@
 
 """
 
-import os
-import inspect
-import numpy as np
-# Import the PyQt and QGIS libraries
-from PyQt4.QtCore import *
-from PyQt4.QtCore import QCoreApplication
-from PyQt4.QtGui import *
 from qgis.core import *
 from qgis.gui import *
 import SemiAutomaticClassificationPlugin.core.config as cfg
@@ -48,51 +41,42 @@ class MultipleROITab:
 	def __init__(self):
 		pass
 		
+	# add point
 	def addPointToTable(self):
 		tW = cfg.ui.point_tableWidget
 		# add item to table
 		c = tW.rowCount()
 		# add list items to table
 		tW.setRowCount(c + 1)
-		it = QTableWidgetItem(str(c + 1))
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "added point " + str(c + 1))
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "added point " + str(c + 1))
 		
+	# add random point
 	def addRandomPointToTable(self, point):
 		tW = cfg.ui.point_tableWidget
 		# add item to table
 		c = tW.rowCount()
 		# add list items to table
 		tW.setRowCount(c + 1)
-		it = QTableWidgetItem(str(c + 1))
-		X = QTableWidgetItem(str(point[0]))
-		Y = QTableWidgetItem(str(point[1]))
-		MID = QTableWidgetItem(str(cfg.ROIMacroID))
-		MInf = QTableWidgetItem(str(cfg.ROIMacroClassInfo))
-		CID = QTableWidgetItem(str(cfg.ROIID))
-		CInf = QTableWidgetItem(str(cfg.ROIInfo))
-		MinSize = QTableWidgetItem(str(cfg.minROISz))
-		MaxWidth = QTableWidgetItem(str(cfg.maxROIWdth))
-		RangRad = QTableWidgetItem(str(cfg.rngRad))
-		if cfg.uid.rapid_ROI_checkBox.isChecked() is True:
-			RBand = QTableWidgetItem(str(cfg.ROIband))
+		#tW.setRowCount(c + 1)
+		if cfg.uidc.rapid_ROI_checkBox.isChecked() is True:
+			RBand = str(cfg.ROIband)
 		else:
-			RBand = QTableWidgetItem(str(""))
-		# add list items to table
-		tW.setRowCount(c + 1)
-		tW.setItem(c, 0, X)
-		tW.setItem(c, 1, Y)
-		tW.setItem(c, 2, MID)
-		tW.setItem(c, 3, MInf)
-		tW.setItem(c, 4, CID)
-		tW.setItem(c, 5, CInf)
-		tW.setItem(c, 6, MinSize)
-		tW.setItem(c, 7, MaxWidth)
-		tW.setItem(c, 8, RangRad)
-		tW.setItem(c, 9, RBand)
+			RBand = ""
+		cfg.utls.addTableItem(tW, str(point[0]), c, 0)
+		cfg.utls.addTableItem(tW, str(point[1]), c, 1)
+		cfg.utls.addTableItem(tW, str(cfg.ROIMacroID), c, 2)
+		cfg.utls.addTableItem(tW, str(cfg.ROIMacroClassInfo), c, 3)
+		cfg.utls.addTableItem(tW, str(cfg.ROIID), c, 4)
+		cfg.utls.addTableItem(tW, str(cfg.ROIInfo), c, 5)
+		cfg.utls.addTableItem(tW, str(cfg.minROISz), c, 6)
+		cfg.utls.addTableItem(tW, str(cfg.maxROIWdth), c, 7)
+		cfg.utls.addTableItem(tW, str(cfg.rngRad), c, 8)
+		cfg.utls.addTableItem(tW, RBand, c, 9)
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "added point " + str(c + 1))
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "added point " + str(c + 1))
 				
+	# create random point
 	def createRandomPoint(self):
 		if cfg.bndSetPresent == "Yes" and cfg.rstrNm == cfg.bndSetNm:
 			imageName = cfg.bndSet[0]
@@ -103,7 +87,7 @@ class MultipleROITab:
 			else:
 				imageName = cfg.rstrNm	
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "No image selected")
+				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "No image selected")
 		img = cfg.utls.selectLayerbyName(imageName, "Yes")
 		crs = cfg.utls.getCrs(img)
 		geographicFlag = crs.geographicFlag()
@@ -136,7 +120,7 @@ class MultipleROITab:
 								if points is None:
 									points = newpoints
 								else:
-									points = np.concatenate((points, newpoints), axis=0)
+									points = cfg.np.concatenate((points, newpoints), axis=0)
 			else:
 				points = cfg.utls.randomPoints(pointNumber, Xmin, Xmax, Ymin, Ymax, minDistance)
 			cfg.uiUtls.updateBar(50)
@@ -147,6 +131,7 @@ class MultipleROITab:
 		else:
 			cfg.mx.msgWar14()
 		
+	# create ROI
 	def createROIfromPoint(self):
 		tW = cfg.ui.point_tableWidget
 		c = tW.rowCount()
@@ -158,7 +143,7 @@ class MultipleROITab:
 				pass
 			cfg.uiUtls.addProgressBar()
 			for i in range(0, c):
-				qApp.processEvents()
+				cfg.QtGuiSCP.qApp.processEvents()
 				if cfg.actionCheck != "No":
 					cfg.uiUtls.updateBar((i+1) * 100 / (c + 1))
 					try:
@@ -166,7 +151,7 @@ class MultipleROITab:
 						Y = tW.item(i,1).text()
 					except Exception, err:
 						# logger
-						cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+						cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 						cfg.mx.msg6()
 					try:
 						p = QgsPoint(float(X), float(Y))
@@ -196,23 +181,23 @@ class MultipleROITab:
 							v = int(tW.item(i, 4).text())
 							cfg.ROIID = v
 							cfg.ROIInfo = tW.item(i, 5).text()
-							cfg.ROId.saveROItoShapefile("No")
+							cfg.classD.saveROItoShapefile("No")
 							# disable undo save ROI
-							cfg.uid.undo_save_Button.setEnabled(False)
+							cfg.uidc.undo_save_Button.setEnabled(False)
 					except Exception, err:
 						# logger
-						cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+						cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 						cfg.mx.msgErr20()
 				# restore settings for single ROI 
-				cfg.ROId.setROIMacroID()
-				cfg.ROId.roiMacroclassInfo()
-				cfg.ROId.setROIID()
-				cfg.ROId.roiClassInfo()
+				cfg.classD.setROIMacroID()
+				cfg.classD.roiMacroclassInfo()
+				cfg.classD.setROIID()
+				cfg.classD.roiClassInfo()
 				cfg.ROId.minROISize()
 				cfg.ROId.maxROIWidth()
 				cfg.ROId.rangeRadius()
-				cfg.ROId.rapidROIband()
-				cfg.ROId.rapidROICheckbox()
+				cfg.classD.rapidROIband()
+				cfg.classD.rapidROICheckbox()
 			cfg.utls.finishSound()
 			cfg.uiUtls.removeProgressBar()
 			# restore previous point for single ROI
@@ -221,11 +206,11 @@ class MultipleROITab:
 			except:
 				pass
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ROI created")
+			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ROI created")
 
 	# export point list to file
 	def exportPointList(self):
-		pointListFile = QFileDialog.getSaveFileName(None , QApplication.translate("semiautomaticclassificationplugin", "Save the point list to file"), "", "CSV (*.csv)")
+		pointListFile = cfg.utls.getSaveFileName(None , cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Save the point list to file"), "", "CSV (*.csv)")
 		try:
 			f = open(pointListFile, 'w')
 			f.write("X;Y;MC ID;MC Info;C ID;C Info;Min size;Max width;Range radius;Rapid ROI band\n")
@@ -258,74 +243,68 @@ class MultipleROITab:
 				f.write(txt)
 				f.close()
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " point list exported")
+			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " point list exported")
 		except Exception, err:
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 		
 	# import points from file
 	def importPoints(self):
-		pointFile = QFileDialog.getOpenFileName(None , "Select a point list file", "", "CSV (*.csv)")
+		pointFile = cfg.utls.getOpenFileName(None , "Select a point list file", "", "CSV (*.csv)")
 		try:
 			f = open(pointFile)
 			sep = ";"
-			if os.path.isfile(pointFile):
+			if cfg.osSCP.path.isfile(pointFile):
 				file = f.readlines()
 				tW = cfg.ui.point_tableWidget
 				for b in range(1, len(file)):
 					# point list
 					p = file[b].strip().split(sep)
-					X = QTableWidgetItem(p[0])
-					Y = QTableWidgetItem(p[1])
-					MID = QTableWidgetItem(p[2])
-					MInf = QTableWidgetItem(p[3])
-					CID = QTableWidgetItem(p[4])
-					CInf = QTableWidgetItem(p[5])
 					MinSize = cfg.minROISz
 					MaxWidth = cfg.maxROIWdth
 					RangRad = cfg.rngRad
 					RBand = ""
 					try:
-						MinSize = QTableWidgetItem(p[6])
-						MaxWidth = QTableWidgetItem(p[7])
-						RangRad = QTableWidgetItem(p[8])
-						RBand = QTableWidgetItem(p[9])
+						MinSize = p[6]
+						MaxWidth = p[7]
+						RangRad = p[8]
+						RBand = p[9]
 					except:
 						pass
 					# add item to table
 					c = tW.rowCount()
 					# add list items to table
 					tW.setRowCount(c + 1)
-					tW.setItem(c, 0, X)
-					tW.setItem(c, 1, Y)
-					tW.setItem(c, 2, MID)
-					tW.setItem(c, 3, MInf)
-					tW.setItem(c, 4, CID)
-					tW.setItem(c, 5, CInf)
-					tW.setItem(c, 6, MinSize)
-					tW.setItem(c, 7, MaxWidth)
-					tW.setItem(c, 8, RangRad)
-					tW.setItem(c, 9, RBand)
+					cfg.utls.addTableItem(tW, p[0], c, 0)
+					cfg.utls.addTableItem(tW, p[1], c, 1)
+					cfg.utls.addTableItem(tW, p[2], c, 2)
+					cfg.utls.addTableItem(tW, p[3], c, 3)
+					cfg.utls.addTableItem(tW, p[4], c, 4)
+					cfg.utls.addTableItem(tW, p[5], c, 5)
+					cfg.utls.addTableItem(tW, MinSize, c, 6)
+					cfg.utls.addTableItem(tW, MaxWidth, c, 7)
+					cfg.utls.addTableItem(tW, RangRad, c, 8)
+					cfg.utls.addTableItem(tW, RBand, c, 9)
 					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " points imported")
+					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " points imported")
 		except Exception, err:
 			cfg.mx.msgErr19()
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 
 	def removePointFromTable(self):
 		cfg.utls.removeRowsFromTable(cfg.ui.point_tableWidget)
 			
 	# Activate signature calculation checkbox2
 	def signatureCheckbox2(self):
-		p = QgsProject.instance()
+		p = cfg.qgisCoreSCP.QgsProject.instance()
 		if cfg.ui.signature_checkBox2.isChecked() is True:
 			p.writeEntry("SemiAutomaticClassificationPlugin", "calculateSignature", "Yes")
 			cfg.sigClcCheck = "Yes"
-			cfg.uid.signature_checkBox.setCheckState(2)
+			cfg.uidc.signature_checkBox.setCheckState(2)
 		else:
 			p.writeEntry("SemiAutomaticClassificationPlugin", "calculateSignature", "No")
 			cfg.sigClcCheck = "No"
-			cfg.uid.signature_checkBox.setCheckState(0)
-		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " checkbox set: " + str(cfg.sigClcCheck))
+			cfg.uidc.signature_checkBox.setCheckState(0)
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " checkbox set: " + str(cfg.sigClcCheck))
 	

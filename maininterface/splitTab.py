@@ -2,13 +2,13 @@
 """
 /**************************************************************************************************************************
  SemiAutomaticClassificationPlugin
-								 A QGIS plugin
- A plugin which allows for the semi-automatic supervised classification of remote sensing images, 
- providing a tool for the region growing of image pixels, creating polygon shapefiles intended for
- the collection of training areas (ROIs), and rapidly performing the classification process (or a preview).
+
+ The Semi-Automatic Classification Plugin for QGIS allows for the supervised classification of remote sensing images, 
+ providing tools for the download, the preprocessing and postprocessing of images.
+
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2015 by Luca Congedo
+		copyright			: (C) 2012-2016 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -32,20 +32,8 @@
 
 """
 
-import os
-import numpy as np
-import itertools
-import inspect
-# for moving files
-import shutil
-# Import the PyQt and QGIS libraries
-from PyQt4.QtCore import *
-from PyQt4.QtCore import QCoreApplication
-from PyQt4.QtGui import *
 from qgis.core import *
 from qgis.gui import *
-from osgeo import gdal
-from osgeo.gdalconst import *
 import SemiAutomaticClassificationPlugin.core.config as cfg
 
 class SplitTab:
@@ -57,7 +45,7 @@ class SplitTab:
 	def rasterLayerName(self):
 		self.rstrLyNm = cfg.ui.raster_name_combo.currentText()
 		# logger
-		cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "raster name: " + self.rstrLyNm)
+		cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "raster name: " + self.rstrLyNm)
 		
 	def refreshClassificationLayer(self):
 		ls = cfg.lgnd.layers()
@@ -69,7 +57,7 @@ class SplitTab:
 				if l.bandCount() > 1:
 					cfg.dlg.raster_layer_combo(l.name())
 		# logger
-		cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "raster layers refreshed")
+		cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "raster layers refreshed")
 		
 	# split raster button
 	def splitRaster(self):
@@ -81,46 +69,60 @@ class SplitTab:
 		if i > 0:
 			self.splitRasterToBands(self.rstrLyNm)
 			# logger
-			cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " split raster layer to band")
+			cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " split raster layer to band")
 		else:
 			self.refreshClassificationLayer()
 		
 	# split raster to bands
-	def splitRasterToBands(self, rasterName):
-		o = QFileDialog.getExistingDirectory(None , QApplication.translate("semiautomaticclassificationplugin", "Select a directory"))
+	def splitRasterToBands(self, rasterName, batch = "No",  inputFile = None, outputDirectory = None):
+		if batch == "No":
+			o = cfg.utls.getExistingDirectory(None , cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Select a directory"))
+		else:
+			o = outputDirectory
 		outputName = cfg.ui.output_name_lineEdit.text()
 		if len(outputName) > 0:
 			outputName = str(outputName.encode('ascii','replace')) + "_" 
 		if len(o) > 0:
-			# disable map canvas render for speed
-			cfg.cnvs.setRenderFlag(False)
-			cfg.uiUtls.addProgressBar()
-			i = cfg.utls.selectLayerbyName(rasterName, "Yes")
+			if cfg.QDirSCP(o).exists():
+				pass
+			else:
+				cfg.osSCP.makedirs(o)
+			if batch == "No":
+				# disable map canvas render for speed
+				cfg.cnvs.setRenderFlag(False)
+				cfg.uiUtls.addProgressBar()
+				i = cfg.utls.selectLayerbyName(rasterName, "Yes")
+				rPath = i.source()
+			else:
+				rPath = inputFile
 			try:
-				iL = cfg.utls.rasterToBands(i.source(), cfg.tmpDir, outputName + rasterName, "Yes")
+				iL = cfg.utls.rasterToBands(rPath, cfg.tmpDir, outputName + rasterName, "Yes")
 				for r in iL:
 					if cfg.rasterCompression != "No":
 						try:
-							cfg.utls.GDALCopyRaster(r, o + "/" + os.path.basename(r), "GTiff", cfg.rasterCompression, "DEFLATE -co PREDICTOR=2 -co ZLEVEL=1")
+							cfg.utls.GDALCopyRaster(r, o + "/" + cfg.osSCP.path.basename(r), "GTiff", cfg.rasterCompression, "DEFLATE -co PREDICTOR=2 -co ZLEVEL=1")
 						except Exception, err:
-							shutil.copy(r, o + "/" + os.path.basename(r))
+							cfg.shutilSCP.copy(r, o + "/" + cfg.osSCP.path.basename(r))
 							# logger
-							if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+							if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 					else:
-						shutil.copy(r, o + "/" + os.path.basename(r))
-					cfg.utls.addRasterLayer(o + "/" + os.path.basename(r), os.path.basename(r))
-					os.remove(r)
-				cfg.utls.finishSound()
-				# enable map canvas render
-				cfg.cnvs.setRenderFlag(True)
-				cfg.uiUtls.removeProgressBar()
+						cfg.shutilSCP.copy(r, o + "/" + cfg.osSCP.path.basename(r))
+					cfg.utls.addRasterLayer(o + "/" + cfg.osSCP.path.basename(r), cfg.osSCP.path.basename(r))
+					cfg.osSCP.remove(r)
+				if batch == "No":
+					cfg.utls.finishSound()
+					# enable map canvas render
+					cfg.cnvs.setRenderFlag(True)
+					cfg.uiUtls.removeProgressBar()
 				# logger
-				cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " end split raster layer to band")
+				cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " end split raster layer to band")
 			except Exception, err:
 				# logger
-				cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-				# enable map canvas render
-				cfg.cnvs.setRenderFlag(True)
-				cfg.uiUtls.removeProgressBar()
+				cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				if batch == "No":
+					# enable map canvas render
+					cfg.cnvs.setRenderFlag(True)
+					cfg.uiUtls.removeProgressBar()
 				cfg.mx.msgErr32()
 				return "No"
+				

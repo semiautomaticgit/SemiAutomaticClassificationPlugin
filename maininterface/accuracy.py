@@ -2,13 +2,13 @@
 """
 /**************************************************************************************************************************
  SemiAutomaticClassificationPlugin
-								 A QGIS plugin
- A plugin which allows for the semi-automatic supervised classification of remote sensing images, 
- providing a tool for the region growing of image pixels, creating polygon shapefiles intended for
- the collection of training areas (ROIs), and rapidly performing the classification process (or a preview).
+
+ The Semi-Automatic Classification Plugin for QGIS allows for the supervised classification of remote sensing images, 
+ providing tools for the download, the preprocessing and postprocessing of images.
+
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2015 by Luca Congedo
+		copyright			: (C) 2012-2016 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -32,20 +32,8 @@
 
 """
 
-import os
-import numpy as np
-import itertools
-import inspect
-# for moving files
-import shutil
-# Import the PyQt and QGIS libraries
-from PyQt4.QtCore import *
-from PyQt4.QtCore import QCoreApplication
-from PyQt4.QtGui import *
 from qgis.core import *
 from qgis.gui import *
-from osgeo import gdal
-from osgeo.gdalconst import *
 import SemiAutomaticClassificationPlugin.core.config as cfg
 
 class Accuracy:
@@ -56,86 +44,142 @@ class Accuracy:
 	# calculate error matrix if click on button
 	def calculateErrorMatrix(self):
 		# logger
-		cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " calculate Error Matrix")
+		cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " calculate Error Matrix")
 		self.errorMatrix(self.clssfctnNm, cfg.referenceLayer)
 	
 	# classification name
 	def classificationLayerName(self):
 		self.clssfctnNm = cfg.ui.classification_name_combo.currentText()
 		# logger
-		cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "classification name: " + unicode(self.clssfctnNm))
+		cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "classification name: " + unicode(self.clssfctnNm))
 	
 	# error matrix calculation
-	def errorMatrix(self, classification, reference):
+	def errorMatrix(self, classification, reference, batch = "No", shapefileField = None, rasterOutput = None):
 		# check if numpy is updated
 		try:
-			np.count_nonzero([1,1,0])
+			cfg.np.count_nonzero([1,1,0])
 		except Exception, err:
 			# logger
-			cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			rstrCheck = "No"
 			cfg.mx.msgErr26()
-			a = cfg.utls.questionBox("Semi-Automatic Classification Plugin", "NumPy version is outdated. Do you want to open the following site for help? http://fromgistors.blogspot.com/p/frequently-asked-questions.html#numpy_version ")
-			if a == "Yes":
-				QDesktopServices().openUrl(QUrl("http://fromgistors.blogspot.com/p/frequently-asked-questions.html#numpy_version"))
-			return "No"
-		rstrOut = QFileDialog.getSaveFileName(None , QApplication.translate("semiautomaticclassificationplugin", "Save error matrix raster output"), "", "*.tif")
+		if batch == "No":
+			rstrOut = cfg.utls.getSaveFileName(None, cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Save error matrix raster output"), "", "*.tif")
+		else:
+			rstrOut = rasterOutput
 		if len(rstrOut) > 0:
-			iClass = cfg.utls.selectLayerbyName(classification, "Yes")
-			l = cfg.utls.selectLayerbyName(reference)
-			if iClass is not None and l is not None:
-				# check projections
-				newRstrProj = cfg.utls.getCrs(iClass)
-				refRstrProj = cfg.utls.getCrs(l)
-				if refRstrProj != newRstrProj:
-					cfg.mx.msg9()
+			if batch == "No":
+				iClass = cfg.utls.selectLayerbyName(classification, "Yes")
+				l = cfg.utls.selectLayerbyName(reference)
+			else:
+				try:
+					# open input with GDAL
+					rD = cfg.gdalSCP.Open(reference, cfg.gdalSCP.GA_ReadOnly)
+					if rD is None:
+						l = cfg.utls.addVectorLayer(unicode(reference) , unicode(cfg.osSCP.path.basename(reference)), "ogr")
+					else:
+						l = cfg.iface.addRasterLayer(unicode(reference), unicode(cfg.osSCP.path.basename(reference)))
+					reml = l
+					rD = None
+					if cfg.osSCP.path.isfile(classification):
+						iClass = cfg.iface.addRasterLayer(unicode(classification), unicode(cfg.osSCP.path.basename(classification)))
+						remiClass = iClass
+					else:
+						return "No"
+				except:
 					return "No"
+			# date time for temp name
+			dT = cfg.utls.getTime()
+			if iClass is not None and l is not None:
+				# if not reference shapefile
+				if l.type() != 0:
+					# check projections
+					newRstrProj = cfg.utls.getCrs(iClass)
+					refRstrProj = cfg.utls.getCrs(l)
+					if refRstrProj != newRstrProj:
+						cfg.mx.msg9()
+						return "No"
 				else:
-					cfg.uiUtls.addProgressBar()
-					# disable map canvas render for speed
-					cfg.cnvs.setRenderFlag(False)
-					qApp.processEvents()
-					# date time for temp name
+					# vector EPSG
+					if "MultiPolygon?crs=PROJCS" in str(l.source()):
+						# temp shapefile
+						tSHP = cfg.tmpDir + "/" + cfg.rclssTempNm + dT + ".shp"
+						l = cfg.utls.saveMemoryLayerToShapefile(l, tSHP)
+						vEPSG = cfg.utls.getEPSGVector(tSHP)
+					else:
+						vEPSG = cfg.utls.getEPSGVector(l.source())
 					dT = cfg.utls.getTime()
+					# in case of reprojection
+					reprjShapefile = cfg.tmpDir + "/" + dT + cfg.osSCP.path.basename(l.source())
+					rEPSG = cfg.utls.getEPSGRaster(iClass.source())
+					if vEPSG != rEPSG:
+						if cfg.osSCP.path.isfile(reprjShapefile):
+							pass
+						else:
+							try:
+								cfg.utls.repojectShapefile(l.source(), int(vEPSG), reprjShapefile, int(rEPSG))
+							except Exception, err:
+								# remove temp layers
+								cfg.utls.removeLayerByLayer(reml)
+								cfg.utls.removeLayerByLayer(remiClass)
+								# logger
+								cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+								return "No"
+						l = cfg.utls.addVectorLayer(reprjShapefile, cfg.osSCP.path.basename(reprjShapefile) , "ogr")
+						
+					if batch == "No":
+						cfg.uiUtls.addProgressBar()
+						# disable map canvas render for speed
+						cfg.cnvs.setRenderFlag(False)
+						cfg.QtGuiSCP.qApp.processEvents()
 					# temp raster layer
 					tRC= cfg.tmpDir + "/" + cfg.rclssTempNm + dT + ".tif"
-					# error matrix
-					eMN = dT + cfg.errMatrixNm
-					cfg.reportPth = str(cfg.tmpDir + "/" + eMN)
-					errorRstPath = rstrOut
-					errorRstPath = errorRstPath.replace('\\', '/')
-					errorRstPath = errorRstPath.replace('//', '/')
-					tblOut = os.path.dirname(errorRstPath) + "/" + os.path.basename(errorRstPath)
-					tblOut = os.path.splitext(tblOut)[0] + ".csv"
-					if unicode(errorRstPath).lower().endswith(".tif"):
-						pass
-					else:
-						errorRstPath = errorRstPath + ".tif"
+				# error matrix
+				eMN = dT + cfg.errMatrixNm
+				cfg.reportPth = str(cfg.tmpDir + "/" + eMN)
+				errorRstPath = rstrOut
+				errorRstPath = errorRstPath.replace('\\', '/')
+				errorRstPath = errorRstPath.replace('//', '/')
+				tblOut = cfg.osSCP.path.dirname(errorRstPath) + "/" + cfg.osSCP.path.basename(errorRstPath)
+				tblOut = cfg.osSCP.path.splitext(tblOut)[0] + ".csv"
+				if unicode(errorRstPath).lower().endswith(".tif"):
+					pass
+				else:
+					errorRstPath = errorRstPath + ".tif"
 				cfg.uiUtls.updateBar(10)
 				# if reference shapefile
 				if l.type()== 0:
-					fd = cfg.ui.class_field_comboBox.currentText()
-					# convert reference layer to raster
-					cfg.utls.vectorToRaster(fd, unicode(l.source()), classification, unicode(tRC))
+					if batch == "No":
+						fd = cfg.ui.class_field_comboBox.currentText()
+					else:
+						fd = shapefileField
+					if batch == "No":
+						# convert reference layer to raster
+						cfg.utls.vectorToRaster(fd, unicode(l.source()), classification, unicode(tRC))
+					else:
+						cfg.utls.vectorToRaster(fd, unicode(l.source()), classification, unicode(tRC), classification)
 					referenceRaster = tRC
 				# if reference raster
 				elif l.type()== 1:
-					referenceRaster = l.source()
+					if batch == "No":
+						referenceRaster = l.source()
+					else:
+						referenceRaster = reference
 				# open input with GDAL
-				refRstrDt = gdal.Open(unicode(referenceRaster), GA_ReadOnly)
-				newRstrDt = gdal.Open(iClass.source(), GA_ReadOnly)
+				refRstrDt = cfg.gdalSCP.Open(unicode(referenceRaster), cfg.gdalSCP.GA_ReadOnly)
+				newRstrDt = cfg.gdalSCP.Open(iClass.source(), cfg.gdalSCP.GA_ReadOnly)
 				# combination finder
 				# band list
 				bLR = cfg.utls.readAllBandsFromRaster(refRstrDt)
-				cfg.rasterBandUniqueVal = np.zeros((1, 1))
-				cfg.rasterBandUniqueVal = np.delete(cfg.rasterBandUniqueVal, 0, 1)
+				cfg.rasterBandUniqueVal = cfg.np.zeros((1, 1))
+				cfg.rasterBandUniqueVal = cfg.np.delete(cfg.rasterBandUniqueVal, 0, 1)
 				o = cfg.utls.processRaster(refRstrDt, bLR, None, "No", cfg.utls.rasterUniqueValues, None, None, None, None, 0, None, cfg.NoDataVal, "No", None, None, "UniqueVal")
-				cfg.rasterBandUniqueVal = np.unique(cfg.rasterBandUniqueVal).tolist()
+				cfg.rasterBandUniqueVal = cfg.np.unique(cfg.rasterBandUniqueVal).tolist()
 				refRasterBandUniqueVal = sorted(cfg.rasterBandUniqueVal)
 				# band list
 				bLN = cfg.utls.readAllBandsFromRaster(newRstrDt)
-				cfg.rasterBandUniqueVal = np.zeros((1, 1))
-				cfg.rasterBandUniqueVal = np.delete(cfg.rasterBandUniqueVal, 0, 1)
+				cfg.rasterBandUniqueVal = cfg.np.zeros((1, 1))
+				cfg.rasterBandUniqueVal = cfg.np.delete(cfg.rasterBandUniqueVal, 0, 1)
 				o = cfg.utls.processRaster(newRstrDt, bLN, None, "No", cfg.utls.rasterUniqueValues, None, None, None, None, 0, None, cfg.NoDataVal, "No", None, None, "UniqueVal")
 				for b in range(0, len(bLR)):
 					bLR[b] = None
@@ -143,9 +187,9 @@ class Accuracy:
 				for b in range(0, len(bLN)):
 					bLN[b] = None
 				newRstrDt = None		
-				cfg.rasterBandUniqueVal = np.unique(cfg.rasterBandUniqueVal).tolist()
+				cfg.rasterBandUniqueVal = cfg.np.unique(cfg.rasterBandUniqueVal).tolist()
 				newRasterBandUniqueVal = sorted(cfg.rasterBandUniqueVal)	
-				cmb = list(itertools.product(refRasterBandUniqueVal, newRasterBandUniqueVal))
+				cmb = list(cfg.itertoolsSCP.product(refRasterBandUniqueVal, newRasterBandUniqueVal))
 				# error matrix
 				col = []
 				row = []
@@ -157,7 +201,7 @@ class Accuracy:
 					if str(i[0]) == "nan" or str(i[1]) == "nan" :
 						pass
 					else:
-						e.append("np.where( (a == " + str(i[0]) + ") & (b == " + str(i[1]) + "), " + str(n) + ", 0)")
+						e.append("cfg.np.where( (a == " + str(i[0]) + ") & (b == " + str(i[1]) + "), " + str(n) + ", 0)")
 						cmbntns["combination_" + str(i[0]) + "_"+ str(i[1])] = n
 						col.append(i[0])
 						row.append(i[1])
@@ -173,7 +217,7 @@ class Accuracy:
 				bandNumberList = [1, 1]
 				vrtCheck = cfg.utls.createVirtualRaster2(bList, tPMD, bandNumberList, "Yes", cfg.NoDataVal, 0, "No", "No")
 				# open input with GDAL
-				rD = gdal.Open(tPMD, GA_ReadOnly)
+				rD = cfg.gdalSCP.Open(tPMD, cfg.gdalSCP.GA_ReadOnly)
 				# output rasters
 				oM = []
 				oM.append(tPMD2)
@@ -184,13 +228,17 @@ class Accuracy:
 				variableList = [["im1", "a"], ["im2", "b"]]
 				o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.bandCalculationMultipleWhere, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", e, variableList, "No")
 				if o == "No":
-					cfg.uiUtls.removeProgressBar()
+					if batch == "No":
+						cfg.uiUtls.removeProgressBar()
 					cfg.mx.msgErr48()
+					# remove temp layers
+					cfg.utls.removeLayerByLayer(reml)
+					cfg.utls.removeLayerByLayer(remiClass)
 					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "Error")
+					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "Error")
 					return "No"
 				# logger
-				cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "accuracy raster output: " + unicode(rstrOut))
+				cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "accuracy raster output: " + unicode(rstrOut))
 				# close GDAL rasters
 				for b in range(0, len(oMR)):
 					oMR[b] = None
@@ -200,28 +248,36 @@ class Accuracy:
 				if cfg.rasterCompression != "No":
 					try:
 						cfg.utls.GDALCopyRaster(tPMD2, errorRstPath, "GTiff", cfg.rasterCompression, "DEFLATE -co PREDICTOR=2 -co ZLEVEL=1")
-						os.remove(tPMD2)
+						cfg.osSCP.remove(tPMD2)
 					except Exception, err:
-						shutil.copy(tPMD2, errorRstPath)
-						os.remove(tPMD2)
+						cfg.shutilSCP.copy(tPMD2, errorRstPath)
+						cfg.osSCP.remove(tPMD2)
 						# logger
-						if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+						if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				else:
-					shutil.copy(tPMD2, errorRstPath)
-					os.remove(tPMD2)
+					cfg.shutilSCP.copy(tPMD2, errorRstPath)
+					cfg.osSCP.remove(tPMD2)
 				cfg.uiUtls.updateBar(80)
-				cols = sorted(np.unique(col).tolist())
-				rows = sorted(np.unique(row).tolist())
+				cols = sorted(cfg.np.unique(col).tolist())
+				rows = sorted(cfg.np.unique(row).tolist())
 				totX = cols
 				totX.extend(rows)
-				total = sorted(np.unique(totX).tolist())
-				errMatrix = np.zeros((len(total), len(total)))
-				cList = "V " + str(QApplication.translate("semiautomaticclassificationplugin", 'Classification')) + "\t"
-				l = open(tblOut, 'w')
-				t = str(QApplication.translate("semiautomaticclassificationplugin", 'ErrMatrixCode')) + "	" + str(QApplication.translate("semiautomaticclassificationplugin", 'Reference')) + "	" + str(QApplication.translate("semiautomaticclassificationplugin", 'Classification')) + "	" + str(QApplication.translate("semiautomaticclassificationplugin", 'PixelSum') + str("\n"))
+				total = sorted(cfg.np.unique(totX).tolist())
+				errMatrix = cfg.np.zeros((len(total), len(total)))
+				cList = "V " + str(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Classification')) + "\t"
+				try:
+					l = open(tblOut, 'w')
+				except Exception, err:
+					# remove temp layers
+					cfg.utls.removeLayerByLayer(reml)
+					cfg.utls.removeLayerByLayer(remiClass)
+					# logger
+					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					return "No"
+				t = str(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'ErrMatrixCode')) + "	" + str(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Reference')) + "	" + str(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Classification')) + "	" + str(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'PixelSum') + str("\n"))
 				l.write(t)
 				# open error raster
-				rDC = gdal.Open(errorRstPath, GA_ReadOnly)
+				rDC = cfg.gdalSCP.Open(errorRstPath, cfg.gdalSCP.GA_ReadOnly)
 				bLC = cfg.utls.readAllBandsFromRaster(rDC)
 				for c in total:
 					cList = cList + str(c) + "\t"
@@ -237,12 +293,12 @@ class Accuracy:
 							errMatrix[total.index(r), total.index(c)] = cfg.rasterBandPixelCount
 				# save combination to table
 				l.write(str("\n"))
-				l.write(str(QApplication.translate("semiautomaticclassificationplugin", 'ERROR MATRIX')) + str("\n"))
-				l.write("\t" + "> " + str(QApplication.translate("semiautomaticclassificationplugin", 'Reference')) + str("\n"))
-				l.write(cList + str(QApplication.translate("semiautomaticclassificationplugin", 'Total') + str("\n")))
+				l.write(str(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'ERROR MATRIX')) + str("\n"))
+				l.write("\t" + "> " + str(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Reference')) + str("\n"))
+				l.write(cList + str(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Total') + str("\n")))
 				# temp matrix
 				tmpMtrx= cfg.tmpDir + "/" + cfg.tempMtrxNm + dT + ".txt"
-				np.savetxt(tmpMtrx, errMatrix, delimiter="\t", fmt="%i")
+				cfg.np.savetxt(tmpMtrx, errMatrix, delimiter="\t", fmt="%i")
 				tM = open(tmpMtrx, 'r')
 				# write matrix
 				ix = 0
@@ -251,7 +307,7 @@ class Accuracy:
 					l.write(tMR)
 					ix = ix + 1
 				# last line
-				lL = str(QApplication.translate("semiautomaticclassificationplugin", 'Total'))
+				lL = str(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Total'))
 				for c in range(0, len(total)):
 					lL = lL + "\t" + str(int(errMatrix[:, c].sum()))
 				totMat = int(errMatrix.sum())
@@ -260,7 +316,7 @@ class Accuracy:
 				l.write(str("\n"))
 				# overall accuracy
 				oA = 100 * errMatrix.trace() / totMat
-				t = str(QApplication.translate("semiautomaticclassificationplugin", 'Overall accuracy [%] = ')) + str(oA) + str("\n")
+				t = str(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Overall accuracy [%] = ')) + str(oA) + str("\n")
 				l.write(t)
 				# user and producer's accuracy and kappa hat, equations from Congalton, R. & Green, K. (2009) Assessing the Accuracy of Remotely Sensed Data: Principles and Practices. CRC Press
 				nipXnpi = 0
@@ -274,10 +330,10 @@ class Accuracy:
 					p = 100 * nii / npi
 					u = 100 * nii / nip
 					khatI = ((totMat * nii) - (nip * npi)) / ((totMat * nip) - (nip * npi))
-					t = QApplication.translate("semiautomaticclassificationplugin", 'Class ') + str(total[g]) + QApplication.translate("semiautomaticclassificationplugin", ' producer accuracy [%] = ') + str(p) + "\t" + QApplication.translate("semiautomaticclassificationplugin", ' user accuracy [%] = ') + str(u) + "\t" + QApplication.translate("semiautomaticclassificationplugin", 'Kappa hat = ') + str(khatI) + str("\n")
+					t = cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Class ') + str(total[g]) + cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", ' producer accuracy [%] = ') + str(p) + "\t" + cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", ' user accuracy [%] = ') + str(u) + "\t" + cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Kappa hat = ') + str(khatI) + str("\n")
 					l.write(t)
 				khat = ((totMat * niiTot) - nipXnpi) / ((totMat * totMat) - nipXnpi)
-				t = str(QApplication.translate("semiautomaticclassificationplugin", 'Kappa hat classification = ')) + str(khat) + str("\n")
+				t = str(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Kappa hat classification = ')) + str(khat) + str("\n")
 				l.write(t)
 				l.close()
 				# close bands
@@ -285,26 +341,31 @@ class Accuracy:
 					bLC[b] = None
 				rDC = None
 				# add raster to layers
-				cfg.iface.addRasterLayer(unicode(errorRstPath), unicode(os.path.basename(errorRstPath)))
-				rstr = cfg.utls.selectLayerbyName(unicode(os.path.basename(errorRstPath)), "Yes")
+				cfg.iface.addRasterLayer(unicode(errorRstPath), unicode(cfg.osSCP.path.basename(errorRstPath)))
+				rstr = cfg.utls.selectLayerbyName(unicode(cfg.osSCP.path.basename(errorRstPath)), "Yes")
 				cfg.utls.rasterSymbolGeneric(rstr, "NoData")	
 				try:
 					f = open(tblOut)
-					if os.path.isfile(tblOut):
+					if cfg.osSCP.path.isfile(tblOut):
 						eM = f.read()
 						cfg.ui.error_matrix_textBrowser.setText(str(eM))
 					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " error matrix calculated")
+					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " error matrix calculated")
 				except Exception, err:
 					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				cfg.uiUtls.updateBar(100)
-				# enable map canvas render
-				cfg.cnvs.setRenderFlag(True)
-				cfg.utls.finishSound()
-				cfg.uiUtls.removeProgressBar()
+				if batch == "No":
+					# enable map canvas render
+					cfg.cnvs.setRenderFlag(True)
+					cfg.utls.finishSound()
+					cfg.uiUtls.removeProgressBar()
+				else:
+					# remove temp layers
+					cfg.utls.removeLayerByLayer(reml)
+					cfg.utls.removeLayerByLayer(remiClass)
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "finished")
+				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "finished")
 			else:
 				self.refreshReferenceLayer()
 				cfg.utls.refreshClassificationLayer()
@@ -323,7 +384,7 @@ class Accuracy:
 		except:
 			pass
 		# logger
-		cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "reference layer name: " + unicode(cfg.referenceLayer))
+		cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "reference layer name: " + unicode(cfg.referenceLayer))
 	
 	# refresh reference layer name
 	def refreshReferenceLayer(self):
@@ -339,4 +400,4 @@ class Accuracy:
 				if l.bandCount() == 1:
 					cfg.dlg.reference_layer_combo(l.name())
 		# logger
-		cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "reference layers refreshed")
+		cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "reference layers refreshed")

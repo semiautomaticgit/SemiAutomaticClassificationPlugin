@@ -2,13 +2,13 @@
 """
 /**************************************************************************************************************************
  SemiAutomaticClassificationPlugin
-								 A QGIS plugin
- A plugin which allows for the semi-automatic supervised classification of remote sensing images, 
- providing a tool for the region growing of image pixels, creating polygon shapefiles intended for
- the collection of training areas (ROIs), and rapidly performing the classification process (or a preview).
+
+ The Semi-Automatic Classification Plugin for QGIS allows for the supervised classification of remote sensing images, 
+ providing tools for the download, the preprocessing and postprocessing of images.
+
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2015 by Luca Congedo
+		copyright			: (C) 2012-2016 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -32,10 +32,6 @@
 
 """
 
-# Import the PyQt and QGIS libraries
-from PyQt4.QtCore import *
-from PyQt4.QtCore import QCoreApplication
-from PyQt4.QtGui import *
 from qgis.core import *
 from qgis.gui import *
 import SemiAutomaticClassificationPlugin.core.config as cfg
@@ -57,13 +53,13 @@ class Ui_Utils:
 	# Create a progress bar and a cancel button
 	def createProgressBar(self, message = "", action = "Executing"):
 		self.widgetBar = cfg.iface.messageBar().createMessage(action, message)
-		cfg.progressBar = QProgressBar()
+		cfg.progressBar = cfg.QtGuiSCP.QProgressBar()
 		cfg.progressBar.setMinimum(0)
 		cfg.progressBar.setMaximum(100)
 		cfg.progressBar.setProperty("value", 0)
 		cfg.progressBar.setTextVisible(True)
 		cfg.progressBar.setObjectName("progressBar")
-		self.cancelButton = QPushButton()
+		self.cancelButton = cfg.QtGuiSCP.QPushButton()
 		self.cancelButton.setEnabled(True)
 		self.cancelButton.setObjectName("cancelButton")
 		self.cancelButton.setText("Cancel")       
@@ -86,7 +82,6 @@ class Ui_Utils:
 		if cfg.actionCheck == "Yes":
 			self.addProgressBar(message, action)
 			cfg.progressBar.setValue(value)
-			#qApp.processEvents()
 			
 	# remove progress bar and cancel button
 	def removeProgressBar(self):
@@ -102,11 +97,11 @@ class Ui_Utils:
 		
 	# enable disable the interface to avoid errors
 	def setInterface(self, state):
-		# ROI dock
-		cfg.dockdlg.setEnabled(state)
 		# classification dock
 		cfg.dockclassdlg.setEnabled(state)
 		# main interface
 		cfg.dlg.setEnabled(state)
 		# toolbar
 		cfg.toolBar.setEnabled(state)
+		cfg.toolBar2.setEnabled(state)
+		

@@ -1,12 +1,12 @@
 #/**************************************************************************************************************************
 # SemiAutomaticClassificationPlugin
-#                                 A QGIS plugin
-# A plugin which allows for the semi-automatic supervised classification of remote sensing images, 
-# providing a tool for the region growing of image pixels, creating polygon shapefiles intended for
-# the collection of training areas (ROIs), and rapidly performing the classification process (or a preview).
+#
+# The Semi-Automatic Classification Plugin for QGIS allows for the supervised classification of remote sensing images, 
+# providing tools for the download, the preprocessing and postprocessing of images.
+#
 #                             -------------------
 #        begin                : 2012-12-29
-#        copyright            : (C) 2012-2015 by Luca Congedo
+#        copyright            : (C) 2012-2017 by Luca Congedo
 #        email                : ing.congedoluca@gmail.com
 #**************************************************************************************************************************/
 # 
@@ -34,9 +34,8 @@
 # Makefile for a PyQGIS plugin 
 
 # translation
-SOURCES = semiautomaticclassificationplugin.py ui/ui_semiautomaticclassificationplugin.py ui/ui_semiautomaticclassificationplugin_dock.py ui/ui_semiautomaticclassificationplugin_scatter_plot.py ui/ui_semiautomaticclassificationplugin_signature_plot.py ui/ui_semiautomaticclassificationplugin_dock_class.py __init__.py ui/semiautomaticclassificationplugindialog.py
-TRANSLATIONS = i18n/semiautomaticclassificationplugin_en.ts
-#TRANSLATIONS = 
+SOURCES = semiautomaticclassificationplugin.py ui/ui_semiautomaticclassificationplugin.py ui/ui_semiautomaticclassificationplugin_scatter_plot.py ui/ui_semiautomaticclassificationplugin_signature_plot.py ui/ui_semiautomaticclassificationplugin_dock_class.py __init__.py ui/semiautomaticclassificationplugindialog.py
+TRANSLATIONS = i18n/semiautomaticclassificationplugin_it.ts i18n/semiautomaticclassificationplugin_es.ts i18n/semiautomaticclassificationplugin_pt_BR.ts i18n/semiautomaticclassificationplugin_pt.ts i18n/semiautomaticclassificationplugin_el_GR.ts i18n/semiautomaticclassificationplugin_uk_UA.ts i18n/semiautomaticclassificationplugin_ar.ts i18n/semiautomaticclassificationplugin_zh_CN.ts i18n/semiautomaticclassificationplugin_fr.ts i18n/semiautomaticclassificationplugin_de.ts i18n/semiautomaticclassificationplugin_ja.ts i18n/semiautomaticclassificationplugin_pl.ts
 
 # global
 
@@ -46,7 +45,7 @@ PY_FILES = semiautomaticclassificationplugin.py ui/semiautomaticclassificationpl
 
 EXTRAS = semiautomaticclassificationplugin.png 
 
-UI_FILES = ui/ui_semiautomaticclassificationplugin.py ui/ui_semiautomaticclassificationplugin_dock.py ui/ui_semiautomaticclassificationplugin_welcome.py ui/ui_semiautomaticclassificationplugin_scatter_plot.py ui/ui_semiautomaticclassificationplugin_signature_plot.py ui/ui_semiautomaticclassificationplugin_dock_class.py
+UI_FILES = ui/ui_semiautomaticclassificationplugin_scatter_plot.py ui/ui_semiautomaticclassificationplugin_signature_plot.py ui/ui_semiautomaticclassificationplugin_dock_class.py ui/ui_semiautomaticclassificationplugin.py
 
 RESOURCE_FILES = ui/resources_rc.py
 
@@ -83,14 +82,6 @@ dclean:
 	find $(HOME)/.qgis2/python/plugins/$(PLUGINNAME) -iname "*.pyc" -delete
 	find $(HOME)/.qgis2/python/plugins/$(PLUGINNAME) -iname "*.directory" -delete
 	find $(HOME)/.qgis2/python/plugins/$(PLUGINNAME) -iname "__0semiautomaticclass.log" -delete
-	find $(HOME)/.qgis2/python/plugins/$(PLUGINNAME) -iname "scene_list.gz" -delete
-	find $(HOME)/.qgis2/python/plugins/$(PLUGINNAME) -iname "LANDSAT_8.csv.gz" -delete
-	find $(HOME)/.qgis2/python/plugins/$(PLUGINNAME) -iname "LANDSAT_ETM.csv.gz" -delete
-	find $(HOME)/.qgis2/python/plugins/$(PLUGINNAME) -iname "LANDSAT_ETM_SLC_OFF.csv.gz" -delete
-	find $(HOME)/.qgis2/python/plugins/$(PLUGINNAME) -iname "LANDSAT_TM-1980-1989.csv.gz" -delete
-	find $(HOME)/.qgis2/python/plugins/$(PLUGINNAME) -iname "LANDSAT_TM-1990-1999.csv.gz" -delete
-	find $(HOME)/.qgis2/python/plugins/$(PLUGINNAME) -iname "LANDSAT_TM-2000-2009.csv.gz" -delete
-	find $(HOME)/.qgis2/python/plugins/$(PLUGINNAME) -iname "LANDSAT_TM-2010-2012.csv.gz" -delete	
 	find $(HOME)/.qgis2/python/plugins/$(PLUGINNAME) -iname ".svn" -prune -exec rm -Rf {} \;
 	echo "firstrun" > $(HOME)/.qgis2/python/plugins/$(PLUGINNAME)/firstrun
 
@@ -120,8 +111,12 @@ upload: zip
 # transup
 # update .ts translation files
 transup:
-	pylupdate4 Makefile
+	#pylupdate4 Makefile
+	pylupdate4 -noobsolete *.py classificationdock/*.py core/*.py maininterface/*.py roidock/*.py spectralsignature/*.py ui/ui_utils.py ui/*.ui -ts i18n/semiautomaticclassificationplugin.ts 
+	cp -vf $(HOME)/.qgis2/python/plugins/$(PLUGINNAME)/i18n/semiautomaticclassificationplugin.ts $(HOME)/.qgis2/python/plugins/$(PLUGINNAME)/i18n/models
+	pylupdate4 -noobsolete *.py classificationdock/*.py core/*.py maininterface/*.py roidock/*.py spectralsignature/*.py ui/ui_utils.py ui/*.ui -ts i18n/semiautomaticclassificationplugin_pl.ts -ts $(TRANSLATIONS)
 
+	
 # transcompile
 # compile translation files into .qm binary format
 transcompile: $(TRANSLATIONS:.ts=.qm)

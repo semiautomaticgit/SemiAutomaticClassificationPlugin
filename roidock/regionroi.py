@@ -2,13 +2,13 @@
 """
 /**************************************************************************************************************************
  SemiAutomaticClassificationPlugin
-								 A QGIS plugin
- A plugin which allows for the semi-automatic supervised classification of remote sensing images, 
- providing a tool for the region growing of image pixels, creating polygon shapefiles intended for
- the collection of training areas (ROIs), and rapidly performing the classification process (or a preview).
+
+ The Semi-Automatic Classification Plugin for QGIS allows for the supervised classification of remote sensing images, 
+ providing tools for the download, the preprocessing and postprocessing of images.
+
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2015 by Luca Congedo
+		copyright			: (C) 2012-2016 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -32,11 +32,9 @@
 
 """
 
-from PyQt4 import QtCore, QtGui
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
 from qgis.core import *
 from qgis.gui import *
+import SemiAutomaticClassificationPlugin.core.config as cfg
 
 class RegionROI(QgsMapTool):
 	def __init__(self, canvas):
@@ -45,12 +43,19 @@ class RegionROI(QgsMapTool):
 		
 	def canvasMoveEvent(self, event):
 		point = self.cnvs.getCoordinateTransform().toMapCoordinates(event.pos())
-		self.emit(SIGNAL("moved"), point)
+		self.emit(cfg.SIGNALSCP("moved"), point)
 		
 	def canvasReleaseEvent(self, event):
 		pnt = self.cnvs.getCoordinateTransform().toMapCoordinates(event.pos())
 		# click
-		if(event.button() == Qt.RightButton):
-			self.emit(SIGNAL("ROIrightClicked"), pnt)
+		if(event.button() == cfg.QtSCP.RightButton):
+			self.emit(cfg.SIGNALSCP("ROIrightClicked"), pnt)
 		else:
-			self.emit(SIGNAL("ROIleftClicked"), pnt)
+			self.emit(cfg.SIGNALSCP("ROIleftClicked"), pnt)
+			
+	def keyPressEvent(self, event):
+		if event.key()==(cfg.QtSCP.Key_Control):
+			cfg.ctrlClick = 1
+		elif event.key()==(cfg.QtSCP.Key_Control and cfg.QtSCP.Key_Z):
+			#cfg.ctrlClick = 0
+			cfg.ROId.deleteLastROI()

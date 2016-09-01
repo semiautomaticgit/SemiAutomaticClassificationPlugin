@@ -2,13 +2,13 @@
 """
 /**************************************************************************************************************************
  SemiAutomaticClassificationPlugin
-								 A QGIS plugin
- A plugin which allows for the semi-automatic supervised classification of remote sensing images, 
- providing a tool for the region growing of image pixels, creating polygon shapefiles intended for
- the collection of training areas (ROIs), and rapidly performing the classification process (or a preview).
+
+ The Semi-Automatic Classification Plugin for QGIS allows for the supervised classification of remote sensing images, 
+ providing tools for the download, the preprocessing and postprocessing of images.
+
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2015 by Luca Congedo
+		copyright			: (C) 2012-2016 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -41,10 +41,6 @@ try:
 except:
 	pass
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigCanvas
-try:
-	from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
-except ImportError:
-	from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
 # Import Figure
 from matplotlib.figure import Figure
 
@@ -53,7 +49,7 @@ class SigCanvas(FigCanvas):
 		# Figure
 		self.figure = Figure()
 		# Add subplot for plot and legend
-		self.ax = self.figure.add_axes([0.05, 0.1, 0.75, 0.8])
+		self.ax = self.figure.add_axes([0.1, 0.15, 0.8, 0.8])
 		# Canvas initialization
 		FigCanvas.__init__(self, self.figure)
 		# Set empty ticks
@@ -70,8 +66,5 @@ class SigWidget2(QtGui.QWidget):
 		self.gridLayout = QtGui.QGridLayout()
 		# Add widget to grid
 		self.gridLayout.addWidget(self.sigCanvas)
-		# Add toolbar
-		tbar= NavigationToolbar(self.sigCanvas, self.sigCanvas)
-		self.gridLayout.addWidget(tbar)
 		# Set layout
 		self.setLayout(self.gridLayout)

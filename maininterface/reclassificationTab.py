@@ -2,13 +2,13 @@
 """
 /**************************************************************************************************************************
  SemiAutomaticClassificationPlugin
-								 A QGIS plugin
- A plugin which allows for the semi-automatic supervised classification of remote sensing images, 
- providing a tool for the region growing of image pixels, creating polygon shapefiles intended for
- the collection of training areas (ROIs), and rapidly performing the classification process (or a preview).
+
+ The Semi-Automatic Classification Plugin for QGIS allows for the supervised classification of remote sensing images, 
+ providing tools for the download, the preprocessing and postprocessing of images.
+
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2015 by Luca Congedo
+		copyright			: (C) 2012-2016 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -32,23 +32,8 @@
 
 """
 
-import os
-import numpy as np
-# for debugging
-import inspect
-import time
-# for moving files
-import shutil
-# Import the PyQt and QGIS libraries
-from PyQt4.QtCore import *
-from PyQt4.QtCore import QCoreApplication
-from PyQt4.QtGui import *
 from qgis.core import *
 from qgis.gui import *
-from osgeo import gdal
-from osgeo import ogr 
-from osgeo import osr
-from osgeo.gdalconst import *
 import SemiAutomaticClassificationPlugin.core.config as cfg
 
 class ReclassificationTab:
@@ -57,26 +42,48 @@ class ReclassificationTab:
 		pass
 					
 	# reclassify
-	def reclassify(self):
-		self.clssfctnNm = cfg.ui.reclassification_name_combo.currentText()
-		i = cfg.utls.selectLayerbyName(self.clssfctnNm, "Yes")
-		try:
-			classificationPath = i.source()
-		except Exception, err:
-			cfg.mx.msg4()
-			cfg.utls.refreshClassificationLayer()
-			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-			return "No"
-		list = self.getValuesTable()
-		tW = cfg.ui.reclass_values_tableWidget
-		c = tW.rowCount()
+	def reclassifyAction(self):
+		self.reclassify()
+		
+	# reclassify
+	def reclassify(self, batch = "No", rasterInput = None, rasterOutput = None, valueString = None):
+		if batch == "No":
+			self.clssfctnNm = cfg.ui.reclassification_name_combo.currentText()
+			i = cfg.utls.selectLayerbyName(self.clssfctnNm, "Yes")
+			try:
+				classificationPath = i.source()
+			except Exception, err:
+				cfg.mx.msg4()
+				cfg.utls.refreshClassificationLayer()
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				return "No"
+			list = self.getValuesTable()
+			tW = cfg.ui.reclass_values_tableWidget
+			c = tW.rowCount()
+		else:
+			if cfg.osSCP.path.isfile(rasterInput):
+				classificationPath = rasterInput
+			else:
+				return "No"
+			list = []
+			values = valueString.split(",")
+			for v in values:
+				val = v.split("-")
+				list.append([val[0], val[1]])
+			c = 1
 		if c > 0:
-			out = QFileDialog.getSaveFileName(None , QApplication.translate("semiautomaticclassificationplugin", "Save raster output"), "", "*.tif")
+			if batch == "No":
+				out = cfg.utls.getSaveFileName(None , cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Save raster output"), "", "*.tif")
+			else:
+				out = rasterOutput
 			if len(out) > 0:
-				cfg.uiUtls.addProgressBar()
+				if batch == "No":
+					cfg.uiUtls.addProgressBar()
+					# disable map canvas render for speed
+					cfg.cnvs.setRenderFlag(False)
 				cfg.uiUtls.updateBar(10)
-				n = os.path.basename(out)
+				n = cfg.osSCP.path.basename(out)
 				if n.endswith(".tif"):
 					out = out
 				else:
@@ -86,7 +93,7 @@ class ReclassificationTab:
 				tPMN2 = dT + cfg.calcRasterNm + ".tif"
 				tPMD2 = cfg.tmpDir + "/" + tPMN2
 				# open input with GDAL
-				rD = gdal.Open(classificationPath, GA_ReadOnly)
+				rD = cfg.gdalSCP.Open(classificationPath, cfg.gdalSCP.GA_ReadOnly)
 				# band list
 				bL = cfg.utls.readAllBandsFromRaster(rD)
 				# output rasters
@@ -104,27 +111,39 @@ class ReclassificationTab:
 				if cfg.rasterCompression != "No":
 					try:
 						cfg.utls.GDALCopyRaster(tPMD2, out, "GTiff", cfg.rasterCompression, "DEFLATE -co PREDICTOR=2 -co ZLEVEL=1")
-						os.remove(tPMD2)
+						cfg.osSCP.remove(tPMD2)
 					except Exception, err:
-						shutil.copy(tPMD2, out)
-						os.remove(tPMD2)
+						cfg.shutilSCP.copy(tPMD2, out)
+						cfg.osSCP.remove(tPMD2)
 						# logger
-						if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+						if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				else:
-					shutil.copy(tPMD2, out)
-					os.remove(tPMD2)
-				r = cfg.utls.addRasterLayer(out, os.path.basename(out))
+					cfg.shutilSCP.copy(tPMD2, out)
+					cfg.osSCP.remove(tPMD2)
+				if cfg.osSCP.path.isfile(out):
+					r = cfg.utls.addRasterLayer(out, cfg.osSCP.path.basename(out))
+				else:
+					if batch == "No":
+						cfg.utls.finishSound()
+						cfg.uiUtls.removeProgressBar()
+						# enable map canvas render
+						cfg.cnvs.setRenderFlag(True)
+					return "No"
 				# create symbol
 				if cfg.ui.apply_symbology_checkBox.isChecked() is True:	
-					sL = cfg.classD.getSignatureList()
-					if str(cfg.ui.class_macroclass_comboBox_2.currentText()) == "MC ID":
+					if str(cfg.ui.class_macroclass_comboBox_2.currentText()) == cfg.fldMacroID_class_def:
 						mc = "Yes"
+						sL = cfg.classD.createMCIDList()
 					else:
 						mc = "No"
+						sL = cfg.classD.getSignatureList()
 					cfg.utls.rasterSymbol(r, sL, mc)
-				cfg.utls.finishSound()
-				cfg.uiUtls.removeProgressBar()
-				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " reclassification ended")
+				if batch == "No":
+					cfg.utls.finishSound()
+					cfg.uiUtls.removeProgressBar()
+					# enable map canvas render
+					cfg.cnvs.setRenderFlag(True)
+				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " reclassification ended")
 
 	def calculateUniqueValues(self):
 		self.clssfctnNm = cfg.ui.reclassification_name_combo.currentText()
@@ -135,14 +154,14 @@ class ReclassificationTab:
 			cfg.mx.msg4()
 			cfg.utls.refreshClassificationLayer()
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			return "No"
 		try:
 			clssRstrSrc = unicode(classificationPath)
 			ck = "Yes"
 		except Exception, err:
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			ck = "No"
 		if ck == "No":
 			cfg.mx.msg4()
@@ -150,14 +169,14 @@ class ReclassificationTab:
 		else:
 			cfg.uiUtls.addProgressBar()
 			cfg.uiUtls.updateBar(10)
-			refRstrDt = gdal.Open(clssRstrSrc, GA_ReadOnly)
+			refRstrDt = cfg.gdalSCP.Open(clssRstrSrc, cfg.gdalSCP.GA_ReadOnly)
 			# combination finder
 			# band list
 			bLR = cfg.utls.readAllBandsFromRaster(refRstrDt)
-			cfg.rasterBandUniqueVal = np.zeros((1, 1))
-			cfg.rasterBandUniqueVal = np.delete(cfg.rasterBandUniqueVal, 0, 1)
+			cfg.rasterBandUniqueVal = cfg.np.zeros((1, 1))
+			cfg.rasterBandUniqueVal = cfg.np.delete(cfg.rasterBandUniqueVal, 0, 1)
 			o = cfg.utls.processRaster(refRstrDt, bLR, None, "No", cfg.utls.rasterUniqueValues, None, None, None, None, 0, None, cfg.NoDataVal, "No", None, None, "UniqueVal")
-			cfg.rasterBandUniqueVal = np.unique(cfg.rasterBandUniqueVal).tolist()
+			cfg.rasterBandUniqueVal = cfg.np.unique(cfg.rasterBandUniqueVal).tolist()
 			refRasterBandUniqueVal = sorted(cfg.rasterBandUniqueVal)	
 			cfg.uiUtls.updateBar(80)
 			if cfg.ui.CID_MCID_code_checkBox.isChecked() is True:
@@ -172,7 +191,7 @@ class ReclassificationTab:
 			refRstrDt = None
 			cfg.uiUtls.updateBar(100)
 			cfg.uiUtls.removeProgressBar()
-			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " values calculated")
+			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " values calculated")
 			
 	def createValueList(self, list):
 		unique = []
@@ -180,7 +199,7 @@ class ReclassificationTab:
 			unique.append([float(i),float(i)])
 		l = sorted(unique, key=lambda unique: (unique[0]))
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " unique" + str(l))
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " unique" + str(l))
 		return l
 		
 	def addValuesToTable(self, valuesList):
@@ -190,13 +209,8 @@ class ReclassificationTab:
 		c = tW.rowCount()
 		for i in valuesList:
 			tW.setRowCount(c + 1)
-			it = QTableWidgetItem(str(c + 1))
-			oldV = QTableWidgetItem(str(i[0]))
-			newV = QTableWidgetItem(str(i[1]))
-			tW.setItem(c, 0, oldV)
-			tW.setItem(c, 1, newV)
-			# add list items to table
-			tW.setRowCount(c + 1)
+			cfg.utls.addTableItem(tW, str(i[0]), c, 0)
+			cfg.utls.addTableItem(tW, str(i[1]), c, 1)
 			c = c + 1
 		cfg.ReclassTabEdited = "Yes"
 		
@@ -226,13 +240,9 @@ class ReclassificationTab:
 		tW = cfg.ui.reclass_values_tableWidget
 		# add item to table
 		c = tW.rowCount()
-		it = QTableWidgetItem(str(c + 1))
-		old = QTableWidgetItem(str(0))
-		new = QTableWidgetItem(str(0))
-		# add list items to table
 		tW.setRowCount(c + 1)
-		tW.setItem(c, 0, old)
-		tW.setItem(c, 1, new)
+		cfg.utls.addTableItem(tW, "0", c, 0)
+		cfg.utls.addTableItem(tW, "0", c, 1)
 		cfg.ReclassTabEdited = "Yes"
 
 	def removePointFromTable(self):
@@ -247,17 +257,17 @@ class ReclassificationTab:
 					val = float(val)
 				except:
 					cfg.ReclassTabEdited = "No"
-					tW.setItem(row, column, QTableWidgetItem(str(0)))
+					cfg.utls.setTableItem(tW, row, column, "0")
 					cfg.ReclassTabEdited = "Yes"
 			elif column == 0:	
 				c = val.replace(cfg.variableName, "rasterSCPArrayfunctionBand")
-				rasterSCPArrayfunctionBand = np.arange(9).reshape(3, 3)
+				rasterSCPArrayfunctionBand = cfg.np.arange(9).reshape(3, 3)
 				try:
-					eval("np.where(" + c + ", 1, rasterSCPArrayfunctionBand)")
+					eval("cfg.np.where(" + c + ", 1, rasterSCPArrayfunctionBand)")
 				except:
 					cfg.ReclassTabEdited = "No"
-					tW.setItem(row, column, QTableWidgetItem(str(0)))
+					cfg.utls.setTableItem(tW, row, column, "0")
 					cfg.ReclassTabEdited = "Yes"
 					cfg.mx.msgWar16()
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "edited cell" + str(row) + ";" + str(column))
+			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "edited cell" + str(row) + ";" + str(column))
