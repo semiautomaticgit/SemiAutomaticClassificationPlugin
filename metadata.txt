@@ -17,6 +17,7 @@ changelog=
 	5.0.1
 	Minor update:
 	-fixed issue when updating the plugin
+	-fixed QPyNullVariant issue
 	
 	5.0.0
 	New version:

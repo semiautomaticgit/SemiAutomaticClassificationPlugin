@@ -486,9 +486,6 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.transparency_Slider.setValue(cfg.ROITrnspVal)
 			# set RAM value
 			cfg.ui.RAM_spinBox.setValue(cfg.RAMValue)
-			# set ID field name line
-			cfg.ui.ID_field_name_lineEdit.setText(cfg.fldID_class)
-			cfg.ui.MID_field_name_lineEdit.setText(cfg.fldMacroID_class)
 			# macroclass checkbox
 			if cfg.macroclassCheck == "No":
 				cfg.uidc.macroclass_checkBox.setCheckState(0)
@@ -505,23 +502,30 @@ class SemiAutomaticClassificationPlugin:
 				cfg.uidc.LC_signature_checkBox.setCheckState(0)
 			elif cfg.LCsignatureCheckBox == "Yes":
 				cfg.uidc.LC_signature_checkBox.setCheckState(2)
-			# set Info field name line
-			cfg.ui.Info_field_name_lineEdit.setText(cfg.fldROI_info)
-			cfg.ui.MCInfo_field_name_lineEdit.setText(cfg.fldROIMC_info)
-			cfg.ui.variable_name_lineEdit.setText(cfg.variableName)
-			cfg.ui.group_name_lineEdit.setText(cfg.grpNm)
-			# set USGS user and password
-			cfg.ui.user_usgs_lineEdit.setText(cfg.USGSUser)
-			USGSPsw = cfg.utls.decryptPassword(cfg.USGSPass)
-			cfg.ui.password_usgs_lineEdit.setText(USGSPsw)
-			cfg.ui.user_usgs_lineEdit_2.setText(cfg.USGSUserASTER)
-			USGSPsw2 = cfg.utls.decryptPassword(cfg.USGSPassASTER)
-			cfg.ui.password_usgs_lineEdit_2.setText(USGSPsw2)
-			# set SciHub user and password
-			cfg.ui.sentinel_service_lineEdit.setText(cfg.SciHubService)
-			cfg.ui.user_scihub_lineEdit.setText(cfg.SciHubUser)
-			sciHubPsw = cfg.utls.decryptPassword(cfg.SciHubPass)
-			cfg.ui.password_scihub_lineEdit.setText(sciHubPsw)
+			try:
+				# set ID field name line
+				cfg.ui.ID_field_name_lineEdit.setText(cfg.fldID_class)
+				cfg.ui.MID_field_name_lineEdit.setText(cfg.fldMacroID_class)
+				# set Info field name line
+				cfg.ui.Info_field_name_lineEdit.setText(cfg.fldROI_info)
+				cfg.ui.MCInfo_field_name_lineEdit.setText(cfg.fldROIMC_info)
+				cfg.ui.variable_name_lineEdit.setText(cfg.variableName)
+				cfg.ui.group_name_lineEdit.setText(cfg.grpNm)
+				# set USGS user and password
+				cfg.ui.user_usgs_lineEdit.setText(cfg.USGSUser)
+				USGSPsw = cfg.utls.decryptPassword(cfg.USGSPass)
+				cfg.ui.password_usgs_lineEdit.setText(USGSPsw)
+				cfg.ui.user_usgs_lineEdit_2.setText(cfg.USGSUserASTER)
+				USGSPsw2 = cfg.utls.decryptPassword(cfg.USGSPassASTER)
+				cfg.ui.password_usgs_lineEdit_2.setText(USGSPsw2)
+				# set SciHub user and password
+				cfg.ui.sentinel_service_lineEdit.setText(cfg.SciHubService)
+				cfg.ui.user_scihub_lineEdit.setText(cfg.SciHubUser)
+				sciHubPsw = cfg.utls.decryptPassword(cfg.SciHubPass)
+				cfg.ui.password_scihub_lineEdit.setText(sciHubPsw)
+			except Exception, err:
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			# reload layers in combos
 			cfg.utls.refreshClassificationLayer()
 			cfg.utls.refreshRasterExtent()
@@ -1174,7 +1178,11 @@ class SemiAutomaticClassificationPlugin:
 		# ROI info
 		cfg.uidc.ROI_Class_line.setText("C 1")
 		cfg.uidc.ROI_Macroclass_line.setText("MC 1")
-		cfg.uidc.custom_index_lineEdit.setText("")
+		try:
+			cfg.uidc.custom_index_lineEdit.setText("")
+		except Exception, err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 		# RGB list
 		cfg.rgb_combo.clear()
 		cfg.rgb_combo.addItem("-")
