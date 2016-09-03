@@ -3630,17 +3630,17 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Proszę ponownie uruchomić QGIS aby uzyskać dostęp do Semi-Automatic Classification Plugin</translation>
     </message>
     <message>
-        <location filename="input.py" line="308"/>
+        <location filename="input.py" line="309"/>
         <source>SCP</source>
         <translation type="unfinished">SCP</translation>
     </message>
     <message>
-        <location filename="input.py" line="322"/>
+        <location filename="input.py" line="323"/>
         <source>Tools</source>
         <translation type="unfinished">Narzędzia</translation>
     </message>
     <message>
-        <location filename="input.py" line="382"/>
+        <location filename="input.py" line="383"/>
         <source>Settings</source>
         <translation type="unfinished">Ustawienia</translation>
     </message>
@@ -3650,7 +3650,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Semi-Automatic Classification Plugin</translation>
     </message>
     <message>
-        <location filename="input.py" line="236"/>
+        <location filename="input.py" line="237"/>
         <source>Band set</source>
         <translation type="unfinished">Zestaw kanałów</translation>
     </message>
@@ -3675,17 +3675,17 @@ p, li { white-space: pre-wrap; }
         <translation>Lokalne wzmocnienie kontrastu (odchylenie standardowe)</translation>
     </message>
     <message>
-        <location filename="input.py" line="248"/>
+        <location filename="input.py" line="249"/>
         <source>Spectral plot</source>
         <translation type="unfinished">Wykres spektralny</translation>
     </message>
     <message>
-        <location filename="input.py" line="246"/>
+        <location filename="input.py" line="247"/>
         <source>Band calc</source>
         <translation type="unfinished">Wyzn Kanałów</translation>
     </message>
     <message>
-        <location filename="input.py" line="258"/>
+        <location filename="input.py" line="259"/>
         <source>Online help</source>
         <translation type="unfinished">Pomoc Online</translation>
     </message>
@@ -4562,32 +4562,32 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="314"/>
+        <location filename="input.py" line="315"/>
         <source>Download images</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="338"/>
+        <location filename="input.py" line="339"/>
         <source>Preprocessing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="354"/>
+        <location filename="input.py" line="355"/>
         <source>Postprocessing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="250"/>
+        <location filename="input.py" line="251"/>
         <source>Scatter plot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="252"/>
+        <location filename="input.py" line="253"/>
         <source>Batch</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="256"/>
+        <location filename="input.py" line="257"/>
         <source>User manual</source>
         <translation type="unfinished"></translation>
     </message>

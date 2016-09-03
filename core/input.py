@@ -184,6 +184,7 @@ class Input:
 		lblmax = cfg.ipt.addToolbarLabel(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", " S"), "Yes")
 		cfg.preview_size_spinBox = cfg.ipt.addToolbarSpin(cfg.classD.previewSize, cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Set the preview size (in pixel unit)"), 0, 1, 1000000, 100, float(cfg.prvwSz), 60)
 		cfg.removeTempFilesButton = cfg.ipt.addToolbar2Button(cfg.utls.removeTempFiles, "semiautomaticclassificationplugin_remove_temp.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Remove temporary files"))
+		cfg.removeTempFilesButton.setEnabled(False)
 		
 	# add spinbox
 	def addToolbarSpin(self, function, tooltip, decimals, min, max, step, value, width = 100):

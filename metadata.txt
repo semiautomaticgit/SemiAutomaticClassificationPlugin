@@ -18,6 +18,7 @@ changelog=
 	Minor update:
 	-fixed issue when updating the plugin
 	-fixed QPyNullVariant issue
+	-disabled the button "Remove temporary files" because of crash in Windows
 	
 	5.0.0
 	New version:
