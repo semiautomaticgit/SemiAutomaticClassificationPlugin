@@ -3625,22 +3625,22 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>semiautomaticclassificationplugin</name>
     <message>
-        <location filename="semiautomaticclassificationplugin.py" line="1378"/>
+        <location filename="semiautomaticclassificationplugin.py" line="1379"/>
         <source>Please, restart QGIS for executing the Semi-Automatic Classification Plugin</source>
         <translation type="unfinished">Proszę ponownie uruchomić QGIS aby uzyskać dostęp do Semi-Automatic Classification Plugin</translation>
     </message>
     <message>
-        <location filename="input.py" line="309"/>
+        <location filename="input.py" line="308"/>
         <source>SCP</source>
         <translation type="unfinished">SCP</translation>
     </message>
     <message>
-        <location filename="input.py" line="323"/>
+        <location filename="input.py" line="322"/>
         <source>Tools</source>
         <translation type="unfinished">Narzędzia</translation>
     </message>
     <message>
-        <location filename="input.py" line="383"/>
+        <location filename="input.py" line="382"/>
         <source>Settings</source>
         <translation type="unfinished">Ustawienia</translation>
     </message>
@@ -3650,7 +3650,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Semi-Automatic Classification Plugin</translation>
     </message>
     <message>
-        <location filename="input.py" line="237"/>
+        <location filename="input.py" line="236"/>
         <source>Band set</source>
         <translation type="unfinished">Zestaw kanałów</translation>
     </message>
@@ -3675,42 +3675,42 @@ p, li { white-space: pre-wrap; }
         <translation>Lokalne wzmocnienie kontrastu (odchylenie standardowe)</translation>
     </message>
     <message>
-        <location filename="input.py" line="249"/>
+        <location filename="input.py" line="248"/>
         <source>Spectral plot</source>
         <translation type="unfinished">Wykres spektralny</translation>
     </message>
     <message>
-        <location filename="input.py" line="247"/>
+        <location filename="input.py" line="246"/>
         <source>Band calc</source>
         <translation type="unfinished">Wyzn Kanałów</translation>
     </message>
     <message>
-        <location filename="input.py" line="259"/>
+        <location filename="input.py" line="258"/>
         <source>Online help</source>
         <translation type="unfinished">Pomoc Online</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="307"/>
+        <location filename="classificationdock.py" line="309"/>
         <source>Select a mask shapefile</source>
         <translation type="unfinished">Wybierz shapefile maski</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="527"/>
+        <location filename="classificationdock.py" line="529"/>
         <source>Save classification output</source>
         <translation type="unfinished">Zapisz wyjście klasyfikacji</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="623"/>
+        <location filename="classificationdock.py" line="625"/>
         <source> conversion to vector. Please wait ...</source>
         <translation type="unfinished"> konwersja na wektor. Prosze czekać ...</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="719"/>
+        <location filename="classificationdock.py" line="721"/>
         <source>Select a qml style</source>
         <translation type="unfinished">Wybierz styl qml</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="789"/>
+        <location filename="classificationdock.py" line="791"/>
         <source>Select a signature list file</source>
         <translation type="unfinished">Wybierz plik z listą sygnatur</translation>
     </message>
@@ -3720,12 +3720,12 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Zresetuj listę sygnatur</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1188"/>
+        <location filename="classificationdock.py" line="1190"/>
         <source>Select a library file</source>
         <translation type="unfinished">Wybierz bibliotekę pliku</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1217"/>
+        <location filename="classificationdock.py" line="1219"/>
         <source>Export the highlighted signatures to CSV library</source>
         <translation type="unfinished">Eksportuj wybrane sygnatury do biblioteki CSV</translation>
     </message>
@@ -3740,12 +3740,12 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Czy na pewno chcesz usunąć wybrane sygnatury?</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1316"/>
+        <location filename="classificationdock.py" line="1318"/>
         <source>Merge signatures</source>
         <translation type="unfinished">Połącz sygnatury</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1316"/>
+        <location filename="classificationdock.py" line="1318"/>
         <source>Merge highlighted signatures?</source>
         <translation type="unfinished">Połączyć wybrane sygnatury?</translation>
     </message>
@@ -4395,29 +4395,29 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Czy na pewno zresetować progi?</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="2141"/>
+        <location filename="classificationdock.py" line="2143"/>
         <source>Add required fds</source>
         <translation>Dodaj wymagane pola</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="2141"/>
+        <location filename="classificationdock.py" line="2143"/>
         <source>It appears that the shapefile </source>
         <translation type="unfinished">Wygląda na to, że ten shapefile</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="2141"/>
+        <location filename="classificationdock.py" line="2143"/>
         <source> is missing some fields that are required for the signature calculation. 
 Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"> nie posiada pól, które są potrzebne do wyznaczania sygnatur. 
 Chcesz dodać wymagane pola do tego shapefile?</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="2225"/>
+        <location filename="classificationdock.py" line="2227"/>
         <source>Undo save ROI</source>
         <translation type="unfinished">Cofnij zapisywanie OT</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="2225"/>
+        <location filename="classificationdock.py" line="2227"/>
         <source>Are you sure you want to delete the last saved ROI?</source>
         <translation type="unfinished">Czy na pewno usunąć ostatnio zapisany OT?</translation>
     </message>
@@ -4427,32 +4427,32 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished">Wartości</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="803"/>
+        <location filename="classificationdock.py" line="805"/>
         <source>Select a SCP training input</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1113"/>
+        <location filename="classificationdock.py" line="1115"/>
         <source>Export SCP training input</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1290"/>
+        <location filename="classificationdock.py" line="1292"/>
         <source>Calculate signatures</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1290"/>
+        <location filename="classificationdock.py" line="1292"/>
         <source>Calculate signatures for highlighted items?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1437"/>
+        <location filename="classificationdock.py" line="1439"/>
         <source>Are you sure you want to delete highlighted ROIs and signatures?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="2029"/>
+        <location filename="classificationdock.py" line="2031"/>
         <source>Create SCP training input</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4562,32 +4562,32 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="315"/>
+        <location filename="input.py" line="314"/>
         <source>Download images</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="339"/>
+        <location filename="input.py" line="338"/>
         <source>Preprocessing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="355"/>
+        <location filename="input.py" line="354"/>
         <source>Postprocessing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="251"/>
+        <location filename="input.py" line="250"/>
         <source>Scatter plot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="253"/>
+        <location filename="input.py" line="252"/>
         <source>Batch</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="257"/>
+        <location filename="input.py" line="256"/>
         <source>User manual</source>
         <translation type="unfinished"></translation>
     </message>

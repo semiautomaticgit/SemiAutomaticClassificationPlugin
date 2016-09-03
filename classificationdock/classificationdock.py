@@ -140,13 +140,7 @@ class ClassificationDock:
 			# disable map canvas render for speed
 			cfg.cnvs.setRenderFlag(False)
 			cfg.uiUtls.updateBar(10)
-			# move previous preview to group
-			g = cfg.utls.groupIndex(cfg.grpNm)
-			if g is None:
-				g = cfg.utls.createGroup(cfg.grpNm)
-			preP = cfg.utls.selectLayerbyName(cfg.lastPrev)
-			if preP is not None:
-				cfg.lgnd.moveLayer(preP, g)
+			lastPrevX = cfg.lastPrev
 			# date time for temp name
 			dT = cfg.utls.getTime()
 			# temp files
@@ -185,9 +179,17 @@ class ClassificationDock:
 							cfg.lastPrev = r.name()
 							cfg.utls.rasterPreviewSymbol(r, cfg.algName)
 							cfg.uiUtls.updateBar(80)
-						# apply symbology
-						cfg.prevList.append(cfg.lastPrev)
+						# move to top
+						cfg.prevList.append(r)
 						cfg.utls.moveLayerTop(r)
+						cfg.iface.setActiveLayer(r)
+						# move previous preview to group
+						g = cfg.utls.groupIndex(cfg.grpNm)
+						if g is None:
+							g = cfg.utls.createGroup(cfg.grpNm)
+						preP = cfg.utls.selectLayerbyName(lastPrevX)
+						if preP is not None:
+							cfg.lgnd.moveLayer(preP, g)
 						cfg.lgnd.setGroupVisible(g, False)
 						cfg.lgnd.setGroupExpanded(g, False)
 						cfg.show_preview_radioButton2.setChecked(True)

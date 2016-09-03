@@ -153,6 +153,7 @@ class SemiAutomaticClassificationPlugin:
 		try:
 			cfg.osSCP = os
 		except:
+			qgisUtils.iface.messageBar().pushMessage("Semi-Automatic Classification Plugin", QApplication.translate("semiautomaticclassificationplugin", "Please, restart QGIS for executing the Semi-Automatic Classification Plugin"), level=QgsMessageBar.INFO)
 			return
 		cfg.sysSCP = sys
 		cfg.platformSCP = platform

@@ -4440,19 +4440,18 @@ class Utils:
 		cfg.cnvs.setRenderFlag(False)
 		try:
 			for p in cfg.prevList:
-				preP = cfg.utls.selectLayerbyName(p)
-				if preP is not None:
-					cfg.utls.removeLayer(preP)
+				pp = cfg.utls.selectLayerbyName(p.name())
+				if pp is not None:
+					cfg.utls.removeLayerByLayer(p)
 			vrt = cfg.utls.selectLayerbyName(cfg.tmpVrtNm + ".vrt")
 			if vrt is not None:
-				cfg.utls.removeLayer(vrt)
+				cfg.utls.removeLayerByLayer(cfg.tmpVrt)
 			cfg.utls.removeGroup(cfg.grpNm)
-			preP = cfg.utls.selectLayerbyName(cfg.lastPrev)
-			if preP is not None:
-				cfg.utls.removeLayer(preP)
 		except Exception, err:
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+		cfg.prevList = []
+		cfg.tmpVrt = None
 		# enable map canvas render
 		cfg.cnvs.setRenderFlag(True)
 			
