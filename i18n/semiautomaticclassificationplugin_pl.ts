@@ -3625,7 +3625,7 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>semiautomaticclassificationplugin</name>
     <message>
-        <location filename="semiautomaticclassificationplugin.py" line="1379"/>
+        <location filename="semiautomaticclassificationplugin.py" line="1383"/>
         <source>Please, restart QGIS for executing the Semi-Automatic Classification Plugin</source>
         <translation type="unfinished">Proszę ponownie uruchomić QGIS aby uzyskać dostęp do Semi-Automatic Classification Plugin</translation>
     </message>
@@ -4875,6 +4875,11 @@ Possible reason: input is a virtual raster or band is not loaded</source>
     <message>
         <location filename="spectralsignatureplot.py" line="1033"/>
         <source>Are you sure you want to undo thresholds?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="semiautomaticclassificationplugin.py" line="361"/>
+        <source>Please, restart QGIS for executing the Semi-Automatic Classification Plugin. Possible missing dependecies.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

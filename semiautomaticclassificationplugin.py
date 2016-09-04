@@ -152,51 +152,51 @@ class SemiAutomaticClassificationPlugin:
 	def __init__(self, iface):
 		try:
 			cfg.osSCP = os
+			cfg.sysSCP = sys
+			cfg.platformSCP = platform
+			cfg.shutilSCP = shutil
+			cfg.inspectSCP = inspect
+			cfg.timeSCP = time
+			cfg.datetimeSCP = datetime
+			cfg.subprocessSCP = subprocess
+			cfg.itertoolsSCP = itertools
+			cfg.zipfileSCP = zipfile
+			cfg.tarfileSCP = tarfile
+			cfg.base64SCP = base64
+			cfg.randomSCP = random
+			cfg.QtCoreSCP = QtCore
+			cfg.QtGuiSCP = QtGui
+			cfg.QNetworkRequestSCP = QNetworkRequest
+			cfg.QtSCP = Qt
+			cfg.QObjectSCP = QObject
+			cfg.QVariantSCP = QVariant
+			cfg.SIGNALSCP= SIGNAL
+			cfg.QFileInfoSCP = QFileInfo
+			cfg.QSettingsSCP = QSettings
+			cfg.QDirSCP = QDir
+			cfg.QDateSCP = QDate
+			cfg.qgisCoreSCP = qgisCore
+			cfg.gdalSCP = gdal
+			cfg.ogrSCP = ogr
+			cfg.osrSCP = osr
+			cfg.urllibSCP = urllib
+			cfg.urllib2SCP = urllib2
+			cfg.sslSCP = ssl
+			cfg.CookieJarSCP = CookieJar
+			cfg.reSCP = re
+			cfg.ETSCP = ET
+			cfg.minidomSCP = minidom
+			cfg.statdistrSCP = statdistr
+			cfg.cdistSCP = cdist
+			cfg.signalSCP = signal
+			cfg.labelSCP = label
+			cfg.MaxNLocatorSCP = MaxNLocator
+			cfg.mplpltSCP = mplplt
+			cfg.mplcolorsSCP = mplcolors
+			cfg.np = np
 		except:
 			qgisUtils.iface.messageBar().pushMessage("Semi-Automatic Classification Plugin", QApplication.translate("semiautomaticclassificationplugin", "Please, restart QGIS for executing the Semi-Automatic Classification Plugin"), level=QgsMessageBar.INFO)
 			return
-		cfg.sysSCP = sys
-		cfg.platformSCP = platform
-		cfg.shutilSCP = shutil
-		cfg.inspectSCP = inspect
-		cfg.timeSCP = time
-		cfg.datetimeSCP = datetime
-		cfg.subprocessSCP = subprocess
-		cfg.itertoolsSCP = itertools
-		cfg.zipfileSCP = zipfile
-		cfg.tarfileSCP = tarfile
-		cfg.base64SCP = base64
-		cfg.randomSCP = random
-		cfg.QtCoreSCP = QtCore
-		cfg.QtGuiSCP = QtGui
-		cfg.QNetworkRequestSCP = QNetworkRequest
-		cfg.QtSCP = Qt
-		cfg.QObjectSCP = QObject
-		cfg.QVariantSCP = QVariant
-		cfg.SIGNALSCP= SIGNAL
-		cfg.QFileInfoSCP = QFileInfo
-		cfg.QSettingsSCP = QSettings
-		cfg.QDirSCP = QDir
-		cfg.QDateSCP = QDate
-		cfg.qgisCoreSCP = qgisCore
-		cfg.gdalSCP = gdal
-		cfg.ogrSCP = ogr
-		cfg.osrSCP = osr
-		cfg.urllibSCP = urllib
-		cfg.urllib2SCP = urllib2
-		cfg.sslSCP = ssl
-		cfg.CookieJarSCP = CookieJar
-		cfg.reSCP = re
-		cfg.ETSCP = ET
-		cfg.minidomSCP = minidom
-		cfg.statdistrSCP = statdistr
-		cfg.cdistSCP = cdist
-		cfg.signalSCP = signal
-		cfg.labelSCP = label
-		cfg.MaxNLocatorSCP = MaxNLocator
-		cfg.mplpltSCP = mplplt
-		cfg.mplcolorsSCP = mplcolors
-		cfg.np = np
 		if PluginCheck == "Yes":
 			# reference to QGIS interface
 			cfg.iface = iface
@@ -355,7 +355,11 @@ class SemiAutomaticClassificationPlugin:
 		
 	def initGui(self):
 		if PluginCheck == "Yes":
-			cfg.iface.addDockWidget(cfg.QtSCP.LeftDockWidgetArea, cfg.dockclassdlg)
+			try:
+				cfg.iface.addDockWidget(cfg.QtSCP.LeftDockWidgetArea, cfg.dockclassdlg)
+			except:
+				qgisUtils.iface.messageBar().pushMessage("Semi-Automatic Classification Plugin", QApplication.translate("semiautomaticclassificationplugin", "Please, restart QGIS for executing the Semi-Automatic Classification Plugin. Possible missing dependecies."), level=QgsMessageBar.INFO)
+				return
 			cfg.ipt.loadInputToolbar()
 			""" menu """
 			cfg.ipt.loadMenu()
