@@ -456,7 +456,7 @@ class DownloadASTERImages:
 			password =cfg.ui.password_usgs_lineEdit_2.text()
 			try:
 				imgID = imageDisplayID + ".hdf"
-				check = cfg.utls.passwordConnect(user, password, url, 'urs.earthdata.nasa.gov', cfg.tmpDir + "//" + imgID, progress)
+				check = cfg.utls.passwordConnectPython(user, password, url, 'urs.earthdata.nasa.gov', cfg.tmpDir + "//" + imgID, progress)
 				if str(check) == 'Cancel action':
 					return check
 				if cfg.osSCP.path.getsize(cfg.tmpDir + "//" + imgID) > 10000:

@@ -189,8 +189,8 @@ class Utils:
 			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			return "No"
 			
-	# connect with password old
-	def passwordConnectOld(self, user, password, url, topLevelUrl, outputPath = None, progress = None, quiet = "No"):
+	# connect with password Python
+	def passwordConnectPython(self, user, password, url, topLevelUrl, outputPath = None, progress = None, quiet = "No"):
 		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode())
 		proxyHandler = cfg.utls.getProxyHandler()
 		passwordHandler = cfg.utls.getPasswordHandler(user, password, topLevelUrl)
