@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/ui_semiautomaticclassificationplugin.ui'
 #
-# Created: Sun Sep  4 20:15:59 2016
+# Created: Tue Sep  6 10:08:30 2016
 #      by: PyQt4 UI code generator 4.11.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -27,7 +27,7 @@ class Ui_SemiAutomaticClassificationPlugin(object):
     def setupUi(self, SemiAutomaticClassificationPlugin):
         SemiAutomaticClassificationPlugin.setObjectName(_fromUtf8("SemiAutomaticClassificationPlugin"))
         SemiAutomaticClassificationPlugin.setEnabled(True)
-        SemiAutomaticClassificationPlugin.resize(815, 559)
+        SemiAutomaticClassificationPlugin.resize(891, 569)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -310,7 +310,7 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.toolBox_2.setFrameShadow(QtGui.QFrame.Raised)
         self.toolBox_2.setObjectName(_fromUtf8("toolBox_2"))
         self.page_3 = QtGui.QWidget()
-        self.page_3.setGeometry(QtCore.QRect(0, 0, 119, 126))
+        self.page_3.setGeometry(QtCore.QRect(0, 0, 838, 152))
         self.page_3.setObjectName(_fromUtf8("page_3"))
         self.gridLayout_135 = QtGui.QGridLayout(self.page_3)
         self.gridLayout_135.setObjectName(_fromUtf8("gridLayout_135"))
@@ -3779,7 +3779,7 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.toolBox_5 = QtGui.QToolBox(self.tab_accuracy)
         self.toolBox_5.setObjectName(_fromUtf8("toolBox_5"))
         self.page_10 = QtGui.QWidget()
-        self.page_10.setGeometry(QtCore.QRect(0, 0, 393, 177))
+        self.page_10.setGeometry(QtCore.QRect(0, 0, 840, 405))
         self.page_10.setObjectName(_fromUtf8("page_10"))
         self.gridLayout_36 = QtGui.QGridLayout(self.page_10)
         self.gridLayout_36.setObjectName(_fromUtf8("gridLayout_36"))
@@ -5070,7 +5070,7 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.band_calc_toolBox.setFrameShadow(QtGui.QFrame.Plain)
         self.band_calc_toolBox.setObjectName(_fromUtf8("band_calc_toolBox"))
         self.page_20 = QtGui.QWidget()
-        self.page_20.setGeometry(QtCore.QRect(0, 0, 254, 258))
+        self.page_20.setGeometry(QtCore.QRect(0, 0, 837, 258))
         self.page_20.setObjectName(_fromUtf8("page_20"))
         self.gridLayout_213 = QtGui.QGridLayout(self.page_20)
         self.gridLayout_213.setObjectName(_fromUtf8("gridLayout_213"))
@@ -5774,7 +5774,7 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.toolBox = QtGui.QToolBox(self.tab_Settings)
         self.toolBox.setObjectName(_fromUtf8("toolBox"))
         self.widget = QtGui.QWidget()
-        self.widget.setGeometry(QtCore.QRect(0, 0, 409, 285))
+        self.widget.setGeometry(QtCore.QRect(0, 0, 856, 422))
         self.widget.setObjectName(_fromUtf8("widget"))
         self.gridLayout_193 = QtGui.QGridLayout(self.widget)
         self.gridLayout_193.setObjectName(_fromUtf8("gridLayout_193"))

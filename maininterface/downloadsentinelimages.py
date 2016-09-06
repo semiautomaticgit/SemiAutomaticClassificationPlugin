@@ -366,7 +366,7 @@ class DownloadSentinelImages:
 					# cfg.mx.msgErr40()
 					# # logger
 					# cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " error connection " + topUrl)
-				urlL = topUrl + '%28%27' +imgID  +'%27%29/Nodes%28%27' +imgName + '.SAFE%27%29/Nodes%28%27GRANULE%27%29/Nodes%28%27' + imgName2 + '%27%29/Nodes%28%27IMG_DATA%27%29/Nodes%28%27' + imgName2[0:-7] + '_B' + bandNumber + '.jp2%27%29/$value'
+				urlL = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('IMG_DATA')/Nodes('" + imgName2[0:-7] + '_B' + bandNumber + ".jp2')/$value"
 				outFile = cfg.tmpDir + "//" + imgName2[0:-7] + '_B' + bandNumber + '.jp2'
 				outCopyFile = outputDirectory + "//" + imgName2[0:-7] + "//" + imgName2[0:-7] + '_B' + bandNumber
 				if exporter == "No":
@@ -414,9 +414,9 @@ class DownloadSentinelImages:
 					outDirList.append(outputDirectory + "//" + imgName2[0:-7])
 					progress = progress + progressStep
 					#download metadata
-					urlL1 = topUrl + '%28%27' +imgID  +'%27%29/Nodes%28%27' +imgName + '.SAFE%27%29/Nodes%28%27' + imgName.replace('_PRD_MSIL1C_', '_MTD_SAFL1C_') + '.xml%27%29/$value'
+					urlL1 = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('" + imgName.replace('_PRD_MSIL1C_', '_MTD_SAFL1C_') + ".xml')/$value"
 					outFile1 = outputDirectory + "//" + imgName2[0:-7] + "//" + imgName.replace('_PRD_MSIL1C_', '_MTD_SAFL1C_') + '.xml'
-					urlL2 = topUrl + '%28%27' +imgID  +'%27%29/Nodes%28%27' +imgName + '.SAFE%27%29/Nodes%28%27GRANULE%27%29/Nodes%28%27' + imgName2 + '%27%29/Nodes%28%27' + imgName2[0:-7].replace('_MSI_L1C_', '_MTD_L1C_') + '.xml%27%29/$value'
+					urlL2 = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('" + imgName2[0:-7].replace('_MSI_L1C_', '_MTD_L1C_') + ".xml')/$value"
 					outFile2 = outputDirectory + "//" + imgName2[0:-7] + "//" + imgName2[0:-7].replace('_MSI_L1C_', '_MTD_L1C_')  + '.xml'
 					if exporter == "No":
 						if not cfg.QDirSCP(outputDirectory + "//" + imgName2[0:-7]).exists():
@@ -428,7 +428,7 @@ class DownloadSentinelImages:
 						links.append(urlL1)
 						links.append(urlL2)
 					#download QI
-					urlL3 = topUrl + '%28%27' +imgID  +'%27%29/Nodes%28%27' +imgName + '.SAFE%27%29/Nodes%28%27GRANULE%27%29/Nodes%28%27' + imgName2 + '%27%29/Nodes%28%27QI_DATA%27%29/Nodes%28%27' + imgName2[0:-7].replace('_MSI_L1C_TL_', '_MSK_CLOUDS_')  + '_B00_MSIL1C.gml%27%29/$value'
+					urlL3 = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('QI_DATA')/Nodes('" + imgName2[0:-7].replace('_MSI_L1C_TL_', '_MSK_CLOUDS_')  + "_B00_MSIL1C.gml')/$value"
 					outFile3 = outputDirectory + "//" + imgName2[0:-7] + "//" + imgName2[0:-7].replace('_MSI_L1C_TL_', '_MSK_CLOUDS_') + '_B00_MSIL1C.gml'
 					if exporter == "No":
 						if not cfg.QDirSCP(outputDirectory + "//" + imgName2[0:-7]).exists():
@@ -535,13 +535,13 @@ class DownloadSentinelImages:
 			# cfg.mx.msgErr40()
 			# # logger
 			# cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " error connection " + topUrl)
-		url = topUrl + '/search?q=' + imgQuery + '%20AND%20cloudcoverpercentage:[0%20TO%20' + str(maxCloudCover) + ']%20AND%20beginPosition:[' + str(dateFrom) + 'T00:00:00.000Z%20TO%20' + str(dateTo) + 'T23:59:59.999Z]%20AND%20footprint:"Intersects%28POLYGON%28%28' + cfg.ui.UX_lineEdit_5.text() + "%20" + cfg.ui.UY_lineEdit_5.text() + "," + cfg.ui.UX_lineEdit_5.text() + "%20" + cfg.ui.LY_lineEdit_5.text() + "," + cfg.ui.LX_lineEdit_5.text() + "%20" + cfg.ui.LY_lineEdit_5.text() + "," + cfg.ui.LX_lineEdit_5.text() + "%20" + cfg.ui.UY_lineEdit_5.text() + "," + cfg.ui.UX_lineEdit_5.text() + "%20" + cfg.ui.UY_lineEdit_5.text() + '%29%29%29%22'
+		url = topUrl + '/search?q=' + imgQuery + '%20AND%20cloudcoverpercentage:[0%20TO%20' + str(maxCloudCover) + ']%20AND%20beginPosition:[' + str(dateFrom) + 'T00:00:00.000Z%20TO%20' + str(dateTo) + 'T23:59:59.999Z]%20AND%20footprint:"Intersects(POLYGON((' + cfg.ui.UX_lineEdit_5.text() + "%20" + cfg.ui.UY_lineEdit_5.text() + "," + cfg.ui.UX_lineEdit_5.text() + "%20" + cfg.ui.LY_lineEdit_5.text() + "," + cfg.ui.LX_lineEdit_5.text() + "%20" + cfg.ui.LY_lineEdit_5.text() + "," + cfg.ui.LX_lineEdit_5.text() + "%20" + cfg.ui.UY_lineEdit_5.text() + "," + cfg.ui.UX_lineEdit_5.text() + "%20" + cfg.ui.UY_lineEdit_5.text() + ')))%22'
 		response = cfg.utls.passwordConnect(user, password, url, topLevelUrl)
 		if response == "No":
 			cfg.uiUtls.removeProgressBar()
 			return "No"
 		#info = response.info()
-		xml = response.read()	
+		xml = response	
 		tW.setSortingEnabled(False)
 		doc = cfg.minidomSCP.parseString(xml)
 		entries = doc.getElementsByTagName("entry")
@@ -582,12 +582,12 @@ class DownloadSentinelImages:
 				attr = xd.getAttribute("name")
 				if attr == "cloudcoverpercentage":
 					cloudcoverpercentage = xd.firstChild.data
-			url2 = topUrl + '/odata/v1/Products%28%27' +imgID  +'%27%29/Nodes%28%27' +imgName + '.SAFE%27%29/Nodes%28%27' + imgName.replace('_PRD_MSIL1C_', '_MTD_SAFL1C_') + '.xml%27%29/$value'
+			url2 = topUrl + "/odata/v1/Products('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('" + imgName.replace('_PRD_MSIL1C_', '_MTD_SAFL1C_') + ".xml')/$value"
 			response2 = cfg.utls.passwordConnect(user, password, url2, topLevelUrl)
 			if response2 == "No":
 				cfg.uiUtls.removeProgressBar()
 				return "No"
-			xml2 = response2.read()
+			xml2 = response2
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " thumbnail downloaded" + xml2)
 			doc2 = cfg.minidomSCP.parseString(xml2)
@@ -601,8 +601,8 @@ class DownloadSentinelImages:
 						c = tW.rowCount()
 						# add list items to table
 						tW.setRowCount(c + 1)
-						imgPreview = topUrl + "/odata/v1/Products%28'" +  imgID + "'%29/Products%28'Quicklook'%29/$value"
-						imgPreview2 = topUrl + '/odata/v1/Products%28%27' +imgID  +'%27%29/Nodes%28%27' +imgName + '.SAFE%27%29/Nodes%28%27GRANULE%27%29/Nodes%28%27' + imgName2 + '%27%29/Nodes%28%27IMG_DATA%27%29/Nodes%28%27' + imgName2[0:-7] + '_B01.jp2%27%29/$value'
+						imgPreview = topUrl + "/odata/v1/Products('" +  imgID + "')/Products('Quicklook')/$value"
+						imgPreview2 = topUrl + "/odata/v1/Products('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('IMG_DATA')/Nodes('" + imgName2[0:-7] + "_B01.jp2')/$value"
 						cfg.utls.addTableItem(tW, imgName, c, 0)
 						cfg.utls.addTableItem(tW, imgName2, c, 1)
 						cfg.utls.addTableItem(tW, acqDateI, c, 2)

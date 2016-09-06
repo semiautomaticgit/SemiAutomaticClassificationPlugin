@@ -4384,7 +4384,7 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="utils.py" line="2038"/>
+        <location filename="utils.py" line="2122"/>
         <source>Please wait ...</source>
         <translation type="unfinished"></translation>
     </message>

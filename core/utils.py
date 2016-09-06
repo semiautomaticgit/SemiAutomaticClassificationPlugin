@@ -105,8 +105,92 @@ class Utils:
 		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode())
 		return passwordHandler
 			
+	# reply Finish
+	def replyFinish(self):
+		cfg.replyP.deleteLater()
+		cfg.fileP = cfg.replyP.readAll()
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode())
+				
+	# replyText
+	def replyText(self):
+		cfg.replyP.deleteLater()
+		cfg.htmlP = cfg.replyP.readAll()
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode())
+			
+	# progress
+	def downloadProgress(self, value, total):
+		cfg.uiUtls.updateBar(self.progressP, "(" + str(value/1048576) + "/" + str(total/1048576) + " MB) " + self.urlP, "Downloading")
+		if cfg.actionCheck == "No":
+			cfg.replyP.finished.disconnect()
+			cfg.replyP.abort()
+			cfg.replyP.close()
+							
 	# connect with password
 	def passwordConnect(self, user, password, url, topLevelUrl, outputPath = None, progress = None, quiet = "No"):
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode())
+		# auth
+		base64UP = cfg.base64SCP.encodestring(user + ":" + password)[:-1]
+		h = "Basic " + base64UP
+		hKey = cfg.QtCoreSCP.QByteArray("Authorization")
+		hValue = cfg.QtCoreSCP.QByteArray(h)
+		r = cfg.QNetworkRequestSCP(cfg.QtCoreSCP.QUrl(url))
+		r.setRawHeader(hKey, hValue)
+		try:
+			if outputPath is None:
+				cfg.replyP = cfg.qgisCoreSCP.QgsNetworkAccessManager.instance().get(r)
+				cfg.replyP.finished.connect(self.replyText)
+				# loop
+				eL = cfg.QtCoreSCP.QEventLoop()
+				cfg.replyP.finished.connect(eL.quit)
+				eL.exec_()
+				cfg.replyP.finished.disconnect(eL.quit)
+				cfg.replyP.finished.disconnect()
+				cfg.replyP.abort()
+				cfg.replyP.close()
+				return cfg.htmlP
+			else:
+				self.urlP = url
+				self.progressP = progress
+				cfg.replyP = cfg.qgisCoreSCP.QgsNetworkAccessManager.instance().get(r)
+				cfg.replyP.finished.connect(self.replyFinish)
+				cfg.replyP.downloadProgress.connect(self.downloadProgress)
+				# loop
+				eL = cfg.QtCoreSCP.QEventLoop()
+				cfg.replyP.finished.connect(eL.quit)
+				eL.exec_()
+				cfg.replyP.finished.disconnect(eL.quit)
+				cfg.replyP.finished.disconnect()
+				cfg.replyP.abort()
+				cfg.replyP.close()
+				with open(outputPath, "wb") as file:
+					file.write(cfg.fileP)
+				
+				if cfg.actionCheck == "No":
+					raise ValueError('Cancel action')
+				if cfg.osSCP.path.getsize(outputPath) > 500:
+					cfg.fileP = None
+					return "Yes"
+				else:
+					if "problem" in cfg.fileP:
+						cfg.fileP = None
+						return "No"
+					else:
+						cfg.fileP = None
+						return "Yes"
+					
+		except Exception, err:
+			if unicode(err) != 'Cancel action':
+				if quiet == "No":
+					if "ssl" in unicode(err):
+						cfg.mx.msgErr56()
+					else:
+						cfg.mx.msgErr50(unicode(err))
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			return "No"
+			
+	# connect with password old
+	def passwordConnectOld(self, user, password, url, topLevelUrl, outputPath = None, progress = None, quiet = "No"):
 		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode())
 		proxyHandler = cfg.utls.getProxyHandler()
 		passwordHandler = cfg.utls.getPasswordHandler(user, password, topLevelUrl)
@@ -5988,12 +6072,16 @@ class Utils:
 	def cleanOldTempDirectory(self):
 		t = cfg.datetimeSCP.datetime.now()
 		inputDir = unicode(cfg.QDirSCP.tempPath() + "/" + cfg.tempDirName)
-		for name in cfg.osSCP.listdir(inputDir):
-			dStr = cfg.datetimeSCP.datetime.strptime(name, "%Y%m%d_%H%M%S%f")
-			diff = (t - dStr)
-			if diff.days > 3:
-				cfg.shutilSCP.rmtree(inputDir + "/" + name, True)
-		
+		try:
+			for name in cfg.osSCP.listdir(inputDir):
+				dStr = cfg.datetimeSCP.datetime.strptime(name, "%Y%m%d_%H%M%S%f")
+				diff = (t - dStr)
+				if diff.days > 3:
+					cfg.shutilSCP.rmtree(inputDir + "/" + name, True)
+		except Exception, err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			
 ##################################
 	""" general functions """
 ##################################

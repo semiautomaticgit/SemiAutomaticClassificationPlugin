@@ -4105,7 +4105,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Zmniejsz zakres obszaru wyszukiwania w obrębie 10 stopni szerokości geograficznej i 10 stopni długości geograficznej</translation>
     </message>
     <message>
-        <location filename="utils.py" line="2038"/>
+        <location filename="utils.py" line="2122"/>
         <source>Please wait ...</source>
         <translation type="unfinished">Proszę czekać...</translation>
     </message>
