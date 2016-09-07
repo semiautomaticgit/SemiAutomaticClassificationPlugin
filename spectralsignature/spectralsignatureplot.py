@@ -460,7 +460,7 @@ class SpectralSignaturePlot:
 		# Create plot		
 		self.signaturePlot()
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
 			
 	# remove signature from list
 	def removeSignature(self):

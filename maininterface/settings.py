@@ -52,7 +52,7 @@ class Settings:
 		
 	# Change ROI color
 	def changeROIColor(self):
-		c = QColorDialog.getColor()
+		c = cfg.QtGuiSCP.getColor()
 		if c.isValid():	
 			self.setQGISRegSetting(cfg.regROIClr, c.name())
 			cfg.ROIClrVal = self.getQGISRegSetting(cfg.regROIClr, cfg.ROIClrValDefault)

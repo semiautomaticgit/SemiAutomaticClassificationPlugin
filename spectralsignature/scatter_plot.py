@@ -67,7 +67,7 @@ class Scatter_Plot:
 		for i in list:
 			cfg.uiscp.colormap_comboBox.addItem(i)
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " list added")
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " list added")
 	
 	def motion_event(self, event):
 		if event.inaxes is not None:
@@ -141,7 +141,7 @@ class Scatter_Plot:
 				cfg.scatterPlotList["CHECKBOX_" + str(id)] = tW.item(row, 0).checkState()
 			cfg.scaPlT.scatterPlot()
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "edited cell" + str(row) + ";" + str(column))
+			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "edited cell" + str(row) + ";" + str(column))
 			
 	def scatterPlotDoubleClick(self, index):
 		if index.column() == 5:
@@ -179,7 +179,7 @@ class Scatter_Plot:
 		elif index.column() == 0:
 			self.selectAllROIs()
 		# logger
-		cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " signatures index: " + str(index))
+		cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " signatures index: " + str(index))
 		
 	# select all signatures
 	def selectAllROIs(self):
@@ -202,10 +202,10 @@ class Scatter_Plot:
 				cfg.scatterPlotList["CHECKBOX_" + str(id)] = tW.item(b, 0).checkState()
 			cfg.uiUtls.removeProgressBar()
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " all signatures")
+			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " all signatures")
 		except Exception, err:
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			cfg.uiUtls.removeProgressBar()
 			
 	# signature list to plot list
@@ -223,7 +223,7 @@ class Scatter_Plot:
 		except:
 			cfg.scatterPlotList["COLORMAP_" + str(id)] = None
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
 		
 	# temp ROI to plot list
 	def tempROIToScatterPlot(self, id, histogram, bandList):
@@ -240,7 +240,7 @@ class Scatter_Plot:
 		except:
 			cfg.scatterPlotList["COLORMAP_" + str(id)] = None
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
 		
 	# add temp ROI to scatter plot
 	def addTempROIToScatterPlot(self):
@@ -251,7 +251,7 @@ class Scatter_Plot:
 			cfg.sctrROIID_h["HISTOGRAM_" + str(cfg.sctrROIID) + "_" + str([bX, bY])] = self.calculateTempROIToScatterPlot()
 			cfg.uiUtls.removeProgressBar()
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
 			
 	# add image extent to scatter plot
 	def addImageToScatterPlot(self):	
@@ -270,7 +270,7 @@ class Scatter_Plot:
 		self.calculatePolygonScatterPlot(pol)
 		cfg.uiUtls.removeProgressBar()
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
 		
 	# add display extent to scatter plot
 	def addDisplayToScatterPlot(self):
@@ -289,7 +289,7 @@ class Scatter_Plot:
 		self.calculatePolygonScatterPlot(pol)
 		cfg.uiUtls.removeProgressBar()
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
 		
 	# calculate polygon scatter plot
 	def calculatePolygonScatterPlot(self, polygon):
@@ -321,7 +321,7 @@ class Scatter_Plot:
 		mL.updateExtents()
 		cfg.sctrROIID_h["HISTOGRAM_" + str(cfg.sctrROIID) + "_" + str([bX, bY])] = self.calculateTempROIToScatterPlot(mL)
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
 			
 	# add temp ROI to scatter plot
 	def calculateTempROIToScatterPlot(self, vector = None):
@@ -333,7 +333,7 @@ class Scatter_Plot:
 		cfg.scaPlT.tempROIToScatterPlot(cfg.sctrROIID, h, [cfg.scatterBandX, cfg.scatterBandY])
 		cfg.scaPlT.scatterPlotListTable(cfg.uiscp.scatter_list_plot_tableWidget)
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
 		return h
 	
 	# calculate scatter plot
@@ -355,7 +355,7 @@ class Scatter_Plot:
 		cfg.uiUtls.removeProgressBar()
 		cfg.scaPlT.scatterPlot()
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
 			
 	# plot colormap
 	def colorPlot(self):
@@ -372,7 +372,7 @@ class Scatter_Plot:
 			ids.append(tW.item(x, 6).text())
 		cfg.scaPlT.scatterPlot(ids)
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
 		
 	# Create scatter plot
 	def scatterPlot(self, colorMap = "No"):
@@ -475,7 +475,7 @@ class Scatter_Plot:
 		# Draw the plot
 		cfg.scaPlT.fitPlotToAxes("Yes")
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " scatter plot created")
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " scatter plot created")
 		cfg.uiUtls.removeProgressBar()
 		
 	# remove scatter plot from list
@@ -493,7 +493,7 @@ class Scatter_Plot:
 				self.removeScatterByID(id)
 			cfg.scaPlT.scatterPlotListTable(cfg.uiscp.scatter_list_plot_tableWidget, "Yes")
 			# logger
-			cfg.utls.logCondition(str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " removed plots: " + str(v))
+			cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " removed plots: " + str(v))
 		
 	# remove scatter plot by ID
 	def removeScatterByID(self, id):
@@ -507,7 +507,7 @@ class Scatter_Plot:
 		cfg.scatterPlotList.pop("COLORMAP_" + str(id))
 		cfg.scatterPlotList.pop("ROW_" + str(id))
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
 			
 	# Create signature list for plot
 	def scatterPlotListTable(self, table, skipPlot = "No"):
@@ -569,7 +569,7 @@ class Scatter_Plot:
 		if skipPlot == "No":
 			self.scatterPlot()
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " list created")
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " list created")
 		
 	# ordered table
 	def orderedTable(self, column):
@@ -593,14 +593,14 @@ class Scatter_Plot:
 				b = i.bandCount()
 			except Exception, err:
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				b = 1
 		if cfg.uiscp.bandX_spinBox.value() > b:
 			cfg.uiscp.bandX_spinBox.setValue(b)
 		cfg.scatterBandX = cfg.uiscp.bandX_spinBox.value()
 		cfg.scaPlT.scatterPlot()
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "scatter band X: " + str(cfg.scatterBandX))
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "scatter band X: " + str(cfg.scatterBandX))
 		
 	# set band Y
 	def bandYPlot(self):
@@ -614,14 +614,14 @@ class Scatter_Plot:
 				b = i.bandCount()
 			except Exception, err:
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				b = 1
 		if cfg.uiscp.bandY_spinBox.value() > b:
 			cfg.uiscp.bandY_spinBox.setValue(b)
 		cfg.scatterBandY = cfg.uiscp.bandY_spinBox.value()
 		cfg.scaPlT.scatterPlot()
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "scatter band X: " + str(cfg.scatterBandY))
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "scatter band X: " + str(cfg.scatterBandY))
 		
 	# resize plot
 	def resize(self):
@@ -676,7 +676,7 @@ class Scatter_Plot:
 				cfg.uiscp.Scatter_Widget_2.sigCanvas.draw()
 			except Exception, err:
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				return "No"
 			
 	# draw polygon
@@ -692,7 +692,7 @@ class Scatter_Plot:
 				cfg.uiscp.Scatter_Widget_2.sigCanvas.draw()
 			except Exception, err:
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				return "No"
 		
 	# calculate scatter raster and add to signature list
@@ -755,7 +755,7 @@ class Scatter_Plot:
 			tSS.updateExtents()
 		a = self.rasterizePolygon(tLP, xMin, xMax, yMin, yMax, dX, dY)
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
 		return a
 			
 	# rasterize polygon
@@ -776,7 +776,7 @@ class Scatter_Plot:
 		# in case of errors
 		except Exception, err:
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			return "No"
 		oR.SetGeoTransform( [ xMin , dX, 0 , yMin , 0 , dY ] )
 		oRB.SetNoDataValue(cfg.NoDataVal)
@@ -791,7 +791,7 @@ class Scatter_Plot:
 		# close rasters
 		oR = None
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
 		return a
 
 	# create grid
@@ -815,7 +815,7 @@ class Scatter_Plot:
 			rangeX = [xMin + rXmin * dX, xMin + (1 + rXmax) * dX]
 			ranges.append([rangeX, rangeY])
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
 		return ranges
 
 	# calculate polygon intersection
@@ -906,7 +906,7 @@ class Scatter_Plot:
 				cfg.lgnd.setGroupVisible(g, False)
 				cfg.lgnd.setGroupExpanded(g, False)
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
 			return tPMD2
 		
 	# remove polygons
@@ -962,7 +962,7 @@ class Scatter_Plot:
 		except Exception, err:
 			cfg.mx.msgErr53()
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + (inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			return "No"
 			
 	# Change ROI color
@@ -972,4 +972,5 @@ class Scatter_Plot:
 			self.color = c.name()
 			cfg.uiscp.polygon_color_Button.setStyleSheet("background-color :" + self.color)
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(inspect.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+			

@@ -4798,7 +4798,7 @@ class Utils:
 	def getGDALForMac(self):
 		if cfg.sysSCPNm == "Darwin":
 			v = cfg.utls.getGDALVersion()
-			cfg.gdalPath = '/Library/Frameworks/cfg.gdalSCP.framework/Versions/' + v[0] + '.' + v[1] + '/Programs/'
+			cfg.gdalPath = '/Library/Frameworks/GDAL.framework/Versions/' + v[0] + '.' + v[1] + '/Programs/'
 			if cfg.osSCP.path.isfile(cfg.gdalPath + "gdal_translate"):
 				pass
 			else:
