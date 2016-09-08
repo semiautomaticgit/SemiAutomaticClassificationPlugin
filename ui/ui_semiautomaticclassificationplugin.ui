@@ -53,7 +53,7 @@
       <locale language="English" country="UnitedStates"/>
      </property>
      <property name="currentIndex">
-      <number>8</number>
+      <number>2</number>
      </property>
      <property name="iconSize">
       <size>
@@ -742,8 +742,8 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>838</width>
-                  <height>152</height>
+                  <width>839</width>
+                  <height>160</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -6089,7 +6089,7 @@ p, li { white-space: pre-wrap; }
          <item row="0" column="0">
           <widget class="QTabWidget" name="tabWidget_preprocessing">
            <property name="currentIndex">
-            <number>0</number>
+            <number>5</number>
            </property>
            <property name="iconSize">
             <size>
@@ -8510,8 +8510,8 @@ p, li { white-space: pre-wrap; }
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>444</width>
-                  <height>135</height>
+                  <width>839</width>
+                  <height>411</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -8706,7 +8706,7 @@ p, li { white-space: pre-wrap; }
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>94</width>
+                  <width>86</width>
                   <height>86</height>
                  </rect>
                 </property>
@@ -8931,16 +8931,6 @@ p, li { white-space: pre-wrap; }
                  <property name="toolTip">
                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select the type of conversion&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
-                 <item>
-                  <property name="text">
-                   <string>Center of pixels</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>All pixels touched</string>
-                  </property>
-                 </item>
                 </widget>
                </item>
               </layout>
@@ -9143,8 +9133,8 @@ p, li { white-space: pre-wrap; }
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>840</width>
-                <height>405</height>
+                <width>841</width>
+                <height>413</height>
                </rect>
               </property>
               <attribute name="label">
@@ -9434,7 +9424,7 @@ p, li { white-space: pre-wrap; }
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>94</width>
+                <width>86</width>
                 <height>86</height>
                </rect>
               </property>
@@ -9752,7 +9742,7 @@ p, li { white-space: pre-wrap; }
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>94</width>
+                <width>86</width>
                 <height>86</height>
                </rect>
               </property>
@@ -10018,7 +10008,7 @@ p, li { white-space: pre-wrap; }
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>94</width>
+                <width>86</width>
                 <height>86</height>
                </rect>
               </property>
@@ -12166,8 +12156,8 @@ p, li { white-space: pre-wrap; }
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>837</width>
-              <height>258</height>
+              <width>855</width>
+              <height>265</height>
              </rect>
             </property>
             <attribute name="label">
@@ -14150,8 +14140,8 @@ p, li { white-space: pre-wrap; }
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>856</width>
-            <height>422</height>
+            <width>857</width>
+            <height>430</height>
            </rect>
           </property>
           <attribute name="label">

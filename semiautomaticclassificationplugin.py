@@ -312,7 +312,7 @@ class SemiAutomaticClassificationPlugin:
 				if cfg.QtCoreSCP.qVersion() > '4.3.3': 
 					cfg.QtCoreSCP.QCoreApplication.installTranslator(trnsltr)
 			""" info """
-			cfg.sysSCPInfo = str(" SemiAutomaticClass " + semiautomaticclassVersion() + " - QGIS v. " + str(cfg.QGISVer) + " - OS " + str(cfg.sysSCPNm) + " - 64bit =" + cfg.sysSCP64bit)
+			cfg.sysSCPInfo = str(" SemiAutomaticClass " + semiautomaticclassVersion() + " - QGIS v. " + str(cfg.QGISVer) + " L:" + lclNm + " - OS " + str(cfg.sysSCPNm) + " - 64bit =" + cfg.sysSCP64bit)
 			# GDAL NUMBER of THREADS
 			try:
 				cfg.gdalSCP.SetConfigOption('GDAL_NUM_THREADS', 'ALL_CPUS')
@@ -361,6 +361,15 @@ class SemiAutomaticClassificationPlugin:
 				qgisUtils.iface.messageBar().pushMessage("Semi-Automatic Classification Plugin", QApplication.translate("semiautomaticclassificationplugin", "Please, restart QGIS for executing the Semi-Automatic Classification Plugin. Possible missing dependecies."), level=QgsMessageBar.INFO)
 				return
 			cfg.ipt.loadInputToolbar()
+			cfg.algMinDist = cfg.uidc.algorithm_combo.itemText(0) 
+			cfg.algML = cfg.uidc.algorithm_combo.itemText(1) 
+			cfg.algSAM = cfg.uidc.algorithm_combo.itemText(2)
+			cfg.algName = cfg.algMinDist
+			cfg.uidc.algorithm_combo.setCurrentIndex(0)
+			# vector to raster type of conversion
+			cfg.ui.conversion_type_combo.addItem(cfg.convCenterPixels)
+			cfg.ui.conversion_type_combo.addItem(cfg.convAllPixelsTouch)
+			cfg.centerOfPixels = cfg.ui.conversion_type_combo.itemText(0)
 			""" menu """
 			cfg.ipt.loadMenu()
 			# set plugin version
@@ -1287,7 +1296,11 @@ class SemiAutomaticClassificationPlugin:
 		cfg.landCC.refreshNewClassificationLayer()
 		# load classification algorithm
 		idAlg = cfg.uidc.algorithm_combo.findText(cfg.algName)
-		cfg.uidc.algorithm_combo.setCurrentIndex(idAlg)
+		if idAlg >= 0:
+			cfg.uidc.algorithm_combo.setCurrentIndex(idAlg)
+		else:
+			cfg.uidc.algorithm_combo.setCurrentIndex(0)
+			cfg.algName = cfg.algMinDist
 		# reload raster bands in checklist
 		cfg.bst.rasterBandName()
 		# reload rasters in checklist

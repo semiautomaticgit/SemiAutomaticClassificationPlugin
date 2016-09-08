@@ -495,9 +495,19 @@ class BandCalcTab:
 											cfg.cnvs.setRenderFlag(True)
 											return "No"
 									bandNumberList.append(1)
-									bList.append(bPath)	
-						gdalRaster2 = cfg.gdalSCP.Open(bPath, cfg.gdalSCP.GA_ReadOnly)
-						gBand2 = gdalRaster2.GetRasterBand(int(1)) 
+									bList.append(bPath)				
+						try:
+							gdalRaster2 = cfg.gdalSCP.Open(bPath, cfg.gdalSCP.GA_ReadOnly)
+							gBand2 = gdalRaster2.GetRasterBand(int(1)) 
+						except Exception, err:
+							cfg.mx.msg4()
+							self.rasterBandName()
+							# logger
+							cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+							if outFile is None:
+								cfg.uiUtls.removeProgressBar()
+								cfg.cnvs.setRenderFlag(True)
+								return "No"
 						noData = gBand2.GetNoDataValue()
 						if cfg.ui.nodata_checkBox_3.isChecked() is True:
 							NoDataValue = cfg.ui.nodata_spinBox_4.value()

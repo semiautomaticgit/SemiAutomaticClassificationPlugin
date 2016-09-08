@@ -464,10 +464,10 @@ rstrNm = None
 prvwSz = 200
 # alg name
 algName = "Minimum Distance"
-algMinDist = "Minimum Distance"
-algML = "Maximum Likelihood"
-algSAM = "Spectral Angle Mapping"
 algLCS = "Land Cover Signature"
+# type of conversion
+convCenterPixels = "Center of pixels"
+convAllPixelsTouch ="All pixels touched"
 #index name
 indName = "NDVI"
 indNDVI = "NDVI"

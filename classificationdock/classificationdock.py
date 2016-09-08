@@ -50,26 +50,26 @@ class ClassificationDock:
 		
 	# set algorithm
 	def algorithmName(self):
-		cfg.algName = str(cfg.uidc.algorithm_combo.currentText())
-		if str(cfg.algName) == cfg.algML:
+		cfg.algName = cfg.uidc.algorithm_combo.currentText()
+		if unicode(cfg.algName) == cfg.algML:
 			if cfg.algThrshld > 100:
 				cfg.mx.msg10()
 				cfg.uidc.alg_threshold_SpinBox.setValue(100)
-		elif str(cfg.algName) == cfg.algSAM:
+		elif unicode(cfg.algName) == cfg.algSAM:
 			if cfg.algThrshld > 90:
 				cfg.mx.msg11()
 				cfg.uidc.alg_threshold_SpinBox.setValue(90)
-		cfg.utls.writeProjectVariable("ClassAlgorithm", str(cfg.algName))
+		cfg.utls.writeProjectVariable("ClassAlgorithm", unicode(cfg.algName))
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "training name: " + unicode(cfg.algName))
 				
 	# set algorithm threshold
 	def algorithmThreshold(self):
 		cfg.algThrshld = cfg.uidc.alg_threshold_SpinBox.value()
-		if str(cfg.algName) == cfg.algML:
+		if unicode(cfg.algName) == cfg.algML:
 			if cfg.algThrshld > 100:
 				cfg.uidc.alg_threshold_SpinBox.setValue(100)
-		elif str(cfg.algName) == cfg.algSAM:
+		elif unicode(cfg.algName) == cfg.algSAM:
 			if cfg.algThrshld > 90:
 				cfg.uidc.alg_threshold_SpinBox.setValue(90)
 		cfg.algThrshld = cfg.uidc.alg_threshold_SpinBox.value()

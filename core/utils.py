@@ -5117,11 +5117,11 @@ class Utils:
 		rPRS = rPSys.GetAuthorityCode(None)
 		if lP != "":
 			if lPRS == None:
-				cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "lP: " + unicode(lP) + "rPRS: " + unicode(rPRS))
+				cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "Error None lP: " + unicode(lP) + "rPRS: " + unicode(rPRS))
 			if lPRS != rPRS:
 				# date time for temp name
 				dT = cfg.utls.getTime()
-				reprjShapefile = cfg.tmpDir + "/" + dT + cfg.osSCP.path.basename(layerPath) 
+				reprjShapefile = cfg.tmpDir + "/" + dT + cfg.osSCP.path.basename(layerPath)
 				cfg.utls.repojectShapefile(layerPath, int(lPRS), reprjShapefile, int(rPRS))
 				l.Destroy()
 				l = cfg.ogrSCP.Open(reprjShapefile)
@@ -6111,7 +6111,7 @@ class Utils:
 		cfg.rpdROICheck = cfg.utls.readProjectVariable("rapidROI", "No")
 		cfg.vegIndexCheck = cfg.utls.readProjectVariable("vegetationIndex", "Yes")
 		cfg.ROIband = cfg.utls.readProjectVariable("rapidROIBand", str(cfg.ROIband))
-		cfg.algName = cfg.utls.readProjectVariable("ClassAlgorithm", str(cfg.algName))
+		cfg.algName = cfg.utls.readProjectVariable("ClassAlgorithm", unicode(cfg.algName))
 		cfg.prvwSz = cfg.utls.readProjectVariable("previewSize", str(cfg.prvwSz))
 		cfg.minROISz = cfg.utls.readProjectVariable("minROISize", str(cfg.minROISz))
 		cfg.maxROIWdth = cfg.utls.readProjectVariable("maxROIWidth", str(cfg.maxROIWdth))

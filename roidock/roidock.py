@@ -257,8 +257,6 @@ class RoiDock:
 			tN = cfg.subsTmpROI + dT
 			# crs
 			pCrs = cfg.utls.getQGISCrs()
-			mL = QgsVectorLayer("Polygon?crs=" + str(pCrs.toWkt()), tN, "memory")
-			mL.setCrs(pCrs) 
 			# subprocess bands
 			dBs = {}
 			dBSP = {}
@@ -267,6 +265,10 @@ class RoiDock:
 				cfg.uiUtls.updateBar(20)
 			# band set
 			if cfg.bndSetPresent == "Yes" and cfg.rstrNm == cfg.bndSetNm:
+				imageName = cfg.bndSet[0]
+				# image CRS
+				bN0 = cfg.utls.selectLayerbyName(imageName, "Yes")
+				iCrs = cfg.utls.getCrs(bN0)
 				if cfg.rpdROICheck == "No":
 					# subset and stack layers to tR
 					for b in range(0, len(cfg.bndSet)):
@@ -305,6 +307,9 @@ class RoiDock:
 						cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 						cfg.mx.msgErr7()
 			else:
+				# image CRS
+				bN0 = cfg.utls.selectLayerbyName(imageName, "Yes")
+				iCrs = cfg.utls.getCrs(bN0)
 				if cfg.rpdROICheck == "No":
 					# subset image
 					pr = cfg.utls.subsetImage(cfg.rstrNm, point.x(), point.y(), int(cfg.maxROIWdth), int(cfg.maxROIWdth), tR, cfg.outTempRastFormat, "Yes")
@@ -403,6 +408,8 @@ class RoiDock:
 				q = cfg.utls.getFeaturebyID(tSS, idf)
 				# get geometry
 				g = q.geometry()
+				mL = QgsVectorLayer("Polygon?crs=" + str(iCrs.toWkt()), tN, "memory")
+				mL.setCrs(iCrs) 
 				pr = mL.dataProvider()
 				# create temp ROI
 				mL.startEditing()		
