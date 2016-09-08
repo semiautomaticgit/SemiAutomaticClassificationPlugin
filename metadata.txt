@@ -17,6 +17,7 @@ changelog=
 	5.0.4
 	Minor update:
 	-fixed various issues the prevented the start of SCP
+	-interface translation to Spanish (thanks to Igor F. Davalos Rojas)
 	
 	5.0.3
 	Minor update:
