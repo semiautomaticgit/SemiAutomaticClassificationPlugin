@@ -309,98 +309,98 @@ class Input:
 		menuBar = cfg.iface.mainWindow().menuBar()
 		menuBar.insertMenu(cfg.iface.firstRightStandardMenu().menuAction(), cfg.menu)	
 		# Band set
-		bandset_action = cfg.ipt.addMenuItem(cfg.menu, cfg.utls.bandSetTab, "semiautomaticclassificationplugin_bandset_tool.png", "Band set")
+		bandset_action = cfg.ipt.addMenuItem(cfg.menu, cfg.utls.bandSetTab, "semiautomaticclassificationplugin_bandset_tool.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Band set"))
 		# Download
 		cfg.download_images_menu = cfg.menu.addMenu(cfg.QtGuiSCP.QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_download_arrow.png"), cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Download images"))
 		# Download Landsat
-		download_landsat8_action = cfg.ipt.addMenuItem(cfg.download_images_menu, cfg.utls.downloadLandast8Tab, "semiautomaticclassificationplugin_landsat8_download_tool.png", "Download Landsat")
+		download_landsat8_action = cfg.ipt.addMenuItem(cfg.download_images_menu, cfg.utls.downloadLandast8Tab, "semiautomaticclassificationplugin_landsat8_download_tool.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Landsat download"))
 		# Download Sentinel
-		download_sentinel_action = cfg.ipt.addMenuItem(cfg.download_images_menu, cfg.utls.downloadSentinelTab, "semiautomaticclassificationplugin_sentinel_download_tool.png", "Download Sentinel-2")
+		download_sentinel_action = cfg.ipt.addMenuItem(cfg.download_images_menu, cfg.utls.downloadSentinelTab, "semiautomaticclassificationplugin_sentinel_download_tool.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Sentinel-2 download "))
 		# Download ASTER
-		download_ASTER_action = cfg.ipt.addMenuItem(cfg.download_images_menu, cfg.utls.downloadASTERTab, "semiautomaticclassificationplugin_aster_download_tool.png", "Download ASTER")
+		download_ASTER_action = cfg.ipt.addMenuItem(cfg.download_images_menu, cfg.utls.downloadASTERTab, "semiautomaticclassificationplugin_aster_download_tool.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "ASTER download"))
 		# Tools
 		cfg.tools_menu = cfg.menu.addMenu(cfg.QtGuiSCP.QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_roi_tool.png"), cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Tools"))
 		# Multiple ROI creation
-		multiple_ROI_creation_action = cfg.ipt.addMenuItem(cfg.tools_menu, cfg.utls.mutlipleROITab, "semiautomaticclassificationplugin_roi_multiple.png", "Multiple ROI creation")
+		multiple_ROI_creation_action = cfg.ipt.addMenuItem(cfg.tools_menu, cfg.utls.mutlipleROITab, "semiautomaticclassificationplugin_roi_multiple.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Multiple ROI creation"))
 		# Import Spectral Library
-		import_spectral_library_action = cfg.ipt.addMenuItem(cfg.tools_menu, cfg.utls.importLibraryTab, "semiautomaticclassificationplugin_import_spectral_library.png", "Import signatures")
+		import_spectral_library_action = cfg.ipt.addMenuItem(cfg.tools_menu, cfg.utls.importLibraryTab, "semiautomaticclassificationplugin_import_spectral_library.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Import signatures"))
 		# Export Spectral Library
-		export_spectral_library_action = cfg.ipt.addMenuItem(cfg.tools_menu, cfg.utls.exportLibraryTab, "semiautomaticclassificationplugin_export_spectral_library.png", "Export signatures")
+		export_spectral_library_action = cfg.ipt.addMenuItem(cfg.tools_menu, cfg.utls.exportLibraryTab, "semiautomaticclassificationplugin_export_spectral_library.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Export signatures"))
 		# Algorithm band weight
-		algorithm_weight_action = cfg.ipt.addMenuItem(cfg.tools_menu, cfg.utls.algorithmWeighTab, "semiautomaticclassificationplugin_weight_tool.png", "Algorithm band weight")
+		algorithm_weight_action = cfg.ipt.addMenuItem(cfg.tools_menu, cfg.utls.algorithmWeighTab, "semiautomaticclassificationplugin_weight_tool.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Algorithm band weight"))
 		# Signature threshold
-		signature_threshold_action = cfg.ipt.addMenuItem(cfg.tools_menu, cfg.utls.algorithmThresholdTab, "semiautomaticclassificationplugin_threshold_tool.png", "Signature threshold")
+		signature_threshold_action = cfg.ipt.addMenuItem(cfg.tools_menu, cfg.utls.algorithmThresholdTab, "semiautomaticclassificationplugin_threshold_tool.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Signature threshold"))
 		# LCS threshold
-		LCS_threshold_action = cfg.ipt.addMenuItem(cfg.tools_menu, cfg.utls.LCSThresholdTab, "semiautomaticclassificationplugin_LCS_threshold_tool.png", "LCS threshold")
+		LCS_threshold_action = cfg.ipt.addMenuItem(cfg.tools_menu, cfg.utls.LCSThresholdTab, "semiautomaticclassificationplugin_LCS_threshold_tool.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "LCS threshold"))
 		# RGB list
-		RGB_list_action = cfg.ipt.addMenuItem(cfg.tools_menu, cfg.utls.RGBListTab, "semiautomaticclassificationplugin_rgb_tool.png", "RGB list")
+		RGB_list_action = cfg.ipt.addMenuItem(cfg.tools_menu, cfg.utls.RGBListTab, "semiautomaticclassificationplugin_rgb_tool.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "RGB list"))
 		# Preprocessing
 		cfg.preprocessing_menu = cfg.menu.addMenu(cfg.QtGuiSCP.QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_class_tool.png"), cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Preprocessing"))
 		# Landsat
-		landsat_action = cfg.ipt.addMenuItem(cfg.preprocessing_menu, cfg.utls.landsatTab, "semiautomaticclassificationplugin_landsat8_tool.png", "Landsat")
+		landsat_action = cfg.ipt.addMenuItem(cfg.preprocessing_menu, cfg.utls.landsatTab, "semiautomaticclassificationplugin_landsat8_tool.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Landsat"))
 		# Sentinel-2
-		sentinel2_action = cfg.ipt.addMenuItem(cfg.preprocessing_menu, cfg.utls.sentinel2Tab, "semiautomaticclassificationplugin_sentinel_tool.png", "Sentinel-2")
+		sentinel2_action = cfg.ipt.addMenuItem(cfg.preprocessing_menu, cfg.utls.sentinel2Tab, "semiautomaticclassificationplugin_sentinel_tool.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Sentinel-2"))
 		# ASTER
-		aster_action = cfg.ipt.addMenuItem(cfg.preprocessing_menu, cfg.utls.asterTab, "semiautomaticclassificationplugin_aster_tool.png", "ASTER")
+		aster_action = cfg.ipt.addMenuItem(cfg.preprocessing_menu, cfg.utls.asterTab, "semiautomaticclassificationplugin_aster_tool.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "ASTER"))
 		# Clip multiple rasters
-		clip_multiple_rasters_action = cfg.ipt.addMenuItem(cfg.preprocessing_menu, cfg.utls.clipMultipleRastersTab, "semiautomaticclassificationplugin_clip_tool.png", "Clip multiple rasters")
+		clip_multiple_rasters_action = cfg.ipt.addMenuItem(cfg.preprocessing_menu, cfg.utls.clipMultipleRastersTab, "semiautomaticclassificationplugin_clip_tool.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Clip multiple rasters"))
 		# Split raster bands
-		split_raster_bands_action = cfg.ipt.addMenuItem(cfg.preprocessing_menu, cfg.utls.splitrasterbandsTab, "semiautomaticclassificationplugin_split_raster.png", "Split raster bands")
+		split_raster_bands_action = cfg.ipt.addMenuItem(cfg.preprocessing_menu, cfg.utls.splitrasterbandsTab, "semiautomaticclassificationplugin_split_raster.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Split raster bands"))
 		# PCA
-		PCA_action = cfg.ipt.addMenuItem(cfg.preprocessing_menu, cfg.utls.PCATab, "semiautomaticclassificationplugin_pca_tool.png", "PCA")
+		PCA_action = cfg.ipt.addMenuItem(cfg.preprocessing_menu, cfg.utls.PCATab, "semiautomaticclassificationplugin_pca_tool.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "PCA"))
 		# Vector to raster
-		vector_to_raster_action = cfg.ipt.addMenuItem(cfg.preprocessing_menu, cfg.utls.vectorToRasterTab, "semiautomaticclassificationplugin_vector_to_raster_tool.png", "Vector to raster")
+		vector_to_raster_action = cfg.ipt.addMenuItem(cfg.preprocessing_menu, cfg.utls.vectorToRasterTab, "semiautomaticclassificationplugin_vector_to_raster_tool.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Vector to raster"))
 		# Postprocessing
 		cfg.postprocessing_menu = cfg.menu.addMenu(cfg.QtGuiSCP.QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_post_process.png"), cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Postprocessing"))
 		# Accuracy
-		accuracy_action = cfg.ipt.addMenuItem(cfg.postprocessing_menu, cfg.utls.accuracyTab, "semiautomaticclassificationplugin_accuracy_tool.png", "Accuracy")
+		accuracy_action = cfg.ipt.addMenuItem(cfg.postprocessing_menu, cfg.utls.accuracyTab, "semiautomaticclassificationplugin_accuracy_tool.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Accuracy"))
 		# Land cover change
-		land_cover_change_action = cfg.ipt.addMenuItem(cfg.postprocessing_menu, cfg.utls.landCoverChangeTab, "semiautomaticclassificationplugin_land_cover_change.png", "Land cover change")
+		land_cover_change_action = cfg.ipt.addMenuItem(cfg.postprocessing_menu, cfg.utls.landCoverChangeTab, "semiautomaticclassificationplugin_land_cover_change.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Land cover change"))
 		# Classification report
-		classification_report_action = cfg.ipt.addMenuItem(cfg.postprocessing_menu, cfg.utls.classificationReportTab, "semiautomaticclassificationplugin_report_tool.png", "Classification report")
+		classification_report_action = cfg.ipt.addMenuItem(cfg.postprocessing_menu, cfg.utls.classificationReportTab, "semiautomaticclassificationplugin_report_tool.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Classification report"))
 		# Classification to vector
-		class_to_vector_action = cfg.ipt.addMenuItem(cfg.postprocessing_menu, cfg.utls.classToVectorTab, "semiautomaticclassificationplugin_class_to_vector_tool.png", "Classification to vector")
+		class_to_vector_action = cfg.ipt.addMenuItem(cfg.postprocessing_menu, cfg.utls.classToVectorTab, "semiautomaticclassificationplugin_class_to_vector_tool.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Classification to vector"))
 		# Reclassification
-		reclassification_action = cfg.ipt.addMenuItem(cfg.postprocessing_menu, cfg.utls.reclassificationTab, "semiautomaticclassificationplugin_reclassification_tool.png", "Reclassification")
+		reclassification_action = cfg.ipt.addMenuItem(cfg.postprocessing_menu, cfg.utls.reclassificationTab, "semiautomaticclassificationplugin_reclassification_tool.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Reclassification"))
 		# Edit raster
-		edit_raster_action = cfg.ipt.addMenuItem(cfg.postprocessing_menu, cfg.utls.editRasterTab, "semiautomaticclassificationplugin_edit_raster.png", "Edit raster")
+		edit_raster_action = cfg.ipt.addMenuItem(cfg.postprocessing_menu, cfg.utls.editRasterTab, "semiautomaticclassificationplugin_edit_raster.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Edit raster"))
 		# Classification sieve
-		classification_sieve_action = cfg.ipt.addMenuItem(cfg.postprocessing_menu, cfg.utls.classificationSieveTab, "semiautomaticclassificationplugin_classification_sieve.png", "Classification sieve")
+		classification_sieve_action = cfg.ipt.addMenuItem(cfg.postprocessing_menu, cfg.utls.classificationSieveTab, "semiautomaticclassificationplugin_classification_sieve.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Classification sieve"))
 		# Classification erosion
-		classification_erosion_action = cfg.ipt.addMenuItem(cfg.postprocessing_menu, cfg.utls.classificationErosionTab, "semiautomaticclassificationplugin_classification_erosion.png", "Classification erosion")
+		classification_erosion_action = cfg.ipt.addMenuItem(cfg.postprocessing_menu, cfg.utls.classificationErosionTab, "semiautomaticclassificationplugin_classification_erosion.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Classification erosion"))
 		# Classification dilation
-		classification_erosion_action = cfg.ipt.addMenuItem(cfg.postprocessing_menu, cfg.utls.classificationDilationTab, "semiautomaticclassificationplugin_classification_dilation.png", "Classification dilation")
+		classification_erosion_action = cfg.ipt.addMenuItem(cfg.postprocessing_menu, cfg.utls.classificationDilationTab, "semiautomaticclassificationplugin_classification_dilation.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Classification dilation"))
 		# Band calc
-		bandcalc_action = cfg.ipt.addMenuItem(cfg.menu, cfg.utls.bandCalcTab, "semiautomaticclassificationplugin_bandcalc_tool.png", "Band calc")
+		bandcalc_action = cfg.ipt.addMenuItem(cfg.menu, cfg.utls.bandCalcTab, "semiautomaticclassificationplugin_bandcalc_tool.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Band calc"))
 		# Spectral plot
-		spectral_plot_action = cfg.ipt.addMenuItem(cfg.menu, cfg.utls.spectralPlotTab, "semiautomaticclassificationplugin_sign_tool.png", "Spectral plot")	
+		spectral_plot_action = cfg.ipt.addMenuItem(cfg.menu, cfg.utls.spectralPlotTab, "semiautomaticclassificationplugin_sign_tool.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Spectral plot"))	
 		# scatter plot
-		scatter_plot_action = cfg.ipt.addMenuItem(cfg.menu, cfg.utls.scatterPlotTab, "semiautomaticclassificationplugin_scatter_tool.png", "Scatter plot")
+		scatter_plot_action = cfg.ipt.addMenuItem(cfg.menu, cfg.utls.scatterPlotTab, "semiautomaticclassificationplugin_scatter_tool.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Scatter plot"))
 		# batch
-		batch_action = cfg.ipt.addMenuItem(cfg.menu, cfg.utls.batchTab, "semiautomaticclassificationplugin_batch.png", "Batch")
+		batch_action = cfg.ipt.addMenuItem(cfg.menu, cfg.utls.batchTab, "semiautomaticclassificationplugin_batch.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Batch"))
 		# Settings
 		cfg.settings_menu = cfg.menu.addMenu(cfg.QtGuiSCP.QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_settings_tool.png"), cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Settings"))
 		# Settings interface
-		self.settings_interface_action = cfg.QtGuiSCP.QAction("Interface", cfg.iface.mainWindow())
+		self.settings_interface_action = cfg.QtGuiSCP.QAction(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Interface"), cfg.iface.mainWindow())
 		self.settings_interface_action.setObjectName("settings_interface_action")
 		cfg.QObjectSCP.connect(self.settings_interface_action, cfg.SIGNALSCP("triggered()"), cfg.utls.settingsInterfaceTab)
 		cfg.settings_menu.addAction(self.settings_interface_action)
 		# Settings processing
-		self.settings_processing_action = cfg.QtGuiSCP.QAction("Processing", cfg.iface.mainWindow())
+		self.settings_processing_action = cfg.QtGuiSCP.QAction(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Processing"), cfg.iface.mainWindow())
 		self.settings_processing_action.setObjectName("settings_processing_action")
 		cfg.QObjectSCP.connect(self.settings_processing_action, cfg.SIGNALSCP("triggered()"), cfg.utls.settingsProcessingTab)
 		cfg.settings_menu.addAction(self.settings_processing_action)
 		# Settings debug
-		self.settings_debug_action = cfg.QtGuiSCP.QAction("Debug", cfg.iface.mainWindow())
+		self.settings_debug_action = cfg.QtGuiSCP.QAction(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Debug"), cfg.iface.mainWindow())
 		self.settings_debug_action.setObjectName("settings_debug_action")
 		cfg.QObjectSCP.connect(self.settings_debug_action, cfg.SIGNALSCP("triggered()"), cfg.utls.settingsDebugTab)
 		cfg.settings_menu.addAction(self.settings_debug_action)
 		# User manual
-		userguide_action = cfg.ipt.addMenuItem(cfg.menu, cfg.ipt.quickGuide, "guide.png", "User manual")
+		userguide_action = cfg.ipt.addMenuItem(cfg.menu, cfg.ipt.quickGuide, "guide.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "User manual"))
 		# help
-		help_action = cfg.ipt.addMenuItem(cfg.menu, cfg.ipt.askHelp, "help.png", "Online help")
+		help_action = cfg.ipt.addMenuItem(cfg.menu, cfg.ipt.askHelp, "help.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Online help"))
 		# About
-		help_action = cfg.ipt.addMenuItem(cfg.menu, cfg.utls.aboutTab, "fromGIStoRS.png", "About")
+		about_action = cfg.ipt.addMenuItem(cfg.menu, cfg.utls.aboutTab, "fromGIStoRS.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "About"))
 		
 	# welcome text
 	def welcomeText(self, inputUrl = None, inputUrl2 = None):

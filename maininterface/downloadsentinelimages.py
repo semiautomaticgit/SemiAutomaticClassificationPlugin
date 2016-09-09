@@ -543,7 +543,13 @@ class DownloadSentinelImages:
 		#info = response.info()
 		xml = response	
 		tW.setSortingEnabled(False)
-		doc = cfg.minidomSCP.parseString(xml)
+		try:
+			doc = cfg.minidomSCP.parseString(xml)
+		except Exception, err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.uiUtls.removeProgressBar()
+			return "No"
 		entries = doc.getElementsByTagName("entry")
 		e = 0
 		for entry in entries:

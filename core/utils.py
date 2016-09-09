@@ -1862,6 +1862,9 @@ class Utils:
 	# import a shapefile
 	def importShapefile(self):
 		shpFile = cfg.ui.select_shapefile_label.text()
+		if cfg.shpLay is None:
+			cfg.mx.msg3()
+			return "No"
 		if len(shpFile) > 0:
 			cfg.uiUtls.addProgressBar()
 			cfg.uiUtls.updateBar(10)
@@ -1870,8 +1873,8 @@ class Utils:
 			# create memory layer
 			provider = tSS.dataProvider()
 			fields = provider.fields()
-			pCrs = cfg.utls.getCrs(tSS)
 			tCrs = cfg.utls.getCrs(cfg.shpLay)
+			pCrs = cfg.utls.getCrs(tSS)
 			f = QgsFeature()
 			mcIdF = self.fieldID(tSS, cfg.ui.MC_ID_combo.currentText())
 			mcInfoF = self.fieldID(tSS, cfg.ui.MC_Info_combo.currentText())

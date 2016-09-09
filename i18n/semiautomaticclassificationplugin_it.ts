@@ -3848,7 +3848,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="236"/>
+        <location filename="input.py" line="312"/>
         <source>Band set</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3873,22 +3873,22 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="246"/>
+        <location filename="input.py" line="374"/>
         <source>Band calc</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="248"/>
+        <location filename="input.py" line="376"/>
         <source>Spectral plot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="250"/>
+        <location filename="input.py" line="378"/>
         <source>Scatter plot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="252"/>
+        <location filename="input.py" line="380"/>
         <source>Batch</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3898,12 +3898,12 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="256"/>
+        <location filename="input.py" line="399"/>
         <source>User manual</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="258"/>
+        <location filename="input.py" line="401"/>
         <source>Online help</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4374,7 +4374,7 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="utils.py" line="2122"/>
+        <location filename="utils.py" line="2125"/>
         <source>Please wait ...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4604,7 +4604,7 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="551"/>
+        <location filename="downloadsentinelimages.py" line="557"/>
         <source>Searching ...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4619,12 +4619,12 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="628"/>
+        <location filename="downloadsentinelimages.py" line="634"/>
         <source>Reset signature list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="628"/>
+        <location filename="downloadsentinelimages.py" line="634"/>
         <source>Are you sure you want to clear the table?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4861,6 +4861,151 @@ Possible reason: input is a virtual raster or band is not loaded</source>
     <message>
         <location filename="semiautomaticclassificationplugin.py" line="361"/>
         <source>Please, restart QGIS for executing the Semi-Automatic Classification Plugin. Possible missing dependecies.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="input.py" line="316"/>
+        <source>Landsat download</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="input.py" line="318"/>
+        <source>Sentinel-2 download </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="input.py" line="324"/>
+        <source>Multiple ROI creation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="input.py" line="326"/>
+        <source>Import signatures</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="input.py" line="328"/>
+        <source>Export signatures</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="input.py" line="330"/>
+        <source>Algorithm band weight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="input.py" line="332"/>
+        <source>Signature threshold</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="input.py" line="334"/>
+        <source>LCS threshold</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="input.py" line="340"/>
+        <source>Landsat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="input.py" line="342"/>
+        <source>Sentinel-2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="input.py" line="344"/>
+        <source>ASTER</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="input.py" line="346"/>
+        <source>Clip multiple rasters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="input.py" line="348"/>
+        <source>Split raster bands</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="input.py" line="350"/>
+        <source>PCA</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="input.py" line="352"/>
+        <source>Vector to raster</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="input.py" line="356"/>
+        <source>Accuracy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="input.py" line="358"/>
+        <source>Land cover change</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="input.py" line="360"/>
+        <source>Classification report</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="input.py" line="362"/>
+        <source>Classification to vector</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="input.py" line="364"/>
+        <source>Reclassification</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="input.py" line="366"/>
+        <source>Edit raster</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="input.py" line="368"/>
+        <source>Classification sieve</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="input.py" line="370"/>
+        <source>Classification erosion</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="input.py" line="372"/>
+        <source>Classification dilation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="input.py" line="403"/>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="input.py" line="320"/>
+        <source>ASTER download</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="input.py" line="384"/>
+        <source>Interface</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="input.py" line="389"/>
+        <source>Processing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="input.py" line="394"/>
+        <source>Debug</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

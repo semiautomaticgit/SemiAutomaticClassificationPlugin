@@ -853,7 +853,7 @@
     <message>
         <location filename="ui_semiautomaticclassificationplugin.ui" line="3340"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Export download links to a text file&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Exporta los enlaces descargados a un archivo de texto&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Exporta los enlaces de descarga a un archivo de texto&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="ui_semiautomaticclassificationplugin.ui" line="2526"/>
@@ -1008,7 +1008,7 @@
     <message>
         <location filename="ui_semiautomaticclassificationplugin.ui" line="3160"/>
         <source>ImageID</source>
-        <translation>ImágenID</translation>
+        <translation>ImagenID</translation>
     </message>
     <message>
         <location filename="ui_semiautomaticclassificationplugin.ui" line="3165"/>
@@ -1213,7 +1213,7 @@
     <message>
         <location filename="ui_semiautomaticclassificationplugin.ui" line="2007"/>
         <source>ImageName</source>
-        <translation>NombreDeImágeen</translation>
+        <translation>NombreDeImagen</translation>
     </message>
     <message>
         <location filename="ui_semiautomaticclassificationplugin.ui" line="2012"/>
@@ -3419,7 +3419,7 @@ p, li { white-space: pre-wrap; }
 &lt;p align=&quot;justify&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Semi-Automatic Classification Plugin is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, version 3 of the License.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Semi-Automatic Classification Plugin is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with Semi-Automatic Classification Plugin. If not, see &amp;lt;&lt;/span&gt;&lt;a href=&quot;http://www.gnu.org/licenses/&quot;&gt;&lt;span style=&quot; font-size:8pt; text-decoration: underline; color:#0000ff;&quot;&gt;http://www.gnu.org/licenses/&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;&amp;gt;.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -3860,7 +3860,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation>Eliminar archivos temporales</translation>
     </message>
     <message>
-        <location filename="input.py" line="236"/>
+        <location filename="input.py" line="312"/>
         <source>Band set</source>
         <translation>Juego de bandas</translation>
     </message>
@@ -3885,22 +3885,22 @@ Do you want to add the required fields to this shapefile?</source>
         <translation>Postprocesamiento</translation>
     </message>
     <message>
-        <location filename="input.py" line="246"/>
+        <location filename="input.py" line="374"/>
         <source>Band calc</source>
         <translation>Calculadora de Bandas</translation>
     </message>
     <message>
-        <location filename="input.py" line="248"/>
+        <location filename="input.py" line="376"/>
         <source>Spectral plot</source>
         <translation>Gráfico espectral</translation>
     </message>
     <message>
-        <location filename="input.py" line="250"/>
+        <location filename="input.py" line="378"/>
         <source>Scatter plot</source>
         <translation>Gráfico de dispersión</translation>
     </message>
     <message>
-        <location filename="input.py" line="252"/>
+        <location filename="input.py" line="380"/>
         <source>Batch</source>
         <translation>En Lotes</translation>
     </message>
@@ -3910,12 +3910,12 @@ Do you want to add the required fields to this shapefile?</source>
         <translation>Configuración</translation>
     </message>
     <message>
-        <location filename="input.py" line="256"/>
+        <location filename="input.py" line="399"/>
         <source>User manual</source>
         <translation>Manual del Usuario</translation>
     </message>
     <message>
-        <location filename="input.py" line="258"/>
+        <location filename="input.py" line="401"/>
         <source>Online help</source>
         <translation>Ayuda en línea</translation>
     </message>
@@ -4043,43 +4043,6 @@ Do you want to add the required fields to this shapefile?</source>
         <location filename="messages.py" line="137"/>
         <source>Classification failed.</source>
         <translation>La clasificación falló.</translation>
-    </message>
-    <message>
-        <location filename="messages.py" line="140"/>
-        <source>ROI creation failed. <byte value="xd"/>
-or <byte value="xd"/>
-Possible reason: one or more band of the band set are missing</source>
-        <translation>La creación del ROI falló. &lt;byte value=&quot;xd&quot;/&gt;
-o &lt;byte value=&quot;xd&quot;/&gt;
-Una posible razón: una o más de las bandas del juego de bandas no se encuentra</translation>
-    </message>
-    <message>
-        <location filename="messages.py" line="146"/>
-        <source>Signature calculation failed. <byte value="xd"/>
-Possible reason: the raster is not loaded</source>
-        <translation>El cálculo de la firma falló. &lt;byte value=&quot;xd&quot;/&gt;
-Una posible razón: el ráster no se cargó</translation>
-    </message>
-    <message>
-        <location filename="messages.py" line="149"/>
-        <source>Import failed. <byte value="xd"/>
-Possible reason: selected file is not a band set</source>
-        <translation>Falló importar. &lt;byte value=&quot;xd&quot;/&gt;
-Una posible razón: el archivo seleccionado no es un Juego de Bandas</translation>
-    </message>
-    <message>
-        <location filename="messages.py" line="152"/>
-        <source>Classification failed. <byte value="xd"/>
-It appears the one or more bands of the band set are missing</source>
-        <translation>La clasificación falló. &lt;byte value=&quot;xd&quot;/&gt;
-Parece que una o más bandas del Juego de Bandas no se encuentra</translation>
-    </message>
-    <message>
-        <location filename="messages.py" line="155"/>
-        <source>ROI creation failed. <byte value="xd"/>
-Possible reason: input is a virtual raster or band is not loaded</source>
-        <translation>La creación del ROI falló. &lt;byte value=&quot;xd&quot;/&gt;
-Una razón posible: la entrada es un ráster virtual o la banda no se cargó</translation>
     </message>
     <message>
         <location filename="messages.py" line="158"/>
@@ -4392,7 +4355,7 @@ Una razón posible: la entrada es un ráster virtual o la banda no se cargó</tr
         <translation>Selecciona un archivo shape</translation>
     </message>
     <message>
-        <location filename="utils.py" line="2122"/>
+        <location filename="utils.py" line="2125"/>
         <source>Please wait ...</source>
         <translation>Por favor espera ...</translation>
     </message>
@@ -4622,7 +4585,7 @@ Una razón posible: la entrada es un ráster virtual o la banda no se cargó</tr
         <translation>Guardar salida</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="551"/>
+        <location filename="downloadsentinelimages.py" line="557"/>
         <source>Searching ...</source>
         <translation>Buscando ...</translation>
     </message>
@@ -4637,12 +4600,12 @@ Una razón posible: la entrada es un ráster virtual o la banda no se cargó</tr
         <translation>Exportar enlaces de descarga</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="628"/>
+        <location filename="downloadsentinelimages.py" line="634"/>
         <source>Reset signature list</source>
         <translation>Restaurar lista de firmas</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="628"/>
+        <location filename="downloadsentinelimages.py" line="634"/>
         <source>Are you sure you want to clear the table?</source>
         <translation>¿Estás seguro que quieres borrar la tabla?</translation>
     </message>
@@ -4879,7 +4842,183 @@ Una razón posible: la entrada es un ráster virtual o la banda no se cargó</tr
     <message>
         <location filename="semiautomaticclassificationplugin.py" line="361"/>
         <source>Please, restart QGIS for executing the Semi-Automatic Classification Plugin. Possible missing dependecies.</source>
+        <translation>Por favor, reinicia QGIS para ejecutar el complemento Semi-Automatic Classification Plugin. Es posible que existan dependencias perdidas.</translation>
+    </message>
+    <message>
+        <location filename="messages.py" line="140"/>
+        <source>ROI creation failed. <byte value="xd"/>
+or <byte value="xd"/>
+Possible reason: one or more band of the band set are missing</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="messages.py" line="146"/>
+        <source>Signature calculation failed. <byte value="xd"/>
+Possible reason: the raster is not loaded</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="messages.py" line="149"/>
+        <source>Import failed. <byte value="xd"/>
+Possible reason: selected file is not a band set</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="messages.py" line="152"/>
+        <source>Classification failed. <byte value="xd"/>
+It appears the one or more bands of the band set are missing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="messages.py" line="155"/>
+        <source>ROI creation failed. <byte value="xd"/>
+Possible reason: input is a virtual raster or band is not loaded</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="input.py" line="316"/>
+        <source>Landsat download</source>
+        <translation type="unfinished">Descargar Landsat</translation>
+    </message>
+    <message>
+        <location filename="input.py" line="318"/>
+        <source>Sentinel-2 download </source>
+        <translation type="unfinished">Sentinel-2 descarga</translation>
+    </message>
+    <message>
+        <location filename="input.py" line="324"/>
+        <source>Multiple ROI creation</source>
+        <translation type="unfinished">Creación de ROI múltiples</translation>
+    </message>
+    <message>
+        <location filename="input.py" line="326"/>
+        <source>Import signatures</source>
+        <translation type="unfinished">Importar firmas</translation>
+    </message>
+    <message>
+        <location filename="input.py" line="328"/>
+        <source>Export signatures</source>
+        <translation type="unfinished">Exportar librerías</translation>
+    </message>
+    <message>
+        <location filename="input.py" line="330"/>
+        <source>Algorithm band weight</source>
+        <translation type="unfinished">Algoritmo peso de banda</translation>
+    </message>
+    <message>
+        <location filename="input.py" line="332"/>
+        <source>Signature threshold</source>
+        <translation type="unfinished">Umbral de firma</translation>
+    </message>
+    <message>
+        <location filename="input.py" line="334"/>
+        <source>LCS threshold</source>
+        <translation type="unfinished">Umbral LCS</translation>
+    </message>
+    <message>
+        <location filename="input.py" line="340"/>
+        <source>Landsat</source>
+        <translation type="unfinished">Landsat</translation>
+    </message>
+    <message>
+        <location filename="input.py" line="342"/>
+        <source>Sentinel-2</source>
+        <translation type="unfinished">Sentinel-2</translation>
+    </message>
+    <message>
+        <location filename="input.py" line="344"/>
+        <source>ASTER</source>
+        <translation type="unfinished">ASTER</translation>
+    </message>
+    <message>
+        <location filename="input.py" line="346"/>
+        <source>Clip multiple rasters</source>
+        <translation type="unfinished">Recortar múltiples rásters</translation>
+    </message>
+    <message>
+        <location filename="input.py" line="348"/>
+        <source>Split raster bands</source>
+        <translation type="unfinished">Separar bandas ráster</translation>
+    </message>
+    <message>
+        <location filename="input.py" line="350"/>
+        <source>PCA</source>
+        <translation type="unfinished">PCA</translation>
+    </message>
+    <message>
+        <location filename="input.py" line="352"/>
+        <source>Vector to raster</source>
+        <translation type="unfinished">Vectorial a ráster</translation>
+    </message>
+    <message>
+        <location filename="input.py" line="356"/>
+        <source>Accuracy</source>
+        <translation type="unfinished">Precisión</translation>
+    </message>
+    <message>
+        <location filename="input.py" line="358"/>
+        <source>Land cover change</source>
+        <translation type="unfinished">Cambio de cobertura del suelo</translation>
+    </message>
+    <message>
+        <location filename="input.py" line="360"/>
+        <source>Classification report</source>
+        <translation type="unfinished">Reporte de la clasificación</translation>
+    </message>
+    <message>
+        <location filename="input.py" line="362"/>
+        <source>Classification to vector</source>
+        <translation type="unfinished">Clasificación a vectorial</translation>
+    </message>
+    <message>
+        <location filename="input.py" line="364"/>
+        <source>Reclassification</source>
+        <translation type="unfinished">Reclasificación</translation>
+    </message>
+    <message>
+        <location filename="input.py" line="366"/>
+        <source>Edit raster</source>
+        <translation type="unfinished">Editar ráster</translation>
+    </message>
+    <message>
+        <location filename="input.py" line="368"/>
+        <source>Classification sieve</source>
+        <translation type="unfinished">Filtrado de la Clasificación</translation>
+    </message>
+    <message>
+        <location filename="input.py" line="370"/>
+        <source>Classification erosion</source>
+        <translation type="unfinished">Erosión de la clasificación</translation>
+    </message>
+    <message>
+        <location filename="input.py" line="372"/>
+        <source>Classification dilation</source>
+        <translation type="unfinished">Dilatación de la Clasificación</translation>
+    </message>
+    <message>
+        <location filename="input.py" line="403"/>
+        <source>About</source>
+        <translation type="unfinished">Acerca de</translation>
+    </message>
+    <message>
+        <location filename="input.py" line="320"/>
+        <source>ASTER download</source>
+        <translation type="unfinished">ASTER descarga</translation>
+    </message>
+    <message>
+        <location filename="input.py" line="384"/>
+        <source>Interface</source>
+        <translation type="unfinished">Interfaz</translation>
+    </message>
+    <message>
+        <location filename="input.py" line="389"/>
+        <source>Processing</source>
+        <translation type="unfinished">Procesado</translation>
+    </message>
+    <message>
+        <location filename="input.py" line="394"/>
+        <source>Debug</source>
+        <translation type="unfinished">Depurar</translation>
     </message>
 </context>
 </TS>

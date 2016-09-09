@@ -16,6 +16,7 @@ changelog=
 
 	5.0.5
 	Minor update:
+	-changed default Sentinel-2 service https://scihub.copernicus.eu/dhus (requires user account)
 	-fixed issue #12 with translations
 	-fixed various issues
 	

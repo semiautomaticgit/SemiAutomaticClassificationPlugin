@@ -524,6 +524,42 @@ class BandCalcTab:
 								if extRaster == cfg.mapExtent:
 									rectangle = cfg.cnvs.extent()
 									tLX, tLY, lRX, lRY = rectangle.xMinimum(), rectangle.yMaximum(), rectangle.xMaximum(), rectangle.yMinimum()
+									pCrs = cfg.utls.getQGISCrs()
+									# check projection 
+									if cfg.bndSetPresent == "Yes" and cfg.imgNm == cfg.bndSetNm:
+										imageName = cfg.bndSet[0]
+									elif cfg.imgNm is not None:
+										imageName = cfg.imgNm
+									else:
+										imageName = variableList[0][1][1:-1]
+									# image CRS
+									bN0 = cfg.utls.selectLayerbyName(imageName, "Yes")
+									iCrs = cfg.utls.getCrs(bN0)
+									if iCrs is None:
+										iCrs = pCrs
+									# projection of input point from project's crs to raster's crs
+									if pCrs != iCrs:
+										tLPoint = QgsPoint(tLX, tLY)
+										lRPoint = QgsPoint(lRX, lRY)
+										try:
+											tLPoint = cfg.utls.projectPointCoordinates(tLPoint, pCrs, iCrs)
+											lRPoint = cfg.utls.projectPointCoordinates(lRPoint, pCrs, iCrs)
+											if tLPoint is False or lRPoint is False:
+												cfg.utls.setQGISCrs(iCrs)
+												cfg.uiUtls.removeProgressBar()
+												cfg.cnvs.setRenderFlag(True)
+												return "No"
+											else:
+												tLX = tLPoint.x()
+												tLY = tLPoint.y()
+												lRX = lRPoint.x()
+												lRY = lRPoint.y()
+										except Exception, err:
+											# logger
+											cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+											cfg.uiUtls.removeProgressBar()
+											cfg.cnvs.setRenderFlag(True)
+											return "No"
 								elif extRaster == cfg.pixelExtent:
 									tLX, tLY, lRX, lRY = extentList[0], extentList[1], extentList[2], extentList[3]
 								else:
