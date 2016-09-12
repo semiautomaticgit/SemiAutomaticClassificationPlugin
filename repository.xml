@@ -9,10 +9,10 @@
         <qgis_minimum_version>2.0.0</qgis_minimum_version>
         <qgis_maximum_version>2.99.0</qgis_maximum_version>
         <homepage><![CDATA[http://fromgistors.blogspot.com/p/semi-automatic-classification-plugin.html]]></homepage>
-        <file_name>SemiAutomaticClassificationPlugin-master.zip</file_name>
+        <file_name>SemiAutomaticClassificationPlugin.zip</file_name>
         <icon>/static/packages/2016/semiautomaticclassificationplugin_zPFemU6.png</icon>
         <author_name><![CDATA[Luca Congedo]]></author_name>
-        <download_url>https://codeload.github.com/semiautomaticgit/SemiAutomaticClassificationPlugin/zip/master</download_url>
+        <download_url>https://github.com/semiautomaticgit/SemiAutomaticClassificationPluginWelcome/raw/master/SemiAutomaticClassificationPlugin.zip</download_url>
         <uploaded_by><![CDATA[lucasupervised]]></uploaded_by>
         <create_date>2016-09-10T13:48:10.465574</create_date>
         <update_date>2016-09-10T13:48:10.465574</update_date>
