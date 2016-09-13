@@ -14,13 +14,16 @@
         <author_name><![CDATA[Luca Congedo]]></author_name>
         <download_url>https://codeload.github.com/semiautomaticgit/SemiAutomaticClassificationPlugin/zip/master</download_url>
         <uploaded_by><![CDATA[lucasupervised]]></uploaded_by>
-        <create_date>2016-09-10T13:48:10.465574</create_date>
-        <update_date>2016-09-10T13:48:10.465574</update_date>
+        <create_date>2016-09-09T13:48:10.465574</create_date>
+        <update_date>2016-09-09T13:48:10.465574</update_date>
         <experimental>False</experimental>
         <deprecated>False</deprecated>
         <tracker><![CDATA[https://github.com/semiautomaticgit/SemiAutomaticClassificationPlugin/issues]]></tracker>
         <repository><![CDATA[https://github.com/semiautomaticgit/SemiAutomaticClassificationPlugin]]></repository>
         <tags><![CDATA[raster,landsat,spectral signature,classification,land cover,accuracy,supervised classification,clip,remote sensing,sentinel,mask,analysis,landscape]]></tags>
+        <downloads>146104</downloads>
+        <average_vote>4.7777335395</average_vote>
+        <rating_votes>108</rating_votes>
         <external_dependencies></external_dependencies>
         <server>False</server>
     </pyqgis_plugin>
