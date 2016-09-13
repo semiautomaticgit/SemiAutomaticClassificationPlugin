@@ -34,7 +34,7 @@
 
 from qgis.core import *
 from qgis.gui import *
-import SemiAutomaticClassificationPlugin.core.config as cfg
+cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
 
 class ClassificationDock:
 
@@ -2066,11 +2066,11 @@ class ClassificationDock:
 						sigFile = unzipDir + "/" + name + ".slf"
 						cfg.classD.saveSignatureList(sigFile)
 						# create zip file
-						cfg.utls.zipDirectoryInFile(sF, unzipDir)
+						cfg.utls.zipDirectoryInFile(sL, unzipDir)
 						# open input
 						cfg.classD.openInput(sL)
 						# logger
-						cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "<<< SCP created: " + "\"" + unicode(sF) + "\"")
+						cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "<<< SCP created: " + "\"" + unicode(sL) + "\"")
 					except Exception, err:
 						# logger
 						cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))

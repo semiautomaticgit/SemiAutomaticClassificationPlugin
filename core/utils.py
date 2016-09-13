@@ -34,7 +34,7 @@
 
 from qgis.core import *
 from qgis.gui import *
-import SemiAutomaticClassificationPlugin.core.config as cfg
+cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
 # sound for Windows
 try:
 	import winsound
@@ -127,7 +127,8 @@ class Utils:
 							
 	# connect with password
 	def passwordConnect(self, user, password, url, topLevelUrl, outputPath = None, progress = None, quiet = "No"):
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode())
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " " + url)
 		# auth
 		base64UP = cfg.base64SCP.encodestring(user + ":" + password)[:-1]
 		h = "Basic " + base64UP
@@ -191,7 +192,8 @@ class Utils:
 			
 	# connect with password Python
 	def passwordConnectPython(self, user, password, url, topLevelUrl, outputPath = None, progress = None, quiet = "No"):
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode())
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " " + url)
 		proxyHandler = cfg.utls.getProxyHandler()
 		passwordHandler = cfg.utls.getPasswordHandler(user, password, topLevelUrl)
 		cookieHandler = cfg.urllib2SCP.HTTPCookieProcessor()
@@ -244,6 +246,8 @@ class Utils:
 		
 	# NASA search
 	def NASASearch(self, url):
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " " + url)
 		cfg.utls.generalOpener()
 		request1 = cfg.urllib2SCP.Request(url)
 		try:

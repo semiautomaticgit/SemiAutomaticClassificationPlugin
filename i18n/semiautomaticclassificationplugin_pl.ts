@@ -3705,7 +3705,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Wybierz plik z listą sygnatur</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="634"/>
+        <location filename="downloadsentinelimages.py" line="636"/>
         <source>Reset signature list</source>
         <translation type="unfinished">Zresetuj listę sygnatur</translation>
     </message>
@@ -3825,7 +3825,7 @@ p, li { white-space: pre-wrap; }
         <translation>SCP zapisuje Plik zdarzeń</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="310"/>
+        <location filename="downloadsentinelimages.py" line="312"/>
         <source>Error</source>
         <translation type="unfinished">Błąd</translation>
     </message>
@@ -4095,7 +4095,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Zmniejsz zakres obszaru wyszukiwania w obrębie 10 stopni szerokości geograficznej i 10 stopni długości geograficznej</translation>
     </message>
     <message>
-        <location filename="utils.py" line="2125"/>
+        <location filename="utils.py" line="2129"/>
         <source>Please wait ...</source>
         <translation type="unfinished">Proszę czekać...</translation>
     </message>
@@ -4215,22 +4215,22 @@ p, li { white-space: pre-wrap; }
         <translation>Zapisz raster wirtualny</translation>
     </message>
     <message>
-        <location filename="bandsetTab.py" line="833"/>
+        <location filename="bandsetTab.py" line="832"/>
         <source>Save raster</source>
         <translation type="unfinished">Zapisz raster</translation>
     </message>
     <message>
-        <location filename="bandsetTab.py" line="884"/>
+        <location filename="bandsetTab.py" line="883"/>
         <source>Build overviews</source>
         <translation type="unfinished">Zbuduj podglądy</translation>
     </message>
     <message>
-        <location filename="bandsetTab.py" line="884"/>
+        <location filename="bandsetTab.py" line="883"/>
         <source>Do you want to build the external overviews of bands?</source>
         <translation>Czy na pewno zbudować zewnętrzne podglądy na kanały?</translation>
     </message>
     <message>
-        <location filename="bandsetTab.py" line="897"/>
+        <location filename="bandsetTab.py" line="896"/>
         <source> building overviews</source>
         <translation> tworzenie podglądu</translation>
     </message>
@@ -4270,22 +4270,22 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Wybierz katalog do zapisu złączonych rastrów</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="337"/>
+        <location filename="downloadsentinelimages.py" line="339"/>
         <source>Download the images in the table (requires internet connection)</source>
         <translation type="unfinished">Pobierz obrazy w tabeli (wymaga połączenia z internetem)</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="482"/>
+        <location filename="downloadsentinelimages.py" line="484"/>
         <source>Export download links</source>
         <translation type="unfinished">Eksportuj pobrane łącza</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="557"/>
+        <location filename="downloadsentinelimages.py" line="559"/>
         <source>Searching ...</source>
         <translation type="unfinished">Wyszukiwanie...</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="634"/>
+        <location filename="downloadsentinelimages.py" line="636"/>
         <source>Are you sure you want to clear the table?</source>
         <translation type="unfinished">Czy na pewno oczyścić tabelę?</translation>
     </message>

@@ -4035,7 +4035,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation>Define un área de búsqueda</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="310"/>
+        <location filename="downloadsentinelimages.py" line="312"/>
         <source>Error</source>
         <translation>Error</translation>
     </message>
@@ -4355,7 +4355,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation>Selecciona un archivo shape</translation>
     </message>
     <message>
-        <location filename="utils.py" line="2125"/>
+        <location filename="utils.py" line="2129"/>
         <source>Please wait ...</source>
         <translation>Por favor espera ...</translation>
     </message>
@@ -4515,22 +4515,22 @@ Do you want to add the required fields to this shapefile?</source>
         <translation>Guardar ráster virtual</translation>
     </message>
     <message>
-        <location filename="bandsetTab.py" line="833"/>
+        <location filename="bandsetTab.py" line="832"/>
         <source>Save raster</source>
         <translation>Guardar ráster</translation>
     </message>
     <message>
-        <location filename="bandsetTab.py" line="884"/>
+        <location filename="bandsetTab.py" line="883"/>
         <source>Build overviews</source>
         <translation>Construir vistas generales</translation>
     </message>
     <message>
-        <location filename="bandsetTab.py" line="884"/>
+        <location filename="bandsetTab.py" line="883"/>
         <source>Do you want to build the external overviews of bands?</source>
         <translation>¿Quieres construir vistas generales externas?</translation>
     </message>
     <message>
-        <location filename="bandsetTab.py" line="897"/>
+        <location filename="bandsetTab.py" line="896"/>
         <source> building overviews</source>
         <translation>construir vistas generales</translation>
     </message>
@@ -4585,27 +4585,27 @@ Do you want to add the required fields to this shapefile?</source>
         <translation>Guardar salida</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="557"/>
+        <location filename="downloadsentinelimages.py" line="559"/>
         <source>Searching ...</source>
         <translation>Buscando ...</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="337"/>
+        <location filename="downloadsentinelimages.py" line="339"/>
         <source>Download the images in the table (requires internet connection)</source>
         <translation>Descarga las imágenes de la tabla (se requiere conexión a internet)</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="482"/>
+        <location filename="downloadsentinelimages.py" line="484"/>
         <source>Export download links</source>
         <translation>Exportar enlaces de descarga</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="634"/>
+        <location filename="downloadsentinelimages.py" line="636"/>
         <source>Reset signature list</source>
         <translation>Restaurar lista de firmas</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="634"/>
+        <location filename="downloadsentinelimages.py" line="636"/>
         <source>Are you sure you want to clear the table?</source>
         <translation>¿Estás seguro que quieres borrar la tabla?</translation>
     </message>

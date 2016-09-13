@@ -290,7 +290,7 @@ class SemiAutomaticClassificationPlugin:
 			cfg.utls.findSystemSpecs()
 			cfg.utls.readVariables()
 			# initialize plugin directory
-			cfg.plgnDir = cfg.QFileInfoSCP(cfg.qgisCoreSCP.QgsApplication.qgisUserDbFilePath()).path() + "/python/plugins/SemiAutomaticClassificationPlugin"
+			cfg.plgnDir = cfg.QFileInfoSCP(cfg.qgisCoreSCP.QgsApplication.qgisUserDbFilePath()).path() + "/python/plugins/" + str(__name__).split(".")[0]
 			# initialize LOG directory
 			cfg.lgndir = cfg.plgnDir
 			# log file path

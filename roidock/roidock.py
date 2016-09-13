@@ -34,7 +34,7 @@
 
 from qgis.core import *
 from qgis.gui import *
-import SemiAutomaticClassificationPlugin.core.config as cfg
+cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
 
 class RoiDock:
 
@@ -308,7 +308,7 @@ class RoiDock:
 						cfg.mx.msgErr7()
 			else:
 				# image CRS
-				bN0 = cfg.utls.selectLayerbyName(imageName, "Yes")
+				bN0 = cfg.utls.selectLayerbyName(cfg.rstrNm, "Yes")
 				iCrs = cfg.utls.getCrs(bN0)
 				if cfg.rpdROICheck == "No":
 					# subset image

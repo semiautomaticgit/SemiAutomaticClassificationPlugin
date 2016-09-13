@@ -38,7 +38,7 @@ from ui_semiautomaticclassificationplugin_dock_class import Ui_DockClass
 from ui_semiautomaticclassificationplugin_scatter_plot import Ui_ScatterPlot
 from ui_semiautomaticclassificationplugin_signature_plot import Ui_SpectralSignaturePlot
 try:
-	import SemiAutomaticClassificationPlugin.core.config as cfg
+	cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
 except:
 	pass
 

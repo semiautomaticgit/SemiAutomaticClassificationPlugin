@@ -4023,7 +4023,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="310"/>
+        <location filename="downloadsentinelimages.py" line="312"/>
         <source>Error</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4374,7 +4374,7 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="utils.py" line="2125"/>
+        <location filename="utils.py" line="2129"/>
         <source>Please wait ...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4534,22 +4534,22 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="bandsetTab.py" line="833"/>
+        <location filename="bandsetTab.py" line="832"/>
         <source>Save raster</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="bandsetTab.py" line="884"/>
+        <location filename="bandsetTab.py" line="883"/>
         <source>Build overviews</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="bandsetTab.py" line="884"/>
+        <location filename="bandsetTab.py" line="883"/>
         <source>Do you want to build the external overviews of bands?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="bandsetTab.py" line="897"/>
+        <location filename="bandsetTab.py" line="896"/>
         <source> building overviews</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4604,27 +4604,27 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="557"/>
+        <location filename="downloadsentinelimages.py" line="559"/>
         <source>Searching ...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="337"/>
+        <location filename="downloadsentinelimages.py" line="339"/>
         <source>Download the images in the table (requires internet connection)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="482"/>
+        <location filename="downloadsentinelimages.py" line="484"/>
         <source>Export download links</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="634"/>
+        <location filename="downloadsentinelimages.py" line="636"/>
         <source>Reset signature list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="634"/>
+        <location filename="downloadsentinelimages.py" line="636"/>
         <source>Are you sure you want to clear the table?</source>
         <translation type="unfinished"></translation>
     </message>

@@ -34,7 +34,7 @@
 
 from qgis.core import *
 from qgis.gui import *
-import SemiAutomaticClassificationPlugin.core.config as cfg
+cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
 
 class BandsetTab:
 
@@ -828,7 +828,6 @@ class BandsetTab:
 	def stackBandSet(self, outFile = None):
 		if cfg.bndSetPresent == "Yes" and cfg.rstrNm == cfg.bndSetNm:
 			ck = cfg.utls.checkBandSet()
-			ck = cfg.utls.checkBandSet()
 			if outFile is None:
 				rstrOut = cfg.utls.getSaveFileName(None , cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Save raster"), "", "*.tif")
 			else:
@@ -921,10 +920,10 @@ class BandsetTab:
 				cfg.bCalc.calculate(outputDirectory + "/" + cfg.calcRasterNm + ".tif")
 		if cfg.actionCheck == "Yes":
 			if cfg.ui.virtual_raster_bandset_checkBox.isChecked() is True:
-				cfg.bst.virtualRasterBandSet(outputDirectory + "/" + cfg.virtualRasterNm + ".vrt")
+				cfg.bst.virtualRasterBandSet(outputDirectory + "/" + cfg.osSCP.path.basename(cfg.bndSetLst[0]).split(".")[0][:-1] + cfg.stackRasterNm + cfg.virtualRasterNm + ".vrt")
 		if cfg.actionCheck == "Yes":
 			if cfg.ui.stack_raster_bandset_checkBox.isChecked() is True:
-				cfg.bst.stackBandSet(outputDirectory + "/" + cfg.stackRasterNm + ".tif")
+				cfg.bst.stackBandSet(outputDirectory + "/" + cfg.osSCP.path.basename(cfg.bndSetLst[0]).split(".")[0][:-1] + cfg.stackRasterNm + ".tif")
 		if cfg.actionCheck == "Yes":
 			if cfg.ui.overview_raster_bandset_checkBox.isChecked() is True:
 				cfg.bst.buildOverviewsBandSet("Yes")

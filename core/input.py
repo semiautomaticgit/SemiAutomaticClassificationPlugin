@@ -32,7 +32,7 @@
 
 """
 
-import SemiAutomaticClassificationPlugin.core.config as cfg
+cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
 try:
 	_fromUtf8 = cfg.QtCoreSCP.QString.fromUtf8
 except AttributeError:

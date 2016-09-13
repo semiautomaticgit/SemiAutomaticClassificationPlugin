@@ -34,7 +34,7 @@
 
 from qgis.core import *
 from qgis.gui import *
-import SemiAutomaticClassificationPlugin.core.config as cfg
+cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
 
 class DownloadSentinelImages:
 
@@ -246,6 +246,8 @@ class DownloadSentinelImages:
 		# check url
 		topLevelUrl = cfg.ui.sentinel_service_lineEdit.text()
 		topUrl =topLevelUrl
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " " + topLevelUrl)
 		# response = cfg.utls.passwordConnect(user, password, topUrl + '/search?q=', topLevelUrl, None, None, "Yes")
 		# if response == "No":
 			# cfg.mx.msgErr40()
