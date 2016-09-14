@@ -1104,12 +1104,12 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.transparency_Slider.valueChanged.connect(cfg.sets.changeROITransparency)
 			# welcome message
 			if cfg.osSCP.path.isfile(cfg.plgnDir + "/firstrun"):
-				cfg.ipt.welcomeText("https://raw.githubusercontent.com/semiautomaticgit/SemiAutomaticClassificationPluginWelcome/master/changelog.html")
+				cfg.ipt.welcomeText("https://semiautomaticgit.github.io/SemiAutomaticClassificationPluginWelcome/changelog.html")
 				cfg.osSCP.remove(cfg.plgnDir + "/firstrun")
 			else:
 				dateV = cfg.datetimeSCP.datetime.now()
 				dStr = dateV.strftime("%Y_%m_%d") 
-				cfg.ipt.welcomeText("https://raw.githubusercontent.com/semiautomaticgit/SemiAutomaticClassificationPluginWelcome/master/welcome" + "_" + dStr + ".html", "https://raw.githubusercontent.com/semiautomaticgit/SemiAutomaticClassificationPluginWelcome/master/welcome.html")
+				cfg.ipt.welcomeText("https://semiautomaticgit.github.io/SemiAutomaticClassificationPluginWelcome/welcome" + "_" + dStr + ".html", "https://semiautomaticgit.github.io/SemiAutomaticClassificationPluginWelcome/welcome.html")
 			cfg.utls.cleanOldTempDirectory()
 		else:
 			dockclassdlg = DockClassDialog(qgisUtils.iface.mainWindow(), qgisUtils.iface)

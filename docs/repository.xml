@@ -1,1 +1,24 @@
-repository
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<?xml-stylesheet type="text/xsl" href="/static/style/plugins.xsl" ?>
+<plugins>
+    <pyqgis_plugin name="Semi-Automatic Classification Plugin - master" version="5.0.7" plugin_id="284">
+        <description><![CDATA[Plugin that allows for the supervised classification of remote sensing images, providing tools for the download, the preprocessing and postprocessing of images.]]></description>
+        <about><![CDATA[Developed by Luca Congedo, the Semi-Automatic Classification Plugin (SCP) allows for the supervised classification of remote sensing images, providing tools for the download, the preprocessing and postprocessing of images. Search and download is available for Landsat and Sentinel-2 images. Several algorithms are available for the land cover classification. This plugin requires the installation of GDAL, OGR, Numpy, SciPy, and Matplotlib. For more information please visit http://fromgistors.blogspot.com/ . Keywords: Land Cover Supervised classification 土地被覆分類 监督分类 土地覆盖分类 教師付き分類 تصنيف استخدام الأراضي Classificação da Cobertura do Solo Clasificación de la Cobertura de la Tierra Classification de la Couverture du Sol классификация землепользования Klassifizierung der Landbedeckung Classificazione della Copertura del Suolo.]]></about>
+        <version>5.0.7</version>
+        <qgis_minimum_version>2.0.0</qgis_minimum_version>
+        <qgis_maximum_version>2.99.0</qgis_maximum_version>
+        <homepage><![CDATA[http://fromgistors.blogspot.com/p/semi-automatic-classification-plugin.html]]></homepage>
+        <file_name>SemiAutomaticClassificationPlugin-master.zip</file_name>
+        <icon>https://1.bp.blogspot.com/-ooebbZ35CWo/V9l9ray87vI/AAAAAAAAC-E/AVmH0gh4_gkbEdaHX5jGjIkYm1h_o1cuQCLcB/s1600/semiautomaticclassificationplugin.png</icon>
+        <author_name><![CDATA[Luca Congedo]]></author_name>
+        <download_url>https://codeload.github.com/semiautomaticgit/SemiAutomaticClassificationPlugin/zip/master</download_url>
+        <tracker><![CDATA[https://github.com/semiautomaticgit/SemiAutomaticClassificationPlugin/issues]]></tracker>
+        <repository><![CDATA[https://github.com/semiautomaticgit/SemiAutomaticClassificationPlugin]]></repository>
+        <tags><![CDATA[raster,landsat,spectral signature,classification,land cover,accuracy,supervised classification,clip,remote sensing,sentinel,mask,analysis,landscape]]></tags>
+        <downloads>00</downloads>
+        <average_vote>5</average_vote>
+        <rating_votes>00</rating_votes>
+        <external_dependencies></external_dependencies>
+        <server>False</server>
+    </pyqgis_plugin>
+</plugins>
