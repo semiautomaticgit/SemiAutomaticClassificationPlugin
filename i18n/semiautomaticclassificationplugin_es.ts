@@ -4355,7 +4355,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation>Selecciona un archivo shape</translation>
     </message>
     <message>
-        <location filename="utils.py" line="2129"/>
+        <location filename="utils.py" line="2130"/>
         <source>Please wait ...</source>
         <translation>Por favor espera ...</translation>
     </message>

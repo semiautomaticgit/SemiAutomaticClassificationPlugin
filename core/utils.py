@@ -62,7 +62,8 @@ class Utils:
 	def replyInTextBrowser(self):
 		cfg.reply.deleteLater()
 		html = str(cfg.reply.readAll())
-		if "404: Not Found" in html:
+		# Github file not found
+		if "<h1>404</h1>" in html:
 			r = cfg.QNetworkRequestSCP(cfg.QtCoreSCP.QUrl(cfg.htmlW))
 			cfg.reply2 = cfg.qgisCoreSCP.QgsNetworkAccessManager.instance().get(r)
 			cfg.reply2.finished.connect(self.replyInTextBrowser2)
