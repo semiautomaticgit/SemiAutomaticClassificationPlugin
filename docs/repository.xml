@@ -1,5 +1,4 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<?xml-stylesheet type="text/xsl" href="/static/style/plugins.xsl" ?>
 <plugins>
     <pyqgis_plugin name="Semi-Automatic Classification Plugin - master" version="5.0.8" plugin_id="284">
         <description><![CDATA[Plugin that allows for the supervised classification of remote sensing images, providing tools for the download, the preprocessing and postprocessing of images.]]></description>
