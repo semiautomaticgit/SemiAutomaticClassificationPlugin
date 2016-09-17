@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/ui_semiautomaticclassificationplugin.ui'
 #
-# Created: Fri Sep 16 14:49:44 2016
+# Created: Sat Sep 17 14:27:09 2016
 #      by: PyQt4 UI code generator 4.11.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -3584,7 +3584,7 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.gridLayout_182.addWidget(self.frame_8, 0, 0, 1, 1)
         self.toolBox_8.addItem(self.page_16, _fromUtf8(""))
         self.page_17 = QtGui.QWidget()
-        self.page_17.setGeometry(QtCore.QRect(0, 0, 86, 86))
+        self.page_17.setGeometry(QtCore.QRect(0, 0, 94, 86))
         self.page_17.setObjectName(_fromUtf8("page_17"))
         self.gridLayout_200 = QtGui.QGridLayout(self.page_17)
         self.gridLayout_200.setObjectName(_fromUtf8("gridLayout_200"))
@@ -3902,7 +3902,7 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.gridLayout_36.addWidget(self.frame_2, 0, 0, 1, 1)
         self.toolBox_5.addItem(self.page_10, _fromUtf8(""))
         self.page_11 = QtGui.QWidget()
-        self.page_11.setGeometry(QtCore.QRect(0, 0, 86, 86))
+        self.page_11.setGeometry(QtCore.QRect(0, 0, 94, 86))
         self.page_11.setObjectName(_fromUtf8("page_11"))
         self.gridLayout_35 = QtGui.QGridLayout(self.page_11)
         self.gridLayout_35.setObjectName(_fromUtf8("gridLayout_35"))
@@ -4035,7 +4035,7 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.gridLayout_186.addWidget(self.frame_3, 0, 0, 1, 1)
         self.toolBox_6.addItem(self.page_12, _fromUtf8(""))
         self.page_13 = QtGui.QWidget()
-        self.page_13.setGeometry(QtCore.QRect(0, 0, 86, 86))
+        self.page_13.setGeometry(QtCore.QRect(0, 0, 94, 86))
         self.page_13.setObjectName(_fromUtf8("page_13"))
         self.gridLayout_185 = QtGui.QGridLayout(self.page_13)
         self.gridLayout_185.setObjectName(_fromUtf8("gridLayout_185"))
@@ -4147,7 +4147,7 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.gridLayout_48.addWidget(self.frame_4, 0, 0, 1, 1)
         self.toolBox_7.addItem(self.page_14, _fromUtf8(""))
         self.page_15 = QtGui.QWidget()
-        self.page_15.setGeometry(QtCore.QRect(0, 0, 86, 86))
+        self.page_15.setGeometry(QtCore.QRect(0, 0, 94, 86))
         self.page_15.setObjectName(_fromUtf8("page_15"))
         self.gridLayout_188 = QtGui.QGridLayout(self.page_15)
         self.gridLayout_188.setObjectName(_fromUtf8("gridLayout_188"))
@@ -6226,14 +6226,14 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.gridLayout_89.addWidget(self.toolButton_plugin, 0, 0, 1, 1)
 
         self.retranslateUi(SemiAutomaticClassificationPlugin)
-        self.toolButton_plugin.setCurrentIndex(2)
+        self.toolButton_plugin.setCurrentIndex(8)
         self.tab_download.setCurrentIndex(0)
         self.toolBox_2.setCurrentIndex(0)
         self.toolBox_3.setCurrentIndex(0)
         self.toolBox_9.setCurrentIndex(0)
         self.tabWidget.setCurrentIndex(0)
         self.toolBox_4.setCurrentIndex(0)
-        self.tabWidget_preprocessing.setCurrentIndex(5)
+        self.tabWidget_preprocessing.setCurrentIndex(0)
         self.toolBox_8.setCurrentIndex(0)
         self.tabWidget_2.setCurrentIndex(0)
         self.toolBox_5.setCurrentIndex(0)
@@ -7300,7 +7300,7 @@ class Ui_SemiAutomaticClassificationPlugin(object):
 "<p align=\"justify\" style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
 "<p align=\"justify\" style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt;\">For more information and tutorials visit the official site </span><span style=\" font-size:10pt; font-weight:600;\">From GIS to Remote Sensing.</span></p>\n"
 "<p align=\"justify\" style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
-"<p align=\"center\" style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><img src=\":/plugins/semiautomaticclassificationplugin/icons/fromGIStoRS.png\" /><a href=\"http://fromgistors.blogspot.com/p/semi-automatic-classification-plugin.html?spref=sacp\"><span style=\" font-size:14pt; text-decoration: underline; color:#0000ff;\">From GIS to Remote Sensing</span></a></p>\n"
+"<p align=\"center\" style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><img src=\":/plugins/semiautomaticclassificationplugin/icons/fromGIStoRS.png\" /><a href=\"https://fromgistors.blogspot.com/p/semi-automatic-classification-plugin.html?spref=sacp\"><span style=\" font-size:14pt; text-decoration: underline; color:#0000ff;\">From GIS to Remote Sensing</span></a></p>\n"
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /><a href=\"https://www.facebook.com/groups/SemiAutomaticClassificationPlugin\"><span style=\" text-decoration: underline; color:#0057ae;\">Semi-Automatic Classification Plugin group on Facebook</span></a></p>\n"
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"https://plus.google.com/communities/107833394986612468374\"><span style=\" text-decoration: underline; color:#0057ae;\">Semi-Automatic Classification Plugin community on Google+</span></a></p>\n"
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"

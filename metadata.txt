@@ -95,6 +95,6 @@ deprecated=False
 
 tags = Raster, Classification, Land Cover, Remote Sensing, Analysis, Landsat, Sentinel, Supervised classification, Spectral signature, Mask, Clip, Accuracy, Landscape
 
-homepage=http://fromgistors.blogspot.com/p/semi-automatic-classification-plugin.html
+homepage=https://fromgistors.blogspot.com/p/semi-automatic-classification-plugin.html
 tracker=https://github.com/semiautomaticgit/SemiAutomaticClassificationPlugin/issues
 repository=https://github.com/semiautomaticgit/SemiAutomaticClassificationPlugin

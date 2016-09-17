@@ -1,4 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
+<?xml-stylesheet type="text/xsl" href="/static/style/plugins.xsl" ?>
 <plugins>
     <pyqgis_plugin name="Semi-Automatic Classification Plugin - master" version="5.0.8" plugin_id="284">
         <description><![CDATA[Plugin that allows for the supervised classification of remote sensing images, providing tools for the download, the preprocessing and postprocessing of images.]]></description>
@@ -6,7 +7,7 @@
         <version>5.0.8</version>
         <qgis_minimum_version>2.0.0</qgis_minimum_version>
         <qgis_maximum_version>2.99.0</qgis_maximum_version>
-        <homepage><![CDATA[http://fromgistors.blogspot.com/p/semi-automatic-classification-plugin.html]]></homepage>
+        <homepage><![CDATA[https://fromgistors.blogspot.com/p/semi-automatic-classification-plugin.html]]></homepage>
         <file_name>SemiAutomaticClassificationPlugin-master.zip</file_name>
         <icon>https://1.bp.blogspot.com/-ooebbZ35CWo/V9l9ray87vI/AAAAAAAAC-E/AVmH0gh4_gkbEdaHX5jGjIkYm1h_o1cuQCLcB/s1600/semiautomaticclassificationplugin.png</icon>
         <author_name><![CDATA[Luca Congedo]]></author_name>

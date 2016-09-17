@@ -287,11 +287,11 @@ class Input:
 		
 	# user manual
 	def quickGuide(self):
-		cfg.QtGuiSCP.QDesktopServices().openUrl(cfg.QtCoreSCP.QUrl("http://fromgistors.blogspot.com/p/user-manual.html?spref=scp"))
+		cfg.QtGuiSCP.QDesktopServices().openUrl(cfg.QtCoreSCP.QUrl("https://fromgistors.blogspot.com/p/user-manual.html?spref=scp"))
 		
 	# help
 	def askHelp(self):
-		cfg.QtGuiSCP.QDesktopServices().openUrl(cfg.QtCoreSCP.QUrl("http://fromgistors.blogspot.com/p/online-help.html?spref=scp"))
+		cfg.QtGuiSCP.QDesktopServices().openUrl(cfg.QtCoreSCP.QUrl("https://fromgistors.blogspot.com/p/online-help.html?spref=scp"))
 		
 	# add item to menu
 	def addMenuItem(self, menu, function, iconName, name):

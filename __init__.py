@@ -66,7 +66,7 @@ def classFactory(iface):
     return SemiAutomaticClassificationPlugin(iface)
 
 def homepage():
-    return "http://fromgistors.blogspot.com/p/semi-automatic-classification-plugin.html"
+    return "https://fromgistors.blogspot.com/p/semi-automatic-classification-plugin.html"
 
 def tracker():
     return "https://github.com/semiautomaticgit/SemiAutomaticClassificationPlugin/issues"
