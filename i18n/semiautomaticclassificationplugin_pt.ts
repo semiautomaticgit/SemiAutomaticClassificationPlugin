@@ -3607,7 +3607,7 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>semiautomaticclassificationplugin</name>
     <message>
-        <location filename="semiautomaticclassificationplugin.py" line="1396"/>
+        <location filename="semiautomaticclassificationplugin.py" line="1398"/>
         <source>Please, restart QGIS for executing the Semi-Automatic Classification Plugin</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3642,37 +3642,37 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1115"/>
+        <location filename="classificationdock.py" line="1122"/>
         <source>Export SCP training input</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1190"/>
+        <location filename="classificationdock.py" line="1197"/>
         <source>Select a library file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1219"/>
+        <location filename="classificationdock.py" line="1226"/>
         <source>Export the highlighted signatures to CSV library</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1292"/>
+        <location filename="classificationdock.py" line="1299"/>
         <source>Calculate signatures</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1292"/>
+        <location filename="classificationdock.py" line="1299"/>
         <source>Calculate signatures for highlighted items?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1318"/>
+        <location filename="classificationdock.py" line="1325"/>
         <source>Merge signatures</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1318"/>
+        <location filename="classificationdock.py" line="1325"/>
         <source>Merge highlighted signatures?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3682,38 +3682,38 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1439"/>
+        <location filename="classificationdock.py" line="1446"/>
         <source>Are you sure you want to delete highlighted ROIs and signatures?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="2031"/>
+        <location filename="classificationdock.py" line="2038"/>
         <source>Create SCP training input</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="2143"/>
+        <location filename="classificationdock.py" line="2150"/>
         <source>Add required fds</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="2143"/>
+        <location filename="classificationdock.py" line="2150"/>
         <source>It appears that the shapefile </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="2143"/>
+        <location filename="classificationdock.py" line="2150"/>
         <source> is missing some fields that are required for the signature calculation. 
 Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="2227"/>
+        <location filename="classificationdock.py" line="2234"/>
         <source>Undo save ROI</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="2227"/>
+        <location filename="classificationdock.py" line="2234"/>
         <source>Are you sure you want to delete the last saved ROI?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4284,7 +4284,7 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="messages.py" line="364"/>
+        <location filename="messages.py" line="370"/>
         <source>Warning</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4394,17 +4394,17 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="accuracy.py" line="277"/>
+        <location filename="accuracy.py" line="285"/>
         <source>Classification</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="accuracy.py" line="277"/>
+        <location filename="accuracy.py" line="285"/>
         <source>ErrMatrixCode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="accuracy.py" line="297"/>
+        <location filename="accuracy.py" line="305"/>
         <source>Reference</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4414,42 +4414,42 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="accuracy.py" line="296"/>
+        <location filename="accuracy.py" line="304"/>
         <source>ERROR MATRIX</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="accuracy.py" line="310"/>
+        <location filename="accuracy.py" line="318"/>
         <source>Total</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="accuracy.py" line="319"/>
+        <location filename="accuracy.py" line="327"/>
         <source>Overall accuracy [%] = </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="accuracy.py" line="333"/>
+        <location filename="accuracy.py" line="341"/>
         <source>Class </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="accuracy.py" line="333"/>
+        <location filename="accuracy.py" line="341"/>
         <source> producer accuracy [%] = </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="accuracy.py" line="333"/>
+        <location filename="accuracy.py" line="341"/>
         <source> user accuracy [%] = </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="accuracy.py" line="333"/>
+        <location filename="accuracy.py" line="341"/>
         <source>Kappa hat = </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="accuracy.py" line="336"/>
+        <location filename="accuracy.py" line="344"/>
         <source>Kappa hat classification = </source>
         <translation type="unfinished"></translation>
     </message>
@@ -4604,7 +4604,7 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="559"/>
+        <location filename="downloadsentinelimages.py" line="563"/>
         <source>Searching ...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4614,17 +4614,17 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="484"/>
+        <location filename="downloadsentinelimages.py" line="488"/>
         <source>Export download links</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="636"/>
+        <location filename="downloadsentinelimages.py" line="644"/>
         <source>Reset signature list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="636"/>
+        <location filename="downloadsentinelimages.py" line="644"/>
         <source>Are you sure you want to clear the table?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4859,7 +4859,7 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="semiautomaticclassificationplugin.py" line="361"/>
+        <location filename="semiautomaticclassificationplugin.py" line="363"/>
         <source>Please, restart QGIS for executing the Semi-Automatic Classification Plugin. Possible missing dependecies.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5006,6 +5006,11 @@ Possible reason: input is a virtual raster or band is not loaded</source>
     <message>
         <location filename="input.py" line="394"/>
         <source>Debug</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="messages.py" line="367"/>
+        <source>The coordinate system of training input is different from the input image. Please create a new training input</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

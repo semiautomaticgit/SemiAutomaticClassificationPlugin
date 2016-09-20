@@ -867,6 +867,13 @@ class ClassificationDock:
 			pass
 		tSS = cfg.utls.addVectorLayer(cfg.inptDir + "/" + nm, nm, "ogr")
 		check = cfg.classD.checkFields(tSS)
+		vEPSG = cfg.utls.getEPSGVectorQGIS(tSS)
+		if cfg.bndSetPresent == "Yes" and cfg.imgNm == cfg.bndSetNm:
+			rEPSG = cfg.utls.getEPSGRaster(cfg.bndSetLst[0])
+		else:
+			rEPSG = cfg.utls.getEPSGRaster(cfg.imgSrc)
+		if str(vEPSG) != str(rEPSG):
+			cfg.mx.msgWar22()
 		if check == "Yes":
 			# create memory layer
 			provider = tSS.dataProvider()

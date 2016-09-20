@@ -5041,7 +5041,19 @@ class Utils:
 		lP = gL.GetSpatialRef()
 		lP.AutoIdentifyEPSG()
 		lPRS = lP.GetAuthorityCode(None)
-		epsg = int(lPRS)
+		# try with QGIS
+		if lPRS is None:
+			mL = cfg.utls.addVectorLayer(layerPath , "temp", "ogr")
+			lPRStr = mL.crs().authid()
+			lPRStr = lPRStr.split(":")
+			if lPRStr[0] == "EPSG":
+				lPRS = lPRStr[1]
+		try:
+			epsg = int(lPRS)
+		except Exception, err:
+			epsg = None
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 		l.Destroy()
 		return epsg
 			
@@ -5130,7 +5142,13 @@ class Utils:
 				# date time for temp name
 				dT = cfg.utls.getTime()
 				reprjShapefile = cfg.tmpDir + "/" + dT + cfg.osSCP.path.basename(layerPath)
-				cfg.utls.repojectShapefile(layerPath, int(lPRS), reprjShapefile, int(rPRS))
+				try:
+					cfg.utls.repojectShapefile(layerPath, int(lPRS), reprjShapefile, int(rPRS))
+				except Exception, err:
+					# logger
+					cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					cfg.mx.msg9()
+					return "No"
 				l.Destroy()
 				l = cfg.ogrSCP.Open(reprjShapefile)
 				gL = l.GetLayer()
@@ -6216,3 +6234,16 @@ class Utils:
 			if not cfg.QDirSCP(cfg.tmpDir).exists():
 				cfg.osSCP.makedirs(cfg.tmpDir)
 		return tmpDir0
+
+	# calculate md5
+	def md5Calc(self, filePath):
+		block = 2 ** 16
+		md5 = cfg.hashlibSCP.md5()
+		with open(filePath, 'rb') as inFile:
+			fileBlock = inFile.read(block)
+			while len(fileBlock) > 0:
+				md5.update(fileBlock)
+				fileBlock = inFile.read(block)
+		return md5.digest()
+		
+		

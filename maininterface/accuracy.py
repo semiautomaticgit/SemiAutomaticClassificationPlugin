@@ -232,8 +232,12 @@ class Accuracy:
 						cfg.uiUtls.removeProgressBar()
 					cfg.mx.msgErr48()
 					# remove temp layers
-					cfg.utls.removeLayerByLayer(reml)
-					cfg.utls.removeLayerByLayer(remiClass)
+					try:
+						cfg.utls.removeLayerByLayer(reml)
+						cfg.utls.removeLayerByLayer(remiClass)
+					except Exception, err:
+						# logger
+						cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 					# logger
 					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "Error")
 					return "No"
@@ -269,8 +273,12 @@ class Accuracy:
 					l = open(tblOut, 'w')
 				except Exception, err:
 					# remove temp layers
-					cfg.utls.removeLayerByLayer(reml)
-					cfg.utls.removeLayerByLayer(remiClass)
+					try:
+						cfg.utls.removeLayerByLayer(reml)
+						cfg.utls.removeLayerByLayer(remiClass)
+					except Exception, err:
+						# logger
+						cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 					# logger
 					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 					return "No"

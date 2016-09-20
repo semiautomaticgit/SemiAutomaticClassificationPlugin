@@ -53,6 +53,7 @@ import random
 import re
 import xml.etree.cElementTree as ET
 from xml.dom import minidom
+import hashlib
 # Import the PyQt libraries
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtCore import Qt, QObject, SIGNAL, QFileInfo, QSettings, QDir, QDate, QVariant
@@ -186,6 +187,7 @@ class SemiAutomaticClassificationPlugin:
 			cfg.reSCP = re
 			cfg.ETSCP = ET
 			cfg.minidomSCP = minidom
+			cfg.hashlibSCP = hashlib
 			cfg.statdistrSCP = statdistr
 			cfg.cdistSCP = cdist
 			cfg.signalSCP = signal

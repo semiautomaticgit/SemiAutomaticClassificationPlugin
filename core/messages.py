@@ -362,3 +362,9 @@ class Messages:
 
 	def msgWar21(self):
 		self.msgBarWarning(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [21]", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "No metadata found inside the input directory. Default values will be used"))
+
+	def msgWar22(self):
+		self.msgBarWarning(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [22]", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "The coordinate system of training input is different from the input image. Please create a new training input"))
+		
+	def msgWar23(self, image):
+		self.msgBarWarning(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [23]", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Check integrity of image " + image))
