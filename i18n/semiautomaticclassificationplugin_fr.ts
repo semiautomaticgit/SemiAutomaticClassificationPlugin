@@ -3607,7 +3607,7 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>semiautomaticclassificationplugin</name>
     <message>
-        <location filename="semiautomaticclassificationplugin.py" line="1398"/>
+        <location filename="semiautomaticclassificationplugin.py" line="1402"/>
         <source>Please, restart QGIS for executing the Semi-Automatic Classification Plugin</source>
         <translation type="unfinished"></translation>
     </message>

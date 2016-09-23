@@ -1105,6 +1105,10 @@ class SemiAutomaticClassificationPlugin:
 			# connect to transparency slider
 			cfg.ui.transparency_Slider.valueChanged.connect(cfg.sets.changeROITransparency)
 			# welcome message
+			lWelcome = cfg.plgnDir + "/ui/welcome.html"
+			htmlText = open(lWelcome, 'r').read()
+			cfg.uidc.main_textBrowser.clear()
+			cfg.uidc.main_textBrowser.setHtml(htmlText)
 			if cfg.osSCP.path.isfile(cfg.plgnDir + "/firstrun"):
 				cfg.ipt.welcomeText("https://semiautomaticgit.github.io/SemiAutomaticClassificationPluginWelcome/changelog.html")
 				cfg.osSCP.remove(cfg.plgnDir + "/firstrun")

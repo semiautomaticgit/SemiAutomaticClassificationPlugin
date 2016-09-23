@@ -5043,11 +5043,12 @@ class Utils:
 		lPRS = lP.GetAuthorityCode(None)
 		# try with QGIS
 		if lPRS is None:
-			mL = cfg.utls.addVectorLayer(layerPath , "temp", "ogr")
+			mL = cfg.utls.addVectorLayer(layerPath , "tempA", "ogr")
 			lPRStr = mL.crs().authid()
 			lPRStr = lPRStr.split(":")
 			if lPRStr[0] == "EPSG":
 				lPRS = lPRStr[1]
+			cfg.utls.removeLayerByLayer(mL)
 		try:
 			epsg = int(lPRS)
 		except Exception, err:
@@ -5128,16 +5129,11 @@ class Utils:
 			cfg.mx.msgErr34()
 			return "No"
 		# check projection
-		lP = cfg.osrSCP.SpatialReference()
-		lP = gL.GetSpatialRef()
-		lP.AutoIdentifyEPSG()
-		lPRS = lP.GetAuthorityCode(None)
+		lPRS = cfg.utls.getEPSGVector(layerPath)
 		rPSys =cfg.osrSCP.SpatialReference(wkt=rP)
 		rPSys.AutoIdentifyEPSG()
 		rPRS = rPSys.GetAuthorityCode(None)
-		if lP != "":
-			if lPRS == None:
-				cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "Error None lP: " + unicode(lP) + "rPRS: " + unicode(rPRS))
+		if lPRS is not None:
 			if lPRS != rPRS:
 				# date time for temp name
 				dT = cfg.utls.getTime()
@@ -5196,7 +5192,7 @@ class Utils:
 			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "vector to raster check: " + unicode(oC))
 		else:
 			cfg.mx.msg9()
-			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "lP: " + unicode(lP) + "rPRS: " + unicode(rPRS))
+			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "Error None lPRS: " + unicode(lPRS) + "rPRS: " + unicode(rPRS))
 			return "No"
 			
 	# convert raster to shapefile
