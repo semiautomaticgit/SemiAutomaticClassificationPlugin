@@ -217,6 +217,8 @@ class RoiDock:
 						
 	# create a ROI
 	def createROI(self, point, progressbar = "Yes"):
+		if (float(cfg.maxROIWdth) % 2 == 0):
+			cfg.maxROIWdth = float(cfg.maxROIWdth) + 1
 		if cfg.rstrNm is None:
 			cfg.mx.msg4()
 			cfg.pntROI = None
