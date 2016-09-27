@@ -1395,8 +1395,7 @@ class SemiAutomaticClassificationPlugin:
 			# remove temp files
 			if cfg.tmpDir is not None and cfg.QDirSCP(cfg.tmpDir).exists():
 				cfg.shutilSCP.rmtree(cfg.tmpDir, True)
-			if not cfg.QDirSCP(unicode(cfg.QDirSCP.tempPath() + "/" + cfg.tempDirName)).exists():
-				cfg.osSCP.makedirs(unicode(cfg.QDirSCP.tempPath() + "/" + cfg.tempDirName))
+			oDir = cfg.utls.makeDirectory(unicode(cfg.QDirSCP.tempPath() + "/" + cfg.tempDirName))
 		except:
 			if PluginCheck == "Yes":
 				qgisUtils.iface.messageBar().pushMessage("Semi-Automatic Classification Plugin", QApplication.translate("semiautomaticclassificationplugin", "Please, restart QGIS for executing the Semi-Automatic Classification Plugin"), level=QgsMessageBar.INFO)

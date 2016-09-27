@@ -52,10 +52,7 @@ class PcaTab:
 		else:
 			outF = outputDirectory
 		if len(outF) > 0:
-			if cfg.QDirSCP(outF).exists():
-				pass
-			else:
-				cfg.osSCP.makedirs(outF)
+			oDir = cfg.utls.makeDirectory(outF)
 			imageName = cfg.imgNm
 			# if band set
 			if cfg.bndSetPresent == "Yes" and cfg.imgNm == cfg.bndSetNm:

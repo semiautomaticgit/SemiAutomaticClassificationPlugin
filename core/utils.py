@@ -4083,7 +4083,7 @@ class Utils:
 			oList = cfg.utls.rasterToBands(tS, cfg.tmpDir, None, "No", cfg.bndSetMultAddFactorsList)
 			rL = cfg.utls.selectLayerbyName(rasterName, "Yes")
 			bCount = rL.bandCount()
-			for b in range(0, bCount):
+			for b in bandList:
 				tS = str(cfg.tmpDir + "//" + cfg.subsTmpRaster + "_" + str(b) + "_" + dT + ".tif")
 				bX = cfg.utls.clipRasterByShapefile(tLP, oList[b], None)
 				bands.append(bX)		
@@ -6231,6 +6231,17 @@ class Utils:
 				cfg.osSCP.makedirs(cfg.tmpDir)
 		return tmpDir0
 
+	# check and create directory
+	def makeDirectory(self, path):
+		if not cfg.QDirSCP(path).exists():
+			try:
+				cfg.osSCP.makedirs(path)
+			except Exception, err:
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				return None
+		return path
+			
 	# calculate md5
 	def md5Calc(self, filePath):
 		block = 2 ** 16

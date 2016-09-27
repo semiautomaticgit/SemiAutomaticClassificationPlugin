@@ -425,8 +425,12 @@ class DownloadSentinelImages:
 					urlL2 = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('" + imgName2[0:-7].replace('_MSI_L1C_', '_MTD_L1C_') + ".xml')/$value"
 					outFile2 = outputDirectory + "//" + imgName2[0:-7] + "//" + imgName2[0:-7].replace('_MSI_L1C_', '_MTD_L1C_')  + '.xml'
 					if exporter == "No":
-						if not cfg.QDirSCP(outputDirectory + "//" + imgName2[0:-7]).exists():
-							cfg.osSCP.makedirs(outputDirectory + "//" + imgName2[0:-7])
+						oDir = cfg.utls.makeDirectory(outputDirectory + "//" + imgName2[0:-7])
+						if oDir is None:
+							cfg.mx.msgErr58()
+							cfg.uiUtls.removeProgressBar()
+							cfg.cnvs.setRenderFlag(True)
+							return "No"
 					if exporter == "No":
 						self.downloadFile(urlL1, outFile1, progress)
 						self.downloadFile(urlL2, outFile2, progress)
@@ -437,8 +441,12 @@ class DownloadSentinelImages:
 					urlL3 = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('QI_DATA')/Nodes('" + imgName2[0:-7].replace('_MSI_L1C_TL_', '_MSK_CLOUDS_')  + "_B00_MSIL1C.gml')/$value"
 					outFile3 = outputDirectory + "//" + imgName2[0:-7] + "//" + imgName2[0:-7].replace('_MSI_L1C_TL_', '_MSK_CLOUDS_') + '_B00_MSIL1C.gml'
 					if exporter == "No":
-						if not cfg.QDirSCP(outputDirectory + "//" + imgName2[0:-7]).exists():
-							cfg.osSCP.makedirs(outputDirectory + "//" + imgName2[0:-7])
+						oDir = cfg.utls.makeDirectory(outputDirectory + "//" + imgName2[0:-7])
+						if oDir is None:
+							cfg.mx.msgErr58()
+							cfg.uiUtls.removeProgressBar()
+							cfg.cnvs.setRenderFlag(True)
+							return "No"
 					if exporter == "No":
 						self.downloadFile(urlL3, outFile3, progress)
 					else:
@@ -471,8 +479,12 @@ class DownloadSentinelImages:
 				if cfg.actionCheck == "Yes":
 					cfg.sentinel2T.populateTable(d)
 					o = d + "_con"
-					if not cfg.QDirSCP(o).exists():
-						cfg.osSCP.makedirs(o)
+					oDir = cfg.utls.makeDirectory(o)
+					if oDir is None:
+						cfg.mx.msgErr58()
+						cfg.uiUtls.removeProgressBar()
+						cfg.cnvs.setRenderFlag(True)
+						return "No"
 					cfg.sentinel2T.sentinel2(d, o, "Yes")
 		cfg.uiUtls.removeProgressBar()
 		cfg.cnvs.setRenderFlag(True)

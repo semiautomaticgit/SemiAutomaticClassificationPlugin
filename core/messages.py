@@ -304,6 +304,9 @@ class Messages:
 	def msgErr57(self, signature):
 		self.msgBarError(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Error") + " [57]", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Spectral signature " + signature +" doesn't match Band set. Calculate the spectral signatures again"))
 		
+	def msgErr58(self):
+		self.msgBarError(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Error") + " [58]", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Directory error. Check write permission"))
+		
 	""" Warnings """
 	def msgWar2Windows(self):
 		self.msgBoxWarning(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [2]", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "It appears that SciPy is not correctly installed. Please, update QGIS "))

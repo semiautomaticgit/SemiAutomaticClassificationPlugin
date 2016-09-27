@@ -83,10 +83,14 @@ class SplitTab:
 		if len(outputName) > 0:
 			outputName = str(outputName.encode('ascii','replace')) + "_" 
 		if len(o) > 0:
-			if cfg.QDirSCP(o).exists():
-				pass
-			else:
-				cfg.osSCP.makedirs(o)
+			oDir = cfg.utls.makeDirectory(o)
+			if oDir is None:
+				if batch == "No":
+					# enable map canvas render
+					cfg.cnvs.setRenderFlag(True)
+					cfg.uiUtls.removeProgressBar()
+				cfg.mx.msgErr58()
+				return "No"
 			if batch == "No":
 				# disable map canvas render for speed
 				cfg.cnvs.setRenderFlag(False)

@@ -213,10 +213,7 @@ class Sentinel2Tab:
 		l = cfg.ui.sentinel_2_tableWidget
 		inp = inputDirectory
 		out = outputDirectory
-		if cfg.QDirSCP(out).exists():
-			pass
-		else:
-			cfg.osSCP.makedirs(out)
+		cfg.utls.makeDirectory(out)
 		# name prefix
 		pre = "RT_"
 		# input bands

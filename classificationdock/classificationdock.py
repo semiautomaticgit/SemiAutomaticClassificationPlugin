@@ -839,11 +839,7 @@ class ClassificationDock:
 		name = zipName[:-4]
 		dT = cfg.utls.getTime()
 		cfg.inptDir = cfg.tmpDir + "/" + name + dT
-		try:
-			cfg.osSCP.makedirs(cfg.inptDir)
-		except Exception, err:
-			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+		oDir = cfg.utls.makeDirectory(cfg.inptDir)
 		# unzip to temp dir
 		try:
 			with cfg.zipfileSCP.ZipFile(shapeFilePath) as zOpen:
@@ -917,11 +913,7 @@ class ClassificationDock:
 		dT = cfg.utls.getTime()
 		inptDir2 = cfg.inptDir
 		cfg.inptDir = cfg.tmpDir + "/" + cfg.trnLay + dT
-		try:
-			cfg.osSCP.makedirs(cfg.inptDir)
-		except Exception, err:
-			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+		oDir = cfg.utls.makeDirectory(cfg.inptDir)
 		shpF = cfg.inptDir + "/" + cfg.trnLay + ".shp"
 		l = cfg.utls.saveMemoryLayerToShapefile(memoryLayer, shpF, cfg.trnLay)		
 		sigFileNm = cfg.trnLay + ".slf"
@@ -980,11 +972,7 @@ class ClassificationDock:
 		name = zipName[:-4]
 		dT = cfg.utls.getTime()
 		unzipDir = cfg.tmpDir + "/" + name + dT
-		try:
-			cfg.osSCP.makedirs(unzipDir)
-		except Exception, err:
-			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+		oDir = cfg.utls.makeDirectory(unzipDir)
 		shpF = unzipDir + "/" + name + ".shp"
 		sigFile = unzipDir + "/" + name + ".slf"
 		# unzip to temp dir
@@ -1140,11 +1128,7 @@ class ClassificationDock:
 			unzipDir = cfg.tmpDir + "/" + name + dT
 			shpF = unzipDir + "/" + name + ".shp"
 			sigFile = unzipDir + "/" + name + ".slf"
-			try:
-				cfg.osSCP.makedirs(unzipDir)
-			except Exception, err:
-				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			oDir = cfg.utls.makeDirectory(unzipDir)
 			QgsVectorFileWriter(unicode(shpF), "CP1250", f, QGis.WKBMultiPolygon , crs, "ESRI Shapefile")
 			tSS = cfg.utls.addVectorLayer(shpF, name + dT, "ogr")
 			tW = cfg.uidc.signature_list_tableWidget
@@ -2064,11 +2048,7 @@ class ClassificationDock:
 						dT = cfg.utls.getTime()
 						unzipDir = cfg.tmpDir + "/" + name + dT
 						shpF = unzipDir + "/" + name + ".shp"
-						try:
-							cfg.osSCP.makedirs(unzipDir)
-						except Exception, err:
-							# logger
-							cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+						oDir = cfg.utls.makeDirectory(unzipDir)
 						QgsVectorFileWriter(unicode(shpF), "CP1250", f, QGis.WKBMultiPolygon , crs, "ESRI Shapefile")
 						sigFile = unzipDir + "/" + name + ".slf"
 						cfg.classD.saveSignatureList(sigFile)
