@@ -920,10 +920,18 @@ class BandsetTab:
 				cfg.bCalc.calculate(outputDirectory + "/" + cfg.calcRasterNm + ".tif")
 		if cfg.actionCheck == "Yes":
 			if cfg.ui.virtual_raster_bandset_checkBox.isChecked() is True:
-				cfg.bst.virtualRasterBandSet(outputDirectory + "/" + cfg.osSCP.path.basename(cfg.bndSetLst[0]).split(".")[0][:-1] + cfg.stackRasterNm + cfg.virtualRasterNm + ".vrt")
+				try:
+					cfg.bst.virtualRasterBandSet(outputDirectory + "/" + cfg.osSCP.path.basename(cfg.bndSetLst[0]).split(".")[0][:-1] + cfg.virtualRasterNm + ".vrt")
+				except Exception, err:
+					# logger
+					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 		if cfg.actionCheck == "Yes":
 			if cfg.ui.stack_raster_bandset_checkBox.isChecked() is True:
-				cfg.bst.stackBandSet(outputDirectory + "/" + cfg.osSCP.path.basename(cfg.bndSetLst[0]).split(".")[0][:-1] + cfg.stackRasterNm + ".tif")
+				try:
+					cfg.bst.stackBandSet(outputDirectory + "/" + cfg.osSCP.path.basename(cfg.bndSetLst[0]).split(".")[0][:-1] + cfg.stackRasterNm + ".tif")
+				except Exception, err:
+					# logger
+					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 		if cfg.actionCheck == "Yes":
 			if cfg.ui.overview_raster_bandset_checkBox.isChecked() is True:
 				cfg.bst.buildOverviewsBandSet("Yes")

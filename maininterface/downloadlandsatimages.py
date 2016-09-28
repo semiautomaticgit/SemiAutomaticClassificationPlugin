@@ -425,13 +425,11 @@ class DownloadLandsatImages:
 					NASAcollection = str(tW.item(i, 11).text())
 					outDir = outputDirectory + "/" + imgID
 					if exporter == "No":
-						if not cfg.QDirSCP(outDir).exists():
-							try:
-								cfg.osSCP.makedirs(outDir)
-							# in case of errors
-							except Exception, err:
-								# logger
-								cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+						oDir = cfg.utls.makeDirectory(outDir)
+						if oDir is None:
+							cfg.uiUtls.removeProgressBar()
+							cfg.mx.msgErr58()
+							return "No"
 					outDirList.append(outDir)
 					if NASAcollection == cfg.NASALandsat8Collection:
 						urlL = "http://landsat-pds.s3.amazonaws.com/L8/" + path.zfill(3) + "/" + row.zfill(3) +"/" + imgID + "/" + imgID + "_"
@@ -498,8 +496,7 @@ class DownloadLandsatImages:
 					if cfg.actionCheck == "Yes":
 						cfg.landsatT.populateTable(d, "Yes")
 						o = d + "_converted"
-						if not cfg.QDirSCP(o).exists():
-							cfg.osSCP.makedirs(o)
+						cfg.utls.makeDirectory(o)
 						cfg.landsatT.landsat(d, o, "Yes")
 			elif cfg.ui.load_in_QGIS_checkBox.isChecked():
 				for d in outDirList:

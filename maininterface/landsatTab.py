@@ -115,15 +115,7 @@ class LandsatTab:
 		l = cfg.ui.landsat_tableWidget
 		inp = inputDirectory
 		out = outputDirectory
-		if cfg.QDirSCP(out).exists():
-			pass
-		else:
-			try:
-				cfg.osSCP.makedirs(out)
-			# in case of errors
-			except Exception, err:
-				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+		cfg.utls.makeDirectory(out)
 		# name prefix
 		pre = "RT_"
 		prePAN = "PAN_"

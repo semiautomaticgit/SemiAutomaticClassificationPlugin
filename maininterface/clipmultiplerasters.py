@@ -157,10 +157,12 @@ class ClipMultipleRasters:
 			for f in fileList:
 				rT.append(f.strip())
 			oD = outputDirectory
-			if cfg.QDirSCP(oD).exists():
-				pass
-			else:
-				cfg.osSCP.makedirs(oD)
+			oDir = cfg.utls.makeDirectory(oD)
+			if oDir is None:
+				cfg.mx.msgErr58()
+				if batch == "No":
+					cfg.uiUtls.removeProgressBar()
+				return "No"
 			s = shapefilePath
 			if cfg.ui.shapefile_checkBox.isChecked() is True:
 				# use shape

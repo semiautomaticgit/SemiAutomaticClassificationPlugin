@@ -216,12 +216,9 @@ class Settings:
 			o = cfg.utls.getExistingDirectory(None , cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Select a directory"))
 			if len(o) != 0:
 				if cfg.QDirSCP(o).exists():
-					try:
-						dT = cfg.utls.getTime()
-						cfg.osSCP.makedirs(o + "/" + dT)
-					except Exception, err:
-						# logger
-						cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					dT = cfg.utls.getTime()
+					oDir = cfg.utls.makeDirectory(o + "/" + dT)
+					if oDir is None:
 						cfg.mx.msgWar17()
 						return "No"
 					cfg.tmpDir = o + "/" + dT

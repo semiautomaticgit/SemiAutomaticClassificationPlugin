@@ -405,13 +405,11 @@ class DownloadASTERImages:
 					NASAcollection = str(tW.item(i, 11).text())
 					outDir = outputDirectory + "/" + imgDispID
 					if exporter == "No":
-						if not cfg.QDirSCP(outDir).exists():
-							try:
-								cfg.osSCP.makedirs(outDir)
-							# in case of errors
-							except Exception, err:
-								# logger
-								cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+						oDir = cfg.utls.makeDirectory(outDir)
+						if oDir is None:
+							cfg.mx.msgErr58()
+							cfg.uiUtls.removeProgressBar()
+							return "No"
 					outDirList.append(outDir)
 					outFileList.append(outDir + "//" + imgDispID + ".hdf")
 					progress = progress + progressStep
@@ -429,8 +427,7 @@ class DownloadASTERImages:
 					if cfg.actionCheck == "Yes":
 						cfg.ASTERT.populateTable(d, "Yes")
 						o = d + "_converted"
-						if not cfg.QDirSCP(o).exists():
-							cfg.osSCP.makedirs(o)
+						oDir = cfg.utls.makeDirectory(o)
 						cfg.ASTERT.ASTER(d, o, "Yes")
 			elif cfg.ui.load_in_QGIS_checkBox_2.isChecked():
 				for d in outDirList:

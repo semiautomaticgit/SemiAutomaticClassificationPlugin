@@ -124,10 +124,7 @@ class ASTERTab:
 			rD = cfg.gdalSCP.Open(inputFile, cfg.gdalSCP.GA_ReadOnly)
 			rDSub = rD.GetSubDatasets()
 		out = outputDirectory
-		if cfg.QDirSCP(out).exists():
-			pass
-		else:
-			cfg.osSCP.makedirs(out)
+		oDir = cfg.utls.makeDirectory(out)
 		# name prefix
 		pre = "RT_"
 		# input bands
