@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>891</width>
+    <width>892</width>
     <height>569</height>
    </rect>
   </property>
@@ -742,7 +742,7 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>839</width>
+                  <width>840</width>
                   <height>160</height>
                  </rect>
                 </property>
@@ -8510,8 +8510,8 @@ p, li { white-space: pre-wrap; }
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>839</width>
-                  <height>411</height>
+                  <width>444</width>
+                  <height>135</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -8706,7 +8706,7 @@ p, li { white-space: pre-wrap; }
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>94</width>
+                  <width>86</width>
                   <height>86</height>
                  </rect>
                 </property>
@@ -9133,7 +9133,7 @@ p, li { white-space: pre-wrap; }
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>841</width>
+                <width>842</width>
                 <height>413</height>
                </rect>
               </property>
@@ -9424,7 +9424,7 @@ p, li { white-space: pre-wrap; }
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>94</width>
+                <width>86</width>
                 <height>86</height>
                </rect>
               </property>
@@ -9742,7 +9742,7 @@ p, li { white-space: pre-wrap; }
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>94</width>
+                <width>86</width>
                 <height>86</height>
                </rect>
               </property>
@@ -10008,7 +10008,7 @@ p, li { white-space: pre-wrap; }
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>94</width>
+                <width>86</width>
                 <height>86</height>
                </rect>
               </property>
@@ -12156,7 +12156,7 @@ p, li { white-space: pre-wrap; }
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>855</width>
+              <width>856</width>
               <height>265</height>
              </rect>
             </property>
@@ -12569,7 +12569,40 @@ p, li { white-space: pre-wrap; }
                      <layout class="QGridLayout" name="gridLayout_93">
                       <item row="0" column="0" colspan="3">
                        <layout class="QGridLayout" name="gridLayout_38">
-                        <item row="0" column="0">
+                        <item row="1" column="0">
+                         <widget class="QComboBox" name="band_set_calculation_combo">
+                          <property name="sizePolicy">
+                           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                            <horstretch>1</horstretch>
+                            <verstretch>0</verstretch>
+                           </sizepolicy>
+                          </property>
+                          <property name="toolTip">
+                           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select an index&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="1" column="1">
+                         <widget class="QToolButton" name="toolButton_import_expression">
+                          <property name="toolTip">
+                           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span &gt;Open a file&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                          </property>
+                          <property name="styleSheet">
+                           <string notr="true">margin: 0px;padding: 0px;</string>
+                          </property>
+                          <property name="icon">
+                           <iconset resource="resources.qrc">
+                            <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_open_file.png</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_open_file.png</iconset>
+                          </property>
+                          <property name="iconSize">
+                           <size>
+                            <width>22</width>
+                            <height>22</height>
+                           </size>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="0" column="0" colspan="2">
                          <widget class="QLabel" name="label_77">
                           <property name="font">
                            <font>
@@ -12589,19 +12622,6 @@ p, li { white-space: pre-wrap; }
                           </property>
                           <property name="text">
                            <string>Index calculation</string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item row="1" column="0">
-                         <widget class="QComboBox" name="band_set_calculation_combo">
-                          <property name="sizePolicy">
-                           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                            <horstretch>1</horstretch>
-                            <verstretch>0</verstretch>
-                           </sizepolicy>
-                          </property>
-                          <property name="toolTip">
-                           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select an index&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                           </property>
                          </widget>
                         </item>
@@ -14140,7 +14160,7 @@ p, li { white-space: pre-wrap; }
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>857</width>
+            <width>858</width>
             <height>430</height>
            </rect>
           </property>

@@ -309,12 +309,6 @@ class BandCalcTab:
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " raster band name checklist created")
 		
-	# add satellite list to combo
-	def addIndicesToCombo(self, indicesList):
-		for i in indicesList:
-			cfg.ui.band_set_calculation_combo.addItem(i)
-		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " indices added")
 	
 	# set indices combo
 	def setIndices(self):
@@ -324,11 +318,70 @@ class BandCalcTab:
 			space = "\n"
 		else:
 			space = ""
-		if cfg.ui.band_set_calculation_combo.currentText() == cfg.indNDVI:
-			pT.setPlainText(text + space + '( "' + str(cfg.variableNIRName) + '" - "' + str(cfg.variableRedName) +'") / ( "' + str(cfg.variableNIRName) + '" + "' + str(cfg.variableRedName) +'") @ NDVI')
-		elif cfg.ui.band_set_calculation_combo.currentText() == cfg.indEVI:
-			pT.setPlainText(text + space + '2.5 * ( "' + str(cfg.variableNIRName) + '" - "' + str(cfg.variableRedName) + '" ) / ( "' + str(cfg.variableNIRName) + '" + 6 * "' + str(cfg.variableRedName) + '" - 7.5 * "' + str(cfg.variableBlueName) + '" + 1) @ EVI')
+		for key in cfg.expressionDict:
+			if cfg.ui.band_set_calculation_combo.currentText() == key:
+				pT.setPlainText(text + space + cfg.expressionDict[key])
+		
+	# import expressions from file
+	def importExpressionList(self):
+		funcFile = cfg.utls.getOpenFileName(None , "Select an expression file", "", "TXT (*.txt)")
+		if len(funcFile) > 0:
+			try:
+				f = open(funcFile)
+				sep = ";"
+				if cfg.osSCP.path.isfile(funcFile):
+					cfg.expressionListBC = []
+					lines = f.readlines()
+					tW = cfg.ui.point_tableWidget
+					if len(lines) > 0:
+						for b in lines:
+							try:
+								v = b.split(sep)
+								# name and expression
+								n = v[0]
+								e = v[1].strip()
+								cfg.expressionListBC.append([n.decode(cfg.sysSCP.getfilesystemencoding()), e.decode(cfg.sysSCP.getfilesystemencoding())])
+							except:
+								pass
+							# logger
+							cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " expressions imported")
+						# save in registry
+						cfg.sets.setQGISRegSetting(cfg.regExpressionListBC, cfg.expressionListBC)
+						cfg.bCalc.createExpressionList(cfg.expressionListBC)
+					else:
+						# save in registry
+						cfg.sets.setQGISRegSetting(cfg.regExpressionListBC, cfg.expressionListBCbase)
+						cfg.bCalc.createExpressionList(cfg.expressionListBCbase)
+			except Exception, err:
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				
+	# create expression list
+	def createExpressionList(self, expressionList):
+		cfg.ui.band_set_calculation_combo.clear()
+		cfg.ui.band_set_calculation_combo.addItem(" ")
+		cfg.expressionDict = {}
+		try:
+			for i in expressionList:
+				try:
+					n = i[0]
+					e = i[1]
+					cfg.ui.band_set_calculation_combo.addItem(n)
+					cfg.expressionDict[n] = e
+				except:
+					pass
+		except:
+			for i in cfg.expressionListBCbase:
+				try:
+					n = i[0]
+					e = i[1]
+					cfg.ui.band_set_calculation_combo.addItem(n)
+					cfg.expressionDict[n] = e
+				except:
+					pass
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " expressions created")
+			
 	# calculate button
 	def calculateButton(self):
 		# band calc

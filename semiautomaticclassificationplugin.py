@@ -353,6 +353,7 @@ class SemiAutomaticClassificationPlugin:
 		cfg.scatPlRoundCharList = cfg.roundCharList
 		cfg.grpNm = cfg.utls.readRegistryKeys(cfg.regGroupName, cfg.grpNm)
 		cfg.rasterDataType = cfg.utls.readRegistryKeys(cfg.regRasterDataType, cfg.rasterDataType)
+		cfg.expressionListBC = cfg.utls.readRegistryKeys(cfg.regExpressionListBC, cfg.expressionListBC)
 		cfg.soundVal = cfg.utls.readRegistryKeys(cfg.regSound, cfg.soundVal)
 		
 	def initGui(self):
@@ -446,7 +447,8 @@ class SemiAutomaticClassificationPlugin:
 			cfg.usgs_C4p = cfg.plgnDir + "/spectralsignature/usgs_spectral_library/volatiles.csv"
 			cfg.usgs_C5p = cfg.plgnDir + "/spectralsignature/usgs_spectral_library/man-made.csv"
 			cfg.usgs_C6p = cfg.plgnDir + "/spectralsignature/usgs_spectral_library/plants_veg_microorg.csv"
-			cfg.bCalc.addIndicesToCombo(cfg.indicesList)
+			# band calc expression
+			cfg.bCalc.createExpressionList(cfg.expressionListBC)
 			cfg.batchT.addFunctionsToCombo(cfg.functionNames)
 			cfg.bst.addSatelliteToCombo(cfg.satWlList)
 			cfg.downLandsat.addSatelliteToCombo(cfg.satLandsatList)
@@ -998,6 +1000,8 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.toolButton_reload_13.clicked.connect(cfg.bCalc.rasterBandName)
 			# connect to calc button
 			cfg.ui.toolButton_calculate.clicked.connect(cfg.bCalc.calculateButton)
+			# connect to import expression button
+			cfg.ui.toolButton_import_expression.clicked.connect(cfg.bCalc.importExpressionList)
 			# connect the expression text
 			cfg.ui.plainTextEdit_calc.textChanged.connect(cfg.bCalc.textChanged)
 			# connect double click table
@@ -1311,7 +1315,6 @@ class SemiAutomaticClassificationPlugin:
 		cfg.bst.rasterBandName()
 		# reload rasters in checklist
 		cfg.clipMulti.rasterNameList()
-		cfg.bCalc.rasterBandName()
 		if cfg.bndSetPresent == "No":
 			# get wavelength
 			bSW = cfg.utls.readProjectVariable("bndSetWvLn", "")
@@ -1363,6 +1366,7 @@ class SemiAutomaticClassificationPlugin:
 			cfg.BandTabEdited = "Yes"
 		cfg.rasterComboEdited = "Yes"
 		cfg.uidc.raster_name_combo.blockSignals(False)
+		cfg.bCalc.rasterBandName()
 		# signature table
 		cfg.utls.clearTable(cfg.uidc.signature_list_tableWidget)
 		cfg.utls.clearTable(cfg.uidc.macroclass_color_tableWidget)

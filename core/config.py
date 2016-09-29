@@ -313,6 +313,7 @@ LandsatTM10ImageDatabase = None
 Landsat8ImageDatabase = None
 LandsatTMImageDatabase2010 = None
 RADIANCE_UNITS = None
+expressionDict = {}
 
 """ QGIS variables """
 # registry key for log setting
@@ -423,6 +424,10 @@ rasterCompression = "Yes"
 # raster data type
 regRasterDataType = "SemiAutomaticClassificationPlugin/rasterDataTypeNew"
 rasterDataType = "Float32"
+# raster data type
+regExpressionListBC= "SemiAutomaticClassificationPlugin/expressionListBC"
+expressionListBCbase = [['NDVI', '( "#NIR#" - "#RED#" ) / ( "#NIR#" + "#RED#" ) @NDVI'], ['EVI', '2.5 * ( "#NIR#" - "#RED#" ) / ( "#NIR#" + 6 * "#RED#" - 7.5 * "#BLUE#" + 1) @EVI']]
+expressionListBC = expressionListBCbase
 
 """ Names """
 uncls = "Unclassified"
