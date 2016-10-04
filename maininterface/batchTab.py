@@ -694,6 +694,14 @@ class BatchTab:
 					cfg.ui.extent_checkBox.setCheckState(0)
 				else:
 					return "No", "No"
+			# align checkbox (1 checked or 0 unchecked)
+			elif pName == "align":
+				if pSplit[1].replace(" ", "") == "1":
+					cfg.ui.align_radioButton.setChecked(True)
+				elif pSplit[1].replace(" ", "") == "0":
+					cfg.ui.align_radioButton.setChecked(False)
+				else:
+					return "No", "No"
 			# nodata checkbox (1 checked or 0 unchecked)
 			elif pName == "set_nodata":
 				if pSplit[1].replace(" ", "") == "1":

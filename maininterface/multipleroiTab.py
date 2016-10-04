@@ -93,7 +93,7 @@ class MultipleROITab:
 		geographicFlag = crs.geographicFlag()
 		if geographicFlag is False:
 			cfg.uiUtls.addProgressBar()
-			tLX, tLY, lRX, lRY, pS = cfg.utls.imageInformationSize(imageName)
+			tLX, tLY, lRX, lRY, pSX, pSY = cfg.utls.imageInformationSize(imageName)
 			Xmin = int(round(min(tLX, lRX)))
 			Xmax = int(round(max(tLX, lRX)))
 			Ymin = int(round(min(tLY, lRY)))

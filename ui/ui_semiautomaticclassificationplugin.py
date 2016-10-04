@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/ui_semiautomaticclassificationplugin.ui'
 #
-# Created: Thu Sep 29 13:02:12 2016
+# Created: Wed Oct  5 00:50:29 2016
 #      by: PyQt4 UI code generator 4.11.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -5394,7 +5394,7 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.toolButton_calculate.setIcon(icon1)
         self.toolButton_calculate.setIconSize(QtCore.QSize(34, 34))
         self.toolButton_calculate.setObjectName(_fromUtf8("toolButton_calculate"))
-        self.gridLayout_126.addWidget(self.toolButton_calculate, 1, 8, 1, 1)
+        self.gridLayout_126.addWidget(self.toolButton_calculate, 1, 9, 1, 1)
         self.label_84 = QtGui.QLabel(self.tab_band_calc)
         font = QtGui.QFont()
         font.setFamily(_fromUtf8("FreeSans"))
@@ -5405,9 +5405,13 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.label_84.setFrameShape(QtGui.QFrame.Panel)
         self.label_84.setFrameShadow(QtGui.QFrame.Sunken)
         self.label_84.setObjectName(_fromUtf8("label_84"))
-        self.gridLayout_126.addWidget(self.label_84, 0, 0, 1, 9)
+        self.gridLayout_126.addWidget(self.label_84, 0, 0, 1, 10)
         spacerItem85 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.gridLayout_126.addItem(spacerItem85, 1, 7, 1, 1)
+        self.gridLayout_126.addItem(spacerItem85, 1, 8, 1, 1)
+        self.align_radioButton = QtGui.QRadioButton(self.tab_band_calc)
+        self.align_radioButton.setChecked(True)
+        self.align_radioButton.setObjectName(_fromUtf8("align_radioButton"))
+        self.gridLayout_126.addWidget(self.align_radioButton, 1, 7, 1, 1)
         self.gridLayout_85.addLayout(self.gridLayout_126, 3, 0, 1, 1)
         self.gridLayout_209.addLayout(self.gridLayout_85, 0, 0, 1, 1)
         icon56 = QtGui.QIcon()
@@ -7171,6 +7175,7 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.toolButton_calculate.setToolTip(_translate("SemiAutomaticClassificationPlugin", "<html><head/><body><p><span >Run</span></p></body></html>", None))
         self.toolButton_calculate.setText(_translate("SemiAutomaticClassificationPlugin", "Import library", None))
         self.label_84.setText(_translate("SemiAutomaticClassificationPlugin", "Output raster", None))
+        self.align_radioButton.setText(_translate("SemiAutomaticClassificationPlugin", "Align", None))
         self.toolButton_plugin.setTabText(self.toolButton_plugin.indexOf(self.tab_band_calc), _translate("SemiAutomaticClassificationPlugin", "Band calc", None))
         self.toolButton_reload_3.setToolTip(_translate("SemiAutomaticClassificationPlugin", "<html><head/><body><p >Refresh list</p></body></html>", None))
         self.toolButton_reload_3.setText(_translate("SemiAutomaticClassificationPlugin", "Plot", None))

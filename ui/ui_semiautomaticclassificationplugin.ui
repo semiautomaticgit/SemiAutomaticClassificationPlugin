@@ -13125,7 +13125,7 @@ p, li { white-space: pre-wrap; }
              </property>
             </widget>
            </item>
-           <item row="1" column="8">
+           <item row="1" column="9">
             <widget class="QToolButton" name="toolButton_calculate">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span &gt;Run&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -13148,7 +13148,7 @@ p, li { white-space: pre-wrap; }
              </property>
             </widget>
            </item>
-           <item row="0" column="0" colspan="9">
+           <item row="0" column="0" colspan="10">
             <widget class="QLabel" name="label_84">
              <property name="font">
               <font>
@@ -13171,7 +13171,7 @@ p, li { white-space: pre-wrap; }
              </property>
             </widget>
            </item>
-           <item row="1" column="7">
+           <item row="1" column="8">
             <spacer name="horizontalSpacer_9">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
@@ -13183,6 +13183,16 @@ p, li { white-space: pre-wrap; }
               </size>
              </property>
             </spacer>
+           </item>
+           <item row="1" column="7">
+            <widget class="QRadioButton" name="align_radioButton">
+             <property name="text">
+              <string>Align</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
            </item>
           </layout>
          </item>

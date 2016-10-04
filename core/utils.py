@@ -2259,7 +2259,7 @@ class Utils:
 					return cfg.lstPnt
 		
 	# create virtual raster with Python
-	def createVirtualRaster2(self, inputRasterList, output, bandNumberList = "No", quiet = "No", NoDataVal = "No", relativeToVRT = 0, pansharp = "No", intersection = "Yes", boxCoordList = None):
+	def createVirtualRaster2(self, inputRasterList, output, bandNumberList = "No", quiet = "No", NoDataVal = "No", relativeToVRT = 0, pansharp = "No", intersection = "Yes", boxCoordList = None, xyResList = None):
 		# create virtual raster
 		drv = cfg.gdalSCP.GetDriverByName("VRT")
 		rXList = []
@@ -2301,6 +2301,9 @@ class Utils:
 		# highest resolution
 		pXSize = min(pXSizeList)
 		pYSize = min(pYSizeList)
+		if xyResList is not None:
+			pXSize = xyResList[0]
+			pYSize = xyResList[1]
 		if boxCoordList is not None:
 			try:
 				override = boxCoordList[4]
@@ -2341,6 +2344,11 @@ class Utils:
 					xRight= xRight - abs(int(round((xRight - boxCoordList[2])  / pXSize))) * pXSize
 				if xBottom < boxCoordList[3]:
 					xBottom = xBottom + abs(int(round((xBottom - boxCoordList[3]) / pYSize))) * pYSize
+		if xyResList is not None:
+			iLeft = xyResList[2]
+			iTop = xyResList[3]
+			iRight = xyResList[4]
+			iBottom = xyResList[5]
 		# number of x pixels
 		if intersection == "Yes":
 			rX = abs(int(round((xRight - xLeft) / pXSize)))
@@ -2374,9 +2382,9 @@ class Utils:
 					x_block = bsize2[0]
 					y_block = bsize2[1]
 					# number of x pixels
-					rX2 = gdalRaster2.RasterXSize * int(round(pX / pXSize))
+					rX2 = int(round(gdalRaster2.RasterXSize * pX / pXSize))
 					# number of y pixels
-					rY2 = gdalRaster2.RasterYSize * int(round(pY / pYSize))
+					rY2 = int(round(gdalRaster2.RasterYSize * pY / pYSize))
 					# offset
 					if intersection == "Yes":
 						xoffX = abs(int(round((left - xLeft) / pX)))
@@ -2455,9 +2463,9 @@ class Utils:
 					x_block = bsize2[0]
 					y_block = bsize2[1]
 					# number of x pixels
-					rX2 = gdalRaster2.RasterXSize * int(round(pX / pXSize))
+					rX2 = int(round(gdalRaster2.RasterXSize * pX / pXSize))
 					# number of y pixels
-					rY2 = gdalRaster2.RasterYSize * int(round(pY / pYSize))
+					rY2 = int(round(gdalRaster2.RasterYSize * pY / pYSize))
 					# offset
 					if intersection == "Yes":
 						xoffX = abs(int(round((left - xLeft) / pX)))
@@ -4401,11 +4409,12 @@ class Utils:
 			# LowRight Y coord
 			lRX = i.extent().xMaximum()
 			# pixel size
-			pS = i.rasterUnitsPerPixelX()
+			pSX = i.rasterUnitsPerPixelX()
+			pSY = i.rasterUnitsPerPixelX()
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "image: " + unicode(imageName) + " topleft: (" + str(tLX) + ","+ str(tLY) + ")")
 			# return a tuple TopLeft X, TopLeft Y, and Pixel size
-			return tLX, tLY, lRX, lRY, pS
+			return tLX, tLY, lRX, lRY, pSX, pSY
 		except Exception, err:
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
@@ -4999,18 +5008,18 @@ class Utils:
 			i = i.source().encode(cfg.sysSCP.getfilesystemencoding())
 			st = "No"
 			# raster top left origin and pixel size
-			tLX, tLY, lRX, lRY, pS = self.imageInformationSize(imageName)
-			if pS is None:
+			tLX, tLY, lRX, lRY, pSX, pSY = self.imageInformationSize(imageName)
+			if pSX is None:
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " image none or missing")
 			else:		
 				try:
 					dType = self.getRasterDataTypeName(i)
 					# subset origin
-					UX = tLX + abs(int((tLX - XCoord) / pS )) * pS - (Width -1 )/ 2 * pS
-					UY = tLY - abs(int((tLY - YCoord) / pS )) * pS + (Height -1 )/ 2 * pS
-					LX = UX + Width * pS
-					LY = UY - Height * pS
+					UX = tLX + abs(int((tLX - XCoord) / pSX )) * pSX - (Width -1 )/ 2 * pSX
+					UY = tLY - abs(int((tLY - YCoord) / pSY )) * pSY + (Height -1 )/ 2 * pSY
+					LX = UX + Width * pSX
+					LY = UY - Height * pSY
 					dT = cfg.utls.getTime()
 					tPMN = cfg.tmpVrtNm + ".vrt"
 					tPMD = cfg.tmpDir + "/" + dT + tPMN

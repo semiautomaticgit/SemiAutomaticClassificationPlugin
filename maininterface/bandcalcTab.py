@@ -533,7 +533,7 @@ class BandCalcTab:
 												cfg.cnvs.setRenderFlag(True)
 												return "No"
 										bandNumberList.append(int(bandNumber[1]))
-										bList.append(bPath)
+										bList.append(bPath)										
 								else:
 									i = cfg.utls.selectLayerbyName(bN, "Yes")
 									try:
@@ -570,6 +570,8 @@ class BandCalcTab:
 							if cfg.ui.intersection_checkBox.isChecked() is True:
 								vrtCheck = cfg.utls.createVirtualRaster2(bList, tPMD, bandNumberList, "Yes", "Yes", 0, "No", "Yes")
 							elif cfg.ui.extent_checkBox.isChecked() is True:
+								# raster resolution
+								xyRes = None
 								if extentRaster is None:
 									extRaster = cfg.ui.raster_extent_combo.currentText()
 								else:
@@ -616,13 +618,31 @@ class BandCalcTab:
 								elif extRaster == cfg.pixelExtent:
 									tLX, tLY, lRX, lRY = extentList[0], extentList[1], extentList[2], extentList[3]
 								else:
-									tLX, tLY, lRX, lRY, pS = cfg.utls.imageInformationSize(extRaster)
+									tLX, tLY, lRX, lRY, pSX, pSY = cfg.utls.imageInformationSize(extRaster)
+									if cfg.ui.align_radioButton.isChecked():
+										xyRes = [pSX, pSY, tLX, tLY, lRX, lRY]
+										# add extent raster to virtual raster list
+										i = cfg.utls.selectLayerbyName(extRaster, "Yes")
+										try:
+											bPath = i.source()
+										except Exception, err:
+											cfg.mx.msg4()
+											self.rasterBandName()
+											# logger
+											cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+											if outFile is None:
+												cfg.uiUtls.removeProgressBar()
+												cfg.cnvs.setRenderFlag(True)
+												return "No"
+										bandNumberList.append(1)
+										bList.append(bPath)
+										
 								if tLX is None:
 									if outFile is None:
 										cfg.uiUtls.removeProgressBar()
 										cfg.cnvs.setRenderFlag(True)
 									return "No"
-								vrtCheck = cfg.utls.createVirtualRaster2(bList, tPMD, bandNumberList, "Yes", "Yes", 0, "No", "No", [float(tLX), float(tLY), float(lRX), float(lRY), "Yes"])
+								vrtCheck = cfg.utls.createVirtualRaster2(bList, tPMD, bandNumberList, "Yes", "Yes", 0, "No", "No", [float(tLX), float(tLY), float(lRX), float(lRY), "Yes"], xyRes)
 							else:
 								vrtCheck = cfg.utls.createVirtualRaster2(bList, tPMD, bandNumberList, "Yes", "Yes", 0, "No", "No")
 						else:

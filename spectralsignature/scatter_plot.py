@@ -261,7 +261,7 @@ class Scatter_Plot:
 		# band set
 		if cfg.bndSetPresent == "Yes" and imageName == cfg.bndSetNm:
 			imageName = cfg.bndSet[0]
-		tLX, tLY, lRX, lRY, pS = cfg.utls.imageInformationSize(imageName)
+		tLX, tLY, lRX, lRY, pSX, pSY = cfg.utls.imageInformationSize(imageName)
 		pol = []
 		pol.append(QgsPoint(tLX , tLY))
 		pol.append(QgsPoint(lRX , tLY))
@@ -280,7 +280,7 @@ class Scatter_Plot:
 		# band set
 		if cfg.bndSetPresent == "Yes" and imageName == cfg.bndSetNm:
 			imageName = cfg.bndSet[0]
-		tLX, tLY, lRX, lRY, pS = cfg.utls.imageInformationSize(imageName)
+		tLX, tLY, lRX, lRY, pSX, pSY = cfg.utls.imageInformationSize(imageName)
 		pol = []
 		pol.append(QgsPoint(min([rectangle.xMaximum(), tLX]) , min([rectangle.yMaximum(), tLY])))
 		pol.append(QgsPoint(max([rectangle.xMinimum(), lRX]) , min([rectangle.yMaximum(), tLY])))
