@@ -140,9 +140,10 @@ class Sentinel2Tab:
 			bandNames = []
 			for f in cfg.osSCP.listdir(inp):
 				if f.lower().endswith(".jp2"):
-					# name
-					nm = cfg.osSCP.path.splitext(f)[0]
-					bandNames.append(f)
+					# check band number
+					bNmb = str(f[-6:-4])
+					if str(bNmb).lower() in ['01','02','03','04','05','06','07','08','8a','09','10','11','12']:
+						bandNames.append(f)
 			# add band items to table
 			b = 0
 			for band in sorted(bandNames):

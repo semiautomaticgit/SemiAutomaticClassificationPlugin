@@ -62,6 +62,7 @@ class EditRaster:
 				else:
 					rSource = rasterInput
 				cfg.ui.undo_edit_Button.setEnabled(False)
+				cfg.undoEditRasterToolbar_toolButton.setEnabled(False)
 				# create feature list
 				rId = []
 				f = QgsFeature()
@@ -82,6 +83,9 @@ class EditRaster:
 					for f in cfg.lstROI.getFeatures():
 						rId.append(f.id())		
 					vector = cfg.lstROI
+					# hide ROI
+					cfg.show_ROI_radioButton.setChecked(False)
+					cfg.ROId.showHideROI()
 				self.setValueRaster(rSource, vector, rId, batch, vectorFieldName)
 				if b != "No":
 					b.triggerRepaint()
@@ -99,10 +103,10 @@ class EditRaster:
 			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode())
 
 	# set value raster
-	def setValueRaster(self, inputRaster, inputVectorQGIS, qgisVectorFeatureList, batch = "No", vectorFieldName = None):
+	def setValueRaster(self, inputRaster, inputVectorQGIS, qgisVectorFeatureList, batch = "No", vectorFieldName = None, toolbarValue = None):
 		crs = cfg.utls.getCrs(inputVectorQGIS)
 		# using ROI polygon
-		if cfg.ui.edit_val_use_ROI_radioButton.isChecked():
+		if cfg.ui.edit_val_use_ROI_radioButton.isChecked() or toolbarValue is not None:
 			# date time for temp name
 			dT = cfg.utls.getTime()
 			# temporary layer
@@ -113,8 +117,9 @@ class EditRaster:
 			vector = cfg.utls.addVectorLayer(tLP, cfg.osSCP.path.basename(tLP), "ogr")
 			for pI in qgisVectorFeatureList:
 				cfg.utls.copyFeatureToLayer(inputVectorQGIS, pI, vector)
-			self.performEdit(inputRaster, tLP)
+			self.performEdit(inputRaster, tLP, toolbarValue)
 			cfg.ui.undo_edit_Button.setEnabled(True)
+			cfg.undoEditRasterToolbar_toolButton.setEnabled(True)
 		# using vector
 		else:
 			if batch == "No":
@@ -285,6 +290,7 @@ class EditRaster:
 			b.triggerRepaint()
 			cfg.cnvs.refresh()
 			cfg.ui.undo_edit_Button.setEnabled(False)
+			cfg.undoEditRasterToolbar_toolButton.setEnabled(False)
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode())
 		except:
@@ -365,4 +371,41 @@ class EditRaster:
 			cfg.ui.edit_val_use_ROI_radioButton.setChecked(True)
 		cfg.ui.edit_val_use_ROI_radioButton.blockSignals(False)
 		cfg.ui.edit_val_use_vector_radioButton.blockSignals(False)
+		
+	# edit using toolbar values
+	def toolbarEditValue(self, toolbarValue):
+		if cfg.lstROI is None:
+			cfg.mx.msg22()
+			return
+		self.rstrNm = cfg.ui.edit_raster_name_combo.currentText()
+		b = cfg.utls.selectLayerbyName(self.rstrNm, "Yes")
+		if b is not None:
+			rSource = b.source()
+			cfg.ui.undo_edit_Button.setEnabled(False)
+			cfg.undoEditRasterToolbar_toolButton.setEnabled(False)
+			# create feature list
+			rId = []
+			f = QgsFeature()
+			for f in cfg.lstROI.getFeatures():
+				rId.append(f.id())		
+			vector = cfg.lstROI
+			# hide ROI
+			cfg.show_ROI_radioButton.setChecked(False)
+			cfg.ROId.showHideROI()
+			self.setValueRaster(rSource, vector, rId, "No", None, toolbarValue)
+			if b != "No":
+				b.triggerRepaint()
+				cfg.cnvs.refresh()
+				
+	# toolbar value 0
+	def toolbarValue0(self):
+		self.toolbarEditValue(int(cfg.val0_spin.value()))
+				
+	# toolbar value 1
+	def toolbarValue1(self):
+		self.toolbarEditValue(int(cfg.val1_spin.value()))
+		
+	# toolbar value 2
+	def toolbarValue2(self):
+		self.toolbarEditValue(int(cfg.val2_spin.value()))
 		

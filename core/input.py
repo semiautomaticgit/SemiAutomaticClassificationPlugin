@@ -123,8 +123,11 @@ class Input:
 		cfg.toolBar.setObjectName("SCP Tools")
 		cfg.toolBar2 = cfg.iface.addToolBar("SCP Working Toolbar")
 		cfg.toolBar2.setObjectName("SCP Working Toolbar")
+		cfg.toolBar3 = cfg.iface.addToolBar("SCP Edit Toolbar")
+		cfg.toolBar3.setObjectName("SCP Edit Toolbar")
 		self.loadToolbar1()
 		self.loadToolbar2()
+		self.loadToolbarEditRaster()
 		
 	# SCP Working Toolbar
 	def loadToolbar2(self):
@@ -199,6 +202,20 @@ class Input:
 		spin.valueChanged.connect(function)
 		return spin
 		
+	# add spinbox
+	def addEditToolbarSpin(self, function, tooltip, decimals, min, max, step, value, width = 100):
+		spin = cfg.QtGuiSCP.QDoubleSpinBox(cfg.iface.mainWindow())
+		spin.setFixedWidth(width)
+		spin.setDecimals(decimals)
+		spin.setMinimum(min)
+		spin.setMaximum(max)
+		spin.setSingleStep(step)
+		spin.setProperty("value", value)
+		spin.setToolTip(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", tooltip))
+		Range_radiusAction = cfg.toolBar3.addWidget(spin)
+		#spin.valueChanged.connect(function)
+		return spin
+		
 	# add radio button
 	def addToolbarRadio(self, function, text, tooltip):
 		radio = cfg.QtGuiSCP.QRadioButton(cfg.iface.mainWindow())
@@ -230,6 +247,21 @@ class Input:
 		lbl.setText(cfg.QtGuiSCP.QApplication.translate("SemiAutomaticClassificationPlugin", text, None))
 		cfg.toolBar2.addWidget(lbl)
 		return lbl
+		
+	# SCP Edit raster
+	def loadToolbarEditRaster(self):
+		cfg.editRasterToolbar_toolButton = cfg.ipt.addToolbarEditButton(cfg.utls.editRasterTab, "semiautomaticclassificationplugin_edit_raster.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Edit raster"))
+		# spinbox value 0
+		cfg.val0_spin = cfg.ipt.addEditToolbarSpin(None, cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Value 0"), 0, -10000, 10000, 1, 0, 60)
+		cfg.setVal0_toolButton = cfg.ipt.addToolbarEditButton(cfg.editRstr.toolbarValue0, "semiautomaticclassificationplugin_enter.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Set value 0"))
+		# spinbox value 1
+		cfg.val1_spin = cfg.ipt.addEditToolbarSpin(None, cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Value 1"), 0, -10000, 10000, 1, 1, 60)
+		cfg.setVal1_toolButton = cfg.ipt.addToolbarEditButton(cfg.editRstr.toolbarValue1, "semiautomaticclassificationplugin_enter.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Set value 1"))
+		# spinbox value 2
+		cfg.val2_spin = cfg.ipt.addEditToolbarSpin(None, cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Value 2"), 0, -10000, 10000, 1, 2, 60)
+		cfg.setVal2_toolButton = cfg.ipt.addToolbarEditButton(cfg.editRstr.toolbarValue2, "semiautomaticclassificationplugin_enter.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Set value 2"))
+		cfg.undoEditRasterToolbar_toolButton = cfg.ipt.addToolbarEditButton(cfg.editRstr.undoEdit, "semiautomaticclassificationplugin_undo_edit_raster.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Undo edit (only for ROI polygons)"))
+		cfg.undoEditRasterToolbar_toolButton.setEnabled(False)
 		
 	# SCP Tools
 	def loadToolbar1(self):
@@ -272,6 +304,15 @@ class Input:
 		toolButton.setStyleSheet(" border: none;margin: 2px;icon-size: 24px; color: black")
 		toolButton.setToolTip(tooltip)
 		cfg.toolBar2.addWidget(toolButton)
+		toolButton.clicked.connect(function)
+		return toolButton
+		
+	# Add toolbar button
+	def addToolbarEditButton(self, function, iconName, tooltip):
+		toolButton = cfg.QtGuiSCP.QPushButton(cfg.QtGuiSCP.QIcon(":/plugins/semiautomaticclassificationplugin/icons/" + iconName), u"")
+		toolButton.setStyleSheet(" border: none;margin: 2px;icon-size: 24px; color: black")
+		toolButton.setToolTip(tooltip)
+		cfg.toolBar3.addWidget(toolButton)
 		toolButton.clicked.connect(function)
 		return toolButton
 			

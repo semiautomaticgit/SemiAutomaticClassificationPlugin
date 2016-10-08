@@ -388,7 +388,9 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.tableWidget_band_calc.verticalHeader().setDefaultSectionSize(16)
 			cfg.ui.landsat_tableWidget.verticalHeader().setDefaultSectionSize(16)
 			cfg.ui.sentinel_2_tableWidget.verticalHeader().setDefaultSectionSize(16)
+			cfg.utls.setColumnWidthList(cfg.ui.sentinel_2_tableWidget, [[0, 400], [1, 200], [2, 60]])
 			cfg.ui.ASTER_tableWidget.verticalHeader().setDefaultSectionSize(16)
+			cfg.utls.setColumnWidthList(cfg.ui.ASTER_tableWidget, [[0, 400], [1, 200], [2, 60]])
 			cfg.ui.LCS_tableWidget.verticalHeader().setDefaultSectionSize(16)
 			cfg.ui.signature_threshold_tableWidget.verticalHeader().setDefaultSectionSize(16)
 			cfg.ui.tableWidget_weight.verticalHeader().setDefaultSectionSize(16)
@@ -871,6 +873,8 @@ class SemiAutomaticClassificationPlugin:
 			# connect to refresh shape button
 			cfg.ui.toolButton_reload_8.clicked.connect(cfg.clipMulti.refreshShapeClip)
 			cfg.ui.show_area_radioButton_3.clicked.connect(cfg.clipMulti.showHideArea)
+			cfg.ui.shapefile_checkBox.stateChanged.connect(cfg.clipMulti.checkboxShapeChanged)
+			cfg.ui.temporary_ROI_checkBox.stateChanged.connect(cfg.clipMulti.checkboxTempROIChanged)
 			""" ASTER tab """
 			# connect to input button
 			cfg.ui.toolButton_directoryInput_ASTER.clicked.connect(cfg.ASTERT.inputASTER)

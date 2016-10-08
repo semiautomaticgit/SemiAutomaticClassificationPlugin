@@ -7011,6 +7011,9 @@ p, li { white-space: pre-wrap; }
                  <attribute name="horizontalHeaderDefaultSectionSize">
                   <number>155</number>
                  </attribute>
+                 <attribute name="horizontalHeaderStretchLastSection">
+                  <bool>true</bool>
+                 </attribute>
                  <column>
                   <property name="text">
                    <string>Band</string>
@@ -7418,6 +7421,9 @@ p, li { white-space: pre-wrap; }
                  </property>
                  <attribute name="horizontalHeaderDefaultSectionSize">
                   <number>155</number>
+                 </attribute>
+                 <attribute name="horizontalHeaderStretchLastSection">
+                  <bool>true</bool>
                  </attribute>
                  <column>
                   <property name="text">

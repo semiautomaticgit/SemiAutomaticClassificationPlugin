@@ -122,6 +122,10 @@ class ClipMultipleRasters:
 					cfg.uiUtls.removeProgressBar()
 				return "No"
 			oD = cfg.utls.getExistingDirectory(None , cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Select a directory where to save clipped rasters"))
+			if len(oD) == 0:
+				if batch == "No":
+					cfg.uiUtls.removeProgressBar()
+				return "No"
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " rasters to be clipped" + unicode(rT))
 			if cfg.ui.shapefile_checkBox.isChecked() is True:
@@ -268,13 +272,13 @@ class ClipMultipleRasters:
 			elif uS == 1:
 				dT = cfg.utls.getTime()
 				# vector EPSG
-				if "MultiPolygon?crs=PROJCS" in str(s):
+				if "MultiPolygon?crs=PROJCS" in unicode(s):
 					# temp shapefile
 					tSHP = cfg.tmpDir + "/" + sN + dT + ".shp"
 					s = cfg.utls.saveMemoryLayerToShapefile(sL, tSHP)
 					s = s.source()
 					vEPSG = cfg.utls.getEPSGVector(tSHP)
-				elif "QgsVectorLayer" in str(s):
+				elif "QgsVectorLayer" in unicode(s):
 					# temporary layer
 					tLN = cfg.subsTmpROI + dT + ".shp"
 					tLP = cfg.tmpDir + "/" + dT + tLN
@@ -327,7 +331,7 @@ class ClipMultipleRasters:
 								cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 								return "No"
 							vect = reprjShapefile
-					check = cfg.utls.vectorToRaster(cfg.emptyFN, unicode(vect), cfg.emptyFN, tRxs, unicode(cL), None, "GTiff", 1)
+					check = cfg.utls.vectorToRaster(cfg.emptyFN, vect, cfg.emptyFN, tRxs, cL, None, "GTiff", 1)
 					if check != "No":
 						b = oD.encode(cfg.sysSCP.getfilesystemencoding()) + "/" 
 						c = outputName + "_" 
@@ -467,3 +471,24 @@ class ClipMultipleRasters:
 				self.clearCanvasPoly()
 		except:
 			pass
+			
+	# checkbox changed
+	def checkboxShapeChanged(self):
+		cfg.ui.shapefile_checkBox.blockSignals(True)
+		cfg.ui.temporary_ROI_checkBox.blockSignals(True)
+		if cfg.ui.shapefile_checkBox.isChecked():
+			if cfg.ui.temporary_ROI_checkBox.isChecked():
+				cfg.ui.temporary_ROI_checkBox.setCheckState(0)
+		cfg.ui.shapefile_checkBox.blockSignals(False)
+		cfg.ui.temporary_ROI_checkBox.blockSignals(False)
+		
+	# checkbox changed
+	def checkboxTempROIChanged(self):
+		cfg.ui.shapefile_checkBox.blockSignals(True)
+		cfg.ui.temporary_ROI_checkBox.blockSignals(True)
+		if cfg.ui.temporary_ROI_checkBox.isChecked():
+			if cfg.ui.shapefile_checkBox.isChecked():
+				cfg.ui.shapefile_checkBox.setCheckState(0)
+		cfg.ui.shapefile_checkBox.blockSignals(False)
+		cfg.ui.temporary_ROI_checkBox.blockSignals(False)
+		

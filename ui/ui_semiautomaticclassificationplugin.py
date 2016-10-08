@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/ui_semiautomaticclassificationplugin.ui'
 #
-# Created: Wed Oct  5 00:50:29 2016
+# Created: Sat Oct  8 15:43:32 2016
 #      by: PyQt4 UI code generator 4.11.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -2881,6 +2881,7 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         item = QtGui.QTableWidgetItem()
         self.sentinel_2_tableWidget.setHorizontalHeaderItem(2, item)
         self.sentinel_2_tableWidget.horizontalHeader().setDefaultSectionSize(155)
+        self.sentinel_2_tableWidget.horizontalHeader().setStretchLastSection(True)
         self.gridLayout_164.addWidget(self.sentinel_2_tableWidget, 1, 0, 1, 1)
         self.gridLayout_195 = QtGui.QGridLayout()
         self.gridLayout_195.setObjectName(_fromUtf8("gridLayout_195"))
@@ -3053,6 +3054,7 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         item = QtGui.QTableWidgetItem()
         self.ASTER_tableWidget.setHorizontalHeaderItem(2, item)
         self.ASTER_tableWidget.horizontalHeader().setDefaultSectionSize(155)
+        self.ASTER_tableWidget.horizontalHeader().setStretchLastSection(True)
         self.gridLayout_96.addWidget(self.ASTER_tableWidget, 1, 0, 1, 1)
         self.gridLayout_222 = QtGui.QGridLayout()
         self.gridLayout_222.setObjectName(_fromUtf8("gridLayout_222"))

@@ -766,7 +766,7 @@ class BandsetTab:
 				r = []
 				for i in tW.selectedItems():
 					r.append(i.row())
-				v = list(set(r))
+				v = sorted(list(set(r)))
 				cfg.BandTabEdited = "No"
 				for x in reversed(v):
 				# remove items

@@ -2431,7 +2431,7 @@ class Utils:
 					  <NODATA>%i</NODATA>
 					</ComplexSource>
 					"""
-					source = xml % (relativeToVRT, source_path.encode(cfg.sysSCP.getfilesystemencoding()), bandNumber, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, "Float64", x_block, y_block, xoffX, xoffY, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, offX, offY, rX2, rY2, noData)
+					source = xml % (relativeToVRT, source_path, bandNumber, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, "Float64", x_block, y_block, xoffX, xoffY, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, offX, offY, rX2, rY2, noData)
 					band.SetMetadataItem("ComplexSource", source, "new_vrt_sources")
 					if NoDataVal == "Yes":
 						band.SetNoDataValue(noData)	
@@ -2519,7 +2519,7 @@ class Utils:
 						  <NODATA>%i</NODATA>
 						</ComplexSource>
 						"""
-						source = xml % (relativeToVRT, source_path.encode(cfg.sysSCP.getfilesystemencoding()), bandNumber, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, "Float64", x_block, y_block, xoffX, xoffY, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, offX, offY, rX2, rY2, noData)
+						source = xml % (relativeToVRT, source_path, bandNumber, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, "Float64", x_block, y_block, xoffX, xoffY, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, offX, offY, rX2, rY2, noData)
 						band.SetMetadataItem("ComplexSource", source, "new_vrt_sources")
 						if NoDataVal == "Yes":
 							band.SetNoDataValue(noData)	
