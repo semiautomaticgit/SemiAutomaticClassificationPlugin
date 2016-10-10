@@ -2419,7 +2419,12 @@ class Utils:
 					bsize = band.GetBlockSize()
 					x_block = bsize[0]
 					y_block = bsize[1]
+					# check path
 					source_path = inputRasterList[0]
+					try:
+						source_path = source_path.encode(cfg.sysSCP.getfilesystemencoding())
+					except:
+						pass
 					# set metadata xml
 					xml = """
 					<ComplexSource>
@@ -2507,7 +2512,12 @@ class Utils:
 						bsize = band.GetBlockSize()
 						x_block = bsize[0]
 						y_block = bsize[1]
+						# check path
 						source_path = b.replace("//", "/")
+						try:
+							source_path = source_path.encode(cfg.sysSCP.getfilesystemencoding())
+						except:
+							pass
 						# set metadata xml
 						xml = """
 						<ComplexSource>
