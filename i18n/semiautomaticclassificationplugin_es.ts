@@ -3638,57 +3638,57 @@ p, li { white-space: pre-wrap; }
         <translation>Guardar los resultados de la clasificación</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="625"/>
+        <location filename="classificationdock.py" line="619"/>
         <source> conversion to vector. Please wait ...</source>
         <translation>convirtiendo a vectorial. Por favor espera ...</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="721"/>
+        <location filename="classificationdock.py" line="715"/>
         <source>Select a qml style</source>
         <translation>Selecciona un estilo qml</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="791"/>
+        <location filename="classificationdock.py" line="785"/>
         <source>Select a signature list file</source>
         <translation>Selecciona un archivo de lista de firma</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="805"/>
+        <location filename="classificationdock.py" line="799"/>
         <source>Select a SCP training input</source>
         <translation>Selecciona una Entrada de Entrenamiento SCP</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1110"/>
+        <location filename="classificationdock.py" line="1104"/>
         <source>Export SCP training input</source>
         <translation>Exportar Entrada de Entrenamiento SCP</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1181"/>
+        <location filename="classificationdock.py" line="1175"/>
         <source>Select a library file</source>
         <translation>Selecciona un archivo de librería</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1210"/>
+        <location filename="classificationdock.py" line="1204"/>
         <source>Export the highlighted signatures to CSV library</source>
         <translation>Exportar las firmas seleccionadas a librería CSV</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1283"/>
+        <location filename="classificationdock.py" line="1277"/>
         <source>Calculate signatures</source>
         <translation>Calcular firmas</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1283"/>
+        <location filename="classificationdock.py" line="1277"/>
         <source>Calculate signatures for highlighted items?</source>
         <translation>¿Calcular firmas para los elementos seleccionados?</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1309"/>
+        <location filename="classificationdock.py" line="1303"/>
         <source>Merge signatures</source>
         <translation>Combinar firmas</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1309"/>
+        <location filename="classificationdock.py" line="1303"/>
         <source>Merge highlighted signatures?</source>
         <translation>¿Combinar firmas seleccionadas?</translation>
     </message>
@@ -3698,39 +3698,39 @@ p, li { white-space: pre-wrap; }
         <translation>Eliminar firmas</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1430"/>
+        <location filename="classificationdock.py" line="1424"/>
         <source>Are you sure you want to delete highlighted ROIs and signatures?</source>
         <translation>¿Estás seguro que quieres eliminar los ROIs y las firmas seleccionadas?</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="2022"/>
+        <location filename="classificationdock.py" line="2016"/>
         <source>Create SCP training input</source>
         <translation>Crear Entrenamiento de Entrada SCP</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="2130"/>
+        <location filename="classificationdock.py" line="2124"/>
         <source>Add required fds</source>
         <translation>Añadir los fondos requeridos</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="2130"/>
+        <location filename="classificationdock.py" line="2124"/>
         <source>It appears that the shapefile </source>
         <translation>Parece que el archivo shape</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="2130"/>
+        <location filename="classificationdock.py" line="2124"/>
         <source> is missing some fields that are required for the signature calculation. 
 Do you want to add the required fields to this shapefile?</source>
         <translation>no se encuentran algunos campos que son requeridos para el cálculo de firmas.
 ¿Deseas agregar los campos requeridos a este archivo shape?</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="2214"/>
+        <location filename="classificationdock.py" line="2208"/>
         <source>Undo save ROI</source>
         <translation>Deshacer guardar ROI</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="2214"/>
+        <location filename="classificationdock.py" line="2208"/>
         <source>Are you sure you want to delete the last saved ROI?</source>
         <translation>¿Estás seguro que quieres eliminar el último ROI guardado?</translation>
     </message>

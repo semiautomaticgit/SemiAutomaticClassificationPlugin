@@ -609,14 +609,8 @@ class ClassificationDock:
 						cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "<<< CLASSIFICATION PERFORMED: " + unicode(cfg.clssPth))
 				### calculate report
 					if cfg.reportCheck == "Yes":
-						cfg.classRep.calculateClassificationReport(cfg.clssPth, 0)
 						reportOut = cfg.osSCP.path.dirname(cfg.clssPth) + "/" + nm + cfg.reportNm
-						try:
-							cfg.shutilSCP.copy(cfg.reportPth, reportOut)
-						except Exception, err:
-							# logger
-							cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-							cfg.mx.msg7()
+						cfg.classRep.calculateClassificationReport(cfg.clssPth, 0, "Yes", reportOut)
 				### convert classification to vector
 					cfg.uiUtls.updateBar(85)
 					if cfg.vectorOutputCheck == "Yes":
