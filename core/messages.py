@@ -307,6 +307,9 @@ class Messages:
 	def msgErr58(self):
 		self.msgBarError(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Error") + " [58]", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Directory error. Check write permission"))
 		
+	def msgErr59(self):
+		self.msgBarError(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Error") + " [59]", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Error accessing training input"))
+		
 	""" Warnings """
 	def msgWar2Windows(self):
 		self.msgBoxWarning(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [2]", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "It appears that SciPy is not correctly installed. Please, update QGIS "))

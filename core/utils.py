@@ -3976,13 +3976,19 @@ class Utils:
 		# create a temp shapefile with a field
 		cfg.utls.createEmptyShapefileQGIS(crs, tLP)
 		mL = cfg.utls.addVectorLayer(tLP , tLN, "ogr")
-		if tempROI == "No":
-			rId = cfg.utls.getIDByAttributes(vector, field, str(id))
-		else:
-			rId = []
-			f = QgsFeature()
-			for f in vector.getFeatures():
-				rId.append(f.id())		
+		try:
+			if tempROI == "No":
+				rId = cfg.utls.getIDByAttributes(vector, field, str(id))
+			else:
+				rId = []
+				f = QgsFeature()
+				for f in vector.getFeatures():
+					rId.append(f.id())
+		except Exception, err:
+			cfg.mx.msgErr54()
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			return "No"				
 		# copy ROI to temp shapefile
 		for pI in rId:
 			cfg.utls.copyFeatureToLayer(vector, pI, mL)
@@ -4344,7 +4350,13 @@ class Utils:
 		f.append(QgsField(cfg.fldID_class, cfg.QVariantSCP.Int))
 		f.append(QgsField(cfg.fldROI_info, cfg.QVariantSCP.String))
 		f.append(QgsField(cfg.fldSCP_UID, cfg.QVariantSCP.String))
-		pCrs = cfg.utls.getCrs(memoryLayer)
+		try:
+			pCrs = cfg.utls.getCrs(memoryLayer)
+		except Exception, err:
+			cfg.mx.msgErr59()
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			return "No"
 		QgsVectorFileWriter(unicode(shpF), "CP1250", f, QGis.WKBMultiPolygon , pCrs, "ESRI Shapefile")
 		if name is None:
 			name = cfg.osSCP.path.basename(shpF)
@@ -4431,11 +4443,11 @@ class Utils:
 			return None, None, None, None, None
 
 	# Get CRS of a layer by name thereof
-	def getCrs(self, lddRstr):
-		if lddRstr is None:
+	def getCrs(self, layer):
+		if layer is None:
 			crs = None
 		else:
-			rP = lddRstr.dataProvider()
+			rP = layer.dataProvider()
 			crs = rP.crs()
 		return crs
 		

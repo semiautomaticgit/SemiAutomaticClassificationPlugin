@@ -3647,37 +3647,37 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1104"/>
+        <location filename="classificationdock.py" line="1120"/>
         <source>Export SCP training input</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1175"/>
+        <location filename="classificationdock.py" line="1191"/>
         <source>Select a library file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1204"/>
+        <location filename="classificationdock.py" line="1220"/>
         <source>Export the highlighted signatures to CSV library</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1277"/>
+        <location filename="classificationdock.py" line="1293"/>
         <source>Calculate signatures</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1277"/>
+        <location filename="classificationdock.py" line="1293"/>
         <source>Calculate signatures for highlighted items?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1303"/>
+        <location filename="classificationdock.py" line="1319"/>
         <source>Merge signatures</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1303"/>
+        <location filename="classificationdock.py" line="1319"/>
         <source>Merge highlighted signatures?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3687,38 +3687,38 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1424"/>
+        <location filename="classificationdock.py" line="1440"/>
         <source>Are you sure you want to delete highlighted ROIs and signatures?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="2016"/>
+        <location filename="classificationdock.py" line="2032"/>
         <source>Create SCP training input</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="2124"/>
+        <location filename="classificationdock.py" line="2140"/>
         <source>Add required fds</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="2124"/>
+        <location filename="classificationdock.py" line="2140"/>
         <source>It appears that the shapefile </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="2124"/>
+        <location filename="classificationdock.py" line="2140"/>
         <source> is missing some fields that are required for the signature calculation. 
 Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="2208"/>
+        <location filename="classificationdock.py" line="2224"/>
         <source>Undo save ROI</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="2208"/>
+        <location filename="classificationdock.py" line="2224"/>
         <source>Are you sure you want to delete the last saved ROI?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4289,87 +4289,87 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="messages.py" line="373"/>
+        <location filename="messages.py" line="376"/>
         <source>Warning</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="messages.py" line="312"/>
+        <location filename="messages.py" line="315"/>
         <source>It appears that SciPy is not correctly installed. Please, update QGIS </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="messages.py" line="315"/>
+        <location filename="messages.py" line="318"/>
         <source>It appears that SciPy is not correctly installed. Please, see this page for information about SciPy installation </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="messages.py" line="318"/>
+        <location filename="messages.py" line="321"/>
         <source>rasters have different pixel sizes that can lead to incorrect results. Please, consider to resample rasters to the same pixel size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="messages.py" line="321"/>
+        <location filename="messages.py" line="324"/>
         <source>The same ID class has been already assigned to a different macrolass</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="messages.py" line="324"/>
+        <location filename="messages.py" line="327"/>
         <source>Wavelength already present</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="messages.py" line="327"/>
+        <location filename="messages.py" line="330"/>
         <source>Wavelength unit not provided in band set</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="messages.py" line="337"/>
+        <location filename="messages.py" line="340"/>
         <source>RAM value was too high. Value has been decreased automatically</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="messages.py" line="343"/>
+        <location filename="messages.py" line="346"/>
         <source>Unable to load the virtual raster. Please create it manually</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="messages.py" line="346"/>
+        <location filename="messages.py" line="349"/>
         <source>Unable to proceed. The raster must be in projected coordinates</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="messages.py" line="349"/>
+        <location filename="messages.py" line="352"/>
         <source>Select at least one raster</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="messages.py" line="352"/>
+        <location filename="messages.py" line="355"/>
         <source>Incorrect expression</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="messages.py" line="355"/>
+        <location filename="messages.py" line="358"/>
         <source>Unable to access the temporary directory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="messages.py" line="358"/>
+        <location filename="messages.py" line="361"/>
         <source>Reduce the search area extent within 10 degrees of latitude and 10 degrees of longitude</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="messages.py" line="361"/>
+        <location filename="messages.py" line="364"/>
         <source>Macroclass symbology is missing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="messages.py" line="364"/>
+        <location filename="messages.py" line="367"/>
         <source>Missing bands</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="messages.py" line="367"/>
+        <location filename="messages.py" line="370"/>
         <source>No metadata found inside the input directory. Default values will be used</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4609,7 +4609,7 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="575"/>
+        <location filename="downloadsentinelimages.py" line="576"/>
         <source>Searching ...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4624,12 +4624,12 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="656"/>
+        <location filename="downloadsentinelimages.py" line="659"/>
         <source>Reset signature list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="656"/>
+        <location filename="downloadsentinelimages.py" line="659"/>
         <source>Are you sure you want to clear the table?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5014,7 +5014,7 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="messages.py" line="370"/>
+        <location filename="messages.py" line="373"/>
         <source>The coordinate system of training input is different from the input image. Please create a new training input</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5056,6 +5056,11 @@ Possible reason: input is a virtual raster or band is not loaded</source>
     <message>
         <location filename="input.py" line="263"/>
         <source>Undo edit (only for ROI polygons)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="messages.py" line="311"/>
+        <source>Error accessing training input</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -855,7 +855,13 @@ class ClassificationDock:
 			cfg.utls.removeLayer(name)
 		except:
 			pass
-		tSS = cfg.utls.addVectorLayer(cfg.inptDir + "/" + nm, nm, "ogr")
+		try:
+			tSS = cfg.utls.addVectorLayer(cfg.inptDir + "/" + nm, nm, "ogr")
+		except:
+			cfg.mx.msgErr59()
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "Error training input")
+			return "No"
 		check = cfg.classD.checkFields(tSS)
 		vEPSG = cfg.utls.getEPSGVectorQGIS(tSS)
 		if cfg.bndSetPresent == "Yes" and cfg.imgNm == cfg.bndSetNm:
@@ -906,10 +912,20 @@ class ClassificationDock:
 	def saveMemToSHP(self, memoryLayer):
 		dT = cfg.utls.getTime()
 		inptDir2 = cfg.inptDir
-		cfg.inptDir = cfg.tmpDir + "/" + cfg.trnLay + dT
+		try:
+			cfg.inptDir = cfg.tmpDir + "/" + cfg.trnLay + dT
+		except Exception, err:
+			cfg.mx.msgErr59()
+			cfg.inptDir = cfg.tmpDir + "/" + dT
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "Error training input")
+			return "No"
 		oDir = cfg.utls.makeDirectory(cfg.inptDir)
 		shpF = cfg.inptDir + "/" + cfg.trnLay + ".shp"
-		l = cfg.utls.saveMemoryLayerToShapefile(memoryLayer, shpF, cfg.trnLay)		
+		l = cfg.utls.saveMemoryLayerToShapefile(memoryLayer, shpF, cfg.trnLay)
+		if l == "No":
+			cfg.classD.openInput()
+			return "No"
 		sigFileNm = cfg.trnLay + ".slf"
 		cfg.sigFile = cfg.inptDir + "/" + sigFileNm 
 		cfg.classD.saveSignatureList(cfg.sigFile)

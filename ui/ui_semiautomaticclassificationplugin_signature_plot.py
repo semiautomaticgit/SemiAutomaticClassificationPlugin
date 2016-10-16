@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/ui_semiautomaticclassificationplugin_signature_plot.ui'
 #
-# Created: Tue Oct 11 20:06:47 2016
+# Created: Sun Oct 16 01:01:18 2016
 #      by: PyQt4 UI code generator 4.11.2
 #
 # WARNING! All changes made in this file will be lost!
