@@ -310,6 +310,9 @@ class Messages:
 	def msgErr59(self):
 		self.msgBarError(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Error") + " [59]", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Error accessing training input"))
 		
+	def msgErr60(self):
+		self.msgBarError(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Error") + " [60]", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Rasters appear to be in different projections. Reproject rasters to the same CRS"))
+		
 	""" Warnings """
 	def msgWar2Windows(self):
 		self.msgBoxWarning(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [2]", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "It appears that SciPy is not correctly installed. Please, update QGIS "))
@@ -374,3 +377,4 @@ class Messages:
 		
 	def msgWar23(self, image):
 		self.msgBarWarning(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [23]", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Check integrity of image " + image))
+		

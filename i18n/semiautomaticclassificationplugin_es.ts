@@ -3658,37 +3658,37 @@ p, li { white-space: pre-wrap; }
         <translation>Selecciona una Entrada de Entrenamiento SCP</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1120"/>
+        <location filename="classificationdock.py" line="1125"/>
         <source>Export SCP training input</source>
         <translation>Exportar Entrada de Entrenamiento SCP</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1191"/>
+        <location filename="classificationdock.py" line="1196"/>
         <source>Select a library file</source>
         <translation>Selecciona un archivo de librería</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1220"/>
+        <location filename="classificationdock.py" line="1225"/>
         <source>Export the highlighted signatures to CSV library</source>
         <translation>Exportar las firmas seleccionadas a librería CSV</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1293"/>
+        <location filename="classificationdock.py" line="1298"/>
         <source>Calculate signatures</source>
         <translation>Calcular firmas</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1293"/>
+        <location filename="classificationdock.py" line="1298"/>
         <source>Calculate signatures for highlighted items?</source>
         <translation>¿Calcular firmas para los elementos seleccionados?</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1319"/>
+        <location filename="classificationdock.py" line="1324"/>
         <source>Merge signatures</source>
         <translation>Combinar firmas</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1319"/>
+        <location filename="classificationdock.py" line="1324"/>
         <source>Merge highlighted signatures?</source>
         <translation>¿Combinar firmas seleccionadas?</translation>
     </message>
@@ -3698,39 +3698,39 @@ p, li { white-space: pre-wrap; }
         <translation>Eliminar firmas</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1440"/>
+        <location filename="classificationdock.py" line="1445"/>
         <source>Are you sure you want to delete highlighted ROIs and signatures?</source>
         <translation>¿Estás seguro que quieres eliminar los ROIs y las firmas seleccionadas?</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="2032"/>
+        <location filename="classificationdock.py" line="2037"/>
         <source>Create SCP training input</source>
         <translation>Crear Entrenamiento de Entrada SCP</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="2140"/>
+        <location filename="classificationdock.py" line="2145"/>
         <source>Add required fds</source>
         <translation>Añadir los fondos requeridos</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="2140"/>
+        <location filename="classificationdock.py" line="2145"/>
         <source>It appears that the shapefile </source>
         <translation>Parece que el archivo shape</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="2140"/>
+        <location filename="classificationdock.py" line="2145"/>
         <source> is missing some fields that are required for the signature calculation. 
 Do you want to add the required fields to this shapefile?</source>
         <translation>no se encuentran algunos campos que son requeridos para el cálculo de firmas.
 ¿Deseas agregar los campos requeridos a este archivo shape?</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="2224"/>
+        <location filename="classificationdock.py" line="2229"/>
         <source>Undo save ROI</source>
         <translation>Deshacer guardar ROI</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="2224"/>
+        <location filename="classificationdock.py" line="2229"/>
         <source>Are you sure you want to delete the last saved ROI?</source>
         <translation>¿Estás seguro que quieres eliminar el último ROI guardado?</translation>
     </message>
@@ -4040,7 +4040,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation>Define un área de búsqueda</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="312"/>
+        <location filename="downloadsentinelimages.py" line="324"/>
         <source>Error</source>
         <translation>Error</translation>
     </message>
@@ -4270,87 +4270,87 @@ Do you want to add the required fields to this shapefile?</source>
         <translation>Error de conexión SSL. Por favor mira las FAQ o el Manual del Usuario del complemento para resolver esto</translation>
     </message>
     <message>
-        <location filename="messages.py" line="376"/>
+        <location filename="messages.py" line="379"/>
         <source>Warning</source>
         <translation>Advertencia</translation>
     </message>
     <message>
-        <location filename="messages.py" line="315"/>
+        <location filename="messages.py" line="318"/>
         <source>It appears that SciPy is not correctly installed. Please, update QGIS </source>
         <translation>Parece que SciPy no está instalado correctamente. Por favor, actualiza QGIS</translation>
     </message>
     <message>
-        <location filename="messages.py" line="318"/>
+        <location filename="messages.py" line="321"/>
         <source>It appears that SciPy is not correctly installed. Please, see this page for information about SciPy installation </source>
         <translation>Parece que SciPy no está instalado correctamente. Por favor, mira esta página con información sobre la instalación de SciPy</translation>
     </message>
     <message>
-        <location filename="messages.py" line="321"/>
+        <location filename="messages.py" line="324"/>
         <source>rasters have different pixel sizes that can lead to incorrect results. Please, consider to resample rasters to the same pixel size</source>
         <translation>los rásters tienen diferentes tamaños de pixel lo que puede producir resultados incorrectos. Por favor, considere remuestrear los rásters al mismo tamaño de pixel</translation>
     </message>
     <message>
-        <location filename="messages.py" line="324"/>
+        <location filename="messages.py" line="327"/>
         <source>The same ID class has been already assigned to a different macrolass</source>
         <translation>El mismo ID de Clase ya ha sido asignado a una Macroclase diferente </translation>
     </message>
     <message>
-        <location filename="messages.py" line="327"/>
+        <location filename="messages.py" line="330"/>
         <source>Wavelength already present</source>
         <translation>Longitud de onda ya presente</translation>
     </message>
     <message>
-        <location filename="messages.py" line="330"/>
+        <location filename="messages.py" line="333"/>
         <source>Wavelength unit not provided in band set</source>
         <translation>No se ha indicado la unidad de longitud de onda en el Juego de Bandas</translation>
     </message>
     <message>
-        <location filename="messages.py" line="340"/>
+        <location filename="messages.py" line="343"/>
         <source>RAM value was too high. Value has been decreased automatically</source>
         <translation>El valor de RAM era demasiado alto. El valor se ha disminuido automáticamente</translation>
     </message>
     <message>
-        <location filename="messages.py" line="346"/>
+        <location filename="messages.py" line="349"/>
         <source>Unable to load the virtual raster. Please create it manually</source>
         <translation>Imposible cargar el ráster virtual. Por favor procede a crearlo manualmente</translation>
     </message>
     <message>
-        <location filename="messages.py" line="349"/>
+        <location filename="messages.py" line="352"/>
         <source>Unable to proceed. The raster must be in projected coordinates</source>
         <translation>Imposible continuar. El ráster debe estar en coordenadas proyectadas</translation>
     </message>
     <message>
-        <location filename="messages.py" line="352"/>
+        <location filename="messages.py" line="355"/>
         <source>Select at least one raster</source>
         <translation>Selecciona al menos un ráster</translation>
     </message>
     <message>
-        <location filename="messages.py" line="355"/>
+        <location filename="messages.py" line="358"/>
         <source>Incorrect expression</source>
         <translation>Expresión incorrecta</translation>
     </message>
     <message>
-        <location filename="messages.py" line="358"/>
+        <location filename="messages.py" line="361"/>
         <source>Unable to access the temporary directory</source>
         <translation>Imposible acceder al directorio temporal</translation>
     </message>
     <message>
-        <location filename="messages.py" line="361"/>
+        <location filename="messages.py" line="364"/>
         <source>Reduce the search area extent within 10 degrees of latitude and 10 degrees of longitude</source>
         <translation>Reduce la extensión del área de búsqueda en 10 grados de latitud y 10 grados de longitud</translation>
     </message>
     <message>
-        <location filename="messages.py" line="364"/>
+        <location filename="messages.py" line="367"/>
         <source>Macroclass symbology is missing</source>
         <translation>No se encuentra la simbología de la Macroclase</translation>
     </message>
     <message>
-        <location filename="messages.py" line="367"/>
+        <location filename="messages.py" line="370"/>
         <source>Missing bands</source>
         <translation>Bandas perdidas</translation>
     </message>
     <message>
-        <location filename="messages.py" line="370"/>
+        <location filename="messages.py" line="373"/>
         <source>No metadata found inside the input directory. Default values will be used</source>
         <translation>No se encuentran metadatos en el directorio de entrada. Se usarán los valores por defecto</translation>
     </message>
@@ -4590,27 +4590,27 @@ Do you want to add the required fields to this shapefile?</source>
         <translation>Guardar salida</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="576"/>
+        <location filename="downloadsentinelimages.py" line="588"/>
         <source>Searching ...</source>
         <translation>Buscando ...</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="339"/>
+        <location filename="downloadsentinelimages.py" line="351"/>
         <source>Download the images in the table (requires internet connection)</source>
         <translation>Descarga las imágenes de la tabla (se requiere conexión a internet)</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="500"/>
+        <location filename="downloadsentinelimages.py" line="512"/>
         <source>Export download links</source>
         <translation>Exportar enlaces de descarga</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="659"/>
+        <location filename="downloadsentinelimages.py" line="674"/>
         <source>Reset signature list</source>
         <translation>Restaurar lista de firmas</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="659"/>
+        <location filename="downloadsentinelimages.py" line="674"/>
         <source>Are you sure you want to clear the table?</source>
         <translation>¿Estás seguro que quieres borrar la tabla?</translation>
     </message>
@@ -5026,7 +5026,7 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished">Depurar</translation>
     </message>
     <message>
-        <location filename="messages.py" line="373"/>
+        <location filename="messages.py" line="376"/>
         <source>The coordinate system of training input is different from the input image. Please create a new training input</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5073,6 +5073,11 @@ Possible reason: input is a virtual raster or band is not loaded</source>
     <message>
         <location filename="messages.py" line="311"/>
         <source>Error accessing training input</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="messages.py" line="314"/>
+        <source>Rasters appear to be in different projections. Reproject rasters to the same CRS</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

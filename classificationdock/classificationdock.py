@@ -864,10 +864,15 @@ class ClassificationDock:
 			return "No"
 		check = cfg.classD.checkFields(tSS)
 		vEPSG = cfg.utls.getEPSGVectorQGIS(tSS)
-		if cfg.bndSetPresent == "Yes" and cfg.imgNm == cfg.bndSetNm:
-			rEPSG = cfg.utls.getEPSGRaster(cfg.bndSetLst[0])
-		else:
-			rEPSG = cfg.utls.getEPSGRaster(cfg.imgSrc)
+		try:
+			if cfg.bndSetPresent == "Yes" and cfg.imgNm == cfg.bndSetNm:
+				rEPSG = cfg.utls.getEPSGRaster(cfg.bndSetLst[0])
+			else:
+				rEPSG = cfg.utls.getEPSGRaster(cfg.imgSrc)
+		except Exception, err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			return "No"
 		if str(vEPSG) != str(rEPSG):
 			cfg.mx.msgWar22()
 		if check == "Yes":

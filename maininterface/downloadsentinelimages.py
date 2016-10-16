@@ -189,7 +189,19 @@ class DownloadSentinelImages:
 				else:
 					checkA = self.downloadPreviewAmazon(imgNm[0:-7], progress)
 					if checkA != "Yes":
-						self.downloadFile(url, cfg.tmpDir + "//" + imgID, progress)
+						# single granule
+						if "MB" in str(tW.item(i, 9).text()):
+							min_lat = str(tW.item(i, 5).text())
+							min_lon = str(tW.item(i, 6).text())
+							max_lat = str(tW.item(i, 7).text())
+							max_lon = str(tW.item(i, 8).text())
+							jpg = str(tW.item(i, 10).text())
+							self.downloadThumbnail(imgID, min_lat, min_lon, max_lat, max_lon, jpg, progress)
+							if cfg.osSCP.path.isfile(cfg.tmpDir + "//" + imgID + ".vrt"):
+								r = cfg.utls.addRasterLayer(cfg.tmpDir + "//" + imgID + ".vrt", imgID.replace(".vrt",""))
+								cfg.utls.setRasterColorComposite(r, 1, 2, 3)
+						else:
+							self.downloadFile(url, cfg.tmpDir + "//" + imgID, progress)
 					if cfg.osSCP.path.isfile(cfg.tmpDir + "//" + imgID):
 						r = cfg.utls.addRasterLayer(cfg.tmpDir + "//" + imgID, imgID)
 				progress = progress + progressStep
@@ -642,6 +654,9 @@ class DownloadSentinelImages:
 										cfg.utls.addTableItem(tW, float(max_lon), c, 8)
 										cfg.utls.addTableItem(tW, imgPreview, c, 10)
 										cfg.utls.addTableItem(tW, imgPreview2, c, 11)
+										# single granule
+										if "MB" in size:
+											cfg.utls.addTableItem(tW, size, c, 9)
 										cfg.utls.addTableItem(tW, imgID, c, 12)
 					except Exception, err:
 						# logger

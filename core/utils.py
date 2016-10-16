@@ -2272,6 +2272,7 @@ class Utils:
 		bottomList = []
 		pXSizeList = []
 		pYSizeList = []
+		epsgList = []
 		for b in inputRasterList:
 			gdalRaster = cfg.gdalSCP.Open(b, cfg.gdalSCP.GA_ReadOnly)	
 			gt = gdalRaster.GetGeoTransform()
@@ -2279,6 +2280,15 @@ class Utils:
 			if rP == "":
 				cfg.mx.msgErr47()
 				return "Yes"
+			# check projections
+			try:
+				rPSys =cfg.osrSCP.SpatialReference(wkt=rP)
+				rPSys.AutoIdentifyEPSG()
+				rPRS = rPSys.GetAuthorityCode(None)
+				epsgList.append(int(rPRS))
+			except Exception, err:
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))	
 			pXSizeList.append(abs(gt[1]))
 			pYSizeList.append(abs(gt[5]))
 			leftList.append(gt[0])
@@ -2290,6 +2300,10 @@ class Utils:
 			# number of y pixels
 			rYList.append(float(gdalRaster.RasterYSize))
 			gdalRaster = None
+		# check projections
+		epsgListI = list(set(epsgList))
+		if len(epsgListI) > 1:
+			cfg.mx.msgErr60()
 		# find raster box
 		iLeft = min(leftList)
 		iTop= max(topList)
@@ -5285,11 +5299,15 @@ class Utils:
 		
 	# zip a directory
 	def zipDirectoryInFile(self, zipPath, fileDirectory):
-		zip = cfg.zipfileSCP.ZipFile(zipPath, 'w')
-		for f in cfg.osSCP.listdir(fileDirectory):
-			zip.write(fileDirectory + "/" + f)
-		zip.close()
-	
+		try:
+			zip = cfg.zipfileSCP.ZipFile(zipPath, 'w')
+			for f in cfg.osSCP.listdir(fileDirectory):
+				zip.write(fileDirectory + "/" + f)
+			zip.close()
+		except Exception, err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			
 	# create backup file
 	def createBackupFile(self, filePath):
 		try:

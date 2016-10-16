@@ -16,7 +16,9 @@ changelog=
 	
 	5.1.3
 	Minor update:
-	-fixed issue when canceling a Sentinel-2 query
+	-fixed issue when cancelling a Sentinel-2 query
+	-download Sentinel-2 preview for single granules instead of band 1
+	-In Band calc check raster projections
 	-various bug fixing
 	
 	5.1.2

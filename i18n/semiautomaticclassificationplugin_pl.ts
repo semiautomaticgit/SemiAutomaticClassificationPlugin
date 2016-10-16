@@ -3734,17 +3734,17 @@ Polish: Jakub Pękala, Robert Szczepanek&lt;/p&gt;
         <translation>Wybierz plik z listą sygnatur</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="659"/>
+        <location filename="downloadsentinelimages.py" line="674"/>
         <source>Reset signature list</source>
         <translation>Wyczyść listę sygnatur</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1191"/>
+        <location filename="classificationdock.py" line="1196"/>
         <source>Select a library file</source>
         <translation>Wybierz bibliotekę pliku</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1220"/>
+        <location filename="classificationdock.py" line="1225"/>
         <source>Export the highlighted signatures to CSV library</source>
         <translation>Eksportuj wybrane sygnatury do biblioteki CSV</translation>
     </message>
@@ -3759,12 +3759,12 @@ Polish: Jakub Pękala, Robert Szczepanek&lt;/p&gt;
         <translation>Czy na pewno chcesz usunąć wybrane sygnatury?</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1319"/>
+        <location filename="classificationdock.py" line="1324"/>
         <source>Merge signatures</source>
         <translation>Połącz sygnatury</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1319"/>
+        <location filename="classificationdock.py" line="1324"/>
         <source>Merge highlighted signatures?</source>
         <translation>Połączyć wybrane sygnatury?</translation>
     </message>
@@ -3854,7 +3854,7 @@ Polish: Jakub Pękala, Robert Szczepanek&lt;/p&gt;
         <translation>SCP zapisuje Plik zdarzeń</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="312"/>
+        <location filename="downloadsentinelimages.py" line="324"/>
         <source>Error</source>
         <translation>Błąd</translation>
     </message>
@@ -4059,67 +4059,67 @@ Polish: Jakub Pękala, Robert Szczepanek&lt;/p&gt;
         <translation>Nie można połączyć. Sprawdź nazwę użytkownika i hasło</translation>
     </message>
     <message>
-        <location filename="messages.py" line="376"/>
+        <location filename="messages.py" line="379"/>
         <source>Warning</source>
         <translation>Uwaga</translation>
     </message>
     <message>
-        <location filename="messages.py" line="315"/>
+        <location filename="messages.py" line="318"/>
         <source>It appears that SciPy is not correctly installed. Please, update QGIS </source>
         <translation>Wygląda na to,że SciPy nie jest zainstalowany poprawnie. Proszę zaktualizować QGIS </translation>
     </message>
     <message>
-        <location filename="messages.py" line="318"/>
+        <location filename="messages.py" line="321"/>
         <source>It appears that SciPy is not correctly installed. Please, see this page for information about SciPy installation </source>
         <translation>Wygląda na to, że SciPy nie jest zainstalowany poprawnie. Proszę poszukać informacji dotyczących instalacji SciPy na tej stronie</translation>
     </message>
     <message>
-        <location filename="messages.py" line="321"/>
+        <location filename="messages.py" line="324"/>
         <source>rasters have different pixel sizes that can lead to incorrect results. Please, consider to resample rasters to the same pixel size</source>
         <translation>rastry posiadają różne rozmiary pikseli, które mogą prowadzić do niepoprawnych wyników. Proszę rozważyć ponowne próbkowanie rastrów do tego samego rozmiaru pikseli</translation>
     </message>
     <message>
-        <location filename="messages.py" line="324"/>
+        <location filename="messages.py" line="327"/>
         <source>The same ID class has been already assigned to a different macrolass</source>
         <translation>Ta sama klasa ID została już przypisana do innej makroklasy</translation>
     </message>
     <message>
-        <location filename="messages.py" line="327"/>
+        <location filename="messages.py" line="330"/>
         <source>Wavelength already present</source>
         <translation>Długość fali jest już podana</translation>
     </message>
     <message>
-        <location filename="messages.py" line="340"/>
+        <location filename="messages.py" line="343"/>
         <source>RAM value was too high. Value has been decreased automatically</source>
         <translation>Wartość RAM&apos;u jest zbyt duża. Wartość została obniżona automatycznie</translation>
     </message>
     <message>
-        <location filename="messages.py" line="346"/>
+        <location filename="messages.py" line="349"/>
         <source>Unable to load the virtual raster. Please create it manually</source>
         <translation>Nie można załadować rastra wirtualnego. Proszę stworzyć go ręcznie</translation>
     </message>
     <message>
-        <location filename="messages.py" line="349"/>
+        <location filename="messages.py" line="352"/>
         <source>Unable to proceed. The raster must be in projected coordinates</source>
         <translation>Nie można kontynuować. Raster musi znajdować się we współrzędnych odwzorowania</translation>
     </message>
     <message>
-        <location filename="messages.py" line="352"/>
+        <location filename="messages.py" line="355"/>
         <source>Select at least one raster</source>
         <translation>Zaznacz przynajmniej jeden raster</translation>
     </message>
     <message>
-        <location filename="messages.py" line="355"/>
+        <location filename="messages.py" line="358"/>
         <source>Incorrect expression</source>
         <translation>Nieprawidłowe wyrażenie</translation>
     </message>
     <message>
-        <location filename="messages.py" line="358"/>
+        <location filename="messages.py" line="361"/>
         <source>Unable to access the temporary directory</source>
         <translation>Nie można uzyskać dostępu do katalogu tymczasowego</translation>
     </message>
     <message>
-        <location filename="messages.py" line="361"/>
+        <location filename="messages.py" line="364"/>
         <source>Reduce the search area extent within 10 degrees of latitude and 10 degrees of longitude</source>
         <translation>Zmniejsz zakres obszaru wyszukiwania w obrębie 10 stopni szerokości geograficznej i 10 stopni długości geograficznej</translation>
     </message>
@@ -4299,22 +4299,22 @@ Polish: Jakub Pękala, Robert Szczepanek&lt;/p&gt;
         <translation>Wybierz katalog do zapisu przyciętych rastrów</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="339"/>
+        <location filename="downloadsentinelimages.py" line="351"/>
         <source>Download the images in the table (requires internet connection)</source>
         <translation>Pobierz obrazy w tabeli (wymaga połączenia z internetem)</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="500"/>
+        <location filename="downloadsentinelimages.py" line="512"/>
         <source>Export download links</source>
         <translation>Eksportuj pobrane łącza</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="576"/>
+        <location filename="downloadsentinelimages.py" line="588"/>
         <source>Searching ...</source>
         <translation>Wyszukiwanie...</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="659"/>
+        <location filename="downloadsentinelimages.py" line="674"/>
         <source>Are you sure you want to clear the table?</source>
         <translation>Czy na pewno oczyścić tabelę?</translation>
     </message>
@@ -4414,29 +4414,29 @@ Polish: Jakub Pękala, Robert Szczepanek&lt;/p&gt;
         <translation>Czy na pewno wyczyścić progi?</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="2140"/>
+        <location filename="classificationdock.py" line="2145"/>
         <source>Add required fds</source>
         <translation>Dodaj wymagane pola</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="2140"/>
+        <location filename="classificationdock.py" line="2145"/>
         <source>It appears that the shapefile </source>
         <translation>Wygląda na to, że ten shapefile</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="2140"/>
+        <location filename="classificationdock.py" line="2145"/>
         <source> is missing some fields that are required for the signature calculation. 
 Do you want to add the required fields to this shapefile?</source>
         <translation> nie posiada pól, które są potrzebne do wyznaczania sygnatur. 
 Chcesz dodać wymagane pola do tego shapefile?</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="2224"/>
+        <location filename="classificationdock.py" line="2229"/>
         <source>Undo save ROI</source>
         <translation>Cofnij zapisywanie OT</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="2224"/>
+        <location filename="classificationdock.py" line="2229"/>
         <source>Are you sure you want to delete the last saved ROI?</source>
         <translation>Czy na pewno usunąć ostatnio zapisany OT?</translation>
     </message>
@@ -4451,27 +4451,27 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation>Wybierz dane treningowe</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1120"/>
+        <location filename="classificationdock.py" line="1125"/>
         <source>Export SCP training input</source>
         <translation>Eksportuj dane treningowe</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1293"/>
+        <location filename="classificationdock.py" line="1298"/>
         <source>Calculate signatures</source>
         <translation>Oblicz sygnatury</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1293"/>
+        <location filename="classificationdock.py" line="1298"/>
         <source>Calculate signatures for highlighted items?</source>
         <translation>Obliczyć sygnatury wybranych obiektów?</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="1440"/>
+        <location filename="classificationdock.py" line="1445"/>
         <source>Are you sure you want to delete highlighted ROIs and signatures?</source>
         <translation>Czy na pewno chcesz usunąć wybrane OT i sygnatury?</translation>
     </message>
     <message>
-        <location filename="classificationdock.py" line="2032"/>
+        <location filename="classificationdock.py" line="2037"/>
         <source>Create SCP training input</source>
         <translation>Stwórz dane treningowe</translation>
     </message>
@@ -4661,22 +4661,22 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation>Błąd połączenia SSL. Sprawdź szczegóły w FAQ podręcznika wtyczki.</translation>
     </message>
     <message>
-        <location filename="messages.py" line="330"/>
+        <location filename="messages.py" line="333"/>
         <source>Wavelength unit not provided in band set</source>
         <translation>Nie podano jednostki długości fali dla zestawu kanałów.</translation>
     </message>
     <message>
-        <location filename="messages.py" line="364"/>
+        <location filename="messages.py" line="367"/>
         <source>Macroclass symbology is missing</source>
         <translation>Brak stylizacji makroklas.</translation>
     </message>
     <message>
-        <location filename="messages.py" line="367"/>
+        <location filename="messages.py" line="370"/>
         <source>Missing bands</source>
         <translation>Brak kanałów</translation>
     </message>
     <message>
-        <location filename="messages.py" line="370"/>
+        <location filename="messages.py" line="373"/>
         <source>No metadata found inside the input directory. Default values will be used</source>
         <translation>Nie znaleziono metadanych w katalogu danych. Zostaną użyte wartości domyślne.</translation>
     </message>
@@ -5016,7 +5016,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation>Śledź błędy</translation>
     </message>
     <message>
-        <location filename="messages.py" line="373"/>
+        <location filename="messages.py" line="376"/>
         <source>The coordinate system of training input is different from the input image. Please create a new training input</source>
         <translation>Układ współrzędnych danych treningowych jest inny niż obrazu. Dokonaj transformacji OT.</translation>
     </message>
@@ -5094,6 +5094,11 @@ Possible reason: input is a virtual raster or band is not loaded</source>
     <message>
         <location filename="messages.py" line="311"/>
         <source>Error accessing training input</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="messages.py" line="314"/>
+        <source>Rasters appear to be in different projections. Reproject rasters to the same CRS</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
