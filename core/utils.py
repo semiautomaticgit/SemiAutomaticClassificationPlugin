@@ -67,8 +67,9 @@ class Utils:
 			r = cfg.QNetworkRequestSCP(cfg.QtCoreSCP.QUrl(cfg.htmlW))
 			cfg.reply2 = cfg.qgisCoreSCP.QgsNetworkAccessManager.instance().get(r)
 			cfg.reply2.finished.connect(self.replyInTextBrowser2)
-		cfg.uidc.main_textBrowser.clear()
-		cfg.uidc.main_textBrowser.setHtml(html)
+		if len(html) > 0:
+			cfg.uidc.main_textBrowser.clear()
+			cfg.uidc.main_textBrowser.setHtml(html)
 		cfg.reply.finished.disconnect()
 		cfg.reply.abort()
 		cfg.reply.close()
@@ -78,8 +79,9 @@ class Utils:
 	def replyInTextBrowser2(self):
 		cfg.reply2.deleteLater()
 		html = str(cfg.reply2.readAll())
-		cfg.uidc.main_textBrowser.clear()
-		cfg.uidc.main_textBrowser.setHtml(html)
+		if len(html) > 0:
+			cfg.uidc.main_textBrowser.clear()
+			cfg.uidc.main_textBrowser.setHtml(html)
 		cfg.reply2.finished.disconnect()
 		cfg.reply2.abort()
 		cfg.reply2.close()
