@@ -652,11 +652,9 @@ class DownloadSentinelImages:
 										cfg.utls.addTableItem(tW, float(min_lon), c, 6)
 										cfg.utls.addTableItem(tW, float(max_lat), c, 7)
 										cfg.utls.addTableItem(tW, float(max_lon), c, 8)
+										cfg.utls.addTableItem(tW, size, c, 9)
 										cfg.utls.addTableItem(tW, imgPreview, c, 10)
 										cfg.utls.addTableItem(tW, imgPreview2, c, 11)
-										# single granule
-										if "MB" in size:
-											cfg.utls.addTableItem(tW, size, c, 9)
 										cfg.utls.addTableItem(tW, imgID, c, 12)
 					except Exception, err:
 						# logger

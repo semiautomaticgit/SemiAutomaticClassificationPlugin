@@ -268,7 +268,7 @@ class Accuracy:
 				totX.extend(rows)
 				total = sorted(cfg.np.unique(totX).tolist())
 				errMatrix = cfg.np.zeros((len(total), len(total)))
-				cList = "V " + str(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Classification')) + "\t"
+				cList = "V " + cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Classification') + "\t"
 				try:
 					l = open(tblOut, 'w')
 				except Exception, err:
@@ -282,7 +282,11 @@ class Accuracy:
 					# logger
 					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 					return "No"
-				t = str(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'ErrMatrixCode')) + "	" + str(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Reference')) + "	" + str(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Classification')) + "	" + str(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'PixelSum') + str("\n"))
+				t = cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'ErrMatrixCode') + "	" + cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Reference') + "	" + cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Classification') + "	" + cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'PixelSum') + "\n"
+				try:
+					t = t.encode(cfg.sysSCP.getfilesystemencoding())
+				except:
+					pass
 				l.write(t)
 				# open error raster
 				rDC = cfg.gdalSCP.Open(errorRstPath, cfg.gdalSCP.GA_ReadOnly)
@@ -301,9 +305,24 @@ class Accuracy:
 							errMatrix[total.index(r), total.index(c)] = cfg.rasterBandPixelCount
 				# save combination to table
 				l.write(str("\n"))
-				l.write(str(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'ERROR MATRIX')) + str("\n"))
-				l.write("\t" + "> " + str(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Reference')) + str("\n"))
-				l.write(cList + str(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Total') + str("\n")))
+				tStr = "\t" + "> " + cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'ERROR MATRIX') + "\n"
+				try:
+					tStr = tStr.encode(cfg.sysSCP.getfilesystemencoding())
+				except:
+					pass
+				l.write(tStr)
+				tStr = "\t" + "> " + cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Reference') + "\n"
+				try:
+					tStr = tStr.encode(cfg.sysSCP.getfilesystemencoding())
+				except:
+					pass
+				l.write(tStr)
+				tStr = cList + cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Total') + "\n"
+				try:
+					tStr = tStr.encode(cfg.sysSCP.getfilesystemencoding())
+				except:
+					pass
+				l.write(tStr)
 				# temp matrix
 				tmpMtrx= cfg.tmpDir + "/" + cfg.tempMtrxNm + dT + ".txt"
 				cfg.np.savetxt(tmpMtrx, errMatrix, delimiter="\t", fmt="%i")
@@ -315,16 +334,24 @@ class Accuracy:
 					l.write(tMR)
 					ix = ix + 1
 				# last line
-				lL = str(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Total'))
+				lL = cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Total')
 				for c in range(0, len(total)):
 					lL = lL + "\t" + str(int(errMatrix[:, c].sum()))
 				totMat = int(errMatrix.sum())
 				lL = lL + "\t" + str(totMat) + str("\n")
+				try:
+					lL = lL.encode(cfg.sysSCP.getfilesystemencoding())
+				except:
+					pass
 				l.write(lL)
 				l.write(str("\n"))
 				# overall accuracy
 				oA = 100 * errMatrix.trace() / totMat
-				t = str(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Overall accuracy [%] = ')) + str(oA) + str("\n")
+				t = cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Overall accuracy [%] = ') + str(oA) + "\n"
+				try:
+					t = t.encode(cfg.sysSCP.getfilesystemencoding())
+				except:
+					pass
 				l.write(t)
 				# user and producer's accuracy and kappa hat, equations from Congalton, R. & Green, K. (2009) Assessing the Accuracy of Remotely Sensed Data: Principles and Practices. CRC Press
 				nipXnpi = 0
@@ -339,9 +366,17 @@ class Accuracy:
 					u = 100 * nii / nip
 					khatI = ((totMat * nii) - (nip * npi)) / ((totMat * nip) - (nip * npi))
 					t = cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Class ') + str(total[g]) + cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", ' producer accuracy [%] = ') + str(p) + "\t" + cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", ' user accuracy [%] = ') + str(u) + "\t" + cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Kappa hat = ') + str(khatI) + str("\n")
+					try:
+						t = t.encode(cfg.sysSCP.getfilesystemencoding())
+					except:
+						pass
 					l.write(t)
 				khat = ((totMat * niiTot) - nipXnpi) / ((totMat * totMat) - nipXnpi)
-				t = str(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Kappa hat classification = ')) + str(khat) + str("\n")
+				t = cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Kappa hat classification = ') + str(khat) + str("\n")
+				try:
+					t = t.encode(cfg.sysSCP.getfilesystemencoding())
+				except:
+					pass
 				l.write(t)
 				l.close()
 				# close bands
@@ -356,7 +391,7 @@ class Accuracy:
 					f = open(tblOut)
 					if cfg.osSCP.path.isfile(tblOut):
 						eM = f.read()
-						cfg.ui.error_matrix_textBrowser.setText(str(eM))
+						cfg.ui.error_matrix_textBrowser.setText(eM)
 					# logger
 					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " error matrix calculated")
 				except Exception, err:

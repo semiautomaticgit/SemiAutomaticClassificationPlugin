@@ -3734,7 +3734,7 @@ Polish: Jakub Pękala, Robert Szczepanek&lt;/p&gt;
         <translation>Wybierz plik z listą sygnatur</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="674"/>
+        <location filename="downloadsentinelimages.py" line="672"/>
         <source>Reset signature list</source>
         <translation>Wyczyść listę sygnatur</translation>
     </message>
@@ -3749,12 +3749,12 @@ Polish: Jakub Pękala, Robert Szczepanek&lt;/p&gt;
         <translation>Eksportuj wybrane sygnatury do biblioteki CSV</translation>
     </message>
     <message>
-        <location filename="spectralsignatureplot.py" line="468"/>
+        <location filename="spectralsignatureplot.py" line="470"/>
         <source>Delete signatures</source>
         <translation>Usuń sygnatury</translation>
     </message>
     <message>
-        <location filename="spectralsignatureplot.py" line="468"/>
+        <location filename="spectralsignatureplot.py" line="470"/>
         <source>Are you sure you want to delete highlighted signatures?</source>
         <translation>Czy na pewno chcesz usunąć wybrane sygnatury?</translation>
     </message>
@@ -4144,7 +4144,7 @@ Polish: Jakub Pękala, Robert Szczepanek&lt;/p&gt;
         <translation>BłądKoduMacierzy</translation>
     </message>
     <message>
-        <location filename="accuracy.py" line="305"/>
+        <location filename="accuracy.py" line="314"/>
         <source>Reference</source>
         <translation>Odniesienie</translation>
     </message>
@@ -4154,42 +4154,42 @@ Polish: Jakub Pękala, Robert Szczepanek&lt;/p&gt;
         <translation>PodsPiks</translation>
     </message>
     <message>
-        <location filename="accuracy.py" line="304"/>
+        <location filename="accuracy.py" line="308"/>
         <source>ERROR MATRIX</source>
         <translation>BŁĄD MACIERZY</translation>
     </message>
     <message>
-        <location filename="accuracy.py" line="318"/>
+        <location filename="accuracy.py" line="337"/>
         <source>Total</source>
         <translation>Całkowicie</translation>
     </message>
     <message>
-        <location filename="accuracy.py" line="327"/>
+        <location filename="accuracy.py" line="350"/>
         <source>Overall accuracy [%] = </source>
         <translation>Ogólna dokładność [%] = </translation>
     </message>
     <message>
-        <location filename="accuracy.py" line="341"/>
+        <location filename="accuracy.py" line="368"/>
         <source>Class </source>
         <translation>Klasyfikacja</translation>
     </message>
     <message>
-        <location filename="accuracy.py" line="341"/>
+        <location filename="accuracy.py" line="368"/>
         <source> producer accuracy [%] = </source>
         <translation>dokładność producenta [%] = </translation>
     </message>
     <message>
-        <location filename="accuracy.py" line="341"/>
+        <location filename="accuracy.py" line="368"/>
         <source> user accuracy [%] = </source>
         <translation>dokładność użytkowanika [%] = </translation>
     </message>
     <message>
-        <location filename="accuracy.py" line="341"/>
+        <location filename="accuracy.py" line="368"/>
         <source>Kappa hat = </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="accuracy.py" line="344"/>
+        <location filename="accuracy.py" line="375"/>
         <source>Kappa hat classification = </source>
         <translation type="unfinished"></translation>
     </message>
@@ -4314,7 +4314,7 @@ Polish: Jakub Pękala, Robert Szczepanek&lt;/p&gt;
         <translation>Wyszukiwanie...</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="674"/>
+        <location filename="downloadsentinelimages.py" line="672"/>
         <source>Are you sure you want to clear the table?</source>
         <translation>Czy na pewno oczyścić tabelę?</translation>
     </message>
@@ -4441,7 +4441,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation>Czy na pewno usunąć ostatnio zapisany OT?</translation>
     </message>
     <message>
-        <location filename="spectralsignatureplot.py" line="625"/>
+        <location filename="spectralsignatureplot.py" line="627"/>
         <source>Values</source>
         <translation>Wartości</translation>
     </message>
@@ -4686,12 +4686,12 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation>Wybierz shapefile</translation>
     </message>
     <message>
-        <location filename="spectralsignatureplot.py" line="1161"/>
+        <location filename="spectralsignatureplot.py" line="1163"/>
         <source>Set thresholds</source>
         <translation>Ustaw próg</translation>
     </message>
     <message>
-        <location filename="spectralsignatureplot.py" line="1161"/>
+        <location filename="spectralsignatureplot.py" line="1163"/>
         <source>Are you sure you want to set thresholds for several signatures?</source>
         <translation>Czy na pewno chcesz ustalić próg dla wielu sygnatur?</translation>
     </message>
@@ -4856,12 +4856,12 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation>Czy na pewno chcesz dodać wybrane sygnatury do listy?</translation>
     </message>
     <message>
-        <location filename="spectralsignatureplot.py" line="1033"/>
+        <location filename="spectralsignatureplot.py" line="1035"/>
         <source>Undo thresholds</source>
         <translation>Cofnij progi</translation>
     </message>
     <message>
-        <location filename="spectralsignatureplot.py" line="1033"/>
+        <location filename="spectralsignatureplot.py" line="1035"/>
         <source>Are you sure you want to undo thresholds?</source>
         <translation>Czy na pewno chcesz wyczyścić progi?</translation>
     </message>

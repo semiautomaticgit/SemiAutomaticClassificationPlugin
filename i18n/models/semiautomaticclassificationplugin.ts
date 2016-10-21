@@ -3682,7 +3682,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="spectralsignatureplot.py" line="468"/>
+        <location filename="spectralsignatureplot.py" line="470"/>
         <source>Delete signatures</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4384,12 +4384,12 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="spectralsignatureplot.py" line="1161"/>
+        <location filename="spectralsignatureplot.py" line="1163"/>
         <source>Set thresholds</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="spectralsignatureplot.py" line="1161"/>
+        <location filename="spectralsignatureplot.py" line="1163"/>
         <source>Are you sure you want to set thresholds for several signatures?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4409,7 +4409,7 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="accuracy.py" line="305"/>
+        <location filename="accuracy.py" line="314"/>
         <source>Reference</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4419,42 +4419,42 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="accuracy.py" line="304"/>
+        <location filename="accuracy.py" line="308"/>
         <source>ERROR MATRIX</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="accuracy.py" line="318"/>
+        <location filename="accuracy.py" line="337"/>
         <source>Total</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="accuracy.py" line="327"/>
+        <location filename="accuracy.py" line="350"/>
         <source>Overall accuracy [%] = </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="accuracy.py" line="341"/>
+        <location filename="accuracy.py" line="368"/>
         <source>Class </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="accuracy.py" line="341"/>
+        <location filename="accuracy.py" line="368"/>
         <source> producer accuracy [%] = </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="accuracy.py" line="341"/>
+        <location filename="accuracy.py" line="368"/>
         <source> user accuracy [%] = </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="accuracy.py" line="341"/>
+        <location filename="accuracy.py" line="368"/>
         <source>Kappa hat = </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="accuracy.py" line="344"/>
+        <location filename="accuracy.py" line="375"/>
         <source>Kappa hat classification = </source>
         <translation type="unfinished"></translation>
     </message>
@@ -4624,12 +4624,12 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="674"/>
+        <location filename="downloadsentinelimages.py" line="672"/>
         <source>Reset signature list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="674"/>
+        <location filename="downloadsentinelimages.py" line="672"/>
         <source>Are you sure you want to clear the table?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4844,22 +4844,22 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="spectralsignatureplot.py" line="468"/>
+        <location filename="spectralsignatureplot.py" line="470"/>
         <source>Are you sure you want to delete highlighted signatures?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="spectralsignatureplot.py" line="625"/>
+        <location filename="spectralsignatureplot.py" line="627"/>
         <source>Values</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="spectralsignatureplot.py" line="1033"/>
+        <location filename="spectralsignatureplot.py" line="1035"/>
         <source>Undo thresholds</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="spectralsignatureplot.py" line="1033"/>
+        <location filename="spectralsignatureplot.py" line="1035"/>
         <source>Are you sure you want to undo thresholds?</source>
         <translation type="unfinished"></translation>
     </message>

@@ -254,6 +254,8 @@ class SpectralSignaturePlot:
 				cfg.signList["MIN_VALUE_" + str(id)] = cfg.spectrPlotList["MIN_VALUE_" + str(id)]
 				cfg.signList["MAX_VALUE_" + str(id)] = cfg.spectrPlotList["MAX_VALUE_" + str(id)]
 				cfg.signList["WAVELENGTH_" + str(id)] = cfg.spectrPlotList["WAVELENGTH_" + str(id)]
+				cfg.signList["MEAN_VALUE_" + str(id)] = cfg.spectrPlotList["MEAN_VALUE_" + str(id)]
+				cfg.signList["SD_" + str(id)] = cfg.spectrPlotList["SD_" + str(id)]
 				cfg.signList["COLOR_" + str(id)] = cfg.spectrPlotList["COLOR_" + str(id)]
 				cfg.signList["CHECKBOX_" + str(id)] = 2
 				cfg.signList["UNIT_" + str(id)] = cfg.spectrPlotList["UNIT_" + str(id)] 
