@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>892</width>
+    <width>889</width>
     <height>569</height>
    </rect>
   </property>
@@ -684,6 +684,19 @@
                <item row="1" column="0" colspan="6">
                 <layout class="QGridLayout" name="gridLayout_120">
                  <item row="0" column="0">
+                  <widget class="QLabel" name="label_194">
+                   <property name="frameShadow">
+                    <enum>QFrame::Sunken</enum>
+                   </property>
+                   <property name="text">
+                    <string>Results</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignCenter</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="2">
                   <widget class="QLabel" name="label_113">
                    <property name="frameShadow">
                     <enum>QFrame::Sunken</enum>
@@ -696,7 +709,7 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="0" column="1">
+                 <item row="0" column="3">
                   <widget class="QLineEdit" name="imageID_lineEdit">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -715,6 +728,40 @@
                    </property>
                    <property name="maxLength">
                     <number>10000</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QSpinBox" name="result_number_spinBox_2">
+                   <property name="minimumSize">
+                    <size>
+                     <width>50</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>100</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                   <property name="toolTip">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Maximum number of results (images)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                   </property>
+                   <property name="minimum">
+                    <number>5</number>
+                   </property>
+                   <property name="maximum">
+                    <number>2000</number>
+                   </property>
+                   <property name="singleStep">
+                    <number>5</number>
+                   </property>
+                   <property name="value">
+                    <number>100</number>
                    </property>
                   </widget>
                  </item>
@@ -742,7 +789,7 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>840</width>
+                  <width>837</width>
                   <height>160</height>
                  </rect>
                 </property>
@@ -945,8 +992,8 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>551</width>
-                  <height>87</height>
+                  <width>837</width>
+                  <height>160</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -1566,6 +1613,19 @@
              </item>
              <item row="5" column="0" colspan="14">
               <layout class="QGridLayout" name="gridLayout_154">
+               <item row="0" column="6">
+                <widget class="QLabel" name="label_193">
+                 <property name="frameShadow">
+                  <enum>QFrame::Sunken</enum>
+                 </property>
+                 <property name="text">
+                  <string>Results</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
                <item row="0" column="3">
                 <widget class="QLabel" name="label_179">
                  <property name="frameShadow">
@@ -1592,7 +1652,7 @@
                  </property>
                 </spacer>
                </item>
-               <item row="0" column="7">
+               <item row="0" column="9">
                 <widget class="QLineEdit" name="imageID_lineEdit_3">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -1719,7 +1779,7 @@
                  </property>
                 </spacer>
                </item>
-               <item row="0" column="6">
+               <item row="0" column="8">
                 <widget class="QLabel" name="label_142">
                  <property name="frameShadow">
                   <enum>QFrame::Sunken</enum>
@@ -1732,7 +1792,7 @@
                  </property>
                 </widget>
                </item>
-               <item row="0" column="10">
+               <item row="0" column="12">
                 <widget class="QToolButton" name="find_images_toolButton_3">
                  <property name="toolTip">
                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Find images&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -1752,7 +1812,7 @@
                  </property>
                 </widget>
                </item>
-               <item row="0" column="9">
+               <item row="0" column="11">
                 <widget class="QLabel" name="label_39">
                  <property name="text">
                   <string>Find</string>
@@ -1762,7 +1822,7 @@
                  </property>
                 </widget>
                </item>
-               <item row="0" column="8">
+               <item row="0" column="10">
                 <spacer name="horizontalSpacer_29">
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
@@ -1809,6 +1869,40 @@
                  </property>
                 </widget>
                </item>
+               <item row="0" column="7">
+                <widget class="QSpinBox" name="result_number_spinBox">
+                 <property name="minimumSize">
+                  <size>
+                   <width>50</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>100</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Maximum number of results (images)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                 </property>
+                 <property name="minimum">
+                  <number>5</number>
+                 </property>
+                 <property name="maximum">
+                  <number>1000</number>
+                 </property>
+                 <property name="singleStep">
+                  <number>5</number>
+                 </property>
+                 <property name="value">
+                  <number>10</number>
+                 </property>
+                </widget>
+               </item>
               </layout>
              </item>
              <item row="2" column="12">
@@ -1847,8 +1941,8 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>119</width>
-                  <height>151</height>
+                  <width>837</width>
+                  <height>162</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -2967,7 +3061,7 @@
                </item>
                <item row="1" column="0" colspan="6">
                 <layout class="QGridLayout" name="gridLayout_240">
-                 <item row="0" column="0">
+                 <item row="0" column="2">
                   <widget class="QLabel" name="label_189">
                    <property name="frameShadow">
                     <enum>QFrame::Sunken</enum>
@@ -2980,7 +3074,7 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="0" column="1">
+                 <item row="0" column="3">
                   <widget class="QLineEdit" name="imageID_lineEdit_2">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -2999,6 +3093,53 @@
                    </property>
                    <property name="maxLength">
                     <number>10000</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_195">
+                   <property name="frameShadow">
+                    <enum>QFrame::Sunken</enum>
+                   </property>
+                   <property name="text">
+                    <string>Results</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignCenter</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QSpinBox" name="result_number_spinBox_3">
+                   <property name="minimumSize">
+                    <size>
+                     <width>50</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>100</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                   <property name="toolTip">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Maximum number of results (images)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                   </property>
+                   <property name="minimum">
+                    <number>5</number>
+                   </property>
+                   <property name="maximum">
+                    <number>2000</number>
+                   </property>
+                   <property name="singleStep">
+                    <number>5</number>
+                   </property>
+                   <property name="value">
+                    <number>100</number>
                    </property>
                   </widget>
                  </item>
@@ -3026,8 +3167,8 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>119</width>
-                  <height>126</height>
+                  <width>837</width>
+                  <height>186</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -9139,7 +9280,7 @@ p, li { white-space: pre-wrap; }
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>842</width>
+                <width>839</width>
                 <height>413</height>
                </rect>
               </property>
@@ -12162,7 +12303,7 @@ p, li { white-space: pre-wrap; }
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>856</width>
+              <width>853</width>
               <height>265</height>
              </rect>
             </property>
@@ -14176,7 +14317,7 @@ p, li { white-space: pre-wrap; }
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>858</width>
+            <width>855</width>
             <height>430</height>
            </rect>
           </property>

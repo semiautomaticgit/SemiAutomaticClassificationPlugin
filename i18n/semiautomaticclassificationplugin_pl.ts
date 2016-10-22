@@ -776,97 +776,97 @@
 <context>
     <name>SemiAutomaticClassificationPlugin</name>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="15235"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="15376"/>
         <source>Semi-Automatic Classification Plugin</source>
         <translation>Semi-Automatic Classification Plugin</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3378"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3519"/>
         <source>Tools</source>
         <translation>Narzędzia</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3398"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3539"/>
         <source>Multiple ROI creation</source>
         <translation>Tworzenie wielu OT</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3669"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3810"/>
         <source>X</source>
         <translation>X</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3674"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3815"/>
         <source>Y</source>
         <translation>Y</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="5278"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="5419"/>
         <source>MC ID</source>
         <translation>MC ID</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="5283"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="5424"/>
         <source>MC Info</source>
         <translation>MC Info</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="5288"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="5429"/>
         <source>C ID</source>
         <translation>C ID</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="5293"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="5434"/>
         <source>C Info</source>
         <translation>C Info</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3714"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3855"/>
         <source>Rapid ROI band</source>
         <translation>Szybki kanał OT</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3649"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3790"/>
         <source> Point coordinates and ROI definition</source>
         <translation>Współrzędne punktu i określenie OT</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3606"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3747"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Create random points inside each cell of a grid with this size&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Generuj losowe punkty wewnątrz każdej komórki siatki o tej wielkości&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3461"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3602"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;Size of a grid cell within points are created randomly&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;Wielkość komórki siatki wewnątrz punktów jest tworzona losowo&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3557"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3698"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;Number of points created randomly&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;Liczba punktów generowanych losowo&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3424"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3565"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;Minimum distance between points&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;Minimalna odległość pomiędzy punktami&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3496"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3637"/>
         <source>Create random points</source>
         <translation>Generuj losowe punkty</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3876"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="4017"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add ROI spectral signatures to signature list&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Dodaj sygnatury OT do listy sygnatur&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="4386"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="4527"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select a library&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wybierz bibliotekę&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="4459"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="4600"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -879,592 +879,592 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="4370"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="4511"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select a chapter&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wybierz rozdział&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="4651"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="4792"/>
         <source>Algorithm band weight</source>
         <translation>Wagi kanałów</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="4684"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="4825"/>
         <source>Band number</source>
         <translation>Numer kanału</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13407"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13548"/>
         <source>Band name</source>
         <translation>Nazwa kanału</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="4694"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="4835"/>
         <source>Weight</source>
         <translation>Waga</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="4720"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="4861"/>
         <source>Band weight</source>
         <translation>Waga kanału</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="5137"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="5278"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set a value&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ustaw wartość&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="5048"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="5189"/>
         <source>Signature threshold</source>
         <translation>Próg sygnatur</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="5660"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="5801"/>
         <source>Automatic  thresholds</source>
         <translation>Automatyczne progi</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7891"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="8032"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Lower right Y&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Prawy dolny Y&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7861"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="8002"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Lower right X&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Prawy dolny  X&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12440"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12581"/>
         <source>+</source>
         <translation>+</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="1560"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="1607"/>
         <source> Search</source>
         <translation>Szukaj</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2790"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2884"/>
         <source>Max cloud cover (%)</source>
         <translation>Maks. pokrycie chmur (%)</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2847"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2941"/>
         <source>to</source>
         <translation>do</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2834"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2928"/>
         <source>yyyy-MM-dd</source>
         <translation>yyyy-MM-dd</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7871"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="8012"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Upper left X&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Lewy górny X&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7881"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="8022"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Upper left Y&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Lewy górny Y&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="750"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="797"/>
         <source>Landsat images</source>
         <translation>Obrazy Landsat</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3131"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3272"/>
         <source> Image list</source>
         <translation>Lista obrazów</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3160"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3301"/>
         <source>ImageID</source>
         <translation>ID obrazu</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3165"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3306"/>
         <source>AcquisitionDate</source>
         <translation>Data pozyskania</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3170"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3311"/>
         <source>CloudCover</source>
         <translation>Pokrycie chmur</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="891"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="938"/>
         <source>Path</source>
         <translation>Ścieżka</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="896"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="943"/>
         <source>Row</source>
         <translation>Wiersz</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3185"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3326"/>
         <source>min_lat</source>
         <translation>min_szer</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3190"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3331"/>
         <source>min_lon</source>
         <translation>min_dł</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3195"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3336"/>
         <source>max_lat</source>
         <translation>maks_szer</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3200"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3341"/>
         <source>max_lon</source>
         <translation>maks_dł</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3205"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3346"/>
         <source>Service</source>
         <translation>Usługa</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3210"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3351"/>
         <source>Preview</source>
         <translation>Podgląd</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2086"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2180"/>
         <source>Download options</source>
         <translation>Opcje</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2094"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2188"/>
         <source>Band 6</source>
         <translation>Kanał 6</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2131"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2225"/>
         <source>Band 4</source>
         <translation>Kanał 4</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2104"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2198"/>
         <source>Band 10</source>
         <translation>Kanał 10</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2151"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2245"/>
         <source>Band 1</source>
         <translation>Kanał 1</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2221"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2315"/>
         <source>Band 3</source>
         <translation>Kanał 3</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2231"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2325"/>
         <source>Band 9</source>
         <translation>Kanał 9</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2161"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2255"/>
         <source>Band 7</source>
         <translation>Kanał 7</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="1048"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="1095"/>
         <source>Band QA</source>
         <translation>Kanał QA</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2141"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2235"/>
         <source>Band 2</source>
         <translation>Kanał 2</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="1068"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="1115"/>
         <source>Band 8 (Panchromatic)</source>
         <translation>Kanał 8 (Panchromatyczny)</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2191"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2285"/>
         <source>Band 11</source>
         <translation>Kanał 11</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2201"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2295"/>
         <source>Band 5</source>
         <translation>Kanał 5</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="1137"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="1184"/>
         <source> Landsat 8 bands</source>
         <translation>Kanały Landsat 8</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3249"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3390"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Load images in QGIS after download&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Po pobraniu wczytaj obrazy do QGIS&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3252"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3393"/>
         <source>Load bands in QGIS</source>
         <translation>Wczytaj kanały do QGIS</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3340"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3481"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Export download links to a text file&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Eksportuj pobrane łącza do pliku tekstowego&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3262"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3403"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Download images from list only if the corresponding previews are loaded in QGIS&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pobierz tylko te obrazy, których podgląd jest wczytany do QGIS&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2339"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2433"/>
         <source> Download</source>
         <translation>Pobierz</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2456"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2550"/>
         <source>Password</source>
         <translation>Hasło</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2436"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2530"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If checked, remember user name and password locally in QGIS&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;zapamiętaj nazwę użytkownika i hasło lokalnie w QGIS&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2439"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2533"/>
         <source>remember</source>
         <translation>zapamiętaj</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2499"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2593"/>
         <source>User</source>
         <translation>Użytkownik</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2492"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2586"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;User name&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Nazwa użytkownika&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2449"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2543"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Password&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Hasło&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="1855"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="1949"/>
         <source>Sentinel images</source>
         <translation>Obrazy z Sentinel</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2007"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2101"/>
         <source>ImageName</source>
         <translation>NazwaObrazu</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2052"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2146"/>
         <source>Size</source>
         <translation>Rozmiar</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="6106"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="6247"/>
         <source>Landsat</source>
         <translation>Landsat</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="6136"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="6277"/>
         <source>Directory containing Landsat bands</source>
         <translation>Katalog zawierający kanały Landsat</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="6168"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="6309"/>
         <source> Landsat conversion to TOA reflectance and brightness temperature</source>
         <translation>Konwersja Landsat do współczynnika odbicia TOA i temperatury luminancyjnej</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7380"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="7521"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enable/Disable calculation of temperature in Celsius from thermal band&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Włącz/wyłącz wyliczanie temperatury w st. Celsjusza z kanału termalnego&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7383"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="7524"/>
         <source> Brightness temperature in Celsius</source>
         <translation>Temperatura luminancyjna w st. Celsjusza</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7303"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="7444"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enable/Disable the DOS1 atmospheric correction (thermal band is not corrected)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Włącz/Wyłącz korekcję atmosferyczną DOS1 (kanał termalny nie jest korygowany)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7306"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="7447"/>
         <source> Apply DOS1 atmospheric correction</source>
         <translation>Zastosuj korekcję atmosferyczną DOS1</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7226"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="7367"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;No data value&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wartość &quot;brak danych&quot;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7242"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="7383"/>
         <source>Use NoData value (image has black border)</source>
         <translation>Użyj wartości BrakDanych (obraz ma czarne obramowanie)</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="6272"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="6413"/>
         <source>Select MTL file (if not in Landsat directory)</source>
         <translation>Wybierz plik MTL (jeżeli nie jest w katalogu Landsat)</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="6333"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="6474"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Perform pan-sharpening (Brovey Transform)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Zastosuj metodę wyostrzania (Transformacja Brovey&apos;a)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7118"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="7259"/>
         <source>Satellite</source>
         <translation>Satelita</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7559"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="7700"/>
         <source>Sun elevation</source>
         <translation>Wysokość słońca</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7477"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="7618"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;DATE ACQUIRED&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;DATA POZYSKANIA&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="6570"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="6711"/>
         <source>Date (YYYY-MM-DD)</source>
         <translation>Data (YYYY-MM-DD)</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7507"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="7648"/>
         <source>Earth sun distance</source>
         <translation>Odlegość Ziemia-Słońce</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7569"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="7710"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;SUN ELEVATION&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;WYSOKOŚĆ SŁOŃCA&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7484"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="7625"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Earth sun distance&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Odległość Ziemi do Słońca&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7638"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="7779"/>
         <source>Metadata</source>
         <translation>Metadane</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="6649"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="6790"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Satellite (e.g. LANDSAT8)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Satelita (np. LANDSAT8)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7420"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="7561"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Edit metadata&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Edytuj metadane&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7430"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="7571"/>
         <source>Band</source>
         <translation>Kanał</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="6403"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="6544"/>
         <source>RADIANCE_MULT</source>
         <translation>RADIANCE_MULT</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="6408"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="6549"/>
         <source>RADIANCE_ADD</source>
         <translation>RADIANCE_ADD</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="6413"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="6554"/>
         <source>REFLECTANCE_MULT</source>
         <translation>REFLECTANCE_MULT</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="6418"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="6559"/>
         <source>REFLECTANCE_ADD</source>
         <translation>REFLECTANCE_ADD</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="6423"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="6564"/>
         <source>RADIANCE_MAXIMUM</source>
         <translation>RADIANCE_MAXIMUM</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="6428"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="6569"/>
         <source>REFLECTANCE_MAXIMUM</source>
         <translation>REFLECTANCE_MAXIMUM</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="6433"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="6574"/>
         <source>K1_CONSTANT</source>
         <translation>K1_CONSTANT</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="6438"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="6579"/>
         <source>K2_CONSTANT</source>
         <translation>K2_CONSTANT</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="6443"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="6584"/>
         <source>LMAX</source>
         <translation>LMAX</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="6448"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="6589"/>
         <source>LMIN</source>
         <translation>LMIN</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="6453"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="6594"/>
         <source>QCALMAX</source>
         <translation>QCALMAX</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="6458"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="6599"/>
         <source>QCALMIN</source>
         <translation>QCALMIN</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7746"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="7887"/>
         <source>Clip multiple rasters</source>
         <translation>Przytnij wiele rastrów</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13360"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13501"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select Rasters&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wybierz Rastry&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7820"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="7961"/>
         <source> Raster list</source>
         <translation>Lista rastrów</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7976"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="8117"/>
         <source> Clip coordinates</source>
         <translation> Współrzędne przycięcia</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="8019"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="8160"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Use shapefile boundaries for clipping rasters&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Użyj granic shapefile do przycięcia rastrów&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="8022"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="8163"/>
         <source>Use shapefile for clipping</source>
         <translation>Użyj shapefile do przycięcia</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="8035"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="8176"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select the shapefile for clipping&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wybierz plik shapefile do przycięcia&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="8084"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="8225"/>
         <source>NoData value</source>
         <translation>Wartość BrakDanych</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13027"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13168"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;NoData value&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wartość BrakDanych&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="8372"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="8513"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Output name prefix&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Prefiks nazwy wynikowej&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="8125"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="8266"/>
         <source>clip</source>
         <translation>clip</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="8407"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="8548"/>
         <source>Output name prefix</source>
         <translation>Prefiks nazwy wynikowej</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="8263"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="8404"/>
         <source>Split raster bands</source>
         <translation>Rozdziel kanały rastra</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="8277"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="8418"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select the image to be split&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wybierz obraz który ma zostać rozdzielony&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="8306"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="8447"/>
         <source>Raster input</source>
         <translation>Wejście rastra</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="8335"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="8476"/>
         <source>Select a multiband raster</source>
         <translation>Wybierz raster wielokanałowy</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="8375"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="8516"/>
         <source>split</source>
         <translation>split</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="9129"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="9270"/>
         <source>Accuracy</source>
         <translation>Dokładność</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="9338"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="9479"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select the field of the classification code &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wybierz pole kodu klasyfikacji&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="9325"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="9466"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select a reference shapefile&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wybierz plik shapefile odniesienia&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="9186"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="9327"/>
         <source>Select the classification to assess</source>
         <translation>Wybierz klasyfikację do oszacowania</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="9212"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="9353"/>
         <source>Select the reference shapefile or raster</source>
         <translation>Wybierz shapefile odniesienia lub raster</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="9228"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="9369"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select the classification to assess&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wybierz klasyfikację do oszacowania&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="9309"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="9450"/>
         <source>Shapefile field</source>
         <translation>Pole shapefile</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="9457"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="9598"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -1477,617 +1477,617 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="9485"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="9626"/>
         <source>Land cover change</source>
         <translation>Zmiana pokrycia terenu</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="9539"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="9680"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select the reference classification raster&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wybierz odniesienie klasyfikacji rastra&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="9562"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="9703"/>
         <source>Select the new classification</source>
         <translation>Wybierz nową klasyfikację</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="9594"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="9735"/>
         <source>Select the reference classification</source>
         <translation>Wybierz klasyfikację referencyjną</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="9610"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="9751"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select a new raster to be compared with the reference raster&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wybierz nowy raster w celu porównania z rastrem referencyjnym&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="9523"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="9664"/>
         <source>Report unchanged pixels</source>
         <translation>Zgłoś nie zmienione piksele</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="9796"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="9937"/>
         <source>Classification report</source>
         <translation>Raport klasyfikacji</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="10339"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="10480"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select the classification raster&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wybierz raster klasyfikacji&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="11849"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="11990"/>
         <source>Select the classification</source>
         <translation>Wybierz klasyfikację</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="9881"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="10022"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If checked, NoData value will be excluded from the report&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;wartość BrakDanych zostanie wyłączona z raportu&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="9884"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="10025"/>
         <source>Use NoData value</source>
         <translation>Użyj wartości BrakDanych</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="10062"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="10203"/>
         <source>Classification to vector</source>
         <translation>Klasyfikacja do wektora</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="10573"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="10714"/>
         <source>Use code from Signature list</source>
         <translation>Użyj kod z Listy sygnatur</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="10589"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="10730"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select the code field&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wybierz pole kodu&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="10293"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="10434"/>
         <source>Reclassification</source>
         <translation>Reklasyfikacja</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="10419"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="10560"/>
         <source>Calculate unique values</source>
         <translation>Wyznacz niepowtarzalne wartości</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="10475"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="10616"/>
         <source>Old value</source>
         <translation>Stare wartości</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="10480"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="10621"/>
         <source>New value</source>
         <translation>Nowe wartości</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12121"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12262"/>
         <source>Band calc</source>
         <translation>Kalkulator</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12955"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13096"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Band list&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Lista kanałów&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12983"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13124"/>
         <source>Variable</source>
         <translation>Zmienna</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12197"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12338"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Inverse cosine&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Arcus cosinus&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12200"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12341"/>
         <source>acos</source>
         <translation>arc cos</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12213"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12354"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sine&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sinus&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12216"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12357"/>
         <source>sin</source>
         <translation>sin</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12229"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12370"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Inverse sine&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Arcus sinus&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12232"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12373"/>
         <source>asin</source>
         <translation>arc sin</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12245"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12386"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Cosine&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Cosinus&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12248"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12389"/>
         <source>cos</source>
         <translation>cos</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12261"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12402"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Tangent&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Tangens&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12264"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12405"/>
         <source>tan</source>
         <translation>tan</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12277"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12418"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Inverse tangent&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Arcus tangens&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12280"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12421"/>
         <source>atan</source>
         <translation>arc tan</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12389"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12530"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Multiplication&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Mnożenie&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12392"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12533"/>
         <source>*</source>
         <translation>*</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12405"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12546"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Power&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Potęga&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12408"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12549"/>
         <source>^</source>
         <translation>^</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12421"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12562"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Minus&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Minus&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12424"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12565"/>
         <source>-</source>
         <translation>-</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12437"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12578"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Plus&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Plus&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12453"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12594"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Division&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Dzielenie&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12456"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12597"/>
         <source>/</source>
         <translation>/</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12469"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12610"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Close parenthesis&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Zamknij nawias&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12472"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12613"/>
         <source>)</source>
         <translation>)</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12485"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12626"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Square root&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pierwiastek kwadratowy&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message encoding="UTF-8">
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12488"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12629"/>
         <source>√</source>
         <translation>√</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12501"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12642"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Open parenthesis&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Otwórz nawias&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12504"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12645"/>
         <source>(</source>
         <translation>(</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12533"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12674"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Natural logarithm&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Logarytm naturalny&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12536"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12677"/>
         <source>ln</source>
         <translation>ln</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12517"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12658"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pi&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Liczba Pi&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message encoding="UTF-8">
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12520"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12661"/>
         <source>π</source>
         <translation>π</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12331"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12472"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Exponential&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Eksponent&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12334"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12475"/>
         <source>exp</source>
         <translation>exp</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12315"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12456"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Conditional where function&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Funkcja warunkowa&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13040"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13181"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If checked, pixels equal to NoData value will be excluded from the output raster&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;piksele o wartości BrakDanych zostaną wyłączone z rastra wyjściowego&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13050"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13191"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If checked, the extent of raster ouput equals the extent of selected raster&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;zasięg rastra wynikowego będzie równy zasięgowi rastra&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13053"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13194"/>
         <source>Same as</source>
         <translation>Takie jak</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13066"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13207"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select a raster&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wybierz raster&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13073"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13214"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If checked, the extent of raster ouput equals the intersection of input rasters&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;rozszerzenie wyjścia rastra będzie takie jak przecięcie wejścia rastra&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13076"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13217"/>
         <source>Intersection</source>
         <translation>Przecięcie</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13127"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13268"/>
         <source>Extent:</source>
         <translation>Zasięg:</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13176"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13317"/>
         <source>Output raster</source>
         <translation>Raster wyjściowy</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12170"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12311"/>
         <source>Expression</source>
         <translation>Wyrażenie</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13332"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13473"/>
         <source> Band list</source>
         <translation>Lista kanałów</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13215"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13356"/>
         <source>Band set</source>
         <translation>Zestaw kanałów</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13379"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13520"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Band set&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Zestaw kanałów&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13412"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13553"/>
         <source>Center wavelength</source>
         <translation>Centralna długość fali</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13417"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13558"/>
         <source>Multiplicative Factor</source>
         <translation>Mnożnik</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13422"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13563"/>
         <source>Additive Factor</source>
         <translation>Współczynnik addytywny</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13477"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13618"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sort bands by name (priority to ending number)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sortuj według nazw kanałów (priorytet dla numerów końcowych)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13714"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13855"/>
         <source>Wavelength unit</source>
         <translation>Jednostka długości fali</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13724"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13865"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wavelength unit&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Jednostka długości fali&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13448"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13589"/>
         <source> Band set definition</source>
         <translation>Definicja zestawu kanałów</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13679"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13820"/>
         <source> Quick wavelength settings</source>
         <translation>Szybkie ustawienia długości fali</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13689"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13830"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select a configuration for setting band center wavelengths&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wybierz konfigurację dla ustawień centralnej długości fali kanału&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13740"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13881"/>
         <source>Create virtual raster of band set</source>
         <translation>Twórz raster wirtualny</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13757"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13898"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Create a .tif raster stacking the bands of the band set&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Stwórz zbiorczy raster (.tif) z zestawu kanałów&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13760"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13901"/>
         <source>Create raster of band set (stack bands)</source>
         <translation>Twórz raster wielokanałowy</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13767"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13908"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Build band overviews (external pyramids) for faster visualization&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;/p&gt;Generuj kanały podglądu (piramidy zewnętrzne) w celu szybszej wizualizacji&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13770"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13911"/>
         <source>Build band overviews</source>
         <translation>Generuj kanały podglądu</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14166"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14307"/>
         <source>Settings</source>
         <translation>Ustawienia</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14184"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14325"/>
         <source>Interface</source>
         <translation>Interfejs</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14584"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14725"/>
         <source>Group name</source>
         <translation>Nazwa grupy</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14600"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14741"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Group name&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Nazwa grupy&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14603"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14744"/>
         <source>Class_temp_group</source>
         <translation>grupa_tym_klas</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14629"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14770"/>
         <source> Temporary group name</source>
         <translation>Tymczasowa nazwa grupy</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14486"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14627"/>
         <source> Variable name</source>
         <translation>Nazwa zmiennej</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14502"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14643"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Variable name for expressions&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Nazwa zmiennej do wyrażenia&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14505"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14646"/>
         <source>raster</source>
         <translation>raster</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14198"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14339"/>
         <source>C Info field</source>
         <translation>Pole C Info</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14205"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14346"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the Class information field name&lt;/p&gt;&lt;p&gt;[max 10 characters]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ustaw nazwę Pola informacji o klasyfikacji&lt;/p&gt;&lt;p&gt;[maks 10 znaków]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14241"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14382"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the Class ID field name&lt;/p&gt;&lt;p&gt;[max 10 characters]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ustaw nazwę pola ID klasyfikacji&lt;/p&gt;&lt;p&gt;[maks 10 znaków]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14251"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14392"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the Macroclass ID field name&lt;/p&gt;&lt;p&gt;[max 10 characters]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ustaw nazwę pola  ID makroklasy&lt;/p&gt;&lt;p&gt;[maks 10 znaków]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14267"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14408"/>
         <source>C ID field</source>
         <translation>Pole C ID</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14274"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14415"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the Macroclass information field name&lt;/p&gt;&lt;p&gt;[max 10 characters]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ustaw nazwę pola Informacji makroklasy&lt;/p&gt;&lt;p&gt;[maks 10 znaków]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14290"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14431"/>
         <source>MC ID field</source>
         <translation>Pole MC ID</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14303"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14444"/>
         <source>MC Info field</source>
         <translation>Pole MC Info</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14409"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14550"/>
         <source>Transparency</source>
         <translation>Przezroczystość</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14353"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14494"/>
         <source> ROI style</source>
         <translation>Styl OT</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14731"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14872"/>
         <source>Processing</source>
         <translation>Obróbka obrazu</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14739"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14880"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enable/Disable the sound when the process is finished&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Włącz/Wyłącz dźwięk po zakończeniu obróbki obrazu&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14742"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14883"/>
         <source>Play sound when finished</source>
         <translation>Odtwórz dźwięk po zakończeniu</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14755"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14896"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If checked, create virtual rasters for certain temporary files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;stwórz rastry wirtualne dla plików tymczasowych&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14758"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14899"/>
         <source>Use virtual raster for temp files</source>
         <translation>Użyj rastrów wirtualnych dla plików tym</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14788"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14929"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If checked, a lossless compression is applied to rasters in order to save disk space&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;kompresja bezstratna dla rastrów w celu zaoszczędzenia miejsca na dysku&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14791"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14932"/>
         <source>Raster compression</source>
         <translation>Kompresja rastrów</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14781"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14922"/>
         <source>Classification process</source>
         <translation>Proces klasyfikacji</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14821"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14962"/>
         <source> RAM</source>
         <translation> RAM</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14848"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14989"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set available RAM for processes&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ustaw dostępną pamięć RAM do obróbki obrazu&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14873"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="15014"/>
         <source>Available RAM (MB)</source>
         <translation>Dostępny RAM (MB)</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14886"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="15027"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Reset to default temporary directory&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Zmień folder tymczasowy na domyślny&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14948"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="15089"/>
         <source>Temporary directory</source>
         <translation>Katalog tymczasowy</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14992"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="15133"/>
         <source>Debug</source>
         <translation>Śledź błędy</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="15000"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="15141"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enable/Disable the Log of events&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Włącz/Wyłącz logowanie w pliku zdarzeń&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="15003"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="15144"/>
         <source>Record events in a Log file</source>
         <translation>Rejestruj zdarzenia w pliku</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="15016"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="15157"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Export the Log file&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Eksportuj Plik zdarzeń&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="15039"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="15180"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Clear the Log file content&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wyczyść zawartość Pliku zdarzeń&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="15078"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="15219"/>
         <source> Log file</source>
         <translation>Plik zdarzeń</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="15148"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="15289"/>
         <source> Test</source>
         <translation> Test</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="15089"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="15230"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Test dependencies&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Testuj zależności&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="15109"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="15250"/>
         <source>Test dependencies</source>
         <translation>Testuj zależności</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="15188"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="15329"/>
         <source>About</source>
         <translation>O wtyczce</translation>
     </message>
@@ -2117,17 +2117,17 @@ p, li { white-space: pre-wrap; }
         <translation>Pobieranie Landsat</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3236"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3377"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Preprocess images&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wstępna obróbka obrazów&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3239"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3380"/>
         <source>Preprocess images</source>
         <translation>Wstępna obróbka obrazów</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3265"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3406"/>
         <source>Only if preview in Layers</source>
         <translation>Tylko te z podglądem w QGIS</translation>
     </message>
@@ -2137,1267 +2137,1267 @@ p, li { white-space: pre-wrap; }
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ffffff;&quot;&gt;Pobierz (z &lt;/span&gt;&lt;a href=&quot;http://aws.amazon.com/public-data-sets/landsat&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#ffffff;&quot;&gt;Amazon Web Services&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; color:#ffffff;&quot;&gt;, &lt;/span&gt;&lt;a href=&quot;https://earthengine.google.com/datasets&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#ffffff;&quot;&gt;Google Earth Engine&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; color:#ffffff;&quot;&gt;, &lt;/span&gt;&lt;a href=&quot;http://earthexplorer.usgs.gov&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#ffffff;&quot;&gt;USGS  EarthExplorer&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; color:#ffffff;&quot;&gt;)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13891"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14032"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span &gt;Run&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span &gt;Uruchom&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="15045"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="15186"/>
         <source>Import library</source>
         <translation>Importuj bibliotekę</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2526"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2620"/>
         <source> Search area</source>
         <translation> Obszar wyszukiwania</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7940"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="8081"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set area in the map&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wybierz obszar na mapie&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2609"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2703"/>
         <source>LR X (Lon)</source>
         <translation>DP X (Lon)</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2622"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2716"/>
         <source>UL Y (Lat)</source>
         <translation>GL Y (Lat)</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2635"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2729"/>
         <source>UL X (Lon)</source>
         <translation>GL X (Lon)</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2648"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2742"/>
         <source>LR Y (Lat)</source>
         <translation>DP Y (Lat)</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7999"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="8140"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Show / hide area&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pokaż / ukryj obszar&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="8002"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="8143"/>
         <source>Show</source>
         <translation>Pokaż</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2724"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2818"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Find images&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Znajdź obrazy&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2744"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2838"/>
         <source>Find</source>
         <translation>Znajdź</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2803"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2897"/>
         <source>Satellites</source>
         <translation>Satelity</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2860"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2954"/>
         <source>Date from</source>
         <translation>Data od</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2873"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2967"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select a satellite&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wybierz satelitę&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="1793"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="1853"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Maximum cloud cover percentage&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Maksymalny procent pokrycia chmurami&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2930"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3024"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ffffff;&quot;&gt; Search&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ffffff;&quot;&gt; Szukaj&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2976"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3070"/>
         <source>Filter</source>
         <translation>Filtruj</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2998"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3092"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Filter images&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Filtruj obrazy&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13550"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13691"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Delete row&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Usuń wiersz&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14069"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14210"/>
         <source>Plot</source>
         <translation>Wykres</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3067"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3208"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Display preview of highlighted images in map&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wyświetl na mapie podgląd wybranych obrazów&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14639"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14780"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span &gt;Reset&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span &gt;Wyczyść&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="921"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="968"/>
         <source>USGScollection</source>
         <translation>kolekcja USGS</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3215"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3356"/>
         <source>collection</source>
         <translation>kolekcja</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13268"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13409"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Select all&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Wybierz wszystkie&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="1197"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="1244"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Login &lt;a href=&quot;https://ers.cr.usgs.gov&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#ffffff;&quot;&gt;https://ers.cr.usgs.gov&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Logowanie do &lt;a href=&quot;https://ers.cr.usgs.gov&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#ffffff;&quot;&gt;https://ers.cr.usgs.gov&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="1231"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="1278"/>
         <source>Sentinel-2 download </source>
         <translation>Pobieranie Sentinel-2 </translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="1412"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="1459"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Login Sentinels&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Logowanie do Sentinel&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="1471"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="1518"/>
         <source>https://scihub.copernicus.eu/s2</source>
         <translation>https://scihub.copernicus.eu/s2</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="1934"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2028"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Display overview of highlighted images in map&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wyświetl na mapie przegląd wybranych obrazów&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2012"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2106"/>
         <source>Granule</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2022"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2116"/>
         <source>Zone</source>
         <translation>Strefa</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2062"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2156"/>
         <source>GranulePreview</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2171"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2265"/>
         <source>Band 12</source>
         <translation>Kanał 12</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2181"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2275"/>
         <source>Band 8</source>
         <translation>Kanał 8</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2211"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2305"/>
         <source>Band 8A</source>
         <translation>Kanał 8A</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2280"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2374"/>
         <source> Sentinel-2 bands</source>
         <translation> Kanały Sentinel-2</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2428"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2522"/>
         <source>ASTER download</source>
         <translation>Pobieranie ASTER</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2479"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2573"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Login &lt;a href=&quot;https://urs.earthdata.nasa.gov&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#ffffff;&quot;&gt;https://urs.earthdata.nasa.gov&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Logowanie do &lt;a href=&quot;https://urs.earthdata.nasa.gov&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#ffffff;&quot;&gt;https://urs.earthdata.nasa.gov&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="2892"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="2986"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;Maximum cloud cover percentage&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;Maksymalny procent pokrycia chmurami&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3034"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3175"/>
         <source>ASTER images</source>
         <translation>Obrazy ASTER</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3175"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3316"/>
         <source>ImageDisplayID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3180"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3321"/>
         <source>DayNightFlag</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3291"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3432"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ffffff;&quot;&gt;Download (from &lt;/span&gt;&lt;a href=&quot;https://lpdaac.usgs.gov/data_access/data_pool&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#ffffff;&quot;&gt;NASA EOSDIS Land Processes DAAC&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; color:#ffffff;&quot;&gt;)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ffffff;&quot;&gt;Pobierz (z &lt;/span&gt;&lt;a href=&quot;https://lpdaac.usgs.gov/data_access/data_pool&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#ffffff;&quot;&gt;NASA EOSDIS Land Processes DAAC&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; color:#ffffff;&quot;&gt;)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3516"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3657"/>
         <source>Create points</source>
         <translation>Generuj punkty</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3529"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3670"/>
         <source>Number of points</source>
         <translation>Liczba punktów</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3576"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3717"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Create points&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Generuj punkty&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3596"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3737"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Create random points with a minimum distance&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Generuj losowe punkty w minimalnej odległości&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3599"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3740"/>
         <source>min distance</source>
         <translation>min. odległość</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3609"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3750"/>
         <source>inside grid</source>
         <translation>wewnątrz siatki</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3699"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3840"/>
         <source>Min</source>
         <translation>Min</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3704"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3845"/>
         <source>Max</source>
         <translation>Max</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3709"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3850"/>
         <source>Dist</source>
         <translation>Odl</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12853"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12994"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Add row&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Dodaj wiersz&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3785"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3926"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Export point list to text file&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Eksportuj listę punktów do pliku tekstowego&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3821"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3962"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Import point list from text file&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Importuj listę punktów z pliku tekstowego&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="4264"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="4405"/>
         <source>Calculate sig.</source>
         <translation>Oblicz sygnatury</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13986"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14127"/>
         <source> Run</source>
         <translation> Uruchom</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3947"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="4088"/>
         <source>Import signatures</source>
         <translation>Importuj sygnatury</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3965"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="4106"/>
         <source>Import library file</source>
         <translation>Importuj plik biblioteki</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3985"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="4126"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select a file: SCP file (*.scp) ; USGS library (*.asc) ; ASTER library (*.txt) ; CSV (*.csv)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wybierz: plik SCP (*.scp) ; bibliotekę USGS (*.asc) ; bibliotekę ASTER (*.txt) ; CSV (*.csv)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13248"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13389"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span &gt;Open a file&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span &gt;Otwórz plik&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="4039"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="4180"/>
         <source>Import shapefile</source>
         <translation>Importuj Shapefile</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7280"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="7421"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Open a file&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Otwórz plik&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="4085"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="4226"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select a shapefile (*.shp)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wybierz shapefile (*.shp)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="4175"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="4316"/>
         <source> Shapefile fields</source>
         <translation> Pola shapefile</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="4241"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="4382"/>
         <source>  Import shapefile</source>
         <translation>  Importuj Shapefile</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="4261"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="4402"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add ROI spectral signature to signature list&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Dodaj charakterystykę spektralną OT do listy sygnatur&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="4274"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="4415"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Import shapefile&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Importuj shapefile&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="4327"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="4468"/>
         <source>Download USGS Spectral Library</source>
         <translation>Pobierz bibliotekę spektralną USGS</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="4421"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="4562"/>
         <source>Import spectral library</source>
         <translation>Importuj bibliotekę spektralną</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="4431"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="4572"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Import spectral library&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Importuj bibliotekę spektralną&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="4479"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="4620"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;USGS Spectral Library downloaded from &lt;a href=&quot;http://speclab.cr.usgs.gov/spectral-lib.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;http://speclab.cr.usgs.gov/spectral-lib.html&lt;/span&gt;&lt;/a&gt;.&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Reference&lt;/span&gt;: R. N. Clark, G. A. Swayze, R. Wise, K. E. Livo, T. M. Hoefen, R. F. Kokaly, and S. J. Sutley, 2007, USGS Digital Spectral Library splib06a, U.S. Geological Survey, Data Series 231.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Biblioteka spektralna USGS pobrana z &lt;a href=&quot;http://speclab.cr.usgs.gov/spectral-lib.html&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;http://speclab.cr.usgs.gov/spectral-lib.html&lt;/span&gt;&lt;/a&gt;.&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Reference&lt;/span&gt;: R. N. Clark, G. A. Swayze, R. Wise, K. E. Livo, T. M. Hoefen, R. F. Kokaly, and S. J. Sutley, 2007, USGS Digital Spectral Library splib06a, U.S. Geological Survey, Data Series 231.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="4508"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="4649"/>
         <source> Library Description (requires internet connection)</source>
         <translation>Opis biblioteki (wymaga połączenia z internetem)</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="4533"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="4674"/>
         <source>Export signatures</source>
         <translation>Eksportuj sygnatury</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="4557"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="4698"/>
         <source>Export </source>
         <translation>Eksport </translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="4570"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="4711"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Export as CSV file (.csv)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Eksportuj jako plik CSV (.csv)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="4593"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="4734"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Export as SCP file (*.scp)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Eksportuj jako plik SCP (*.scp)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="4600"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="4741"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Export highlighted spectral signatures&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
 </source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Eksportuj wybrane sygnatury spektralne&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
 </translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="4621"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="4762"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select a directory where highlighted spectral signatures are saved as .csv&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wybierz folder do zapisu wybranych sygnatur spektralnych jako .csv&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="4948"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="5089"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Reset&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
 </source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Wyczyść&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="5153"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="5294"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Set&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
 </source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Ustaw&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
 </translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="4827"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="4968"/>
         <source>Set weight</source>
         <translation>Ustaw wagę</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="4885"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="5026"/>
         <source>Automatic  weight</source>
         <translation>Automatyczna waga</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="5012"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="5153"/>
         <source>MD Threshold</source>
         <translation>Próg MD</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="5017"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="5158"/>
         <source>ML Threshold</source>
         <translation>Próg ML</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="5022"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="5163"/>
         <source>SAM Threshold</source>
         <translation>Próg SAM</translation>
     </message>
     <message encoding="UTF-8">
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="5072"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="5213"/>
         <source>Set threshold = σ *</source>
         <translation>Ustaw wagę = σ *</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="5456"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="5597"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set a value that will be multiplied by standard deviation&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ustaw wagę, która będzie mnożona przez odchylenie standardowe&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message encoding="UTF-8">
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="5472"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="5613"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set automatic threshold σ&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ustaw automatyczny próg σ&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="5127"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="5268"/>
         <source>Set threshold</source>
         <translation>Ustaw próg</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="5245"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="5386"/>
         <source>LCS threshold</source>
         <translation>Próg LCS</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="5298"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="5439"/>
         <source>Color [overlap MC_ID-C_ID]</source>
         <translation>Kolor [nałożenie MC_ID-C_ID]</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="5324"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="5465"/>
         <source>LC Signature threshold</source>
         <translation>Próg sygnatury LC</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="5338"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="5479"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Add highlighted signatures to spectral signature plot&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Dodaj wybrane sygnatury do wykresu spektralnego sygnatur&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="5383"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="5524"/>
         <source>Min Max</source>
         <translation>Min Max</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="5393"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="5534"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set automatic threshold Min Max&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ustaw automatyczny próg Min Max&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message encoding="UTF-8">
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="5440"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="5581"/>
         <source>σ *</source>
         <translation>σ *</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="5523"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="5664"/>
         <source>From pixel</source>
         <translation>Z piksela</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="5533"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="5674"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Activate pointer for setting thresholds from pixel&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Aktywuj wskaźnik do wyboru progu z piksela&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="5555"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="5696"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If checked, signature threshold is extended to include pixel signature&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;próg sygnatury jest rozszerzany o sygnaturę piksela&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="5572"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="5713"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If checked, signature threshold is reduced to exclude pixel signature&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;próg sygnatury jest redukowany o sygnaturę piksela&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="5604"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="5745"/>
         <source>From ROI</source>
         <translation>Z OT</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="5614"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="5755"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set thresholds from temporary ROI&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ustaw próg z tymczasowego OT&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="5705"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="5846"/>
         <source>RGB list</source>
         <translation>Lista RGB</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="5732"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="5873"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sort RGB automatically&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Automatycznie sortuj RGB&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="5755"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="5896"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Move highlighted RGB down&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Przesuń zaznaczone RBG niżej&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="5778"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="5919"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Move highlighted RGB up&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Przesuń zaznaczone RGB wyżej&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="5828"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="5969"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Export RGB list to text file&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Eksportuj listę RGB do pliku tekstowego&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="5851"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="5992"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Import RGB list from text file&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Importuj listę RGB z pliku tekstowego&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="5963"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="6104"/>
         <source>RGB</source>
         <translation>RGB</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="5997"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="6138"/>
         <source>Automatic RGB</source>
         <translation>Automatyczne RGB</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="6025"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="6166"/>
         <source>Band combinations</source>
         <translation>Kombinacje kanałów</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="6035"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="6176"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add all combinations of bands&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Dodaj wszystkie kombinacje kanałów&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="6084"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="6225"/>
         <source>Preprocessing</source>
         <translation>Wstępna obróbka obrazów</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7239"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="7380"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ignore the NoData value in DOS1 calculation&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ignoruj wartości NoData przy korekcji DOS1&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14909"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="15050"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p  &gt;Select a directory&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p  &gt;Wybierz folder&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="6336"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="6477"/>
         <source>Perform pansharpening (Landsat 7 or 8)</source>
         <translation>Zastosuj pansharpening (Landsat 7 lub 8)</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7398"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="7539"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Create the Band set automatically and use the checked Band set tools&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Automatycznie twórz zestaw kanałów i użyj zaznaczone&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7401"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="7542"/>
         <source>Create Band set and use Band set tools</source>
         <translation>Twórz zestaw kanałów i użyj narzędzi zestawu kanałów</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="6731"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="6872"/>
         <source>Sentinel-2</source>
         <translation>Sentinel-2</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="6761"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="6902"/>
         <source>Directory containing Sentinel-2 bands</source>
         <translation>Folder zawierający kanały Sentinel-2</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="6823"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="6964"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enable/Disable the DOS1 atmospheric correction&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Włącz/wyłącz korekcję atmosferyczną DOS1&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="6904"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="7045"/>
         <source> Sentinel-2 conversion</source>
         <translation> Konwersja Sentinel-2</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="6933"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="7074"/>
         <source>Select metadata file (MTD_SAFL1C)</source>
         <translation>Wybierz plik metadanych (MTD_SAFL1C)</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7024"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="7165"/>
         <source>Quantification value</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7029"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="7170"/>
         <source>Solar irradiance</source>
         <translation>Irradiancja słoneczna</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7095"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="7236"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Satellite (e.g. Sentinel-2A)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Satelita (np. Sentinel-2A)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7216"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="7357"/>
         <source>ASTER</source>
         <translation>ASTER</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7341"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="7482"/>
         <source> ASTER conversion to TOA reflectance and brightness temperature</source>
         <translation> Konwersja ASTER do współczynnika odbicia TOA i temperatury luminancyjnej</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7370"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="7511"/>
         <source>Select file ASTER L1T (.hdf)</source>
         <translation>Wybierz plik ASTER L1T (.hdf)</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7435"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="7576"/>
         <source>UnitConversionCoeff</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7440"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="7581"/>
         <source>PixelSize</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7533"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="7674"/>
         <source>Date (YYYYMMDD)</source>
         <translation>Data (YYYYMMDD)</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7576"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="7717"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Upper left (meters)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Lewy górny [m]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7599"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="7740"/>
         <source>UTM zone</source>
         <translation>Strefa UTM</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7609"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="7750"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;UTM zone&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Strefa UTM&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7661"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="7802"/>
         <source>UPPERLEFTM</source>
         <translation>Lewa-góra [m]</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13225"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13366"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Refresh list&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Odśwież listę&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7904"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="8045"/>
         <source>UL Y</source>
         <translation>GL Y</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7917"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="8058"/>
         <source>LR X</source>
         <translation>DP X</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7930"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="8071"/>
         <source>LR Y</source>
         <translation>DP Y</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="7989"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="8130"/>
         <source>UL X</source>
         <translation>GL X</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="8065"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="8206"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Use temporary ROI boundaries for clipping rasters&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Użyj tymczasowego OT do przycięcia rastrów&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="8068"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="8209"/>
         <source>Use temporary ROI for clipping</source>
         <translation>Użyj tymczasowego OT do przycięcia</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="8503"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="8644"/>
         <source>PCA</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="9817"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="9958"/>
         <source>Input</source>
         <translation>Dane</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="8543"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="8684"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If checked, calculate this number of components only&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;oblicz tylko liczbę składowych&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="8546"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="8687"/>
         <source>Number of components</source>
         <translation>Liczba składowych</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="8553"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="8694"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Number of components&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Liczba składowych&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="8579"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="8720"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If checked, NoData value will be ignored during the calculation&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;wartość BrakDanych będzie ignorowana w obliczeniach&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="8699"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="8840"/>
         <source> Principal Components Analysis of Band set</source>
         <translation> Analiza głównych składowych (Principal Components Analysis)</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="10022"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="10163"/>
         <source>Output</source>
         <translation>Wynik</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="8760"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="8901"/>
         <source>Vector to raster</source>
         <translation>Wektor na raster</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="8790"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="8931"/>
         <source>Select the vector</source>
         <translation>Wybierz wektor</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="11051"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="11192"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select the vector&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wybierz wektor&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="11008"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="11149"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Use the value field of the vector&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Użyj pola warstwy wektorowej&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="11011"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="11152"/>
         <source>Use the value field of the vector</source>
         <translation>Użyj pola warstwy wektorowej</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="11024"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="11165"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select the value field&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wybierz pole&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="10844"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="10985"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Use constant value&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Użyj stałej wartości&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="10847"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="10988"/>
         <source>Use constant value</source>
         <translation>Użyj stałej wartości</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="10857"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="10998"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Value&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wartość&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="8922"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="9063"/>
         <source>Select the type of conversion</source>
         <translation>Wybierz typ konwersji</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="8938"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="9079"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select the type of conversion&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wybierz typ konwersji&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="8971"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="9112"/>
         <source>Select the reference raster</source>
         <translation>Wybierz raster referencyjny</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="9010"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="9151"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select the reference raster&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wybierz raster referencyjny&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="9109"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="9250"/>
         <source>Postprocessing</source>
         <translation>Końcowa obróbka obrazów</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="9520"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="9661"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;If enabled, pixels having the same values in both classifications will be reported; if not enabled, 0 value is set for unchanged pixels&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;piksel zachowa wartość, gdy nie uległa ona zmianie (przy wyłączonej opcji, niezmienionym pikselom przypisana zostanie wartość 0)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="10570"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="10711"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Use the codes from Signature list table for vector symbology&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Użyj kodów z listy sygnatur do wektora&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="10598"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="10739"/>
         <source>C_ID</source>
         <translation>C_ID</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="10593"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="10734"/>
         <source>MC_ID</source>
         <translation>MC_ID</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="10628"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="10769"/>
         <source> Symbology</source>
         <translation>Stylizacja</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="10373"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="10514"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Calculate unique values&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wyznacz wartości unikalne&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="10393"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="10534"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enable this for reclassification from C ID to MC ID; if checked, unique values are calculated from the Signature list, setting old value C ID and new value MC ID&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Mapuje klasy C ID na MC ID; oblicza unikalne wartości z listy sygnatur, pozostawiając stare C ID i przypisując nowe wartości MC ID&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="10396"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="10537"/>
         <source>calculate C ID to MC ID values</source>
         <translation>reklasyfikuj C ID na MC ID</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="10451"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="10592"/>
         <source> Values</source>
         <translation> Wartości</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="10710"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="10851"/>
         <source>Edit raster</source>
         <translation>Edycja rastra</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="10721"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="10862"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Undo edit (only for ROI polygons)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Cofnij edycję (tylko dla poligonów OT)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="10794"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="10935"/>
         <source>Select the input raster</source>
         <translation>Wybierz raster źródłowy</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="10810"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="10951"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select the raster to edit&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wybierz raster do edycji&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="10887"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="11028"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Use expression&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Użyj wyrażenia&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="10890"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="11031"/>
         <source>Use expression</source>
         <translation>Użyj wyrażenia</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="10915"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="11056"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter expression&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wprowadź wyrażenie&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="10918"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="11059"/>
         <source>where(raster == 1, 2, raster)</source>
         <translation>where(raster == 1, 2, raster)</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="10997"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="11138"/>
         <source> Edit raster values</source>
         <translation> Edytuj wartości rastra</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="11035"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="11176"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Edit values using a vector&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Edytuj wartości używając wektora&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="11038"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="11179"/>
         <source> Edit values using a vector</source>
         <translation> Edytuj wartości używając wektora</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="11085"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="11226"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Edit values using temporary ROIs&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Edytuj wartości używając tymczasowych OT&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="11088"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="11229"/>
         <source> Edit values using ROI polygons</source>
         <translation> Edytuj wartości używając poligonów OT</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="11118"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="11259"/>
         <source> Edit options</source>
         <translation> Opcje edycji</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="11134"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="11275"/>
         <source>Classification sieve</source>
         <translation type="unfinished">Klas. (sieve)</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="11865"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12006"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select the classification&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wybierz klasyfikację&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="11287"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="11428"/>
         <source>Size threshold</source>
         <translation>Próg wielkości</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="11297"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="11438"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Size threshold in pixels&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Próg wielkośći [px]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="11982"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12123"/>
         <source>Pixel connection</source>
         <translation>Połączeń pikseli</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12004"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12145"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pixel connection&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Połączeń pikseli&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12008"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12149"/>
         <source>4</source>
         <translation>4</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12013"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12154"/>
         <source>8</source>
         <translation>8</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="11419"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="11560"/>
         <source>Classification erosion</source>
         <translation type="unfinished">Klas. (erosion)</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="11921"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12062"/>
         <source>Size in pixels</source>
         <translation>Rozmiar [px]</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="11931"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12072"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Size in pixels&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Rozmiar w pikselach&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12041"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12182"/>
         <source>Class values</source>
         <translation>Wartości klas</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12069"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12210"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter class values separated by , or -&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wprowadź wartości klas oddzielone , lub -&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="11768"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="11909"/>
         <source>Classification dilation</source>
         <translation type="unfinished">Klas. (dilation)</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12297"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12438"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;NoData value of raster (e.g.  nodata(&amp;quot;raster1&amp;quot;) )&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wartość BrakDanych dla rastra (np.  nodata(&amp;quot;raster1&amp;quot;) )&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12300"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12441"/>
         <source>nodata</source>
         <translation>nodata</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12318"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12459"/>
         <source>where</source>
         <translation>where</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12351"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12492"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Not equals&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Różne od&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12354"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12495"/>
         <source>!=</source>
         <translation>!=</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12367"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12508"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Equals&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Równe&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12370"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12511"/>
         <source>==</source>
         <translation>==</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12549"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12690"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Greater than&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Większe niż&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12552"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12693"/>
         <source>&gt;</source>
         <translation>&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12565"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12706"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Less than&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Mniejsze niż&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12568"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12709"/>
         <source>&lt;</source>
         <translation>&lt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12630"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12771"/>
         <source>Index calculation</source>
         <translation>Obliczenie wskaźników</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12587"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12728"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select an index&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wybierz wskaźnik&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12677"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12818"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter an expression (e.g. &amp;quot;raster1&amp;quot; + &amp;quot;raster2&amp;quot; )&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wprowadź wyrażenie (np. &amp;quot;raster1&amp;quot; + &amp;quot;raster2&amp;quot; )&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12698"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12839"/>
         <source>Decision rules</source>
         <translation>Reguły</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12711"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12852"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter one or more rules separated by semicolon (e.g. &amp;quot;raster1&amp;quot; &amp;gt; 0; &amp;quot;raster2&amp;quot; &amp;gt; 0 )&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wprowadź jedną lub więcej reguł, oddzielonych średnikami (np. &amp;quot;raster1&amp;quot; &amp;gt; 0; &amp;quot;raster2&amp;quot; &amp;gt; 0 )&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12718"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12859"/>
         <source>Value</source>
         <translation>Wartości</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12723"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12864"/>
         <source>Rule</source>
         <translation>Reguła</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12771"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12912"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Move highlighted rule up&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Przesuń zaznaczone reguły wyżej&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12794"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="12935"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Import rules from text file&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Importuj reguły z pliku tekstowego&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12876"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13017"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Export rules to text file&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Eksportuj reguły do pliku tekstowego&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="12912"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13053"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Move highlighted rule down&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Przesuń zaznaczone reguły niżej&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13043"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13184"/>
         <source>Set NoData value</source>
         <translation>Użyj wartości BrakDanych</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13291"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13432"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add band to Band set&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Dodaj kanał do zestawu kanałów&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13500"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13641"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Move highlighted band down&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Przesuń zaznaczone kanały niżej&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13523"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13664"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Move highlighted band up&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Przesuń zaznaczone kanały wyżej&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13586"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13727"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Export band set to text file&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Eksportuj zestaw kanałów do pliku tekstowego&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13632"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13773"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Import band set from text file&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Importuj zestaw kanałów z pliku tekstowego&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13737"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13878"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Create a virtual raster of band set&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Twórz wirtualny raster&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13747"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13888"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Calculate expression in Band calc&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Oblicz wyrażenie z kalkulatora kanałów&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13750"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13891"/>
         <source>Band calc expressions</source>
         <translation>Wyrażenie kalkulatora</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13793"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13934"/>
         <source> Band set tools</source>
         <translation>Narzędzia zestawu kanałów</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14016"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14157"/>
         <source>Batch</source>
         <translation>Tryb wsadowy</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13874"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14015"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter a batch function&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wprowadź funkcję&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13935"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14076"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select a function&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wybierz funkcję&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13958"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14099"/>
         <source>Functions</source>
         <translation>Funkcje</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14027"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14168"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Import batch from text file&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Importuj plik wsadowy z pliku tekstowego&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14063"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14204"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Export batch to text file&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Eksportuj plik wsadowy do pliku tekstowego&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14231"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14372"/>
         <source> Field names of training input</source>
         <translation> Nazwy pól dla obszarów treningowych (OT)</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14365"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14506"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select temporary ROI color&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wybierz kolor OT&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14387"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14528"/>
         <source>ROI color</source>
         <translation>Kolor</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14416"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14557"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Change temporary ROI transparency&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Zmień przezroczystość OT&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14531"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14672"/>
         <source> Variable name for expressions (tab Reclassification and Edit raster)</source>
         <translation> Nazwa zmiennej do wyrażenia (zakładka Reklasyfikacja i Edycja rastra)</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14682"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14823"/>
         <source> Dock</source>
         <translation> Panel</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14692"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14833"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If checked, news about the SCP are downloaded on startup and displayed in Dock&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Aktualności o wtyczce są pobierane przy uruchomieniu i wyświetlane w panelu&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="14695"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="14836"/>
         <source>Download news on startup</source>
         <translation>Wczytaj aktualności przy uruchamianiu</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="15258"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="15399"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -3443,8 +3443,18 @@ Polish: Jakub Pękala, Robert Szczepanek&lt;/p&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with Semi-Automatic Classification Plugin. If not, see &amp;lt;&lt;/span&gt;&lt;a href=&quot;http://www.gnu.org/licenses/&quot;&gt;&lt;span style=&quot; font-size:8pt; text-decoration: underline; color:#0000ff;&quot;&gt;http://www.gnu.org/licenses/&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;&amp;gt;.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="13196"/>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="13337"/>
         <source>Align</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3105"/>
+        <source>Results</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3127"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Maximum number of results (images)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3734,7 +3744,7 @@ Polish: Jakub Pękala, Robert Szczepanek&lt;/p&gt;
         <translation>Wybierz plik z listą sygnatur</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="672"/>
+        <location filename="downloadsentinelimages.py" line="673"/>
         <source>Reset signature list</source>
         <translation>Wyczyść listę sygnatur</translation>
     </message>
@@ -4309,12 +4319,12 @@ Polish: Jakub Pękala, Robert Szczepanek&lt;/p&gt;
         <translation>Eksportuj pobrane łącza</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="588"/>
+        <location filename="downloadsentinelimages.py" line="589"/>
         <source>Searching ...</source>
         <translation>Wyszukiwanie...</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="672"/>
+        <location filename="downloadsentinelimages.py" line="673"/>
         <source>Are you sure you want to clear the table?</source>
         <translation>Czy na pewno oczyścić tabelę?</translation>
     </message>

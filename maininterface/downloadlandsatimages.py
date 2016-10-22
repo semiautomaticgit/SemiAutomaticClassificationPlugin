@@ -162,6 +162,7 @@ class DownloadLandsatImages:
 		dateFrom = QdateFrom.toPyDate().strftime("%Y-%m-%d") 
 		dateTo = QdateTo.toPyDate().strftime("%Y-%m-%d") 
 		maxCloudCover = int(cfg.ui.cloud_cover_spinBox.value())
+		resultNum = int(cfg.ui.result_number_spinBox_2.value())
 		sat = cfg.ui.landsat_satellite_combo.currentText()
 		if sat == cfg.usgsLandsat8:
 			NASAcollection = cfg.NASALandsat8Collection
@@ -198,7 +199,7 @@ class DownloadLandsatImages:
 			cfg.uiUtls.updateBar(30, cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Searching ..."))
 			# cloud cover returns 0 results
 			# without cloud cover
-			searchUrl = 'https://cmr.earthdata.nasa.gov/search/granules.echo10?bounding_box=' + cfg.ui.UX_lineEdit_3.text() + '%2C' + cfg.ui.LY_lineEdit_3.text() + '%2C' + cfg.ui.LX_lineEdit_3.text() + '%2C' + cfg.ui.UY_lineEdit_3.text() + '&echo_collection_id=' + NASAcollection + '&temporal=' + dateFrom + '%2C' + dateTo + 'T23%3A59%3A59.000Z&sort_key%5B%5D=-start_date&page_size=100&pretty=true'
+			searchUrl = 'https://cmr.earthdata.nasa.gov/search/granules.echo10?bounding_box=' + cfg.ui.UX_lineEdit_3.text() + '%2C' + cfg.ui.LY_lineEdit_3.text() + '%2C' + cfg.ui.LX_lineEdit_3.text() + '%2C' + cfg.ui.UY_lineEdit_3.text() + '&echo_collection_id=' + NASAcollection + '&temporal=' + dateFrom + '%2C' + dateTo + 'T23%3A59%3A59.000Z&sort_key%5B%5D=-start_date&page_size=' + str(resultNum) + '&pretty=true'
 			# connect and search
 			searchResult = cfg.utls.NASASearch(searchUrl)
 			xmlFile = searchResult.read()

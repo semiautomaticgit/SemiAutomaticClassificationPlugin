@@ -161,6 +161,7 @@ class DownloadASTERImages:
 		dateFrom = QdateFrom.toPyDate().strftime("%Y-%m-%d") 
 		dateTo = QdateTo.toPyDate().strftime("%Y-%m-%d") 
 		maxCloudCover = int(cfg.ui.cloud_cover_spinBox_3.value())
+		resultNum = int(cfg.ui.result_number_spinBox_3.value())
 		sat = cfg.ui.astert_satellite_combo.currentText()
 		if sat == cfg.usgsASTER:
 			NASAcollection = cfg.NASAASTERCollection
@@ -186,7 +187,7 @@ class DownloadASTERImages:
 			tW = cfg.ui.aster_images_tableWidget
 			tW.setSortingEnabled(False)
 			cfg.uiUtls.updateBar(30, cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Searching ..."))
-			searchUrl = 'https://cmr.earthdata.nasa.gov/search/granules.echo10?bounding_box=' + cfg.ui.UX_lineEdit_4.text() + '%2C' + cfg.ui.LY_lineEdit_4.text() + '%2C' + cfg.ui.LX_lineEdit_4.text() + '%2C' + cfg.ui.UY_lineEdit_4.text() + '&echo_collection_id=' + NASAcollection + '&temporal=' + dateFrom + '%2C' + dateTo + 'T23%3A59%3A59.000Z&cloud_cover=0,' + str(maxCloudCover) + '&sort_key%5B%5D=-start_date&page_size=100&pretty=true'
+			searchUrl = 'https://cmr.earthdata.nasa.gov/search/granules.echo10?bounding_box=' + cfg.ui.UX_lineEdit_4.text() + '%2C' + cfg.ui.LY_lineEdit_4.text() + '%2C' + cfg.ui.LX_lineEdit_4.text() + '%2C' + cfg.ui.UY_lineEdit_4.text() + '&echo_collection_id=' + NASAcollection + '&temporal=' + dateFrom + '%2C' + dateTo + 'T23%3A59%3A59.000Z&cloud_cover=0,' + str(maxCloudCover) + '&sort_key%5B%5D=-start_date&page_size=' + str(resultNum) + '&pretty=true'
 			# connect and search
 			searchResult = cfg.utls.NASASearch(searchUrl)
 			xmlFile = searchResult.read()
