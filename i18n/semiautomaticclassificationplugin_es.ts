@@ -3633,7 +3633,7 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>semiautomaticclassificationplugin</name>
     <message>
-        <location filename="semiautomaticclassificationplugin.py" line="1409"/>
+        <location filename="semiautomaticclassificationplugin.py" line="1410"/>
         <source>Please, restart QGIS for executing the Semi-Automatic Classification Plugin</source>
         <translation>Por favor, reinicia QGIS para ejecutar el Semi-Automatic Classification Plugin</translation>
     </message>
@@ -4600,7 +4600,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation>Guardar salida</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="589"/>
+        <location filename="downloadsentinelimages.py" line="588"/>
         <source>Searching ...</source>
         <translation>Buscando ...</translation>
     </message>
@@ -4615,12 +4615,12 @@ Do you want to add the required fields to this shapefile?</source>
         <translation>Exportar enlaces de descarga</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="673"/>
+        <location filename="downloadsentinelimages.py" line="671"/>
         <source>Reset signature list</source>
         <translation>Restaurar lista de firmas</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="673"/>
+        <location filename="downloadsentinelimages.py" line="671"/>
         <source>Are you sure you want to clear the table?</source>
         <translation>¿Estás seguro que quieres borrar la tabla?</translation>
     </message>

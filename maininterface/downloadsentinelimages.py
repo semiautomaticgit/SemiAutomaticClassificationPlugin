@@ -551,7 +551,6 @@ class DownloadSentinelImages:
 			cfg.mx.msg23()
 			return "No"
 		cfg.uiUtls.addProgressBar()
-		cfg.cnvs.setRenderFlag(False)
 		tW = cfg.ui.sentinel_images_tableWidget
 		cfg.uiUtls.updateBar(30, cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Searching ..."))
 		cfg.QtGuiSCP.qApp.processEvents()
@@ -660,8 +659,7 @@ class DownloadSentinelImages:
 					except Exception, err:
 						# logger
 						cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-		tW.setSortingEnabled(True)
-		cfg.cnvs.setRenderFlag(True)				
+		tW.setSortingEnabled(True)		
 		cfg.uiUtls.removeProgressBar()
 		self.clearCanvasPoly()
 		# logger

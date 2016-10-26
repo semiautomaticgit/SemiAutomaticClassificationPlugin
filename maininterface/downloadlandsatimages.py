@@ -193,7 +193,6 @@ class DownloadLandsatImages:
 		try:
 			cfg.uiUtls.addProgressBar()
 			cfg.QtGuiSCP.qApp.processEvents()
-			cfg.cnvs.setRenderFlag(False)
 			tW = cfg.ui.landsat_images_tableWidget
 			tW.setSortingEnabled(False)
 			cfg.uiUtls.updateBar(30, cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Searching ..."))
@@ -276,8 +275,7 @@ class DownloadLandsatImages:
 					cfg.utls.addTableItem(tW, USGScollection, c, 9)
 					cfg.utls.addTableItem(tW, imID[7], c, 10)
 					cfg.utls.addTableItem(tW, NASAcollection, c, 11)
-			tW.setSortingEnabled(True)
-			cfg.cnvs.setRenderFlag(True)				
+			tW.setSortingEnabled(True)		
 			cfg.uiUtls.removeProgressBar()
 			self.clearCanvasPoly()
 			# logger

@@ -3622,7 +3622,7 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>semiautomaticclassificationplugin</name>
     <message>
-        <location filename="semiautomaticclassificationplugin.py" line="1409"/>
+        <location filename="semiautomaticclassificationplugin.py" line="1410"/>
         <source>Please, restart QGIS for executing the Semi-Automatic Classification Plugin</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4619,7 +4619,7 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="589"/>
+        <location filename="downloadsentinelimages.py" line="588"/>
         <source>Searching ...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4634,12 +4634,12 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="673"/>
+        <location filename="downloadsentinelimages.py" line="671"/>
         <source>Reset signature list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="673"/>
+        <location filename="downloadsentinelimages.py" line="671"/>
         <source>Are you sure you want to clear the table?</source>
         <translation type="unfinished"></translation>
     </message>

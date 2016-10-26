@@ -1399,6 +1399,7 @@ class SemiAutomaticClassificationPlugin:
 			qgisUtils.iface.removeDockWidget(cfg.dockclassdlg)
 			del cfg.toolBar
 			del cfg.toolBar2
+			del cfg.toolBar3
 			cfg.menu.deleteLater()
 			# remove temp files
 			if cfg.tmpDir is not None and cfg.QDirSCP(cfg.tmpDir).exists():

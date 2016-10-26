@@ -104,4 +104,5 @@ class Ui_Utils:
 		# toolbar
 		cfg.toolBar.setEnabled(state)
 		cfg.toolBar2.setEnabled(state)
+		cfg.toolBar3.setEnabled(state)
 		
