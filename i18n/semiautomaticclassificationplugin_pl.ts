@@ -3744,7 +3744,7 @@ Polish: Jakub Pękala, Robert Szczepanek&lt;/p&gt;
         <translation>Wybierz plik z listą sygnatur</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="671"/>
+        <location filename="downloadsentinelimages.py" line="673"/>
         <source>Reset signature list</source>
         <translation>Wyczyść listę sygnatur</translation>
     </message>
@@ -4069,7 +4069,7 @@ Polish: Jakub Pękala, Robert Szczepanek&lt;/p&gt;
         <translation>Nie można połączyć. Sprawdź nazwę użytkownika i hasło</translation>
     </message>
     <message>
-        <location filename="messages.py" line="379"/>
+        <location filename="messages.py" line="382"/>
         <source>Warning</source>
         <translation>Uwaga</translation>
     </message>
@@ -4319,12 +4319,12 @@ Polish: Jakub Pękala, Robert Szczepanek&lt;/p&gt;
         <translation>Eksportuj pobrane łącza</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="588"/>
+        <location filename="downloadsentinelimages.py" line="590"/>
         <source>Searching ...</source>
         <translation>Wyszukiwanie...</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="671"/>
+        <location filename="downloadsentinelimages.py" line="673"/>
         <source>Are you sure you want to clear the table?</source>
         <translation>Czy na pewno oczyścić tabelę?</translation>
     </message>
@@ -5109,6 +5109,11 @@ Possible reason: input is a virtual raster or band is not loaded</source>
     <message>
         <location filename="messages.py" line="314"/>
         <source>Rasters appear to be in different projections. Reproject rasters to the same CRS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="messages.py" line="382"/>
+        <source>Search error HTTP Status 500, reduce the result number</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

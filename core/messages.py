@@ -378,3 +378,6 @@ class Messages:
 	def msgWar23(self, image):
 		self.msgBarWarning(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [23]", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Check integrity of image " + image))
 		
+	def msgWar24(self):
+		self.msgBarWarning(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [24]", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Search error HTTP Status 500, reduce the result number"))
+		

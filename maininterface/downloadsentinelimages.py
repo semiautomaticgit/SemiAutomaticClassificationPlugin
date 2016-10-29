@@ -560,105 +560,107 @@ class DownloadSentinelImages:
 		# check url
 		topLevelUrl = cfg.ui.sentinel_service_lineEdit.text()
 		topUrl =topLevelUrl
-		# response = cfg.utls.passwordConnect(user, password, topUrl + '/search?q=', topLevelUrl, None, None, "Yes")
-		# if response == "No":
-			# cfg.mx.msgErr40()
-			# # logger
-			# cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " error connection " + topUrl)
-		url = topUrl + '/search?q=' + imgQuery + '%20AND%20cloudcoverpercentage:[0%20TO%20' + str(maxCloudCover) + ']%20AND%20beginPosition:[' + str(dateFrom) + 'T00:00:00.000Z%20TO%20' + str(dateTo) + 'T23:59:59.999Z]%20AND%20footprint:"Intersects(POLYGON((' + cfg.ui.UX_lineEdit_5.text() + "%20" + cfg.ui.UY_lineEdit_5.text() + "," + cfg.ui.UX_lineEdit_5.text() + "%20" + cfg.ui.LY_lineEdit_5.text() + "," + cfg.ui.LX_lineEdit_5.text() + "%20" + cfg.ui.LY_lineEdit_5.text() + "," + cfg.ui.LX_lineEdit_5.text() + "%20" + cfg.ui.UY_lineEdit_5.text() + "," + cfg.ui.UX_lineEdit_5.text() + "%20" + cfg.ui.UY_lineEdit_5.text() + ')))%22' + '&rows=' + str(resultNum) + '&start=0'
-		response = cfg.utls.passwordConnect(user, password, url, topLevelUrl)
-		if response == "No":
-			cfg.uiUtls.removeProgressBar()
-			return "No"
-		#info = response.info()
-		xml = response	
-		tW.setSortingEnabled(False)
-		try:
-			doc = cfg.minidomSCP.parseString(xml)
-		except Exception, err:
-			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-			cfg.uiUtls.removeProgressBar()
-			return "No"
-		entries = doc.getElementsByTagName("entry")
-		e = 0
-		for entry in entries:
-			if cfg.actionCheck == "Yes":
-				e = e + 1
-				cfg.uiUtls.updateBar(30 + e * int(70/len(entries)), cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Searching ..."))
-				imgNameTag = entry.getElementsByTagName("title")[0]
-				imgName = imgNameTag.firstChild.data
-				imgIDTag = entry.getElementsByTagName("id")[0]
-				imgID = imgIDTag.firstChild.data
-				summary = entry.getElementsByTagName("summary")[0]
-				infos = summary.firstChild.data.split(',')
-				for info in infos:
-					infoIt = info.strip().split(' ')
-					if infoIt[0] == "Date:":
-						acqDateI = infoIt[1]
-					# if infoIt[0] == "Satellite:":
-						# print "Satellite " + infoIt[1]
-					if infoIt[0] == "Size:":
-						size = infoIt[1] + " " + infoIt[2]
-				strings = entry.getElementsByTagName("str")
-				for x in strings:
-					attr = x.getAttribute("name")
-					if attr == "footprint":
-						footprintCoord = x.firstChild.data.replace('POLYGON ((', "").replace('))', "").split(',')
-						xList = []
-						yList = []
-						for coords in footprintCoord:
-							xList.append(float(coords.split(' ')[0]))
-							yList.append(float(coords.split(' ')[1]))
-						min_lon = min(xList)
-						max_lon = max(xList)
-						min_lat = min(yList)
-						max_lat = max(yList)
-				doubles = entry.getElementsByTagName("double")
-				for xd in doubles:
-					attr = xd.getAttribute("name")
-					if attr == "cloudcoverpercentage":
-						cloudcoverpercentage = xd.firstChild.data
-				url2 = topUrl + "/odata/v1/Products('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('" + imgName.replace('_PRD_MSIL1C_', '_MTD_SAFL1C_') + ".xml')/$value"
+		# loop for results
+		maxResultNum = resultNum
+		if maxResultNum > 100:
+			maxResultNum = 100
+		for startR in range(0, resultNum, maxResultNum):
+			url = topUrl + '/search?q=' + imgQuery + '%20AND%20cloudcoverpercentage:[0%20TO%20' + str(maxCloudCover) + ']%20AND%20beginPosition:[' + str(dateFrom) + 'T00:00:00.000Z%20TO%20' + str(dateTo) + 'T23:59:59.999Z]%20AND%20footprint:"Intersects(POLYGON((' + cfg.ui.UX_lineEdit_5.text() + "%20" + cfg.ui.UY_lineEdit_5.text() + "," + cfg.ui.UX_lineEdit_5.text() + "%20" + cfg.ui.LY_lineEdit_5.text() + "," + cfg.ui.LX_lineEdit_5.text() + "%20" + cfg.ui.LY_lineEdit_5.text() + "," + cfg.ui.LX_lineEdit_5.text() + "%20" + cfg.ui.UY_lineEdit_5.text() + "," + cfg.ui.UX_lineEdit_5.text() + "%20" + cfg.ui.UY_lineEdit_5.text() + ')))%22' + '&rows=' + str(maxResultNum) + '&start=' + str(startR)
+			response = cfg.utls.passwordConnect(user, password, url, topLevelUrl)
+			if response == "No":
+				cfg.uiUtls.removeProgressBar()
+				return "No"
+			#info = response.info()
+			xml = response	
+			tW.setSortingEnabled(False)
+			try:
+				doc = cfg.minidomSCP.parseString(xml)
+			except Exception, err:
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				if "HTTP Status 500" in xml:
+					cfg.mx.msgWar24()
+				cfg.uiUtls.removeProgressBar()
+				return "No"
+			entries = doc.getElementsByTagName("entry")
+			e = 0
+			for entry in entries:
 				if cfg.actionCheck == "Yes":
-					response2 = cfg.utls.passwordConnect(user, password, url2, topLevelUrl)
-					if response2 == "No":
-						cfg.uiUtls.removeProgressBar()
-						return "No"
-					xml2 = response2
-					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " thumbnail downloaded" + xml2)
-					try:
-						doc2 = cfg.minidomSCP.parseString(xml2)
-						entries2 = doc2.getElementsByTagName("Granules")
-						for entry2 in entries2:
-							if cfg.actionCheck == "Yes":
-								imgName2 = entry2.attributes["granuleIdentifier"].value
-								for filter in imageFindList:
-									if filter in imgName.lower() or filter in imgName2.lower():
-										acZoneI = imgName2[-12:-7]
-										# add item to table
-										c = tW.rowCount()
-										# add list items to table
-										tW.setRowCount(c + 1)
-										imgPreview = topUrl + "/odata/v1/Products('" +  imgID + "')/Products('Quicklook')/$value"
-										imgPreview2 = topUrl + "/odata/v1/Products('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('IMG_DATA')/Nodes('" + imgName2[0:-7] + "_B01.jp2')/$value"
-										cfg.utls.addTableItem(tW, imgName, c, 0)
-										cfg.utls.addTableItem(tW, imgName2, c, 1)
-										cfg.utls.addTableItem(tW, acqDateI, c, 2)
-										cfg.utls.addTableItem(tW, acZoneI, c, 3)
-										cfg.utls.addTableItem(tW, float(cloudcoverpercentage), c, 4)
-										cfg.utls.addTableItem(tW, float(min_lat), c, 5)
-										cfg.utls.addTableItem(tW, float(min_lon), c, 6)
-										cfg.utls.addTableItem(tW, float(max_lat), c, 7)
-										cfg.utls.addTableItem(tW, float(max_lon), c, 8)
-										cfg.utls.addTableItem(tW, size, c, 9)
-										cfg.utls.addTableItem(tW, imgPreview, c, 10)
-										cfg.utls.addTableItem(tW, imgPreview2, c, 11)
-										cfg.utls.addTableItem(tW, imgID, c, 12)
-					except Exception, err:
+					e = e + 1
+					cfg.uiUtls.updateBar(30 + e * int(70/len(entries)), cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Searching ..."))
+					imgNameTag = entry.getElementsByTagName("title")[0]
+					imgName = imgNameTag.firstChild.data
+					imgIDTag = entry.getElementsByTagName("id")[0]
+					imgID = imgIDTag.firstChild.data
+					summary = entry.getElementsByTagName("summary")[0]
+					infos = summary.firstChild.data.split(',')
+					for info in infos:
+						infoIt = info.strip().split(' ')
+						if infoIt[0] == "Date:":
+							acqDateI = infoIt[1]
+						# if infoIt[0] == "Satellite:":
+							# print "Satellite " + infoIt[1]
+						if infoIt[0] == "Size:":
+							size = infoIt[1] + " " + infoIt[2]
+					strings = entry.getElementsByTagName("str")
+					for x in strings:
+						attr = x.getAttribute("name")
+						if attr == "footprint":
+							footprintCoord = x.firstChild.data.replace('POLYGON ((', "").replace('))', "").split(',')
+							xList = []
+							yList = []
+							for coords in footprintCoord:
+								xList.append(float(coords.split(' ')[0]))
+								yList.append(float(coords.split(' ')[1]))
+							min_lon = min(xList)
+							max_lon = max(xList)
+							min_lat = min(yList)
+							max_lat = max(yList)
+					doubles = entry.getElementsByTagName("double")
+					for xd in doubles:
+						attr = xd.getAttribute("name")
+						if attr == "cloudcoverpercentage":
+							cloudcoverpercentage = xd.firstChild.data
+					url2 = topUrl + "/odata/v1/Products('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('" + imgName.replace('_PRD_MSIL1C_', '_MTD_SAFL1C_') + ".xml')/$value"
+					if cfg.actionCheck == "Yes":
+						response2 = cfg.utls.passwordConnect(user, password, url2, topLevelUrl)
+						if response2 == "No":
+							cfg.uiUtls.removeProgressBar()
+							return "No"
+						xml2 = response2
 						# logger
-						cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+						cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " thumbnail downloaded" + xml2)
+						try:
+							doc2 = cfg.minidomSCP.parseString(xml2)
+							entries2 = doc2.getElementsByTagName("Granules")
+							for entry2 in entries2:
+								if cfg.actionCheck == "Yes":
+									imgName2 = entry2.attributes["granuleIdentifier"].value
+									for filter in imageFindList:
+										if filter in imgName.lower() or filter in imgName2.lower():
+											acZoneI = imgName2[-12:-7]
+											# add item to table
+											c = tW.rowCount()
+											# add list items to table
+											tW.setRowCount(c + 1)
+											imgPreview = topUrl + "/odata/v1/Products('" +  imgID + "')/Products('Quicklook')/$value"
+											imgPreview2 = topUrl + "/odata/v1/Products('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('IMG_DATA')/Nodes('" + imgName2[0:-7] + "_B01.jp2')/$value"
+											cfg.utls.addTableItem(tW, imgName, c, 0)
+											cfg.utls.addTableItem(tW, imgName2, c, 1)
+											cfg.utls.addTableItem(tW, acqDateI, c, 2)
+											cfg.utls.addTableItem(tW, acZoneI, c, 3)
+											cfg.utls.addTableItem(tW, float(cloudcoverpercentage), c, 4)
+											cfg.utls.addTableItem(tW, float(min_lat), c, 5)
+											cfg.utls.addTableItem(tW, float(min_lon), c, 6)
+											cfg.utls.addTableItem(tW, float(max_lat), c, 7)
+											cfg.utls.addTableItem(tW, float(max_lon), c, 8)
+											cfg.utls.addTableItem(tW, size, c, 9)
+											cfg.utls.addTableItem(tW, imgPreview, c, 10)
+											cfg.utls.addTableItem(tW, imgPreview2, c, 11)
+											cfg.utls.addTableItem(tW, imgID, c, 12)
+						except Exception, err:
+							# logger
+							cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 		tW.setSortingEnabled(True)		
 		cfg.uiUtls.removeProgressBar()
 		self.clearCanvasPoly()

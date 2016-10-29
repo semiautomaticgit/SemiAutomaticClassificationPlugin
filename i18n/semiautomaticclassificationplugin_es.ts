@@ -4280,7 +4280,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation>Error de conexión SSL. Por favor mira las FAQ o el Manual del Usuario del complemento para resolver esto</translation>
     </message>
     <message>
-        <location filename="messages.py" line="379"/>
+        <location filename="messages.py" line="382"/>
         <source>Warning</source>
         <translation>Advertencia</translation>
     </message>
@@ -4600,7 +4600,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation>Guardar salida</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="588"/>
+        <location filename="downloadsentinelimages.py" line="590"/>
         <source>Searching ...</source>
         <translation>Buscando ...</translation>
     </message>
@@ -4615,12 +4615,12 @@ Do you want to add the required fields to this shapefile?</source>
         <translation>Exportar enlaces de descarga</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="671"/>
+        <location filename="downloadsentinelimages.py" line="673"/>
         <source>Reset signature list</source>
         <translation>Restaurar lista de firmas</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="671"/>
+        <location filename="downloadsentinelimages.py" line="673"/>
         <source>Are you sure you want to clear the table?</source>
         <translation>¿Estás seguro que quieres borrar la tabla?</translation>
     </message>
@@ -5088,6 +5088,11 @@ Possible reason: input is a virtual raster or band is not loaded</source>
     <message>
         <location filename="messages.py" line="314"/>
         <source>Rasters appear to be in different projections. Reproject rasters to the same CRS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="messages.py" line="382"/>
+        <source>Search error HTTP Status 500, reduce the result number</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

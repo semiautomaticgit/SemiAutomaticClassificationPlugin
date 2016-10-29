@@ -42,7 +42,7 @@ def description():
 
 
 def version():
-    return "Version 5.1.6 - Kourou"
+    return "Version 5.1.7 - Kourou"
 
 
 def icon():
