@@ -165,7 +165,7 @@ class BatchTab:
 		for p in paramList:
 			# working directory inside " "
 			g = cfg.reSCP.findall('[\'](.*?)[\']',p)
-			workingDir = g[0]
+			workingDir = g[0].replace('\\', '/')
 			if len(workingDir) > 0 and cfg.QDirSCP(workingDir).exists():
 				cfg.workingDir =workingDir
 			else:
@@ -185,7 +185,13 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(" ", "")
 			# input file path inside " "
 			if pName == "input_raster_path":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					file = "'" + g[0] + "'"
 				else:
@@ -214,7 +220,13 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(" ", "")
 			# input directory inside " "
 			if pName == "input_dir":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				cfg.ui.label_26.setText(g[0])
 				inputDir = "'" + g[0] + "'"
 				if len(g[0]) > 0 and cfg.QDirSCP(unicode(g[0])).exists():
@@ -225,14 +237,26 @@ class BatchTab:
 					return "No", "No"
 			# output directory inside " "
 			elif pName == "output_dir":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					outputDir = "'" + g[0] + "'"
 				else:
 					return "No", "No"
 			# MTL file path inside " "
 			elif pName == "mtl_file_path":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				cfg.ui.label_27.setText(g[0])
 			# temperature in Celsius checkbox (1 checked or 0 unchecked)
 			elif pName == "celsius_temperature":
@@ -303,7 +327,13 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(" ", "")
 			# input file inside " "
 			if pName == "input_raster_path":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				cfg.ui.label_143.setText(g[0])
 				inputFile = "'" + g[0] + "'"
 				if len(g[0]) > 0:
@@ -314,7 +344,13 @@ class BatchTab:
 					return "No", "No"
 			# output directory inside " "
 			elif pName == "output_dir":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					outputDir = "'" + g[0] + "'"
 				else:
@@ -380,7 +416,13 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(" ", "")
 			# input directory inside " "
 			if pName == "input_dir":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				cfg.ui.S2_label_86.setText(g[0])
 				inputDir = "'" + g[0] + "'"
 				if len(g[0]) > 0 and cfg.QDirSCP(unicode(g[0])).exists():
@@ -391,14 +433,26 @@ class BatchTab:
 					return "No", "No"
 			# output directory inside " "
 			elif pName == "output_dir":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					outputDir = "'" + g[0] + "'"
 				else:
 					return "No", "No"
 			# MTD_SAFL1C file path inside " "
 			elif pName == "mtd_safl1c_file_path":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				cfg.ui.S2_label_94.setText(g[0])
 			# DOS1 checkbox (1 checked or 0 unchecked)
 			elif pName == "apply_dos1":
@@ -453,7 +507,13 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(" ", "")
 			# output classification inside " "
 			if pName == "output_classification_path":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					outputClassification = "'" + g[0] + "'"
 				else:
@@ -504,7 +564,13 @@ class BatchTab:
 					return "No", "No"
 			# mask file path inside " "
 			elif pName == "mask_file_path":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					cfg.uidc.mask_lineEdit.setText(g[0])
 				else:
@@ -560,7 +626,13 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(" ", "")
 			# input file path inside " " separated by ,
 			if pName == "raster_path_list":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				files = g[0]
 				if len(files) > 0:
 					files = "'" + files + "'"
@@ -568,7 +640,13 @@ class BatchTab:
 					return "No", "No"
 			# center wavelength inside " " separated by ,
 			elif pName == "center_wavelength":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				center_wavelength = g[0]
 				if len(center_wavelength) > 0:
 					center_wavelength = "'" + center_wavelength + "'"
@@ -576,7 +654,13 @@ class BatchTab:
 					return "No", "No"
 			# multiplicative factor inside " " separated by ,
 			elif pName == "multiplicative_factor":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				multiplicative_factor = g[0]
 				if len(multiplicative_factor) > 0:
 					multiplicative_factor = "'" + multiplicative_factor + "'"
@@ -584,7 +668,13 @@ class BatchTab:
 					return "No", "No"
 			# additive factor inside " " separated by ,
 			elif pName == "additive_factor":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				additive_factor = g[0]
 				if len(additive_factor) > 0:
 					additive_factor = "'" + additive_factor + "'"
@@ -621,7 +711,13 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(" ", "")
 			# input file path inside " "
 			if pName == "input_raster_path":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				file = "'" + g[0] + "'"
 				if len(g[0]) > 0:
 					pass
@@ -629,7 +725,13 @@ class BatchTab:
 					return "No", "No"
 			# output directory inside " "
 			elif pName == "output_dir":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					outputDir = "'" + g[0] + "'"
 				else:
@@ -671,7 +773,13 @@ class BatchTab:
 					return "No", "No"
 			# output file path inside " "
 			elif pName == "output_raster_path":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				outputRaster = "'" + g[0] + "'"
 				if len(g[0]) > 0:
 					pass
@@ -679,7 +787,13 @@ class BatchTab:
 					return "No", "No"
 			# extent same as raster name inside " "
 			elif pName == "extent_same_as_raster_name":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				extentRaster = "'" + g[0] + "'"
 				if len(g[0]) > 0:
 					cfg.ui.extent_checkBox.setCheckState(2)
@@ -739,7 +853,13 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(" ", "")
 			# input file path inside " " separated by ,
 			if pName == "input_raster_path":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				files = g[0]
 				if len(files) > 0:
 					files = "'" + files + "'"
@@ -747,7 +867,13 @@ class BatchTab:
 					return "No", "No"
 			# output directory inside " "
 			elif pName == "output_dir":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					outputDir = "'" + g[0] + "'"
 				else:
@@ -770,14 +896,26 @@ class BatchTab:
 					return "No", "No"
 			# shapefile path inside " "
 			elif pName == "shapefile_path":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					shapefilePath = "'" + g[0] + "'"
 				else:
 					return "No", "No"
 			# ul_x inside " "
 			elif pName == "ul_x":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					cfg.ui.UX_lineEdit.setText(g[0])
 				else:
@@ -785,7 +923,13 @@ class BatchTab:
 					return "No", "No"
 			# ul_y inside " "
 			elif pName == "ul_y":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					cfg.ui.UY_lineEdit.setText(g[0])
 				else:
@@ -793,7 +937,13 @@ class BatchTab:
 					return "No", "No"
 			# lr_x inside " "
 			elif pName == "lr_x":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					cfg.ui.LX_lineEdit.setText(g[0])
 				else:
@@ -801,7 +951,13 @@ class BatchTab:
 					return "No", "No"
 			# lr_y inside " "
 			elif pName == "lr_y":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					cfg.ui.LY_lineEdit.setText(g[0])
 				else:
@@ -835,7 +991,13 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(" ", "")
 			# input file path inside " "
 			if pName == "input_raster_path":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				inputRaster = "'" + g[0] + "'"
 				if len(g[0]) > 0:
 					pass
@@ -843,7 +1005,13 @@ class BatchTab:
 					return "No", "No"
 			# output file path inside " "
 			elif pName == "output_raster_path":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				outputRaster = "'" + g[0] + "'"
 				if len(g[0]) > 0:
 					pass
@@ -851,7 +1019,13 @@ class BatchTab:
 					return "No", "No"
 			# reclassification values inside " " (list of oldValue-newValue separated by ,)
 			elif pName == "value_list":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				values = g[0]
 				if len(values) > 0:
 					values = "'" + values + "'"
@@ -893,7 +1067,13 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(" ", "")
 			# input file path inside " "
 			if pName == "input_raster_path":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				inputRaster = "'" + g[0] + "'"
 				if len(g[0]) > 0:
 					pass
@@ -901,7 +1081,13 @@ class BatchTab:
 					return "No", "No"
 			# output file path inside " "
 			elif pName == "output_raster_path":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				outputRaster = "'" + g[0] + "'"
 				if len(g[0]) > 0:
 					pass
@@ -941,7 +1127,13 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(" ", "")
 			# input file path inside " "
 			if pName == "input_raster_path":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				inputRaster = "'" + g[0] + "'"
 				if len(g[0]) > 0:
 					pass
@@ -949,7 +1141,13 @@ class BatchTab:
 					return "No", "No"
 			# output file path inside " "
 			elif pName == "output_raster_path":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				outputRaster = "'" + g[0] + "'"
 				if len(g[0]) > 0:
 					pass
@@ -957,7 +1155,13 @@ class BatchTab:
 					return "No", "No"
 			# class values inside " "
 			elif pName == "class_values":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					cfg.ui.erosion_classes_lineEdit.setText(g[0])
 				else:
@@ -997,7 +1201,13 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(" ", "")
 			# input file path inside " "
 			if pName == "input_raster_path":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				inputRaster = "'" + g[0] + "'"
 				if len(g[0]) > 0:
 					pass
@@ -1005,7 +1215,13 @@ class BatchTab:
 					return "No", "No"
 			# output file path inside " "
 			elif pName == "output_raster_path":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				outputRaster = "'" + g[0] + "'"
 				if len(g[0]) > 0:
 					pass
@@ -1013,7 +1229,13 @@ class BatchTab:
 					return "No", "No"
 			# class values inside " "
 			elif pName == "class_values":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					cfg.ui.dilation_classes_lineEdit.setText(g[0])
 				else:
@@ -1055,7 +1277,13 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(" ", "")
 			# input file path inside " "
 			if pName == "input_raster_path":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				inputRaster = "'" + g[0] + "'"
 				if len(g[0]) > 0:
 					pass
@@ -1063,7 +1291,13 @@ class BatchTab:
 					return "No", "No"
 			# input vector inside " "
 			elif pName == "input_vector_path":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				inputVector = "'" + g[0] + "'"
 				if len(g[0]) > 0:
 					pass
@@ -1071,7 +1305,13 @@ class BatchTab:
 					return "No", "No"
 			# vector field name inside " "
 			elif pName == "vector_field_name":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					vectorFieldName = "'" + g[0] + "'"
 					cfg.ui.use_field_vector_checkBox.setCheckState(2)
@@ -1115,7 +1355,13 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(" ", "")
 			# output directory inside " "
 			if pName == "output_dir":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					outputDir = "'" + g[0] + "'"
 				else:
@@ -1170,28 +1416,52 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(" ", "")
 			# classification path inside " "
 			if pName == "classification_file_path":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					classification = "'" + g[0] + "'"
 				else:
 					return "No", "No"
 			# output path inside " "
 			elif pName == "output_raster_path":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					outputRaster = "'" + g[0] + "'"
 				else:
 					return "No", "No"
 			# shapefile field name inside " "
 			elif pName == "shapefile_field_name":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					shapefileField = "'" + g[0] + "'"
 				else:
 					return "No", "No"
 			# reference path inside " "
 			elif pName == "reference_file_path":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					reference = "'" + g[0] + "'"
 				else:
@@ -1219,21 +1489,39 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(" ", "")
 			# output path inside " "
 			if pName == "output_raster_path":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					outputRaster = "'" + g[0] + "'"
 				else:
 					return "No", "No"
 			# input vector path inside " "
 			elif pName == "vector_file_path":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					inputVector= "'" + g[0] + "'"
 				else:
 					return "No", "No"
 			# input vector field name " "
 			elif pName == "vector_field_name":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					vectorFieldName = "'" + g[0] + "'"
 				else:
@@ -1262,7 +1550,13 @@ class BatchTab:
 					return "No", "No"
 			# input raster path inside " "
 			elif pName == "reference_raster_path":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					inputRaster = "'" + g[0] + "'"
 				else:
@@ -1289,21 +1583,39 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(" ", "")
 			# output path inside " "
 			if pName == "output_raster_path":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					outputRaster = "'" + g[0] + "'"
 				else:
 					return "No", "No"
 			# input raster path inside " "
 			elif pName == "reference_raster_path":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					refRaster = "'" + g[0] + "'"
 				else:
 					return "No", "No"
 			# input raster path inside " "
 			elif pName == "new_raster_path":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					newRaster = "'" + g[0] + "'"
 				else:
@@ -1329,14 +1641,26 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(" ", "")
 			# output path inside " "
 			if pName == "output_report_path":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					outputReport = "'" + g[0] + "'"
 				else:
 					return "No", "No"
 			# input raster path inside " "
 			elif pName == "input_raster_path":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					inputRaster = "'" + g[0] + "'"
 				else:
@@ -1377,14 +1701,26 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(" ", "")
 			# input raster path inside " "
 			if pName == "input_raster_path":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					inputRaster = "'" + g[0] + "'"
 				else:
 					return "No", "No"
 			# output vector path inside " "
 			elif pName == "output_vector_path":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					outputVector = "'" + g[0] + "'"
 				else:
@@ -1424,7 +1760,13 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(" ", "")
 			# input file path inside " "
 			if pName == "training_file_path":
-				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplit[1])
+				try:
+					pSplitX = pSplit[1] + ":" + pSplit[2]
+				except:
+					pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				file = "'" + g[0] + "'"
 				if len(g[0]) > 0:
 					pass

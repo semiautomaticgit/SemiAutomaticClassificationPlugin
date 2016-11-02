@@ -2,7 +2,7 @@
 name=Semi-Automatic Classification Plugin
 qgisMinimumVersion=2.0
 description= Plugin that allows for the supervised classification of remote sensing images, providing tools for the download, the preprocessing and postprocessing of images.
-version=5.1.7
+version=5.1.8
 about=Developed by Luca Congedo, the Semi-Automatic Classification Plugin (SCP) allows for the supervised classification of remote sensing images, providing tools for the download, the preprocessing and postprocessing of images. Search and download is available for ASTER, Landsat and Sentinel-2 images. Several algorithms are available for the land cover classification. This plugin requires the installation of GDAL, OGR, Numpy, SciPy, and Matplotlib. For more information please visit https://fromgistors.blogspot.com/ . Keywords: Land Cover Supervised classification 土地被覆分類 监督分类 土地覆盖分类 教師付き分類 تصنيف استخدام الأراضي Classificação da Cobertura do Solo Clasificación de la Cobertura de la Tierra Classification de la Couverture du Sol классификация землепользования Klassifizierung der Landbedeckung Classificazione della Copertura del Suolo.
 
 author=Luca Congedo
@@ -13,6 +13,10 @@ icon=semiautomaticclassificationplugin.png
 
 ; start of optional metadata
 changelog=
+	
+	5.1.8
+	Minor update:
+	-fixed issue with paths in batch tool
 	
 	5.1.7
 	Minor update:
