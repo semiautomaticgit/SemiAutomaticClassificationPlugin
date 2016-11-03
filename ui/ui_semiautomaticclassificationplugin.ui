@@ -992,8 +992,8 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>837</width>
-                  <height>160</height>
+                  <width>551</width>
+                  <height>87</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -1941,8 +1941,8 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>837</width>
-                  <height>162</height>
+                  <width>119</width>
+                  <height>151</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -3167,8 +3167,8 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>837</width>
-                  <height>186</height>
+                  <width>119</width>
+                  <height>126</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -13991,34 +13991,6 @@ p, li { white-space: pre-wrap; }
         <layout class="QGridLayout" name="gridLayout_203">
          <item row="0" column="0">
           <layout class="QGridLayout" name="gridLayout_217">
-           <item row="1" column="1">
-            <widget class="QPlainTextEdit" name="plainTextEdit_batch">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>50</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>16777215</width>
-               <height>400</height>
-              </size>
-             </property>
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter a batch function&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="plainText">
-              <string notr="true"/>
-             </property>
-            </widget>
-           </item>
            <item row="2" column="1" colspan="2">
             <layout class="QGridLayout" name="gridLayout_218">
              <item row="1" column="0" colspan="2">
@@ -14273,6 +14245,28 @@ p, li { white-space: pre-wrap; }
               </layout>
              </item>
             </layout>
+           </item>
+           <item row="1" column="1">
+            <widget class="QPlainTextEdit" name="plainTextEdit_batch">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>50</height>
+              </size>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter a batch function&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="plainText">
+              <string notr="true"/>
+             </property>
+            </widget>
            </item>
           </layout>
          </item>

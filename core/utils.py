@@ -3489,6 +3489,7 @@ class Utils:
 	# replace numpy operators for expressions in Band calc
 	def replaceNumpyOperators(self, expression):
 		f = expression
+		f = f.replace(" np.", " " + cfg.numpyn)
 		f = f.replace(" ln(", " " + cfg.logn + "(")
 		f = f.replace(" ln (", " " + cfg.logn + "(")
 		f = f.replace(" sqrt(", " " + cfg.numpySqrt + "(")

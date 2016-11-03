@@ -194,6 +194,8 @@ rasterPixelCountPCA = {}
 remainingTime = 0
 # set variable for standard deviation plot
 sigmaCheck = "Yes"
+# numpy
+numpyn = "cfg.np."
 # numpy logarithm
 logn = "cfg.np.log"
 # numpy logarithm
