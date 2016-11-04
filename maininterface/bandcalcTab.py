@@ -676,14 +676,30 @@ class BandCalcTab:
 							if cfg.rasterCompression != "No":
 								try:
 									cfg.utls.GDALCopyRaster(tPMD2, out, "GTiff", cfg.rasterCompression, "DEFLATE -co PREDICTOR=2 -co ZLEVEL=1")
+									if cfg.osSCP.path.isfile(out):
+										pass
+									else:
+										try:
+											cfg.shutilSCP.copy(tPMD2, out)
+										except Exception, err:
+											# logger
+											if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 									cfg.osSCP.remove(tPMD2)
 								except Exception, err:
-									cfg.shutilSCP.copy(tPMD2, out)
+									try:
+										cfg.shutilSCP.copy(tPMD2, out)
+									except Exception, err:
+										# logger
+										if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 									cfg.osSCP.remove(tPMD2)
 									# logger
 									if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 							else:
-								cfg.shutilSCP.copy(tPMD2, out)
+								try:
+									cfg.shutilSCP.copy(tPMD2, out)
+								except Exception, err:
+									# logger
+									if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 								cfg.osSCP.remove(tPMD2)
 							if quiet == "No":
 								r = cfg.utls.addRasterLayer(out, cfg.osSCP.path.basename(out))

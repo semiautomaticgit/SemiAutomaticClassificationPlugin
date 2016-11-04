@@ -473,7 +473,7 @@
                   <widget class="QDateEdit" name="dateEdit_from">
                    <property name="date">
                     <date>
-                     <year>1980</year>
+                     <year>1972</year>
                      <month>1</month>
                      <day>1</day>
                     </date>
@@ -487,7 +487,7 @@
                    </property>
                    <property name="minimumDate">
                     <date>
-                     <year>1980</year>
+                     <year>1972</year>
                      <month>1</month>
                      <day>1</day>
                     </date>
@@ -992,8 +992,8 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>551</width>
-                  <height>87</height>
+                  <width>837</width>
+                  <height>160</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -1941,8 +1941,8 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>119</width>
-                  <height>151</height>
+                  <width>837</width>
+                  <height>162</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -3167,8 +3167,8 @@
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>119</width>
-                  <height>126</height>
+                  <width>837</width>
+                  <height>186</height>
                  </rect>
                 </property>
                 <attribute name="label">

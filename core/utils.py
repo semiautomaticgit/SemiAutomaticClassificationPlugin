@@ -2835,12 +2835,14 @@ class Utils:
 				RED = self.findNearestValueinList(cfg.bndSetWvLn.values(), cfg.REDCenterBand, cfg.REDThreshold)
 				NIR = self.findNearestValueinList(cfg.bndSetWvLn.values(), cfg.NIRCenterBand, cfg.NIRThreshold)
 				BLUE = self.findNearestValueinList(cfg.bndSetWvLn.values(), cfg.BLUECenterBand, cfg.BLUEThreshold)
-			if RED is not None and NIR is not None:
+			if RED is not None:
 				for band, value in cfg.bndSetWvLn.items():
 					if value == RED:
 						bN = band.replace("WAVELENGTH_", "")
 						cfg.REDBand = int(bN)
-					elif value == NIR:
+			if NIR is not None:
+				for band, value in cfg.bndSetWvLn.items():
+					if value == NIR:
 						bN = band.replace("WAVELENGTH_", "")
 						cfg.NIRBand = int(bN)
 			if BLUE is not None:

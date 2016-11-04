@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ui/ui_semiautomaticclassificationplugin.ui'
 #
-# Created: Thu Nov  3 18:45:36 2016
+# Created: Fri Nov  4 23:42:13 2016
 #      by: PyQt4 UI code generator 4.11.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -219,9 +219,9 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.gridLayout_114 = QtGui.QGridLayout()
         self.gridLayout_114.setObjectName(_fromUtf8("gridLayout_114"))
         self.dateEdit_from = QtGui.QDateEdit(self.tab_download_landsat)
-        self.dateEdit_from.setDate(QtCore.QDate(1980, 1, 1))
+        self.dateEdit_from.setDate(QtCore.QDate(1972, 1, 1))
         self.dateEdit_from.setMaximumDate(QtCore.QDate(2045, 12, 31))
-        self.dateEdit_from.setMinimumDate(QtCore.QDate(1980, 1, 1))
+        self.dateEdit_from.setMinimumDate(QtCore.QDate(1972, 1, 1))
         self.dateEdit_from.setCalendarPopup(True)
         self.dateEdit_from.setObjectName(_fromUtf8("dateEdit_from"))
         self.gridLayout_114.addWidget(self.dateEdit_from, 1, 4, 1, 1)
@@ -413,7 +413,7 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.gridLayout_135.addLayout(self.gridLayout_134, 1, 0, 1, 1)
         self.toolBox_2.addItem(self.page_3, _fromUtf8(""))
         self.page_4 = QtGui.QWidget()
-        self.page_4.setGeometry(QtCore.QRect(0, 0, 551, 87))
+        self.page_4.setGeometry(QtCore.QRect(0, 0, 837, 160))
         self.page_4.setObjectName(_fromUtf8("page_4"))
         self.gridLayout_118 = QtGui.QGridLayout(self.page_4)
         self.gridLayout_118.setObjectName(_fromUtf8("gridLayout_118"))
@@ -769,7 +769,7 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.toolBox_3.setFrameShadow(QtGui.QFrame.Raised)
         self.toolBox_3.setObjectName(_fromUtf8("toolBox_3"))
         self.page_7 = QtGui.QWidget()
-        self.page_7.setGeometry(QtCore.QRect(0, 0, 119, 151))
+        self.page_7.setGeometry(QtCore.QRect(0, 0, 837, 162))
         self.page_7.setObjectName(_fromUtf8("page_7"))
         self.gridLayout_157 = QtGui.QGridLayout(self.page_7)
         self.gridLayout_157.setObjectName(_fromUtf8("gridLayout_157"))
@@ -1236,7 +1236,7 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.toolBox_9.setFrameShadow(QtGui.QFrame.Raised)
         self.toolBox_9.setObjectName(_fromUtf8("toolBox_9"))
         self.page_18 = QtGui.QWidget()
-        self.page_18.setGeometry(QtCore.QRect(0, 0, 119, 126))
+        self.page_18.setGeometry(QtCore.QRect(0, 0, 837, 186))
         self.page_18.setObjectName(_fromUtf8("page_18"))
         self.gridLayout_151 = QtGui.QGridLayout(self.page_18)
         self.gridLayout_151.setObjectName(_fromUtf8("gridLayout_151"))
