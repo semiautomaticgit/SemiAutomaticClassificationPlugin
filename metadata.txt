@@ -16,6 +16,7 @@ changelog=
 	
 	5.1.10
 	Minor update:
+	-added "#GREEN#" variable name
 	-fixed issue in Batch expressions
 	-fixed issue in Landsat search dates
 	

@@ -305,6 +305,14 @@ class BandCalcTab:
 				cfg.utls.addTableItem(l, cfg.variableName + str(b + 1), b, 0, "No")
 				cfg.utls.addTableItem(l, bN, b, 1, "No")
 				b = b + 1		
+			if cfg.GREENBand is not None:
+				# band name
+				bN = cfg.variableGreenName
+				# Add band to table
+				l.insertRow(b)
+				cfg.utls.addTableItem(l, cfg.variableName + str(b + 1), b, 0, "No")
+				cfg.utls.addTableItem(l, bN, b, 1, "No")
+				b = b + 1		
 		cfg.bCalc.textChanged()
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " raster band name checklist created")
@@ -502,13 +510,15 @@ class BandCalcTab:
 												return "No"
 										bandNumberList.append(int(bandNumber[1]))
 										bList.append(bPath)
-								elif cfg.variableBlueName in bN or cfg.variableRedName in bN or cfg.variableNIRName in bN :
+								elif cfg.variableBlueName in bN or cfg.variableRedName in bN or cfg.variableNIRName in bN or cfg.variableGreenName in bN :
 									if bN == cfg.variableRedName :
 										bandNumber = ["", cfg.REDBand]
 									elif bN == cfg.variableNIRName :
 										bandNumber = ["", cfg.NIRBand]
 									elif bN == cfg.variableBlueName :
 										bandNumber = ["", cfg.BLUEBand]
+									elif bN == cfg.variableGreenName :
+										bandNumber = ["", cfg.GREENBand]
 									else:
 										cfg.mx.msg4()
 										if outFile is None:

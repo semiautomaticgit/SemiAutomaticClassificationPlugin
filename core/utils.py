@@ -2822,6 +2822,7 @@ class Utils:
 		cfg.REDBand = None
 		cfg.NIRBand = None
 		cfg.BLUEBand = None
+		cfg.GREENBand = None
 		try:
 			cfg.bndSetUnit["UNIT"]
 		except:
@@ -2831,10 +2832,12 @@ class Utils:
 				RED = self.findNearestValueinList(cfg.bndSetWvLn.values(), cfg.REDCenterBand*1000, cfg.REDThreshold*1000)
 				NIR = self.findNearestValueinList(cfg.bndSetWvLn.values(), cfg.NIRCenterBand*1000, cfg.NIRThreshold*1000)
 				BLUE = self.findNearestValueinList(cfg.bndSetWvLn.values(), cfg.BLUECenterBand*1000, cfg.BLUEThreshold*1000)
+				GREEN = self.findNearestValueinList(cfg.bndSetWvLn.values(), cfg.GREENCenterBand*1000, cfg.GREENThreshold*1000)
 			elif cfg.bndSetUnit["UNIT"] == cfg.unitMicro:
 				RED = self.findNearestValueinList(cfg.bndSetWvLn.values(), cfg.REDCenterBand, cfg.REDThreshold)
 				NIR = self.findNearestValueinList(cfg.bndSetWvLn.values(), cfg.NIRCenterBand, cfg.NIRThreshold)
 				BLUE = self.findNearestValueinList(cfg.bndSetWvLn.values(), cfg.BLUECenterBand, cfg.BLUEThreshold)
+				GREEN = self.findNearestValueinList(cfg.bndSetWvLn.values(), cfg.GREENCenterBand, cfg.GREENThreshold)
 			if RED is not None:
 				for band, value in cfg.bndSetWvLn.items():
 					if value == RED:
@@ -2850,8 +2853,13 @@ class Utils:
 					if value == BLUE:
 						bN = band.replace("WAVELENGTH_", "")
 						cfg.BLUEBand = int(bN)
+			if GREEN is not None:
+				for band, value in cfg.bndSetWvLn.items():
+					if value == GREEN:
+						bN = band.replace("WAVELENGTH_", "")
+						cfg.GREENBand = int(bN)
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "RED =" + str(cfg.REDBand) + ", NIR =" + str(cfg.NIRBand) + ", BLUE =" + str(cfg.BLUEBand))
+				cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "RED =" + str(cfg.REDBand) + ", NIR =" + str(cfg.NIRBand) + ", BLUE =" + str(cfg.BLUEBand) + ", GREEN =" + str(cfg.GREENBand))
 		
 	# calculation of earth sun distance
 	def calculateEarthSunDistance(self, date, dateFormat):
@@ -3099,7 +3107,7 @@ class Utils:
 						# logger
 						cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 						return "No"
-					if rD is None or cfg.NIRBand is None or cfg.REDBand is None or cfg.BLUEBand is None:
+					if rD is None or cfg.NIRBand is None or cfg.REDBand is None or cfg.BLUEBand is None or cfg.GREENBand is None:
 						return "No"
 					else:
 						rasterB = rD.GetRasterBand(int(b))
@@ -3473,6 +3481,8 @@ class Utils:
 					name = "#" + name
 					if "#" + l == cfg.variableRedName :
 						bandNumber = ["", cfg.REDBand]
+					elif "#" + l == cfg.variableGreenName :
+						bandNumber = ["", cfg.GREENBand]
 					elif "#" + l == cfg.variableNIRName :
 						bandNumber = ["", cfg.NIRBand]
 					elif "#" + l == cfg.variableBlueName :
