@@ -4967,6 +4967,8 @@ class Utils:
 		
 	# copy raster with GDAL
 	def GDALCopyRaster(self, input, output, outFormat = "GTiff", compress = "No", compressFormat = "DEFLATE", additionalParams = ""):
+		outDir = cfg.osSCP.path.dirname(output)
+		cfg.utls.makeDirectory(outDir)
 		if compress == "No":
 			op = " -of " + outFormat
 		else:
