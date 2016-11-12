@@ -49,14 +49,19 @@ class BatchTab:
 		e = expression.rstrip().split("\n")
 		cfg.workingDir = None
 		for nf in e:
-			function = self.checkExpression(nf)
-			runFunction = function[0]
-			if runFunction == "(" + cfg.workingDirNm + ")":
+			if len(nf.strip()) == 0:
+				pass
+			elif nf.strip()[0] == "#":
 				pass
 			else:
-				if cfg.workingDir is not None:
-					runFunction = runFunction.replace(cfg.workingDirNm, cfg.workingDir)
-				eval(runFunction)
+				function = self.checkExpression(nf)
+				runFunction = function[0]
+				if runFunction == "(" + cfg.workingDirNm + ")":
+					pass
+				else:
+					if cfg.workingDir is not None:
+						runFunction = runFunction.replace(cfg.workingDirNm, cfg.workingDir)
+					eval(runFunction)
 		cfg.utls.finishSound()
 		cfg.cnvs.setRenderFlag(True)
 		cfg.uiUtls.removeProgressBar()
@@ -74,33 +79,38 @@ class BatchTab:
 		ex = []
 		checkO = "Yes"
 		for nf in e:
-			f = nf.split(";")
-			nm = f[0].replace(" ", "")
-			fNm, fRun, fList = cfg.batchT.replaceFunctionNames(nm)
-			oldF = f
-			# create function
-			if fNm == "No":
-				checkO = "No"
+			if len(nf.strip()) == 0:
+				pass
+			elif nf.strip()[0] == "#":
+				pass
 			else:
-				try:
-					check, parameters = eval(fNm + "(" + str(f[1:]) + ")")
-					cfg.ui.plainTextEdit_batch.setStyleSheet("color : green")
-					cfg.ui.toolButton_run_batch.setEnabled(True)
-					if check == "No":
-						checkO = "No"
-				except Exception, err:
-					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				f = nf.split(";")
+				nm = f[0].replace(" ", "")
+				fNm, fRun, fList = cfg.batchT.replaceFunctionNames(nm)
+				oldF = f
+				# create function
+				if fNm == "No":
 					checkO = "No"
-			if checkO == "Yes":
-				function = fRun + "("
-				for p in parameters:
-					function = function + p + ","
-				function = function[:-1] + ")"
-				ex.append(function)
-			else:
-				cfg.ui.plainTextEdit_batch.setStyleSheet("color : red")
-				cfg.ui.toolButton_run_batch.setEnabled(False)
+				else:
+					try:
+						check, parameters = eval(fNm + "(" + str(f[1:]) + ")")
+						cfg.ui.plainTextEdit_batch.setStyleSheet("color : green")
+						cfg.ui.toolButton_run_batch.setEnabled(True)
+						if check == "No":
+							checkO = "No"
+					except Exception, err:
+						# logger
+						cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+						checkO = "No"
+				if checkO == "Yes":
+					function = fRun + "("
+					for p in parameters:
+						function = function + p + ","
+					function = function[:-1] + ")"
+					ex.append(function)
+				else:
+					cfg.ui.plainTextEdit_batch.setStyleSheet("color : red")
+					cfg.ui.toolButton_run_batch.setEnabled(False)
 		return ex
 			
 	# replace function names
@@ -1317,6 +1327,80 @@ class BatchTab:
 				if len(g[0]) > 0:
 					reference = "'" + g[0] + "'"
 				else:
+					return "No", "No"
+			else:
+				return "No", "No"
+		# append parameters
+		try:
+			# batch
+			parameters.append(classification)
+			parameters.append(reference)
+			parameters.append('"Yes"')
+			parameters.append(shapefileField)
+			parameters.append(outputRaster)
+		except:
+			return "No", "No"
+		return "Yes", parameters
+											
+	# batch cross classification
+	def performCrossClassification(self, paramList):
+		shapefileField = "None"
+		parameters = []
+		for p in paramList:
+			pSplit = p.split(":", 1)
+			pName = pSplit[0].lower().replace(" ", "")
+			# classification path inside " "
+			if pName == "classification_file_path":
+				pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
+				if len(g[0]) > 0:
+					classification = "'" + g[0] + "'"
+				else:
+					return "No", "No"
+			# output path inside " "
+			elif pName == "output_raster_path":
+				pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
+				if len(g[0]) > 0:
+					outputRaster = "'" + g[0] + "'"
+				else:
+					return "No", "No"
+			# shapefile field name inside " "
+			elif pName == "shapefile_field_name":
+				pSplitX = pSplit[1]
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
+				if len(g[0]) > 0:
+					shapefileField = "'" + g[0] + "'"
+				else:
+					return "No", "No"
+			# reference path inside " "
+			elif pName == "reference_file_path":
+				pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
+				if len(g[0]) > 0:
+					reference = "'" + g[0] + "'"
+				else:
+					return "No", "No"
+			# nodata checkbox (1 checked or 0 unchecked)
+			elif pName == "use_nodata":
+				if pSplit[1].replace(" ", "") == "1":
+					cfg.ui.nodata_checkBox_6.setCheckState(2)
+				elif pSplit[1].replace(" ", "") == "0":
+					cfg.ui.nodata_checkBox_6.setCheckState(0)
+				else:
+					return "No", "No"
+			# nodata value (int value)
+			elif pName == "nodata_value":
+				try:
+					val = int(pSplit[1].replace(" ", ""))
+					cfg.ui.nodata_spinBox_7.setValue(val)
+				except:
 					return "No", "No"
 			else:
 				return "No", "No"

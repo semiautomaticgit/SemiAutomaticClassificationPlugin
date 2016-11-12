@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="/plugins/semiautomaticclassificationplugin">
+    <file>icons/semiautomaticclassificationplugin_cross_classification.png</file>
     <file>icons/semiautomaticclassificationplugin_rgb_tool.png</file>
     <file>icons/semiautomaticclassificationplugin_aster_download_tool.png</file>
     <file>icons/semiautomaticclassificationplugin_undo_lcs_threshold.png</file>

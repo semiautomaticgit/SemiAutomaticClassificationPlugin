@@ -79,6 +79,9 @@ class SemiAutomaticClassificationPluginDialog(QtGui.QDialog):
 	def classification_layer_combo(self, layer):
 		self.ui.classification_name_combo.addItem(layer)
 		
+	def classification_layer_combo_2(self, layer):
+		self.ui.classification_name_combo_2.addItem(layer)
+		
 	def classification_report_combo(self, layer):
 		self.ui.classification_report_name_combo.addItem(layer)
 		
@@ -90,6 +93,9 @@ class SemiAutomaticClassificationPluginDialog(QtGui.QDialog):
 		
 	def reference_layer_combo(self, shape):
 		self.ui.reference_name_combo.addItem(shape)
+		
+	def reference_layer_combo_2(self, shape):
+		self.ui.reference_name_combo_2.addItem(shape)
 		
 	def classification_reference_layer_combo(self, layer):
 		self.ui.classification_reference_name_combo.addItem(layer)
@@ -123,6 +129,9 @@ class SemiAutomaticClassificationPluginDialog(QtGui.QDialog):
 		
 	def class_field_combo(self, field):
 		self.ui.class_field_comboBox.addItem(field)
+				
+	def class_field_combo_2(self, field):
+		self.ui.class_field_comboBox_2.addItem(field)
 				
 	def reference_field_combo(self, field):
 		self.ui.field_comboBox.addItem(field)

@@ -3702,6 +3702,11 @@ class Utils:
 							array[::, ::, b][array[::, ::, b] == ndv] = cfg.np.nan
 							if ndv2 is not None:
 								array[::, ::, b][array[::, ::, b] == ndv2] = cfg.np.nan
+						else:
+							if ndv2 is None:
+								array[::, ::, b][cfg.np.isnan(array[::, ::, b])] = ndv
+							else:
+								array[::, ::, b][cfg.np.isnan(array[::, ::, b])] = ndv2
 						if functionBand is not None and functionBand != "No":
 							cfg.QtGuiSCP.qApp.processEvents()
 							functionBand(b+1, array[::, ::, b].reshape(bSY, bSX), bSX, bSY, x, y, outputRasterList, functionBandArgument, functionVariable)
@@ -4231,6 +4236,7 @@ class Utils:
 	def refreshClassificationLayer(self):
 		ls = cfg.lgnd.layers()
 		cfg.ui.classification_name_combo.clear()
+		cfg.ui.classification_name_combo_2.clear()
 		cfg.ui.classification_report_name_combo.clear()
 		cfg.ui.classification_vector_name_combo.clear()
 		cfg.ui.reclassification_name_combo.clear()
@@ -4245,6 +4251,7 @@ class Utils:
 			if (l.type()==QgsMapLayer.RasterLayer):
 				if l.bandCount() == 1:
 					cfg.dlg.classification_layer_combo(l.name())
+					cfg.dlg.classification_layer_combo_2(l.name())
 					cfg.dlg.classification_report_combo(l.name())
 					cfg.dlg.classification_to_vector_combo(l.name())
 					cfg.dlg.reclassification_combo(l.name())
@@ -6007,29 +6014,33 @@ class Utils:
 	def classificationReportTab(self):
 		cfg.utls.selectTab2MainInterface(2)
 		
+	# select Cross classification report tab
+	def crossClassificationTab(self):
+		cfg.utls.selectTab2MainInterface(3)
+		
 	# select Classification report tab
 	def classToVectorTab(self):
-		cfg.utls.selectTab2MainInterface(3)
+		cfg.utls.selectTab2MainInterface(4)
 	
 	# select Reclassification tab
 	def reclassificationTab(self):
-		cfg.utls.selectTab2MainInterface(4)
+		cfg.utls.selectTab2MainInterface(5)
 			
 	# select Edit raster tab
 	def editRasterTab(self):
-		cfg.utls.selectTab2MainInterface(5)
+		cfg.utls.selectTab2MainInterface(6)
 		
 	# select Classification sieve tab
 	def classificationSieveTab(self):
-		cfg.utls.selectTab2MainInterface(6)		
+		cfg.utls.selectTab2MainInterface(7)		
 		
 	# select Classification erosion tab
 	def classificationErosionTab(self):
-		cfg.utls.selectTab2MainInterface(7)
+		cfg.utls.selectTab2MainInterface(8)
 		
 	# select Classification dilation tab
 	def classificationDilationTab(self):
-		cfg.utls.selectTab2MainInterface(8)
+		cfg.utls.selectTab2MainInterface(9)
 		
 ### tab 4
 	# select Band calc tab

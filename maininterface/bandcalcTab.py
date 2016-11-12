@@ -444,7 +444,7 @@ class BandCalcTab:
 					e = eM[0]
 					dCheck = "Yes"
 					try:
-						eN = eM[1]
+						eN = self.checkOutputName(eM[1])
 					except Exception, err:
 						dCheck = "No"
 						cfg.mx.msg4()
@@ -740,6 +740,19 @@ class BandCalcTab:
 			else:
 				tW.setStyleSheet("color : red")
 			
+	# check the output Name and return it
+	def checkOutputName(self, outputName):
+		try:
+			outputName = outputName.replace(cfg.variableOutputNameBandset, cfg.osSCP.path.basename(cfg.bndSetLst[0]).split(".")[0][:-1])
+		except:
+			pass
+		try:
+			dT = cfg.utls.getTime()
+			outputName = outputName.replace(cfg.variableOutputNameDate, dT)
+		except:
+			pass
+		return outputName
+		
 	# check the expression and return it
 	def checkExpression(self, expression):
 		tW = cfg.ui.tableWidget_band_calc

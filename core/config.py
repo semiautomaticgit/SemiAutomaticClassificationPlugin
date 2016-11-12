@@ -380,6 +380,8 @@ variableBlueName_def = "#BLUE#"
 variableGreenName_def = "#GREEN#"
 variableRedName_def = "#RED#"
 variableNIRName_def = "#NIR#"
+variableOutputNameBandset_def = "#BANDSET#"
+variableOutputNameDate_def = "#DATE#"
 merged_name = "merged_"
 fldID_class = fldID_class_def
 # macroclass ID
@@ -408,6 +410,8 @@ variableBlueName = variableBlueName_def
 variableGreenName = variableGreenName_def
 variableRedName = variableRedName_def
 variableNIRName = variableNIRName_def
+variableOutputNameBandset = variableOutputNameBandset_def
+variableOutputNameDate = variableOutputNameDate_def
 # band set name
 regBandSetName = "SemiAutomaticClassificationPlugin/BandSetName"
 bndSetNm = "<< band set >>"
@@ -446,6 +450,7 @@ polyRasterNm = "polyr_raster"
 stackRasterNm = "stack_raster"
 virtualRasterNm = "virt_rast"
 errMatrixNm = "_error_matrix.csv"
+crossClassNm = "_cross_classification.csv"
 PCANm = "PCA_band_"
 PCAReportNm = "PCA_report.txt"
 tempMtrxNm = "tmp_error_matrix"
@@ -582,6 +587,7 @@ functionNames.append([['classification_sieve', 'cfg.batchT.performClassification
 functionNames.append([['classification_to_vector', 'cfg.batchT.performClassificationToVector', 'cfg.classVect.convertClassificationToVector', ["input_raster_path : ''", "use_signature_list_code : 1", "code_field : 'C_ID'", "output_vector_path : ''"]]]) 
 functionNames.append([['clip_multiple_rasters', 'cfg.batchT.performClipRasters',  'cfg.clipMulti.clipRasters', ["input_raster_path : ''", "output_dir : ''", "use_shapefile : 0", "shapefile_path : ''", "ul_x : ''", "ul_y : ''", "lr_x : ''", "lr_y : ''", "nodata_value : 0", "output_name_prefix : 'clip'"]]])
 functionNames.append([['create_bandset', 'cfg.batchT.performBandSetCreation',  'cfg.bst.addFileToBandSet', ["raster_path_list : ''", "center_wavelength : ''", "wavelength_unit : 1", "multiplicative_factor : ''", "additive_factor : ''"]]])
+functionNames.append([['cross_classification', 'cfg.batchT.performCrossClassification',  'cfg.crossC.crossClassification', ["classification_file_path : ''", "use_nodata : 0", "nodata_value : 0", "reference_file_path : ''", "shapefile_field_name : ''", "output_raster_path : ''"]]])
 functionNames.append([['edit_raster_using_shapefile', 'cfg.batchT.performEditRasterUsingShapefile', 'cfg.editRstr.setRasterValue', ["input_raster_path : ''", "input_vector_path : ''", "vector_field_name : ''", "constant_value : 0", "expression :  'where(raster == 1, 2, raster)'"]]])
 functionNames.append([['land_cover_change', 'cfg.batchT.performLandCoverChange',  'cfg.landCC.landCoverChange', ["reference_raster_path : ''", "new_raster_path : ''", "output_raster_path : ''"]]])
 functionNames.append([['landsat_conversion', 'cfg.batchT.performLandsatConversion',  'cfg.landsatT.landsat', ["input_dir : ''", "mtl_file_path : ''", "celsius_temperature : 0", "apply_dos1 : 0", "use_nodata : 1", "nodata_value : 0", "pansharpening : 0", "create_bandset : 1", "output_dir : ''"]]])

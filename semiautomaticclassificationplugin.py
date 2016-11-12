@@ -102,6 +102,7 @@ if PluginCheck == "Yes":
 		from maininterface.asterTab import ASTERTab
 		from maininterface.sentinelTab import Sentinel2Tab
 		from maininterface.accuracy import Accuracy
+		from maininterface.crossclassificationTab import CrossClassification
 		from maininterface.splitTab import SplitTab
 		from maininterface.pcaTab import PcaTab
 		from maininterface.vectortorasterTab import VectorToRasterTab
@@ -230,6 +231,7 @@ class SemiAutomaticClassificationPlugin:
 			cfg.multiROI = MultipleROITab()
 			cfg.usgsLib = USGS_Spectral_Lib()
 			cfg.acc = Accuracy()
+			cfg.crossC = CrossClassification()
 			cfg.splitT = SplitTab()
 			cfg.pcaT = PcaTab()
 			cfg.vctRstrT = VectorToRasterTab()
@@ -550,6 +552,7 @@ class SemiAutomaticClassificationPlugin:
 			cfg.utls.refreshClassificationLayer()
 			cfg.utls.refreshRasterExtent()
 			cfg.acc.refreshReferenceLayer()
+			cfg.crossC.refreshReferenceLayer()
 			cfg.landCC.refreshClassificationReferenceLayer()
 			cfg.landCC.refreshNewClassificationLayer()
 			# reload raster bands in checklist
@@ -950,6 +953,17 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.toolButton_reload_10.clicked.connect(cfg.utls.refreshClassificationLayer)
 			# connect to calculate button
 			cfg.ui.calculateReport_toolButton.clicked.connect(cfg.classRep.calculateClassReport)
+			""" Cross classification tab """
+			# connect the classification combo
+			cfg.ui.classification_name_combo_2.currentIndexChanged.connect(cfg.crossC.classificationLayerName)
+			# connect to refresh button
+			cfg.ui.toolButton_reload_21.clicked.connect(cfg.utls.refreshClassificationLayer)
+			# connect the reference combo
+			cfg.ui.reference_name_combo_2.currentIndexChanged.connect(cfg.crossC.referenceLayerName)
+			# connect to refresh button
+			cfg.ui.buttonReload_shape_5.clicked.connect(cfg.crossC.refreshReferenceLayer)
+			# connect to calculate error matrix button
+			cfg.ui.calculatecrossClass_toolButton.clicked.connect(cfg.crossC.calculateCrossClassification)
 			""" Classification to vector """
 			# connect to refresh button
 			cfg.ui.toolButton_reload_12.clicked.connect(cfg.utls.refreshClassificationLayer)
@@ -1182,6 +1196,7 @@ class SemiAutomaticClassificationPlugin:
 		cfg.utls.refreshClassificationLayer()
 		cfg.utls.refreshRasterExtent()
 		cfg.acc.refreshReferenceLayer()
+		cfg.crossC.refreshReferenceLayer()
 		cfg.landCC.refreshClassificationReferenceLayer()
 		cfg.landCC.refreshNewClassificationLayer()
 		# reload raster bands in checklist
@@ -1306,6 +1321,7 @@ class SemiAutomaticClassificationPlugin:
 		cfg.utls.refreshClassificationLayer()
 		cfg.utls.refreshRasterExtent()
 		cfg.acc.refreshReferenceLayer()
+		cfg.crossC.refreshReferenceLayer()
 		cfg.landCC.refreshClassificationReferenceLayer()
 		cfg.landCC.refreshNewClassificationLayer()
 		# load classification algorithm

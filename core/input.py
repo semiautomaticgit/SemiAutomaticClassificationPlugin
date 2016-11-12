@@ -399,6 +399,8 @@ class Input:
 		land_cover_change_action = cfg.ipt.addMenuItem(cfg.postprocessing_menu, cfg.utls.landCoverChangeTab, "semiautomaticclassificationplugin_land_cover_change.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Land cover change"))
 		# Classification report
 		classification_report_action = cfg.ipt.addMenuItem(cfg.postprocessing_menu, cfg.utls.classificationReportTab, "semiautomaticclassificationplugin_report_tool.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Classification report"))
+		# Cross classification
+		cross_classification_action = cfg.ipt.addMenuItem(cfg.postprocessing_menu, cfg.utls.crossClassificationTab, "semiautomaticclassificationplugin_cross_classification.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Cross classification"))
 		# Classification to vector
 		class_to_vector_action = cfg.ipt.addMenuItem(cfg.postprocessing_menu, cfg.utls.classToVectorTab, "semiautomaticclassificationplugin_class_to_vector_tool.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Classification to vector"))
 		# Reclassification

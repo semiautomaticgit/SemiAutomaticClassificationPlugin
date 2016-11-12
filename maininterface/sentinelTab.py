@@ -139,7 +139,7 @@ class Sentinel2Tab:
 			dBs = {}
 			bandNames = []
 			for f in cfg.osSCP.listdir(inp):
-				if f.lower().endswith(".jp2"):
+				if f.lower().endswith(".jp2") or f.lower().endswith(".tif"):
 					# check band number
 					bNmb = str(f[-6:-4])
 					if str(bNmb).lower() in ['01','02','03','04','05','06','07','08','8a','09','10','11','12']:
