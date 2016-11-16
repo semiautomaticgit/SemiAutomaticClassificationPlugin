@@ -157,8 +157,8 @@ class DownloadSentinelImages:
 			cfg.sets.setQGISRegSetting(cfg.regSciHubPass, "")
 		
 	# download image preview from Amazon
-	def downloadPreviewAmazon(self, imgID, progress = None):
-		url = "http://sentinel-s2-l1c.s3.amazonaws.com/tiles/" + imgID[-5:-3] + "/" + imgID[-3] + "/" + imgID[-2:] + "/" + imgID[-30:-26] + "/" + imgID[-26:-24].replace("0", "") + "/" + imgID[-24:-22].replace("0", "") + "/0/preview.jp2"
+	def downloadPreviewAmazon(self, imgID, acquisitionDate, progress = None):
+		url = "http://sentinel-s2-l1c.s3.amazonaws.com/tiles/" + imgID[-5:-3] + "/" + imgID[-3] + "/" + imgID[-2:] + "/" + acquisitionDate[0:4] + "/" + acquisitionDate[5:7].replace("0", "") + "/" + acquisitionDate[8:10].replace("0", "") + "/0/preview.jp2"
 		check = cfg.utls.downloadFile(url, cfg.tmpDir + "//" + imgID + '_p.jp2', imgID, progress)
 		return check
 		
@@ -177,6 +177,7 @@ class DownloadSentinelImages:
 			progress = 0
 			for i in id:
 				imgNm = str(tW.item(i, 1).text())
+				acquisitionDate = str(tW.item(i, 2).text())
 				imgID = imgNm[0:-7] + '_p.jp2'
 				url = str(tW.item(i, 11).text())
 				if cfg.osSCP.path.isfile(cfg.tmpDir + "//" + imgID):
@@ -187,7 +188,7 @@ class DownloadSentinelImages:
 					else:
 						r = cfg.utls.addRasterLayer(cfg.tmpDir + "//" + imgID, imgID)
 				else:
-					checkA = self.downloadPreviewAmazon(imgNm[0:-7], progress)
+					checkA = self.downloadPreviewAmazon(imgNm[0:-7], acquisitionDate, progress)
 					if checkA != "Yes":
 						# single granule
 						if "MB" in str(tW.item(i, 9).text()):
@@ -279,11 +280,6 @@ class DownloadSentinelImages:
 		# check url
 		topLevelUrl = cfg.ui.sentinel_service_lineEdit.text()
 		topUrl =topLevelUrl
-		# response = cfg.utls.passwordConnect(user, password, topUrl + '/search?q=', topLevelUrl, None, None, "Yes")
-		# if response == "No":
-			# cfg.mx.msgErr40()
-			# # logger
-			# cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " error connection " + topUrl)
 		check = cfg.utls.passwordConnect(user, password, imageJPG, topLevelUrl, cfg.tmpDir + "//" + imgID + "_thumb.jpg", progress)
 		if check == "Yes":
 			cLon = (float(min_lon) + float(max_lon)) / 2
@@ -358,44 +354,60 @@ class DownloadSentinelImages:
 			for i in range(1, 14):
 				t = "cfg.ui.checkBoxs_band_" + str(i) + ".setCheckState(2)"
 				eval(t)
+			cfg.ui.ancillary_data_checkBox.setCheckState(2)
 			self.checkAll = "No"
 		else:
 			for i in range(1, 14):
 				t = "cfg.ui.checkBoxs_band_" + str(i) + ".setCheckState(0)"
 				eval(t)
+			cfg.ui.ancillary_data_checkBox.setCheckState(0)
 			self.checkAll = "Yes"
 		
 	# check band download
-	def checkImageBands(self, checkbox, bandNumber, imgID, imgName, imgName2, outputDirectory, exporter, progress, outFilesList, linksList):
+	def checkImageBands(self, checkbox, bandNumber, imgID, imgName, imgName2, acquisitionDate, outputDirectory, exporter, progress, outFilesList, linksList):
 		if cfg.actionCheck == "Yes":
+			check = "No"
 			if checkbox.isChecked():
-				user = cfg.ui.user_scihub_lineEdit.text()
-				password =cfg.ui.password_scihub_lineEdit.text()
-				# check url
-				topLevelUrl = cfg.ui.sentinel_service_lineEdit.text()
-				topUrl =topLevelUrl + '/odata/v1/Products'
-				topUrl2 =topLevelUrl
-				# response = cfg.utls.passwordConnect(user, password, topUrl2 + '/search?q=', topLevelUrl, None, None, "Yes")
-				# if response == "No":
-					# cfg.mx.msgErr40()
-					# # logger
-					# cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " error connection " + topUrl)
-				urlL = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('IMG_DATA')/Nodes('" + imgName2[0:-7] + '_B' + bandNumber + ".jp2')/$value"
-				outFile = cfg.tmpDir + "//" + imgName2[0:-7] + '_B' + bandNumber + '.jp2'
-				outCopyFile = outputDirectory + "//" + imgName2[0:-7] + "//" + imgName2[0:-7] + '_B' + bandNumber
-				if exporter == "No":
-					self.downloadFile(urlL, outFile, progress)
-					if cfg.osSCP.path.getsize(outFile) < 100000:
+				# download using the service http://sentinel-s2-l1c.s3-website.eu-central-1.amazonaws.com
+				urlL = "http://sentinel-s2-l1c.s3.amazonaws.com/tiles/" + imgID[-5:-3] + "/" + imgID[-3] + "/" + imgID[-2:] + "/" + acquisitionDate[0:4] + "/" + acquisitionDate[5:7].replace("0", "") + "/" + acquisitionDate[8:10].replace("0", "") + "/0/"
+				check = cfg.utls.downloadFile( urlL + "metadata.xml", cfg.tmpDir  + "//" + imgID + "_metadata.xml", imgID + "_metadata.xml", progress)
+				if check == "Yes":
+					meta = open(cfg.tmpDir  + "//" + imgID + "_metadata.xml", 'r').read()
+					if "NoSuchKey" in meta:
+						check = "No"
+				if check == "Yes":
+					if cfg.actionCheck == "Yes":
+						if exporter == "Yes":
+							linksList.append(urlL + 'B' + bandNumber + '.jp2')
+						else:
+							outFile = cfg.tmpDir + "//" + imgName2[0:-7] + '_B' + bandNumber + '.jp2'
+							outCopyFile = outputDirectory + "//" + imgName2[0:-7] + "//" + imgName2[0:-7] + '_B' + bandNumber
+							check = cfg.utls.downloadFile( urlL + 'B' + bandNumber + ".jp2", outFile, imgName2[0:-7] + '_B' + bandNumber + '.jp2', progress)
+							outFilesList.append([outFile, outCopyFile])
+				# download from hub
+				else:
+					user = cfg.ui.user_scihub_lineEdit.text()
+					password =cfg.ui.password_scihub_lineEdit.text()
+					# check url
+					topLevelUrl = cfg.ui.sentinel_service_lineEdit.text()
+					topUrl =topLevelUrl + '/odata/v1/Products'
+					topUrl2 =topLevelUrl
+					urlL = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('IMG_DATA')/Nodes('" + imgName2[0:-7] + '_B' + bandNumber + ".jp2')/$value"
+					outFile = cfg.tmpDir + "//" + imgName2[0:-7] + '_B' + bandNumber + '.jp2'
+					outCopyFile = outputDirectory + "//" + imgName2[0:-7] + "//" + imgName2[0:-7] + '_B' + bandNumber
+					if exporter == "No":
 						self.downloadFile(urlL, outFile, progress)
 						if cfg.osSCP.path.getsize(outFile) < 100000:
-							cfg.mx.msgWar23(imgName2[0:-7] + '_B' + bandNumber + '.jp2')
-					outFilesList.append([outFile, outCopyFile])
-				else:
-					linksList.append(urlL)
+							self.downloadFile(urlL, outFile, progress)
+							if cfg.osSCP.path.getsize(outFile) < 100000:
+								cfg.mx.msgWar23(imgName2[0:-7] + '_B' + bandNumber + '.jp2')
+						outFilesList.append([outFile, outCopyFile])
+					else:
+						linksList.append(urlL)
 		else:
 			cfg.uiUtls.removeProgressBar()
 			return "No"
-				
+		
 	# download images
 	def downloadSentinelImages(self, outputDirectory, exporter = "No"):
 		cfg.uiUtls.addProgressBar()
@@ -414,14 +426,10 @@ class DownloadSentinelImages:
 		topLevelUrl = cfg.ui.sentinel_service_lineEdit.text()
 		topUrl =topLevelUrl + '/odata/v1/Products'
 		topUrl2 =topLevelUrl
-		# response = cfg.utls.passwordConnect(user, password, topUrl2 + '/search?q=', topLevelUrl, None, None, "Yes")
-		# if response == "No":
-			# cfg.mx.msgErr40()
-			# # logger
-			# cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " error connection " + topUrl)
 		for i in range(0, c):
 			if cfg.actionCheck == "Yes":
 				imgName = str(tW.item(i, 0).text())
+				acquisitionDate = str(tW.item(i, 2).text())
 				imgID = str(tW.item(i, 12).text())
 				imgName2 = str(tW.item(i, 1).text())
 				imgJp2 = imgName2[0:-7] + '_p.jp2'
@@ -431,11 +439,6 @@ class DownloadSentinelImages:
 					outFiles = []
 					outDirList.append(outputDirectory + "//" + imgName2[0:-7])
 					progress = progress + progressStep
-					#download metadata
-					urlL1 = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('" + imgName.replace('_PRD_MSIL1C_', '_MTD_SAFL1C_') + ".xml')/$value"
-					outFile1 = outputDirectory + "//" + imgName2[0:-7] + "//" + imgName.replace('_PRD_MSIL1C_', '_MTD_SAFL1C_') + '.xml'
-					urlL2 = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('" + imgName2[0:-7].replace('_MSI_L1C_', '_MTD_L1C_') + ".xml')/$value"
-					outFile2 = outputDirectory + "//" + imgName2[0:-7] + "//" + imgName2[0:-7].replace('_MSI_L1C_', '_MTD_L1C_')  + '.xml'
 					if exporter == "No":
 						oDir = cfg.utls.makeDirectory(outputDirectory + "//" + imgName2[0:-7])
 						if oDir is None:
@@ -443,40 +446,40 @@ class DownloadSentinelImages:
 							cfg.uiUtls.removeProgressBar()
 							cfg.cnvs.setRenderFlag(True)
 							return "No"
-					if exporter == "No":
-						self.downloadFile(urlL1, outFile1, progress)
-						self.downloadFile(urlL2, outFile2, progress)
-					else:
-						links.append(urlL1)
-						links.append(urlL2)
-					#download QI
-					urlL3 = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('QI_DATA')/Nodes('" + imgName2[0:-7].replace('_MSI_L1C_TL_', '_MSK_CLOUDS_')  + "_B00_MSIL1C.gml')/$value"
-					outFile3 = outputDirectory + "//" + imgName2[0:-7] + "//" + imgName2[0:-7].replace('_MSI_L1C_TL_', '_MSK_CLOUDS_') + '_B00_MSIL1C.gml'
-					if exporter == "No":
-						oDir = cfg.utls.makeDirectory(outputDirectory + "//" + imgName2[0:-7])
-						if oDir is None:
-							cfg.mx.msgErr58()
-							cfg.uiUtls.removeProgressBar()
-							cfg.cnvs.setRenderFlag(True)
-							return "No"
-					if exporter == "No":
-						self.downloadFile(urlL3, outFile3, progress)
-					else:
-						links.append(urlL3)
+					# download ancillary data
+					if cfg.ui.ancillary_data_checkBox.isChecked():
+						#download metadata
+						urlL1 = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('" + imgName.replace('_PRD_MSIL1C_', '_MTD_SAFL1C_') + ".xml')/$value"
+						outFile1 = outputDirectory + "//" + imgName2[0:-7] + "//" + imgName.replace('_PRD_MSIL1C_', '_MTD_SAFL1C_') + '.xml'
+						urlL2 = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('" + imgName2[0:-7].replace('_MSI_L1C_', '_MTD_L1C_') + ".xml')/$value"
+						outFile2 = outputDirectory + "//" + imgName2[0:-7] + "//" + imgName2[0:-7].replace('_MSI_L1C_', '_MTD_L1C_')  + '.xml'							
+						if exporter == "No":
+							self.downloadFile(urlL1, outFile1, progress)
+							self.downloadFile(urlL2, outFile2, progress)
+						else:
+							links.append(urlL1)
+							links.append(urlL2)
+						#download QI
+						urlL3 = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('QI_DATA')/Nodes('" + imgName2[0:-7].replace('_MSI_L1C_TL_', '_MSK_CLOUDS_')  + "_B00_MSIL1C.gml')/$value"
+						outFile3 = outputDirectory + "//" + imgName2[0:-7] + "//" + imgName2[0:-7].replace('_MSI_L1C_TL_', '_MSK_CLOUDS_') + '_B00_MSIL1C.gml'
+						if exporter == "No":
+							self.downloadFile(urlL3, outFile3, progress)
+						else:
+							links.append(urlL3)
 					# download bands
-					self.checkImageBands(cfg.ui.checkBoxs_band_1, '01', imgID, imgName, imgName2, outputDirectory, exporter, progress, outFiles, links)
-					self.checkImageBands(cfg.ui.checkBoxs_band_2, '02', imgID, imgName, imgName2, outputDirectory, exporter, progress, outFiles, links)
-					self.checkImageBands(cfg.ui.checkBoxs_band_3, '03', imgID, imgName, imgName2, outputDirectory, exporter, progress, outFiles, links)
-					self.checkImageBands(cfg.ui.checkBoxs_band_4, '04', imgID, imgName, imgName2, outputDirectory, exporter, progress, outFiles, links)
-					self.checkImageBands(cfg.ui.checkBoxs_band_5, '05', imgID, imgName, imgName2, outputDirectory, exporter, progress, outFiles, links)
-					self.checkImageBands(cfg.ui.checkBoxs_band_6, '06', imgID, imgName, imgName2, outputDirectory, exporter, progress, outFiles, links)
-					self.checkImageBands(cfg.ui.checkBoxs_band_7, '07', imgID, imgName, imgName2, outputDirectory, exporter, progress, outFiles, links)
-					self.checkImageBands(cfg.ui.checkBoxs_band_8, '08', imgID, imgName, imgName2, outputDirectory, exporter, progress, outFiles, links)
-					self.checkImageBands(cfg.ui.checkBoxs_band_9, '8A', imgID, imgName, imgName2, outputDirectory, exporter, progress, outFiles, links)
-					self.checkImageBands(cfg.ui.checkBoxs_band_10, '09', imgID, imgName, imgName2, outputDirectory, exporter, progress, outFiles, links)
-					self.checkImageBands(cfg.ui.checkBoxs_band_11, '10', imgID, imgName, imgName2, outputDirectory, exporter, progress, outFiles, links)
-					self.checkImageBands(cfg.ui.checkBoxs_band_12, '11', imgID, imgName, imgName2, outputDirectory, exporter, progress, outFiles, links)
-					self.checkImageBands(cfg.ui.checkBoxs_band_13, '12', imgID, imgName, imgName2, outputDirectory, exporter, progress, outFiles, links)
+					self.checkImageBands(cfg.ui.checkBoxs_band_1, '01', imgID, imgName, imgName2, acquisitionDate,outputDirectory, exporter, progress, outFiles, links)
+					self.checkImageBands(cfg.ui.checkBoxs_band_2, '02', imgID, imgName, imgName2, acquisitionDate, outputDirectory, exporter, progress, outFiles, links)
+					self.checkImageBands(cfg.ui.checkBoxs_band_3, '03', imgID, imgName, imgName2, acquisitionDate, outputDirectory, exporter, progress, outFiles, links)
+					self.checkImageBands(cfg.ui.checkBoxs_band_4, '04', imgID, imgName, imgName2, acquisitionDate, outputDirectory, exporter, progress, outFiles, links)
+					self.checkImageBands(cfg.ui.checkBoxs_band_5, '05', imgID, imgName, imgName2, acquisitionDate, outputDirectory, exporter, progress, outFiles, links)
+					self.checkImageBands(cfg.ui.checkBoxs_band_6, '06', imgID, imgName, imgName2, acquisitionDate, outputDirectory, exporter, progress, outFiles, links)
+					self.checkImageBands(cfg.ui.checkBoxs_band_7, '07', imgID, imgName, imgName2, acquisitionDate, outputDirectory, exporter, progress, outFiles, links)
+					self.checkImageBands(cfg.ui.checkBoxs_band_8, '08', imgID, imgName, imgName2, acquisitionDate, outputDirectory, exporter, progress, outFiles, links)
+					self.checkImageBands(cfg.ui.checkBoxs_band_9, '8A', imgID, imgName, imgName2, acquisitionDate, outputDirectory, exporter, progress, outFiles, links)
+					self.checkImageBands(cfg.ui.checkBoxs_band_10, '09', imgID, imgName, imgName2, acquisitionDate, outputDirectory, exporter, progress, outFiles, links)
+					self.checkImageBands(cfg.ui.checkBoxs_band_11, '10', imgID, imgName, imgName2, acquisitionDate, outputDirectory, exporter, progress, outFiles, links)
+					self.checkImageBands(cfg.ui.checkBoxs_band_12, '11', imgID, imgName, imgName2, acquisitionDate, outputDirectory, exporter, progress, outFiles, links)
+					self.checkImageBands(cfg.ui.checkBoxs_band_13, '12', imgID, imgName, imgName2, acquisitionDate, outputDirectory, exporter, progress, outFiles, links)
 					for oFile in outFiles:
 						cfg.shutilSCP.copy(oFile[0], oFile[1] + '.jp2')
 						cfg.osSCP.remove(oFile[0])
@@ -580,6 +583,8 @@ class DownloadSentinelImages:
 				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				if "HTTP Status 500" in xml:
 					cfg.mx.msgWar24()
+				else:
+					cfg.mx.msgErr40()
 				cfg.uiUtls.removeProgressBar()
 				return "No"
 			entries = doc.getElementsByTagName("entry")

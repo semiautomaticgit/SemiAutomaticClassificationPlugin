@@ -325,6 +325,9 @@ class Input:
 	# activate docks
 	def activateDocks(self):
 		cfg.dockclassdlg.show()
+		cfg.toolBar.show()
+		cfg.toolBar2.show()
+		cfg.toolBar3.show()
 		
 	# user manual
 	def quickGuide(self):
@@ -348,7 +351,7 @@ class Input:
 		cfg.menu.setObjectName('semiautomaticclassificationplugin')
 		cfg.menu.setTitle(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "SCP"))
 		menuBar = cfg.iface.mainWindow().menuBar()
-		menuBar.insertMenu(cfg.iface.firstRightStandardMenu().menuAction(), cfg.menu)	
+		menuBar.insertMenu(cfg.iface.firstRightStandardMenu().menuAction(), cfg.menu)
 		# Band set
 		bandset_action = cfg.ipt.addMenuItem(cfg.menu, cfg.utls.bandSetTab, "semiautomaticclassificationplugin_bandset_tool.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Band set"))
 		# Download
@@ -444,6 +447,8 @@ class Input:
 		help_action = cfg.ipt.addMenuItem(cfg.menu, cfg.ipt.askHelp, "help.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Online help"))
 		# About
 		about_action = cfg.ipt.addMenuItem(cfg.menu, cfg.utls.aboutTab, "fromGIStoRS.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "About"))
+		# show plugin
+		show_action = cfg.ipt.addMenuItem(cfg.menu, self.showPlugin, "semiautomaticclassificationplugin_docks.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Show plugin"))
 		
 	# welcome text
 	def welcomeText(self, inputUrl = None, inputUrl2 = None):
