@@ -363,7 +363,24 @@ class SemiAutomaticClassificationPlugin:
 			try:
 				cfg.iface.addDockWidget(cfg.QtSCP.LeftDockWidgetArea, cfg.dockclassdlg)
 			except:
-				qgisUtils.iface.messageBar().pushMessage("Semi-Automatic Classification Plugin", QApplication.translate("semiautomaticclassificationplugin", "Please, restart QGIS for executing the Semi-Automatic Classification Plugin. Possible missing dependecies."), level=QgsMessageBar.INFO)
+				msg = ""
+				try:
+					import scipy.stats.distributions as statdistr
+				except:
+					msg = "SciPy"
+				try:
+					from matplotlib.ticker import MaxNLocator
+				except:
+					msg = "Matplotlib"
+				try:
+					import numpy as np
+				except:
+					msg = "NumPy"
+				try:
+					from osgeo import gdal
+				except:
+					msg = "Gdal"
+				qgisUtils.iface.messageBar().pushMessage("Semi-Automatic Classification Plugin", QApplication.translate("semiautomaticclassificationplugin", "Please, restart QGIS for executing the Semi-Automatic Classification Plugin. Possible missing dependecies: " + msg), level=QgsMessageBar.INFO)
 				return
 			cfg.ipt.loadInputToolbar()
 			cfg.algMinDist = cfg.uidc.algorithm_combo.itemText(0) 

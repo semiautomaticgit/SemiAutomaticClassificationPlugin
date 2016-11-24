@@ -5142,7 +5142,12 @@ class Utils:
 		rPSys =cfg.osrSCP.SpatialReference(wkt=rP)
 		rPSys.AutoIdentifyEPSG()
 		rPRS = rPSys.GetAuthorityCode(None)
-		epsg = int(rPRS)
+		try:
+			epsg = int(rPRS)
+		except Exception, err:
+			cfg.mx.msgErr61(str(layerPath))
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 		return epsg
 		
 	# convert reference layer to raster based on the resolution of a raster

@@ -3669,7 +3669,7 @@ Polish: Jakub Pękala, Robert Szczepanek&lt;/p&gt;
 <context>
     <name>semiautomaticclassificationplugin</name>
     <message>
-        <location filename="semiautomaticclassificationplugin.py" line="1426"/>
+        <location filename="semiautomaticclassificationplugin.py" line="1444"/>
         <source>Please, restart QGIS for executing the Semi-Automatic Classification Plugin</source>
         <translation>Proszę ponownie uruchomić QGIS aby uzyskać dostęp do Semi-Automatic Classification Plugin</translation>
     </message>
@@ -4084,67 +4084,67 @@ Polish: Jakub Pękala, Robert Szczepanek&lt;/p&gt;
         <translation>Nie można połączyć. Sprawdź nazwę użytkownika i hasło</translation>
     </message>
     <message>
-        <location filename="messages.py" line="382"/>
+        <location filename="messages.py" line="385"/>
         <source>Warning</source>
         <translation>Uwaga</translation>
     </message>
     <message>
-        <location filename="messages.py" line="318"/>
+        <location filename="messages.py" line="321"/>
         <source>It appears that SciPy is not correctly installed. Please, update QGIS </source>
         <translation>Wygląda na to,że SciPy nie jest zainstalowany poprawnie. Proszę zaktualizować QGIS </translation>
     </message>
     <message>
-        <location filename="messages.py" line="321"/>
+        <location filename="messages.py" line="324"/>
         <source>It appears that SciPy is not correctly installed. Please, see this page for information about SciPy installation </source>
         <translation>Wygląda na to, że SciPy nie jest zainstalowany poprawnie. Proszę poszukać informacji dotyczących instalacji SciPy na tej stronie</translation>
     </message>
     <message>
-        <location filename="messages.py" line="324"/>
+        <location filename="messages.py" line="327"/>
         <source>rasters have different pixel sizes that can lead to incorrect results. Please, consider to resample rasters to the same pixel size</source>
         <translation>rastry posiadają różne rozmiary pikseli, które mogą prowadzić do niepoprawnych wyników. Proszę rozważyć ponowne próbkowanie rastrów do tego samego rozmiaru pikseli</translation>
     </message>
     <message>
-        <location filename="messages.py" line="327"/>
+        <location filename="messages.py" line="330"/>
         <source>The same ID class has been already assigned to a different macrolass</source>
         <translation>Ta sama klasa ID została już przypisana do innej makroklasy</translation>
     </message>
     <message>
-        <location filename="messages.py" line="330"/>
+        <location filename="messages.py" line="333"/>
         <source>Wavelength already present</source>
         <translation>Długość fali jest już podana</translation>
     </message>
     <message>
-        <location filename="messages.py" line="343"/>
+        <location filename="messages.py" line="346"/>
         <source>RAM value was too high. Value has been decreased automatically</source>
         <translation>Wartość RAM&apos;u jest zbyt duża. Wartość została obniżona automatycznie</translation>
     </message>
     <message>
-        <location filename="messages.py" line="349"/>
+        <location filename="messages.py" line="352"/>
         <source>Unable to load the virtual raster. Please create it manually</source>
         <translation>Nie można załadować rastra wirtualnego. Proszę stworzyć go ręcznie</translation>
     </message>
     <message>
-        <location filename="messages.py" line="352"/>
+        <location filename="messages.py" line="355"/>
         <source>Unable to proceed. The raster must be in projected coordinates</source>
         <translation>Nie można kontynuować. Raster musi znajdować się we współrzędnych odwzorowania</translation>
     </message>
     <message>
-        <location filename="messages.py" line="355"/>
+        <location filename="messages.py" line="358"/>
         <source>Select at least one raster</source>
         <translation>Zaznacz przynajmniej jeden raster</translation>
     </message>
     <message>
-        <location filename="messages.py" line="358"/>
+        <location filename="messages.py" line="361"/>
         <source>Incorrect expression</source>
         <translation>Nieprawidłowe wyrażenie</translation>
     </message>
     <message>
-        <location filename="messages.py" line="361"/>
+        <location filename="messages.py" line="364"/>
         <source>Unable to access the temporary directory</source>
         <translation>Nie można uzyskać dostępu do katalogu tymczasowego</translation>
     </message>
     <message>
-        <location filename="messages.py" line="364"/>
+        <location filename="messages.py" line="367"/>
         <source>Reduce the search area extent within 10 degrees of latitude and 10 degrees of longitude</source>
         <translation>Zmniejsz zakres obszaru wyszukiwania w obrębie 10 stopni szerokości geograficznej i 10 stopni długości geograficznej</translation>
     </message>
@@ -4686,22 +4686,22 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation>Błąd połączenia SSL. Sprawdź szczegóły w FAQ podręcznika wtyczki.</translation>
     </message>
     <message>
-        <location filename="messages.py" line="333"/>
+        <location filename="messages.py" line="336"/>
         <source>Wavelength unit not provided in band set</source>
         <translation>Nie podano jednostki długości fali dla zestawu kanałów.</translation>
     </message>
     <message>
-        <location filename="messages.py" line="367"/>
+        <location filename="messages.py" line="370"/>
         <source>Macroclass symbology is missing</source>
         <translation>Brak stylizacji makroklas.</translation>
     </message>
     <message>
-        <location filename="messages.py" line="370"/>
+        <location filename="messages.py" line="373"/>
         <source>Missing bands</source>
         <translation>Brak kanałów</translation>
     </message>
     <message>
-        <location filename="messages.py" line="373"/>
+        <location filename="messages.py" line="376"/>
         <source>No metadata found inside the input directory. Default values will be used</source>
         <translation>Nie znaleziono metadanych w katalogu danych. Zostaną użyte wartości domyślne.</translation>
     </message>
@@ -4891,11 +4891,6 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation>Czy na pewno chcesz wyczyścić progi?</translation>
     </message>
     <message>
-        <location filename="semiautomaticclassificationplugin.py" line="366"/>
-        <source>Please, restart QGIS for executing the Semi-Automatic Classification Plugin. Possible missing dependecies.</source>
-        <translation>Wymagany restart QGIS.Brakuje prawdopodobnie bibliotek wykorzystywanych przez wtyczkę.</translation>
-    </message>
-    <message>
         <location filename="input.py" line="360"/>
         <source>Landsat download</source>
         <translation>Pobieranie Landsat</translation>
@@ -5041,7 +5036,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation>Śledź błędy</translation>
     </message>
     <message>
-        <location filename="messages.py" line="376"/>
+        <location filename="messages.py" line="379"/>
         <source>The coordinate system of training input is different from the input image. Please create a new training input</source>
         <translation>Układ współrzędnych danych treningowych jest inny niż obrazu. Dokonaj transformacji OT.</translation>
     </message>
@@ -5127,7 +5122,7 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="messages.py" line="382"/>
+        <location filename="messages.py" line="385"/>
         <source>Search error HTTP Status 500, reduce the result number</source>
         <translation type="unfinished"></translation>
     </message>
