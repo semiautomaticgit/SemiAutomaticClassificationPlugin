@@ -4159,7 +4159,7 @@ Polish: Jakub Pękala, Robert Szczepanek&lt;/p&gt;
         <translation>Zapisz błąd macierzy wyjścia rastra</translation>
     </message>
     <message>
-        <location filename="crossclassificationTab.py" line="306"/>
+        <location filename="crossclassificationTab.py" line="305"/>
         <source>Classification</source>
         <translation>Klasyfikacja</translation>
     </message>
@@ -4169,7 +4169,7 @@ Polish: Jakub Pękala, Robert Szczepanek&lt;/p&gt;
         <translation>BłądKoduMacierzy</translation>
     </message>
     <message>
-        <location filename="crossclassificationTab.py" line="335"/>
+        <location filename="crossclassificationTab.py" line="334"/>
         <source>Reference</source>
         <translation>Odniesienie</translation>
     </message>
@@ -4184,7 +4184,7 @@ Polish: Jakub Pękala, Robert Szczepanek&lt;/p&gt;
         <translation>BŁĄD MACIERZY</translation>
     </message>
     <message>
-        <location filename="crossclassificationTab.py" line="358"/>
+        <location filename="crossclassificationTab.py" line="357"/>
         <source>Total</source>
         <translation>Całkowicie</translation>
     </message>
@@ -5132,12 +5132,12 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="crossclassificationTab.py" line="306"/>
+        <location filename="crossclassificationTab.py" line="305"/>
         <source>CrossClassCode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="crossclassificationTab.py" line="329"/>
+        <location filename="crossclassificationTab.py" line="328"/>
         <source>CROSS MATRIX [</source>
         <translation type="unfinished"></translation>
     </message>

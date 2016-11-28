@@ -268,7 +268,7 @@ class Accuracy:
 				totX.extend(rows)
 				total = sorted(cfg.np.unique(totX).tolist())
 				errMatrix = cfg.np.zeros((len(total), len(total)))
-				cList = "V " + cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Classification') + "\t"
+				cList = "V_" + cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Classification') + "\t"
 				try:
 					l = open(tblOut, 'w')
 				except Exception, err:

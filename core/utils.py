@@ -5240,13 +5240,20 @@ class Utils:
 			# set raster projection from reference
 			oR.SetGeoTransform( [ origX , rGT[1] , 0 , origY , 0 , rGT[5] ] )
 			oR.SetProjection(rP)
-			oRB.SetNoDataValue(cfg.NoDataVal)
-			m = cfg.np.zeros((rR, rC), dtype=cfg.np.float64)
-			m.fill(cfg.NoDataVal)
-			oRB.WriteArray(m, 0, 0)
-			oRB.FlushCache()
-			# close bands
-			oRB = None
+
+			
+			tPMN2 = dT + cfg.calcRasterNm + ".tif"
+			tPMD2 = cfg.tmpDir + "/" + tPMN2
+			# output rasters
+			oM = []
+			oM.append(tPMD2)
+			oMR = cfg.utls.createRasterFromReference(oR, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0, None, "No")
+			e = str("a * 0")
+			variableList = [["im1", "a"]]
+			o = cfg.utls.processRaster(oR, [oRB], None, "No", cfg.utls.bandCalculation, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", e, variableList, "No")
+			
+
+
 			# convert reference layer to raster
 			if ALL_TOUCHED is None:
 				if burnValues is None:
@@ -5258,6 +5265,8 @@ class Utils:
 					oC = cfg.gdalSCP.RasterizeLayer(oR, [1], gL, options = ["ATTRIBUTE=" + str(fieldName), "ALL_TOUCHED=TRUE"])
 				else:
 					oC = cfg.gdalSCP.RasterizeLayer(oR, [1], gL, burn_values=[burnValues], options = ["ALL_TOUCHED=TRUE"])
+			# close bands
+			oRB = None
 			# close rasters
 			oR = None
 			rD = None

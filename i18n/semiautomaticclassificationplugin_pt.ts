@@ -4424,7 +4424,7 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="crossclassificationTab.py" line="306"/>
+        <location filename="crossclassificationTab.py" line="305"/>
         <source>Classification</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4434,7 +4434,7 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="crossclassificationTab.py" line="335"/>
+        <location filename="crossclassificationTab.py" line="334"/>
         <source>Reference</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4449,7 +4449,7 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="crossclassificationTab.py" line="358"/>
+        <location filename="crossclassificationTab.py" line="357"/>
         <source>Total</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5099,12 +5099,12 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="crossclassificationTab.py" line="306"/>
+        <location filename="crossclassificationTab.py" line="305"/>
         <source>CrossClassCode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="crossclassificationTab.py" line="329"/>
+        <location filename="crossclassificationTab.py" line="328"/>
         <source>CROSS MATRIX [</source>
         <translation type="unfinished"></translation>
     </message>

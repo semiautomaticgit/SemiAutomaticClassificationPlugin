@@ -283,13 +283,12 @@ class CrossClassification:
 					cfg.shutilSCP.copy(tPMD2, crossRstPath)
 					cfg.osSCP.remove(tPMD2)
 				cfg.uiUtls.updateBar(80)
-				cols = sorted(cfg.np.unique(col).tolist())
-				rows = sorted(cfg.np.unique(row).tolist())
-				totX = cols
-				totX.extend(rows)
-				total = sorted(cfg.np.unique(totX).tolist())
-				crossClass = cfg.np.zeros((len(total), len(total)))
-				cList = "V " + cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Classification') + "\t"
+				col2 = list(set(col))
+				row2 = list(set(row))
+				cols = sorted(cfg.np.unique(col2).tolist())
+				rows = sorted(cfg.np.unique(row2).tolist())
+				crossClass = cfg.np.zeros((len(rows), len(cols)))
+				cList = "V_" + cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Classification') + "\t"
 				try:
 					l = open(tblOut, 'w')
 				except Exception, err:
@@ -311,19 +310,19 @@ class CrossClassification:
 				l.write(t)
 				# open cross raster
 				rDC = cfg.gdalSCP.Open(crossRstPath, cfg.gdalSCP.GA_ReadOnly)
-				bLC = cfg.utls.readAllBandsFromRaster(rDC)
-				for c in total:
+				bLC = cfg.utls.readAllBandsFromRaster(rDC)				
+				for c in cols:
 					cList = cList + str(c) + "\t"
-					for r in total:
+					for r in rows:
 						cfg.rasterBandPixelCount = 0
 						try:
 							v = cmbntns["combination_" + str(c) + "_"+ str(r)]
 							o = cfg.utls.processRaster(rDC, bLC, None, "No", cfg.utls.rasterEqualValueCount, None, None, None, None, 0, None, nD, "No", None, v, "value " + str(v))
 							t = str(v) + "\t" + str(c) + "\t" + str(r) + "\t" + str(cfg.rasterBandPixelCount) + "	" + str(cfg.rasterBandPixelCount * cRPX * cRPY) + str("\n")
 							l.write(t)
-							crossClass[total.index(r), total.index(c)] = cfg.rasterBandPixelCount * cRPX * cRPY
+							crossClass[rows.index(r), cols.index(c)] = cfg.rasterBandPixelCount * cRPX * cRPY
 						except:
-							crossClass[total.index(r), total.index(c)] = cfg.rasterBandPixelCount * cRPX * cRPY
+							crossClass[rows.index(r), cols.index(c)] = cfg.rasterBandPixelCount * cRPX * cRPY
 				# save combination to table
 				l.write(str("\n"))
 				tStr = "\t" + "> " + cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'CROSS MATRIX [') + str(un) + "^2]" + "\n"
@@ -351,12 +350,12 @@ class CrossClassification:
 				# write matrix
 				ix = 0
 				for j in tM:
-					tMR = str(total[ix]) + "\t" + j.rstrip('\n') + "\t" + str(int(crossClass[ix, :].sum())) + str("\n")
+					tMR = str(rows[ix]) + "\t" + j.rstrip('\n') + "\t" + str(int(crossClass[ix, :].sum())) + str("\n")
 					l.write(tMR)
 					ix = ix + 1
 				# last line
 				lL = cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Total')
-				for c in range(0, len(total)):
+				for c in range(0, len(cols)):
 					lL = lL + "\t" + str(int(crossClass[:, c].sum()))
 				totMat = int(crossClass.sum())
 				lL = lL + "\t" + str(totMat) + str("\n")
