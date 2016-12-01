@@ -5228,7 +5228,9 @@ class Utils:
 			rC = abs(int(round((maxX - minX) / rGT[1])))
 			rR = abs(int(round((maxY - minY) / rGT[5])))
 			tD = cfg.gdalSCP.GetDriverByName(outFormat)
-			oR = tD.Create(outputRaster, rC, rR, 1, cfg.gdalSCP.GDT_Float32)
+			tPMN2 = dT + cfg.calcRasterNm + ".tif"
+			tPMD2 = cfg.tmpDir + "/" + tPMN2
+			oR = tD.Create(tPMD2, rC, rR, 1, cfg.gdalSCP.GDT_Float32)
 			try:
 				oRB = oR.GetRasterBand(1)
 			# in case of errors
@@ -5240,35 +5242,33 @@ class Utils:
 			# set raster projection from reference
 			oR.SetGeoTransform( [ origX , rGT[1] , 0 , origY , 0 , rGT[5] ] )
 			oR.SetProjection(rP)
-
-			
-			tPMN2 = dT + cfg.calcRasterNm + ".tif"
-			tPMD2 = cfg.tmpDir + "/" + tPMN2
 			# output rasters
 			oM = []
-			oM.append(tPMD2)
-			oMR = cfg.utls.createRasterFromReference(oR, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0, None, "No")
+			oM.append(outputRaster)
+			oMR = cfg.utls.createRasterFromReference(oR, 1, oM, 0, "GTiff", cfg.rasterDataType, 0, None, "No")
 			e = str("a * 0")
 			variableList = [["im1", "a"]]
-			o = cfg.utls.processRaster(oR, [oRB], None, "No", cfg.utls.bandCalculation, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", e, variableList, "No")
-			
-
-
-			# convert reference layer to raster
-			if ALL_TOUCHED is None:
-				if burnValues is None:
-					oC = cfg.gdalSCP.RasterizeLayer(oR, [1], gL, options = ["ATTRIBUTE=" + str(fieldName)])
-				else:
-					oC = cfg.gdalSCP.RasterizeLayer(oR, [1], gL, burn_values=[burnValues])
-			else:
-				if burnValues is None:
-					oC = cfg.gdalSCP.RasterizeLayer(oR, [1], gL, options = ["ATTRIBUTE=" + str(fieldName), "ALL_TOUCHED=TRUE"])
-				else:
-					oC = cfg.gdalSCP.RasterizeLayer(oR, [1], gL, burn_values=[burnValues], options = ["ALL_TOUCHED=TRUE"])
+			o = cfg.utls.processRaster(oR, [oRB], None, "No", cfg.utls.bandCalculation, None, oMR, None, None, 0, None, 0, "No", e, variableList, "No")
 			# close bands
 			oRB = None
 			# close rasters
 			oR = None
+			oMR = None
+			oR2 = cfg.gdalSCP.Open(outputRaster, cfg.gdalSCP.GA_Update)
+			# convert reference layer to raster
+			if ALL_TOUCHED is None:
+				if burnValues is None:
+					oC = cfg.gdalSCP.RasterizeLayer(oR2, [1], gL, options = ["ATTRIBUTE=" + str(fieldName)])
+				else:
+					oC = cfg.gdalSCP.RasterizeLayer(oR2, [1], gL, burn_values=[burnValues])
+			else:
+				if burnValues is None:
+					oC = cfg.gdalSCP.RasterizeLayer(oR2, [1], gL, options = ["ATTRIBUTE=" + str(fieldName), "ALL_TOUCHED=TRUE"])
+				else:
+					oC = cfg.gdalSCP.RasterizeLayer(oR2, [1], gL, burn_values=[burnValues], options = ["ALL_TOUCHED=TRUE"])
+
+			# close rasters
+			oR2 = None
 			rD = None
 			l.Destroy()
 			# logger
