@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2016 by Luca Congedo
+		copyright			: (C) 2012-2017 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -157,8 +157,8 @@ class DownloadSentinelImages:
 			cfg.sets.setQGISRegSetting(cfg.regSciHubPass, "")
 		
 	# download image preview from Amazon
-	def downloadPreviewAmazon(self, imgID, acquisitionDate, progress = None):
-		url = "http://sentinel-s2-l1c.s3.amazonaws.com/tiles/" + imgID[-5:-3] + "/" + imgID[-3] + "/" + imgID[-2:] + "/" + acquisitionDate[0:4] + "/" + acquisitionDate[5:7].replace("0", "") + "/" + acquisitionDate[8:10].replace("0", "") + "/0/preview.jp2"
+	def downloadPreviewAmazon(self, imgID, imgIDN, imgIDT, imgIDTT, acquisitionDate, progress = None):
+		url = "http://sentinel-s2-l1c.s3.amazonaws.com/tiles/" + imgIDN + "/" + imgIDT + "/" + imgIDTT + "/" + acquisitionDate[0:4] + "/" + acquisitionDate[5:7].replace("0", "") + "/" + acquisitionDate[8:10].replace("0", "") + "/0/preview.jp2"
 		check = cfg.utls.downloadFile(url, cfg.tmpDir + "//" + imgID + '_p.jp2', imgID, progress)
 		return check
 		
@@ -178,7 +178,10 @@ class DownloadSentinelImages:
 			for i in id:
 				imgNm = str(tW.item(i, 1).text())
 				acquisitionDate = str(tW.item(i, 2).text())
-				imgID = imgNm[0:-7] + '_p.jp2'
+				if imgNm[0:4] == "L1C_":
+					imgID = imgNm + '_p.jp2'
+				else:
+					imgID = imgNm[0:-7] + '_p.jp2'
 				url = str(tW.item(i, 11).text())
 				if cfg.osSCP.path.isfile(cfg.tmpDir + "//" + imgID):
 					l = cfg.utls.selectLayerbyName(imgID)
@@ -188,7 +191,10 @@ class DownloadSentinelImages:
 					else:
 						r = cfg.utls.addRasterLayer(cfg.tmpDir + "//" + imgID, imgID)
 				else:
-					checkA = self.downloadPreviewAmazon(imgNm[0:-7], acquisitionDate, progress)
+					if imgNm[0:4] == "L1C_":
+						checkA = self.downloadPreviewAmazon(imgNm, imgNm.split("_")[1][1:3], imgNm.split("_")[1][3], imgNm.split("_")[1][4:],acquisitionDate, progress)
+					else:
+						checkA = self.downloadPreviewAmazon(imgNm[0:-7] , imgNm[0:-7][-5:-3], imgNm[0:-7][-3], imgNm[0:-7][-2:], acquisitionDate, progress)
 					if checkA != "Yes":
 						# single granule
 						if "MB" in str(tW.item(i, 9).text()):
@@ -380,9 +386,14 @@ class DownloadSentinelImages:
 						if exporter == "Yes":
 							linksList.append(urlL + 'B' + bandNumber + '.jp2')
 						else:
-							outFile = cfg.tmpDir + "//" + imgName2[0:-7] + '_B' + bandNumber + '.jp2'
-							outCopyFile = outputDirectory + "//" + imgName2[0:-7] + "//" + imgName2[0:-7] + '_B' + bandNumber
-							check = cfg.utls.downloadFile( urlL + 'B' + bandNumber + ".jp2", outFile, imgName2[0:-7] + '_B' + bandNumber + '.jp2', progress)
+							if imgName2[0:4] == "L1C_":
+								outFile = cfg.tmpDir + "//" + imgName2[4:]  + '_B' + bandNumber + '.jp2'
+								outCopyFile = outputDirectory + "//" + imgName2 + "//" + imgName2[4:]  + '_B' + bandNumber
+								check = cfg.utls.downloadFile( urlL + 'B' + bandNumber + ".jp2", outFile, imgName2[4:] + '_B' + bandNumber + '.jp2', progress)
+							else:
+								outFile = cfg.tmpDir + "//" + imgName2[0:-7] + '_B' + bandNumber + '.jp2'
+								outCopyFile = outputDirectory + "//" + imgName2[0:-7] + "//" + imgName2[0:-7] + '_B' + bandNumber
+								check = cfg.utls.downloadFile( urlL + 'B' + bandNumber + ".jp2", outFile, imgName2[0:-7] + '_B' + bandNumber + '.jp2', progress)
 							outFilesList.append([outFile, outCopyFile])
 				# download from hub
 				else:
@@ -392,9 +403,14 @@ class DownloadSentinelImages:
 					topLevelUrl = cfg.ui.sentinel_service_lineEdit.text()
 					topUrl =topLevelUrl + '/odata/v1/Products'
 					topUrl2 =topLevelUrl
-					urlL = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('IMG_DATA')/Nodes('" + imgName2[0:-7] + '_B' + bandNumber + ".jp2')/$value"
-					outFile = cfg.tmpDir + "//" + imgName2[0:-7] + '_B' + bandNumber + '.jp2'
-					outCopyFile = outputDirectory + "//" + imgName2[0:-7] + "//" + imgName2[0:-7] + '_B' + bandNumber
+					if imgName2[0:4] == "L1C_":
+						urlL = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('IMG_DATA')/Nodes('" + imgName2.split("_")[1] + "_" + imgName.split("_")[2] + '_B' + bandNumber + ".jp2')/$value"
+						outFile = cfg.tmpDir + "//" + imgName2.split("_")[1] + "_" + imgName.split("_")[2] + '_B' + bandNumber + '.jp2'
+						outCopyFile = outputDirectory + "//" + imgName2  + "//" + imgName2[4:] + '_B' + bandNumber
+					else:
+						urlL = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('IMG_DATA')/Nodes('" + imgName2[0:-7] + '_B' + bandNumber + ".jp2')/$value"
+						outFile = cfg.tmpDir + "//" + imgName2[0:-7] + '_B' + bandNumber + '.jp2'
+						outCopyFile = outputDirectory + "//" + imgName2[0:-7] + "//" + imgName2[0:-7] + '_B' + bandNumber
 					if exporter == "No":
 						self.downloadFile(urlL, outFile, progress)
 						if cfg.osSCP.path.getsize(outFile) < 100000:
@@ -432,15 +448,24 @@ class DownloadSentinelImages:
 				acquisitionDate = str(tW.item(i, 2).text())
 				imgID = str(tW.item(i, 12).text())
 				imgName2 = str(tW.item(i, 1).text())
-				imgJp2 = imgName2[0:-7] + '_p.jp2'
+				if imgName2[0:4] == "L1C_":
+					imgJp2 = imgName2 + '_p.jp2'
+				else:
+					imgJp2 = imgName2[0:-7] + '_p.jp2'
 				if cfg.ui.download_if_preview_in_legend_checkBox_3.isChecked() and cfg.utls.selectLayerbyName(imgJp2, "Yes") is None:
 					pass
 				else:
 					outFiles = []
-					outDirList.append(outputDirectory + "//" + imgName2[0:-7])
+					if imgName2[0:4] == "L1C_":
+						outDirList.append(outputDirectory + "//" + imgName2)
+					else:
+						outDirList.append(outputDirectory + "//" + imgName2[0:-7])
 					progress = progress + progressStep
 					if exporter == "No":
-						oDir = cfg.utls.makeDirectory(outputDirectory + "//" + imgName2[0:-7])
+						if imgName2[0:4] == "L1C_":
+							oDir = cfg.utls.makeDirectory(outputDirectory + "//" + imgName2)
+						else:
+							oDir = cfg.utls.makeDirectory(outputDirectory + "//" + imgName2[0:-7])
 						if oDir is None:
 							cfg.mx.msgErr58()
 							cfg.uiUtls.removeProgressBar()
@@ -449,22 +474,31 @@ class DownloadSentinelImages:
 					# download ancillary data
 					if cfg.ui.ancillary_data_checkBox.isChecked():
 						#download metadata
-						urlL1 = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('" + imgName.replace('_PRD_MSIL1C_', '_MTD_SAFL1C_') + ".xml')/$value"
-						outFile1 = outputDirectory + "//" + imgName2[0:-7] + "//" + imgName.replace('_PRD_MSIL1C_', '_MTD_SAFL1C_') + '.xml'
-						urlL2 = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('" + imgName2[0:-7].replace('_MSI_L1C_', '_MTD_L1C_') + ".xml')/$value"
-						outFile2 = outputDirectory + "//" + imgName2[0:-7] + "//" + imgName2[0:-7].replace('_MSI_L1C_', '_MTD_L1C_')  + '.xml'							
+						if imgName2[0:4] == "L1C_":
+							# new version
+							urlL1 = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('MTD_MSIL1C.xml')/$value"
+							outFile1 = outputDirectory + "//" + imgName2 + "//" + 'MTD_MSIL1C.xml'
+							urlL2 = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('MTD_TL.xml')/$value"
+							outFile2 = outputDirectory + "//" + imgName2 + "//" + 'MTD_TL.xml'
+							# download QI
+							urlL3 = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('QI_DATA')/Nodes('MSK_CLOUDS_B00.gml')/$value"
+							outFile3 = outputDirectory + "//" + imgName2 + "//" + 'MSK_CLOUDS_B00.gml'
+						else:
+							# old version
+							urlL1 = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('" + imgName.replace('_PRD_MSIL1C_', '_MTD_SAFL1C_') + ".xml')/$value"
+							outFile1 = outputDirectory + "//" + imgName2[0:-7] + "//" + imgName.replace('_PRD_MSIL1C_', '_MTD_SAFL1C_') + '.xml'
+							urlL2 = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('" + imgName2[0:-7].replace('_MSI_L1C_', '_MTD_L1C_') + ".xml')/$value"
+							outFile2 = outputDirectory + "//" + imgName2[0:-7] + "//" + imgName2[0:-7].replace('_MSI_L1C_', '_MTD_L1C_')  + '.xml'		
+							# download QI
+							urlL3 = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('QI_DATA')/Nodes('" + imgName2[0:-7].replace('_MSI_L1C_TL_', '_MSK_CLOUDS_')  + "_B00_MSIL1C.gml')/$value"
+							outFile3 = outputDirectory + "//" + imgName2[0:-7] + "//" + imgName2[0:-7].replace('_MSI_L1C_TL_', '_MSK_CLOUDS_') + '_B00_MSIL1C.gml'
 						if exporter == "No":
 							self.downloadFile(urlL1, outFile1, progress)
 							self.downloadFile(urlL2, outFile2, progress)
+							self.downloadFile(urlL3, outFile3, progress)
 						else:
 							links.append(urlL1)
 							links.append(urlL2)
-						#download QI
-						urlL3 = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('QI_DATA')/Nodes('" + imgName2[0:-7].replace('_MSI_L1C_TL_', '_MSK_CLOUDS_')  + "_B00_MSIL1C.gml')/$value"
-						outFile3 = outputDirectory + "//" + imgName2[0:-7] + "//" + imgName2[0:-7].replace('_MSI_L1C_TL_', '_MSK_CLOUDS_') + '_B00_MSIL1C.gml'
-						if exporter == "No":
-							self.downloadFile(urlL3, outFile3, progress)
-						else:
 							links.append(urlL3)
 					# download bands
 					self.checkImageBands(cfg.ui.checkBoxs_band_1, '01', imgID, imgName, imgName2, acquisitionDate,outputDirectory, exporter, progress, outFiles, links)
@@ -626,9 +660,13 @@ class DownloadSentinelImages:
 						attr = xd.getAttribute("name")
 						if attr == "cloudcoverpercentage":
 							cloudcoverpercentage = xd.firstChild.data
-					url2 = topUrl + "/odata/v1/Products('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('" + imgName.replace('_PRD_MSIL1C_', '_MTD_SAFL1C_') + ".xml')/$value"
+					url2 = topUrl + "/odata/v1/Products('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('MTD_MSIL1C.xml')/$value"
 					if cfg.actionCheck == "Yes":
 						response2 = cfg.utls.passwordConnect(user, password, url2, topLevelUrl)
+						if len(response2) == 0:
+							# old xml version
+							url2 = topUrl + "/odata/v1/Products('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('" + imgName.replace('_PRD_MSIL1C_', '_MTD_SAFL1C_') + ".xml')/$value"
+							response2 = cfg.utls.passwordConnect(user, password, url2, topLevelUrl)
 						if response2 == "No":
 							cfg.uiUtls.removeProgressBar()
 							return "No"
@@ -637,7 +675,40 @@ class DownloadSentinelImages:
 						cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " thumbnail downloaded" + xml2)
 						try:
 							doc2 = cfg.minidomSCP.parseString(xml2)
+							imgName2Tag = doc2.getElementsByTagName("IMAGE_FILE")[0]
+							imgName2 = imgName2Tag.firstChild.data.split("/")[1]
+							if cfg.actionCheck == "Yes":								
+								for filter in imageFindList:
+									if filter in imgName.lower() or filter in imgName2.lower():
+										acZoneI = imgName2.split("_")[1][1:]
+										# add item to table
+										c = tW.rowCount()
+										# add list items to table
+										tW.setRowCount(c + 1)
+										imgPreview = topUrl + "/odata/v1/Products('" +  imgID + "')/Products('Quicklook')/$value"
+										imgPreview2 = topUrl + "/odata/v1/Products('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('IMG_DATA')/Nodes('" + imgName2[0:-7] + "_B01.jp2')/$value"
+										cfg.utls.addTableItem(tW, imgName, c, 0)
+										cfg.utls.addTableItem(tW, imgName2, c, 1)
+										cfg.utls.addTableItem(tW, acqDateI, c, 2)
+										cfg.utls.addTableItem(tW, acZoneI, c, 3)
+										cfg.utls.addTableItem(tW, float(cloudcoverpercentage), c, 4)
+										cfg.utls.addTableItem(tW, float(min_lat), c, 5)
+										cfg.utls.addTableItem(tW, float(min_lon), c, 6)
+										cfg.utls.addTableItem(tW, float(max_lat), c, 7)
+										cfg.utls.addTableItem(tW, float(max_lon), c, 8)
+										cfg.utls.addTableItem(tW, size, c, 9)
+										cfg.utls.addTableItem(tW, imgPreview, c, 10)
+										cfg.utls.addTableItem(tW, imgPreview2, c, 11)
+										cfg.utls.addTableItem(tW, imgID, c, 12)
+						except Exception, err:
+							# logger
+							cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+						# old xml version
+						try:
+							doc2 = cfg.minidomSCP.parseString(xml2)
 							entries2 = doc2.getElementsByTagName("Granules")
+							if len(entries2) == 0:
+								entries2 = doc2.getElementsByTagName("Granule")
 							for entry2 in entries2:
 								if cfg.actionCheck == "Yes":
 									imgName2 = entry2.attributes["granuleIdentifier"].value

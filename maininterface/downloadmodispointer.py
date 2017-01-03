@@ -36,7 +36,7 @@ from qgis.core import *
 from qgis.gui import *
 cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
 
-class LCSigPixel2(QgsMapTool):
+class DownloadMODISPointer(QgsMapTool):
 	def __init__(self, canvas):
 		QgsMapTool.__init__(self, canvas)
 		self.cnvs = canvas	
@@ -49,6 +49,6 @@ class LCSigPixel2(QgsMapTool):
 		pnt = self.cnvs.getCoordinateTransform().toMapCoordinates(event.pos())
 		# click
 		if(event.button() == cfg.QtSCP.RightButton):
-			self.emit(cfg.SIGNALSCP("MaprightClicked"), pnt)
+			self.emit(cfg.SIGNALSCP("rightClicked"), pnt)
 		else:
-			self.emit(cfg.SIGNALSCP("MapleftClicked"), pnt)
+			self.emit(cfg.SIGNALSCP("leftClicked"), pnt)

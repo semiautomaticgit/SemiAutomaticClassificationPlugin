@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2016 by Luca Congedo
+		copyright			: (C) 2012-2017 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -362,6 +362,8 @@ class Input:
 		download_sentinel_action = cfg.ipt.addMenuItem(cfg.download_images_menu, cfg.utls.downloadSentinelTab, "semiautomaticclassificationplugin_sentinel_download_tool.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Sentinel-2 download "))
 		# Download ASTER
 		download_ASTER_action = cfg.ipt.addMenuItem(cfg.download_images_menu, cfg.utls.downloadASTERTab, "semiautomaticclassificationplugin_aster_download_tool.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "ASTER download"))
+		# Download MODIS
+		download_MODIS_action = cfg.ipt.addMenuItem(cfg.download_images_menu, cfg.utls.downloadMODISTab, "semiautomaticclassificationplugin_modis_download_tool.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "MODIS download"))
 		# Tools
 		cfg.tools_menu = cfg.menu.addMenu(cfg.QtGuiSCP.QIcon(":/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_roi_tool.png"), cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Tools"))
 		# Multiple ROI creation
@@ -386,10 +388,14 @@ class Input:
 		sentinel2_action = cfg.ipt.addMenuItem(cfg.preprocessing_menu, cfg.utls.sentinel2Tab, "semiautomaticclassificationplugin_sentinel_tool.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Sentinel-2"))
 		# ASTER
 		aster_action = cfg.ipt.addMenuItem(cfg.preprocessing_menu, cfg.utls.asterTab, "semiautomaticclassificationplugin_aster_tool.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "ASTER"))
+		# MODIS
+		modis_action = cfg.ipt.addMenuItem(cfg.preprocessing_menu, cfg.utls.modisTab, "semiautomaticclassificationplugin_modis_tool.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "MODIS"))
 		# Clip multiple rasters
 		clip_multiple_rasters_action = cfg.ipt.addMenuItem(cfg.preprocessing_menu, cfg.utls.clipMultipleRastersTab, "semiautomaticclassificationplugin_clip_tool.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Clip multiple rasters"))
 		# Split raster bands
 		split_raster_bands_action = cfg.ipt.addMenuItem(cfg.preprocessing_menu, cfg.utls.splitrasterbandsTab, "semiautomaticclassificationplugin_split_raster.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Split raster bands"))
+		# Stack raster bands
+		stack_raster_bands_action = cfg.ipt.addMenuItem(cfg.preprocessing_menu, cfg.utls.stackrasterbandsTab, "semiautomaticclassificationplugin_stack_raster.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Stack raster bands"))
 		# PCA
 		PCA_action = cfg.ipt.addMenuItem(cfg.preprocessing_menu, cfg.utls.PCATab, "semiautomaticclassificationplugin_pca_tool.png", cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "PCA"))
 		# Vector to raster

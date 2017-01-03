@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2016 by Luca Congedo
+		copyright			: (C) 2012-2017 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -122,6 +122,7 @@ lastVrt = []
 # band list
 bndMdl = None
 bndMdls = None
+bndMdls2 = None
 newClssfctnNm = None
 refClssfctnNm = None
 rbbrBnd = None
@@ -359,8 +360,12 @@ regUSGSPass= "SemiAutomaticClassificationPlugin/USGSPass"
 USGSPass = ""
 regUSGSUserASTER = "SemiAutomaticClassificationPlugin/USGSUserASTER"
 USGSUserASTER = ""
-regUSGSPassASTER= "SemiAutomaticClassificationPlugin/USGSPassASTER"
+regUSGSPassASTER = "SemiAutomaticClassificationPlugin/USGSPassASTER"
 USGSPassASTER = ""
+regUSGSUserMODIS = "SemiAutomaticClassificationPlugin/USGSUserMODIS"
+USGSUserMODIS = ""
+regUSGSPassMODIS = "SemiAutomaticClassificationPlugin/USGSPassMODIS"
+USGSPassMODIS = ""
 regSciHubUser = "SemiAutomaticClassificationPlugin/SciHubUser"
 SciHubUser = ""
 regSciHubService = "SemiAutomaticClassificationPlugin/SciHubService_5_2"
@@ -518,24 +523,42 @@ satLandsat13 = "Landsat 1-3 MSS [bands 4, 5, 6, 7]"
 satRapidEye = "RapidEye [bands 1, 2, 3, 4, 5]"
 satSentinel2 = "Sentinel-2 [bands 2, 3, 4, 5, 6, 7, 8, 8A, 11, 12]"
 satASTER = "ASTER [bands 1, 2, 3N, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]"
+satMODIS = "MODIS [bands 3, 4, 1, 2, 5, 6, 7]"
+satMODIS2 = "MODIS [bands 1, 2]"
 satSPOT4 = "SPOT 4 [bands 1, 2, 3, 4]"
 satSPOT5 = "SPOT 5 [bands 1, 2, 3, 4]"
 satSPOT6 = "SPOT 6 [bands 1, 2, 3, 4]"
 satPleiades = "Pleiades [bands 1, 2, 3, 4]"
 satQuickBird = "QuickBird [bands 1, 2, 3, 4]"
 satWorldView23 = "WorldView-2 -3 Multispectral [bands 1, 2, 3, 4, 5, 6, 7, 8]"
-satWlList = ["", NoSatellite, satASTER, satGeoEye1, satLandsat8, satLandsat7, satLandsat45, satLandsat13, satPleiades, satQuickBird, satRapidEye, satSentinel2, satSPOT4, satSPOT5, satSPOT6, satWorldView23]
+satWlList = ["", NoSatellite, satASTER, satGeoEye1, satLandsat8, satLandsat7, satLandsat45, satLandsat13, satMODIS, satMODIS2, satPleiades, satQuickBird, satRapidEye, satSentinel2, satSPOT4, satSPOT5, satSPOT6, satWorldView23]
 usgsLandsat8 = "L8 OLI/TIRS"
 usgsLandsat7 = "L7 ETM+"
 usgsLandsat45 = "L4-5 TM"
 usgsLandsat15 = "L1-5 MSS"
 usgsASTER = "ASTER Level 1T"
+usgsMODIS_MOD09GQ = "MOD09GQ_V6"
+usgsMODIS_MYD09GQ = "MYD09GQ_V6"
+usgsMODIS_MOD09GA = "MOD09GA_V6"
+usgsMODIS_MYD09GA = "MYD09GA_V6"
+usgsMODIS_MOD09Q1 = "MOD09Q1_V6"
+usgsMODIS_MYD09Q1 = "MYD09Q1_V6"
+usgsMODIS_MOD09A1 = "MOD09A1_V6"
+usgsMODIS_MYD09A1 = "MYD09A1_V6"
 usgsLandsat8Collection = "4923"
 usgsLandsat7slcoffCollection = "3373"
 usgsLandsat7slconCollection = "3372"
 usgsLandsat45Collection = "3119"
 usgsLandsat15Collection = "3120"
 usgsASTERCollection = "9380"
+NASAMOD09GQCollection = "C193529903-LPDAAC_ECS"
+NASAMYD09GQCollection = "C193529460-LPDAAC_ECS"
+NASAMOD09GACollection = "C193529902-LPDAAC_ECS"
+NASAMYD09GACollection = "C193529459-LPDAAC_ECS"
+NASAMOD09Q1Collection = "C193529944-LPDAAC_ECS"
+NASAMYD09Q1Collection = "C193529461-LPDAAC_ECS"
+NASAMOD09A1Collection = "C193529899-LPDAAC_ECS"
+NASAMYD09A1Collection = "C193529457-LPDAAC_ECS"
 NASAASTERCollection = "C1000000320-LPDAAC_ECS"
 NASALandsat8Collection = "C185174181-USGS_EROS"
 NASALandsat7Collection = "C179001725-USGS_EROS"
@@ -543,6 +566,7 @@ NASALandsat45Collection = "C179872799-USGS_EROS"
 NASALandsat15Collection = "C179872798-USGS_EROS"
 satLandsatList = [usgsLandsat8, usgsLandsat7, usgsLandsat45, usgsLandsat15]
 satASTERtList = [usgsASTER]
+satMODIStList = [usgsMODIS_MOD09GQ, usgsMODIS_MYD09GQ, usgsMODIS_MOD09GA, usgsMODIS_MYD09GA, usgsMODIS_MOD09Q1, usgsMODIS_MYD09Q1, usgsMODIS_MOD09A1, usgsMODIS_MYD09A1]
 indNDVI = "NDVI"
 indEVI = "EVI"
 indicesList = ["", indNDVI, indEVI]
@@ -591,11 +615,13 @@ functionNames.append([['cross_classification', 'cfg.batchT.performCrossClassific
 functionNames.append([['edit_raster_using_shapefile', 'cfg.batchT.performEditRasterUsingShapefile', 'cfg.editRstr.setRasterValue', ["input_raster_path : ''", "input_vector_path : ''", "vector_field_name : ''", "constant_value : 0", "expression :  'where(raster == 1, 2, raster)'"]]])
 functionNames.append([['land_cover_change', 'cfg.batchT.performLandCoverChange',  'cfg.landCC.landCoverChange', ["reference_raster_path : ''", "new_raster_path : ''", "output_raster_path : ''"]]])
 functionNames.append([['landsat_conversion', 'cfg.batchT.performLandsatConversion',  'cfg.landsatT.landsat', ["input_dir : ''", "mtl_file_path : ''", "celsius_temperature : 0", "apply_dos1 : 0", "use_nodata : 1", "nodata_value : 0", "pansharpening : 0", "create_bandset : 1", "output_dir : ''"]]])
+functionNames.append([['modis_conversion', 'cfg.batchT.performMODISConversion', 'cfg.MODIST.MODIS', ["input_raster_path : ''", "reproject_wgs84 : 1", "use_nodata : 1", "nodata_value : -999", "create_bandset : 1", "output_dir : ''"]]])
 functionNames.append([['open_training_input', 'cfg.batchT.performOpenTrainingInput',  'cfg.classD.openInput', ["training_file_path : ''"]]])
 functionNames.append([['pca', 'cfg.batchT.performPCA',  'cfg.pcaT.calculatePCA', ["use_number_of_components : 0"", number_of_components : 2", "use_nodata : 1", "nodata_value : 0", "output_dir : ''"]]])
 functionNames.append([['reclassification', 'cfg.batchT.performReclassification', 'cfg.reclassification.reclassify', ["input_raster_path : ''", "value_list : 'oldVal-newVal;oldVal-newVal'", "use_signature_list_code : 1", "code_field : 'MC_ID'", "output_raster_path : ''"]]])
 functionNames.append([['sentinel_conversion', 'cfg.batchT.performSentinelConversion', 'cfg.sentinel2T.sentinel2', ["input_dir : ''", "mtd_safl1c_file_path : ''", "apply_dos1 : 0", "use_nodata : 1", "nodata_value : 0", "create_bandset : 1", "output_dir : ''"]]])
-functionNames.append([['split_raster_bands', 'cfg.batchT.performSplitRaster', 'cfg.splitT.splitRasterToBands', ["input_raster_path : ''",   "output_dir : ''", "output_name_prefix : 'split'"]]])
+functionNames.append([['split_raster_bands', 'cfg.batchT.performSplitRaster', 'cfg.splitT.splitRasterToBands', ["input_raster_path : ''", "output_dir : ''", "output_name_prefix : 'split'"]]])
+functionNames.append([['stack_raster_bands', 'cfg.batchT.performStackRaster', 'cfg.stackRstr.stackRasters', ["input_raster_path : ''", "output_raster_path : ''"]]])
 functionNames.append([['vector_to_raster', 'cfg.batchT.performVectorToRaster', 'cfg.vctRstrT.convertToRaster', ["vector_file_path : ''", "use_value_field : 1", "vector_field_name : ''", "constant_value : 1", "reference_raster_path : ''",  "type_of_conversion : 'Center of pixels'", "output_raster_path : ''"]]])
 functionNames.append([[workingDirNm, 'cfg.batchT.workingDirectory', '', ["''"]]])
 

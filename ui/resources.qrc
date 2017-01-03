@@ -1,5 +1,8 @@
 <RCC>
   <qresource prefix="/plugins/semiautomaticclassificationplugin">
+    <file>icons/semiautomaticclassificationplugin_stack_raster.png</file>
+    <file>icons/semiautomaticclassificationplugin_modis_download_tool.png</file>
+    <file>icons/semiautomaticclassificationplugin_modis_tool.png</file>
     <file>icons/semiautomaticclassificationplugin_cross_classification.png</file>
     <file>icons/semiautomaticclassificationplugin_rgb_tool.png</file>
     <file>icons/semiautomaticclassificationplugin_aster_download_tool.png</file>
@@ -49,8 +52,8 @@
     <file>icons/semiautomaticclassificationplugin_open_file.png</file>
     <file>icons/semiautomaticclassificationplugin_add.png</file>
     <file>icons/semiautomaticclassificationplugin_remove.png</file>
-    <file>icons/semiautomaticclassificationplugin_remove_temp.png</file>
     <file>icons/semiautomaticclassificationplugin_undo_save_roi.png</file>
+    <file>icons/semiautomaticclassificationplugin_remove_temp.png</file>
     <file>icons/semiautomaticclassificationplugin_save_roi.png</file>
     <file>icons/semiautomaticclassificationplugin_export_spectral_library.png</file>
     <file>icons/semiautomaticclassificationplugin_LCS_threshold_tool.png</file>

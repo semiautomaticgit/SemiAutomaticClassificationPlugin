@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2016 by Luca Congedo
+		copyright			: (C) 2012-2017 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -90,6 +90,13 @@ class BandsetTab:
 			id = cfg.ui.unit_combo.findText(cfg.wlMicro)	
 		elif satelliteName == cfg.satLandsat13:
 			wl = [0.55, 0.65, 0.75, 0.95]
+			id = cfg.ui.unit_combo.findText(cfg.wlMicro)
+		# MODIS center wavelength calculated from https://lpdaac.usgs.gov/dataset_discovery/modis
+		elif satelliteName == cfg.satMODIS:
+			wl = [0.469, 0.555, 0.645, 0.858, 1.24, 1.64, 2.13]
+			id = cfg.ui.unit_combo.findText(cfg.wlMicro)
+		elif satelliteName == cfg.satMODIS2:
+			wl = [0.645, 0.858]
 			id = cfg.ui.unit_combo.findText(cfg.wlMicro)
 		# RapidEye center wavelength calculated from http://www.blackbridge.com/rapideye/products/ortho.htm
 		elif satelliteName == cfg.satRapidEye:

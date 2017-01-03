@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2016 by Luca Congedo
+		copyright			: (C) 2012-2017 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -41,7 +41,7 @@ class ASTERTab:
 	def __init__(self):
 		pass
 		
-	# landsat input
+	# ASTER input
 	def inputASTER(self):
 		i = cfg.utls.getOpenFileName(None , cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Select a HDF file"), "", "file .hdf (*.hdf)")
 		cfg.ui.label_143.setText(unicode(i))
@@ -596,12 +596,19 @@ class ASTERTab:
 						esd = str(cfg.utls.calculateEarthSunDistance(dt, dFmt))
 					except Exception, err:
 						# logger
-						cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + unicode(err))	
-					cfg.ui.date_lineEdit_2.setText(dt)
-					cfg.ui.sun_elev_lineEdit_2.setText(sE)
-					cfg.ui.earth_sun_dist_lineEdit_2.setText(esd)
-					cfg.ui.utm_zone_lineEdit.setText(utm)
-					cfg.ui.ulm_lineEdit.setText(uLM)
+						cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + unicode(err))
+					try:
+						cfg.ui.date_lineEdit_2.setText(dt)
+						cfg.ui.sun_elev_lineEdit_2.setText(sE)
+						cfg.ui.earth_sun_dist_lineEdit_2.setText(esd)
+						cfg.ui.utm_zone_lineEdit.setText(utm)
+						cfg.ui.ulm_lineEdit.setText(uLM)
+					except Exception, err:
+						# logger
+						cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + unicode(err))
+						if batch == "No":
+							cfg.uiUtls.removeProgressBar()
+						return
 					rDSub = rD.GetSubDatasets()
 					#  aster bands
 					for sb in rDSub:

@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2016 by Luca Congedo
+		copyright			: (C) 2012-2017 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -82,37 +82,9 @@ class Sentinel2Tab:
 		else:
 			if batch == "No":
 				cfg.uiUtls.addProgressBar()
-			# if len(cfg.ui.S2_label_92.text()) == 0:
-				# for f in cfg.osSCP.listdir(inp):
-					# if f.lower().endswith(".xml") and "_mtd_l1c_" in f.lower():
-							# MTD_L1C = inp + "/" + str(f)
-			# else:
-				# MTD_L1C = cfg.ui.S2_label_92.text()
-			# # open metadata file
-			# try:
-				# doc = cfg.minidomSCP.parse(MTD_L1C)
-				# SENSING_TIME = doc.getElementsByTagName("SENSING_TIME")[0]
-				# dt = SENSING_TIME.firstChild.data
-				# cfg.ui.S2_date_lineEdit.setText(dt[0:10])
-				# if esd == "":
-					# # date format
-					# dFmt = "%Y-%m-%d"
-					# esd = str(cfg.utls.calculateEarthSunDistance(dt[0:10], dFmt))
-				# cfg.ui.S2_earth_sun_dist_lineEdit.setText(esd)
-				# ZENITH_ANGLE = doc.getElementsByTagName("ZENITH_ANGLE")[0]
-				# zA = ZENITH_ANGLE.firstChild.data
-				# # Zenith
-				# cfg.ui.S2_sun_zenith_lineEdit.setText(zA)
-			# except Exception, err:
-				# # logger
-				# cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + unicode(err))
-				# if batch == "No":
-					# cfg.uiUtls.removeProgressBar()
-				# cfg.mx.msgErr51()
-				# check = "No"
 			if len(cfg.ui.S2_label_94.text()) == 0:
 				for f in cfg.osSCP.listdir(inp):
-					if f.lower().endswith(".xml") and "_mtd_safl1c_" in f.lower():
+					if f.lower().endswith(".xml") and "mtd_msil1c" in f.lower() or "mtd_safl1c" in f.lower() :
 							MTD_SAFL1C = inp + "/" + str(f)
 			else:
 				MTD_SAFL1C = cfg.ui.S2_label_94.text()

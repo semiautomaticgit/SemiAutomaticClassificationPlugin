@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2016 by Luca Congedo
+		copyright			: (C) 2012-2017 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -872,7 +872,12 @@ class ClassificationDock:
 		except Exception, err:
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-			return "No"
+			if cfg.bndSetPresent == "Yes" and cfg.imgNm == cfg.bndSetNm:
+				xR = cfg.utls.selectLayerbyName(cfg.bndSet[0], "Yes")
+			else:
+				xR = cfg.utls.selectLayerbyName(cfg.imgNm, "Yes")
+			rEPSG = cfg.utls.getEPSGVectorQGIS(xR)
+			#return "No"
 		if str(vEPSG) != str(rEPSG):
 			cfg.mx.msgWar22()
 		if check == "Yes":
@@ -1118,7 +1123,7 @@ class ClassificationDock:
 			# logger
 			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			
-	# export band set to file
+	# export signature to file
 	def exportSignatureFile(self):
 		signFile = cfg.utls.getSaveFileName(None , cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Export SCP training input"), "", "SCP file (*.scp)")
 		if len(signFile) > 0:
@@ -1173,6 +1178,54 @@ class ClassificationDock:
 			tSS.updateExtents()
 			# create zip file
 			cfg.utls.zipDirectoryInFile(signFile, unzipDir)
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " signatures exported in: " + unicode(signFile))
+			
+	# export signature to shapefile
+	def exportSignatureShapefile(self):
+		signFile = cfg.utls.getSaveFileName(None , cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Export SCP training input"), "", "Shapefile (*.shp)")
+		if len(signFile) > 0:
+			# create shapefile
+			crs = cfg.utls.getCrs(cfg.shpLay)
+			f = QgsFields()
+			# add Class ID, macroclass ID and Info fields
+			f.append(QgsField(cfg.fldMacroID_class, cfg.QVariantSCP.Int))
+			f.append(QgsField(cfg.fldROIMC_info, cfg.QVariantSCP.String))
+			f.append(QgsField(cfg.fldID_class, cfg.QVariantSCP.Int))
+			f.append(QgsField(cfg.fldROI_info, cfg.QVariantSCP.String))
+			f.append(QgsField(cfg.fldSCP_UID, cfg.QVariantSCP.String))
+			# open shapefile
+			if signFile.lower().endswith(".shp"):
+				sL = unicode(signFile)
+			else:
+				sL = unicode(signFile) + ".shp"
+			# shapefile
+			zipName = cfg.osSCP.path.basename(unicode(sL))
+			name = zipName[:-4]
+			dT = cfg.utls.getTime()
+			shpF = sL
+			QgsVectorFileWriter(unicode(shpF), "CP1250", f, QGis.WKBMultiPolygon , crs, "ESRI Shapefile")
+			tSS = cfg.utls.addVectorLayer(shpF, name + dT, "ogr")
+			tW = cfg.uidc.signature_list_tableWidget
+			r = []
+			for i in tW.selectedIndexes():
+				id = tW.item(i.row(), 6).text()
+				r.append(id)
+			if len(tW.selectedIndexes()) == 0:
+				c = tW.rowCount()
+				for i in range(0, c):
+					id = tW.item(i, 6).text()
+					r.append(id)
+	
+			f = QgsFeature()
+			tSS.startEditing()
+			for f in cfg.shpLay.getFeatures():
+				SCP_UID  = str(f[cfg.fldSCP_UID])
+				if SCP_UID in r:
+					tSS.addFeature(f)
+			tSS.commitChanges()
+			tSS.dataProvider().createSpatialIndex()
+			tSS.updateExtents()
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " signatures exported in: " + unicode(signFile))
 			

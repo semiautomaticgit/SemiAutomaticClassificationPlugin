@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2016 by Luca Congedo
+		copyright			: (C) 2012-2017 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -707,7 +707,7 @@ class Utils:
 	def calculateCovMatrix(self, arrayList):
 		# create empty array
 		d = arrayList[0].shape
-		arrCube = cfg.np.zeros((d[0], d[1], len(arrayList)), dtype=cfg.np.float64)
+		arrCube = cfg.np.zeros((d[0], d[1], len(arrayList)), dtype=cfg.np.float32)
 		i = 0
 		try:
 			for a in arrayList:
@@ -746,7 +746,7 @@ class Utils:
 	# convert list to covariance array
 	def listToCovarianceMatrix(self, list):
 		try:
-			covMat = cfg.np.zeros((len(list), len(list)), dtype=cfg.np.float64)
+			covMat = cfg.np.zeros((len(list), len(list)), dtype=cfg.np.float32)
 			i = 0
 			for x in list:
 				covMat[i, :] = x
@@ -1308,7 +1308,7 @@ class Utils:
 		arrayList = []
 		for s in signatureList:
 			val = s[4]
-			array = cfg.np.zeros((len(gdalBandList)), dtype=cfg.np.float64)
+			array = cfg.np.zeros((len(gdalBandList)), dtype=cfg.np.float32)
 			max = len(gdalBandList) * 2
 			i = 0
 			for b in range(0, max, 2):
@@ -2113,7 +2113,7 @@ class Utils:
 			b = 2500
 		# check memory
 		try:
-			a = cfg.np.zeros((b,b), dtype = cfg.np.float64)
+			a = cfg.np.zeros((b,b), dtype = cfg.np.float32)
 			cfg.uiUtls.updateBar(20,  cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Please wait ..."))
 		except:
 			for i in reversed(range(128, mem, int(mem/10))):
@@ -2122,7 +2122,7 @@ class Utils:
 					# set system memory max
 					if cfg.sysSCP64bit == "No" and b > 2500:
 						b = 2500
-					a = cfg.np.zeros((int(b),int(b)), dtype = cfg.np.float64)
+					a = cfg.np.zeros((int(b),int(b)), dtype = cfg.np.float32)
 					size = a.nbytes / 1048576
 					cfg.ui.RAM_spinBox.setValue(size * bandNumber)
 					cfg.mx.msgWar11()
@@ -2452,7 +2452,7 @@ class Utils:
 					  <NODATA>%i</NODATA>
 					</ComplexSource>
 					"""
-					source = xml % (relativeToVRT, source_path, bandNumber, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, "Float64", x_block, y_block, xoffX, xoffY, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, offX, offY, rX2, rY2, noData)
+					source = xml % (relativeToVRT, source_path, bandNumber, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, "Float32", x_block, y_block, xoffX, xoffY, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, offX, offY, rX2, rY2, noData)
 					band.SetMetadataItem("ComplexSource", source, "new_vrt_sources")
 					if NoDataVal == "Yes":
 						band.SetNoDataValue(noData)	
@@ -2545,7 +2545,7 @@ class Utils:
 						  <NODATA>%i</NODATA>
 						</ComplexSource>
 						"""
-						source = xml % (relativeToVRT, source_path, bandNumber, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, "Float64", x_block, y_block, xoffX, xoffY, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, offX, offY, rX2, rY2, noData)
+						source = xml % (relativeToVRT, source_path, bandNumber, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, "Float32", x_block, y_block, xoffX, xoffY, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, offX, offY, rX2, rY2, noData)
 						band.SetMetadataItem("ComplexSource", source, "new_vrt_sources")
 						if NoDataVal == "Yes":
 							band.SetNoDataValue(noData)	
@@ -3225,7 +3225,7 @@ class Utils:
 				return "No"
 			# create array if not
 			if not isinstance(o, cfg.np.ndarray):
-				a = cfg.np.zeros((rasterSCPArrayfunctionBand.shape[0], rasterSCPArrayfunctionBand.shape[1]), dtype=cfg.np.float64)
+				a = cfg.np.zeros((rasterSCPArrayfunctionBand.shape[0], rasterSCPArrayfunctionBand.shape[1]), dtype=cfg.np.float32)
 				try:
 					a.fill(o)
 				except Exception, err:
@@ -3233,6 +3233,7 @@ class Utils:
 					cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 					return "No"
 				o = a
+			o = cfg.np.nan_to_num(o)
 			oR = outputGdalRasterList[0]
 			# output raster
 			band = gdalBandList[0].GetBand()
@@ -3274,7 +3275,7 @@ class Utils:
 			try:
 				if not isinstance(o, cfg.np.ndarray):
 					o = cfg.np.where(o == 0, cfg.NoDataVal, o)
-					a = cfg.np.zeros((rasterSCPArrayfunctionBand.shape[0], rasterSCPArrayfunctionBand.shape[1]), dtype=cfg.np.float64)
+					a = cfg.np.zeros((rasterSCPArrayfunctionBand.shape[0], rasterSCPArrayfunctionBand.shape[1]), dtype=cfg.np.float32)
 					a.fill(o)
 					o = a
 			except Exception, err:
@@ -3554,7 +3555,7 @@ class Utils:
 						progressStart = progressStart + progresStep
 						bSX = rX
 						bSY = boundarySize * 2  
-						array = cfg.np.zeros((bSX, bSY, len(gdalBandList)), dtype=cfg.np.float64)
+						array = cfg.np.zeros((bSX, bSY, len(gdalBandList)), dtype=cfg.np.float32)
 						for b in range(0, len(gdalBandList)):
 							ndv = cfg.NoDataVal
 							a = self.readArrayBlock(gdalBandList[b], 0, y - boundarySize, bSX, bSY)
@@ -3597,7 +3598,7 @@ class Utils:
 						progressStart = progressStart + progresStep
 						bSX = boundarySize * 2 
 						bSY = rY 
-						array = cfg.np.zeros((bSX, bSY, len(gdalBandList)), dtype=cfg.np.float64)
+						array = cfg.np.zeros((bSX, bSY, len(gdalBandList)), dtype=cfg.np.float32)
 						for b in range(0, len(gdalBandList)):
 							ndv = cfg.NoDataVal
 							a = self.readArrayBlock(gdalBandList[b], x - boundarySize, 0, bSX, bSY)
@@ -3673,7 +3674,7 @@ class Utils:
 						bSX = previewSize
 					if x + bSX > rX:
 						bSX = rX - x
-					array = cfg.np.zeros((bSX, bSY, len(gdalBandList)), dtype=cfg.np.float64)
+					array = cfg.np.zeros((bSX, bSY, len(gdalBandList)), dtype=cfg.np.float32)
 					for b in range(0, len(gdalBandList)):
 						ndv = cfg.NoDataVal
 						a = self.readArrayBlock(gdalBandList[b], x, y, bSX, bSY)
@@ -5009,6 +5010,54 @@ class Utils:
 			sP.wait()
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " image: " + unicode(output))
+		
+	# reproject raster with GDAL
+	def GDALReprojectRaster(self, input, output, outFormat = "GTiff", s_srs = None,  t_srs = None, additionalParams = None):
+		outDir = cfg.osSCP.path.dirname(output)
+		cfg.utls.makeDirectory(outDir)
+		if s_srs is None:
+			op = " -t_srs " + t_srs + " -of " + outFormat
+		else:
+			op = " -s_srs " + s_srs + " -t_srs " + t_srs + " -of " + outFormat
+		if additionalParams is None:
+			pass
+		else:
+			op = " " + additionalParams + " " + op 
+		try:
+			cfg.utls.getGDALForMac()
+			gD = "gdalwarp"
+			a = cfg.gdalPath + gD + op 
+			if '"' in input:
+				b = input
+			else:
+				b = '"' + input + '" '
+			c = '"' + output + '" '
+			d = a + " " + b + " " + c
+			sP = cfg.subprocessSCP.Popen(d, shell=True, stdout=cfg.subprocessSCP.PIPE, stderr=cfg.subprocessSCP.PIPE)
+			sP.wait()
+			# get error
+			out, err = sP.communicate()
+			sP.stdout.close()
+			if len(err) > 0:
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " GDAL error:: " + str(err) )
+		# in case of errors
+		except Exception, err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.getGDALForMac()
+			gD = "gdalwarp"
+			a = cfg.gdalPath + gD + op 
+			if '"' in input:
+				b = input
+			else:
+				b = '"' + input + '" '
+			c = '"' + output + '" '
+			d = a + " " + b + " " + c
+			sP = cfg.subprocessSCP.Popen(d, shell=True)
+			sP.wait()
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " image: " + unicode(output))
 			
 	# Merge raster bands
 	def mergeRasterBands(self, bandList, output, outFormat = "GTiff", compress = "No"):
@@ -5131,7 +5180,10 @@ class Utils:
 	def getEPSGVectorQGIS(self, layer):
 		pCrs = cfg.utls.getCrs(layer)
 		id = pCrs.authid()
-		id = int(id.replace("EPSG:", ""))
+		try:
+			id = int(id.replace("EPSG:", ""))
+		except:
+			pass
 		return id
 		
 	# get EPSG for raster
@@ -5911,6 +5963,10 @@ class Utils:
 	# download ASTER tab
 	def downloadASTERTab(self):
 		cfg.utls.selectTabDownloadImages(2)
+		
+	# download MODIS tab
+	def downloadMODISTab(self):
+		cfg.utls.selectTabDownloadImages(3)
 
 ### tab 1
 	# select tab 0 from Main Interface
@@ -5984,21 +6040,29 @@ class Utils:
 	def asterTab(self):
 		cfg.utls.selectTab1MainInterface(2)
 		
+	# select MODIS tab
+	def modisTab(self):
+		cfg.utls.selectTab1MainInterface(3)
+		
 	# select Clip multiple rasters tab
 	def clipMultipleRastersTab(self):
-		cfg.utls.selectTab1MainInterface(3)
+		cfg.utls.selectTab1MainInterface(4)
 	
 	# select Split raster bands tab
 	def splitrasterbandsTab(self):
-		cfg.utls.selectTab1MainInterface(4)
+		cfg.utls.selectTab1MainInterface(5)
+		
+	# select Stack raster bands tab
+	def stackrasterbandsTab(self):
+		cfg.utls.selectTab1MainInterface(6)
 		
 	# PCA tab
 	def PCATab(self):
-		cfg.utls.selectTab1MainInterface(5)
+		cfg.utls.selectTab1MainInterface(7)
 			
 	# Vector to raster tab
 	def vectorToRasterTab(self):
-		cfg.utls.selectTab1MainInterface(6)
+		cfg.utls.selectTab1MainInterface(8)
 		
 ### tab 3
 	# select tab 3 from Main Interface

@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2016 by Luca Congedo
+		copyright			: (C) 2012-2017 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -90,6 +90,7 @@ if PluginCheck == "Yes":
 		from roidock.regionroi import RegionROI
 		from maininterface.downloadlandsatpointer import DownloadLandsatPointer
 		from maininterface.downloadasterpointer import DownloadASTERPointer
+		from maininterface.downloadmodispointer import DownloadMODISPointer
 		from maininterface.downloadsentinelpointer import DownloadSentinelPointer
 		from roidock.roidock import RoiDock
 		from spectralsignature.spectralsignatureplot import SpectralSignaturePlot
@@ -100,6 +101,7 @@ if PluginCheck == "Yes":
 		from spectralsignature.usgs_spectral_lib import USGS_Spectral_Lib
 		from maininterface.landsatTab import LandsatTab
 		from maininterface.asterTab import ASTERTab
+		from maininterface.modisTab import MODISTab
 		from maininterface.sentinelTab import Sentinel2Tab
 		from maininterface.accuracy import Accuracy
 		from maininterface.crossclassificationTab import CrossClassification
@@ -116,12 +118,14 @@ if PluginCheck == "Yes":
 		from maininterface.bandcalcTab import BandCalcTab
 		from maininterface.batchTab import BatchTab
 		from maininterface.clipmultiplerasters import ClipMultipleRasters
+		from maininterface.stackrasterbands import StackRasterBands
 		from maininterface.editraster import EditRaster
 		from maininterface.sieveTab import SieveRaster
 		from maininterface.erosionTab import ErosionRaster
 		from maininterface.dilationTab import DilationRaster
 		from maininterface.downloadlandsatimages import DownloadLandsatImages
 		from maininterface.downloadasterimages import DownloadASTERImages
+		from maininterface.downloadmodisimages import DownloadMODISImages
 		from maininterface.downloadsentinelimages import DownloadSentinelImages
 		from maininterface.clipmultiplerasterspointer import ClipMultiplerastersPointer
 		from maininterface.landcoverchange import LandCoverChange
@@ -243,15 +247,18 @@ class SemiAutomaticClassificationPlugin:
 			cfg.bCalc = BandCalcTab()
 			cfg.batchT= BatchTab()
 			cfg.clipMulti = ClipMultipleRasters()
+			cfg.stackRstr = StackRasterBands()
 			cfg.editRstr = EditRaster()
 			cfg.sieveRstr = SieveRaster()
 			cfg.ersnRstr = ErosionRaster()
 			cfg.dltnRstr = DilationRaster()
 			cfg.downLandsat = DownloadLandsatImages()
 			cfg.downASTER = DownloadASTERImages()
+			cfg.downMODIS = DownloadMODISImages()
 			cfg.downSentinel = DownloadSentinelImages()
 			cfg.landsatT = LandsatTab()
 			cfg.ASTERT = ASTERTab()
+			cfg.MODIST = MODISTab()
 			cfg.sentinel2T = Sentinel2Tab()
 			cfg.landCC = LandCoverChange()
 			cfg.classRep = ClassReportTab()
@@ -262,6 +269,7 @@ class SemiAutomaticClassificationPlugin:
 			cfg.regionROI = RegionROI(cfg.cnvs)
 			cfg.dwnlLandsatP = DownloadLandsatPointer(cfg.cnvs)
 			cfg.dwnlASTERP = DownloadASTERPointer(cfg.cnvs)
+			cfg.dwnlMODISP = DownloadMODISPointer(cfg.cnvs)
 			cfg.dwnlSentinelP = DownloadSentinelPointer(cfg.cnvs)
 			cfg.clipMultiP = ClipMultiplerastersPointer(cfg.cnvs)
 			cfg.LCSPixel = LCSigPixel(cfg.cnvs)
@@ -279,6 +287,8 @@ class SemiAutomaticClassificationPlugin:
 			cfg.iface.connect(cfg.dwnlLandsatP , cfg.SIGNALSCP("rightClicked") , cfg.downLandsat.pointerRightClick)
 			cfg.iface.connect(cfg.dwnlASTERP , cfg.SIGNALSCP("leftClicked") , cfg.downASTER.pointerLeftClick)
 			cfg.iface.connect(cfg.dwnlASTERP , cfg.SIGNALSCP("rightClicked") , cfg.downASTER.pointerRightClick)
+			cfg.iface.connect(cfg.dwnlMODISP , cfg.SIGNALSCP("leftClicked") , cfg.downMODIS.pointerLeftClick)
+			cfg.iface.connect(cfg.dwnlMODISP , cfg.SIGNALSCP("rightClicked") , cfg.downMODIS.pointerRightClick)
 			cfg.iface.connect(cfg.dwnlSentinelP , cfg.SIGNALSCP("leftClicked") , cfg.downSentinel.pointerLeftClick)
 			cfg.iface.connect(cfg.dwnlSentinelP , cfg.SIGNALSCP("rightClicked") , cfg.downSentinel.pointerRightClick)
 			cfg.iface.connect(cfg.clipMultiP , cfg.SIGNALSCP("leftClicked") , cfg.clipMulti.pointerLeftClick)
@@ -347,6 +357,8 @@ class SemiAutomaticClassificationPlugin:
 		cfg.USGSPass = cfg.utls.readRegistryKeys(cfg.regUSGSPass, cfg.USGSPass)
 		cfg.USGSUserASTER = cfg.utls.readRegistryKeys(cfg.regUSGSUserASTER, cfg.USGSUserASTER)
 		cfg.USGSPassASTER = cfg.utls.readRegistryKeys(cfg.regUSGSPassASTER, cfg.USGSPassASTER)
+		cfg.USGSUserMODIS = cfg.utls.readRegistryKeys(cfg.regUSGSUserMODIS, cfg.USGSUserMODIS)
+		cfg.USGSPassMODIS = cfg.utls.readRegistryKeys(cfg.regUSGSPassMODIS, cfg.USGSPassMODIS)
 		cfg.SciHubUser = cfg.utls.readRegistryKeys(cfg.regSciHubUser, cfg.SciHubUser)
 		cfg.SciHubService = cfg.utls.readRegistryKeys(cfg.regSciHubService, cfg.SciHubService)
 		cfg.SciHubPass = cfg.utls.readRegistryKeys(cfg.regSciHubPass, cfg.SciHubPass)
@@ -410,6 +422,8 @@ class SemiAutomaticClassificationPlugin:
 			cfg.utls.setColumnWidthList(cfg.ui.sentinel_2_tableWidget, [[0, 400], [1, 200], [2, 60]])
 			cfg.ui.ASTER_tableWidget.verticalHeader().setDefaultSectionSize(16)
 			cfg.utls.setColumnWidthList(cfg.ui.ASTER_tableWidget, [[0, 400], [1, 200], [2, 60]])
+			cfg.ui.MODIS_tableWidget.verticalHeader().setDefaultSectionSize(16)
+			cfg.utls.setColumnWidthList(cfg.ui.MODIS_tableWidget, [[0, 400], [1, 200], [2, 60]])
 			cfg.ui.LCS_tableWidget.verticalHeader().setDefaultSectionSize(16)
 			cfg.ui.signature_threshold_tableWidget.verticalHeader().setDefaultSectionSize(16)
 			cfg.ui.tableWidget_weight.verticalHeader().setDefaultSectionSize(16)
@@ -434,6 +448,7 @@ class SemiAutomaticClassificationPlugin:
 			# passwords
 			cfg.ui.password_usgs_lineEdit.setEchoMode(cfg.QtGuiSCP.QLineEdit.Password)
 			cfg.ui.password_usgs_lineEdit_2.setEchoMode(cfg.QtGuiSCP.QLineEdit.Password)
+			cfg.ui.password_usgs_lineEdit_3.setEchoMode(cfg.QtGuiSCP.QLineEdit.Password)
 			cfg.ui.password_scihub_lineEdit.setEchoMode(cfg.QtGuiSCP.QLineEdit.Password)
 			# scatter plot list
 			cfg.utls.insertTableColumn(cfg.uiscp.scatter_list_plot_tableWidget, 6, cfg.tableColString, None, "Yes")
@@ -460,6 +475,8 @@ class SemiAutomaticClassificationPlugin:
 			cfg.utls.setColumnWidthList(cfg.ui.sentinel_images_tableWidget, [[0, 300]])
 			# ASTER download tab
 			cfg.utls.setColumnWidthList(cfg.ui.aster_images_tableWidget, [[0, 300]])
+			# MODIS download tab
+			cfg.utls.setColumnWidthList(cfg.ui.modis_images_tableWidget, [[0, 300]])
 			# USGS spectral lbrary
 			cfg.usgsLib.addSpectralLibraryToCombo(cfg.usgs_lib_list)
 			cfg.usgs_C1p = cfg.plgnDir + "/spectralsignature/usgs_spectral_library/minerals.csv"
@@ -474,6 +491,7 @@ class SemiAutomaticClassificationPlugin:
 			cfg.bst.addSatelliteToCombo(cfg.satWlList)
 			cfg.downLandsat.addSatelliteToCombo(cfg.satLandsatList)
 			cfg.downASTER.addSatelliteToCombo(cfg.satASTERtList)
+			cfg.downMODIS.addSatelliteToCombo(cfg.satMODIStList)
 			cfg.scaPlT.addColormapToCombo(cfg.scatterColorMap)
 			cfg.bst.addUnitToCombo(cfg.unitList)
 			cfg.classD.previewSize()
@@ -555,8 +573,11 @@ class SemiAutomaticClassificationPlugin:
 				USGSPsw = cfg.utls.decryptPassword(cfg.USGSPass)
 				cfg.ui.password_usgs_lineEdit.setText(USGSPsw)
 				cfg.ui.user_usgs_lineEdit_2.setText(cfg.USGSUserASTER)
+				cfg.ui.user_usgs_lineEdit_3.setText(cfg.USGSUserMODIS)
 				USGSPsw2 = cfg.utls.decryptPassword(cfg.USGSPassASTER)
 				cfg.ui.password_usgs_lineEdit_2.setText(USGSPsw2)
+				USGSPsw3 = cfg.utls.decryptPassword(cfg.USGSPassMODIS)
+				cfg.ui.password_usgs_lineEdit_3.setText(USGSPsw3)
 				# set SciHub user and password
 				cfg.ui.sentinel_service_lineEdit.setText(cfg.SciHubService)
 				cfg.ui.user_scihub_lineEdit.setText(cfg.SciHubUser)
@@ -576,6 +597,7 @@ class SemiAutomaticClassificationPlugin:
 			cfg.bst.rasterBandName()
 			# reload rasters in checklist
 			cfg.clipMulti.rasterNameList()
+			cfg.stackRstr.rasterNameList()
 			""" Multiple ROI tab """
 			# connect to add point
 			cfg.ui.add_point_pushButton.clicked.connect(cfg.multiROI.addPointToTable)
@@ -607,6 +629,7 @@ class SemiAutomaticClassificationPlugin:
 			""" Export spectral signature tab """
 			# connect to export signature to SCP file
 			cfg.ui.export_SCP_pushButton.clicked.connect(cfg.classD.exportSignatureFile)
+			cfg.ui.export_SHP_pushButton.clicked.connect(cfg.classD.exportSignatureShapefile)
 			# connect to export signature to CSV
 			cfg.ui.export_CSV_library_toolButton.clicked.connect(cfg.classD.exportToCSVLibrary)
 			""" Algorithm weight tab """
@@ -691,6 +714,20 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.remember_user_checkBox_3.stateChanged.connect(cfg.downASTER.rememberUserCheckbox)
 			cfg.ui.user_usgs_lineEdit_2.editingFinished.connect(cfg.downASTER.rememberUser)
 			cfg.ui.password_usgs_lineEdit_2.editingFinished.connect(cfg.downASTER.rememberUser)
+			""" Download MODIS tab """
+			# connect to find images button
+			cfg.ui.find_images_toolButton_4.clicked.connect(cfg.downMODIS.findImages)
+			cfg.ui.selectUL_toolButton_6.clicked.connect(cfg.downMODIS.pointerActive)
+			# connect to display button
+			cfg.ui.toolButton_display_4.clicked.connect(cfg.downMODIS.displayImages)
+			cfg.ui.remove_image_toolButton_4.clicked.connect(cfg.downMODIS.removeImageFromTable)
+			cfg.ui.clear_table_toolButton_4.clicked.connect(cfg.downMODIS.clearTable)
+			cfg.ui.download_images_Button_4.clicked.connect(cfg.downMODIS.downloadImages)
+			cfg.ui.export_links_Button_4.clicked.connect(cfg.downMODIS.exportLinks)
+			cfg.ui.show_area_radioButton_5.clicked.connect(cfg.downMODIS.showHideArea)
+			cfg.ui.remember_user_checkBox_4.stateChanged.connect(cfg.downMODIS.rememberUserCheckbox)
+			cfg.ui.user_usgs_lineEdit_3.editingFinished.connect(cfg.downMODIS.rememberUser)
+			cfg.ui.password_usgs_lineEdit_3.editingFinished.connect(cfg.downMODIS.rememberUser)
 			""" Classification dock """
 			# combo layer
 			cfg.uidc.raster_name_combo.currentIndexChanged.connect(cfg.ipt.rasterLayerName)
@@ -895,6 +932,13 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.show_area_radioButton_3.clicked.connect(cfg.clipMulti.showHideArea)
 			cfg.ui.shapefile_checkBox.stateChanged.connect(cfg.clipMulti.checkboxShapeChanged)
 			cfg.ui.temporary_ROI_checkBox.stateChanged.connect(cfg.clipMulti.checkboxTempROIChanged)
+			""" Stack raster bands """
+			# connect to stack button
+			cfg.ui.stack_Button.clicked.connect(cfg.stackRstr.stackAction)
+			# connect to refresh rasters button
+			cfg.ui.toolButton_reload_22.clicked.connect(cfg.stackRstr.rasterNameList)
+			# connect to select all rasters button
+			cfg.ui.select_all_rasters_Button_3.clicked.connect(cfg.stackRstr.selectAllRasters)
 			""" ASTER tab """
 			# connect to input button
 			cfg.ui.toolButton_directoryInput_ASTER.clicked.connect(cfg.ASTERT.inputASTER)
@@ -904,6 +948,12 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.date_lineEdit_2.textChanged.connect(cfg.ASTERT.editedDate)
 			cfg.ui.pushButton_Conversion_3.clicked.connect(cfg.ASTERT.performASTERCorrection)
 			cfg.ui.pushButton_remove_band_2.clicked.connect(cfg.ASTERT.removeHighlightedBand)
+			""" MODIS tab """
+			# connect to input button
+			cfg.ui.toolButton_directoryInput_MODIS.clicked.connect(cfg.MODIST.inputMODIS)
+			cfg.ui.MODIS_tableWidget.cellChanged.connect(cfg.MODIST.editedCell)
+			cfg.ui.pushButton_Conversion_4.clicked.connect(cfg.MODIST.performMODISConversion)
+			cfg.ui.pushButton_remove_band_3.clicked.connect(cfg.MODIST.removeHighlightedBand)
 			""" Landsat tab """
 			# connect to input button
 			cfg.ui.toolButton_directoryInput.clicked.connect(cfg.landsatT.inputLandsat)
@@ -1220,6 +1270,7 @@ class SemiAutomaticClassificationPlugin:
 		cfg.bst.rasterBandName()
 		# reload rasters in checklist
 		cfg.clipMulti.rasterNameList()
+		cfg.stackRstr.rasterNameList()
 		cfg.bCalc.rasterBandName()
 		# rapid ROI band
 		cfg.uidc.rapidROI_band_spinBox.setValue(1)
@@ -1352,6 +1403,7 @@ class SemiAutomaticClassificationPlugin:
 		cfg.bst.rasterBandName()
 		# reload rasters in checklist
 		cfg.clipMulti.rasterNameList()
+		cfg.stackRstr.rasterNameList()
 		if cfg.bndSetPresent == "No":
 			# get wavelength
 			bSW = cfg.utls.readProjectVariable("bndSetWvLn", "")
@@ -1421,6 +1473,7 @@ class SemiAutomaticClassificationPlugin:
 		cfg.bst.rasterBandName()
 		# reload rasters in checklist
 		cfg.clipMulti.rasterNameList()
+		cfg.stackRstr.rasterNameList()
 		# Run the dialog event loop
 		pointer_result = cfg.dlg.exec_()
 		# logger

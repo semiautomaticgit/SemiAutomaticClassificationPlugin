@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2016 by Luca Congedo
+		copyright			: (C) 2012-2017 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -743,7 +743,7 @@ class BandCalcTab:
 	# check the output Name and return it
 	def checkOutputName(self, outputName):
 		try:
-			outputName = outputName.replace(cfg.variableOutputNameBandset, cfg.osSCP.path.basename(cfg.bndSetLst[0]).split(".")[0][:-1])
+			outputName = outputName.replace(cfg.variableOutputNameBandset, cfg.osSCP.path.basename(cfg.bndSetLst[0]).rpartition(".")[0][:-1])
 		except:
 			pass
 		try:

@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2016 by Luca Congedo
+		copyright			: (C) 2012-2017 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -398,6 +398,81 @@ class BatchTab:
 			return "No", "No"
 		# populate table
 		cfg.ASTERT.populateTable(cfg.ui.label_143.text(), "Yes")
+		return "Yes", parameters
+																			
+	# batch MODIS conversion
+	def performMODISConversion(self, paramList):
+		parameters = []
+		for p in paramList:
+			pSplit = p.split(":", 1)
+			pName = pSplit[0].lower().replace(" ", "")
+			# input file inside " "
+			if pName == "input_raster_path":
+				pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
+				cfg.ui.label_217.setText(g[0])
+				inputFile = "'" + g[0] + "'"
+				if len(g[0]) > 0:
+					pass
+				else:
+					l = cfg.ui.MODIS_tableWidget
+					cfg.utls.clearTable(l)
+					return "No", "No"
+			# output directory inside " "
+			elif pName == "output_dir":
+				pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
+				if len(g[0]) > 0:
+					outputDir = "'" + g[0] + "'"
+				else:
+					return "No", "No"
+			# reproject to WGS 84 checkbox (1 checked or 0 unchecked)
+			elif pName == "reproject_wgs84":
+				if pSplit[1].replace(" ", "") == "1":
+					cfg.ui.reproject_modis_checkBox.setCheckState(2)
+				elif pSplit[1].replace(" ", "") == "0":
+					cfg.ui.reproject_modis_checkBox.setCheckState(0)
+				else:
+					return "No", "No"
+			# nodata checkbox (1 checked or 0 unchecked)
+			elif pName == "use_nodata":
+				if pSplit[1].replace(" ", "") == "1":
+					cfg.ui.nodata_checkBox_7.setCheckState(2)
+				elif pSplit[1].replace(" ", "") == "0":
+					cfg.ui.nodata_checkBox_7.setCheckState(0)
+				else:
+					return "No", "No"
+			# nodata value (int value)
+			elif pName == "nodata_value":
+				try:
+					val = int(pSplit[1].replace(" ", ""))
+					cfg.ui.nodata_spinBox_8.setValue(val)
+				except:
+					return "No", "No"
+			# bandset checkbox (1 checked or 0 unchecked)
+			elif pName == "create_bandset":
+				if pSplit[1].replace(" ", "") == "1":
+					cfg.ui.create_bandset_checkBox_3.setCheckState(2)
+				elif pSplit[1].replace(" ", "") == "0":
+					cfg.ui.create_bandset_checkBox_3.setCheckState(0)
+				else:
+					return "No", "No"
+			else:
+				return "No", "No"
+		# append parameters
+		try:
+			parameters.append(inputFile)
+			parameters.append(outputDir)
+			# batch
+			parameters.append('"Yes"')
+		except:
+			return "No", "No"
+		# populate table
+		cfg.MODIST.populateTable(cfg.ui.label_217.text(), "Yes")
 		return "Yes", parameters
 						
 	# batch Sentinel conversion
@@ -908,6 +983,44 @@ class BatchTab:
 			parameters.append(files)
 			parameters.append(outputDir)
 			parameters.append(shapefilePath)
+		except:
+			return "No", "No"
+		return "Yes", parameters
+		
+	# batch stack rasters
+	def performStackRaster(self, paramList):
+		parameters = []
+		for p in paramList:
+			pSplit = p.split(":", 1)
+			pName = pSplit[0].lower().replace(" ", "")
+			# input file path inside " " separated by ,
+			if pName == "input_raster_path":
+				pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
+				files = g[0]
+				if len(files) > 0:
+					files = "'" + files + "'"
+				else:
+					return "No", "No"
+			# output file path inside " "
+			elif pName == "output_raster_path":
+				pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
+				outputRaster = "'" + g[0] + "'"
+				if len(g[0]) > 0:
+					pass
+				else:
+					return "No", "No"
+		# append parameters
+		try:
+			# batch
+			parameters.append('"Yes"')
+			parameters.append(files)
+			parameters.append(outputRaster)
 		except:
 			return "No", "No"
 		return "Yes", parameters

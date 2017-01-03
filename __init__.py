@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2016 by Luca Congedo
+		copyright			: (C) 2012-2017 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -42,7 +42,7 @@ def description():
 
 
 def version():
-    return "Version 5.2.4 - Kourou"
+    return "Version 5.3.0 - Kourou"
 
 
 def icon():

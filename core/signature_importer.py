@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2016 by Luca Congedo
+		copyright			: (C) 2012-2017 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -61,13 +61,11 @@ class Signature_Importer:
 				for w in s:
 					i = (cfg.np.abs(wavelength - w)).argmin()
 					waveL = wl[i]
-					# empty value for obtaining the same structure as the ROI stats
-					zero = 0
 					reflectance = ref[i]
 					standardDeviation = sD[i]
 					val = []
-					val.append(waveL)
-					val.append(zero)
+					val.append(reflectance-standardDeviation)
+					val.append(reflectance+standardDeviation)
 					val.append(reflectance)
 					val.append(standardDeviation)
 					cfg.tblOut["BAND_{0}".format(b+1)] = val
@@ -103,13 +101,11 @@ class Signature_Importer:
 				for w in s:
 					i = (cfg.np.abs(wavelength - w)).argmin()
 					waveL = wl[i]
-					# empty value for obtaining the same structure as the ROI stats
-					zero = 0
 					reflectance = ref[i]
 					standardDeviation = sD[i]
 					val = []
-					val.append(waveL)
-					val.append(zero)
+					val.append(reflectance-standardDeviation)
+					val.append(reflectance+standardDeviation)
 					val.append(reflectance)
 					val.append(standardDeviation)
 					cfg.tblOut["BAND_{0}".format(b+1)] = val
@@ -155,13 +151,11 @@ class Signature_Importer:
 			for w in s:
 				i = (cfg.np.abs(wavelength - w)).argmin()
 				waveL = wl[i]
-				# empty value for obtaining the same structure as the ROI stats
-				zero = 0
 				reflectance = ref[i]
 				standardDeviation = sD[i]
 				val = []
-				val.append(waveL)
-				val.append(zero)
+				val.append(reflectance-standardDeviation)
+				val.append(reflectance+standardDeviation)
 				val.append(reflectance)
 				val.append(standardDeviation)
 				cfg.tblOut["BAND_{0}".format(b+1)] = val
