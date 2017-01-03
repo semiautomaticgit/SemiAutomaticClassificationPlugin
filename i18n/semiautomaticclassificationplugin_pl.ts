@@ -3819,7 +3819,7 @@ Polish: Jakub Pękala, Robert Szczepanek&lt;/p&gt;
         <translation>Wybierz plik z listą sygnatur</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="749"/>
+        <location filename="downloadsentinelimages.py" line="752"/>
         <source>Reset signature list</source>
         <translation>Wyczyść listę sygnatur</translation>
     </message>
@@ -4399,7 +4399,7 @@ Polish: Jakub Pękala, Robert Szczepanek&lt;/p&gt;
         <translation>Wyszukiwanie...</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="749"/>
+        <location filename="downloadsentinelimages.py" line="752"/>
         <source>Are you sure you want to clear the table?</source>
         <translation>Czy na pewno oczyścić tabelę?</translation>
     </message>

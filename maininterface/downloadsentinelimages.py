@@ -674,6 +674,7 @@ class DownloadSentinelImages:
 						# logger
 						cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " thumbnail downloaded" + xml2)
 						try:
+							newV = None
 							doc2 = cfg.minidomSCP.parseString(xml2)
 							imgName2Tag = doc2.getElementsByTagName("IMAGE_FILE")[0]
 							imgName2 = imgName2Tag.firstChild.data.split("/")[1]
@@ -700,43 +701,45 @@ class DownloadSentinelImages:
 										cfg.utls.addTableItem(tW, imgPreview, c, 10)
 										cfg.utls.addTableItem(tW, imgPreview2, c, 11)
 										cfg.utls.addTableItem(tW, imgID, c, 12)
+										newV = "Yes"
 						except Exception, err:
 							# logger
 							cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-						# old xml version
-						try:
-							doc2 = cfg.minidomSCP.parseString(xml2)
-							entries2 = doc2.getElementsByTagName("Granules")
-							if len(entries2) == 0:
-								entries2 = doc2.getElementsByTagName("Granule")
-							for entry2 in entries2:
-								if cfg.actionCheck == "Yes":
-									imgName2 = entry2.attributes["granuleIdentifier"].value
-									for filter in imageFindList:
-										if filter in imgName.lower() or filter in imgName2.lower():
-											acZoneI = imgName2[-12:-7]
-											# add item to table
-											c = tW.rowCount()
-											# add list items to table
-											tW.setRowCount(c + 1)
-											imgPreview = topUrl + "/odata/v1/Products('" +  imgID + "')/Products('Quicklook')/$value"
-											imgPreview2 = topUrl + "/odata/v1/Products('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('IMG_DATA')/Nodes('" + imgName2[0:-7] + "_B01.jp2')/$value"
-											cfg.utls.addTableItem(tW, imgName, c, 0)
-											cfg.utls.addTableItem(tW, imgName2, c, 1)
-											cfg.utls.addTableItem(tW, acqDateI, c, 2)
-											cfg.utls.addTableItem(tW, acZoneI, c, 3)
-											cfg.utls.addTableItem(tW, float(cloudcoverpercentage), c, 4)
-											cfg.utls.addTableItem(tW, float(min_lat), c, 5)
-											cfg.utls.addTableItem(tW, float(min_lon), c, 6)
-											cfg.utls.addTableItem(tW, float(max_lat), c, 7)
-											cfg.utls.addTableItem(tW, float(max_lon), c, 8)
-											cfg.utls.addTableItem(tW, size, c, 9)
-											cfg.utls.addTableItem(tW, imgPreview, c, 10)
-											cfg.utls.addTableItem(tW, imgPreview2, c, 11)
-											cfg.utls.addTableItem(tW, imgID, c, 12)
-						except Exception, err:
-							# logger
-							cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+						if newV is None:
+							# old xml version
+							try:
+								doc2 = cfg.minidomSCP.parseString(xml2)
+								entries2 = doc2.getElementsByTagName("Granules")
+								if len(entries2) == 0:
+									entries2 = doc2.getElementsByTagName("Granule")
+								for entry2 in entries2:
+									if cfg.actionCheck == "Yes":
+										imgName2 = entry2.attributes["granuleIdentifier"].value
+										for filter in imageFindList:
+											if filter in imgName.lower() or filter in imgName2.lower():
+												acZoneI = imgName2[-12:-7]
+												# add item to table
+												c = tW.rowCount()
+												# add list items to table
+												tW.setRowCount(c + 1)
+												imgPreview = topUrl + "/odata/v1/Products('" +  imgID + "')/Products('Quicklook')/$value"
+												imgPreview2 = topUrl + "/odata/v1/Products('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('IMG_DATA')/Nodes('" + imgName2[0:-7] + "_B01.jp2')/$value"
+												cfg.utls.addTableItem(tW, imgName, c, 0)
+												cfg.utls.addTableItem(tW, imgName2, c, 1)
+												cfg.utls.addTableItem(tW, acqDateI, c, 2)
+												cfg.utls.addTableItem(tW, acZoneI, c, 3)
+												cfg.utls.addTableItem(tW, float(cloudcoverpercentage), c, 4)
+												cfg.utls.addTableItem(tW, float(min_lat), c, 5)
+												cfg.utls.addTableItem(tW, float(min_lon), c, 6)
+												cfg.utls.addTableItem(tW, float(max_lat), c, 7)
+												cfg.utls.addTableItem(tW, float(max_lon), c, 8)
+												cfg.utls.addTableItem(tW, size, c, 9)
+												cfg.utls.addTableItem(tW, imgPreview, c, 10)
+												cfg.utls.addTableItem(tW, imgPreview2, c, 11)
+												cfg.utls.addTableItem(tW, imgID, c, 12)
+							except Exception, err:
+								# logger
+								cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 		tW.setSortingEnabled(True)		
 		cfg.uiUtls.removeProgressBar()
 		self.clearCanvasPoly()

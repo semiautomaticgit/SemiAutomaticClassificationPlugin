@@ -4690,12 +4690,12 @@ Do you want to add the required fields to this shapefile?</source>
         <translation>Exportar enlaces de descarga</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="749"/>
+        <location filename="downloadsentinelimages.py" line="752"/>
         <source>Reset signature list</source>
         <translation>Restaurar lista de firmas</translation>
     </message>
     <message>
-        <location filename="downloadsentinelimages.py" line="749"/>
+        <location filename="downloadsentinelimages.py" line="752"/>
         <source>Are you sure you want to clear the table?</source>
         <translation>¿Estás seguro que quieres borrar la tabla?</translation>
     </message>
