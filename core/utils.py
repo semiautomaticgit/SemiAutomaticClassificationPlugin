@@ -3233,7 +3233,9 @@ class Utils:
 					cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 					return "No"
 				o = a
-			o = cfg.np.nan_to_num(o)
+			a = cfg.np.nan_to_num(o)
+			a[cfg.np.isnan(o)] = cfg.np.nan
+			o = a
 			oR = outputGdalRasterList[0]
 			# output raster
 			band = gdalBandList[0].GetBand()
