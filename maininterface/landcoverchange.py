@@ -195,7 +195,11 @@ class LandCoverChange:
 						l = open(tblOut, 'w')
 					except:
 						return "No"
-					t = str(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'ChangeCode')) + "	" + str(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'ReferenceClass')) + "	" + str(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'NewClass')) + "	" + str(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'PixelSum') + str("\n"))
+					t = cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'ChangeCode') + "	" + cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'ReferenceClass') + "	" + cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'NewClass') + "	" + cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'PixelSum') + str("\n")
+					try:
+						t = t.encode(cfg.sysSCP.getfilesystemencoding())
+					except:
+						pass
 					l.write(t)
 					# change stats
 					rDC = cfg.gdalSCP.Open(chngRstPath, cfg.gdalSCP.GA_ReadOnly)
@@ -233,6 +237,7 @@ class LandCoverChange:
 						# enable map canvas render
 						cfg.cnvs.setRenderFlag(True)
 						cfg.utls.finishSound()
+						cfg.ui.toolBox_landCoverChange.setCurrentIndex(1)
 						cfg.uiUtls.removeProgressBar()
 					# logger
 					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "finished")

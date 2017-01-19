@@ -10444,7 +10444,7 @@ p, li { white-space: pre-wrap; }
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>94</width>
+                  <width>86</width>
                   <height>86</height>
                  </rect>
                 </property>
@@ -10862,7 +10862,7 @@ p, li { white-space: pre-wrap; }
           </attribute>
           <layout class="QGridLayout" name="gridLayout_184">
            <item row="0" column="0">
-            <widget class="QToolBox" name="toolBox_5">
+            <widget class="QToolBox" name="toolBox_accuracy">
              <property name="currentIndex">
               <number>0</number>
              </property>
@@ -11162,8 +11162,8 @@ p, li { white-space: pre-wrap; }
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>94</width>
-                <height>86</height>
+                <width>855</width>
+                <height>413</height>
                </rect>
               </property>
               <attribute name="label">
@@ -11218,7 +11218,7 @@ p, li { white-space: pre-wrap; }
           </attribute>
           <layout class="QGridLayout" name="gridLayout_187">
            <item row="0" column="0">
-            <widget class="QToolBox" name="toolBox_6">
+            <widget class="QToolBox" name="toolBox_landCoverChange">
              <property name="currentIndex">
               <number>0</number>
              </property>
@@ -11227,8 +11227,8 @@ p, li { white-space: pre-wrap; }
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>366</width>
-                <height>175</height>
+                <width>855</width>
+                <height>413</height>
                </rect>
               </property>
               <attribute name="label">
@@ -11480,7 +11480,7 @@ p, li { white-space: pre-wrap; }
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>94</width>
+                <width>86</width>
                 <height>86</height>
                </rect>
               </property>
@@ -11529,7 +11529,7 @@ p, li { white-space: pre-wrap; }
           </attribute>
           <layout class="QGridLayout" name="gridLayout_27">
            <item row="0" column="0">
-            <widget class="QToolBox" name="toolBox_7">
+            <widget class="QToolBox" name="toolBox_class_report">
              <property name="styleSheet">
               <string notr="true"/>
              </property>
@@ -11541,8 +11541,8 @@ p, li { white-space: pre-wrap; }
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>366</width>
-                <height>147</height>
+                <width>855</width>
+                <height>413</height>
                </rect>
               </property>
               <attribute name="label">
@@ -11746,8 +11746,8 @@ p, li { white-space: pre-wrap; }
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>94</width>
-                <height>86</height>
+                <width>855</width>
+                <height>413</height>
                </rect>
               </property>
               <attribute name="label">
@@ -11785,7 +11785,7 @@ p, li { white-space: pre-wrap; }
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="tab_2">
+         <widget class="QWidget" name="tab_cross_classification">
           <attribute name="icon">
            <iconset resource="resources.qrc">
             <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_cross_classification.png</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_cross_classification.png</iconset>
@@ -11795,7 +11795,7 @@ p, li { white-space: pre-wrap; }
           </attribute>
           <layout class="QGridLayout" name="gridLayout_254">
            <item row="0" column="0">
-            <widget class="QToolBox" name="cross_classification">
+            <widget class="QToolBox" name="toolBox_cross_classification">
              <property name="currentIndex">
               <number>0</number>
              </property>
@@ -11804,8 +11804,8 @@ p, li { white-space: pre-wrap; }
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>377</width>
-                <height>205</height>
+                <width>855</width>
+                <height>413</height>
                </rect>
               </property>
               <attribute name="label">
@@ -12122,8 +12122,8 @@ p, li { white-space: pre-wrap; }
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>94</width>
-                <height>86</height>
+                <width>855</width>
+                <height>413</height>
                </rect>
               </property>
               <attribute name="label">

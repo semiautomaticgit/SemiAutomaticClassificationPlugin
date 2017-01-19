@@ -4484,17 +4484,17 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="crossclassificationTab.py" line="305"/>
+        <location filename="crossclassificationTab.py" line="304"/>
         <source>Classification</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="accuracy.py" line="285"/>
+        <location filename="accuracy.py" line="284"/>
         <source>ErrMatrixCode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="crossclassificationTab.py" line="334"/>
+        <location filename="crossclassificationTab.py" line="333"/>
         <source>Reference</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4504,42 +4504,42 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="accuracy.py" line="308"/>
+        <location filename="accuracy.py" line="307"/>
         <source>ERROR MATRIX</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="crossclassificationTab.py" line="357"/>
+        <location filename="crossclassificationTab.py" line="356"/>
         <source>Total</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="accuracy.py" line="350"/>
+        <location filename="accuracy.py" line="349"/>
         <source>Overall accuracy [%] = </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="accuracy.py" line="368"/>
+        <location filename="accuracy.py" line="367"/>
         <source>Class </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="accuracy.py" line="368"/>
+        <location filename="accuracy.py" line="367"/>
         <source> producer accuracy [%] = </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="accuracy.py" line="368"/>
+        <location filename="accuracy.py" line="367"/>
         <source> user accuracy [%] = </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="accuracy.py" line="368"/>
+        <location filename="accuracy.py" line="367"/>
         <source>Kappa hat = </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="accuracy.py" line="375"/>
+        <location filename="accuracy.py" line="374"/>
         <source>Kappa hat classification = </source>
         <translation type="unfinished"></translation>
     </message>
@@ -4664,7 +4664,7 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="crossclassificationTab.py" line="264"/>
+        <location filename="crossclassificationTab.py" line="263"/>
         <source>Unknown</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5159,12 +5159,12 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="crossclassificationTab.py" line="305"/>
+        <location filename="crossclassificationTab.py" line="304"/>
         <source>CrossClassCode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="crossclassificationTab.py" line="328"/>
+        <location filename="crossclassificationTab.py" line="327"/>
         <source>CROSS MATRIX [</source>
         <translation type="unfinished"></translation>
     </message>

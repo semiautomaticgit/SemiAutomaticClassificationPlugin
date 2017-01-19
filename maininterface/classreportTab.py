@@ -108,7 +108,11 @@ class ClassReportTab:
 				sum = cfg.rasterBandPixelCount
 				# save combination to table
 				l = open(cfg.reportPth, 'w')
-				t = str(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Class')) + "	" + str(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'PixelSum')) + "	" + str(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Percentage %')) + "	" + str(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Area [' + str(un) + "^2]") + str("\n"))
+				t = cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Class') + "	" + cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'PixelSum') + "	" + cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Percentage %') + "	" + cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Area [' + un + "^2]") + str("\n")
+				try:
+					t = t.encode(cfg.sysSCP.getfilesystemencoding())
+				except:
+					pass
 				l.write(t)
 				for i in cfg.rasterBandUniqueVal:
 					cfg.rasterBandPixelCount = 0
@@ -144,6 +148,7 @@ class ClassReportTab:
 				if batch == "No":
 					cfg.uiUtls.removeProgressBar()
 					cfg.utls.finishSound()
+					cfg.ui.toolBox_class_report.setCurrentIndex(1)
 						
 	# calculate classification report if click on button
 	def calculateClassReport(self):

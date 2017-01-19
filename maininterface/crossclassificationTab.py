@@ -126,14 +126,13 @@ class CrossClassification:
 								cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 								return "No"
 						l = cfg.utls.addVectorLayer(reprjShapefile, cfg.osSCP.path.basename(reprjShapefile) , "ogr")
-						
-					if batch == "No":
-						cfg.uiUtls.addProgressBar()
-						# disable map canvas render for speed
-						cfg.cnvs.setRenderFlag(False)
-						cfg.QtGuiSCP.qApp.processEvents()
-					# temp raster layer
-					tRC= cfg.tmpDir + "/" + cfg.rclssTempNm + dT + ".tif"
+				if batch == "No":
+					cfg.uiUtls.addProgressBar()
+					# disable map canvas render for speed
+					cfg.cnvs.setRenderFlag(False)
+					cfg.QtGuiSCP.qApp.processEvents()
+				# temp raster layer
+				tRC= cfg.tmpDir + "/" + cfg.rclssTempNm + dT + ".tif"
 				# cross classification
 				eMN = dT + cfg.crossClassNm
 				cfg.reportPth = str(cfg.tmpDir + "/" + eMN)
@@ -302,7 +301,7 @@ class CrossClassification:
 					# logger
 					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 					return "No"
-				t = cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'CrossClassCode') + "	" + cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Reference') + "	" + cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Classification') + "	" + cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'PixelSum') + "	" + str(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Area [' + str(un) + "^2]") + str("\n"))
+				t = cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'CrossClassCode') + "	" + cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Reference') + "	" + cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Classification') + "	" + cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'PixelSum') + "	" + cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Area [' + un + "^2]") + str("\n")
 				try:
 					t = t.encode(cfg.sysSCP.getfilesystemencoding())
 				except:
@@ -388,6 +387,7 @@ class CrossClassification:
 					# enable map canvas render
 					cfg.cnvs.setRenderFlag(True)
 					cfg.utls.finishSound()
+					cfg.ui.toolBox_cross_classification.setCurrentIndex(1)
 					cfg.uiUtls.removeProgressBar()
 				else:
 					# remove temp layers
