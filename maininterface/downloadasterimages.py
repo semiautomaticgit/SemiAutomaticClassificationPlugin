@@ -221,7 +221,7 @@ class DownloadASTERImages:
 						lon.append(float(longi.firstChild.data))
 					DayNightFlag = entry.getElementsByTagName("DayNightFlag")[0]
 					dayNight = DayNightFlag.firstChild.data
-					listImgID.append([imgID, imgDate, cloudCover, imgDispID, dayNight, lon, lat, imgPreview])
+					listImgID.append([imgID, imgDate, cloudCover, imgDispID, dayNight, lon, lat, imgPreview.replace("http:", "https:")])
 			cfg.uiUtls.updateBar(100, cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Searching ..."))
 			c = tW.rowCount()
 			for imID in listImgID:
@@ -312,7 +312,10 @@ class DownloadASTERImages:
 		
 	# download thumbnail
 	def downloadThumbnail(self, imgID, imgDispID, row, min_lat, min_lon, max_lat, max_lon, imageJPG, progress = None):
-		check = cfg.utls.downloadFile(imageJPG, cfg.tmpDir + "//" + imgDispID + "_thumb.jpg", imgDispID + "_thumb.jpg", progress)
+		#check = cfg.utls.downloadFile(imageJPG, cfg.tmpDir + "//" + imgDispID + "_thumb.jpg", imgDispID + "_thumb.jpg", progress)
+		user = cfg.ui.user_usgs_lineEdit_2.text()
+		password = cfg.ui.password_usgs_lineEdit_2.text()
+		check = cfg.utls.passwordConnect(user, password, imageJPG, 'urs.earthdata.nasa.gov', cfg.tmpDir + "//" + imgDispID + "_thumb.jpg", progress, "No")
 		if check == "Yes":
 			cLon = (float(min_lon) + float(max_lon)) / 2
 			cLat = (float(min_lat) + float(max_lat)) / 2
@@ -444,7 +447,7 @@ class DownloadASTERImages:
 	# download image
 	def downloadASTERImagesFromNASA(self, imageID, collection, imageDisplayID, outputDirectory, progress, exporter = "No", date = None):
 		# The ASTER L1T data products are retrieved from the online Data Pool, courtesy of the NASA Land Processes Distributed Active Archive Center (LP DAAC), USGS/Earth Resources Observation and Science (EROS) Center, Sioux Falls, South Dakota, https://lpdaac.usgs.gov/data_access/data_pool"
-		url = "http://e4ftl01.cr.usgs.gov/ASTT/AST_L1T.003/" + date.replace("-", ".")+ "/" + imageDisplayID + ".hdf"
+		url = "https://e4ftl01.cr.usgs.gov/ASTT/AST_L1T.003/" + date.replace("-", ".")+ "/" + imageDisplayID + ".hdf"
 		if exporter == "Yes":
 			return url
 		else:
@@ -452,7 +455,8 @@ class DownloadASTERImages:
 			password =cfg.ui.password_usgs_lineEdit_2.text()
 			try:
 				imgID = imageDisplayID + ".hdf"
-				check = cfg.utls.passwordConnectPython(user, password, url, 'urs.earthdata.nasa.gov', cfg.tmpDir + "//" + imgID, progress)
+				#check = cfg.utls.passwordConnectPython(user, password, url, 'urs.earthdata.nasa.gov', cfg.tmpDir + "//" + imgID, progress)
+				check = cfg.utls.passwordConnect(user, password, url, 'urs.earthdata.nasa.gov', cfg.tmpDir + "//" + imgID, progress, "No", "Yes")
 				if str(check) == 'Cancel action':
 					return check
 				if cfg.osSCP.path.getsize(cfg.tmpDir + "//" + imgID) > 10000:

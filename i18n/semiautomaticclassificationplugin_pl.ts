@@ -4209,7 +4209,7 @@ Polish: Jakub Pękala, Robert Szczepanek&lt;/p&gt;
         <translation>Zmniejsz zakres obszaru wyszukiwania w obrębie 10 stopni szerokości geograficznej i 10 stopni długości geograficznej</translation>
     </message>
     <message>
-        <location filename="utils.py" line="2132"/>
+        <location filename="utils.py" line="2192"/>
         <source>Please wait ...</source>
         <translation>Proszę czekać...</translation>
     </message>

@@ -128,8 +128,32 @@ class Utils:
 			cfg.replyP.abort()
 			cfg.replyP.close()
 							
+	# reply redirect
+	def replyRedirect(self):
+		cfg.replyR.deleteLater()
+		rA = cfg.replyR.attribute(cfg.QNetworkRequestSCP.RedirectionTargetAttribute)
+		if rA is not None:
+			cfg.replyRURL = rA.toString()
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode())				
+						
+	# reply redirect
+	def replyRedirect2(self):
+		cfg.replyR2.deleteLater()
+		rA = cfg.replyR2.attribute(cfg.QNetworkRequestSCP.RedirectionTargetAttribute)
+		if rA is not None:
+			cfg.replyRURL2 = rA.toString()
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode())				
+			
+	# reply redirect
+	def replyRedirect3(self):
+		cfg.replyR3.deleteLater()
+		rA = cfg.replyR3.attribute(cfg.QNetworkRequestSCP.RedirectionTargetAttribute)
+		if rA is not None:
+			cfg.replyRURL3 = rA.toString()
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode())				
+
 	# connect with password
-	def passwordConnect(self, user, password, url, topLevelUrl, outputPath = None, progress = None, quiet = "No"):
+	def passwordConnect(self, user, password, url, topLevelUrl, outputPath = None, progress = None, quiet = "No", redirect = "No"):
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " " + url)
 		# auth
@@ -138,10 +162,46 @@ class Utils:
 		hKey = cfg.QtCoreSCP.QByteArray("Authorization")
 		hValue = cfg.QtCoreSCP.QByteArray(h)
 		r = cfg.QNetworkRequestSCP(cfg.QtCoreSCP.QUrl(url))
-		r.setRawHeader(hKey, hValue)
+		r.setRawHeader(hKey, hValue)		
+		qnamI = cfg.qgisCoreSCP.QgsNetworkAccessManager.instance()
+		if redirect is not "No":
+			cfg.replyR = qnamI.get(r)
+			cfg.replyR.finished.connect(self.replyRedirect)
+			# loop
+			eL = cfg.QtCoreSCP.QEventLoop()
+			cfg.replyR.finished.connect(eL.quit)
+			eL.exec_()
+			cfg.replyR.finished.disconnect(eL.quit)
+			cfg.replyR.finished.disconnect()
+			cfg.replyR.abort()
+			cfg.replyR.close()
+			r2 = cfg.QNetworkRequestSCP(cfg.QtCoreSCP.QUrl(cfg.replyRURL))
+			r2.setRawHeader(hKey, hValue)
+			cfg.replyR2 = qnamI.get(r2)
+			cfg.replyR2.finished.connect(self.replyRedirect2)
+			# loop
+			eL = cfg.QtCoreSCP.QEventLoop()
+			cfg.replyR2.finished.connect(eL.quit)
+			eL.exec_()
+			cfg.replyR2.finished.disconnect(eL.quit)
+			cfg.replyR2.finished.disconnect()
+			cfg.replyR2.abort()
+			cfg.replyR2.close()
+			r3 = cfg.QNetworkRequestSCP(cfg.QtCoreSCP.QUrl(cfg.replyRURL2))
+			r3.setRawHeader(hKey, hValue)
+			cfg.replyR3 = qnamI.get(r3)
+			cfg.replyR3.finished.connect(self.replyRedirect3)
+			# loop
+			eL = cfg.QtCoreSCP.QEventLoop()
+			cfg.replyR3.finished.connect(eL.quit)
+			eL.exec_()
+			cfg.replyR3.finished.disconnect(eL.quit)
+			cfg.replyR3.finished.disconnect()
+			cfg.replyR3.abort()
+			cfg.replyR3.close()
 		try:
 			if outputPath is None:
-				cfg.replyP = cfg.qgisCoreSCP.QgsNetworkAccessManager.instance().get(r)
+				cfg.replyP = qnamI.get(r)
 				cfg.replyP.finished.connect(self.replyText)
 				# loop
 				eL = cfg.QtCoreSCP.QEventLoop()
@@ -155,7 +215,7 @@ class Utils:
 			else:
 				self.urlP = url
 				self.progressP = progress
-				cfg.replyP = cfg.qgisCoreSCP.QgsNetworkAccessManager.instance().get(r)
+				cfg.replyP = qnamI.get(r)
 				cfg.replyP.finished.connect(self.replyFinish)
 				cfg.replyP.downloadProgress.connect(self.downloadProgress)
 				# loop

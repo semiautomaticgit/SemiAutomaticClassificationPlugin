@@ -247,7 +247,7 @@ class DownloadMODISImages:
 						lon.append(pppLon)
 					DayNightFlag = entry.getElementsByTagName("DayNightFlag")[0]
 					dayNight = DayNightFlag.firstChild.data
-					listImgID.append([imgID, imgDate, cloudCover, imgDispID, dayNight, lon, lat, imgPreview])
+					listImgID.append([imgID, imgDate, cloudCover, imgDispID, dayNight, lon, lat, imgPreview.replace("http:", "https:")])
 			cfg.uiUtls.updateBar(100, cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Searching ..."))
 			c = tW.rowCount()
 			for imID in listImgID:
@@ -338,7 +338,10 @@ class DownloadMODISImages:
 		
 	# download thumbnail
 	def downloadThumbnail(self, imgID, imgDispID, row, min_lat, min_lon, max_lat, max_lon, imageJPG, progress = None):
-		check = cfg.utls.downloadFile(imageJPG, cfg.tmpDir + "//" + imgDispID + "_thumb.jpg", imgDispID + "_thumb.jpg", progress)
+		#check = cfg.utls.downloadFile(imageJPG, cfg.tmpDir + "//" + imgDispID + "_thumb.jpg", imgDispID + "_thumb.jpg", progress)
+		user = cfg.ui.user_usgs_lineEdit_3.text()
+		password =cfg.ui.password_usgs_lineEdit_3.text()
+		check = cfg.utls.passwordConnect(user, password, imageJPG, 'urs.earthdata.nasa.gov', cfg.tmpDir + "//" + imgDispID + "_thumb.jpg", progress, "No")
 		if check == "Yes":
 			UL1 = QgsPoint(float(min_lon), float(max_lat))
 			LR1 = QgsPoint(float(max_lon), float(min_lat))
@@ -457,13 +460,13 @@ class DownloadMODISImages:
 		elif collection == cfg.NASAMYD09GACollection:
 			url = "https://e4ftl01.cr.usgs.gov/MODV6_Dal_A/MOLA/MYD09GA.006/" + date.replace("-", ".")+ "/" + imageDisplayID + ".hdf"
 		elif collection == cfg.NASAMOD09Q1Collection:
-			url = "http://e4ftl01.cr.usgs.gov/MODV6_Cmp_B/MOLT/MOD09Q1.006/" + date.replace("-", ".")+ "/" + imageDisplayID + ".hdf"
+			url = "https://e4ftl01.cr.usgs.gov/MODV6_Cmp_B/MOLT/MOD09Q1.006/" + date.replace("-", ".")+ "/" + imageDisplayID + ".hdf"
 		elif collection == cfg.NASAMYD09Q1Collection:
-			url = "http://e4ftl01.cr.usgs.gov/MODV6_Cmp_B/MOLA/MYD09Q1.006/" + date.replace("-", ".")+ "/" + imageDisplayID + ".hdf"
+			url = "https://e4ftl01.cr.usgs.gov/MODV6_Cmp_B/MOLA/MYD09Q1.006/" + date.replace("-", ".")+ "/" + imageDisplayID + ".hdf"
 		elif collection == cfg.NASAMOD09A1Collection:
-			url = "http://e4ftl01.cr.usgs.gov/MODV6_Cmp_C/MOLT/MOD09A1.006/" + date.replace("-", ".")+ "/" + imageDisplayID + ".hdf"
+			url = "https://e4ftl01.cr.usgs.gov/MODV6_Cmp_C/MOLT/MOD09A1.006/" + date.replace("-", ".")+ "/" + imageDisplayID + ".hdf"
 		elif collection == cfg.NASAMYD09A1Collection:
-			url = "http://e4ftl01.cr.usgs.gov//MODV6_Cmp_C/MOLA/MYD09A1.006/" + date.replace("-", ".")+ "/" + imageDisplayID + ".hdf"
+			url = "https://e4ftl01.cr.usgs.gov//MODV6_Cmp_C/MOLA/MYD09A1.006/" + date.replace("-", ".")+ "/" + imageDisplayID + ".hdf"
 		if exporter == "Yes":
 			return url
 		else:
@@ -471,7 +474,8 @@ class DownloadMODISImages:
 			password =cfg.ui.password_usgs_lineEdit_3.text()
 			try:
 				imgID = imageDisplayID + ".hdf"
-				check = cfg.utls.passwordConnectPython(user, password, url, 'urs.earthdata.nasa.gov', cfg.tmpDir + "//" + imgID, progress)
+				#check = cfg.utls.passwordConnectPython(user, password, url, 'urs.earthdata.nasa.gov', cfg.tmpDir + "//" + imgID, progress)
+				check = cfg.utls.passwordConnect(user, password, url, 'urs.earthdata.nasa.gov', cfg.tmpDir + "//" + imgID, progress, "No", "Yes")
 				if str(check) == 'Cancel action':
 					return check
 				if cfg.osSCP.path.getsize(cfg.tmpDir + "//" + imgID) > 10000:
