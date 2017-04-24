@@ -158,7 +158,7 @@ class DownloadSentinelImages:
 		
 	# download image preview from Amazon
 	def downloadPreviewAmazon(self, imgID, imgIDN, imgIDT, imgIDTT, acquisitionDate, progress = None):
-		url = "http://sentinel-s2-l1c.s3.amazonaws.com/tiles/" + imgIDN + "/" + imgIDT + "/" + imgIDTT + "/" + acquisitionDate[0:4] + "/" + acquisitionDate[5:7].replace("0", "") + "/" + acquisitionDate[8:10].replace("0", "") + "/0/preview.jp2"
+		url = "http://sentinel-s2-l1c.s3.amazonaws.com/tiles/" + imgIDN + "/" + imgIDT + "/" + imgIDTT + "/" + acquisitionDate[0:4] + "/" + acquisitionDate[5:7].lstrip('0') + "/" + acquisitionDate[8:10].lstrip('0') + "/0/preview.jp2"
 		check = cfg.utls.downloadFile(url, cfg.tmpDir + "//" + imgID + '_p.jp2', imgID, progress)
 		return check
 		
