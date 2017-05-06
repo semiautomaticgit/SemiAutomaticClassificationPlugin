@@ -663,7 +663,7 @@ class DownloadSentinelImages:
 					url2 = topUrl + "/odata/v1/Products('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('MTD_MSIL1C.xml')/$value"
 					if cfg.actionCheck == "Yes":
 						response2 = cfg.utls.passwordConnect(user, password, url2, topLevelUrl)
-						if len(response2) == 0:
+						if len(response2) == 0 or "Navigation failed" in response2:
 							# old xml version
 							url2 = topUrl + "/odata/v1/Products('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('" + imgName.replace('_PRD_MSIL1C_', '_MTD_SAFL1C_') + ".xml')/$value"
 							response2 = cfg.utls.passwordConnect(user, password, url2, topLevelUrl)
@@ -672,7 +672,7 @@ class DownloadSentinelImages:
 							return "No"
 						xml2 = response2
 						# logger
-						cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " thumbnail downloaded" + xml2)
+						cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " xml downloaded")
 						try:
 							newV = None
 							doc2 = cfg.minidomSCP.parseString(xml2)
