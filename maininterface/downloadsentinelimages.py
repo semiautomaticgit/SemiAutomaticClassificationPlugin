@@ -574,10 +574,10 @@ class DownloadSentinelImages:
 				imgIDLineSplit = str(imgIDLine).replace(" ", "").split(",")
 			for m in imgIDLineSplit:
 				imageFindList.append(m.lower())
-			imgQuery = "S2A*"
+			imgQuery = "S2*"
 		else:
-			imageFindList.append("s2a")
-			imgQuery = "S2A*"
+			imageFindList.append("s2")
+			imgQuery = "S2*"
 		try:
 			rubbRect = QgsRectangle(float(cfg.ui.UX_lineEdit_5.text()), float(cfg.ui.UY_lineEdit_5.text()), float(cfg.ui.LX_lineEdit_5.text()), float(cfg.ui.LY_lineEdit_5.text()))
 			if abs(float(cfg.ui.UX_lineEdit_5.text()) - float(cfg.ui.LX_lineEdit_5.text())) > 10 or abs(float(cfg.ui.UY_lineEdit_5.text()) - float(cfg.ui.LY_lineEdit_5.text())) > 10:
