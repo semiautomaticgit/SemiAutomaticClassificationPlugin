@@ -602,7 +602,7 @@ class DownloadSentinelImages:
 		if maxResultNum > 100:
 			maxResultNum = 100
 		for startR in range(0, resultNum, maxResultNum):
-			url = topUrl + '/search?q=' + imgQuery + '%20AND%20cloudcoverpercentage:[0%20TO%20' + str(maxCloudCover) + ']%20AND%20beginPosition:[' + str(dateFrom) + 'T00:00:00.000Z%20TO%20' + str(dateTo) + 'T23:59:59.999Z]%20AND%20footprint:"Intersects(POLYGON((' + cfg.ui.UX_lineEdit_5.text() + "%20" + cfg.ui.UY_lineEdit_5.text() + "," + cfg.ui.UX_lineEdit_5.text() + "%20" + cfg.ui.LY_lineEdit_5.text() + "," + cfg.ui.LX_lineEdit_5.text() + "%20" + cfg.ui.LY_lineEdit_5.text() + "," + cfg.ui.LX_lineEdit_5.text() + "%20" + cfg.ui.UY_lineEdit_5.text() + "," + cfg.ui.UX_lineEdit_5.text() + "%20" + cfg.ui.UY_lineEdit_5.text() + ')))%22' + '&rows=' + str(maxResultNum) + '&start=' + str(startR)
+			url = topUrl + '/search?q=' + imgQuery + ' AND cloudcoverpercentage:[0 TO ' + str(maxCloudCover) + '] AND beginPosition:[' + str(dateFrom) + 'T00:00:00.000Z TO ' + str(dateTo) + 'T23:59:59.999Z] AND footprint: "Intersects(POLYGON((' + cfg.ui.UX_lineEdit_5.text() + " " + cfg.ui.UY_lineEdit_5.text() + "," + cfg.ui.UX_lineEdit_5.text() + " " + cfg.ui.LY_lineEdit_5.text() + "," + cfg.ui.LX_lineEdit_5.text() + " " + cfg.ui.LY_lineEdit_5.text() + "," + cfg.ui.LX_lineEdit_5.text() + " " + cfg.ui.UY_lineEdit_5.text() + "," + cfg.ui.UX_lineEdit_5.text() + " " + cfg.ui.UY_lineEdit_5.text() + '))) "' + '&rows=' + str(maxResultNum) + '&start=' + str(startR)
 			response = cfg.utls.passwordConnect(user, password, url, topLevelUrl)
 			if response == "No":
 				cfg.uiUtls.removeProgressBar()
