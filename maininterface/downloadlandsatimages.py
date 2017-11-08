@@ -169,6 +169,7 @@ class DownloadLandsatImages:
 			USGScollection = cfg.usgsLandsat8Collection
 		elif sat == cfg.usgsLandsat7:
 			NASAcollection = cfg.NASALandsat7Collection
+			USGScollection = cfg.usgsLandsat7Collection
 		elif sat == cfg.usgsLandsat45:
 			NASAcollection = cfg.NASALandsat45Collection
 			USGScollection = cfg.usgsLandsat45Collection
@@ -190,99 +191,116 @@ class DownloadLandsatImages:
 			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			cfg.mx.msg23()
 			return "No"
-		try:
-			cfg.uiUtls.addProgressBar()
-			cfg.QtGuiSCP.qApp.processEvents()
-			tW = cfg.ui.landsat_images_tableWidget
-			tW.setSortingEnabled(False)
-			cfg.uiUtls.updateBar(30, cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Searching ..."))
-			# cloud cover returns 0 results
-			# without cloud cover
-			searchUrl = 'https://cmr.earthdata.nasa.gov/search/granules.echo10?bounding_box=' + cfg.ui.UX_lineEdit_3.text() + '%2C' + cfg.ui.LY_lineEdit_3.text() + '%2C' + cfg.ui.LX_lineEdit_3.text() + '%2C' + cfg.ui.UY_lineEdit_3.text() + '&echo_collection_id=' + NASAcollection + '&temporal=' + dateFrom + '%2C' + dateTo + 'T23%3A59%3A59.000Z&sort_key%5B%5D=-start_date&page_size=' + str(resultNum) + '&pretty=true'
-			# connect and search
-			searchResult = cfg.utls.NASASearch(searchUrl)
-			xmlFile = searchResult.read()
-			imgIDList = []
-			doc = cfg.minidomSCP.parseString(xmlFile)
-			entries = doc.getElementsByTagName("Granule")
-			pages = len(entries)
-			page = 0
-			for entry in entries:
-				page = page + 1
-				cfg.uiUtls.updateBar(30 + int(page * 70 / pages), cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Searching ..."))
-				gId = entry.getElementsByTagName("GranuleUR")[0]
+		#try:
+		cfg.uiUtls.addProgressBar()
+		cfg.QtGuiSCP.qApp.processEvents()
+		tW = cfg.ui.landsat_images_tableWidget
+		tW.setSortingEnabled(False)
+		cfg.uiUtls.updateBar(30, cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Searching ..."))
+		# cloud cover returns 0 results
+		# without cloud cover
+		searchUrl = 'https://cmr.earthdata.nasa.gov/search/granules.echo10?bounding_box=' + cfg.ui.UX_lineEdit_3.text() + '%2C' + cfg.ui.LY_lineEdit_3.text() + '%2C' + cfg.ui.LX_lineEdit_3.text() + '%2C' + cfg.ui.UY_lineEdit_3.text() + '&echo_collection_id=' + NASAcollection + '&temporal=' + dateFrom + '%2C' + dateTo + 'T23%3A59%3A59.000Z&sort_key%5B%5D=-start_date&page_size=' + str(resultNum) + '&pretty=true'
+		# connect and search
+		searchResult = cfg.utls.NASASearch(searchUrl)
+		xmlFile = searchResult.read()
+		imgIDList = []
+		doc = cfg.minidomSCP.parseString(xmlFile)
+		entries = doc.getElementsByTagName("Granule")
+		pages = len(entries)
+		page = 0
+		cloudCover = 0
+		for entry in entries:
+			page = page + 1
+			cfg.uiUtls.updateBar(30 + int(page * 70 / pages), cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Searching ..."))
+			gId = entry.getElementsByTagName("GranuleUR")[0]
+			imgID = gId.firstChild.data
+			if imgID[0:4] not in ["LC08", "LE07"]:
+				gId = entry.getElementsByTagName("LocalVersionId")[0]
 				imgID = gId.firstChild.data
-				if imgID not in imgIDList:
-					imgIDList.append(imgID)
-					imgDispID = imgID
+			if imgID not in imgIDList:
+				imgIDList.append(imgID)
+				imgDispID = imgID
+				on = entry.getElementsByTagName("ProviderBrowseUrl")
+				url = on[0].getElementsByTagName("URL")[0]
+				imgPreview = url.firstChild.data
+				StartCoordinate1 = entry.getElementsByTagName("StartCoordinate1")[0]
+				path = StartCoordinate1.firstChild.data
+				StartCoordinate2 = entry.getElementsByTagName("StartCoordinate2")[0]
+				row = StartCoordinate2.firstChild.data
+				dt = entry.getElementsByTagName("BeginningDateTime")[0]
+				imgDate = dt.firstChild.data
+				imgDate = cfg.datetimeSCP.datetime.strptime(imgDate[0:19], '%Y-%m-%dT%H:%M:%S').strftime('%Y-%m-%d %H:%M:%S')
+				try:
 					cc = entry.getElementsByTagName("QAPercentCloudCover")[0]
 					cloudCover = cc.firstChild.data
-					StartCoordinate1 = entry.getElementsByTagName("StartCoordinate1")[0]
-					path = StartCoordinate1.firstChild.data
-					StartCoordinate2 = entry.getElementsByTagName("StartCoordinate2")[0]
-					row = StartCoordinate2.firstChild.data
-					on = entry.getElementsByTagName("ProviderBrowseUrl")
-					url = on[0].getElementsByTagName("URL")[0]
-					imgPreview = url.firstChild.data
-					dt = entry.getElementsByTagName("BeginningDateTime")[0]
-					imgDate = dt.firstChild.data
-					imgDate = cfg.datetimeSCP.datetime.strptime(imgDate[0:19], '%Y-%m-%dT%H:%M:%S').strftime('%Y-%m-%d %H:%M:%S')
-					PointLatitude = entry.getElementsByTagName("PointLatitude")
-					lat = []
-					for latit in PointLatitude:
-						lat.append(float(latit.firstChild.data))
-					PointLongitude = entry.getElementsByTagName("PointLongitude")
-					lon = []
-					for longi in PointLongitude:
-						lon.append(float(longi.firstChild.data))
-					listImgID.append([imgID, imgDate, cloudCover, path, row, lon, lat, imgPreview])
-			c = tW.rowCount()
-			for imID in listImgID:
-				if len(imageFindList) > 0:
-					for iF in imageFindList:
-						if iF in imID[0].lower():
-							imgCheck = "Yes"
-							break
-						else:
-							imgCheck = "No"
-				# workaround for cloud cover filter
-				elif maxCloudCover < float(imID[2]):
-					imgCheck = "No"
-				else:
-					imgCheck = "Yes"
-				if imgCheck == "Yes":
-					c = tW.rowCount()
-					# add list items to table
-					tW.setRowCount(c + 1)
-					cfg.utls.addTableItem(tW, imID[0], c, 0)
-					cfg.utls.addTableItem(tW, str(imID[1]), c, 1)
-					if sat == cfg.usgsLandsat7:
-						if cfg.datetimeSCP.datetime.strptime(imID[1][0:19], '%Y-%m-%d %H:%M:%S') < cfg.datetimeSCP.datetime.strptime('2003-05-30 00:00:00', '%Y-%m-%d %H:%M:%S'):
-							USGScollection = cfg.usgsLandsat7slconCollection
-						else:
-							USGScollection = cfg.usgsLandsat7slcoffCollection
-					cfg.utls.addTableItem(tW, int(round(float(imID[2]))), c, 2)
-					cfg.utls.addTableItem(tW, imID[3], c, 3)
-					cfg.utls.addTableItem(tW, imID[4], c, 4)
-					min_lon = min(imID[5])
-					max_lon = max(imID[5])
-					min_lat = min(imID[6])
-					max_lat = max(imID[6])
-					cfg.utls.addTableItem(tW, float(min_lat), c, 5)
-					cfg.utls.addTableItem(tW, float(min_lon), c, 6)
-					cfg.utls.addTableItem(tW, float(max_lat), c, 7)
-					cfg.utls.addTableItem(tW,float(max_lon), c, 8)
-					cfg.utls.addTableItem(tW, USGScollection, c, 9)
-					cfg.utls.addTableItem(tW, imID[7], c, 10)
-					cfg.utls.addTableItem(tW, NASAcollection, c, 11)
-			tW.setSortingEnabled(True)		
-			cfg.uiUtls.removeProgressBar()
-			self.clearCanvasPoly()
-			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " Landsat images")
-			c = tW.rowCount()
-			if c == 0:
-				cfg.mx.msg21()
+				except:
+					addAttrs = entry.getElementsByTagName("AdditionalAttribute")
+					for addAttr in addAttrs:
+						addAttrNames = addAttr.getElementsByTagName("Name")
+						for addAttrName in addAttrNames:
+							addAttrNameC = addAttrName.firstChild.data
+							if addAttrNameC == "LandCloudCover":
+								addAttrValues = addAttr.getElementsByTagName("Values")[0]
+								addAttrVal = addAttrValues.getElementsByTagName("Value")[0]
+								cloudCover = addAttrVal.firstChild.data
+				PointLatitude = entry.getElementsByTagName("PointLatitude")
+				PointLongitude = entry.getElementsByTagName("PointLongitude")
+				lat = []
+				for latit in PointLatitude:
+					lat.append(float(latit.firstChild.data))
+				lon = []
+				for longi in PointLongitude:
+					lon.append(float(longi.firstChild.data))
+				listImgID.append([imgID, imgDate, cloudCover, path, row, lon, lat, imgPreview])
+		c = tW.rowCount()
+		for imID in listImgID:
+			if len(imageFindList) > 0:
+				for iF in imageFindList:
+					if iF in imID[0].lower():
+						imgCheck = "Yes"
+						break
+					else:
+						imgCheck = "No"
+			# workaround for cloud cover filter
+			elif maxCloudCover < float(imID[2]):
+				imgCheck = "No"
+			else:
+				imgCheck = "Yes"
+			if imgCheck == "Yes":
+				c = tW.rowCount()
+				# add list items to table
+				tW.setRowCount(c + 1)
+				cfg.utls.addTableItem(tW, imID[0], c, 0)
+				cfg.utls.addTableItem(tW, str(imID[1]), c, 1)
+				# if sat == cfg.usgsLandsat7:
+					# if cfg.datetimeSCP.datetime.strptime(imID[1][0:19], '%Y-%m-%d %H:%M:%S') < cfg.datetimeSCP.datetime.strptime('2003-05-30 00:00:00', '%Y-%m-%d %H:%M:%S'):
+						# USGScollection = cfg.usgsLandsat7slconCollection
+					# else:
+						# USGScollection = cfg.usgsLandsat7slcoffCollection
+				cfg.utls.addTableItem(tW, int(round(float(imID[2]))), c, 2)
+				cfg.utls.addTableItem(tW, imID[3], c, 3)
+				cfg.utls.addTableItem(tW, imID[4], c, 4)
+				min_lon = min(imID[5])
+				max_lon = max(imID[5])
+				min_lat = min(imID[6])
+				max_lat = max(imID[6])
+				cfg.utls.addTableItem(tW, float(min_lat), c, 5)
+				cfg.utls.addTableItem(tW, float(min_lon), c, 6)
+				cfg.utls.addTableItem(tW, float(max_lat), c, 7)
+				cfg.utls.addTableItem(tW,float(max_lon), c, 8)
+				cfg.utls.addTableItem(tW, USGScollection, c, 9)
+				cfg.utls.addTableItem(tW, imID[7], c, 10)
+				cfg.utls.addTableItem(tW, NASAcollection, c, 11)
+		tW.setSortingEnabled(True)		
+		cfg.uiUtls.removeProgressBar()
+		self.clearCanvasPoly()
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " Landsat images")
+		c = tW.rowCount()
+		if c == 0:
+			cfg.mx.msg21()
+		try:
+			pass
 		except Exception, err:
 			cfg.mx.msgErr39()
 			cfg.uiUtls.removeProgressBar()
@@ -431,7 +449,8 @@ class DownloadLandsatImages:
 							return "No"
 					outDirList.append(outDir)
 					if NASAcollection == cfg.NASALandsat8Collection:
-						urlL = "http://landsat-pds.s3.amazonaws.com/L8/" + path.zfill(3) + "/" + row.zfill(3) +"/" + imgID + "/" + imgID + "_"
+						outUrl = self.downloadLandsatImagesFromUSGS(imgID, USGScollection, row, outDir, progress, exporter)
+						urlL = "http://landsat-pds.s3.amazonaws.com/c1/L8/" + path.zfill(3) + "/" + row.zfill(3) +"/" + imgID + "/" + imgID + "_"
 						check = cfg.utls.downloadFile( urlL + "MTL.txt", outDir + "//" + imgID + "_MTL.txt", imgID + "_MTL.txt", progress)
 						if check == "Yes":
 							meta = open(outDir + "//" + imgID + "_MTL.txt", 'r').read()
@@ -512,7 +531,7 @@ class DownloadLandsatImages:
 			
 	# download image preview
 	def downloadLandsatImagesFromUSGS(self, imageID, collection, row, outputDirectory, progress, exporter = "No"):
-		url = "http://earthexplorer.usgs.gov/download/" + collection + "/" + imageID + "/STANDARD/EE"
+		url = "https://earthexplorer.usgs.gov/download/" + collection + "/" + imageID + "/STANDARD/EE"
 		if exporter == "Yes":
 			return url
 		else:
@@ -541,8 +560,8 @@ class DownloadLandsatImages:
 	# download Landsat data using the service http://storage.googleapis.com/earthengine-public/landsat/
 	def downloadLandsatImagesFromGoogle(self, imageID, path, row, outputDirectory, progress, exporter = "No"):
 		baseUrl = "http://storage.googleapis.com/earthengine-public/landsat/"
-		if imageID[0:3] == "LC8":
-			sat = "L8"
+		if imageID[0:4] == "LC08":
+			sat = "LC08"			
 		elif imageID[0:3] == "LE7":
 			sat = "L7"
 		elif imageID[0:3] == "LT5":
