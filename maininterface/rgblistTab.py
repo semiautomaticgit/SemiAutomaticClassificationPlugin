@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2017 by Luca Congedo
+		copyright			: (C) 2012-2018 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -32,8 +32,8 @@
 
 """
 
-from qgis.core import *
-from qgis.gui import *
+
+
 cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
 
 class RGBListTab:
@@ -64,7 +64,7 @@ class RGBListTab:
 			t = tW.item(row, column).text()
 			try:
 				check = cfg.utls.createRGBColorComposite(t)
-			except Exception, err:
+			except Exception as err:
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				check = "No"
@@ -126,7 +126,7 @@ class RGBListTab:
 	def clearTable(self, question = "Yes"):
 		if question == "Yes":
 			# ask for confirm
-			a = cfg.utls.questionBox(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Reset RGB list"), cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Are you sure you want to clear the RGB list?"))
+			a = cfg.utls.questionBox(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Reset RGB list"), cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Are you sure you want to clear the RGB list?"))
 		else:
 			a = "Yes"
 		if a == "Yes":
@@ -159,7 +159,7 @@ class RGBListTab:
 			v = list(set(ns))
 			for i in range (0, len(v)):
 				tW.selectRow(v[i])
-		except Exception, err:
+		except Exception as err:
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			tW.clearSelection()
@@ -184,7 +184,7 @@ class RGBListTab:
 		for i in range (0, len(s)):
 			ns.append(s[i].row() + 1)
 		try:
-			for b in reversed(range(0, c)):
+			for b in reversed(list(range(0, c))):
 				if tW.item(b, 0).isSelected():
 					bNU = tW.item(b, 0).text()
 					bND = tW.item(b + 1, 0).text()
@@ -194,7 +194,7 @@ class RGBListTab:
 			v = list(set(ns))
 			for i in range (0, len(v)):
 				tW.selectRow(v[i])
-		except Exception, err:
+		except Exception as err:
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			tW.clearSelection()
@@ -212,14 +212,19 @@ class RGBListTab:
 		self.allRGBList()
 
 	# all RGB List 
-	def allRGBList(self, question = "Yes"):
+	def allRGBList(self, question = "Yes", bandSetNumber = None):
 		if question == "Yes":
 			# ask for confirm
-			a = cfg.utls.questionBox(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "RGB list"), cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Calculate all the RGB combinations?"))
+			a = cfg.utls.questionBox(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "RGB list"), cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Calculate all the RGB combinations?"))
 		else:
 			a = "Yes"
 		if a == "Yes":
-			perm = list(cfg.itertoolsSCP.permutations(range(1, len(cfg.bndSet)+1), 3))
+			if bandSetNumber is None:
+				bandSetNumber = cfg.bndSetNumber
+			if bandSetNumber >= len(cfg.bandSetsList):
+				cfg.mx.msgWar25(bandSetNumber + 1)
+				return "No"
+			perm = list(cfg.itertoolsSCP.permutations(list(range(1, len(cfg.bandSetsList[bandSetNumber][3])+1)), 3))
 			tW = cfg.ui.RGB_tableWidget
 			self.tableEdited = "No"
 			tW.blockSignals(True)
@@ -240,8 +245,12 @@ class RGBListTab:
 		
 # export RGB list to file
 	def exportRGBList(self):
-		file = cfg.utls.getSaveFileName(None , cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Save the RGB list to file"), "", "CSV (*.csv)")
-		if len(file) > 0:
+		file = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Save the RGB list to file"), "", "*.csv", "csv")
+		if file is not False:
+			if file.lower().endswith(".csv"):
+				pass
+			else:
+				file = file + ".csv"
 			try:
 				f = open(file, 'w')
 				f.write("")
@@ -254,7 +263,7 @@ class RGBListTab:
 				f.close()
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " list exported")
-			except Exception, err:
+			except Exception as err:
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 		
@@ -275,7 +284,7 @@ class RGBListTab:
 					cfg.utls.addTableItem(tW, file[b].strip(), c, 0)
 					# logger
 					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " list imported")
-		except Exception, err:
+		except Exception as err:
 			cfg.mx.msgErr19()
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))

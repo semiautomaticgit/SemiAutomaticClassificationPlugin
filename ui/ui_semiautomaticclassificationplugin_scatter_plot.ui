@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>710</width>
-    <height>527</height>
+    <height>579</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -857,7 +857,7 @@
   <customwidget>
    <class>ScatterWidget2</class>
    <extends>QWidget</extends>
-   <header>scatterwidget2</header>
+   <header>.scatterwidget2</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

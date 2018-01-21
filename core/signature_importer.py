@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2017 by Luca Congedo
+		copyright			: (C) 2012-2018 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -54,7 +54,7 @@ class Signature_Importer:
 					ref.append(float(v[1]))
 					sD.append(float(v[2]))
 				wavelength = cfg.np.array(wl)
-				a = cfg.bndSetWvLn.values()
+				a = list(cfg.bandSetsList[cfg.bndSetNumber][4])
 				s = sorted(a, key=float)
 				b = 0
 				cfg.tblOut = {}
@@ -94,7 +94,7 @@ class Signature_Importer:
 					ref.append(float(v[1]) / 100)
 					sD.append(float(0))
 				wavelength = cfg.np.array(wl)
-				a = cfg.bndSetWvLn.values()
+				a = list(cfg.bandSetsList[cfg.bndSetNumber][4])
 				s = sorted(a, key=float)
 				b = 0
 				cfg.tblOut = {}
@@ -133,9 +133,9 @@ class Signature_Importer:
 					v = file[b].split(",")
 				# check if wavelength is not in micrometers
 				vL = float(v[0])
-				if vL > 30 and str(cfg.bndSetUnit["UNIT"]) == cfg.unitMicro:
+				if vL > 30 and str(cfg.bandSetsList[cfg.bndSetNumber][5]) == cfg.unitMicro:
 					vL = vL / 1000
-				elif vL < 30 and str(cfg.bndSetUnit["UNIT"]) == cfg.wlNano:
+				elif vL < 30 and str(cfg.bandSetsList[cfg.bndSetNumber][5]) == cfg.wlNano:
 					vL = vL * 1000
 				wl.append(vL)
 				ref.append(float(v[1]))
@@ -144,7 +144,7 @@ class Signature_Importer:
 				except:
 					sD.append(float(0))
 			wavelength = cfg.np.array(wl)
-			a = cfg.bndSetWvLn.values()
+			a = list(cfg.bandSetsList[cfg.bndSetNumber][4])
 			s = sorted(a, key=float)
 			b = 0
 			cfg.tblOut = {}
@@ -177,12 +177,12 @@ class Signature_Importer:
 		cfg.tblOut["ROI_SIZE"] = 0
 		if unit is None:
 			unit = cfg.unitMicro
-		cfg.utls.ROIStatisticsToSignature("No", macroclassID, macroclassInfo, classID, classInfo, unit)
-		cfg.classD.ROIListTable(cfg.trnLay, cfg.uidc.signature_list_tableWidget)
+		cfg.utls.ROIStatisticsToSignature("No", macroclassID, macroclassInfo, classID, classInfo, cfg.bndSetNumber, unit)
+		cfg.SCPD.ROIListTable(cfg.shpLay, cfg.uidc.signature_list_tableWidget)
 		
 	# open a shapefile
 	def openShapefileI(self):
-		shpFile = cfg.utls.getOpenFileName(None , cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Select a shapefile"), "", "Shapefile (*.shp)")
+		shpFile = cfg.utls.getOpenFileName(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Select a shapefile"), "", "Shapefile (*.shp)")
 		if len(shpFile) > 0:
 			fields = cfg.utls.fieldsShapefile(shpFile)
 			cfg.ui.MC_ID_combo.clear()

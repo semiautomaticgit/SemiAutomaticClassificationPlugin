@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2017 by Luca Congedo
+		copyright			: (C) 2012-2018 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -32,8 +32,8 @@
 
 """
 
-from qgis.core import *
-from qgis.gui import *
+
+
 cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
 
 class BandCalcTab:
@@ -43,7 +43,7 @@ class BandCalcTab:
 		self.decisionRulesButton = False
 		
 	# toolbox changed
-	def toolboxChanged(self, index):
+	def tabChanged(self, index):
 		cfg.bandCalcIndex = index
 		if cfg.bandCalcIndex == 0:
 			cfg.ui.toolButton_calculate.setEnabled(self.expressionButton)
@@ -96,7 +96,7 @@ class BandCalcTab:
 	def clearRules(self, question = "Yes"):
 		if question == "Yes":
 			# ask for confirm
-			a = cfg.utls.questionBox(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Clear rules"), cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Are you sure you want to clear the rules?"))
+			a = cfg.utls.questionBox(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Clear rules"), cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Are you sure you want to clear the rules?"))
 		else:
 			a = "Yes"
 		if a == "Yes":
@@ -172,7 +172,7 @@ class BandCalcTab:
 		
 	# import rules from text file
 	def importRules(self):
-		file = cfg.utls.getOpenFileName(None , cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Select a text file of rules"), "", "txt (*.txt)")
+		file = cfg.utls.getOpenFileName(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Select a text file of rules"), "", "txt (*.txt)")
 		if len(file) > 0:
 			self.clearRules("No")
 			tW = cfg.ui.decision_rules_tableWidget
@@ -206,8 +206,8 @@ class BandCalcTab:
 		tW = cfg.ui.decision_rules_tableWidget
 		c = tW.rowCount()
 		if c > 0:
-			file = cfg.utls.getSaveFileName(None , cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Save the rules to file"), "", "txt (*.txt)")
-			if len(file) > 0:
+			file = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Save the rules to file"), "", "*.txt", "txt")
+			if file is not False:
 				if file.lower().endswith(".txt"):
 					pass
 				else:
@@ -235,16 +235,21 @@ class BandCalcTab:
 			return e
 					
 	# Set raster band table
-	def rasterBandName(self):
+	def rasterBandName(self, bandSetNumber = None):
+		if bandSetNumber is None:
+			bandSetNumber = cfg.bndSetNumber
+		if bandSetNumber >= len(cfg.bandSetsList):
+			cfg.mx.msgWar25(bandSetNumber + 1)
+			return "No"
 		cfg.utls.refreshRasterExtent()
-		ls = cfg.lgnd.layers()
+		ls = cfg.qgisCoreSCP.QgsProject.instance().mapLayers().values()
 		l = cfg.ui.tableWidget_band_calc
 		l.setSortingEnabled(False)
 		cfg.utls.clearTable(l)
 		check = "Yes"
 		b = 0
-		for x in ls:
-			if x.type() == QgsMapLayer.RasterLayer and x.bandCount() == 1:
+		for x in sorted(ls, key=lambda c: c.name()):
+			if x.type() == cfg.qgisCoreSCP.QgsMapLayer.RasterLayer and x.bandCount() == 1:
 				# band name
 				bN = x.name()
 				# Add band to table
@@ -252,9 +257,9 @@ class BandCalcTab:
 				cfg.utls.addTableItem(l, cfg.variableName + str(b + 1), b, 0, "No")
 				cfg.utls.addTableItem(l, bN, b, 1, "No")
 				b = b + 1
-		if cfg.bndSetPresent == "Yes" and cfg.imgNm == cfg.bndSetNm:
+		if cfg.bandSetsList[bandSetNumber][0] == "Yes":
 			c = 1
-			for x in cfg.bndSetLst:
+			for x in range(0, len(cfg.bandSetsList[bandSetNumber][3])):
 				# band name
 				bN = cfg.variableBandsetName + "#b" + str(c)
 				# Add band to table
@@ -263,14 +268,14 @@ class BandCalcTab:
 				cfg.utls.addTableItem(l, bN, b, 1, "No")
 				b = b + 1
 				c = c + 1
-		elif cfg.imgNm is not None:
+		else:
 			try:
-				r = cfg.utls.selectLayerbyName(cfg.imgNm, "Yes")
+				r = cfg.utls.selectLayerbyName(cfg.bandSetsList[bandSetNumber][8], "Yes")
 				iR = r.source()
 			except:
 				check = "No"
 			if check == "Yes":
-				x = cfg.utls.getNumberBandRaster(cfg.imgSrc)
+				x = cfg.utls.getNumberBandRaster(iR)
 				for c in range(1, x + 1):
 					# band name
 					bN = cfg.variableBandsetName + "#b" + str(c)
@@ -280,7 +285,8 @@ class BandCalcTab:
 					cfg.utls.addTableItem(l, bN, b, 1, "No")
 					b = b + 1
 		if check == "Yes":
-			cfg.utls.findBandNumber()
+			if len(cfg.bandSetsList[bandSetNumber][3]) > 0:
+				cfg.utls.findBandNumber()
 			if cfg.BLUEBand is not None:
 				# band name
 				bN = cfg.variableBlueName
@@ -348,19 +354,19 @@ class BandCalcTab:
 								# name and expression
 								n = v[0]
 								e = v[1].strip()
-								cfg.expressionListBC.append([n.decode(cfg.sysSCP.getfilesystemencoding()), e.decode(cfg.sysSCP.getfilesystemencoding())])
+								cfg.expressionListBC.append([n, e])
 							except:
 								pass
 							# logger
 							cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " expressions imported")
 						# save in registry
-						cfg.sets.setQGISRegSetting(cfg.regExpressionListBC, cfg.expressionListBC)
+						cfg.utls.setQGISRegSetting(cfg.regExpressionListBC, cfg.expressionListBC)
 						cfg.bCalc.createExpressionList(cfg.expressionListBC)
 					else:
 						# save in registry
-						cfg.sets.setQGISRegSetting(cfg.regExpressionListBC, cfg.expressionListBCbase)
+						cfg.utls.setQGISRegSetting(cfg.regExpressionListBC, cfg.expressionListBCbase)
 						cfg.bCalc.createExpressionList(cfg.expressionListBCbase)
-			except Exception, err:
+			except Exception as err:
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				
@@ -401,11 +407,16 @@ class BandCalcTab:
 			cfg.bCalc.calculate(None, "No", e)
 		
 	# calculate
-	def calculate(self, outFile = None, batch = "No", expressionString = None, extentRaster = None, extentList = None, quiet = "No"):
+	def calculate(self, outFile = None, batch = "No", expressionString = None, extentRaster = None, extentList = None, quiet = "No", bandSetNumber = None):
+		if bandSetNumber is None:
+			bandSetNumber = cfg.bndSetNumber
+		if bandSetNumber >= len(cfg.bandSetsList):
+			cfg.mx.msgWar25(bandSetNumber + 1)
+			return "No"	
 		if batch == "No":
 			pass
 		else:
-			self.rasterBandName()
+			self.rasterBandName(bandSetNumber)
 		tW = cfg.ui.tableWidget_band_calc
 		c = tW.rowCount()
 		if c > 0:
@@ -414,16 +425,19 @@ class BandCalcTab:
 				if cfg.bandCalcIndex == 0:
 					textCount = cfg.ui.plainTextEdit_calc.blockCount()
 					if textCount > 1:
-						outF = cfg.utls.getExistingDirectory(None , cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Select a directory"))
-						outF = outF + "/" + cfg.calcRasterNm + ".tif"
+						outF = cfg.utls.getExistingDirectory(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Select a directory"))
+						if len(outF) > 0:
+							outF = outF + "/" + cfg.calcRasterNm + ".tif"
+						else:
+							return
 					else:
-						outF = cfg.utls.getSaveFileName(None , cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Save raster output"), "", "*.tif")
+						outF = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Save raster output"), "", "*.tif", "tif")
 				# decision rules
 				elif cfg.bandCalcIndex == 1:
-					outF = cfg.utls.getSaveFileName(None , cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Save raster output"), "", "*.tif")
+					outF = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Save raster output"), "", "*.tif", "tif")
 			else:
 				outF = outFile
-			if len(outF) > 0:
+			if outF is not False:
 				if outFile is None:
 					cfg.uiUtls.addProgressBar()
 				cfg.uiUtls.updateBar(10)
@@ -445,7 +459,7 @@ class BandCalcTab:
 					dCheck = "Yes"
 					try:
 						eN = self.checkOutputName(eM[1])
-					except Exception, err:
+					except Exception as err:
 						dCheck = "No"
 						cfg.mx.msg4()
 						# logger
@@ -463,14 +477,14 @@ class BandCalcTab:
 							if eN is None and len(check) == 1:
 								out = cfg.osSCP.path.dirname(outF) + "/" + n.rstrip(n[len(n) - 4: len(n)]) + ".tif"
 							elif eN is None and len(check) > 1:
-								out = cfg.osSCP.path.dirname(outF) + "/" + n.rstrip(n[len(n) - 4: len(n)]) + "_" + unicode(it) + ".tif"
+								out = cfg.osSCP.path.dirname(outF) + "/" + n.rstrip(n[len(n) - 4: len(n)]) + "_" + str(it) + ".tif"
 							else:
 								out = cfg.osSCP.path.dirname(outF) + "/" + n.rstrip(n[len(n) - 4: len(n)]) + ".tif"
 						else:
 							if eN is None and len(check) == 1:
 								out = cfg.osSCP.path.dirname(outF) + "/" + n + ".tif"
 							elif eN is None and len(check) > 1:
-								out = cfg.osSCP.path.dirname(outF) + "/" + n + "_" + unicode(it) + ".tif"
+								out = cfg.osSCP.path.dirname(outF) + "/" + n + "_" + str(it) + ".tif"
 							else:
 								out = cfg.osSCP.path.dirname(outF) + "/" + n + ".tif"
 						tPMN = cfg.tmpVrtNm + ".vrt"
@@ -487,21 +501,21 @@ class BandCalcTab:
 						for b in range(0, c):
 							bV = tW.item(b, 0).text()
 							bN = tW.item(b, 1).text()
-							if unicode('"' +  bV +'"') in e or unicode('"' + bN +'"') in e:
+							if str('"' +  bV +'"') in e or str('"' + bN +'"') in e:
 								variableList.append(['"' + bV + '"', '"' + bN + '"'])
 								if cfg.variableBandsetName in bN:
 									bandNumber = bN.split("#b")
-									if cfg.bndSetPresent == "Yes" and cfg.imgNm == cfg.bndSetNm:
+									if cfg.bandSetsList[bandSetNumber][0] == "Yes":
 										bPath = cfg.bndSetLst[int(bandNumber[1]) - 1]
 										bandNumberList.append(1)
 										bList.append(bPath)
-									elif cfg.imgNm is not None:
-										i = cfg.utls.selectLayerbyName(cfg.imgNm, "Yes")
+									else:
+										i = cfg.utls.selectLayerbyName(cfg.bandSetsList[bandSetNumber][8], "Yes")
 										try:
 											bPath = i.source()
-										except Exception, err:
+										except Exception as err:
 											cfg.mx.msg4()
-											self.rasterBandName()
+											self.rasterBandName(bandSetNumber)
 											# logger
 											cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 											if outFile is None:
@@ -525,17 +539,17 @@ class BandCalcTab:
 											cfg.uiUtls.removeProgressBar()
 											cfg.cnvs.setRenderFlag(True)
 											return "No"
-									if cfg.bndSetPresent == "Yes" and cfg.imgNm == cfg.bndSetNm:
+									if cfg.bandSetsList[bandSetNumber][0] == "Yes":
 										bPath = cfg.bndSetLst[int(bandNumber[1]) - 1]
 										bandNumberList.append(1)
 										bList.append(bPath)
-									elif cfg.imgNm is not None:
-										i = cfg.utls.selectLayerbyName(cfg.imgNm, "Yes")
+									else:
+										i = cfg.utls.selectLayerbyName(cfg.bandSetsList[bandSetNumber][8], "Yes")
 										try:
 											bPath = i.source()
-										except Exception, err:
+										except Exception as err:
 											cfg.mx.msg4()
-											self.rasterBandName()
+											self.rasterBandName(bandSetNumber)
 											# logger
 											cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 											if outFile is None:
@@ -548,9 +562,9 @@ class BandCalcTab:
 									i = cfg.utls.selectLayerbyName(bN, "Yes")
 									try:
 										bPath = i.source()
-									except Exception, err:
+									except Exception as err:
 										cfg.mx.msg4()
-										self.rasterBandName()
+										self.rasterBandName(bandSetNumber)
 										# logger
 										cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 										if outFile is None:
@@ -562,9 +576,9 @@ class BandCalcTab:
 						try:
 							gdalRaster2 = cfg.gdalSCP.Open(bPath, cfg.gdalSCP.GA_ReadOnly)
 							gBand2 = gdalRaster2.GetRasterBand(int(1)) 
-						except Exception, err:
+						except Exception as err:
 							cfg.mx.msg4()
-							self.rasterBandName()
+							self.rasterBandName(bandSetNumber)
 							# logger
 							cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 							if outFile is None:
@@ -578,7 +592,7 @@ class BandCalcTab:
 							NoDataValue = cfg.NoDataVal
 						if extentList is None:
 							if cfg.ui.intersection_checkBox.isChecked() is True:
-								vrtCheck = cfg.utls.createVirtualRaster2(bList, tPMD, bandNumberList, "Yes", "Yes", 0, "No", "Yes")
+								vrtCheck = cfg.utls.createVirtualRaster(bList, tPMD, bandNumberList, "Yes", "Yes", 0, "No", "Yes")
 							elif cfg.ui.extent_checkBox.isChecked() is True:
 								# raster resolution
 								xyRes = None
@@ -591,12 +605,16 @@ class BandCalcTab:
 									tLX, tLY, lRX, lRY = rectangle.xMinimum(), rectangle.yMaximum(), rectangle.xMaximum(), rectangle.yMinimum()
 									pCrs = cfg.utls.getQGISCrs()
 									# check projection 
-									if cfg.bndSetPresent == "Yes" and cfg.imgNm == cfg.bndSetNm:
-										imageName = cfg.bndSet[0]
-									elif cfg.imgNm is not None:
-										imageName = cfg.imgNm
+									if cfg.bandSetsList[bandSetNumber][0] == "Yes":
+										try:
+											imageName = cfg.bandSetsList[bandSetNumber][3][0]
+										except:
+											imageName = variableList[0][1][1:-1]
 									else:
-										imageName = variableList[0][1][1:-1]
+										try:
+											imageName = cfg.bandSetsList[bandSetNumber][8]
+										except:
+											imageName = variableList[0][1][1:-1]
 									# image CRS
 									bN0 = cfg.utls.selectLayerbyName(imageName, "Yes")
 									iCrs = cfg.utls.getCrs(bN0)
@@ -604,8 +622,8 @@ class BandCalcTab:
 										iCrs = pCrs
 									# projection of input point from project's crs to raster's crs
 									if pCrs != iCrs:
-										tLPoint = QgsPoint(tLX, tLY)
-										lRPoint = QgsPoint(lRX, lRY)
+										tLPoint = cfg.qgisCoreSCP.QgsPointXY(tLX, tLY)
+										lRPoint = cfg.qgisCoreSCP.QgsPointXY(lRX, lRY)
 										try:
 											tLPoint = cfg.utls.projectPointCoordinates(tLPoint, pCrs, iCrs)
 											lRPoint = cfg.utls.projectPointCoordinates(lRPoint, pCrs, iCrs)
@@ -619,7 +637,7 @@ class BandCalcTab:
 												tLY = tLPoint.y()
 												lRX = lRPoint.x()
 												lRY = lRPoint.y()
-										except Exception, err:
+										except Exception as err:
 											# logger
 											cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 											cfg.uiUtls.removeProgressBar()
@@ -635,9 +653,9 @@ class BandCalcTab:
 										i = cfg.utls.selectLayerbyName(extRaster, "Yes")
 										try:
 											bPath = i.source()
-										except Exception, err:
+										except Exception as err:
 											cfg.mx.msg4()
-											self.rasterBandName()
+											self.rasterBandName(bandSetNumber)
 											# logger
 											cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 											if outFile is None:
@@ -652,17 +670,17 @@ class BandCalcTab:
 										cfg.uiUtls.removeProgressBar()
 										cfg.cnvs.setRenderFlag(True)
 									return "No"
-								vrtCheck = cfg.utls.createVirtualRaster2(bList, tPMD, bandNumberList, "Yes", "Yes", 0, "No", "No", [float(tLX), float(tLY), float(lRX), float(lRY), "Yes"], xyRes)
+								vrtCheck = cfg.utls.createVirtualRaster(bList, tPMD, bandNumberList, "Yes", "Yes", 0, "No", "No", [float(tLX), float(tLY), float(lRX), float(lRY), "Yes"], xyRes)
 							else:
-								vrtCheck = cfg.utls.createVirtualRaster2(bList, tPMD, bandNumberList, "Yes", "Yes", 0, "No", "No")
+								vrtCheck = cfg.utls.createVirtualRaster(bList, tPMD, bandNumberList, "Yes", "Yes", 0, "No", "No")
 						else:
 							tLX, tLY, lRX, lRY = extentList[0], extentList[1], extentList[2], extentList[3]
-							vrtCheck = cfg.utls.createVirtualRaster2(bList, tPMD, bandNumberList, "Yes", "Yes", 0, "No", "No", [float(tLX), float(tLY), float(lRX), float(lRY), "Yes"])
+							vrtCheck = cfg.utls.createVirtualRaster(bList, tPMD, bandNumberList, "Yes", "Yes", 0, "No", "No", [float(tLX), float(tLY), float(lRX), float(lRY), "Yes"])
 						# open input with GDAL
 						rD = cfg.gdalSCP.Open(tPMD, cfg.gdalSCP.GA_ReadOnly)
 						if rD is None:
 							cfg.mx.msg4()
-							self.rasterBandName()
+							self.rasterBandName(bandSetNumber)
 							# logger
 							cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " None raster")
 							if outFile is None:
@@ -691,14 +709,14 @@ class BandCalcTab:
 									else:
 										try:
 											cfg.shutilSCP.copy(tPMD2, out)
-										except Exception, err:
+										except Exception as err:
 											# logger
 											if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 									cfg.osSCP.remove(tPMD2)
-								except Exception, err:
+								except Exception as err:
 									try:
 										cfg.shutilSCP.copy(tPMD2, out)
-									except Exception, err:
+									except Exception as err:
 										# logger
 										if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 									cfg.osSCP.remove(tPMD2)
@@ -707,19 +725,23 @@ class BandCalcTab:
 							else:
 								try:
 									cfg.shutilSCP.copy(tPMD2, out)
-								except Exception, err:
+								except Exception as err:
 									# logger
 									if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 								cfg.osSCP.remove(tPMD2)
 							if quiet == "No":
-								r = cfg.utls.addRasterLayer(out, cfg.osSCP.path.basename(out))
+								r =cfg.utls.addRasterLayer(out, cfg.osSCP.path.basename(out))
 								try:
 									cfg.utls.rasterSymbolSingleBandGray(r)
-								except Exception, err:
+								except Exception as err:
 									# logger
 									if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 						it = it + 1
 				cfg.uiUtls.updateBar(100)
+				if batch == "No":
+					pass
+				else:
+					self.rasterBandName(bandSetNumber)
 				if outFile is None:
 					cfg.utls.finishSound()
 					cfg.cnvs.setRenderFlag(True)
@@ -798,7 +820,7 @@ class BandCalcTab:
 						elif cfg.bandCalcIndex == 1:
 							self.decisionRulesButton = True
 						cfg.ui.toolButton_calculate.setEnabled(True)
-					except Exception, err:
+					except Exception as err:
 						# logger
 						cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 						check = "No"
@@ -885,7 +907,7 @@ class BandCalcTab:
 			tW.clearSelection()
 			v = list(set(ns))
 			cfg.utls.selectRowsInTable(tW, v)
-		except Exception, err:
+		except Exception as err:
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			tW.clearSelection()
@@ -902,7 +924,7 @@ class BandCalcTab:
 		for i in range (0, len(s)):
 			ns.append(s[i].row() + 1)
 		try:
-			for b in reversed(range(0, c)):
+			for b in reversed(list(range(0, c))):
 				if tW.item(b, 0).isSelected() or tW.item(b, 1).isSelected():
 					bNU = tW.item(b, 0).text()
 					bND = tW.item(b + 1, 0).text()
@@ -915,7 +937,7 @@ class BandCalcTab:
 			tW.clearSelection()
 			v = list(set(ns))
 			cfg.utls.selectRowsInTable(tW, v)
-		except Exception, err:
+		except Exception as err:
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			tW.clearSelection()

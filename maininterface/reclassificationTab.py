@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2017 by Luca Congedo
+		copyright			: (C) 2012-2018 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -32,8 +32,8 @@
 
 """
 
-from qgis.core import *
-from qgis.gui import *
+
+
 cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
 
 class ReclassificationTab:
@@ -52,7 +52,7 @@ class ReclassificationTab:
 			i = cfg.utls.selectLayerbyName(self.clssfctnNm, "Yes")
 			try:
 				classificationPath = i.source()
-			except Exception, err:
+			except Exception as err:
 				cfg.mx.msg4()
 				cfg.utls.refreshClassificationLayer()
 				# logger
@@ -74,20 +74,19 @@ class ReclassificationTab:
 			c = 1
 		if c > 0:
 			if batch == "No":
-				out = cfg.utls.getSaveFileName(None , cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Save raster output"), "", "*.tif")
+				out = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Save raster output"), "", "*.tif", "tif")
 			else:
 				out = rasterOutput
-			if len(out) > 0:
+			if out is not False:
+				if out.lower().endswith(".tif"):
+					pass
+				else:
+					out = out + ".tif"
 				if batch == "No":
 					cfg.uiUtls.addProgressBar()
 					# disable map canvas render for speed
 					cfg.cnvs.setRenderFlag(False)
 				cfg.uiUtls.updateBar(10)
-				n = cfg.osSCP.path.basename(out)
-				if n.endswith(".tif"):
-					out = out
-				else:
-					out = out + ".tif"
 				# date time for temp name
 				dT = cfg.utls.getTime()
 				tPMN2 = dT + cfg.calcRasterNm + ".tif"
@@ -112,7 +111,7 @@ class ReclassificationTab:
 					try:
 						cfg.utls.GDALCopyRaster(tPMD2, out, "GTiff", cfg.rasterCompression, "DEFLATE -co PREDICTOR=2 -co ZLEVEL=1")
 						cfg.osSCP.remove(tPMD2)
-					except Exception, err:
+					except Exception as err:
 						cfg.shutilSCP.copy(tPMD2, out)
 						cfg.osSCP.remove(tPMD2)
 						# logger
@@ -121,7 +120,7 @@ class ReclassificationTab:
 					cfg.shutilSCP.copy(tPMD2, out)
 					cfg.osSCP.remove(tPMD2)
 				if cfg.osSCP.path.isfile(out):
-					r = cfg.utls.addRasterLayer(out, cfg.osSCP.path.basename(out))
+					r =cfg.utls.addRasterLayer(out, cfg.osSCP.path.basename(out))
 				else:
 					if batch == "No":
 						cfg.utls.finishSound()
@@ -133,10 +132,10 @@ class ReclassificationTab:
 				if cfg.ui.apply_symbology_checkBox.isChecked() is True:	
 					if str(cfg.ui.class_macroclass_comboBox_2.currentText()) == cfg.fldMacroID_class_def:
 						mc = "Yes"
-						sL = cfg.classD.createMCIDList()
+						sL = cfg.SCPD.createMCIDList()
 					else:
 						mc = "No"
-						sL = cfg.classD.getSignatureList()
+						sL = cfg.SCPD.getSignatureList()
 					cfg.utls.rasterSymbol(r, sL, mc)
 				if batch == "No":
 					cfg.utls.finishSound()
@@ -150,16 +149,16 @@ class ReclassificationTab:
 		i = cfg.utls.selectLayerbyName(self.clssfctnNm, "Yes")
 		try:
 			classificationPath = i.source()
-		except Exception, err:
+		except Exception as err:
 			cfg.mx.msg4()
 			cfg.utls.refreshClassificationLayer()
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			return "No"
 		try:
-			clssRstrSrc = unicode(classificationPath)
+			clssRstrSrc = str(classificationPath)
 			ck = "Yes"
-		except Exception, err:
+		except Exception as err:
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			ck = "No"

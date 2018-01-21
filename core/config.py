@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2017 by Luca Congedo
+		copyright			: (C) 2012-2018 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -96,8 +96,6 @@ logFile = None
 toolPan = None
 pntCheck = None
 lstPnt = None
-imgNm = None
-rLay = None
 # training layer
 shpLay = None
 # training layer name
@@ -152,7 +150,6 @@ undoIDList = {}
 undoSpectrPlotList = {}
 ROI_SCP_UID = {}
 MCID_List = {}
-bandsetCount = 0
 # spectral plot
 spectrPlotList = {}
 signPlotIDs = {}
@@ -191,6 +188,11 @@ rasterBandUniqueVal = None
 rasterBandPixelCount = None
 # raster pixel count for PCA
 rasterPixelCountPCA = {}
+# raster clustering
+rasterClusteringrasterClustering = {}
+# raster class signature
+rasterClassSignature = {}
+classSignatureNm = "Class signature"
 # remaining time
 remainingTime = 0
 # set variable for standard deviation plot
@@ -229,7 +231,8 @@ pF = []
 # virtual raster
 landsatVrtNm = "landsat"
 sentinel2VrtNm = "sentinel2"
-tmpVrtNm = "band_set"
+tmpVrtNm = "vrt_temp_"
+bndSetVrtNm = "Virtual Band Set "
 tmpVrt = None
 # scp input directory
 inptDir = None
@@ -274,25 +277,25 @@ testNumpyV = None
 debugRasterPath = "/debug/roi_raster.tif"
 absolutePath = False
 ctrlClick = None
+previewSliderActive = None
+previewSliderArray = None
 msgWar8check = "No"
 lastSaveDir = ""
 # band calc
 bandCalcIndex = 0
+dockIndex = 0
 
 """ Project variables """
 qmlFl = None
 sigClcCheck = None
+saveInputCheck = None
 rpdROICheck = None
 vegIndexCheck = None
-bndSet = {}
-bndSetWvLn = {}
-bndSetMultiFactors = {}
-bndSetAddFactors = {}
-bndSetMultiFactorsList = []
-bndSetAddFactorsList = []
-bndSetMultAddFactorsList = []
 multiAddFactorsVar = "multiplicativeAdditiveFactorsVar"
-bndSetPresent = None
+bandSetsList = []
+bndSetNumber = 0
+bndSetTabList = []
+bndSetWidgetReset = "No"
 rasterName = None
 cmplClsNm = None
 cmplMClsNm = None
@@ -322,6 +325,9 @@ RADIANCE_UNITS = None
 expressionDict = {}
 
 """ QGIS variables """
+# registry key for first installation
+regFirstInstall = "SemiAutomaticClassificationPlugin/firstInstall"
+firstInstallVal = "Yes"
 # registry key for log setting
 regLogKey = "SemiAutomaticClassificationPlugin/logSetting"
 logSetVal = "No"
@@ -350,6 +356,17 @@ regRasterCompression = "SemiAutomaticClassificationPlugin/rasterCompression"
 # registry key for RAM value setting
 regRAMValue = "SemiAutomaticClassificationPlugin/RAMValue"
 RAMValue = 512
+# smtp server
+regSMTPCheck = "SemiAutomaticClassificationPlugin/SMTPCheck"
+SMTPCheck = "Yes"
+regSMTPServer = "SemiAutomaticClassificationPlugin/SMTPServer"
+SMTPServer = ""
+regSMTPtoEmails = "SemiAutomaticClassificationPlugin/SMTPtoEmails"
+SMTPtoEmails = ""
+regSMTPUser = "SemiAutomaticClassificationPlugin/SMTPUser"
+SMTPUser = ""
+regSMTPPassword = "SemiAutomaticClassificationPlugin/SMTPPassword"
+SMTPPassword = ""
 # field names for shapefile
 regIDFieldName = "SemiAutomaticClassificationPlugin/IDFieldName"
 # registry key for temporary directory
@@ -362,10 +379,6 @@ regUSGSUserASTER = "SemiAutomaticClassificationPlugin/USGSUserASTER"
 USGSUserASTER = ""
 regUSGSPassASTER = "SemiAutomaticClassificationPlugin/USGSPassASTER"
 USGSPassASTER = ""
-regUSGSUserMODIS = "SemiAutomaticClassificationPlugin/USGSUserMODIS"
-USGSUserMODIS = ""
-regUSGSPassMODIS = "SemiAutomaticClassificationPlugin/USGSPassMODIS"
-USGSPassMODIS = ""
 regSciHubUser = "SemiAutomaticClassificationPlugin/SciHubUser"
 SciHubUser = ""
 regSciHubService = "SemiAutomaticClassificationPlugin/SciHubService_5_2"
@@ -380,6 +393,7 @@ fldROIMC_info_def = "MC_info"
 ROI_Size_info_def = "ROI_size"
 fldSCP_UID_def= "SCP_UID"
 variableName_def = "raster"
+vectorVariableName_def = "vector"
 variableBandsetName_def = "bandset"
 variableBlueName_def = "#BLUE#"
 variableGreenName_def = "#GREEN#"
@@ -408,6 +422,9 @@ fldSCP_UID = fldSCP_UID_def
 # variable name
 regVariableName = "SemiAutomaticClassificationPlugin/VariableName"
 variableName = variableName_def
+# variable name
+regVectorVariableName = "SemiAutomaticClassificationPlugin/vectorVariableName"
+vectorVariableName = vectorVariableName_def
 # variable band set name
 regVariableBandsetName = "SemiAutomaticClassificationPlugin/VariableBandsetName"
 variableBandsetName = variableBandsetName_def
@@ -419,7 +436,7 @@ variableOutputNameBandset = variableOutputNameBandset_def
 variableOutputNameDate = variableOutputNameDate_def
 # band set name
 regBandSetName = "SemiAutomaticClassificationPlugin/BandSetName"
-bndSetNm = "<< band set >>"
+bandSetName = "Band set "
 # plot variables
 #regRoundCharList = "SemiAutomaticClassificationPlugin/roundCharList"
 roundCharList = 15
@@ -458,11 +475,14 @@ errMatrixNm = "_error_matrix.csv"
 crossClassNm = "_cross_classification.csv"
 PCANm = "PCA_band_"
 PCAReportNm = "PCA_report.txt"
+kmeansNm = "kmeans_"
+kmeansReportNm = "kmeans_report.txt"
 tempMtrxNm = "tmp_error_matrix"
 reportNm = "_report.csv"
 sigRasterNm = "sig"
 prvwTempNm = "previewtemp.tif"
 rclssTempNm = "temporary_ref_reclass"
+bsCombTempNm = "temporary_band_set_comb"
 maskRasterNm = "mskRstr.tif"
 subsROINm = "subset_ROI_temp.tif"
 subsTmpRaster = "subset_temp_b"
@@ -473,6 +493,7 @@ tmpROINm = "temp_ROI"
 mapExtent = '"Map extent"'
 pixelExtent = '"Pixel extent"'
 splitBndNm = "splitBand_"
+spectralDistNm = "SpectralDistanceBandSets_"
 reflectanceRasterNm = "reflectance_temp"
 NoDataVal = -999
 unclassifiedVal = -1000
@@ -480,11 +501,13 @@ maxLikeNoDataVal = -999999999900000
 maxValDt = 999999999900000
 unclassValue = None
 referenceLayer = None
-rstrNm = None
 prvwSz = 200
 # alg name
 algName = "Minimum Distance"
+kmeansAlgName = "Minimum Distance"
 algLCS = "Land Cover Signature"
+algKmeans = "K-means"
+algISODATA = "ISODATA"
 # type of conversion
 convCenterPixels = "Center of pixels"
 convAllPixelsTouch ="All pixels touched"
@@ -512,7 +535,6 @@ transformedDivergenceNm = "Transformed divergence"
 notAvailable = "n/a"
 
 """ band set """
-bndSetUnit = None
 # list of satellites for wavelength
 NoSatellite = "Band order"
 satGeoEye1 = "GeoEye-1 [bands 1, 2, 3, 4]"
@@ -522,6 +544,7 @@ satLandsat45 = "Landsat 4-5 TM [bands 1, 2, 3, 4, 5, 7]"
 satLandsat13 = "Landsat 1-3 MSS [bands 4, 5, 6, 7]"
 satRapidEye = "RapidEye [bands 1, 2, 3, 4, 5]"
 satSentinel2 = "Sentinel-2 [bands 2, 3, 4, 5, 6, 7, 8, 8A, 11, 12]"
+satSentinel3 = "Sentinel-3 [bands 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]"
 satASTER = "ASTER [bands 1, 2, 3N, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]"
 satMODIS = "MODIS [bands 3, 4, 1, 2, 5, 6, 7]"
 satMODIS2 = "MODIS [bands 1, 2]"
@@ -531,11 +554,13 @@ satSPOT6 = "SPOT 6 [bands 1, 2, 3, 4]"
 satPleiades = "Pleiades [bands 1, 2, 3, 4]"
 satQuickBird = "QuickBird [bands 1, 2, 3, 4]"
 satWorldView23 = "WorldView-2 -3 Multispectral [bands 1, 2, 3, 4, 5, 6, 7, 8]"
-satWlList = ["", NoSatellite, satASTER, satGeoEye1, satLandsat8, satLandsat7, satLandsat45, satLandsat13, satMODIS, satMODIS2, satPleiades, satQuickBird, satRapidEye, satSentinel2, satSPOT4, satSPOT5, satSPOT6, satWorldView23]
+satWlList = ["", NoSatellite, satASTER, satGeoEye1, satLandsat8, satLandsat7, satLandsat45, satLandsat13, satMODIS, satMODIS2, satPleiades, satQuickBird, satRapidEye, satSentinel2, satSentinel3, satSPOT4, satSPOT5, satSPOT6, satWorldView23]
 usgsLandsat8 = "L8 OLI/TIRS"
 usgsLandsat7 = "L7 ETM+"
 usgsLandsat45 = "L4-5 TM"
 usgsLandsat15 = "L1-5 MSS"
+esaSentinel2 = "Sentinel-2"
+esaSentinel3 = "Sentinel-3"
 usgsASTER = "ASTER Level 1T"
 usgsMODIS_MOD09GQ = "MOD09GQ_V6"
 usgsMODIS_MYD09GQ = "MYD09GQ_V6"
@@ -563,15 +588,18 @@ NASALandsat8Collection = "C1427461962-USGS_EROS"
 NASALandsat7Collection = "C1427459680-USGS_EROS"
 NASALandsat45Collection = "C1427462674-USGS_EROS"
 NASALandsat15Collection = "C179872798-USGS_EROS"
+satSentinelList = [esaSentinel2]
+satSentinel3List = [esaSentinel3]
 satLandsatList = [usgsLandsat8, usgsLandsat7, usgsLandsat45, usgsLandsat15]
 satASTERtList = [usgsASTER]
 satMODIStList = [usgsMODIS_MOD09GQ, usgsMODIS_MYD09GQ, usgsMODIS_MOD09GA, usgsMODIS_MYD09GA, usgsMODIS_MOD09Q1, usgsMODIS_MYD09Q1, usgsMODIS_MOD09A1, usgsMODIS_MYD09A1]
+downProductList = satSentinelList + satSentinel3List + satLandsatList + satASTERtList + satMODIStList
 indNDVI = "NDVI"
 indEVI = "EVI"
 indicesList = ["", indNDVI, indEVI]
 # unit list
 noUnit = "band number"
-wlMicro = u"µm (1 E-6m)"
+wlMicro = "µm (1 E-6m)"
 wlNano = "nm (1 E-9m)"
 unitNano = "E-9m"
 unitMicro = "E-6m"
@@ -598,29 +626,39 @@ usgs_C6p = None
 workingDirNm = "!working_dir!"
 workingDir = None
 functionNames = []
+functionNames.append([['accuracy', 'cfg.batchT.performAccuracy',  'cfg.acc.errorMatrix', ["classification_file_path : ''", "reference_file_path : ''", "vector_field_name : ''", "output_raster_path : ''"]]])
+functionNames.append([['add_new_bandset', 'cfg.batchT.performAddNewBandSet',  'cfg.bst.addBandSetTab', [""]]])
 functionNames.append([['add_raster', 'cfg.batchT.performAddRaster',  'cfg.utls.addRasterLayer', ["input_raster_path : ''", "input_raster_name : ''"]]])
-functionNames.append([['accuracy', 'cfg.batchT.performAccuracy',  'cfg.acc.errorMatrix', ["classification_file_path : ''", "reference_file_path : ''", "shapefile_field_name : ''", "output_raster_path : ''"]]])
-functionNames.append([['aster_conversion', 'cfg.batchT.performASTERConversion', 'cfg.ASTERT.ASTER', ["input_raster_path : ''", "celsius_temperature : 0", "apply_dos1 : 0", "use_nodata : 1", "nodata_value : 0", "create_bandset : 1", "output_dir : ''"]]])
-functionNames.append([['band_calc', 'cfg.batchT.performBandCalc',  'cfg.bCalc.calculate', ["expression : ''", "output_raster_path : ''", "extent_same_as_raster_name : ''", "align : 1", "extent_intersection : 1", "set_nodata : 0", "nodata_value : 0"]]])
-functionNames.append([['classification', 'cfg.batchT.performClassification', 'cfg.classD.runClassification', ["use_macroclass : 0", "algorithm_name  : 'Minimum Distance'", "use_lcs : 0", "use_lcs_algorithm : 0", "use_lcs_only_overlap : 0", "apply_mask : 0",  "mask_file_path : ''", "vector_output : 0",  "classification_report : 0",  "save_algorithm_files : 0", "output_classification_path : ''"]]])
+functionNames.append([['aster_conversion', 'cfg.batchT.performASTERConversion', 'cfg.ASTERT.ASTER', ["input_raster_path : ''", "celsius_temperature : 0", "apply_dos1 : 0", "dos1_only_green : 1", "use_nodata : 1", "nodata_value : 0", "create_bandset : 1", "output_dir : ''", "band_set : 1"]]])
+functionNames.append([['band_calc', 'cfg.batchT.performBandCalc',  'cfg.bCalc.calculate', ["expression : ''", "output_raster_path : ''", "extent_same_as_raster_name : ''", "align : 1", "extent_intersection : 1", "set_nodata : 0", "nodata_value : 0", "band_set : 1"]]])
+functionNames.append([['band_combination', 'cfg.batchT.performBandCombination',  'cfg.bsComb.bandSetCombination', ["band_set : 1", "output_raster_path : ''"]]])
+functionNames.append([['class_signature', 'cfg.batchT.performClassSignature',  'cfg.classSigT.calculateClassSignature', ["input_raster_path : ''", "band_set : 1", "save_signatures : 1", "output_text_path : ''"]]])
+functionNames.append([['classification', 'cfg.batchT.performClassification', 'cfg.SCPD.runClassification', ["band_set : 1", "use_macroclass : 0", "algorithm_name  : 'Minimum Distance'", "use_lcs : 0", "use_lcs_algorithm : 0", "use_lcs_only_overlap : 0", "apply_mask : 0",  "mask_file_path : ''", "vector_output : 0",  "classification_report : 0",  "save_algorithm_files : 0", "output_classification_path : ''"]]])
 functionNames.append([['classification_dilation', 'cfg.batchT.performClassificationDilation', 'cfg.dltnRstr.dilationClassification', ["input_raster_path : ''", "class_values : ''", "size_in_pixels : 1", "pixel_connection : 4", "output_raster_path : ''"]]])
 functionNames.append([['classification_erosion', 'cfg.batchT.performClassificationErosion', 'cfg.ersnRstr.erosionClassification', ["input_raster_path : ''", "class_values : ''", "size_in_pixels : 1", "pixel_connection : 4", "output_raster_path : ''"]]])
 functionNames.append([['classification_report', 'cfg.batchT.performClassificationReport',  'cfg.classRep.calculateClassificationReport', ["input_raster_path : ''", "use_nodata : 0", "nodata_value : 0", "output_report_path : ''"]]])
 functionNames.append([['classification_sieve', 'cfg.batchT.performClassificationSieve',  'cfg.sieveRstr.sieveClassification', ["input_raster_path : ''", "size_threshold : 2", "pixel_connection : 4", "output_raster_path : ''"]]])
 functionNames.append([['classification_to_vector', 'cfg.batchT.performClassificationToVector', 'cfg.classVect.convertClassificationToVector', ["input_raster_path : ''", "use_signature_list_code : 1", "code_field : 'C_ID'", "output_vector_path : ''"]]]) 
-functionNames.append([['clip_multiple_rasters', 'cfg.batchT.performClipRasters',  'cfg.clipMulti.clipRasters', ["input_raster_path : ''", "output_dir : ''", "use_shapefile : 0", "shapefile_path : ''", "ul_x : ''", "ul_y : ''", "lr_x : ''", "lr_y : ''", "nodata_value : 0", "output_name_prefix : 'clip'"]]])
+functionNames.append([['clip_multiple_rasters', 'cfg.batchT.performClipRasters',  'cfg.clipMulti.clipRasters', ["band_set : 1", "output_dir : ''", "use_vector : 0", "vector_path : ''", "use_vector_field : 0", "vector_field : ''", "ul_x : ''", "ul_y : ''", "lr_x : ''", "lr_y : ''", "nodata_value : 0", "output_name_prefix : 'clip'"]]])
+functionNames.append([['cloud_masking', 'cfg.batchT.performCloudMasking',  'cfg.cloudMsk.cloudMaskingBandSet', ["band_set : 1", "input_raster_path : ''", "class_values : ''", "use_buffer : 1", "size_in_pixels : 1", "nodata_value : 0", "output_name_prefix : 'mask'", "output_dir : ''"]]])
+functionNames.append([['clustering', 'cfg.batchT.performClustering',  'cfg.clusteringT.calculateClustering', ["band_set : 1","clustering_method : 1", "use_distance_threshold : 1", "threshold_value : 0.0001", "number_of_classes : 10", "max_iterations : 10", "isodata_max_std_dev : 0.0001", "isodata_min_class_size : 10", "use_nodata : 0", "nodata_value : 0", "seed_signatures : 1", "distance_algorithm : 1", "save_signatures : 0", "output_raster_path : ''"]]])
 functionNames.append([['create_bandset', 'cfg.batchT.performBandSetCreation',  'cfg.bst.addFileToBandSet', ["raster_path_list : ''", "center_wavelength : ''", "wavelength_unit : 1", "multiplicative_factor : ''", "additive_factor : ''"]]])
-functionNames.append([['cross_classification', 'cfg.batchT.performCrossClassification',  'cfg.crossC.crossClassification', ["classification_file_path : ''", "use_nodata : 0", "nodata_value : 0", "reference_file_path : ''", "shapefile_field_name : ''", "output_raster_path : ''"]]])
-functionNames.append([['edit_raster_using_shapefile', 'cfg.batchT.performEditRasterUsingShapefile', 'cfg.editRstr.setRasterValue', ["input_raster_path : ''", "input_vector_path : ''", "vector_field_name : ''", "constant_value : 0", "expression :  'where(raster == 1, 2, raster)'"]]])
+functionNames.append([['cross_classification', 'cfg.batchT.performCrossClassification',  'cfg.crossC.crossClassification', ["classification_file_path : ''", "use_nodata : 0", "nodata_value : 0", "reference_file_path : ''", "vector_field_name : ''", "output_raster_path : ''"]]])
+functionNames.append([['edit_raster_using_vector', 'cfg.batchT.performEditRasterUsingVector', 'cfg.editRstr.setRasterValue', ["input_raster_path : ''", "input_vector_path : ''", "vector_field_name : ''", "constant_value : 0", "expression :  'where(raster == 1, 2, raster)'"]]])
 functionNames.append([['land_cover_change', 'cfg.batchT.performLandCoverChange',  'cfg.landCC.landCoverChange', ["reference_raster_path : ''", "new_raster_path : ''", "output_raster_path : ''"]]])
-functionNames.append([['landsat_conversion', 'cfg.batchT.performLandsatConversion',  'cfg.landsatT.landsat', ["input_dir : ''", "mtl_file_path : ''", "celsius_temperature : 0", "apply_dos1 : 0", "use_nodata : 1", "nodata_value : 0", "pansharpening : 0", "create_bandset : 1", "output_dir : ''"]]])
-functionNames.append([['modis_conversion', 'cfg.batchT.performMODISConversion', 'cfg.MODIST.MODIS', ["input_raster_path : ''", "reproject_wgs84 : 1", "use_nodata : 1", "nodata_value : -999", "create_bandset : 1", "output_dir : ''"]]])
-functionNames.append([['open_training_input', 'cfg.batchT.performOpenTrainingInput',  'cfg.classD.openInput', ["training_file_path : ''"]]])
-functionNames.append([['pca', 'cfg.batchT.performPCA',  'cfg.pcaT.calculatePCA', ["use_number_of_components : 0"", number_of_components : 2", "use_nodata : 1", "nodata_value : 0", "output_dir : ''"]]])
+functionNames.append([['landsat_conversion', 'cfg.batchT.performLandsatConversion',  'cfg.landsatT.landsat', ["input_dir : ''", "mtl_file_path : ''", "celsius_temperature : 0", "apply_dos1 : 0", "dos1_only_blue_green : 1", "use_nodata : 1", "nodata_value : 0", "pansharpening : 0", "create_bandset : 1", "output_dir : ''", "band_set : 1"]]])
+functionNames.append([['modis_conversion', 'cfg.batchT.performMODISConversion', 'cfg.MODIST.MODIS', ["input_raster_path : ''", "reproject_wgs84 : 1", "use_nodata : 1", "nodata_value : -999", "create_bandset : 1", "output_dir : ''", "band_set : 1"]]])
+functionNames.append([['mosaic_bandsets', 'cfg.batchT.performMosaicBandSets', 'cfg.mosaicBS.mosaicBandSets', ["band_set_list : ''", "output_dir : ''", "output_name_prefix : 'mosaic'"]]])
+functionNames.append([['open_training_input', 'cfg.batchT.performOpenTrainingInput',  'cfg.SCPD.openInput', ["training_file_path : ''"]]])
+functionNames.append([['pca', 'cfg.batchT.performPCA',  'cfg.pcaT.calculatePCA', ["band_set : 1", "use_number_of_components : 0", "number_of_components : 2", "use_nodata : 1", "nodata_value : 0", "output_dir : ''"]]])
 functionNames.append([['reclassification', 'cfg.batchT.performReclassification', 'cfg.reclassification.reclassify', ["input_raster_path : ''", "value_list : 'oldVal-newVal;oldVal-newVal'", "use_signature_list_code : 1", "code_field : 'MC_ID'", "output_raster_path : ''"]]])
-functionNames.append([['sentinel_conversion', 'cfg.batchT.performSentinelConversion', 'cfg.sentinel2T.sentinel2', ["input_dir : ''", "mtd_safl1c_file_path : ''", "apply_dos1 : 0", "use_nodata : 1", "nodata_value : 0", "create_bandset : 1", "output_dir : ''"]]])
+functionNames.append([['remove_bandset', 'cfg.batchT.performRemoveBandSet',  'cfg.bst.removeBandSetTab', ["band_set : 1"]]])
+functionNames.append([['select_bandset', 'cfg.batchT.performBandSetSelection',  'cfg.bst.selectBandSetTab', ["band_set : 1"]]])
+functionNames.append([['sentinel2_conversion', 'cfg.batchT.performSentinel2Conversion', 'cfg.sentinel2T.sentinel2', ["input_dir : ''", "mtd_safl1c_file_path : ''", "apply_dos1 : 0", "dos1_only_blue_green : 1", "use_nodata : 1", "nodata_value : 0", "create_bandset : 1", "output_dir : ''", "band_set : 1"]]])
+functionNames.append([['sentinel3_conversion', 'cfg.batchT.performSentinel3Conversion', 'cfg.sentinel3T.sentinel3', ["input_dir : ''", "apply_dos1 : 0", "dos1_only_blue_green : 1", "use_nodata : 1", "nodata_value : 0", "create_bandset : 1", "output_dir : ''", "band_set : 1"]]])
+functionNames.append([['spectral_distance', 'cfg.batchT.performSpectralDistance', 'cfg.spclDstBS.spectralDistBandSets', ["first_band_set : 1", "second_band_set : 2", "distance_algorithm  : 1", "use_distance_threshold : 1", "threshold_value : 0.1", "output_dir : ''"]]])
 functionNames.append([['split_raster_bands', 'cfg.batchT.performSplitRaster', 'cfg.splitT.splitRasterToBands', ["input_raster_path : ''", "output_dir : ''", "output_name_prefix : 'split'"]]])
-functionNames.append([['stack_raster_bands', 'cfg.batchT.performStackRaster', 'cfg.stackRstr.stackRasters', ["input_raster_path : ''", "output_raster_path : ''"]]])
+functionNames.append([['stack_raster_bands', 'cfg.batchT.performStackRaster', 'cfg.stackRstr.stackRasters', ["band_set : 1", "output_raster_path : ''"]]])
 functionNames.append([['vector_to_raster', 'cfg.batchT.performVectorToRaster', 'cfg.vctRstrT.convertToRaster', ["vector_file_path : ''", "use_value_field : 1", "vector_field_name : ''", "constant_value : 1", "reference_raster_path : ''",  "type_of_conversion : 'Center of pixels'", "output_raster_path : ''"]]])
 functionNames.append([[workingDirNm, 'cfg.batchT.workingDirectory', '', ["''"]]])
 

@@ -1,9 +1,9 @@
 [general]
 name=Semi-Automatic Classification Plugin
-qgisMinimumVersion=2.0
+qgisMinimumVersion=3.00
 description= Plugin that allows for the supervised classification of remote sensing images, providing tools for the download, the preprocessing and postprocessing of images.
-version=5.3.11
-about=Developed by Luca Congedo, the Semi-Automatic Classification Plugin (SCP) allows for the supervised classification of remote sensing images, providing tools for the download, the preprocessing and postprocessing of images. Search and download is available for ASTER, Landsat, MODIS, and Sentinel-2 images. Several algorithms are available for the land cover classification. This plugin requires the installation of GDAL, OGR, Numpy, SciPy, and Matplotlib. For more information please visit https://fromgistors.blogspot.com/ .
+version=6.0.0
+about=Developed by Luca Congedo, the Semi-Automatic Classification Plugin (SCP) allows for the supervised classification of remote sensing images, providing tools for the download, the preprocessing and postprocessing of images. Search and download is available for ASTER, Landsat, MODIS, Sentinel-2, and Sentinel-3 images. Several algorithms are available for the land cover classification. This plugin requires the installation of GDAL, OGR, Numpy, SciPy, and Matplotlib. For more information please visit https://fromgistors.blogspot.com .
 
 author=Luca Congedo
 email=ing.congedoluca@gmail.com
@@ -14,242 +14,40 @@ icon=semiautomaticclassificationplugin.png
 ; start of optional metadata
 changelog=
 
-	5.3.11
-	Minor update:
-	-fixed Landsat search
-	
-	5.3.10
-	Minor update:
-	-fixed Sentinel-2B search
-	
-	5.3.9
-	Minor update:
-	-fixed Sentinel-2 search
-	
-	5.3.8
-	Minor update:
-	-fixed Sentinel-2 search
-	
-	5.3.7
-	Minor update:
-	-fixed Sentinel-2 image preview url
-	
-	5.3.6
-	Minor update:
-	-fixed MODIS and ASTER download
-	
-	5.3.5
-	Minor update:
-	-fixed calculation issue with NoData values
-	
-	5.3.4
-	Minor update:
-	-fixed regression in tools Accuracy and Classification report
-	
-	5.3.3
-	Minor update:
-	-fixed issue with characters in tools Land cover change and Classification report
-	
-	5.3.2
-	Minor update:
-	-fixed regression in signature calculation
-	
-	5.3.1
-	Minor update:
-	-fixed Sentinel-2 search
-	
-	5.3.0
+	6.0.0
 	Major update:
-	-added MODIS download and preprocessing tool
-	-added tool for stacking raster bands
-	-added MODIS processing and stack bands to Batch tool
-	-added option to export training input as shapefile
-	-fixed Sentinel-2 search
-	-fixed importing spectral signatures
-	
-	5.2.4
-	Minor update:
-	-fixed regression in accuracy calculation
-	
-	5.2.3
-	Minor update:
-	-bug fixing vector to raster
-	-bug fixing cross classification
-	
-	5.2.2
-	Minor update:
-	-bug fixing missing dependencies
-	
-	5.2.1
-	Minor update:
-	-implemented Sentinel-2 download from AWS
-	-changed default Sentinel-2 service https://scihub.copernicus.eu/dhus
-	-added show plugin button in SCP menu
-	
-	5.2.0
-	Major update:
-	-new tool for cross classification, calculating cross raster and cross area between a classification and a reference shapefile or raster
-	-tif files allowed as input for Sentinel-2 preprocessing
-	-in Batch tool begin with # can be used for comments
-	-in Batch calc new variables for output names, "#BANDSET#" for name of the first band in the bandset and "#DATE#" for the current date and time
-	-in Batch calc fixed NoData calculation
-	
-	5.1.10
-	Minor update:
-	-added "#GREEN#" variable name
-	-fixed issue in Batch expressions
-	-fixed issue in Landsat search dates
-	
-	5.1.9
-	Minor update:
-	-fixed issue in Band calc when using np. in expressions
-	
-	5.1.8
-	Minor update:
-	-fixed issue with paths in batch tool
-	
-	5.1.7
-	Minor update:
-	-adapted Sentinel-2 search to API update https://scihub.copernicus.eu/news/News00111
-	
-	5.1.6
-	Minor update:
-	-fixed render issue when searching images
-	-fixed edit toolbar issue
-	
-	5.1.5
-	Minor update:
-	-added option for maximum result number in Landsat, Sentinel-2, and ASTER download
-	
-	5.1.4
-	Minor update:
-	-fixed issue when searching Sentinel-2 images
-	-fixed issue with translation of accuracy matrix
-	-fixed issue when importing spectral signature from plot
-	
-	5.1.3
-	Minor update:
-	-fixed issue when cancelling a Sentinel-2 query
-	-download Sentinel-2 preview for single granules instead of band 1
-	-In Band calc check raster projections
-	-various bug fixing
-	
-	5.1.2
-	Minor update:
-	-fixed issue when calculating report after classification
-	
-	5.1.1
-	Minor update:
-	-fixed issue in Band calc tool
-	
-	5.1.0
-	Major update:
-	-added toolbar for editing raster
-	-fixed issue in sorting and removing bands in the Band set
-	-various bug fixing
-	
-	5.0.14
-	Minor update:
-	-in Band calc tool added option to align raster output to the raster selected as extent
-	
-	5.0.13
-	Minor update:
-	-interface translation to Polish (thanks to Robert Szczepanek and Jakub Pękala)
-	-Band calc added button to import expressions from a text file (each line an expression) with name and expression separated by ";" such as NDVI; ( "#NIR#" - "#RED#" ) / ( "#NIR#" + "#RED#" ) @NDVI
-	
-	5.0.12
-	Minor update:
-	-fixed issue #14
-	-fixed directory creation
-	-fixed path issue in clip multiple raster
-	
-	5.0.11
-	Minor update:
-	-fixed ROI creation issue
-	
-	5.0.10
-	Minor update:
-	-fixed ROI projection issue
-	
-	5.0.9
-	Minor update:
-	-fixed projection issue
-	
-	5.0.8
-	Minor update:
-	-html news fixed
-	
-	5.0.7
-	Minor update:
-	-html news are now in github.io
-	
-	5.0.6
-	Minor update:
-	-fixed ROI creation issue whith multiband raster
-	-added plugin repository
-	-stack bandset now uses the first band name for the output
-	
-	5.0.5
-	Minor update:
-	-changed default Sentinel-2 service https://scihub.copernicus.eu/dhus (requires user account)
-	-fixed issue #12 with translations
-	-fixed various issues
-	
-	5.0.4
-	Minor update:
-	-fixed various issues the prevented the start of SCP
-	-interface translation to Spanish (thanks to Igor F. Davalos Rojas)
-	
-	5.0.3
-	Minor update:
-	-fixed Sentinel-2 SSL download issue
-	
-	5.0.2
-	Minor update:
-	-fixed issue #7 when updating the plugin
-	-fixed issue #8 removing temporary files
-	
-	5.0.1
-	Minor update:
-	-fixed issue when updating the plugin
-	-fixed QPyNullVariant issue
-	-disabled the button "Remove temporary files" because of crash in Windows
-	
-	5.0.0
-	New version:
-	-new interface
-	-new input file (extension .scp) which is a zip file containing the shapefile and signature list file
-	-possibility to create multipart ROIs (pressing CTRL + mouse click) and CTRL + Z for removing last part
-	-C ID is automatically incremented after saving a ROI
-	-function to merge ROI polygons from table
-	-new Land Cover Signature classification based on the range values of spectral signatures
-	-new tab for the definition of range values for Land Cover Signature classification
-	-in Landsat and Sentinel pre processing added option for calculations based on the band set
-	-new tab for PCA (Principal Components Analysis) of Band set
-	-in Band set added options for automatic calculation of virtual raster, stack of layers, build overviews, and Band calc expressions
-	-enhanced signature plot that allows for interactive definition of range values and new navigation (pan with left click and zoom with scroll or right click)
-	-enhanced Band calc allowing for the use of variables "#BLUE#" , "#RED#", and "#NIR#" in expressions
-	-Band calc option to use custom file names for multiple expression adding @fileName at the end of expression
-	-in Band calc added Decision rules for calculating raster based on conditions (e.g. "raster1 >0" or multiple rules separated by semicolon)
-	-added button for importing SCP file (polygons with automatic reprojection and spectral signatures), CSV, and external shapefile
-	-direct search of Landsat images from NASA CMR Search
-	-new tab for search and download of ASTER images L1T  from NASA Land Processes Distributed Active Archive Center
-	-new tab for conversion of ASTER images L1T
-	-new tab for manual raster editing
-	-new tab for classification sieve
-	-new tab for classification erosion
-	-new tab for classification dilation
-	-new tab for conversion from vector to raster (using a reference raster for pixel alignment)
-	-new tab for batch processing (Landsat conversion, Sentinel conversion,  ASTER conversion, Create band set, Classification, Split raster bands, Vector to raster, Clip multliple rasters, Accuracy, Land Cover Change, Classification report, Classification to vector, Reclassification, Classification sieve, Classification erosion, Classification dilation, Edit raster using shapefile, Band calc) and option for using a working directory (!working_dir!)
-	-new tab for editing RGB list
-	-improved settings of UL and LR points for area definition in several tabs (left click for UL point and right click for LR point)
-	-added service option for Sentinel-2 download mirrors (e.g. working with https://finhub.nsdc.fmi.fi , https://data.sentinel.zamg.ac.at) 
-	-if available, Sentinel-2 granule preview are downloaded from the Amazon Web Services (http://sentinel-pds.s3-website.eu-central-1.amazonaws.com)
-	-results of image searching are added to the previous results in the table
-	-improved scatter plot
-	-ROI size (pixels) is calculated in the Signature details
-	-added button for calculation of spectral distances
-	-clip multiple rasters using shapefile and accuracy assessment now work also if shapefile and raster projections are different
+	-version updated for QGIS 3
+	-updated the Main interface with new tabs and design
+	-in tab Band set added option for multiple band set definition that can be moved and closed
+	-in tab Band set quick wavelength set according to band number of sensor
+	-new tab Download products for searching and downloading free images and products
+	-in tab Download products added download and preprocessing of Sentinel-2 Level 2A
+	-in tab Download products added download of Sentinel-3 OLCI
+	-in tab Download products added image preview with click on Product list items
+	-in tab Download products added option to import and export table of product download
+	-in tab Download products the Product list is saved with the project
+	-in tabs Landsat Sentinel-2 and ASTER added option to limit DOS1 correction only to blue and green bands
+	-in tab Preprocessing added tool for Sentinel-3 OLCI
+	-in tab Preprocessing added tool Mosaic band sets for the creation of multiband mosaics
+	-in tab Preprocessing added tool Cloud masking of a band set which is based on the values of a classification
+	-in tab Band processing added tool Clustering with K-means and ISODATA algorithms
+	-in tab Band processing added tool Spectral distance for calculating pixel distance between two band sets
+	-in tab Band processing added tool Band combination for calculating a raster of band combinations from a band set
+	-in tab Postprocessing added tool Class signature for calculating the spectral signatures of classes in a classification using a band set
+	-in tab ROI Creation added option to autosave training input (backup file created when saving QGIS project)
+	-in tab Clip Multiple Rasters added option to select a vector field for iterating through each vector polygon and add field value to the output name
+	-in Working toolbar added possibility to plot spectral signatures of the same pixel for all the band sets (pressing the button ROI region growing then CTRL + mouse right click in the map)
+	-in tab Classification the threshold value if > 0 is used for all the spectral signatures;
+	-in tab Edit raster added vector as variable name for using vector value in expression
+	-in tab Batch added several new functions and changed some of the function variable names
+	-in tab Batch added label for checking the expression
+	-in tab Batch added table containing the list of functions
+	-in tab Settings Processing added SMTP process notification
+	-in tab Settings Debug added table of Log
+	-in tab Multiple ROI creation now can import a point shapefile for point coordinates
+	-in tab Multiple ROI creation the random point creation avoids raster NoData
+	-in Spectral Signature Plot fixed signature plot for large values
+	-various bugfixing and improvements 
 
 experimental=False
 deprecated=False

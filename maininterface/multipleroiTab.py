@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2017 by Luca Congedo
+		copyright			: (C) 2012-2018 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -32,8 +32,8 @@
 
 """
 
-from qgis.core import *
-from qgis.gui import *
+
+
 cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
 
 class MultipleROITab:
@@ -78,19 +78,17 @@ class MultipleROITab:
 				
 	# create random point
 	def createRandomPoint(self):
-		if cfg.bndSetPresent == "Yes" and cfg.rstrNm == cfg.bndSetNm:
-			imageName = cfg.bndSet[0]
+		if cfg.bandSetsList[cfg.bndSetNumber][0] == "Yes":
+			imageName = cfg.bandSetsList[cfg.bndSetNumber][3][0]
 		else:
-			if cfg.utls.selectLayerbyName(cfg.rstrNm, "Yes") is None:
+			try:
+				imageName = cfg.bandSetsList[cfg.bndSetNumber][8]
+			except:
 				cfg.mx.msg4()
 				return "No"
-			else:
-				imageName = cfg.rstrNm	
-				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "No image selected")
 		img = cfg.utls.selectLayerbyName(imageName, "Yes")
 		crs = cfg.utls.getCrs(img)
-		geographicFlag = crs.geographicFlag()
+		geographicFlag = crs.isGeographic()
 		if geographicFlag is False:
 			cfg.uiUtls.addProgressBar()
 			tLX, tLY, lRX, lRY, pSX, pSY = cfg.utls.imageInformationSize(imageName)
@@ -106,8 +104,8 @@ class MultipleROITab:
 				minDistance = int(cfg.ui.point_distance_spinBox.value())
 			if cfg.ui.point_grid_checkBox.isChecked() is True:
 				gridSize = int(cfg.ui.point_grid_spinBox.value())
-				XRange = range(Xmin, Xmax, gridSize)
-				YRange = range(Ymin, Ymax, gridSize)
+				XRange = list(range(Xmin, Xmax, gridSize))
+				YRange = list(range(Ymin, Ymax, gridSize))
 				if len(XRange) == 1:
 					XRange = [Xmin, Xmax]	
 				if len(YRange) == 1:
@@ -116,15 +114,15 @@ class MultipleROITab:
 					if XRange.index(x) < (len(XRange) - 1):
 						for y in YRange:
 							if YRange.index(y) < (len(YRange) - 1):
-								newpoints = cfg.utls.randomPoints(pointNumber, x, XRange[XRange.index(x)+1], y, YRange[YRange.index(y)+1], minDistance)
+								newpoints = cfg.utls.randomPoints(pointNumber, x, XRange[XRange.index(x)+1], y, YRange[YRange.index(y)+1], minDistance, imageName)
 								if points is None:
 									points = newpoints
 								else:
-									points = cfg.np.concatenate((points, newpoints), axis=0)
+									points.append(newpoints[0])
 			else:
-				points = cfg.utls.randomPoints(pointNumber, Xmin, Xmax, Ymin, Ymax, minDistance)
+				points = cfg.utls.randomPoints(pointNumber, Xmin, Xmax, Ymin, Ymax, minDistance, imageName)
 			cfg.uiUtls.updateBar(50)
-			for i in range(0, points.shape[0]):
+			for i in range(0, len(points)):
 				self.addRandomPointToTable(points[i])
 			cfg.uiUtls.updateBar(100)
 			cfg.uiUtls.removeProgressBar()
@@ -143,19 +141,19 @@ class MultipleROITab:
 				pass
 			cfg.uiUtls.addProgressBar()
 			for i in range(0, c):
-				cfg.QtGuiSCP.qApp.processEvents()
+				cfg.QtWidgetsSCP.qApp.processEvents()
 				if cfg.actionCheck != "No":
 					cfg.uiUtls.updateBar((i+1) * 100 / (c + 1))
 					try:
 						X = tW.item(i,0).text()
 						Y = tW.item(i,1).text()
-					except Exception, err:
+					except Exception as err:
 						# logger
 						cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 						cfg.mx.msg6()
 					try:
-						p = QgsPoint(float(X), float(Y))
-						cfg.utls.checkPointImage(cfg.rstrNm, p)
+						p = cfg.qgisCoreSCP.QgsPointXY(float(X), float(Y))
+						cfg.utls.checkPointImage(cfg.bandSetsList[cfg.bndSetNumber][8], p)
 						if cfg.pntCheck == "Yes":
 							cfg.pntROI = cfg.lstPnt
 							# create ROI
@@ -173,7 +171,7 @@ class MultipleROITab:
 								cfg.ROIband = v
 								cfg.rpdROICheck = "Yes"
 							cfg.origPoint = cfg.pntROI
-							cfg.ROId.createROI(cfg.pntROI, "No")
+							cfg.SCPD.createROI(cfg.pntROI, "No")
 							# save ROI
 							v = int(tW.item(i, 2).text())
 							cfg.ROIMacroID = v
@@ -181,23 +179,23 @@ class MultipleROITab:
 							v = int(tW.item(i, 4).text())
 							cfg.ROIID = v
 							cfg.ROIInfo = tW.item(i, 5).text()
-							cfg.classD.saveROItoShapefile("No")
+							cfg.SCPD.saveROItoShapefile("No")
 							# disable undo save ROI
 							cfg.uidc.undo_save_Button.setEnabled(False)
-					except Exception, err:
+					except Exception as err:
 						# logger
 						cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 						cfg.mx.msgErr20()
 				# restore settings for single ROI 
-				cfg.classD.setROIMacroID()
-				cfg.classD.roiMacroclassInfo()
-				cfg.classD.setROIID()
-				cfg.classD.roiClassInfo()
-				cfg.ROId.minROISize()
-				cfg.ROId.maxROIWidth()
-				cfg.ROId.rangeRadius()
-				cfg.classD.rapidROIband()
-				cfg.classD.rapidROICheckbox()
+				cfg.SCPD.setROIMacroID()
+				cfg.SCPD.roiMacroclassInfo()
+				cfg.SCPD.setROIID()
+				cfg.SCPD.roiClassInfo()
+				cfg.SCPD.minROISize()
+				cfg.SCPD.maxROIWidth()
+				cfg.SCPD.rangeRadius()
+				cfg.SCPD.rapidROIband()
+				cfg.SCPD.rapidROICheckbox()
 			cfg.utls.finishSound()
 			cfg.uiUtls.removeProgressBar()
 			# restore previous point for single ROI
@@ -210,8 +208,12 @@ class MultipleROITab:
 
 	# export point list to file
 	def exportPointList(self):
-		pointListFile = cfg.utls.getSaveFileName(None , cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Save the point list to file"), "", "CSV (*.csv)")
+		pointListFile = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Save the point list to file"), "", "*.csv", "csv")
 		try:
+			if pointListFile.lower().endswith(".csv"):
+				pass
+			else:
+				pointListFile = pointListFile + ".csv"
 			f = open(pointListFile, 'w')
 			f.write("X;Y;MC ID;MC Info;C ID;C Info;Min size;Max width;Range radius;Rapid ROI band\n")
 			f.close()
@@ -244,54 +246,97 @@ class MultipleROITab:
 				f.close()
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " point list exported")
-		except Exception, err:
+		except Exception as err:
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 		
 	# import points from file
 	def importPoints(self):
-		pointFile = cfg.utls.getOpenFileName(None , "Select a point list file", "", "CSV (*.csv)")
-		try:
-			f = open(pointFile)
-			sep = ";"
-			if cfg.osSCP.path.isfile(pointFile):
-				file = f.readlines()
-				tW = cfg.ui.point_tableWidget
-				for b in range(1, len(file)):
-					# point list
-					p = file[b].strip().split(sep)
-					MinSize = cfg.minROISz
-					MaxWidth = cfg.maxROIWdth
-					RangRad = cfg.rngRad
-					RBand = ""
+		pointFile = cfg.utls.getOpenFileName(None , "Select a point list file", "", "CSV (*.csv);; Point shapefile .shp (*.shp)")
+		if pointFile.lower().endswith(".csv"):
+			try:
+				f = open(pointFile)
+				sep = ";"
+				if cfg.osSCP.path.isfile(pointFile):
+					file = f.readlines()
+					tW = cfg.ui.point_tableWidget
+					for b in range(1, len(file)):
+						# point list
+						p = file[b].strip().split(sep)
+						MinSize = cfg.minROISz
+						MaxWidth = cfg.maxROIWdth
+						RangRad = cfg.rngRad
+						RBand = ""
+						try:
+							MinSize = p[6]
+							MaxWidth = p[7]
+							RangRad = p[8]
+							RBand = p[9]
+						except:
+							pass
+						# add item to table
+						c = tW.rowCount()
+						# add list items to table
+						tW.setRowCount(c + 1)
+						cfg.utls.addTableItem(tW, p[0], c, 0)
+						cfg.utls.addTableItem(tW, p[1], c, 1)
+						cfg.utls.addTableItem(tW, p[2], c, 2)
+						cfg.utls.addTableItem(tW, p[3], c, 3)
+						cfg.utls.addTableItem(tW, p[4], c, 4)
+						cfg.utls.addTableItem(tW, p[5], c, 5)
+						cfg.utls.addTableItem(tW, MinSize, c, 6)
+						cfg.utls.addTableItem(tW, MaxWidth, c, 7)
+						cfg.utls.addTableItem(tW, RangRad, c, 8)
+						cfg.utls.addTableItem(tW, RBand, c, 9)
+						# logger
+						cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " points imported")
+			except Exception as err:
+				cfg.mx.msgErr19()
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+		elif pointFile.lower().endswith(".shp"):
+			try:
+				lPRS = cfg.utls.getEPSGVector(pointFile)
+				# band set
+				if cfg.bandSetsList[cfg.bndSetNumber][0] == "Yes":
 					try:
-						MinSize = p[6]
-						MaxWidth = p[7]
-						RangRad = p[8]
-						RBand = p[9]
+						imageName = cfg.bandSetsList[cfg.bndSetNumber][3][0]
 					except:
-						pass
-					# add item to table
-					c = tW.rowCount()
-					# add list items to table
-					tW.setRowCount(c + 1)
-					cfg.utls.addTableItem(tW, p[0], c, 0)
-					cfg.utls.addTableItem(tW, p[1], c, 1)
-					cfg.utls.addTableItem(tW, p[2], c, 2)
-					cfg.utls.addTableItem(tW, p[3], c, 3)
-					cfg.utls.addTableItem(tW, p[4], c, 4)
-					cfg.utls.addTableItem(tW, p[5], c, 5)
-					cfg.utls.addTableItem(tW, MinSize, c, 6)
-					cfg.utls.addTableItem(tW, MaxWidth, c, 7)
-					cfg.utls.addTableItem(tW, RangRad, c, 8)
-					cfg.utls.addTableItem(tW, RBand, c, 9)
-					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " points imported")
-		except Exception, err:
-			cfg.mx.msgErr19()
-			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-
+						cfg.mx.msgWar25(str(cfg.bndSetNumber + 1))
+						return "No"
+					# image CRS
+					bN0 = cfg.utls.selectLayerbyName(imageName, "Yes")
+					iCrs = cfg.utls.getCrs(bN0)
+				else:
+					# image CRS
+					bN0 = cfg.utls.selectLayerbyName(imageName, "Yes")
+					iCrs = cfg.utls.getCrs(bN0)
+				rPSys = cfg.osrSCP.SpatialReference(wkt=iCrs.toWkt())
+				rPSys.AutoIdentifyEPSG()
+				rPRS = rPSys.GetAuthorityCode(None)
+				if str(lPRS) != str(rPRS):
+					# date time for temp name
+					dT = cfg.utls.getTime()
+					reprjShapefile = cfg.tmpDir + "/" + dT + cfg.osSCP.path.basename(pointFile)
+					cfg.utls.repojectShapefile(pointFile, int(lPRS), reprjShapefile, int(rPRS), "wkbPoint")
+					pointFile = reprjShapefile
+				d = cfg.ogrSCP.GetDriverByName("ESRI Shapefile")
+				dr = d.Open(pointFile, 0)
+				iL = dr.GetLayer()
+				iF = iL.GetNextFeature()
+				while iF:
+					g = iF.GetGeometryRef()
+					p = [g.GetX(), g.GetY()]
+					iF.Destroy()
+					iF = iL.GetNextFeature()
+					self.addRandomPointToTable(p)
+				iL = None
+				dr = None
+			except Exception as err:
+				cfg.mx.msgErr19()
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				
 	def removePointFromTable(self):
 		cfg.utls.removeRowsFromTable(cfg.ui.point_tableWidget)
 			

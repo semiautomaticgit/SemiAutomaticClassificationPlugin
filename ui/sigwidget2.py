@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2017 by Luca Congedo
+		copyright			: (C) 2012-2018 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -33,14 +33,15 @@
 """
 
 # Import PyQt libraries
-from PyQt4 import QtGui
+from PyQt5 import QtGui, QtWidgets
+from PyQt5.QtWidgets import QWidget
 # Import FigureCanvas
 import matplotlib
 try:
-	matplotlib.use("Qt4Agg")
+	matplotlib.use("Qt5Agg")
 except:
 	pass
-from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigCanvas
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigCanvas
 # Import Figure
 from matplotlib.figure import Figure
 
@@ -56,14 +57,14 @@ class SigCanvas(FigCanvas):
 		self.ax.set_xticks([])
 		self.ax.set_yticks([])
 
-class SigWidget2(QtGui.QWidget):
+class SigWidget2(QWidget):
 	def __init__(self, parent = None):
 		# Widget initialization
-		QtGui.QWidget.__init__(self, parent)
+		QWidget.__init__(self, parent)
 		# Widget canvas
 		self.sigCanvas = SigCanvas()
 		# Create grid layout
-		self.gridLayout = QtGui.QGridLayout()
+		self.gridLayout = QtWidgets.QGridLayout()
 		# Add widget to grid
 		self.gridLayout.addWidget(self.sigCanvas)
 		# Set layout

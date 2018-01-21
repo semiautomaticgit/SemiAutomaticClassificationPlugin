@@ -1,5 +1,33 @@
 <RCC>
   <qresource prefix="/plugins/semiautomaticclassificationplugin">
+    <file>icons/semiautomaticclassificationplugin_roi_options.png</file>
+    <file>icons/semiautomaticclassificationplugin_post_process_r.png</file>
+    <file>icons/semiautomaticclassificationplugin_roi_tool_r.png</file>
+    <file>icons/semiautomaticclassificationplugin_bandcalc_tool_r.png</file>
+    <file>icons/semiautomaticclassificationplugin_band_processing_r.png</file>
+    <file>icons/semiautomaticclassificationplugin_bandset_tool_r.png</file>
+    <file>icons/semiautomaticclassificationplugin_batch_r.png</file>
+    <file>icons/semiautomaticclassificationplugin_download_arrow_r.png</file>
+    <file>icons/semiautomaticclassificationplugin_class_tool_r.png</file>
+    <file>icons/semiautomaticclassificationplugin_cloud_masking_tool.png</file>
+    <file>icons/semiautomaticclassificationplugin_class_signature_tool.png</file>
+    <file>icons/semiautomaticclassificationplugin_band_processing.png</file>
+    <file>icons/semiautomaticclassificationplugin_band_tools.png</file>
+    <file>icons/semiautomaticclassificationplugin_spectral_distance.png</file>
+    <file>icons/semiautomaticclassificationplugin_home.png</file>
+    <file>icons/semiautomaticclassificationplugin_macroclass_list.png</file>
+    <file>icons/semiautomaticclassificationplugin_roi_list.png</file>
+    <file>icons/semiautomaticclassificationplugin_download_login.png</file>
+    <file>icons/semiautomaticclassificationplugin_download_options.png</file>
+    <file>icons/semiautomaticclassificationplugin_download_search.png</file>
+    <file>icons/semiautomaticclassificationplugin_bandcalc_expression.png</file>
+    <file>icons/semiautomaticclassificationplugin_bandcalc_rules.png</file>
+    <file>icons/semiautomaticclassificationplugin_band_combination_tool.png</file>
+    <file>icons/semiautomaticclassificationplugin_add_bandset_tool.png</file>
+    <file>icons/semiautomaticclassificationplugin_training_input.png</file>
+    <file>icons/semiautomaticclassificationplugin_classification.png</file>
+    <file>icons/semiautomaticclassificationplugin_sentinel3_tool.png</file>
+    <file>icons/semiautomaticclassificationplugin_kmeans_tool.png</file>
     <file>icons/semiautomaticclassificationplugin_stack_raster.png</file>
     <file>icons/semiautomaticclassificationplugin_modis_download_tool.png</file>
     <file>icons/semiautomaticclassificationplugin_modis_tool.png</file>
@@ -98,14 +126,16 @@
     <file>icons/fromGIStoRS.png</file>
     <file>icons/semiautomaticclassificationplugin_accuracy_tool.png</file>
     <file>icons/semiautomaticclassificationplugin_roi_single.png</file>
-    <file>icons/ACCDAR.png</file>
     <file>semiautomaticclassificationplugin.png</file>
     <file>icons/semiautomaticclassificationplugin_bandset_tool.png</file>
     <file>icons/semiautomaticclassificationplugin_class_tool.png</file>
+    <file>icons/semiautomaticclassificationplugin_mosaic_tool.png</file>
     <file>icons/semiautomaticclassificationplugin_roi_tool.png</file>
     <file>icons/semiautomaticclassificationplugin_settings_tool.png</file>
     <file>icons/semiautomaticclassificationplugin_sign_tool.png</file>
+    <file>icons/semiautomaticclassificationplugin_mosaic_tool.png</file>
   </qresource>
+  <qresource prefix="other"/>
   <qresource prefix="pointer">
     <file>icons/pointer/LCS_pointer.png</file>
     <file>icons/pointer/ROI_pointer.png</file>

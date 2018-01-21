@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2017 by Luca Congedo
+		copyright			: (C) 2012-2018 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -32,26 +32,28 @@
 
 """
 
-from PyQt4 import QtGui
-from ui_semiautomaticclassificationplugin import Ui_SemiAutomaticClassificationPlugin
-from ui_semiautomaticclassificationplugin_dock_class import Ui_DockClass
-from ui_semiautomaticclassificationplugin_scatter_plot import Ui_ScatterPlot
-from ui_semiautomaticclassificationplugin_signature_plot import Ui_SpectralSignaturePlot
+from PyQt5 import QtGui
+from PyQt5 import QtWidgets
+from .ui_semiautomaticclassificationplugin import Ui_SemiAutomaticClassificationPlugin
+from .ui_semiautomaticclassificationplugin_dock_class import Ui_DockClass
+from .ui_semiautomaticclassificationplugin_scatter_plot import Ui_ScatterPlot
+from .ui_semiautomaticclassificationplugin_welcome import Ui_SCP_Welcome
+from .ui_semiautomaticclassificationplugin_signature_plot import Ui_SpectralSignaturePlot
 try:
 	cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
 except:
 	pass
 
 # create the dialog
-class SemiAutomaticClassificationPluginDialog(QtGui.QDialog):
+class SemiAutomaticClassificationPluginDialog(QtWidgets.QDialog):
 	def __init__(self):
-		QtGui.QDialog.__init__(self)
+		QtWidgets.QDialog.__init__(self)
 		try:
 			self.setWindowFlags(cfg.QtSCP.Window)
 		except:
 			return
 		# initialize plugin directory
-		self.plgnDir = cfg.QFileInfoSCP(cfg.qgisCoreSCP.QgsApplication.qgisUserDbFilePath()).path() + "/python/plugins/SemiAutomaticClassificationPlugin"
+		self.plgnDir = cfg.QFileInfoSCP(cfg.qgisCoreSCP.QgsApplication.qgisUserDatabaseFilePath()).path() + "/python/plugins/SemiAutomaticClassificationPlugin"
 		# locale name
 		self.lclNm = cfg.QSettingsSCP().value("locale/userLocale")[0:2] 
 		# path to locale
@@ -81,6 +83,9 @@ class SemiAutomaticClassificationPluginDialog(QtGui.QDialog):
 		
 	def classification_layer_combo_2(self, layer):
 		self.ui.classification_name_combo_2.addItem(layer)
+		
+	def classification_layer_combo_3(self, layer):
+		self.ui.classification_name_combo_3.addItem(layer)
 		
 	def classification_report_combo(self, layer):
 		self.ui.classification_report_name_combo.addItem(layer)
@@ -121,6 +126,9 @@ class SemiAutomaticClassificationPluginDialog(QtGui.QDialog):
 	def dilation_raster_combo(self, layer):
 		self.ui.dilation_raster_name_combo.addItem(layer)
 			
+	def cloud_mask_raster_combo(self, layer):
+		self.ui.classification_name_combo_4.addItem(layer)
+			
 	def reference_raster_combo(self, layer):
 		self.ui.reference_raster_name_combo.addItem(layer)
 		
@@ -133,6 +141,9 @@ class SemiAutomaticClassificationPluginDialog(QtGui.QDialog):
 	def class_field_combo_2(self, field):
 		self.ui.class_field_comboBox_2.addItem(field)
 				
+	def class_field_combo_3(self, field):
+		self.ui.class_field_comboBox_3.addItem(field)
+				
 	def reference_field_combo(self, field):
 		self.ui.field_comboBox.addItem(field)
 		
@@ -140,12 +151,12 @@ class SemiAutomaticClassificationPluginDialog(QtGui.QDialog):
 		self.ui.field_comboBox_2.addItem(field)
 		
 # create the dialog
-class DockClassDialog(QtGui.QDockWidget):
+class DockClassDialog(QtWidgets.QDockWidget):
 	def __init__(self, parent, iface):
-		QtGui.QDockWidget.__init__(self)
+		QtWidgets.QDockWidget.__init__(self)
 		# initialize plugin directory
 		try:
-			self.plgnDir = cfg.QFileInfoSCP(cfg.qgisCoreSCP.QgsApplication.qgisUserDbFilePath()).path() + "/python/plugins/SemiAutomaticClassificationPlugin"
+			self.plgnDir = cfg.QFileInfoSCP(cfg.qgisCoreSCP.QgsApplication.qgisUserDatabaseFilePath()).path() + "/python/plugins/SemiAutomaticClassificationPlugin"
 		except:
 			return
 		# locale name
@@ -163,15 +174,15 @@ class DockClassDialog(QtGui.QDockWidget):
 		self.ui.setupUi(self)
 
 # create the dialog
-class ScatterPlotDialog(QtGui.QDialog):
+class ScatterPlotDialog(QtWidgets.QDialog):
 	def __init__(self):
-		QtGui.QDockWidget.__init__(self)
+		QtWidgets.QDockWidget.__init__(self)
 		try:
 			self.setWindowFlags(cfg.QtSCP.Window)
 		except:
 			return
 		# initialize plugin directory
-		self.plgnDir = cfg.QFileInfoSCP(cfg.qgisCoreSCP.QgsApplication.qgisUserDbFilePath()).path() + "/python/plugins/SemiAutomaticClassificationPlugin"
+		self.plgnDir = cfg.QFileInfoSCP(cfg.qgisCoreSCP.QgsApplication.qgisUserDatabaseFilePath()).path() + "/python/plugins/SemiAutomaticClassificationPlugin"
 		# locale name
 		self.lclNm = cfg.QSettingsSCP().value("locale/userLocale")[0:2] 
 		# path to locale
@@ -186,12 +197,12 @@ class ScatterPlotDialog(QtGui.QDialog):
 		self.ui = Ui_ScatterPlot()
 		self.ui.setupUi(self)
 		
-class SpectralSignatureDialog(QtGui.QDialog):
+class SpectralSignatureDialog(QtWidgets.QDialog):
 	def __init__(self):
-		QtGui.QDockWidget.__init__(self)
+		QtWidgets.QDockWidget.__init__(self)
 		self.setWindowFlags(cfg.QtSCP.Window)
 		# initialize plugin directory
-		self.plgnDir = cfg.QFileInfoSCP(cfg.qgisCoreSCP.QgsApplication.qgisUserDbFilePath()).path() + "/python/plugins/SemiAutomaticClassificationPlugin"
+		self.plgnDir = cfg.QFileInfoSCP(cfg.qgisCoreSCP.QgsApplication.qgisUserDatabaseFilePath()).path() + "/python/plugins/SemiAutomaticClassificationPlugin"
 		# locale name
 		self.lclNm = cfg.QSettingsSCP().value("locale/userLocale")[0:2] 
 		# path to locale
@@ -204,4 +215,27 @@ class SpectralSignatureDialog(QtGui.QDialog):
 			if cfg.QtCoreSCP.qVersion() > '4.3.3': 
 				cfg.QtCoreSCP.QCoreApplication.installTranslator(self.trnsltr)
 		self.ui = Ui_SpectralSignaturePlot()
+		self.ui.setupUi(self)
+		
+class WelcomeDialog(QtWidgets.QDialog):
+	def __init__(self):
+		QtWidgets.QDockWidget.__init__(self)
+		try:
+			self.setWindowFlags(cfg.QtSCP.Window)
+		except:
+			return
+		# initialize plugin directory
+		self.plgnDir = cfg.QFileInfoSCP(cfg.qgisCoreSCP.QgsApplication.qgisUserDatabaseFilePath()).path() + "/python/plugins/SemiAutomaticClassificationPlugin"
+		# locale name
+		self.lclNm = cfg.QSettingsSCP().value("locale/userLocale")[0:2] 
+		# path to locale
+		lclPth = "" 
+		if cfg.QFileInfoSCP(self.plgnDir).exists(): 
+			lclPth = self.plgnDir + "/i18n/semiautomaticclassificationplugin_" + self.lclNm + ".qm" 
+		if cfg.QFileInfoSCP(lclPth).exists(): 
+			self.trnsltr = cfg.QtCoreSCP.QTranslator() 
+			self.trnsltr.load(lclPth) 
+			if cfg.QtCoreSCP.qVersion() > '4.3.3': 
+				cfg.QtCoreSCP.QCoreApplication.installTranslator(self.trnsltr)
+		self.ui = Ui_SCP_Welcome()
 		self.ui.setupUi(self)

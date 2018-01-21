@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2017 by Luca Congedo
+		copyright			: (C) 2012-2018 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -32,8 +32,8 @@
 
 """
 
-from qgis.core import *
-from qgis.gui import *
+
+
 cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
 
 class MODISTab:
@@ -43,14 +43,19 @@ class MODISTab:
 		
 	# MODIS input
 	def inputMODIS(self):
-		i = cfg.utls.getOpenFileName(None , cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Select a HDF file"), "", "file .hdf (*.hdf)")
-		cfg.ui.label_217.setText(unicode(i))
+		i = cfg.utls.getOpenFileName(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Select a HDF file"), "", "file .hdf (*.hdf)")
+		cfg.ui.label_217.setText(str(i))
 		self.populateTable(i)
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), unicode(i))
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), str(i))
 	
 	# MODIS conversion
-	def MODIS(self, inputFile, outputDirectory, batch = "No"):
+	def MODIS(self, inputFile, outputDirectory, batch = "No", bandSetNumber = None):
+		if bandSetNumber is None:
+			bandSetNumber = cfg.bndSetNumber
+		if bandSetNumber >= len(cfg.bandSetsList):
+			cfg.mx.msgWar25(bandSetNumber + 1)
+			return "No"
 		if batch == "No":
 			cfg.uiUtls.addProgressBar()
 			# disable map canvas render for speed
@@ -95,7 +100,7 @@ class MODISTab:
 							oNm = pre + iBand + ".tif"
 							outputRaster = out + "/" + oNm
 							outputRasterList.append(outputRaster)
-							tempRaster = cfg.tmpDir + "/" + dT + iBand
+							tempRaster = cfg.tmpDir + "/" + dT + iBand + ".tif"
 							tempRasterList.append(tempRaster)
 							try:
 								coeff = float(l.item(i,1).text())
@@ -118,34 +123,38 @@ class MODISTab:
 				try:
 					cfg.utls.GDALCopyRaster(temp, outputRasterList[bN], "GTiff", cfg.rasterCompression, "DEFLATE -co PREDICTOR=2 -co ZLEVEL=1", resample)
 					cfg.osSCP.remove(temp)
-				except Exception, err:
+				except Exception as err:
+					# logger
+					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 					try:
 						cfg.shutilSCP.copy(temp, outputRasterList[bN])
 						cfg.osSCP.remove(temp)
-					except Exception, err:
+					except Exception as err:
 						# logger
 						if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-					# logger
-					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				bN = bN + 1
 		if cfg.actionCheck == "Yes":
 			# load raster bands
 			for outR in outputRasterList:
 				if cfg.osSCP.path.isfile(outR):
-					cfg.iface.addRasterLayer(outR)
+					cfg.utls.addRasterLayer(outR)
 				else:
 					cfg.mx.msgErr38(outR)
-					cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "WARNING: unable to load raster" + unicode(outR))
+					cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "WARNING: unable to load raster" + str(outR))
 			# create band set
 			if cfg.ui.create_bandset_checkBox.isChecked() is True:
+				if cfg.ui.add_new_bandset_checkBox_5.isChecked() is True:
+					bandSetNumber = cfg.bst.addBandSetTab()
 				cfg.bst.rasterBandName()
-				cfg.bst.setBandSet(bandSetNameList)
-				cfg.bndSetPresent = "Yes"
+				cfg.bst.setBandSet(bandSetNameList, bandSetNumber)
+				cfg.bandSetsList[bandSetNumber][0] = "Yes"
 				if len(bandSetNameList) > 2:
-					cfg.bst.setSatelliteWavelength(cfg.satMODIS)
+					cfg.bst.setSatelliteWavelength(cfg.satMODIS, None, bandSetNumber)
 				else:
-					cfg.bst.setSatelliteWavelength(cfg.satMODIS2)
-				tW = cfg.ui.tableWidget
+					cfg.bst.setSatelliteWavelength(cfg.satMODIS2, None, bandSetNumber)				
+				if bandSetNumber == None:
+					bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
+				tW = eval("cfg.ui.tableWidget__" + cfg.bndSetTabList[bandSetNumber])
 				tW.clearSelection()
 				tW.selectRow(0)
 				tW.selectRow(1)
@@ -195,18 +204,18 @@ class MODISTab:
 				bL[b] = None
 			rD = None
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), unicode(inputRaster))
+			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), str(inputRaster))
 			return "Yes"
 			try:
 				cfg.osSCP.remove(tPMD)
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "files deleted")
-			except Exception, err:
+			except Exception as err:
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-		except Exception, err:
+		except Exception as err:
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + unicode(err))
+			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			return "No"
 
 	# MODIS conversion button
@@ -214,13 +223,13 @@ class MODISTab:
 		if len(cfg.ui.label_217.text()) == 0:
 			cfg.mx.msg14()
 		else:
-			o = cfg.utls.getExistingDirectory(None , cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Select a directory"))
+			o = cfg.utls.getExistingDirectory(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Select a directory"))
 			if len(o) == 0:
 				cfg.mx.msg14()
 			else:
 				self.MODIS(cfg.ui.label_217.text(), o)
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "Perform MODIS conversion: " + unicode(cfg.ui.label_217.text()))
+				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "Perform MODIS conversion: " + str(cfg.ui.label_217.text()))
 		
 	# populate table
 	def populateTable(self, input, batch = "No"):

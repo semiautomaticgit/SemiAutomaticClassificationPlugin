@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2017 by Luca Congedo
+		copyright			: (C) 2012-2018 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -32,23 +32,26 @@
 
 """
 
-from qgis.core import *
+
 from qgis.gui import *
 cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
 
 class ClipMultiplerastersPointer(QgsMapTool):
+
+	rightClicked = cfg.pyqtSignalSCP( ['QgsPointXY'] )
+	leftClicked = cfg.pyqtSignalSCP( ['QgsPointXY'] )
+	
 	def __init__(self, canvas):
 		QgsMapTool.__init__(self, canvas)
 		self.cnvs = canvas	
 		
 	def canvasMoveEvent(self, event):
 		point = self.cnvs.getCoordinateTransform().toMapCoordinates(event.pos())
-		self.emit(cfg.SIGNALSCP("moved"), point)
 		
 	def canvasReleaseEvent(self, event):
 		pnt = self.cnvs.getCoordinateTransform().toMapCoordinates(event.pos())
 		# click
 		if(event.button() == cfg.QtSCP.RightButton):
-			self.emit(cfg.SIGNALSCP("rightClicked"), pnt)
+			self.rightClicked.emit(pnt)
 		else:
-			self.emit(cfg.SIGNALSCP("leftClicked"), pnt)
+			self.leftClicked.emit(pnt)

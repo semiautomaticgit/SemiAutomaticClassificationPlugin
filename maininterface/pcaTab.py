@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2017 by Luca Congedo
+		copyright			: (C) 2012-2018 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -32,8 +32,8 @@
 
 """
 
-from qgis.core import *
-from qgis.gui import *
+
+
 cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
 
 class PcaTab:
@@ -46,44 +46,51 @@ class PcaTab:
 		self.calculatePCA()
 		
 	# calculate PCA
-	def calculatePCA(self, batch = "No", outputDirectory = None):
+	def calculatePCA(self, batch = "No", outputDirectory = None, bandSetNumber = None):
+		if bandSetNumber is None:
+			bandSet = cfg.ui.band_set_comb_spinBox_4.value()
+			bandSetNumber = bandSet - 1
+		if bandSetNumber >= len(cfg.bandSetsList):
+			cfg.mx.msgWar25(bandSetNumber + 1)
+			return "No"
 		if batch == "No":
-			outF = cfg.utls.getExistingDirectory(None , cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Select a directory"))
+			outF = cfg.utls.getExistingDirectory(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Select a directory"))
 		else:
 			outF = outputDirectory
 		if len(outF) > 0:
 			oDir = cfg.utls.makeDirectory(outF)
-			imageName = cfg.imgNm
+			imageName = cfg.bandSetsList[bandSetNumber][8]
 			# if band set
-			if cfg.bndSetPresent == "Yes" and cfg.imgNm == cfg.bndSetNm:
-				# if masked bandset
-				if imageName == cfg.maskRasterNm:
-					bS = cfg.bndSetMaskList
-				else:
+			if cfg.bandSetsList[bandSetNumber][0] == "Yes":
+				ckB = cfg.utls.checkBandSet(bandSetNumber)
+				if ckB == "Yes":
 					bS = cfg.bndSetLst
-				# open input with GDAL
-				bL = []
-				for i in range(0, len(bS)):
-					rD = cfg.gdalSCP.Open(unicode(bS[i]), cfg.gdalSCP.GA_ReadOnly)
-					bL.append(rD)
-			else:
-				# if masked raster
-				if imageName == cfg.maskRasterNm:
-					iR = cfg.maskRstSrc
+					# open input with GDAL
+					bL = []
+					for i in range(0, len(bS)):
+						rD = cfg.gdalSCP.Open(str(bS[i]), cfg.gdalSCP.GA_ReadOnly)
+						bL.append(rD)
 				else:
-					r = cfg.utls.selectLayerbyName(imageName, "Yes")
-					try:
-						iR = r.source()
-						# open input with GDAL
-						rD = cfg.gdalSCP.Open(iR, cfg.gdalSCP.GA_ReadOnly)
-					except Exception, err:
-						# logger
-						if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-						return "No"
+					cfg.mx.msgErr6()
+					# logger
+					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "Error no band set")	
+					return None
+			else:
+				r = cfg.utls.selectLayerbyName(imageName, "Yes")
+				try:
+					iR = r.source()
+					# open input with GDAL
+					rD = cfg.gdalSCP.Open(iR, cfg.gdalSCP.GA_ReadOnly)
+				except Exception as err:
+					# logger
+					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					return "No"
 				# band list
 				bL = cfg.utls.readAllBandsFromRaster(rD)
 			if cfg.ui.num_comp_checkBox.isChecked() is True:
 				numbComp = cfg.ui.pca_components_spinBox.value()
+				if numbComp > len(bL):
+					numbComp = len(bL)
 			else:
 				numbComp = len(bL)
 			if rD is not None:
@@ -93,7 +100,12 @@ class PcaTab:
 				rDC= None
 				
 	# PCA calculation
-	def PCACalculation(self, inputGDALRaster, bandList, outputDirectory, numberComponents = 1, NoDataValue = None, batch = "No"):
+	def PCACalculation(self, inputGDALRaster, bandList, outputDirectory, numberComponents = 1, NoDataValue = None, batch = "No", bandSetNumber = None):
+		if bandSetNumber is None:
+			bandSetNumber = cfg.bndSetNumber
+		if bandSetNumber >= len(cfg.bandSetsList):
+			cfg.mx.msgWar25(bandSetNumber + 1)
+			return "No"
 		if batch == "No":
 			cfg.uiUtls.addProgressBar()
 			# disable map canvas render for speed
@@ -105,8 +117,6 @@ class PcaTab:
 		bL =bandList
 		# date time for temp name
 		dT = cfg.utls.getTime()
-		tPMN = dT + cfg.calcRasterNm + ".tif"
-		tPMD = cfg.tmpDir + "/" + tPMN
 		tempRasterList = []
 		for i in range(1, numberComponents + 1):
 			tempRasterList.append(cfg.tmpDir + "/" + dT + cfg.PCANm + str(i) + ".tif")
@@ -120,11 +130,11 @@ class PcaTab:
 		else:
 			nD = None
 		cfg.rasterPixelCountPCA = {}
-		o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.rasterPixelCount, None, None, None, None, 0, None, cfg.NoDataVal, "No", nD, None, "Sum")
+		o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.rasterPixelCount, None, None, None, None, 0, None, cfg.NoDataVal, "No", nD, cfg.bandSetsList[bandSetNumber][6], "Sum")
 		# calculate band mean
 		for i in range(0, len(bL)):
 			cfg.rasterPixelCountPCA["MEAN_BAND_" + str(i)] = cfg.rasterPixelCountPCA["SUM_BAND_" + str(i)] / cfg.rasterPixelCountPCA["COUNT_BAND_" + str(i)]
-		o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.rasterCovariance, None, None, None, None, 0, None, cfg.NoDataVal, "No", nD, None, "Covariance")
+		o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.rasterCovariance, None, None, None, None, 0, None, cfg.NoDataVal, "No", nD, cfg.bandSetsList[bandSetNumber][6], "Covariance")
 		covM = self.createCovarianceMatrix(bL)
 		corrM = self.createCorrelationMatrix(covM)
 		comp, totalVariance, totalVarianceCumulative, eigenValues = self.calculateEigenVectors(covM)
@@ -133,18 +143,18 @@ class PcaTab:
 		totalVarianceCumulative = totalVarianceCumulative[:numberComponents]
 		eigenValues =eigenValues[:numberComponents]
 		# calculation
-		o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.calculatePCABands, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", comp, None, "No")
+		o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.calculatePCABands, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", comp, cfg.bandSetsList[bandSetNumber][6], "No")
 		for b in range(0, len(oMR)):
 			oMR[b] = None
 		# copy raster
 		if o != "No":
 			for r in tempRasterList:
-				out = outputDirectory + "/" + unicode(cfg.osSCP.path.basename(r)[21:])
+				out = outputDirectory + "/" + str(cfg.osSCP.path.basename(r)[21:])
 				if cfg.rasterCompression != "No":
 					try:
 						cfg.utls.GDALCopyRaster(r, out, "GTiff", cfg.rasterCompression, "DEFLATE -co PREDICTOR=2 -co ZLEVEL=1")
 						cfg.osSCP.remove(r)
-					except Exception, err:
+					except Exception as err:
 						cfg.shutilSCP.copy(r, out)
 						cfg.osSCP.remove(r)
 						# logger
@@ -153,10 +163,11 @@ class PcaTab:
 					cfg.shutilSCP.copy(r, out)
 					cfg.osSCP.remove(r)
 				# add raster to layers
-				cfg.iface.addRasterLayer(unicode(out), unicode(cfg.osSCP.path.basename(out)))
+				cfg.utls.addRasterLayer(str(out), str(cfg.osSCP.path.basename(out)))
 		cfg.uiUtls.updateBar(90)		
 		# display parameters
-		self.displayParameters(covM, corrM, comp, totalVariance, totalVarianceCumulative, eigenValues, outputDirectory)
+		self.displayParameters(covM, corrM, comp, totalVariance, totalVarianceCumulative, eigenValues, outputDirectory, str(cfg.osSCP.path.basename(out)))
+		cfg.ui.toolBox_PCA.setCurrentIndex(1)
 		cfg.uiUtls.updateBar(100)
 		if batch == "No":
 			# enable map canvas render
@@ -166,19 +177,19 @@ class PcaTab:
 		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " PCA calculated")
 	
 	# display PCA parameters
-	def displayParameters(self, covarianceMatrix, correlationMatrix, components, totalVariance, totalVarianceCumulative, eigenValues, outputDirectory):
-		tblOut = outputDirectory + "/" + cfg.PCAReportNm
+	def displayParameters(self, covarianceMatrix, correlationMatrix, components, totalVariance, totalVarianceCumulative, eigenValues, outputDirectory, outputFileName = None):
+		tblOut = outputDirectory + "/" + str(outputFileName) + cfg.PCAReportNm
 		try:
 			l = open(tblOut, 'w')
-		except Exception, err:
+		except Exception as err:
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			return "No"
-		t = str(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Principal Components Analysis')) + "	" + str("\n") + str("\n")
+		t = str(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Principal Components Analysis')) + "	" + str("\n") + str("\n")
 		l.write(t)
-		t = str(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Covariance matrix')) + "	"
+		t = str(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Covariance matrix')) + "	"
 		l.write(str(t) + str("\n"))
-		tB = str(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Bands')) + "	"
+		tB = str(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Bands')) + "	"
 		for y in range(0, covarianceMatrix.shape[0]):
 			tB = tB + str(y + 1) + "	"
 		l.write(str(tB) + str("\n"))
@@ -188,7 +199,7 @@ class PcaTab:
 				t = t + str(covarianceMatrix[y,x]) + "	"
 			l.write(str(t) + str("\n"))
 		l.write(str("\n"))
-		t = str(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Correlation matrix')) + "	"
+		t = str(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Correlation matrix')) + "	"
 		l.write(str(t) + str("\n"))
 		l.write(str(tB) + str("\n"))
 		for y in range(0, correlationMatrix.shape[0]):
@@ -197,11 +208,11 @@ class PcaTab:
 				t = t + str(correlationMatrix[y,x]) + "	"
 			l.write(str(t) + str("\n"))
 		l.write(str("\n"))
-		t = str(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Eigen vectors')) + "	"
+		t = str(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Eigen vectors')) + "	"
 		l.write(str(t) + str("\n"))
-		tB = str(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Bands')) + "	"
+		tB = str(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Bands')) + "	"
 		for y in range(0, len(components)):
-			tB = tB + str(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Vector_')) + str(y + 1) + "	"
+			tB = tB + str(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Vector_')) + str(y + 1) + "	"
 		l.write(str(tB) + str("\n"))
 		for i in range(0, len(components)):
 			t = str(i + 1) + "	"
@@ -209,7 +220,7 @@ class PcaTab:
 				t = t + str(v[i]) + "	"
 			l.write(str(t) + str("\n"))
 		l.write(str("\n"))
-		t = str(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Eigen values')) + "	" + str(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Accounted variance')) + "	" + str(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", 'Cumulative variance')) + "	"
+		t = str(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Eigen values')) + "	" + str(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Accounted variance')) + "	" + str(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Cumulative variance')) + "	"
 		l.write(str(t) + str("\n"))
 		for i in range(0, len(eigenValues)):
 			t = str(eigenValues[i]) + "	" + str(totalVariance[i]) + "	" + str(totalVarianceCumulative[i])
@@ -221,15 +232,15 @@ class PcaTab:
 				eM = f.read()
 				cfg.ui.report_textBrowser_2.setText(str(eM))
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " error matrix calculated")
-		except Exception, err:
+			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " PCA calculated")
+		except Exception as err:
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 	
 	# create covariance matrix
 	def createCovarianceMatrix(self, bandList):
 		m = cfg.np.zeros((len(bandList), len(bandList)))
-		comb = cfg.itertoolsSCP.combinations(range(0, len(bandList)), 2)
+		comb = cfg.itertoolsSCP.combinations(list(range(0, len(bandList))), 2)
 		for i in comb:
 			v = cfg.rasterPixelCountPCA["COV_BAND_" + str(i[0]) + "-" + str(i[1])]
 			m.itemset((int(i[0]), int(i[1])), v)

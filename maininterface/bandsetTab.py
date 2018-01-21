@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2017 by Luca Congedo
+		copyright			: (C) 2012-2018 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -32,8 +32,8 @@
 
 """
 
-from qgis.core import *
-from qgis.gui import *
+
+
 cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
 
 class BandsetTab:
@@ -55,17 +55,29 @@ class BandsetTab:
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " units added")
 			
+	# set Band unit
 	def setBandUnit(self):
-		self.readBandSet(cfg.bndSetPresent)
+		bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
+		tW = eval("cfg.ui.tableWidget__" + cfg.bndSetTabList[bandSetNumber])
+		c = tW.rowCount()
+		cfg.BandTabEdited = "No"
+		tW.blockSignals(True)
+		for i in range(0, c):
+			cfg.utls.setTableItem(tW, i, 4, cfg.ui.unit_combo.currentText())
+		tW.blockSignals(False)
+		cfg.BandTabEdited = "Yes"
+		self.readBandSet("Yes")
 			
 	def satelliteWavelength(self):
 		self.setSatelliteWavelength()
 			
 	# set satellite wavelengths
-	def setSatelliteWavelength(self, satelliteName = None, bandList = None):
+	def setSatelliteWavelength(self, satelliteName = None, bandList = None, bandSetNumber = None):
 		if satelliteName is None:
 			satelliteName = cfg.ui.wavelength_sat_combo.currentText()
-		tW = cfg.ui.tableWidget
+		if bandSetNumber == None:
+			bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
+		tW = eval("cfg.ui.tableWidget__" + cfg.bndSetTabList[bandSetNumber])
 		c = tW.rowCount()
 		wl = []
 		tW.blockSignals(True)
@@ -78,73 +90,119 @@ class BandsetTab:
 		elif satelliteName == cfg.satASTER:
 			wl = [0.560, 0.660, 0.810, 1.650, 2.165, 2.205, 2.260, 2.330, 2.395, 8.300, 8.650, 9.100, 10.600, 11.300]
 			id = cfg.ui.unit_combo.findText(cfg.wlMicro)
+			bl = ['01', '02', '3N', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14']
 		# Landsat center wavelength calculated from http://landsat.usgs.gov/band_designations_landsat_satellites.php
 		elif satelliteName == cfg.satLandsat8:
 			wl = [0.48, 0.56, 0.655, 0.865, 1.61, 2.2]
 			id = cfg.ui.unit_combo.findText(cfg.wlMicro)
+			bl = ['02', '03', '04', '05', '06', '07']
 		elif satelliteName == cfg.satLandsat7:
 			wl = [0.485, 0.56, 0.66, 0.835, 1.65, 2.22]
 			id = cfg.ui.unit_combo.findText(cfg.wlMicro)
+			bl = ['01', '02', '03', '04', '05', '07']
 		elif satelliteName == cfg.satLandsat45:
 			wl = [0.485, 0.56, 0.66, 0.83, 1.65, 2.215]
 			id = cfg.ui.unit_combo.findText(cfg.wlMicro)	
+			bl = ['01', '02', '03', '04', '05', '07']
 		elif satelliteName == cfg.satLandsat13:
 			wl = [0.55, 0.65, 0.75, 0.95]
 			id = cfg.ui.unit_combo.findText(cfg.wlMicro)
+			bl = ['04', '05', '06', '07']
 		# MODIS center wavelength calculated from https://lpdaac.usgs.gov/dataset_discovery/modis
 		elif satelliteName == cfg.satMODIS:
 			wl = [0.469, 0.555, 0.645, 0.858, 1.24, 1.64, 2.13]
 			id = cfg.ui.unit_combo.findText(cfg.wlMicro)
+			bl = ['03', '04', '01', '02', '05', '06', '07']
 		elif satelliteName == cfg.satMODIS2:
 			wl = [0.645, 0.858]
 			id = cfg.ui.unit_combo.findText(cfg.wlMicro)
+			bl = ['01', '02']
 		# RapidEye center wavelength calculated from http://www.blackbridge.com/rapideye/products/ortho.htm
 		elif satelliteName == cfg.satRapidEye:
 			wl = [0.475, 0.555, 0.6575, 0.71, 0.805]
 			id = cfg.ui.unit_combo.findText(cfg.wlMicro)
+			bl = ['01', '02', '03', '04', '05']
 		# SPOT center wavelength calculated from http://www.astrium-geo.com/en/194-resolution-and-spectral-bands
 		elif satelliteName == cfg.satSPOT4 or satelliteName == cfg.satSPOT5:
 			wl = [0.545, 0.645, 0.835, 1.665]
 			id = cfg.ui.unit_combo.findText(cfg.wlMicro)
+			bl = ['01', '02', '03', '04']
 		elif satelliteName == cfg.satSPOT6:
 			wl = [0.485, 0.56, 0.66, 0.825]
 			id = cfg.ui.unit_combo.findText(cfg.wlMicro)
+			bl = ['01', '02', '03', '04']
 		# Pléiades center wavelength calculated from http://www.astrium-geo.com/en/3027-pleiades-50-cm-resolution-products
 		elif satelliteName == cfg.satPleiades:
 			wl = [0.49, 0.56, 0.65, 0.84]
 			id = cfg.ui.unit_combo.findText(cfg.wlMicro)
+			bl = ['01', '02', '03', '04']
 		# QuickBird center wavelength calculated from http://www.digitalglobe.com/resources/satellite-information
 		elif satelliteName == cfg.satQuickBird:
 			wl = [0.4875, 0.543, 0.65, 0.8165]
 			id = cfg.ui.unit_combo.findText(cfg.wlMicro)
+			bl = ['01', '02', '03', '04']
 		# WorldView-2 center wavelength calculated from http://www.digitalglobe.com/resources/satellite-information
 		elif satelliteName == cfg.satWorldView23:
 			wl = [0.425, 0.48, 0.545, 0.605, 0.66, 0.725, 0.8325, 0.95]
 			id = cfg.ui.unit_combo.findText(cfg.wlMicro)
+			bl = ['01', '02', '03', '04', '05', '06', '07', '08']
 		# GeoEye-1 center wavelength calculated from http://www.digitalglobe.com/resources/satellite-information
 		elif satelliteName == cfg.satGeoEye1:
 			wl = [0.48, 0.545, 0.6725, 0.85]
 			id = cfg.ui.unit_combo.findText(cfg.wlMicro)
+			bl = ['01', '02', '03', '04']
 		# Sentinel-2 center wavelength from https://sentinel.esa.int/documents/247904/685211/Sentinel-2A+MSI+Spectral+Responses
 		elif satelliteName == cfg.satSentinel2:
 			wl = [0.490, 0.560, 0.665, 0.705, 0.740, 0.783, 0.842, 0.865, 1.610, 2.190]
+			bl = ['02','03','04','05','06','07','08','8a','11','12']
+			id = cfg.ui.unit_combo.findText(cfg.wlMicro)
+		# Sentinel-3 center wavelength from Sentinel-3 xfdumanifest.xml
+		elif satelliteName == cfg.satSentinel3:
+			wl = [0.400, 0.4125, 0.4425, 0.490, 0.510, 0.560, 0.620, 0.665, 0.67375, 0.68125, 0.70875, 0.75375, 0.76125, 0.764375, 0.7675, 0.77875, 0.865, 0.885, 0.900, 0.940, 1.020]
+			bl = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21']
 			id = cfg.ui.unit_combo.findText(cfg.wlMicro)
 		cfg.BandTabEdited = "No"
-		b = 0
 		if bandList is None:
-			for i in wl:
-				if b < c:
-					tW.item(b, 1).setText(str(float(i)))
-					b = b + 1
+			vals = []
+			for i in range(0, c):
+				try:
+					b = bl.index(tW.item(i, 0).text().lower().split(".")[0][-2:])
+					val = float(wl[b])
+					if val not in vals:
+						tW.item(i, 1).setText(str(val))					
+						vals.append(val)
+					else:
+						tW.item(i, 1).setText(str(i))
+				except:
+					try:
+						b = bl.index(tW.item(i, 0).text().lower().split(".")[0][-2:].lstrip('0'))				
+						val = float(wl[b])
+						if val not in vals:
+							tW.item(i, 1).setText(str(val))					
+							vals.append(val)
+						else:
+							tW.item(i, 1).setText(str(i))
+					except:
+						try:
+							val = float(wl[i])
+							if val not in vals:
+								tW.item(i, 1).setText(str(val))					
+								vals.append(val)
+							else:
+								tW.item(i, 1).setText(str(i))							
+						except:
+							pass
 		else:
+			b = 0
 			for n in bandList:
 				i = wl[n - 1]
 				tW.item(b, 1).setText(str(float(i)))
 				b = b + 1
 		tW.blockSignals(False)
 		cfg.BandTabEdited = "Yes"
+		cfg.bst.orderByWavelength(bandSetNumber)
 		cfg.ui.unit_combo.setCurrentIndex(id)
-		self.readBandSet(cfg.bndSetPresent)
+		self.readBandSet("Yes")
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " satellite" + str(satelliteName))
 			
@@ -153,10 +211,12 @@ class BandsetTab:
 		self.addFileToBandSet()
 		
 	# add file to band set
-	def addFileToBandSet(self, batch = "No", fileListString = None, wavelengthString = None, multiplicativeFactorString = None, additiveFactorString = None):
-		tW = cfg.ui.tableWidget
+	def addFileToBandSet(self, batch = "No", fileListString = None, wavelengthString = None, multiplicativeFactorString = None, additiveFactorString = None, bandSetNumber = None):		
+		if bandSetNumber == None:
+			bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
+		tW = eval("cfg.ui.tableWidget__" + cfg.bndSetTabList[bandSetNumber])
 		if batch == "No":
-			files = cfg.utls.getOpenFileNames(None , cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Select a raster"), "", "Raster (*.*)")
+			files = cfg.utls.getOpenFileNames(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Select a raster"), "", "Raster (*.*)")
 		else:
 			cfg.utls.clearTable(tW)
 			fileList = fileListString.split(",")
@@ -182,35 +242,36 @@ class BandsetTab:
 		if len(files) == 1:
 			try:
 				iBC = cfg.utls.getNumberBandRaster(files[0])
-			except Exception, err:
+			except Exception as err:
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				cfg.mx.msgErr25()
 				return "No"
 			if iBC > 1:
-				r = cfg.utls.addRasterLayer(files[0], cfg.osSCP.path.basename(files[0]))
+				r =cfg.utls.addRasterLayer(files[0], cfg.osSCP.path.basename(files[0]))
 				cfg.utls.clearTable(tW)
+				cfg.QtWidgetsSCP.qApp.processEvents()
 				cfg.ipt.checkRefreshRasterLayer()
 				# load project image name in combo
-				id = cfg.uidc.raster_name_combo.findText(cfg.osSCP.path.basename(files[0]))
-				cfg.uidc.raster_name_combo.setCurrentIndex(id)
+				id = cfg.ui.image_raster_name_combo.findText(r.name())
+				cfg.ui.image_raster_name_combo.setCurrentIndex(id)
 				return "Yes"
 		# check if single raster
-		if c > 0 and cfg.bndSetPresent == "No":
+		if c > 0 and cfg.bandSetsList[bandSetNumber][0] == "No":
 			cfg.utls.clearTable(tW)
 		for i in files:
 			check = "Yes"
 			try:
 				iBC = cfg.utls.getNumberBandRaster(i)
-			except Exception, err:
+			except Exception as err:
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				cfg.mx.msgErr25()
 				iBC = None
 				check = "No"
 			if iBC == 1 and check == "Yes":
-				r = cfg.utls.addRasterLayer(i, cfg.osSCP.path.basename(i))
-				itN = cfg.osSCP.path.basename(i)
+				r =cfg.utls.addRasterLayer(i, cfg.osSCP.path.basename(i))
+				itN = r.name()
 				# count table rows
 				c = tW.rowCount()
 				# add list items to table
@@ -240,101 +301,149 @@ class BandsetTab:
 				else:
 					v = "0"
 				cfg.utls.addTableItem(tW, v, c, 3)
+				cfg.utls.addTableItem(tW, cfg.ui.unit_combo.currentText(), c, 4)
+				cfg.utls.addTableItem(tW, "", c, 5)
 		tW.blockSignals(False)
 		cfg.bst.rasterBandName()
 		self.readBandSet("Yes")
-		cfg.rstrNm = cfg.bndSetNm
-		cfg.imgNm = cfg.rstrNm
 		cfg.BandTabEdited = "Yes"
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " band set changed n. of bands" + str(c))
 			
 	# add band to band set
-	def addBandToSet(self):
-		tW = cfg.ui.tableWidget
+	def addBandToSet(self):	
+		bandSetNumber = None
+		if bandSetNumber == None:
+			bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
+		tW = eval("cfg.ui.tableWidget__" + cfg.bndSetTabList[bandSetNumber])
 		c = tW.rowCount()
 		# check if single raster
-		if c > 0 and cfg.bndSetPresent == "No":
+		if c > 0 and cfg.bandSetsList[bandSetNumber][0] == "No":
 			pass
 		else:
-			# checklist
-			l = cfg.ui.raster_listView
-			# count rows in checklist
-			lc = l.model().rowCount()
+			l = cfg.ui.bands_tableWidget
+			c = l.rowCount()
+			s = l.selectedItems()
+			ns  = []
+			for i in range (0, len(s)):
+				ns.append(s[i].row())
+			lc = list(set(ns))
 			cfg.BandTabEdited = "No"
 			tW.blockSignals(True)
-			for b in range(0, lc):
+			if len(list(cfg.bandSetsList[bandSetNumber][4])) > 0:
+				v = max(cfg.bandSetsList[bandSetNumber][4])
+			else:
+				v = 0
+			for b in lc:
 				# count table rows
 				c = tW.rowCount()
-				# If checkbox is activated
-				if cfg.bndMdl.item(b).checkState() == 2:
-					# name of item of list
-					itN = cfg.bndMdl.item(b).text()
-					# add list items to table
-					tW.setRowCount(c + 1)
-					cfg.utls.addTableItem(tW, itN, c, 0)
-					if len(cfg.bndSetWvLn.values()) > 0:
-						v = max(cfg.bndSetWvLn.values()) + 1
-					else:
-						v = c + 1
-					cfg.utls.addTableItem(tW, str(float(v)), c, 1)
-					cfg.utls.addTableItem(tW, "1", c, 2)
-					cfg.utls.addTableItem(tW, "0", c, 3)
+				v = v + 1
+				# name of item of list
+				itN = l.item(b, 0).text()
+				# add list items to table
+				tW.setRowCount(c + 1)
+				cfg.utls.addTableItem(tW, itN, c, 0)
+				cfg.utls.addTableItem(tW, str(float(v)), c, 1)
+				cfg.utls.addTableItem(tW, "1", c, 2)
+				cfg.utls.addTableItem(tW, "0", c, 3)
+				cfg.utls.addTableItem(tW, cfg.ui.unit_combo.currentText(), c, 4)
+				cfg.utls.addTableItem(tW, "", c, 5)
 			tW.blockSignals(False)
 			self.readBandSet("Yes")
-			cfg.rstrNm = cfg.bndSetNm
-			cfg.imgNm = cfg.rstrNm
 			cfg.BandTabEdited = "Yes"
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " band set changed n. of bands" + str(lc))
 		
 	# set all bands to state 0 or 2
 	def allBandSetState(self, value):
-		# checklist
-		l = cfg.ui.raster_listView
-		# count rows in checklist
-		c = l.model().rowCount()
-		for b in range(0, c):
-			if cfg.actionCheck == "Yes":
-				cfg.bndMdl.item(b).setCheckState(value)
-				cfg.uiUtls.updateBar((b+1) * 100 / (c))
-			else:
-				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " all bands cancelled")
-				
+		tW = cfg.ui.bands_tableWidget
+		c = tW.rowCount()
+		if value == 0:
+			tW.clearSelection() 
+		else:
+			v = list(range(0, c))
+			cfg.utls.selectRowsInTable(tW, v)
+		
+	# set raster name as band set
+	def rasterLayerName(self):
+		if cfg.rasterComboEdited == "Yes":
+			imgNm = cfg.ui.image_raster_name_combo.currentText()
+			# set input
+			rLay = cfg.utls.selectLayerbyName(imgNm)
+			if rLay is not None:
+				cfg.bst.clearBandSet("No", "No")
+				cfg.bst.rasterToBandName(imgNm)
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "input raster: " + str(imgNm))
+			
 	# clear the band set
 	def clearBandSetAction(self):
 		self.clearBandSet()
 		
 	# clear the band set
-	def clearBandSet(self, question = "Yes", refresh = "Yes"):
+	def clearBandSet(self, question = "Yes", refresh = "Yes", bandSetNumber = None):
 		if question == "Yes":
 			# ask for confirm
-			a = cfg.utls.questionBox(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Clear band set"), cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Are you sure you want to clear the band set?"))
+			a = cfg.utls.questionBox(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Clear band set"), cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Are you sure you want to clear the band set?"))
 		else:
 			a = "Yes"
-		if a == "Yes":
-			tW = cfg.ui.tableWidget
+		if a == "Yes":	
+			if bandSetNumber == None:
+				bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
+			tW = eval("cfg.ui.tableWidget__" + cfg.bndSetTabList[bandSetNumber])
 			cfg.BandTabEdited = "No"
 			cfg.utls.clearTable(tW)
 			cfg.BandTabEdited = "Yes"
-			# band set unit
-			cfg.bndSetUnit = {}
-			# band set name list
-			cfg.bndSet = []
-			# band set wavelength
-			cfg.bndSetWvLn = {}
-			cfg.bndSetMultiFactors = {}
-			cfg.bndSetAddFactors = {}
+			# band set list
+			try:
+				cfg.bandSetsList[bandSetNumber] = []
+			except:
+				pass
 			if refresh == "Yes":
 				# read band set
-				self.readBandSet("No", refresh)
+				self.readBandSet("Yes", refresh)
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " band set cleared")
 		
+	# order by wavelength
+	def orderByWavelength(self, bandSetNumber):
+		tW = eval("cfg.ui.tableWidget__" + cfg.bndSetTabList[bandSetNumber])
+		cfg.BandTabEdited = "No"
+		tW.blockSignals(True)		
+		nm = []
+		wvl = []
+		add = []
+		mul = []
+		id = []
+		c = tW.rowCount()
+		for b in range(0, c):
+			nm.append(tW.item(b, 0).text())
+			wvl.append(float(tW.item(b, 1).text()))
+			mul.append(tW.item(b, 2).text())
+			add.append(tW.item(b, 3).text())
+		if wvl is not None:
+			# sort items
+			b = 0
+			for i in sorted(wvl):
+				x = wvl.index(i)
+				cfg.utls.addTableItem(tW, nm[x], b, 0, "No")
+				cfg.utls.addTableItem(tW, str(float(i)), b, 1)
+				cfg.utls.addTableItem(tW, str(mul[x]), b, 2)
+				cfg.utls.addTableItem(tW, str(add[x]), b, 3)
+				b = b + 1
+			tW.show()
+			self.readBandSet("Yes")
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ordered bands")
+		tW.blockSignals(False)
+		cfg.BandTabEdited = "Yes"
+		
 	# band set edited
 	def editedBandSet(self, row, column):
-		tW = cfg.ui.tableWidget
+		bandSetNumber = None
+		if bandSetNumber == None:
+			bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
+		tW = eval("cfg.ui.tableWidget__" + cfg.bndSetTabList[bandSetNumber])
 		if cfg.BandTabEdited == "Yes" and column == 1:
 			# check if bandset is empty
 			c = tW.rowCount()
@@ -342,53 +451,33 @@ class BandsetTab:
 			try:
 				w = str(float(tW.item(row, column).text()))
 			except:
-				w = str(float(cfg.bndSetWvLn["WAVELENGTH_" + str(row + 1)]))
+				w = str(float(cfg.bandSetsList[bandSetNumber][4][row]))
 			cfg.utls.setTableItem(tW, row, column, w)
 			tW.show()
 			if c == 0:
-				self.readBandSet()
-			elif float(tW.item(row, column).text()) in cfg.bndSetWvLn.values():
+				self.readBandSet("Yes")
+			elif float(tW.item(row, column).text()) in cfg.bandSetsList[bandSetNumber][4]:
 				cfg.mx.msgWar7()
-				w = str(float(cfg.bndSetWvLn["WAVELENGTH_" + str(row + 1)]))
+				w = str(float(cfg.bandSetsList[bandSetNumber][4][row]))
 				cfg.utls.setTableItem(tW, row, column, w)
 				tW.show()
 			else:
-				# order by wavelength
-				nm = []
-				wvl = []
-				id = []
-				for b in range(0, c):
-					nm.append(tW.item(b, 0).text())
-					wvl.append(float(tW.item(b, 1).text()))
-				if wvl is not None:
-					tW.clearContents()
-					# sort items
-					b = 0
-					for i in sorted(wvl):
-						x = wvl.index(i)
-						cfg.utls.addTableItem(tW, nm[x], b, 0, "No")
-						cfg.utls.addTableItem(tW, str(float(i)), b, 1)
-						b = b + 1
-					tW.show()
-					self.readBandSet(cfg.bndSetPresent)
-					cfg.BandTabEdited = "Yes"
-					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " band edited; bands n. " + str(c))
+				cfg.bst.orderByWavelength(bandSetNumber)
 			cfg.BandTabEdited = "Yes"
 		elif cfg.BandTabEdited == "Yes" and column == 2:
 			# check if bandset is empty
 			c = tW.rowCount()
 			if c == 0:
-				self.readBandSet()
+				self.readBandSet("No")
 			else:
 				cfg.BandTabEdited = "No"
 				try:
 					test = float(tW.item(row, column).text())
 					cfg.utls.addTableItem(tW, str(tW.item(row, column).text()), row, column)
 				except:
-					cfg.utls.addTableItem(tW, str(cfg.bndSetMultiFactors["MULTIPLICATIVE_FACTOR_" + str(row + 1)]), row, column)
+					cfg.utls.addTableItem(tW, str(cfg.bandSetsList[bandSetNumber][6][0][row]), row, column)
 				tW.show()
-				self.readBandSet(cfg.bndSetPresent)
+				self.readBandSet("No")
 				cfg.BandTabEdited = "Yes"
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " band edited; bands n. " + str(c))
@@ -396,77 +485,238 @@ class BandsetTab:
 			# check if bandset is empty
 			c = tW.rowCount()
 			if c == 0:
-				self.readBandSet()
+				self.readBandSet("No")
 			else:
 				cfg.BandTabEdited = "No"
 				try:
 					test = float(tW.item(row, column).text())
 					cfg.utls.addTableItem(tW, str(tW.item(row, column).text()), row, column)
 				except:
-					cfg.utls.addTableItem(tW, str(cfg.bndSetAddFactors["ADDITIVE_FACTOR_" + str(row + 1)]), row, column)
+					cfg.utls.addTableItem(tW, str(cfg.bandSetsList[bandSetNumber][6][1][row]), row, column)
 				tW.show()
-				self.readBandSet(cfg.bndSetPresent)
+				self.readBandSet("No")
 				cfg.BandTabEdited = "Yes"
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " band edited; bands n. " + str(c))
+		elif cfg.BandTabEdited == "Yes" and column == 4:
+			cfg.BandTabEdited = "No"
+			cfg.utls.addTableItem(tW, str(cfg.bst.unitNameConversion(cfg.bandSetsList[bandSetNumber][5], "Yes")), row, column)
+			cfg.BandTabEdited = "Yes"
+		elif cfg.BandTabEdited == "Yes" and column == 5:
+			cfg.BandTabEdited = "No"
+			cfg.utls.addTableItem(tW, str(cfg.bandSetsList[bandSetNumber][8]), row, column)
+			cfg.BandTabEdited = "Yes"
+		elif cfg.BandTabEdited == "Yes" and column == 0:
+			cfg.BandTabEdited = "No"
+			cfg.utls.addTableItem(tW, str(cfg.bandSetsList[bandSetNumber][3][row]), row, column)
+			cfg.BandTabEdited = "Yes"
 		
-	def readBandSet(self, bandset = "Yes", refresh = "Yes"):
-		tW = cfg.ui.tableWidget
-		# check if bandset is empty
-		c = tW.rowCount()
-		cfg.bandsetCount = c
-		cfg.bndSetPresent = bandset
-		# band set name list
-		cfg.bndSet = []
-		# band set wavelength
-		cfg.bndSetWvLn = {}
-		# band set multiplicative and additive factors
-		cfg.bndSetMultiFactors = {}
-		cfg.bndSetAddFactors = {}
-		cfg.bndSetMultiFactorsList = []
-		cfg.bndSetAddFactorsList = []
-		cfg.bndSetMultAddFactorsList = []
-		if c == 0:
-			cfg.bndSetPresent = "No"
-			if refresh == "Yes":
-				cfg.ipt.refreshRasterLayer()
+	# tab band set changed
+	def tabBandSetChanged(self, index):
+		if cfg.BandTabEdited == "Yes":
+			cfg.bndSetNumber = index
+			t = cfg.ui.Band_set_tabWidget.count()
+			cfg.bndSetTabList = []
+			for i in range(0, t):
+				cfg.bndSetTabList.append(str(cfg.ui.Band_set_tabWidget.widget(i).objectName()).split("__")[1])
+				cfg.ui.Band_set_tabWidget.setTabText(i, cfg.bandSetName + str(i + 1))
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " changed tab band set")
+			cfg.bst.readBandSet("Yes")
+		
+	# select band set tab
+	def selectBandSetTab(self, index):
+		t = len(cfg.bndSetTabList)
+		if index >= t:
+			cfg.mx.msgErr62(str(index + 1))
 		else:
-			for b in range(0, c):
-				cfg.bndSet.append(tW.item(b, 0).text())
-				cfg.bndSetWvLn["WAVELENGTH_{0}".format(b + 1)] = float(tW.item(b, 1).text())
-				try:
-					cfg.bndSetMultiFactors["MULTIPLICATIVE_FACTOR_{0}".format(b + 1)] = float(tW.item(b, 2).text())
-				except:
-					cfg.bndSetMultiFactors["MULTIPLICATIVE_FACTOR_{0}".format(b + 1)] = 1
-				try:
-					cfg.bndSetAddFactors["ADDITIVE_FACTOR_{0}".format(b + 1)] = float(tW.item(b, 3).text())
-				except:
-					cfg.bndSetAddFactors["ADDITIVE_FACTOR_{0}".format(b + 1)] = 0
-				cfg.bndSetMultiFactorsList.append(cfg.bndSetMultiFactors["MULTIPLICATIVE_FACTOR_{0}".format(b + 1)])
-				cfg.bndSetAddFactorsList.append(cfg.bndSetAddFactors["ADDITIVE_FACTOR_{0}".format(b + 1)])
-				cfg.bndSetMultAddFactorsList.append([cfg.bndSetMultiFactors["MULTIPLICATIVE_FACTOR_{0}".format(b + 1)], cfg.bndSetAddFactors["ADDITIVE_FACTOR_{0}".format(b + 1)]])
-			if bandset == "Yes":
-				cfg.ipt.refreshRasterLayer()
-		# read unit
-		cfg.bndSetUnit["UNIT"] = self.unitNameConversion(cfg.ui.unit_combo.currentText())
-		# find band number
-		cfg.utls.findBandNumber()
-		cfg.utls.checkBandSet()
-		cfg.tmpVrt = None
-		tPMN = cfg.tmpVrtNm + ".vrt"
+			cfg.ui.Band_set_tabWidget.setCurrentIndex(index)
+		
+	# select band set tab
+	def removeBandSetTab(self, index):
+		t = len(cfg.bndSetTabList)
+		if t > 1:
+			cfg.bst.deleteBandSetTab(index)
+		else:
+			cfg.mx.msgErr62(str(index + 1))
+		
+	# add band set tab
+	def addBandSetTabAction(self):
+		cfg.bst.addBandSetTab()
+		
+	# add band set tab
+	def addBandSetTab(self, refresh = "Yes"):
+		cfg.algWT.addBandSetWeigthTab()
+		dT = cfg.utls.getTime()
+		w = "cfg.ui.tableWidget__" + str(dT)
+		cfg.bndSetTabList.append(dT)
+		band_set_tab = cfg.QtWidgetsSCP.QWidget()
+		band_set_tab.setObjectName(w)	
+		gridLayout = cfg.QtWidgetsSCP.QGridLayout(band_set_tab)
+		gridLayout.setObjectName("gridLayout" + str(dT))		
+		exec(w + " = cfg.QtWidgetsSCP.QTableWidget(band_set_tab)")
+		tW = eval(w)
+		tW.setFrameShape(cfg.QtWidgetsSCP.QFrame.WinPanel)
+		tW.setFrameShadow(cfg.QtWidgetsSCP.QFrame.Sunken)
+		tW.setAlternatingRowColors(True)
+		tW.setSelectionMode(cfg.QtWidgetsSCP.QAbstractItemView.MultiSelection)
+		tW.setSelectionBehavior(cfg.QtWidgetsSCP.QAbstractItemView.SelectRows)
+		tW.setColumnCount(6)
+		tW.setObjectName(w)
+		tW.setRowCount(0)
+		item = cfg.QtWidgetsSCP.QTableWidgetItem()
+		tW.setHorizontalHeaderItem(0, item)
+		item = cfg.QtWidgetsSCP.QTableWidgetItem()
+		tW.setHorizontalHeaderItem(1, item)
+		item = cfg.QtWidgetsSCP.QTableWidgetItem()
+		tW.setHorizontalHeaderItem(2, item)
+		item = cfg.QtWidgetsSCP.QTableWidgetItem()
+		tW.setHorizontalHeaderItem(3, item)
+		item = cfg.QtWidgetsSCP.QTableWidgetItem()
+		tW.setHorizontalHeaderItem(4, item)
+		item = cfg.QtWidgetsSCP.QTableWidgetItem()
+		tW.setHorizontalHeaderItem(5, item)
+		item = tW.horizontalHeaderItem(0)
+		item.setText(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Band name"))
+		item = tW.horizontalHeaderItem(1)
+		item.setText(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Center wavelength"))
+		item = tW.horizontalHeaderItem(2)
+		item.setText(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Multiplicative Factor"))
+		item = tW.horizontalHeaderItem(3)
+		item.setText(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Additive Factor"))
+		item = tW.horizontalHeaderItem(4)
+		item.setText(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Wavelength unit"))
+		item = tW.horizontalHeaderItem(5)
+		item.setText(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Image name"))
+		tW.verticalHeader().setDefaultSectionSize(16)
+		tW.horizontalHeader().setStretchLastSection(True)
+		gridLayout.addWidget(tW, 0, 0, 1, 1)
+		# connect to edited cell
 		try:
-			cfg.utls.removeLayer(tPMN)
+			tW.cellChanged.disconnect()
 		except:
 			pass
-		# write project variables
-		cfg.utls.writeProjectVariable("bandSetPresent", str(cfg.bndSetPresent))
-		cfg.utls.writeProjectVariable("bandSet", str(cfg.bndSet))
-		cfg.utls.writeProjectVariable("bndSetWvLn", str(cfg.bndSetWvLn.values()))
-		cfg.utls.writeProjectVariable("bndSetMultF", str(cfg.bndSetMultiFactorsList))
-		cfg.utls.writeProjectVariable("bndSetAddF", str(cfg.bndSetAddFactorsList))
-		cfg.utls.writeProjectVariable("bndSetUnit", str(cfg.bndSetUnit["UNIT"]))
-		# load algorithm weight table
-		cfg.algWT.loadAlgorithmTable(cfg.bndSet)
+		tW.cellChanged.connect(cfg.bst.editedBandSet)
+		cfg.ui.Band_set_tabWidget.addTab(band_set_tab, cfg.bandSetName + str(len(cfg.bndSetTabList)))		
+		cfg.utls.setColumnWidthList(tW, [[0, 350], [1, 150], [2, 150], [3, 150], [4, 150], [5, 150]])
+		if refresh == "Yes":
+			cfg.bst.readBandSet("Yes")
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " added band set")
+		return len(cfg.bndSetTabList) - 1
+			
+	# close Band set tab
+	def closeBandSetTab(self, index):
+		# ask for confirm
+		a = cfg.utls.questionBox(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Remove band set"), cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Are you sure you want to remove band set " + str(index + 1) + "?"))
+		if a == "Yes":
+			t = len(cfg.bndSetTabList)
+			if t > 1:
+				cfg.bst.deleteBandSetTab(index)
+				for i in range(0, t-1):
+					cfg.ui.Band_set_tabWidget.setTabText(i, cfg.bandSetName + str(i + 1))
+				cfg.bst.readBandSet("Yes")
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " closed band set " + str(index + 1))
+			else:
+				cfg.mx.msg24()
+				
+	# delete Band set tab	
+	def deleteBandSetTab(self, index):
+		try:
+			cfg.bndSetTabList.pop(index)
+			cfg.ui.Band_set_tabWidget.removeTab(index)
+			cfg.algWT.deleteBandSetWeigthTab(index)
+		except Exception as err:
+			cfg.mx.msgErr62(str(index + 1))
+			# logger
+			cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+		
+	# read band set
+	def readBandSet(self, bandsetPresent = "Yes", refresh = "No"):
+		cfg.bandSetsList = []
+		imgName = ""		
+		for i in range(0, len(cfg.bndSetTabList)):
+			try:
+				tW = eval("cfg.ui.tableWidget__" + cfg.bndSetTabList[i])	
+			except Exception as err:
+				self.tabBandSetChanged(0)
+				# logger
+				cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				return
+			# check if bandset is empty
+			c = tW.rowCount()
+			bandSetList = [bandsetPresent, i, c, None, None, None, None, None, None]
+			# band set name list
+			bndSet = []
+			# band set wavelength
+			bndSetWvLn = []
+			# band set multiplicative and additive factors
+			bndSetMultiFactorsList = []
+			bndSetAddFactorsList = []
+			unit = cfg.noUnit
+			if c == 0:
+				bandSetList[0] = "No"
+				if refresh == "Yes":
+					cfg.ipt.refreshRasterLayer()
+			else:
+				for b in range(0, c):
+					imgName = tW.item(0, 5).text()
+					bndSet.append(tW.item(b, 0).text())
+					bndSetWvLn.append(float(tW.item(b, 1).text()))
+					try:
+						bndSetMultiFactorsList.append(float(tW.item(b, 2).text()))
+					except:
+						bndSetMultiFactorsList.append(1)
+					try:
+						bndSetAddFactorsList.append(float(tW.item(b, 3).text()))
+					except:
+						bndSetAddFactorsList.append(0)
+					try:
+						unit = tW.item(0, 4).text()
+					except:
+						unit = cfg.noUnit						
+			bandSetList[7] = cfg.bandSetName + str(i)	
+			if imgName == "":
+				bandSetList[0] = "Yes"
+				bandSetList[8] = ""
+			else:
+				bandSetList[0] = "No"
+				bandSetList[8] = imgName
+			bandSetList[3] = bndSet
+			bandSetList[4] = bndSetWvLn
+			bandSetList[5] = self.unitNameConversion(unit)
+			bandSetList[6] = [bndSetMultiFactorsList, bndSetAddFactorsList]					
+			cfg.bandSetsList.append(bandSetList)
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " read band set")
+		cfg.bst.configureBandSet(bandsetPresent)
+
+	# configure band set
+	def configureBandSet(self, reset = "Yes", bandSetNumber = None):
+		if bandSetNumber is None:
+			bandSetNumber = cfg.bndSetNumber
+			# write project variables
+			cfg.utls.writeProjectVariable("bandSetsList", str(cfg.bandSetsList))		
+			cfg.utls.writeProjectVariable("bndSetNumber", str(cfg.bndSetNumber))
+			cfg.tmpVrt = None
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " configure band set")
+		try:
+			cfg.bandSetsList[bandSetNumber][3]
+		except:
+			return "No"
+		# find band number
+		if len(cfg.bandSetsList[bandSetNumber][3]) > 0:
+			cfg.utls.findBandNumber()
+		cfg.utls.checkBandSet(bandSetNumber)		
+		# reset rapid ROI spinbox
+		cfg.uidc.rapidROI_band_spinBox.setValue(1)
+		# read algorithm weight table
+		if reset == "Yes":
+			cfg.algWT.resetAlgorithmTable()
+		else:
+			cfg.algWT.readAlgorithmTable()
 		
 	# 	convert unit name string in combo
 	def unitNameConversion(self, unitName, reverse = "No"):
@@ -488,16 +738,23 @@ class BandsetTab:
 
 	# export band set to file
 	def exportBandSet(self):
-		bndSetFile = cfg.utls.getSaveFileName(None , cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Save the band set to file"), "", "XML (*.xml)")
-		if len(bndSetFile) > 0:
+		bndSetFile = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Save the band set to file"), "", "*.xml", "xml")
+		if bndSetFile is not False:
+			if bndSetFile.lower().endswith(".xml"):
+				pass
+			else:
+				bndSetFile = bndSetFile + ".xml"
 			try:
-				tW = cfg.ui.tableWidget
+				bandSetNumber = None
+				if bandSetNumber == None:
+					bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
+				tW = eval("cfg.ui.tableWidget__" + cfg.bndSetTabList[bandSetNumber])
 				# check if bandset is empty
 				c = tW.rowCount()
 				if c != 0:
 					root = cfg.ETSCP.Element("bandset")
-					root.set("unit",str(cfg.bndSetUnit["UNIT"]))
-					root.set("bandsetpresent",str(cfg.bndSetPresent))
+					root.set("unit",str(cfg.bandSetsList[bandSetNumber][5]))
+					root.set("bandsetpresent",str(cfg.bandSetsList[bandSetNumber][0]))
 					for b in range(0, c):
 						bandItem = cfg.ETSCP.SubElement(root, "band")
 						bandItem.set("number", str(b + 1))
@@ -509,19 +766,23 @@ class BandsetTab:
 						mutliplicativeField.text = tW.item(b, 2).text()	
 						additiveField = cfg.ETSCP.SubElement(bandItem, "additive_factor")
 						additiveField.text = tW.item(b, 3).text()
+						unitField = cfg.ETSCP.SubElement(bandItem, "wavelength_unit")
+						unitField.text = tW.item(b, 4).text()
+						imageNameField = cfg.ETSCP.SubElement(bandItem, "image_name")
+						imageNameField.text = tW.item(b, 5).text()						
 					o = open(bndSetFile, 'w')
 					f = cfg.minidomSCP.parseString(cfg.ETSCP.tostring(root)).toprettyxml()
 					o.write(f)
 					o.close()
 					# logger
 					cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " band set exported")
-			except Exception, err:
+			except Exception as err:
 				# logger
 				cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 		
 	# import band set from file
 	def importBandSet(self):
-		bndSetFile = cfg.utls.getOpenFileName(None , cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Select a band set file"), "", "XML (*.xml)")
+		bndSetFile = cfg.utls.getOpenFileName(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Select a band set file"), "", "XML (*.xml)")
 		if len(bndSetFile) > 0:
 			try:
 				tree = cfg.ETSCP.parse(bndSetFile)
@@ -533,6 +794,8 @@ class BandsetTab:
 				# multiplicative and additive factors
 				multF = {}
 				addF = {}
+				wlU = {}
+				imNm = {}
 				# band number
 				bN = []
 				unit = root.get("unit")
@@ -549,8 +812,16 @@ class BandsetTab:
 					bs[n] = str(child.find("name").text).strip()
 					wl[n] = float(child.find("wavelength").text.strip())
 					multF[n] = float(child.find("multiplicative_factor").text.strip())
-					addF[n] = float(child.find("additive_factor").text.strip())					
-				tW = cfg.ui.tableWidget
+					addF[n] = float(child.find("additive_factor").text.strip())	
+					wlU[n] = str(child.find("wavelength_unit").text.strip())
+					try:		
+						imNm[n] = str(child.find("image_name").text.strip())
+					except:
+						imNm[n] = ""					
+				bandSetNumber = None
+				if bandSetNumber == None:
+					bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
+				tW = eval("cfg.ui.tableWidget__" + cfg.bndSetTabList[bandSetNumber])
 				cfg.BandTabEdited = "No"
 				while tW.rowCount() > 0:
 					tW.removeRow(0)
@@ -562,18 +833,22 @@ class BandsetTab:
 					cfg.utls.addTableItem(tW, str(wl[x]), c, 1)
 					cfg.utls.addTableItem(tW, str(multF[x]), c, 2)
 					cfg.utls.addTableItem(tW, str(addF[x]), c, 3)
-				self.readBandSet(bandset)
+					cfg.utls.addTableItem(tW, str(wlU[x]), c, 4)
+					cfg.utls.addTableItem(tW, str(imNm[x]), c, 5)					
+				self.readBandSet("Yes")
 				cfg.BandTabEdited = "Yes"
 				# logger
-				cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " band set imported")		
-			except Exception, err:
+				cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " band set imported")
+			except Exception as err:
 				# logger
 				cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				cfg.mx.msgErr5()
 				
 	# set band set
-	def setBandSet(self, bandNameList):
-		tW = cfg.ui.tableWidget
+	def setBandSet(self, bandNameList, bandSetNumber = None):
+		if bandSetNumber == None:
+			bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
+		tW = eval("cfg.ui.tableWidget__" + cfg.bndSetTabList[bandSetNumber])
 		cfg.BandTabEdited = "No"
 		try:
 			while tW.rowCount() > 0:
@@ -583,13 +858,15 @@ class BandsetTab:
 				# add list items to table
 				tW.setRowCount(c + 1)
 				cfg.utls.addTableItem(tW, x, c, 0, "No")
-				cfg.utls.addTableItem(tW, "", c, 1)
+				cfg.utls.addTableItem(tW, c+1, c, 1)
 				cfg.utls.addTableItem(tW, "1", c, 2)
 				cfg.utls.addTableItem(tW, "0", c, 3)
+				cfg.utls.addTableItem(tW, cfg.noUnit, c, 4)
+				cfg.utls.addTableItem(tW, "", c, 5)
 			cfg.BandTabEdited = "Yes"
 			# logger
 			cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " band set set")
-		except Exception, err:
+		except Exception as err:
 			cfg.BandTabEdited = "Yes"
 			# logger
 			cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
@@ -597,10 +874,13 @@ class BandsetTab:
 			
 	# move down selected band
 	def moveDownBand(self):
-		tW = cfg.ui.tableWidget
+		bandSetNumber = None
+		if bandSetNumber == None:
+			bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
+		tW = eval("cfg.ui.tableWidget__" + cfg.bndSetTabList[bandSetNumber])
 		c = tW.rowCount()
 		# check if single raster
-		if c > 0 and cfg.bndSetPresent == "No":
+		if c > 0 and cfg.bandSetsList[bandSetNumber][0] == "No":
 			pass
 		else:
 			s = tW.selectedItems()
@@ -610,7 +890,7 @@ class BandsetTab:
 			for i in range (0, len(s)):
 				ns.append(s[i].row() + 1)
 			try:
-				for b in reversed(range(0, c)):
+				for b in reversed(list(range(0, c))):
 					if tW.item(b, 0).isSelected() or tW.item(b, 1).isSelected():
 						bNU = tW.item(b, 0).text()
 						bND = tW.item(b + 1, 0).text()
@@ -620,22 +900,25 @@ class BandsetTab:
 				v = list(set(ns))
 				for i in range (0, len(v)):
 					tW.selectRow(v[i])
-			except Exception, err:
+			except Exception as err:
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				tW.clearSelection()
 			# update band set
-			self.readBandSet()
+			self.readBandSet("Yes")
 			cfg.BandTabEdited = "Yes"
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " band moved")
 
 	# sort band name
 	def sortBandName(self):
-		tW = cfg.ui.tableWidget
+		bandSetNumber = None
+		if bandSetNumber == None:
+			bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
+		tW = eval("cfg.ui.tableWidget__" + cfg.bndSetTabList[bandSetNumber])
 		c = tW.rowCount()
 		# check if single raster
-		if c > 0 and cfg.bndSetPresent == "No":
+		if c > 0 and cfg.bandSetsList[bandSetNumber][0] == "No":
 			pass
 		else:
 			cfg.BandTabEdited = "No"
@@ -666,22 +949,25 @@ class BandsetTab:
 				for b in range(0, c):
 					tW.item(b, 0).setText(str(bNsort[b]))
 				tW.clearSelection()
-			except Exception, err:
+			except Exception as err:
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				tW.clearSelection()
 			# update band set
-			self.readBandSet()
+			self.readBandSet("Yes")
 			cfg.BandTabEdited = "Yes"
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " band moved")
 	
 	# move up selected band
 	def moveUpBand(self):
-		tW = cfg.ui.tableWidget
+		bandSetNumber = None
+		if bandSetNumber == None:
+			bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
+		tW = eval("cfg.ui.tableWidget__" + cfg.bndSetTabList[bandSetNumber])
 		c = tW.rowCount()
 		# check if single raster
-		if c > 0 and cfg.bndSetPresent == "No":
+		if c > 0 and cfg.bandSetsList[bandSetNumber][0] == "No":
 			pass
 		else:
 			s = tW.selectedItems()
@@ -701,40 +987,38 @@ class BandsetTab:
 				v = list(set(ns))
 				for i in range (0, len(v)):
 					tW.selectRow(v[i])
-			except Exception, err:
+			except Exception as err:
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				tW.clearSelection()
 			# update band set
-			self.readBandSet()
+			self.readBandSet("Yes")
 			cfg.BandTabEdited = "Yes"
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " band moved")
 				
 	# Set raster band checklist
 	def rasterBandName(self):
-		ls = cfg.lgnd.layers()
-		# checklist
-		l = cfg.ui.raster_listView
-		# create band item model
-		cfg.bndMdl = cfg.QtGuiSCP.QStandardItemModel(l)
-		cfg.bndMdl.clear()
-		l.setModel(cfg.bndMdl)
-		l.show()
-		for x in ls:
-			if x.type() == QgsMapLayer.RasterLayer and x.bandCount() == 1:
-				# band name
-				it = cfg.QtGuiSCP.QStandardItem(x.name())
-				# Create checkbox
-				it.setCheckable(True)
-				# Add band to model
-				cfg.bndMdl.appendRow(it)
+		ls = cfg.qgisCoreSCP.QgsProject.instance().mapLayers().values()
+		tW = cfg.ui.bands_tableWidget
+		cfg.utls.clearTable(tW)
+		for x in sorted(ls, key=lambda c: c.name()):
+			if x.type() == cfg.qgisCoreSCP.QgsMapLayer.RasterLayer and x.bandCount() == 1 and cfg.bndSetVrtNm not in x.name():
+				tW.blockSignals(True)
+				# count table rows
+				c = tW.rowCount()
+				# add list items to table
+				tW.setRowCount(c + 1)
+				cfg.utls.addTableItem(tW, x.name(), c, 0)
+				tW.blockSignals(False)
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " raster band name checklist created")
 		
 	# Set raster to single band names for wavelength definition
-	def rasterToBandName(self, rasterName, bandset = "No"):
-		tW = cfg.ui.tableWidget
+	def rasterToBandName(self, rasterName, bandset = "No", bandSetNumber = None):		
+		if bandSetNumber == None:
+			bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
+		tW = eval("cfg.ui.tableWidget__" + cfg.bndSetTabList[bandSetNumber])
 		r = cfg.utls.selectLayerbyName(rasterName, "Yes")
 		b = r.bandCount()
 		cfg.BandTabEdited = "No"
@@ -747,28 +1031,31 @@ class BandsetTab:
 			# add list items to table
 			tW.setRowCount(c + 1)
 			cfg.utls.addTableItem(tW, itN, c, 0, "No")
-			if len(cfg.bndSetWvLn.values()) > 0:
-				v = max(cfg.bndSetWvLn.values()) + 1
-			else:
-				v = i + 1
+			v = i + 1
 			wl = str(float(v))
 			cfg.utls.addTableItem(tW, wl, c, 1)
 			cfg.utls.addTableItem(tW, "1", c, 2)
 			cfg.utls.addTableItem(tW, "0", c, 3)
-		self.readBandSet(bandset)
+			cfg.utls.addTableItem(tW, "0", c, 4)
+			cfg.utls.addTableItem(tW, cfg.ui.unit_combo.currentText(), c, 4)
+			cfg.utls.addTableItem(tW, rasterName, c, 5)
+		self.readBandSet("Yes")
 		tW.blockSignals(False)
 		cfg.BandTabEdited = "Yes"
 	
 	# remove selected band
 	def removeBand(self):
-		tW = cfg.ui.tableWidget
+		bandSetNumber = None
+		if bandSetNumber == None:
+			bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
+		tW = eval("cfg.ui.tableWidget__" + cfg.bndSetTabList[bandSetNumber])
 		c = tW.rowCount()
 		# check if single raster
-		if c > 0 and cfg.bndSetPresent == "No":
-			pass
+		if c > 0 and cfg.bandSetsList[bandSetNumber][0] == "No":
+			cfg.mx.msg25()
 		else:
 			# ask for confirm
-			a = cfg.utls.questionBox(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Remove band"), cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Are you sure you want to remove the selected bands from band set?"))
+			a = cfg.utls.questionBox(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Remove band"), cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Are you sure you want to remove the selected bands from band set?"))
 			if a == "Yes":
 				r = []
 				for i in tW.selectedItems():
@@ -778,14 +1065,13 @@ class BandsetTab:
 				for x in reversed(v):
 				# remove items
 					tW.removeRow(x)
-				self.readBandSet()
+				self.readBandSet("Yes")
 				cfg.BandTabEdited = "Yes"
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " band removed; bands n. " + str(c))
 		
 	# select all bands for set
 	def selectAllBands(self):
-		cfg.uiUtls.addProgressBar()
 		try:
 			# select all
 			if self.allBandsCheck == "Yes":
@@ -803,83 +1089,72 @@ class BandsetTab:
 				self.allBandSetState(2)
 				# set check all bands
 				self.allBandsCheck = "No"
-			except Exception, err:
+			except Exception as err:
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				pass
-		cfg.uiUtls.removeProgressBar()
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " all bands clicked")
 		
 	# create virtual raster
-	def virtualRasterBandSet(self, outFile = None):
-		if cfg.bndSetPresent == "Yes" and cfg.rstrNm == cfg.bndSetNm:
-			ck = cfg.utls.checkBandSet()
+	def virtualRasterBandSet(self, outFile = None, bandSetNumber = None):		
+		if bandSetNumber == None:
+			bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
+		if cfg.bandSetsList[bandSetNumber][0] == "Yes":
+			ck = cfg.utls.checkBandSet(bandSetNumber)
 			if outFile is None:
-				rstrOut = cfg.utls.getSaveFileName(None , cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Save virtual raster"), "", "*.vrt")
+				rstrOut = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Save virtual raster"), "", "*.vrt", "vrt")
 			else:
 				rstrOut = outFile
-			if len(rstrOut) > 0 and ck == "Yes":
-				if unicode(rstrOut).endswith(".vrt"):
-					rstrOut = rstrOut
+			if rstrOut is not False and ck == "Yes":
+				if rstrOut.lower().endswith(".vrt"):
+					pass
 				else:
 					rstrOut = rstrOut + ".vrt"
-				st = cfg.utls.createVirtualRaster(cfg.bndSetLst, rstrOut)
+				st = cfg.utls.createVirtualRaster(cfg.bndSetLst, rstrOut, "No", "Yes", "Yes", 0)
 				# add virtual raster to layers
-				cfg.iface.addRasterLayer(unicode(rstrOut), unicode(cfg.osSCP.path.basename(rstrOut)))
+				cfg.utls.addRasterLayer(str(rstrOut), str(cfg.osSCP.path.basename(rstrOut)))
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " virtual raster: " + str(st))
 			elif ck == "No":
 				cfg.mx.msgErr33()
 			
-	def stackBandSet(self, outFile = None):
-		if cfg.bndSetPresent == "Yes" and cfg.rstrNm == cfg.bndSetNm:
-			ck = cfg.utls.checkBandSet()
+	def stackBandSet(self, outFile = None, bandSetNumber = None):		
+		if bandSetNumber == None:
+			bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
+		if cfg.bandSetsList[bandSetNumber][0] == "Yes":
+			ck = cfg.utls.checkBandSet(bandSetNumber)
 			if outFile is None:
-				rstrOut = cfg.utls.getSaveFileName(None , cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Save raster"), "", "*.tif")
+				rstrOut = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Save raster"), "", "*.tif", "tif")
 			else:
 				rstrOut = outFile
-			if len(rstrOut) > 0 and ck == "Yes":
-				if outFile is None:
-					cfg.uiUtls.addProgressBar()
-				cfg.cnvs.setRenderFlag(False)
-				if unicode(rstrOut).endswith(".tif"):
-					rstrOut = rstrOut
+			if rstrOut is not False and ck == "Yes":
+				if rstrOut.lower().endswith(".tif"):
+					pass
 				else:
 					rstrOut = rstrOut + ".tif"
+				if outFile is None:
+					cfg.uiUtls.addProgressBar()
 				cfg.uiUtls.updateBar(10)
-				# date time for temp name
-				dT = cfg.utls.getTime()
-				tPMN2 = dT + cfg.calcRasterNm + ".tif"
-				tPMD2 = cfg.tmpDir + "/" + tPMN2
-				st = cfg.utls.mergeRasterBands(cfg.bndSetLst, tPMD2)
-				if cfg.rasterCompression != "No":
-					try:
-						cfg.utls.GDALCopyRaster(tPMD2, rstrOut, "GTiff", cfg.rasterCompression, "DEFLATE -co PREDICTOR=2 -co ZLEVEL=1")
-						cfg.osSCP.remove(tPMD2)
-					except Exception, err:
-						cfg.shutilSCP.copy(tPMD2, rstrOut)
-						cfg.osSCP.remove(tPMD2)
-						# logger
-						if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-				else:
-					cfg.shutilSCP.copy(tPMD2, rstrOut)
-					cfg.osSCP.remove(tPMD2)
-				# add raster to layers
-				cfg.iface.addRasterLayer(unicode(rstrOut), unicode(cfg.osSCP.path.basename(rstrOut)))
-				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " raster: " + str(st))
-				cfg.uiUtls.updateBar(100)
+				st = cfg.utls.mergeRasterBands(cfg.bndSetLst, rstrOut)
+				if cfg.osSCP.path.isfile(rstrOut):
+					cfg.cnvs.setRenderFlag(False)
+					cfg.utls.addRasterLayer(str(rstrOut), str(cfg.osSCP.path.basename(rstrOut)))
+					cfg.cnvs.setRenderFlag(True)
+					# logger
+					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " raster: " + str(st))
+					cfg.uiUtls.updateBar(100)
 				if outFile is None:
 					cfg.utls.finishSound()
 					cfg.uiUtls.removeProgressBar()
-					cfg.cnvs.setRenderFlag(True)
 			elif ck == "No":
 				cfg.mx.msgErr33()
 
 	# build band overviews
-	def buildOverviewsBandSet(self, quiet = "No"):
-		tW = cfg.ui.tableWidget
+	def buildOverviewsBandSet(self, quiet = "No", bandSetNumber = None):
+		if bandSetNumber == None:
+			bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
+		tW = eval("cfg.ui.tableWidget__" + cfg.bndSetTabList[bandSetNumber])
 		c = tW.rowCount()
 		# check if single raster
 		if c > 0:
@@ -887,20 +1162,20 @@ class BandsetTab:
 				a = "Yes"
 			else:
 				# ask for confirm
-				a = cfg.utls.questionBox(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Build overviews"), cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Do you want to build the external overviews of bands?"))
+				a = cfg.utls.questionBox(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Build overviews"), cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Do you want to build the external overviews of bands?"))
 			if a == "Yes":	
 				if quiet == "No":
 					cfg.uiUtls.addProgressBar()
-				if cfg.bndSetPresent == "Yes" and cfg.rstrNm == cfg.bndSetNm:
+				if cfg.bandSetsList[bandSetNumber][0] == "Yes":
 					b = 1
 					for i in cfg.bndSetLst:
 						cfg.utls.buildOverviewsGDAL(i)
-						cfg.uiUtls.updateBar((b) * 100 / (len(cfg.bndSetLst)), cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", " building overviews"))
+						cfg.uiUtls.updateBar((b) * 100 / (len(cfg.bndSetLst)), cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", " building overviews"))
 						b = b + 1
 				else:
-					image = cfg.utls.selectLayerbyName(cfg.rstrNm, "Yes")
+					image = cfg.utls.selectLayerbyName(cfg.bandSetsList[bandSetNumber][8], "Yes")
 					i = image.source()
-					cfg.uiUtls.updateBar(50, cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", " building overviews"))
+					cfg.uiUtls.updateBar(50, cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", " building overviews"))
 					cfg.utls.buildOverviewsGDAL(i)
 				cfg.uiUtls.updateBar(100)
 				if quiet == "No":
@@ -911,7 +1186,10 @@ class BandsetTab:
 				
 	# button perform Band set tools
 	def performBandSetTools(self):
-		i = cfg.utls.getExistingDirectory(None , cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Select a directory"))
+		if cfg.ui.overview_raster_bandset_checkBox.isChecked() is True and cfg.ui.band_calc_checkBox.isChecked() is False and cfg.ui.stack_raster_bandset_checkBox.isChecked() is False and cfg.ui.virtual_raster_bandset_checkBox.isChecked() is False:
+			i = "Yes"
+		else:
+			i = cfg.utls.getExistingDirectory(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Select a directory"))
 		if len(i) > 0:
 			cfg.uiUtls.addProgressBar()
 			cfg.bst.bandSetTools(i)
@@ -929,14 +1207,14 @@ class BandsetTab:
 			if cfg.ui.virtual_raster_bandset_checkBox.isChecked() is True:
 				try:
 					cfg.bst.virtualRasterBandSet(outputDirectory + "/" + cfg.osSCP.path.basename(cfg.bndSetLst[0]).split(".")[0][:-1] + cfg.virtualRasterNm + ".vrt")
-				except Exception, err:
+				except Exception as err:
 					# logger
 					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 		if cfg.actionCheck == "Yes":
 			if cfg.ui.stack_raster_bandset_checkBox.isChecked() is True:
 				try:
 					cfg.bst.stackBandSet(outputDirectory + "/" + cfg.osSCP.path.basename(cfg.bndSetLst[0]).split(".")[0][:-1] + cfg.stackRasterNm + ".tif")
-				except Exception, err:
+				except Exception as err:
 					# logger
 					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 		if cfg.actionCheck == "Yes":

@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2017 by Luca Congedo
+		copyright			: (C) 2012-2018 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -32,8 +32,8 @@
 
 """
 
-from qgis.core import *
-from qgis.gui import *
+
+
 cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
 
 class VectorToRasterTab:
@@ -62,15 +62,15 @@ class VectorToRasterTab:
 			if len(fd) == 0:
 				cfg.utls.refreshVectorLayer()
 				return
-			rstrOut = cfg.utls.getSaveFileName(None, cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Save raster output"), "", "*.tif")
+			rstrOut = cfg.utls.getSaveFileName(None, cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Save raster output"), "", "*.tif", "tif")
 		else:
 			vectorSource = vectorPath
 			referenceRasterPath = rasterPath
 			referenceRasterName = "No"
 			rstrOut = rasterOutput
 			fd = fieldName
-		if len(rstrOut) > 0:
-			if unicode(rstrOut).lower().endswith(".tif"):
+		if rstrOut is not False:
+			if rstrOut.lower().endswith(".tif"):
 				pass
 			else:
 				rstrOut = rstrOut + ".tif"
@@ -100,7 +100,7 @@ class VectorToRasterTab:
 			cfg.uiUtls.updateBar(100)
 			# add raster to layers
 			if cfg.osSCP.path.isfile(rstrOut):
-				rstr = cfg.iface.addRasterLayer(rstrOut, cfg.osSCP.path.basename(rstrOut))
+				rstr = cfg.utls.addRasterLayer(rstrOut, cfg.osSCP.path.basename(rstrOut))
 			else:
 				return "No"
 			cfg.utls.rasterSymbolSingleBandGray(rstr)

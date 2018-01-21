@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2017 by Luca Congedo
+		copyright			: (C) 2012-2018 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -42,7 +42,7 @@ def description():
 
 
 def version():
-    return "Version 5.3.11 - Kourou"
+    return "Version 6.0.0 - Greenbelt"
 
 
 def icon():
@@ -50,7 +50,7 @@ def icon():
 
 
 def qgisMinimumVersion():
-    return "2.0"
+    return "2.99"
 
 def author():
     return "Luca Congedo"
@@ -62,7 +62,7 @@ def category():
     return "Raster"
 
 def classFactory(iface):
-    from semiautomaticclassificationplugin import SemiAutomaticClassificationPlugin
+    from .semiautomaticclassificationplugin import SemiAutomaticClassificationPlugin
     return SemiAutomaticClassificationPlugin(iface)
 
 def homepage():

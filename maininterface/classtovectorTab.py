@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2017 by Luca Congedo
+		copyright			: (C) 2012-2018 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -32,8 +32,8 @@
 
 """
 
-from qgis.core import *
-from qgis.gui import *
+
+
 cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
 
 class ClassToVectorTab:
@@ -52,37 +52,37 @@ class ClassToVectorTab:
 			i = cfg.utls.selectLayerbyName(self.clssfctnNm, "Yes")
 			try:
 				classificationPath = i.source()
-			except Exception, err:
+			except Exception as err:
 				cfg.mx.msg4()
 				cfg.utls.refreshClassificationLayer()
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				return "No"
-			out = cfg.utls.getSaveFileName(None , cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Save shapefile output"), "", "*.shp")
+			out = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Save shapefile output"), "", "*.shp", "shp")
 		else:
 			if cfg.osSCP.path.isfile(inputRaster):
 				classificationPath = inputRaster
 			else:
 				return "No"
 			out = outputVector
-		if len(out) > 0:
+		if out is not False:
+			if out.lower().endswith(".shp"):
+				pass
+			else:
+				out = out + ".shp"
 			if batch == "No":
 				cfg.uiUtls.addProgressBar()
 				# disable map canvas render
 				cfg.cnvs.setRenderFlag(False)
 			cfg.uiUtls.updateBar(10)
 			n = cfg.osSCP.path.basename(out)
-			if n.endswith(".shp"):
-				out = out
-			else:
-				out = out + ".shp"
 			cfg.uiUtls.updateBar(20)
 			if str(cfg.ui.class_macroclass_comboBox.currentText()) == cfg.fldMacroID_class_def:
 				mc = "Yes"
-				sL = cfg.classD.createMCIDList()
+				sL = cfg.SCPD.createMCIDList()
 			else:
 				mc = "No"
-				sL = cfg.classD.getSignatureList()
+				sL = cfg.SCPD.getSignatureList()
 			cfg.utls.rasterToVector(classificationPath, out)
 			cfg.uiUtls.updateBar(80)
 			vl = cfg.utls.addVectorLayer(out, cfg.osSCP.path.basename(out), "ogr")

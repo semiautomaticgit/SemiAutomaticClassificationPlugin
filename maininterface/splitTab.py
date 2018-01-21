@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2017 by Luca Congedo
+		copyright			: (C) 2012-2018 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -32,8 +32,8 @@
 
 """
 
-from qgis.core import *
-from qgis.gui import *
+
+
 cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
 
 class SplitTab:
@@ -48,12 +48,12 @@ class SplitTab:
 		cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "raster name: " + self.rstrLyNm)
 		
 	def refreshClassificationLayer(self):
-		ls = cfg.lgnd.layers()
+		ls = cfg.qgisCoreSCP.QgsProject.instance().mapLayers().values()
 		cfg.ui.raster_name_combo.clear()
 		# raster name
 		self.rstrLyNm = None
-		for l in ls:
-			if (l.type()==QgsMapLayer.RasterLayer):
+		for l in sorted(ls, key=lambda c: c.name()):
+			if (l.type()== cfg.qgisCoreSCP.QgsMapLayer.RasterLayer):
 				if l.bandCount() > 1:
 					cfg.dlg.raster_layer_combo(l.name())
 		# logger
@@ -76,12 +76,12 @@ class SplitTab:
 	# split raster to bands
 	def splitRasterToBands(self, rasterName, batch = "No",  inputFile = None, outputDirectory = None):
 		if batch == "No":
-			o = cfg.utls.getExistingDirectory(None , cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Select a directory"))
+			o = cfg.utls.getExistingDirectory(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Select a directory"))
 		else:
 			o = outputDirectory
 		outputName = cfg.ui.output_name_lineEdit.text()
 		if len(outputName) > 0:
-			outputName = str(outputName.encode('ascii','replace')) + "_" 
+			outputName = str(outputName.encode('ascii','replace'))[2:-1] + "_" 
 		if len(o) > 0:
 			oDir = cfg.utls.makeDirectory(o)
 			if oDir is None:
@@ -105,7 +105,7 @@ class SplitTab:
 					if cfg.rasterCompression != "No":
 						try:
 							cfg.utls.GDALCopyRaster(r, o + "/" + cfg.osSCP.path.basename(r), "GTiff", cfg.rasterCompression, "DEFLATE -co PREDICTOR=2 -co ZLEVEL=1")
-						except Exception, err:
+						except Exception as err:
 							cfg.shutilSCP.copy(r, o + "/" + cfg.osSCP.path.basename(r))
 							# logger
 							if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
@@ -120,7 +120,7 @@ class SplitTab:
 					cfg.uiUtls.removeProgressBar()
 				# logger
 				cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " end split raster layer to band")
-			except Exception, err:
+			except Exception as err:
 				# logger
 				cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				if batch == "No":

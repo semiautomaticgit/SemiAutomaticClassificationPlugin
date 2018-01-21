@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>737</width>
-    <height>557</height>
+    <width>957</width>
+    <height>564</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -23,7 +23,7 @@
    <iconset resource="resources.qrc">
     <normaloff>:/plugins/semiautomaticclassificationplugin/semiautomaticclassificationplugin.png</normaloff>:/plugins/semiautomaticclassificationplugin/semiautomaticclassificationplugin.png</iconset>
   </property>
-  <layout class="QGridLayout" name="gridLayout_21">
+  <layout class="QGridLayout" name="gridLayout_8">
    <item row="0" column="0">
     <layout class="QGridLayout" name="gridLayout_5">
      <item row="1" column="0">
@@ -556,42 +556,26 @@
    </item>
    <item row="1" column="0">
     <layout class="QGridLayout" name="gridLayout_6">
-     <item row="0" column="0">
-      <widget class="QToolBox" name="toolBox">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>300</height>
-        </size>
-       </property>
-       <property name="frameShape">
-        <enum>QFrame::StyledPanel</enum>
-       </property>
-       <property name="frameShadow">
-        <enum>QFrame::Raised</enum>
+     <item row="0" column="1">
+      <widget class="QTabWidget" name="tabWidget">
+       <property name="tabPosition">
+        <enum>QTabWidget::West</enum>
        </property>
        <property name="currentIndex">
         <number>0</number>
        </property>
-       <widget class="QWidget" name="page">
-        <property name="geometry">
-         <rect>
-          <x>0</x>
-          <y>0</y>
-          <width>717</width>
-          <height>271</height>
-         </rect>
-        </property>
-        <attribute name="label">
+       <property name="documentMode">
+        <bool>true</bool>
+       </property>
+       <widget class="QWidget" name="tab">
+        <attribute name="icon">
+         <iconset resource="resources.qrc">
+          <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_sign_tool.png</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_sign_tool.png</iconset>
+        </attribute>
+        <attribute name="title">
          <string>Plot</string>
         </attribute>
-        <layout class="QGridLayout" name="gridLayout_8">
+        <layout class="QGridLayout" name="gridLayout">
          <item row="0" column="0">
           <layout class="QGridLayout" name="gridLayout_3">
            <item row="0" column="0">
@@ -626,19 +610,6 @@
               <bool>true</bool>
              </property>
             </widget>
-           </item>
-           <item row="0" column="7">
-            <spacer name="horizontalSpacer_4">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
            </item>
            <item row="0" column="8">
             <widget class="QLabel" name="label_8">
@@ -848,23 +819,35 @@
              </property>
             </widget>
            </item>
+           <item row="0" column="7">
+            <spacer name="horizontalSpacer_4">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
           </layout>
          </item>
         </layout>
+        <zorder>Sig_Widget</zorder>
+        <zorder></zorder>
+        <zorder></zorder>
        </widget>
-       <widget class="QWidget" name="page_2">
-        <property name="geometry">
-         <rect>
-          <x>0</x>
-          <y>0</y>
-          <width>717</width>
-          <height>271</height>
-         </rect>
-        </property>
-        <attribute name="label">
+       <widget class="QWidget" name="tab_2">
+        <attribute name="icon">
+         <iconset resource="resources.qrc">
+          <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_accuracy_tool.png</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_accuracy_tool.png</iconset>
+        </attribute>
+        <attribute name="title">
          <string>Signature details</string>
         </attribute>
-        <layout class="QGridLayout" name="gridLayout_10">
+        <layout class="QGridLayout" name="gridLayout_21">
          <item row="0" column="0">
           <layout class="QGridLayout" name="gridLayout_9">
            <item row="0" column="0">
@@ -878,19 +861,15 @@
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="page_3">
-        <property name="geometry">
-         <rect>
-          <x>0</x>
-          <y>0</y>
-          <width>717</width>
-          <height>271</height>
-         </rect>
-        </property>
-        <attribute name="label">
+       <widget class="QWidget" name="tab_3">
+        <attribute name="icon">
+         <iconset resource="resources.qrc">
+          <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_calculate_spectral_distances.png</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_calculate_spectral_distances.png</iconset>
+        </attribute>
+        <attribute name="title">
          <string>Spectral distances</string>
         </attribute>
-        <layout class="QGridLayout" name="gridLayout_12">
+        <layout class="QGridLayout" name="gridLayout_22">
          <item row="0" column="0">
           <layout class="QGridLayout" name="gridLayout_11">
            <item row="0" column="0">
@@ -908,9 +887,6 @@
      </item>
     </layout>
    </item>
-   <item row="2" column="0">
-    <layout class="QGridLayout" name="gridLayout"/>
-   </item>
   </layout>
   <zorder></zorder>
  </widget>
@@ -918,7 +894,7 @@
   <customwidget>
    <class>SigWidget2</class>
    <extends>QWidget</extends>
-   <header>sigwidget2</header>
+   <header>.sigwidget2</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

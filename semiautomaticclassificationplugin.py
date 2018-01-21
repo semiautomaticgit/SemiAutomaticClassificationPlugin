@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2017 by Luca Congedo
+		copyright			: (C) 2012-2018 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -42,9 +42,9 @@ import datetime
 import subprocess
 import numpy as np
 import urllib
-import urllib2
 import ssl
-from cookielib import CookieJar
+import smtplib
+from http.cookiejar import CookieJar
 import itertools
 import zipfile
 import tarfile
@@ -54,95 +54,107 @@ import re
 import xml.etree.cElementTree as ET
 from xml.dom import minidom
 import hashlib
+import ctypes
 # Import the PyQt libraries
-from PyQt4 import QtCore, QtGui
-from PyQt4.QtCore import Qt, QObject, SIGNAL, QFileInfo, QSettings, QDir, QDate, QVariant
-from PyQt4.QtGui import QApplication
-from PyQt4.QtNetwork import QNetworkRequest
+from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import Qt, QObject, QFileInfo, QSettings, QDir, QDate, QVariant, pyqtSignal
+from PyQt5.QtWidgets import QApplication
+from PyQt5.QtNetwork import QNetworkRequest
 # Import the QGIS libraries
 import qgis.core as qgisCore
-from qgis.gui import *
+import qgis.gui as qgisGui
 import qgis.utils as qgisUtils
 from osgeo import gdal
 from osgeo import ogr
 from osgeo import osr
 # Initialize Qt ui
-import ui.resources_rc
-from ui.ui_semiautomaticclassificationplugin import Ui_SemiAutomaticClassificationPlugin
-from ui.semiautomaticclassificationplugindialog import SemiAutomaticClassificationPluginDialog
-from ui.semiautomaticclassificationplugindialog import SpectralSignatureDialog
-from ui.semiautomaticclassificationplugindialog import ScatterPlotDialog
-from ui.semiautomaticclassificationplugindialog import DockClassDialog
+from .ui.resources_rc import *
+from .ui.ui_semiautomaticclassificationplugin import Ui_SemiAutomaticClassificationPlugin
+from .ui.ui_semiautomaticclassificationplugin_welcome import Ui_SCP_Welcome
+from .ui.semiautomaticclassificationplugindialog import SemiAutomaticClassificationPluginDialog
+from .ui.semiautomaticclassificationplugindialog import SpectralSignatureDialog
+from .ui.semiautomaticclassificationplugindialog import WelcomeDialog
+from .ui.semiautomaticclassificationplugindialog import ScatterPlotDialog
+from .ui.semiautomaticclassificationplugindialog import DockClassDialog
 # Import plugin version
-from __init__ import version as semiautomaticclassVersion
+from .__init__ import version as semiautomaticclassVersion
+
 global PluginCheck
 PluginCheck = "Yes"
 try:
-	import core.config as cfg
+	from .core import config as cfg
 except:
 	PluginCheck = "No"
+	
+# required by other modules
+cfg.QObjectSCP = QObject
+cfg.pyqtSignalSCP = pyqtSignal
+
+
 if PluginCheck == "Yes":
 	try:
-		import core.messages as msgs
-		from core.utils import Utils
-		from core.signature_importer import Signature_Importer
-		from roidock.manualroi import ManualROI
-		from roidock.regionroi import RegionROI
-		from maininterface.downloadlandsatpointer import DownloadLandsatPointer
-		from maininterface.downloadasterpointer import DownloadASTERPointer
-		from maininterface.downloadmodispointer import DownloadMODISPointer
-		from maininterface.downloadsentinelpointer import DownloadSentinelPointer
-		from roidock.roidock import RoiDock
-		from spectralsignature.spectralsignatureplot import SpectralSignaturePlot
-		from spectralsignature.scatter_plot import Scatter_Plot
-		from classificationdock.classificationdock import ClassificationDock
-		from classificationdock.classificationpreview import ClassificationPreview
-		from maininterface.multipleroiTab import MultipleROITab
-		from spectralsignature.usgs_spectral_lib import USGS_Spectral_Lib
-		from maininterface.landsatTab import LandsatTab
-		from maininterface.asterTab import ASTERTab
-		from maininterface.modisTab import MODISTab
-		from maininterface.sentinelTab import Sentinel2Tab
-		from maininterface.accuracy import Accuracy
-		from maininterface.crossclassificationTab import CrossClassification
-		from maininterface.splitTab import SplitTab
-		from maininterface.pcaTab import PcaTab
-		from maininterface.vectortorasterTab import VectorToRasterTab
-		from maininterface.bandsetTab import BandsetTab
-		from maininterface.algorithmWeightTab import AlgWeightTab
-		from maininterface.signatureThresholdTab import SigThresholdTab
-		from maininterface.LCSignatureThresholdTab import LCSigThresholdTab
-		from maininterface.rgblistTab import RGBListTab
-		from maininterface.LCSignaturePixel import LCSigPixel
-		from maininterface.LCSignaturePixel2 import LCSigPixel2
-		from maininterface.bandcalcTab import BandCalcTab
-		from maininterface.batchTab import BatchTab
-		from maininterface.clipmultiplerasters import ClipMultipleRasters
-		from maininterface.stackrasterbands import StackRasterBands
-		from maininterface.editraster import EditRaster
-		from maininterface.sieveTab import SieveRaster
-		from maininterface.erosionTab import ErosionRaster
-		from maininterface.dilationTab import DilationRaster
-		from maininterface.downloadlandsatimages import DownloadLandsatImages
-		from maininterface.downloadasterimages import DownloadASTERImages
-		from maininterface.downloadmodisimages import DownloadMODISImages
-		from maininterface.downloadsentinelimages import DownloadSentinelImages
-		from maininterface.clipmultiplerasterspointer import ClipMultiplerastersPointer
-		from maininterface.landcoverchange import LandCoverChange
-		from maininterface.classreportTab import ClassReportTab
-		from maininterface.classtovectorTab import ClassToVectorTab
-		from maininterface.reclassificationTab import ReclassificationTab
-		from maininterface.settings import Settings
-		from core.input import Input
-		from ui.ui_utils import Ui_Utils
+		from .core.messages import Messages as msgs
+		from .core.utils import Utils
+		from .core.signature_importer import Signature_Importer
+		from .maininterface.downloadproductpointer import DownloadProductPointer
+		from .maininterface.downloadproducts import DownloadProducts
+		from .spectralsignature.spectralsignatureplot import SpectralSignaturePlot
+		from .spectralsignature.scatter_plot import Scatter_Plot	
+		from .dock.manualroi import ManualROI
+		from .dock.regionroi import RegionROI
+		from .dock.scpdock import SCPDock
+		from .dock.classificationpreview import ClassificationPreview
+		from .maininterface.multipleroiTab import MultipleROITab
+		from .spectralsignature.usgs_spectral_lib import USGS_Spectral_Lib
+		from .maininterface.landsatTab import LandsatTab
+		from .maininterface.asterTab import ASTERTab
+		from .maininterface.modisTab import MODISTab
+		from .maininterface.sentinel2Tab import Sentinel2Tab
+		from .maininterface.sentinel3Tab import Sentinel3Tab
+		from .maininterface.accuracy import Accuracy
+		from .maininterface.crossclassificationTab import CrossClassification
+		from .maininterface.bandcombination import BandCombination
+		from .maininterface.splitTab import SplitTab
+		from .maininterface.pcaTab import PcaTab
+		from .maininterface.clusteringTab import ClusteringTab
+		from .maininterface.classSignatureTab import ClassSignatureTab
+		from .maininterface.vectortorasterTab import VectorToRasterTab
+		from .maininterface.bandsetTab import BandsetTab
+		from .maininterface.algorithmWeightTab import AlgWeightTab
+		from .maininterface.signatureThresholdTab import SigThresholdTab
+		from .maininterface.LCSignatureThresholdTab import LCSigThresholdTab
+		from .maininterface.rgblistTab import RGBListTab
+		from .maininterface.LCSignaturePixel import LCSigPixel
+		from .maininterface.LCSignaturePixel2 import LCSigPixel2
+		from .maininterface.bandcalcTab import BandCalcTab
+		from .maininterface.batchTab import BatchTab
+		from .maininterface.clipmultiplerasters import ClipMultipleRasters
+		from .maininterface.stackrasterbands import StackRasterBands
+		from .maininterface.mosaicbandsets import MosaicBandSets
+		from .maininterface.cloudmasking import CloudMasking
+		from .maininterface.spectraldistancebandsets import SpectralDistanceBandsets
+		from .maininterface.editraster import EditRaster
+		from .maininterface.sieveTab import SieveRaster
+		from .maininterface.erosionTab import ErosionRaster
+		from .maininterface.dilationTab import DilationRaster
+		from .maininterface.clipmultiplerasterspointer import ClipMultiplerastersPointer
+		from .maininterface.landcoverchange import LandCoverChange
+		from .maininterface.classreportTab import ClassReportTab
+		from .maininterface.classtovectorTab import ClassToVectorTab
+		from .maininterface.reclassificationTab import ReclassificationTab
+		from .maininterface.settings import Settings
+		from .core.input import Input
+		from .ui.ui_utils import Ui_Utils
 	except:
 		PluginCheck = "No"
-		qgisUtils.iface.messageBar().pushMessage("Semi-Automatic Classification Plugin", QApplication.translate("semiautomaticclassificationplugin", "Please, restart QGIS for executing the Semi-Automatic Classification Plugin"), level=QgsMessageBar.INFO)
+		qgisUtils.iface.messageBar().pushMessage("Semi-Automatic Classification Plugin", QApplication.translate("semiautomaticclassificationplugin", "Please, restart QGIS for executing the Semi-Automatic Classification Plugin"), level=qgisGui.QgsMessageBar.INFO)
+
 	try:
 		import scipy.stats.distributions as statdistr
 		from scipy.spatial.distance import cdist
 		from scipy import signal
 		from scipy.ndimage import label
+		from scipy.cluster.vq import vq, kmeans, whiten
 		cfg.scipyCheck = "Yes"
 	except:
 		cfg.scipyCheck = "No"
@@ -150,9 +162,10 @@ if PluginCheck == "Yes":
 		from matplotlib.ticker import MaxNLocator
 		import matplotlib.pyplot as mplplt
 		import matplotlib.colors as mplcolors
-	except Exception, err:
+	except Exception as err:
 		cfg.testMatplotlibV = err
-		
+
+	
 class SemiAutomaticClassificationPlugin:
 
 	def __init__(self, iface):
@@ -165,6 +178,7 @@ class SemiAutomaticClassificationPlugin:
 			cfg.timeSCP = time
 			cfg.datetimeSCP = datetime
 			cfg.subprocessSCP = subprocess
+			cfg.urllibSCP = urllib
 			cfg.itertoolsSCP = itertools
 			cfg.zipfileSCP = zipfile
 			cfg.tarfileSCP = tarfile
@@ -172,45 +186,46 @@ class SemiAutomaticClassificationPlugin:
 			cfg.randomSCP = random
 			cfg.QtCoreSCP = QtCore
 			cfg.QtGuiSCP = QtGui
+			cfg.QtWidgetsSCP = QtWidgets
 			cfg.QNetworkRequestSCP = QNetworkRequest
 			cfg.QtSCP = Qt
-			cfg.QObjectSCP = QObject
 			cfg.QVariantSCP = QVariant
-			cfg.SIGNALSCP= SIGNAL
 			cfg.QFileInfoSCP = QFileInfo
 			cfg.QSettingsSCP = QSettings
 			cfg.QDirSCP = QDir
 			cfg.QDateSCP = QDate
 			cfg.qgisCoreSCP = qgisCore
+			cfg.qgisGuiSCP = qgisGui
 			cfg.gdalSCP = gdal
 			cfg.ogrSCP = ogr
 			cfg.osrSCP = osr
-			cfg.urllibSCP = urllib
-			cfg.urllib2SCP = urllib2
 			cfg.sslSCP = ssl
+			cfg.smtplibSCP = smtplib
 			cfg.CookieJarSCP = CookieJar
 			cfg.reSCP = re
 			cfg.ETSCP = ET
 			cfg.minidomSCP = minidom
 			cfg.hashlibSCP = hashlib
+			cfg.ctypesSCP = ctypes
 			cfg.statdistrSCP = statdistr
 			cfg.cdistSCP = cdist
 			cfg.signalSCP = signal
 			cfg.labelSCP = label
+			cfg.vqSCP = vq
+			cfg.kmeansSCP = kmeans
+			cfg.whitenSCP = whiten
 			cfg.MaxNLocatorSCP = MaxNLocator
 			cfg.mplpltSCP = mplplt
 			cfg.mplcolorsSCP = mplcolors
 			cfg.np = np
 		except:
-			qgisUtils.iface.messageBar().pushMessage("Semi-Automatic Classification Plugin", QApplication.translate("semiautomaticclassificationplugin", "Please, restart QGIS for executing the Semi-Automatic Classification Plugin"), level=QgsMessageBar.INFO)
+			qgisUtils.iface.messageBar().pushMessage("Semi-Automatic Classification Plugin", QApplication.translate("semiautomaticclassificationplugin", "Please, restart QGIS for executing the Semi-Automatic Classification Plugin"), level=qgisGui.QgsMessageBar.INFO)
 			return
 		if PluginCheck == "Yes":
 			# reference to QGIS interface
 			cfg.iface = iface
 			# reference to map canvas
 			cfg.cnvs = iface.mapCanvas()
-			# reference to legend
-			cfg.lgnd = iface.legendInterface()		
 			# create the dialog
 			cfg.dlg = SemiAutomaticClassificationPluginDialog()
 			# reference to ui
@@ -219,16 +234,17 @@ class SemiAutomaticClassificationPlugin:
 			cfg.dockclassdlg = DockClassDialog(cfg.iface.mainWindow(), cfg.iface)
 			# reference dock class ui
 			cfg.uidc = cfg.dockclassdlg.ui
+			# welcome dialog
+			cfg.welcomedlg = WelcomeDialog()
 			# spectral signature plot dialog
 			cfg.spectralplotdlg = SpectralSignatureDialog()
 			cfg.uisp = cfg.spectralplotdlg.ui
 			# scatter plot dialog
 			cfg.scatterplotdlg = ScatterPlotDialog()
 			cfg.uiscp = cfg.scatterplotdlg.ui
-			cfg.mx = msgs.Messages(cfg.iface)
+			cfg.mx = msgs(cfg.iface)
 			cfg.utls = Utils()
-			cfg.ROId = RoiDock()
-			cfg.classD = ClassificationDock()
+			cfg.SCPD = SCPDock()
 			cfg.classPrev = ClassificationPreview(cfg.cnvs)
 			cfg.spSigPlot = SpectralSignaturePlot()
 			cfg.scaPlT = Scatter_Plot()
@@ -236,8 +252,11 @@ class SemiAutomaticClassificationPlugin:
 			cfg.usgsLib = USGS_Spectral_Lib()
 			cfg.acc = Accuracy()
 			cfg.crossC = CrossClassification()
+			cfg.bsComb = BandCombination()
 			cfg.splitT = SplitTab()
 			cfg.pcaT = PcaTab()
+			cfg.clusteringT = ClusteringTab()
+			cfg.classSigT = ClassSignatureTab()
 			cfg.vctRstrT = VectorToRasterTab()
 			cfg.bst = BandsetTab()
 			cfg.algWT = AlgWeightTab()
@@ -248,18 +267,19 @@ class SemiAutomaticClassificationPlugin:
 			cfg.batchT= BatchTab()
 			cfg.clipMulti = ClipMultipleRasters()
 			cfg.stackRstr = StackRasterBands()
+			cfg.mosaicBS = MosaicBandSets()
+			cfg.cloudMsk = CloudMasking()
+			cfg.spclDstBS = SpectralDistanceBandsets()
 			cfg.editRstr = EditRaster()
 			cfg.sieveRstr = SieveRaster()
 			cfg.ersnRstr = ErosionRaster()
 			cfg.dltnRstr = DilationRaster()
-			cfg.downLandsat = DownloadLandsatImages()
-			cfg.downASTER = DownloadASTERImages()
-			cfg.downMODIS = DownloadMODISImages()
-			cfg.downSentinel = DownloadSentinelImages()
+			cfg.downProd = DownloadProducts()
 			cfg.landsatT = LandsatTab()
 			cfg.ASTERT = ASTERTab()
 			cfg.MODIST = MODISTab()
 			cfg.sentinel2T = Sentinel2Tab()
+			cfg.sentinel3T = Sentinel3Tab()
 			cfg.landCC = LandCoverChange()
 			cfg.classRep = ClassReportTab()
 			cfg.classVect = ClassToVectorTab()
@@ -267,10 +287,7 @@ class SemiAutomaticClassificationPlugin:
 			cfg.sigImport = Signature_Importer()
 			cfg.mnlROI = ManualROI(cfg.cnvs)
 			cfg.regionROI = RegionROI(cfg.cnvs)
-			cfg.dwnlLandsatP = DownloadLandsatPointer(cfg.cnvs)
-			cfg.dwnlASTERP = DownloadASTERPointer(cfg.cnvs)
-			cfg.dwnlMODISP = DownloadMODISPointer(cfg.cnvs)
-			cfg.dwnlSentinelP = DownloadSentinelPointer(cfg.cnvs)
+			cfg.dwnlPrdPnt = DownloadProductPointer(cfg.cnvs)
 			cfg.clipMultiP = ClipMultiplerastersPointer(cfg.cnvs)
 			cfg.LCSPixel = LCSigPixel(cfg.cnvs)
 			cfg.LCSPixel2 = LCSigPixel2(cfg.cnvs)
@@ -278,33 +295,27 @@ class SemiAutomaticClassificationPlugin:
 			cfg.uiUtls = Ui_Utils()
 			cfg.ipt = Input()
 			# connect when map is clicked
-			cfg.iface.connect(cfg.mnlROI , cfg.SIGNALSCP("leftClicked") , cfg.ROId.clckL)
-			cfg.iface.connect(cfg.mnlROI , cfg.SIGNALSCP("rightClicked") , cfg.ROId.clckR)
-			cfg.iface.connect(cfg.mnlROI , cfg.SIGNALSCP("moved") , cfg.ROId.movedPointer)
-			cfg.iface.connect(cfg.regionROI , cfg.SIGNALSCP("ROIleftClicked") , cfg.ROId.pointerClickROI)
-			cfg.iface.connect(cfg.regionROI , cfg.SIGNALSCP("ROIrightClicked") , cfg.ROId.pointerRightClickROI)
-			cfg.iface.connect(cfg.dwnlLandsatP , cfg.SIGNALSCP("leftClicked") , cfg.downLandsat.pointerLeftClick)
-			cfg.iface.connect(cfg.dwnlLandsatP , cfg.SIGNALSCP("rightClicked") , cfg.downLandsat.pointerRightClick)
-			cfg.iface.connect(cfg.dwnlASTERP , cfg.SIGNALSCP("leftClicked") , cfg.downASTER.pointerLeftClick)
-			cfg.iface.connect(cfg.dwnlASTERP , cfg.SIGNALSCP("rightClicked") , cfg.downASTER.pointerRightClick)
-			cfg.iface.connect(cfg.dwnlMODISP , cfg.SIGNALSCP("leftClicked") , cfg.downMODIS.pointerLeftClick)
-			cfg.iface.connect(cfg.dwnlMODISP , cfg.SIGNALSCP("rightClicked") , cfg.downMODIS.pointerRightClick)
-			cfg.iface.connect(cfg.dwnlSentinelP , cfg.SIGNALSCP("leftClicked") , cfg.downSentinel.pointerLeftClick)
-			cfg.iface.connect(cfg.dwnlSentinelP , cfg.SIGNALSCP("rightClicked") , cfg.downSentinel.pointerRightClick)
-			cfg.iface.connect(cfg.clipMultiP , cfg.SIGNALSCP("leftClicked") , cfg.clipMulti.pointerLeftClick)
-			cfg.iface.connect(cfg.clipMultiP , cfg.SIGNALSCP("rightClicked") , cfg.clipMulti.pointerRightClick)
-			cfg.iface.connect(cfg.regionROI , cfg.SIGNALSCP("moved") , cfg.ROId.movedPointer)
-			cfg.iface.connect(cfg.classPrev , cfg.SIGNALSCP("leftClicked") , cfg.classD.pointerClickPreview)
-			cfg.iface.connect(cfg.classPrev , cfg.SIGNALSCP("rightClicked") , cfg.classD.pointerRightClickPreview)
-			cfg.iface.connect(cfg.LCSPixel , cfg.SIGNALSCP("MaprightClicked") , cfg.LCSignT.pointerLeftClick)
-			cfg.iface.connect(cfg.LCSPixel , cfg.SIGNALSCP("MapleftClicked") , cfg.LCSignT.pointerLeftClick)
-			cfg.iface.connect(cfg.LCSPixel2 , cfg.SIGNALSCP("MaprightClicked") , cfg.spSigPlot.pointerLeftClick)
-			cfg.iface.connect(cfg.LCSPixel2 , cfg.SIGNALSCP("MapleftClicked") , cfg.spSigPlot.pointerLeftClick)
+			cfg.mnlROI.rightClicked.connect(cfg.SCPD.clckR)
+			cfg.mnlROI.leftClicked.connect(cfg.SCPD.clckL)
+			cfg.mnlROI.moved.connect(cfg.SCPD.movedPointer)
+			cfg.regionROI.ROIleftClicked.connect(cfg.SCPD.pointerClickROI)
+			cfg.regionROI.ROIrightClicked.connect(cfg.SCPD.pointerRightClickROI)
+			cfg.regionROI.moved.connect(cfg.SCPD.movedPointer)
+			cfg.clipMultiP.leftClicked.connect(cfg.clipMulti.pointerLeftClick)
+			cfg.clipMultiP.rightClicked.connect(cfg.clipMulti.pointerRightClick)
+			cfg.dwnlPrdPnt.leftClicked.connect(cfg.downProd.pointerLeftClick)
+			cfg.dwnlPrdPnt.rightClicked.connect(cfg.downProd.pointerRightClick)
+			cfg.classPrev.leftClicked.connect(cfg.SCPD.pointerClickPreview)
+			cfg.classPrev.rightClicked.connect(cfg.SCPD.pointerRightClickPreview)
+			cfg.LCSPixel.MaprightClicked.connect(cfg.LCSignT.pointerLeftClick)
+			cfg.LCSPixel.MapleftClicked.connect(cfg.LCSignT.pointerLeftClick)
+			cfg.LCSPixel2.MaprightClicked.connect(cfg.spSigPlot.pointerLeftClick)
+			cfg.LCSPixel2.MapleftClicked.connect(cfg.spSigPlot.pointerLeftClick)			
 			# system variables
 			cfg.utls.findSystemSpecs()
 			cfg.utls.readVariables()
 			# initialize plugin directory
-			cfg.plgnDir = cfg.QFileInfoSCP(cfg.qgisCoreSCP.QgsApplication.qgisUserDbFilePath()).path() + "/python/plugins/" + str(__name__).split(".")[0]
+			cfg.plgnDir = cfg.QFileInfoSCP(cfg.qgisCoreSCP.QgsApplication.qgisUserDatabaseFilePath()).path() + "/python/plugins/" + str(__name__).split(".")[0]
 			# initialize LOG directory
 			cfg.lgndir = cfg.plgnDir
 			# log file path
@@ -321,7 +332,6 @@ class SemiAutomaticClassificationPlugin:
 				lclPth = cfg.plgnDir + "/i18n/semiautomaticclassificationplugin_" + lclNm + ".qm" 
 			if cfg.QFileInfoSCP(lclPth).exists(): 
 				trnsltr = cfg.QtCoreSCP.QTranslator() 
-				cfg.QtCoreSCP.QTextCodec.setCodecForTr(cfg.QtCoreSCP.QTextCodec.codecForName('utf-8'))
 				trnsltr.load(lclPth) 
 				if cfg.QtCoreSCP.qVersion() > '4.3.3': 
 					cfg.QtCoreSCP.QCoreApplication.installTranslator(trnsltr)
@@ -332,11 +342,11 @@ class SemiAutomaticClassificationPlugin:
 				cfg.gdalSCP.SetConfigOption('GDAL_NUM_THREADS', 'ALL_CPUS')
 			except:
 				pass
-			
+
 	# read registry keys 
 	def registryKeys(self):
 		""" registry keys """
-		cfg.logSetVal = cfg.utls.readRegistryKeys(cfg.regLogKey, cfg.logSetVal)
+		cfg.firstInstallVal = cfg.utls.readRegistryKeys(cfg.regFirstInstall, cfg.firstInstallVal)
 		cfg.logSetVal = cfg.utls.readRegistryKeys(cfg.regLogKey, cfg.logSetVal)
 		cfg.downNewsVal = cfg.utls.readRegistryKeys(cfg.downNewsKey, cfg.downNewsVal)
 		cfg.ROIClrVal = cfg.utls.readRegistryKeys(cfg.regROIClr, cfg.ROIClrVal)
@@ -352,17 +362,20 @@ class SemiAutomaticClassificationPlugin:
 		cfg.LCsignatureCheckBox = cfg.utls.readRegistryKeys(cfg.regLCSignature, cfg.LCsignatureCheckBox)
 		cfg.fldROI_info = cfg.utls.readRegistryKeys(cfg.regInfoFieldName, cfg.fldROI_info)
 		cfg.fldROIMC_info = cfg.utls.readRegistryKeys(cfg.regMCInfoFieldName, cfg.fldROIMC_info)
-		cfg.variableName = cfg.utls.readRegistryKeys(cfg.regVariableName, cfg.variableName)
+		cfg.variableName = cfg.utls.readRegistryKeys(cfg.regVariableName, cfg.variableName)		
+		cfg.vectorVariableName = cfg.utls.readRegistryKeys(cfg.regVectorVariableName, cfg.vectorVariableName)		
+		cfg.SMTPCheck = cfg.utls.readRegistryKeys(cfg.regSMTPCheck, cfg.SMTPCheck)
+		cfg.SMTPServer = cfg.utls.readRegistryKeys(cfg.regSMTPServer, cfg.SMTPServer)
+		cfg.SMTPtoEmails = cfg.utls.readRegistryKeys(cfg.regSMTPtoEmails, cfg.SMTPtoEmails)
+		cfg.SMTPUser = cfg.utls.readRegistryKeys(cfg.regSMTPUser, cfg.SMTPUser)
+		cfg.SMTPPassword = cfg.utls.readRegistryKeys(cfg.regSMTPPassword, cfg.SMTPPassword)
 		cfg.USGSUser = cfg.utls.readRegistryKeys(cfg.regUSGSUser, cfg.USGSUser)
 		cfg.USGSPass = cfg.utls.readRegistryKeys(cfg.regUSGSPass, cfg.USGSPass)
 		cfg.USGSUserASTER = cfg.utls.readRegistryKeys(cfg.regUSGSUserASTER, cfg.USGSUserASTER)
 		cfg.USGSPassASTER = cfg.utls.readRegistryKeys(cfg.regUSGSPassASTER, cfg.USGSPassASTER)
-		cfg.USGSUserMODIS = cfg.utls.readRegistryKeys(cfg.regUSGSUserMODIS, cfg.USGSUserMODIS)
-		cfg.USGSPassMODIS = cfg.utls.readRegistryKeys(cfg.regUSGSPassMODIS, cfg.USGSPassMODIS)
 		cfg.SciHubUser = cfg.utls.readRegistryKeys(cfg.regSciHubUser, cfg.SciHubUser)
 		cfg.SciHubService = cfg.utls.readRegistryKeys(cfg.regSciHubService, cfg.SciHubService)
 		cfg.SciHubPass = cfg.utls.readRegistryKeys(cfg.regSciHubPass, cfg.SciHubPass)
-		cfg.bndSetNm = cfg.utls.readRegistryKeys(cfg.regBandSetName, cfg.bndSetNm)
 		cfg.sigPLRoundCharList = cfg.roundCharList
 		cfg.scatPlRoundCharList = cfg.roundCharList
 		cfg.grpNm = cfg.utls.readRegistryKeys(cfg.regGroupName, cfg.grpNm)
@@ -392,7 +405,7 @@ class SemiAutomaticClassificationPlugin:
 					from osgeo import gdal
 				except:
 					msg = "Gdal"
-				qgisUtils.iface.messageBar().pushMessage("Semi-Automatic Classification Plugin", QApplication.translate("semiautomaticclassificationplugin", "Please, restart QGIS for executing the Semi-Automatic Classification Plugin. Possible missing dependecies: " + msg), level=QgsMessageBar.INFO)
+				qgisUtils.iface.messageBar().pushMessage("Semi-Automatic Classification Plugin", QApplication.translate("semiautomaticclassificationplugin", "Please, restart QGIS for executing the Semi-Automatic Classification Plugin. Possible missing dependecies: " + msg), level=qgisGui.QgsMessageBar.INFO)
 				return
 			cfg.ipt.loadInputToolbar()
 			cfg.algMinDist = cfg.uidc.algorithm_combo.itemText(0) 
@@ -408,14 +421,13 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ipt.loadMenu()
 			# set plugin version
 			cfg.ui.plugin_version_label.setText(semiautomaticclassVersion())
+			cfg.uidc.plugin_version_label2.setText("SCP " + semiautomaticclassVersion())
 			# signature list
 			cfg.utls.insertTableColumn(cfg.uidc.signature_list_tableWidget, 6, cfg.tableColString, None, "Yes")
 			cfg.utls.sortTableColumn(cfg.uidc.signature_list_tableWidget, 6)
 			cfg.utls.setColumnWidthList(cfg.uidc.signature_list_tableWidget, [[0, 30], [1, 30], [2, 40], [3, 40], [4, 50], [5, 40]])
 			# row height
-			cfg.ui.landsat_images_tableWidget.verticalHeader().setDefaultSectionSize(16)
-			cfg.ui.sentinel_images_tableWidget.verticalHeader().setDefaultSectionSize(16)
-			cfg.ui.tableWidget.verticalHeader().setDefaultSectionSize(16)
+			cfg.ui.download_images_tableWidget.verticalHeader().setDefaultSectionSize(16)
 			cfg.ui.tableWidget_band_calc.verticalHeader().setDefaultSectionSize(16)
 			cfg.ui.landsat_tableWidget.verticalHeader().setDefaultSectionSize(16)
 			cfg.ui.sentinel_2_tableWidget.verticalHeader().setDefaultSectionSize(16)
@@ -426,14 +438,15 @@ class SemiAutomaticClassificationPlugin:
 			cfg.utls.setColumnWidthList(cfg.ui.MODIS_tableWidget, [[0, 400], [1, 200], [2, 60]])
 			cfg.ui.LCS_tableWidget.verticalHeader().setDefaultSectionSize(16)
 			cfg.ui.signature_threshold_tableWidget.verticalHeader().setDefaultSectionSize(16)
-			cfg.ui.tableWidget_weight.verticalHeader().setDefaultSectionSize(16)
 			cfg.ui.point_tableWidget.verticalHeader().setDefaultSectionSize(16)
+			cfg.ui.log_tableWidget.verticalHeader().setDefaultSectionSize(16)
+			cfg.utls.setColumnWidthList(cfg.ui.log_tableWidget, [[0, 100], [1, 200], [2, 800]])
 			try:
-				cfg.uidc.signature_list_tableWidget.horizontalHeader().setResizeMode(4, cfg.QtGuiSCP.QHeaderView.Stretch)
+				cfg.uidc.signature_list_tableWidget.horizontalHeader().setSectionResizeMode(4, cfg.QtWidgetsSCP.QHeaderView.Stretch)
 			except:
 				pass
 			try:
-				cfg.uidc.macroclass_color_tableWidget.horizontalHeader().setResizeMode(1, cfg.QtGuiSCP.QHeaderView.Stretch)
+				cfg.uidc.macroclass_color_tableWidget.horizontalHeader().setSectionResizeMode(1, cfg.QtWidgetsSCP.QHeaderView.Stretch)
 			except:
 				pass
 			# spectral signature plot list
@@ -441,42 +454,34 @@ class SemiAutomaticClassificationPlugin:
 			cfg.utls.sortTableColumn(cfg.uisp.signature_list_plot_tableWidget, 3)
 			cfg.utls.setColumnWidthList(cfg.uisp.signature_list_plot_tableWidget, [[0, 30], [1, 40], [2, 100], [3, 40], [4, 100], [5, 30]])
 			try:
-				cfg.uisp.signature_list_plot_tableWidget.horizontalHeader().setResizeMode(2, cfg.QtGuiSCP.QHeaderView.Stretch)
-				cfg.uisp.signature_list_plot_tableWidget.horizontalHeader().setResizeMode(4, cfg.QtGuiSCP.QHeaderView.Stretch)
+				cfg.uisp.signature_list_plot_tableWidget.horizontalHeader().setSectionResizeMode(2, cfg.QtWidgetsSCP.QHeaderView.Stretch)
+				cfg.uisp.signature_list_plot_tableWidget.horizontalHeader().setSectionResizeMode(4, cfg.QtWidgetsSCP.QHeaderView.Stretch)
 			except:
 				pass
 			# passwords
-			cfg.ui.password_usgs_lineEdit.setEchoMode(cfg.QtGuiSCP.QLineEdit.Password)
-			cfg.ui.password_usgs_lineEdit_2.setEchoMode(cfg.QtGuiSCP.QLineEdit.Password)
-			cfg.ui.password_usgs_lineEdit_3.setEchoMode(cfg.QtGuiSCP.QLineEdit.Password)
-			cfg.ui.password_scihub_lineEdit.setEchoMode(cfg.QtGuiSCP.QLineEdit.Password)
+			cfg.ui.smtp_password_lineEdit.setEchoMode(cfg.QtWidgetsSCP.QLineEdit.Password)
+			cfg.ui.password_usgs_lineEdit.setEchoMode(cfg.QtWidgetsSCP.QLineEdit.Password)
+			cfg.ui.password_usgs_lineEdit_2.setEchoMode(cfg.QtWidgetsSCP.QLineEdit.Password)
+			cfg.ui.password_scihub_lineEdit.setEchoMode(cfg.QtWidgetsSCP.QLineEdit.Password)
 			# scatter plot list
 			cfg.utls.insertTableColumn(cfg.uiscp.scatter_list_plot_tableWidget, 6, cfg.tableColString, None, "Yes")
 			cfg.utls.sortTableColumn(cfg.uiscp.scatter_list_plot_tableWidget, 3)
 			cfg.utls.setColumnWidthList(cfg.uiscp.scatter_list_plot_tableWidget, [[0, 30], [1, 40], [2, 100], [3, 40], [4, 100], [5, 30]])
 			try:
-				cfg.uiscp.scatter_list_plot_tableWidget.horizontalHeader().setResizeMode(2, cfg.QtGuiSCP.QHeaderView.Stretch)
-				cfg.uiscp.scatter_list_plot_tableWidget.horizontalHeader().setResizeMode(4, cfg.QtGuiSCP.QHeaderView.Stretch)
+				cfg.uiscp.scatter_list_plot_tableWidget.horizontalHeader().setSectionResizeMode(2, cfg.QtWidgetsSCP.QHeaderView.Stretch)
+				cfg.uiscp.scatter_list_plot_tableWidget.horizontalHeader().setSectionResizeMode(4, cfg.QtWidgetsSCP.QHeaderView.Stretch)
 			except:
 				pass
 			# signature threshold
 			cfg.utls.insertTableColumn(cfg.ui.signature_threshold_tableWidget, 7, cfg.tableColString, None, "Yes")
 			cfg.utls.setColumnWidthList(cfg.ui.signature_threshold_tableWidget,  [[4, 100], [5, 100], [6, 100]])
 			try:
-				cfg.ui.signature_threshold_tableWidget.horizontalHeader().setResizeMode(1, cfg.QtGuiSCP.QHeaderView.Stretch)
-				cfg.ui.signature_threshold_tableWidget.horizontalHeader().setResizeMode(3, cfg.QtGuiSCP.QHeaderView.Stretch)
+				cfg.ui.signature_threshold_tableWidget.horizontalHeader().setSectionResizeMode(1, cfg.QtWidgetsSCP.QHeaderView.Stretch)
+				cfg.ui.signature_threshold_tableWidget.horizontalHeader().setSectionResizeMode(3, cfg.QtWidgetsSCP.QHeaderView.Stretch)
 			except:
 				pass
-			# band set list
-			cfg.utls.setColumnWidthList(cfg.ui.tableWidget, [[0, 350], [1, 150], [2, 150], [3, 150]])
-			# Landsat download tab
-			cfg.utls.setColumnWidthList(cfg.ui.landsat_images_tableWidget, [[0, 200]])
-			# Sentinel download tab
-			cfg.utls.setColumnWidthList(cfg.ui.sentinel_images_tableWidget, [[0, 300]])
-			# ASTER download tab
-			cfg.utls.setColumnWidthList(cfg.ui.aster_images_tableWidget, [[0, 300]])
-			# MODIS download tab
-			cfg.utls.setColumnWidthList(cfg.ui.modis_images_tableWidget, [[0, 300]])
+			# product download tab
+			cfg.utls.setColumnWidthList(cfg.ui.download_images_tableWidget, [[0, 100], [1, 400]])
 			# USGS spectral lbrary
 			cfg.usgsLib.addSpectralLibraryToCombo(cfg.usgs_lib_list)
 			cfg.usgs_C1p = cfg.plgnDir + "/spectralsignature/usgs_spectral_library/minerals.csv"
@@ -487,14 +492,12 @@ class SemiAutomaticClassificationPlugin:
 			cfg.usgs_C6p = cfg.plgnDir + "/spectralsignature/usgs_spectral_library/plants_veg_microorg.csv"
 			# band calc expression
 			cfg.bCalc.createExpressionList(cfg.expressionListBC)
-			cfg.batchT.addFunctionsToCombo(cfg.functionNames)
+			cfg.batchT.addFunctionsToTable(cfg.functionNames)
 			cfg.bst.addSatelliteToCombo(cfg.satWlList)
-			cfg.downLandsat.addSatelliteToCombo(cfg.satLandsatList)
-			cfg.downASTER.addSatelliteToCombo(cfg.satASTERtList)
-			cfg.downMODIS.addSatelliteToCombo(cfg.satMODIStList)
+			cfg.downProd.addSatelliteToCombo(cfg.downProductList)
 			cfg.scaPlT.addColormapToCombo(cfg.scatterColorMap)
 			cfg.bst.addUnitToCombo(cfg.unitList)
-			cfg.classD.previewSize()
+			cfg.SCPD.previewSize()
 			# set log state
 			if cfg.logSetVal == "Yes":
 				cfg.ui.log_checkBox.setCheckState(2)
@@ -521,18 +524,23 @@ class SemiAutomaticClassificationPlugin:
 				cfg.ui.raster_compression_checkBox.setCheckState(2)
 			elif cfg.rasterCompression == "No":
 				cfg.ui.raster_compression_checkBox.setCheckState(0)
+			# set SMTP checkbox state
+			if cfg.SMTPCheck == "Yes":
+				cfg.ui.smtp_checkBox.setCheckState(2)
+			elif cfg.SMTPCheck == "No":
+				cfg.ui.smtp_checkBox.setCheckState(0)
 			# set sound state
 			if cfg.soundVal == "Yes":
 				cfg.ui.sound_checkBox.setCheckState(2)
 			elif cfg.soundVal == "No":
 				cfg.ui.sound_checkBox.setCheckState(0)
 			# connect to project loaded
-			cfg.QObjectSCP.connect(cfg.qgisCoreSCP.QgsProject.instance(), cfg.SIGNALSCP("readProject(const QDomDocument &)"), self.projectLoaded)
-			cfg.QObjectSCP.connect(cfg.qgisCoreSCP.QgsProject.instance(), cfg.SIGNALSCP("projectSaved()"), self.projectSaved)
+			cfg.qgisCoreSCP.QgsProject.instance().readProject.connect(self.projectLoaded)
+			cfg.qgisCoreSCP.QgsProject.instance().projectSaved.connect(self.projectSaved)
 			cfg.iface.newProjectCreated.connect(self.newProjectLoaded)
-			#cfg.QObjectSCP.connect(cfg.qgisCoreSCP.QgsProject.instance(), cfg.SIGNALSCP("loadingLayer(const QString &)"), self.test)
 			#cfg.qgisCoreSCP.QgsProject.instance().readMapLayer.connect(self.test)
 			#cfg.qgisCoreSCP.QgsProject.instance().layerLoaded.connect(self.test)
+			
 			""" Docks """
 			# reload layers in combos
 			cfg.ipt.refreshRasterLayer()
@@ -568,22 +576,32 @@ class SemiAutomaticClassificationPlugin:
 				cfg.ui.MCInfo_field_name_lineEdit.setText(cfg.fldROIMC_info)
 				cfg.ui.variable_name_lineEdit.setText(cfg.variableName)
 				cfg.ui.group_name_lineEdit.setText(cfg.grpNm)
+				# set SMTP server
+				cfg.ui.smtp_server_lineEdit.setText(cfg.SMTPServer)
+				# set SMTP to emails
+				cfg.ui.to_email_lineEdit.setText(cfg.SMTPtoEmails)
+				# set SMTP user and password
+				cfg.ui.smtp_user_lineEdit.setText(cfg.SMTPUser)
+				if cfg.SMTPPassword is not None:
+					SMTPPsw = cfg.utls.decryptPassword(cfg.SMTPPassword[2:-1])
+					cfg.ui.smtp_password_lineEdit.setText(str(SMTPPsw)[2:-1])
+					cfg.SMTPPassword = str(SMTPPsw)[2:-1]
 				# set USGS user and password
 				cfg.ui.user_usgs_lineEdit.setText(cfg.USGSUser)
-				USGSPsw = cfg.utls.decryptPassword(cfg.USGSPass)
-				cfg.ui.password_usgs_lineEdit.setText(USGSPsw)
+				if cfg.USGSPass is not None:
+					USGSPsw = cfg.utls.decryptPassword(cfg.USGSPass[2:-1])
+					cfg.ui.password_usgs_lineEdit.setText(str(USGSPsw)[2:-1])
 				cfg.ui.user_usgs_lineEdit_2.setText(cfg.USGSUserASTER)
-				cfg.ui.user_usgs_lineEdit_3.setText(cfg.USGSUserMODIS)
-				USGSPsw2 = cfg.utls.decryptPassword(cfg.USGSPassASTER)
-				cfg.ui.password_usgs_lineEdit_2.setText(USGSPsw2)
-				USGSPsw3 = cfg.utls.decryptPassword(cfg.USGSPassMODIS)
-				cfg.ui.password_usgs_lineEdit_3.setText(USGSPsw3)
+				if cfg.USGSPassASTER is not None:
+					USGSPsw2 = cfg.utls.decryptPassword(cfg.USGSPassASTER[2:-1])
+					cfg.ui.password_usgs_lineEdit_2.setText(str(USGSPsw2)[2:-1])
 				# set SciHub user and password
 				cfg.ui.sentinel_service_lineEdit.setText(cfg.SciHubService)
 				cfg.ui.user_scihub_lineEdit.setText(cfg.SciHubUser)
-				sciHubPsw = cfg.utls.decryptPassword(cfg.SciHubPass)
-				cfg.ui.password_scihub_lineEdit.setText(sciHubPsw)
-			except Exception, err:
+				if cfg.SciHubPass is not None:
+					sciHubPsw = cfg.utls.decryptPassword(cfg.SciHubPass[2:-1])
+					cfg.ui.password_scihub_lineEdit.setText(str(sciHubPsw)[2:-1])
+			except Exception as err:
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			# reload layers in combos
@@ -595,9 +613,10 @@ class SemiAutomaticClassificationPlugin:
 			cfg.landCC.refreshNewClassificationLayer()
 			# reload raster bands in checklist
 			cfg.bst.rasterBandName()
-			# reload rasters in checklist
-			cfg.clipMulti.rasterNameList()
-			cfg.stackRstr.rasterNameList()
+			# set default SCP tab
+			cfg.ipt.SCPTabChanged(0)
+			""" SCP tab """
+			cfg.ui.SCP_tabs.currentChanged.connect(cfg.ipt.SCPTabChanged)
 			""" Multiple ROI tab """
 			# connect to add point
 			cfg.ui.add_point_pushButton.clicked.connect(cfg.multiROI.addPointToTable)
@@ -615,7 +634,7 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.signature_checkBox2.stateChanged.connect(cfg.multiROI.signatureCheckbox2)
 			""" Import spectral signature tab """
 			# connect the import library
-			cfg.ui.open_library_pushButton.clicked.connect(cfg.classD.openLibraryFile)
+			cfg.ui.open_library_pushButton.clicked.connect(cfg.SCPD.openLibraryFile)
 			# connect the open shapefile
 			cfg.ui.open_shapefile_pushButton.clicked.connect(cfg.sigImport.openShapefileI)
 			# connect the import shapefile
@@ -628,13 +647,11 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.add_usgs_library_pushButton.clicked.connect(cfg.usgsLib.addSignatureToList)
 			""" Export spectral signature tab """
 			# connect to export signature to SCP file
-			cfg.ui.export_SCP_pushButton.clicked.connect(cfg.classD.exportSignatureFile)
-			cfg.ui.export_SHP_pushButton.clicked.connect(cfg.classD.exportSignatureShapefile)
+			cfg.ui.export_SCP_pushButton.clicked.connect(cfg.SCPD.exportSignatureFile)
+			cfg.ui.export_SHP_pushButton.clicked.connect(cfg.SCPD.exportSignatureShapefile)
 			# connect to export signature to CSV
-			cfg.ui.export_CSV_library_toolButton.clicked.connect(cfg.classD.exportToCSVLibrary)
+			cfg.ui.export_CSV_library_toolButton.clicked.connect(cfg.SCPD.exportToCSVLibrary)
 			""" Algorithm weight tab """
-			# edited cell
-			cfg.ui.tableWidget_weight.cellChanged.connect(cfg.algWT.editedWeightTable)
 			cfg.ui.reset_weights_pushButton.clicked.connect(cfg.algWT.resetWeights)
 			cfg.ui.set_weight_value_pushButton.clicked.connect(cfg.algWT.setWeights)
 			""" Signature threshold tab """
@@ -668,126 +685,94 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.all_RGB_list_toolButton.clicked.connect(cfg.RGBLT.allRGBListAction)
 			cfg.ui.export_RGB_List_toolButton.clicked.connect(cfg.RGBLT.exportRGBList)
 			cfg.ui.import_RGB_List_toolButton.clicked.connect(cfg.RGBLT.importRGB)
-			""" Download Landsat tab """
+			""" Download product tab """
 			# connect to find images button
-			cfg.ui.find_images_toolButton.clicked.connect(cfg.downLandsat.findImages)
-			cfg.ui.selectUL_toolButton_3.clicked.connect(cfg.downLandsat.pointerActive)
+			cfg.ui.find_images_toolButton.clicked.connect(cfg.downProd.findImages)
+			cfg.ui.selectUL_toolButton_3.clicked.connect(cfg.downProd.pointerActive)
 			# connect to display button
-			cfg.ui.toolButton_display.clicked.connect(cfg.downLandsat.displayImages)
-			cfg.ui.remove_image_toolButton.clicked.connect(cfg.downLandsat.removeImageFromTable)
-			cfg.ui.clear_table_toolButton.clicked.connect(cfg.downLandsat.clearTable)
-			cfg.ui.download_images_Button.clicked.connect(cfg.downLandsat.downloadImages)
-			cfg.ui.export_links_Button.clicked.connect(cfg.downLandsat.exportLinks)
-			cfg.ui.check_toolButton.clicked.connect(cfg.downLandsat.checkAllBands)
-			cfg.ui.show_area_radioButton_2.clicked.connect(cfg.downLandsat.showHideArea)
-			cfg.ui.remember_user_checkBox_2.stateChanged.connect(cfg.downLandsat.rememberUserCheckbox)
-			cfg.ui.user_usgs_lineEdit.editingFinished.connect(cfg.downLandsat.rememberUser)
-			cfg.ui.password_usgs_lineEdit.editingFinished.connect(cfg.downLandsat.rememberUser)
-			""" Download Sentinel tab """
-			# connect to find images button
-			cfg.ui.reset_sentinel_service_toolButton.clicked.connect(cfg.downSentinel.resetService)
-			cfg.ui.find_images_toolButton_3.clicked.connect(cfg.downSentinel.findImages)
-			cfg.ui.selectUL_toolButton_5.clicked.connect(cfg.downSentinel.pointerActive)
-			cfg.ui.clear_table_toolButton_3.clicked.connect(cfg.downSentinel.clearTable)
-			cfg.ui.export_links_Button_3.clicked.connect(cfg.downSentinel.exportLinks)
-			cfg.ui.toolButton_display_3.clicked.connect(cfg.downSentinel.displayImages)
-			cfg.ui.toolButton_granule_preview.clicked.connect(cfg.downSentinel.displayGranules)
-			cfg.ui.check_toolButton_2.clicked.connect(cfg.downSentinel.checkAllBands)
-			cfg.ui.sentinel_service_lineEdit.editingFinished.connect(cfg.downSentinel.rememberService)
-			cfg.ui.user_scihub_lineEdit.editingFinished.connect(cfg.downSentinel.rememberUser)
-			cfg.ui.password_scihub_lineEdit.editingFinished.connect(cfg.downSentinel.rememberUser)
-			cfg.ui.remember_user_checkBox.stateChanged.connect(cfg.downSentinel.rememberUserCheckbox)
-			cfg.ui.download_images_Button_3.clicked.connect(cfg.downSentinel.downloadImages)
-			cfg.ui.remove_image_toolButton_3.clicked.connect(cfg.downSentinel.removeImageFromTable)
-			cfg.ui.show_area_radioButton.clicked.connect(cfg.downSentinel.showHideArea)
-			""" Download ASTER tab """
-			# connect to find images button
-			cfg.ui.find_images_toolButton_2.clicked.connect(cfg.downASTER.findImages)
-			cfg.ui.selectUL_toolButton_4.clicked.connect(cfg.downASTER.pointerActive)
-			# connect to display button
-			cfg.ui.toolButton_display_2.clicked.connect(cfg.downASTER.displayImages)
-			cfg.ui.remove_image_toolButton_2.clicked.connect(cfg.downASTER.removeImageFromTable)
-			cfg.ui.clear_table_toolButton_2.clicked.connect(cfg.downASTER.clearTable)
-			cfg.ui.download_images_Button_2.clicked.connect(cfg.downASTER.downloadImages)
-			cfg.ui.export_links_Button_2.clicked.connect(cfg.downASTER.exportLinks)
-			cfg.ui.show_area_radioButton_4.clicked.connect(cfg.downASTER.showHideArea)
-			cfg.ui.remember_user_checkBox_3.stateChanged.connect(cfg.downASTER.rememberUserCheckbox)
-			cfg.ui.user_usgs_lineEdit_2.editingFinished.connect(cfg.downASTER.rememberUser)
-			cfg.ui.password_usgs_lineEdit_2.editingFinished.connect(cfg.downASTER.rememberUser)
-			""" Download MODIS tab """
-			# connect to find images button
-			cfg.ui.find_images_toolButton_4.clicked.connect(cfg.downMODIS.findImages)
-			cfg.ui.selectUL_toolButton_6.clicked.connect(cfg.downMODIS.pointerActive)
-			# connect to display button
-			cfg.ui.toolButton_display_4.clicked.connect(cfg.downMODIS.displayImages)
-			cfg.ui.remove_image_toolButton_4.clicked.connect(cfg.downMODIS.removeImageFromTable)
-			cfg.ui.clear_table_toolButton_4.clicked.connect(cfg.downMODIS.clearTable)
-			cfg.ui.download_images_Button_4.clicked.connect(cfg.downMODIS.downloadImages)
-			cfg.ui.export_links_Button_4.clicked.connect(cfg.downMODIS.exportLinks)
-			cfg.ui.show_area_radioButton_5.clicked.connect(cfg.downMODIS.showHideArea)
-			cfg.ui.remember_user_checkBox_4.stateChanged.connect(cfg.downMODIS.rememberUserCheckbox)
-			cfg.ui.user_usgs_lineEdit_3.editingFinished.connect(cfg.downMODIS.rememberUser)
-			cfg.ui.password_usgs_lineEdit_3.editingFinished.connect(cfg.downMODIS.rememberUser)
+			cfg.ui.toolButton_display.clicked.connect(cfg.downProd.displayImages)
+			cfg.ui.remove_image_toolButton.clicked.connect(cfg.downProd.removeImageFromTable)
+			cfg.ui.clear_table_toolButton.clicked.connect(cfg.downProd.clearTable)
+			cfg.ui.download_images_Button.clicked.connect(cfg.downProd.downloadImages)
+			cfg.ui.export_links_Button.clicked.connect(cfg.downProd.exportLinks)
+			cfg.ui.import_table_pushButton.clicked.connect(cfg.downProd.importTableText)
+			cfg.ui.export_table_pushButton.clicked.connect(cfg.downProd.exportTableText)
+			cfg.ui.check_toolButton.clicked.connect(cfg.downProd.checkAllBands)
+			cfg.ui.show_area_radioButton_2.clicked.connect(cfg.downProd.showHideArea)
+			cfg.ui.remember_user_checkBox_2.stateChanged.connect(cfg.downProd.rememberUserCheckbox)
+			cfg.ui.user_usgs_lineEdit.editingFinished.connect(cfg.downProd.rememberUser)
+			cfg.ui.password_usgs_lineEdit.editingFinished.connect(cfg.downProd.rememberUser)
+			cfg.ui.reset_sentinel_service_toolButton.clicked.connect(cfg.downProd.resetService)
+			cfg.ui.remember_user_checkBox.stateChanged.connect(cfg.downProd.rememberUserCheckboxSentinel2)
+			cfg.ui.user_scihub_lineEdit.editingFinished.connect(cfg.downProd.rememberUserSentinel2)
+			cfg.ui.password_scihub_lineEdit.editingFinished.connect(cfg.downProd.rememberUserSentinel2)
+			cfg.ui.sentinel_service_lineEdit.editingFinished.connect(cfg.downProd.rememberService)
+			cfg.ui.check_toolButton_2.clicked.connect(cfg.downProd.checkAllBandsSentinel2)
+			cfg.ui.check_toolButton_3.clicked.connect(cfg.downProd.checkAllBandsSentinel3)
+			cfg.ui.remember_user_checkBox_3.stateChanged.connect(cfg.downProd.rememberUserCheckboxEarthdata)
+			cfg.ui.user_usgs_lineEdit_2.editingFinished.connect(cfg.downProd.rememberUserEarthdata)
+			cfg.ui.password_usgs_lineEdit_2.editingFinished.connect(cfg.downProd.rememberUserEarthdata)
+			cfg.ui.download_images_tableWidget.itemSelectionChanged.connect(cfg.downProd.tableClick)
 			""" Classification dock """
-			# combo layer
-			cfg.uidc.raster_name_combo.currentIndexChanged.connect(cfg.ipt.rasterLayerName)
-			# button reload
-			cfg.uidc.toolButton_reload.clicked.connect(cfg.ipt.checkRefreshRasterLayer)
 			# button band set
 			cfg.uidc.bandset_toolButton.clicked.connect(cfg.utls.bandSetTab)
-			cfg.uidc.input_raster_toolButton.clicked.connect(cfg.bst.addFileToBandSetAction)
-			cfg.uidc.ROItools_toolButton_2.clicked.connect(cfg.utls.roiToolsTab)
+			cfg.uidc.band_processing_toolButton.clicked.connect(cfg.utls.bandProcessingTab)
 			cfg.uidc.preprocessing_toolButton_2.clicked.connect(cfg.utls.preProcessingTab)
 			cfg.uidc.postprocessing_toolButton_2.clicked.connect(cfg.utls.postProcessingTab)
 			cfg.uidc.bandcalc_toolButton_2.clicked.connect(cfg.utls.bandCalcTab)
 			cfg.uidc.download_images_toolButton_2.clicked.connect(cfg.utls.selectTabDownloadImages)
-			cfg.uidc.settings_toolButton_2.clicked.connect(cfg.utls.settingsTab)
+			cfg.uidc.basic_tools_toolButton.clicked.connect(cfg.utls.basicToolsTab)
+			cfg.uidc.batch_toolButton.clicked.connect(cfg.utls.batchTab)
 			cfg.uidc.userguide_toolButton_2.clicked.connect(cfg.ipt.quickGuide)
 			cfg.uidc.help_toolButton_2.clicked.connect(cfg.ipt.askHelp)
+			cfg.uidc.support_toolButton.clicked.connect(cfg.ipt.supportSCP)
+			cfg.uidc.tabWidget_dock.currentChanged.connect(cfg.ipt.dockTabChanged)
 			# button new shapefile
-			cfg.uidc.button_new_input.clicked.connect(cfg.classD.createInput)
+			cfg.uidc.button_new_input.clicked.connect(cfg.SCPD.createInput)
 			# connect to save to shapefile 
-			cfg.uidc.button_Save_ROI.clicked.connect(cfg.classD.saveROItoShapefile)
+			cfg.uidc.button_Save_ROI.clicked.connect(cfg.SCPD.saveROItoShapefile)
 			# connect to undo save ROI 
-			cfg.uidc.undo_save_Button.clicked.connect(cfg.classD.undoSaveROI)
+			cfg.uidc.undo_save_Button.clicked.connect(cfg.SCPD.undoSaveROI)
 			# connect the signature calculation checkBox
-			cfg.uidc.signature_checkBox.stateChanged.connect(cfg.classD.signatureCheckbox)
-			cfg.uidc.scatterPlot_toolButton.clicked.connect(cfg.classD.addROIToScatterPlot)
+			cfg.uidc.signature_checkBox.stateChanged.connect(cfg.SCPD.signatureCheckbox)
+			cfg.uidc.scatterPlot_toolButton.clicked.connect(cfg.SCPD.addROIToScatterPlot)
+			# connect the save input checkBox
+			cfg.uidc.save_input_checkBox.stateChanged.connect(cfg.SCPD.saveInputCheckbox)
 			# connect to open training shapefile
-			cfg.uidc.trainingFile_toolButton.clicked.connect(cfg.classD.openTrainingFile)
+			cfg.uidc.trainingFile_toolButton.clicked.connect(cfg.SCPD.openTrainingFile)
 			# connect to export signature list file
 			cfg.uidc.export_signature_list_toolButton.clicked.connect(cfg.utls.exportLibraryTab)
 			# connect to import library file
 			cfg.uidc.import_library_toolButton.clicked.connect(cfg.utls.importLibraryTab)
 			# add to spectral signature plot
-			cfg.uidc.signature_spectral_plot_toolButton.clicked.connect(cfg.classD.addSignatureToSpectralPlot)
+			cfg.uidc.signature_spectral_plot_toolButton.clicked.connect(cfg.SCPD.addSignatureToSpectralPlot)
 			# connect to edited cell
-			cfg.uidc.signature_list_tableWidget.cellChanged.connect(cfg.classD.editedCell)
+			cfg.uidc.signature_list_tableWidget.cellChanged.connect(cfg.SCPD.editedCell)
 			# connect to signature list double click
-			cfg.uidc.signature_list_tableWidget.doubleClicked.connect(cfg.classD.signatureListDoubleClick)
+			cfg.uidc.signature_list_tableWidget.doubleClicked.connect(cfg.SCPD.signatureListDoubleClick)
 			# connect to delete signature
-			cfg.uidc.delete_Signature_Button.clicked.connect(cfg.classD.removeSelectedSignatures)
+			cfg.uidc.delete_Signature_Button.clicked.connect(cfg.SCPD.removeSelectedSignatures)
 			# connect to merge signatures
-			cfg.uidc.merge_signature_toolButton.clicked.connect(cfg.classD.mergeSelectedSignatures)
-			cfg.uidc.calculate_signature_toolButton.clicked.connect(cfg.classD.calculateSignatures)
+			cfg.uidc.merge_signature_toolButton.clicked.connect(cfg.SCPD.mergeSelectedSignatures)
+			cfg.uidc.calculate_signature_toolButton.clicked.connect(cfg.SCPD.calculateSignatures)
 			# connect the ROI macroclass ID	
-			cfg.uidc.ROI_Macroclass_ID_spin.valueChanged.connect(cfg.classD.setROIMacroID)
+			cfg.uidc.ROI_Macroclass_ID_spin.valueChanged.connect(cfg.SCPD.setROIMacroID)
 			# connect the ROI Macroclass 
-			cfg.uidc.ROI_Macroclass_line.editingFinished.connect(cfg.classD.roiMacroclassInfo)
+			cfg.uidc.ROI_Macroclass_line.editingFinished.connect(cfg.SCPD.roiMacroclassInfo)
 			# custom expression
-			cfg.uidc.custom_index_lineEdit.editingFinished.connect(cfg.classD.customExpressionEdited)
+			cfg.uidc.custom_index_lineEdit.editingFinished.connect(cfg.SCPD.customExpressionEdited)
 			# connect the ROI Class ID
-			cfg.uidc.ROI_ID_spin.valueChanged.connect(cfg.classD.setROIID)
+			cfg.uidc.ROI_ID_spin.valueChanged.connect(cfg.SCPD.setROIID)
 			# connect the ROI Class 
-			cfg.uidc.ROI_Class_line.editingFinished.connect(cfg.classD.roiClassInfo)
+			cfg.uidc.ROI_Class_line.editingFinished.connect(cfg.SCPD.roiClassInfo)
 			# connect the rapid ROI checkBox
-			cfg.uidc.display_cursor_checkBox.stateChanged.connect(cfg.classD.vegetationIndexCheckbox)
+			cfg.uidc.display_cursor_checkBox.stateChanged.connect(cfg.SCPD.vegetationIndexCheckbox)
 			# connect the vegetation index combo	
-			cfg.uidc.vegetation_index_comboBox.currentIndexChanged.connect(cfg.classD.vegetationIndexName)
+			cfg.uidc.vegetation_index_comboBox.currentIndexChanged.connect(cfg.SCPD.vegetationIndexName)
 			# connect the rapid ROI checkBox
-			cfg.uidc.rapid_ROI_checkBox.stateChanged.connect(cfg.classD.rapidROICheckbox)
+			cfg.uidc.rapid_ROI_checkBox.stateChanged.connect(cfg.SCPD.rapidROICheckbox)
 			# connect the vegetation index display checkbox
-			cfg.uidc.rapidROI_band_spinBox.valueChanged.connect(cfg.classD.rapidROIband)
+			cfg.uidc.rapidROI_band_spinBox.valueChanged.connect(cfg.SCPD.rapidROIband)
 			# connect to algorithm weight button 
 			cfg.uidc.algorithm_weight_button.clicked.connect(cfg.utls.algorithmWeighTab)
 			# connect to threshold button 
@@ -795,35 +780,37 @@ class SemiAutomaticClassificationPlugin:
 			# connect to LCS threshold button 
 			cfg.uidc.LC_signature_button.clicked.connect(cfg.utls.LCSThresholdTab)
 			# connect the algorithm combo	
-			cfg.uidc.algorithm_combo.currentIndexChanged.connect(cfg.classD.algorithmName)
+			cfg.uidc.algorithm_combo.currentIndexChanged.connect(cfg.SCPD.algorithmName)
 			# connect the algorithm threshold
-			cfg.uidc.alg_threshold_SpinBox.valueChanged.connect(cfg.classD.algorithmThreshold)
+			cfg.uidc.alg_threshold_SpinBox.valueChanged.connect(cfg.SCPD.algorithmThreshold)
 			# connect to edited cell
-			cfg.uidc.macroclass_color_tableWidget.cellChanged.connect(cfg.classD.McIdEditedCell)
+			cfg.uidc.macroclass_color_tableWidget.cellChanged.connect(cfg.SCPD.McIdEditedCell)
 			# connect to MC ID double click
-			cfg.uidc.macroclass_color_tableWidget.doubleClicked.connect(cfg.classD.McIdDoubleClick)
+			cfg.uidc.macroclass_color_tableWidget.doubleClicked.connect(cfg.SCPD.McIdDoubleClick)
 			# connect to add row
-			cfg.uidc.add_MC_row_Button.clicked.connect(cfg.classD.addMCIDToTable)
-			cfg.uidc.delete_MC_row_Button.clicked.connect(cfg.classD.removeMCIDFromTable)
+			cfg.uidc.add_MC_row_Button.clicked.connect(cfg.SCPD.addMCIDToTable)
+			cfg.uidc.delete_MC_row_Button.clicked.connect(cfg.SCPD.removeMCIDFromTable)
 			# connect to run classification
-			cfg.uidc.button_classification.clicked.connect(cfg.classD.runClassificationAction)
+			cfg.uidc.button_classification.clicked.connect(cfg.SCPD.runClassificationAction)
 			# connect the alg files checkBox
 			cfg.uidc.alg_files_checkBox.stateChanged.connect(cfg.sets.algFilesCheckbox)
 			# connect the vector output checkBox
-			cfg.uidc.vector_output_checkBox.stateChanged.connect(cfg.classD.vectorCheckbox)
+			cfg.uidc.vector_output_checkBox.stateChanged.connect(cfg.SCPD.vectorCheckbox)
 			# connect the macroclass checkBox
-			cfg.uidc.macroclass_checkBox.stateChanged.connect(cfg.classD.macroclassCheckbox)
-			cfg.uidc.class_checkBox.stateChanged.connect(cfg.classD.classCheckbox)
+			cfg.uidc.macroclass_checkBox.stateChanged.connect(cfg.SCPD.macroclassCheckbox)
+			cfg.uidc.class_checkBox.stateChanged.connect(cfg.SCPD.classCheckbox)
 			# connect the LC signature checkBox
-			cfg.uidc.LC_signature_checkBox.stateChanged.connect(cfg.classD.LCSignature_Checkbox)
+			cfg.uidc.LC_signature_checkBox.stateChanged.connect(cfg.SCPD.LCSignature_Checkbox)
 			# connect the report checkBox
-			cfg.uidc.report_checkBox.stateChanged.connect(cfg.classD.reportCheckbox)
+			cfg.uidc.report_checkBox.stateChanged.connect(cfg.SCPD.reportCheckbox)
 			# connect the mask checkBox
-			cfg.uidc.mask_checkBox.stateChanged.connect(cfg.classD.maskCheckbox)
+			cfg.uidc.mask_checkBox.stateChanged.connect(cfg.SCPD.maskCheckbox)
 			# connect to reset qml button
-			cfg.uidc.resetQmlButton.clicked.connect(cfg.classD.resetQmlStyle)
+			cfg.uidc.resetQmlButton.clicked.connect(cfg.SCPD.resetQmlStyle)
 			# connect to reset mask button
-			cfg.uidc.resetMaskButton.clicked.connect(cfg.classD.resetMask)
+			cfg.uidc.resetMaskButton.clicked.connect(cfg.SCPD.resetMask)
+			# connect to qml button
+			cfg.uidc.qml_Button.clicked.connect(cfg.SCPD.selectQmlStyle)
 			""" Spectral signature plot """	
 			# connect the sigma checkBox
 			cfg.uisp.sigma_checkBox.stateChanged.connect(cfg.spSigPlot.sigmaCheckbox)
@@ -887,10 +874,10 @@ class SemiAutomaticClassificationPlugin:
 			cfg.uiscp.show_polygon_area_pushButton.clicked.connect(cfg.scaPlT.showScatterPolygonArea)
 			cfg.uiscp.add_signature_list_pushButton.clicked.connect(cfg.scaPlT.addToSignatureList)
 			""" Band set tab """
-			# edited cell
-			cfg.ui.tableWidget.cellChanged.connect(cfg.bst.editedBandSet)
 			# connect to refresh button
 			cfg.ui.toolButton_reload_3.clicked.connect(cfg.bst.rasterBandName)
+			# button reload
+			cfg.ui.toolButton_reload.clicked.connect(cfg.ipt.checkRefreshRasterLayer)
 			# connect to add file button
 			cfg.ui.toolButton_input_raster.clicked.connect(cfg.bst.addFileToBandSetAction)
 			# connect to add raster band button
@@ -907,6 +894,14 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.sort_by_name_toolButton.clicked.connect(cfg.bst.sortBandName)
 			# connect to remove band button
 			cfg.ui.remove_toolButton.clicked.connect(cfg.bst.removeBand)
+			# connect add band set
+			cfg.ui.add_band_set_toolButton.clicked.connect(cfg.bst.addBandSetTabAction)
+			# connect to changed tab
+			cfg.ui.Band_set_tabWidget.currentChanged.connect(cfg.bst.tabBandSetChanged)
+			# connect close tab
+			cfg.ui.Band_set_tabWidget.tabCloseRequested.connect(cfg.bst.closeBandSetTab)
+			# combo layer
+			cfg.ui.image_raster_name_combo.currentIndexChanged.connect(cfg.bst.rasterLayerName)
 			# connect to import band set button
 			cfg.ui.import_bandset_toolButton.clicked.connect(cfg.bst.importBandSet)
 			# connect to export band set button
@@ -921,10 +916,6 @@ class SemiAutomaticClassificationPlugin:
 			""" Clip multiple rasters """
 			# connect to clip button
 			cfg.ui.clip_Button.clicked.connect(cfg.clipMulti.clipRastersAction)
-			# connect to refresh rasters button
-			cfg.ui.toolButton_reload_7.clicked.connect(cfg.clipMulti.rasterNameList)
-			# connect to select all rasters button
-			cfg.ui.select_all_rasters_Button_2.clicked.connect(cfg.clipMulti.selectAllRasters)
 			# connect to activate UL pointer 
 			cfg.ui.selectUL_toolButton.clicked.connect(cfg.clipMulti.pointerActive)
 			# connect to refresh shape button
@@ -932,13 +923,24 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.show_area_radioButton_3.clicked.connect(cfg.clipMulti.showHideArea)
 			cfg.ui.shapefile_checkBox.stateChanged.connect(cfg.clipMulti.checkboxShapeChanged)
 			cfg.ui.temporary_ROI_checkBox.stateChanged.connect(cfg.clipMulti.checkboxTempROIChanged)
+			# connect the shapefile combo
+			cfg.ui.shapefile_comboBox.currentIndexChanged.connect(cfg.clipMulti.referenceLayerName)
 			""" Stack raster bands """
 			# connect to stack button
 			cfg.ui.stack_Button.clicked.connect(cfg.stackRstr.stackAction)
-			# connect to refresh rasters button
-			cfg.ui.toolButton_reload_22.clicked.connect(cfg.stackRstr.rasterNameList)
-			# connect to select all rasters button
-			cfg.ui.select_all_rasters_Button_3.clicked.connect(cfg.stackRstr.selectAllRasters)
+			""" Spectral change band sets """
+			# connect to calculate button
+			cfg.ui.spectral_distance_bandsets_toolButton.clicked.connect(cfg.spclDstBS.calculateDistanceAction)			
+			cfg.ui.min_distance_radioButton_2.clicked.connect(cfg.spclDstBS.radioMinDistChanged)			
+			cfg.ui.spectral_angle_map_radioButton_2.clicked.connect(cfg.spclDstBS.radioSAMChanged)
+			""" Mosaic band sets """
+			# connect to mosaic button
+			cfg.ui.mosaic_bandsets_toolButton.clicked.connect(cfg.mosaicBS.mosaicAction)
+			cfg.ui.mosaic_band_sets_lineEdit.textChanged.connect(cfg.mosaicBS.textChanged)
+			""" Cloud masking """
+			# connect to mask button
+			cfg.ui.cloud_mask_toolButton.clicked.connect(cfg.cloudMsk.maskAction)
+			cfg.ui.cloud_mask_classes_lineEdit.textChanged.connect(cfg.cloudMsk.textChanged)
 			""" ASTER tab """
 			# connect to input button
 			cfg.ui.toolButton_directoryInput_ASTER.clicked.connect(cfg.ASTERT.inputASTER)
@@ -973,6 +975,11 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.S2_pushButton_remove_band.clicked.connect(cfg.sentinel2T.removeHighlightedBand)
 			cfg.ui.sentinel_2_tableWidget.cellChanged.connect(cfg.sentinel2T.editedCell)
 			cfg.ui.S2_toolButton_directoryInput_xml2.clicked.connect(cfg.sentinel2T.inputXML2)
+			""" Sentinel-3 tab """
+			# connect to input button
+			cfg.ui.S3_toolButton_directoryInput.clicked.connect(cfg.sentinel3T.inputSentinel)
+			cfg.ui.pushButton_Conversion_5.clicked.connect(cfg.sentinel3T.performSentinelConversion)
+			cfg.ui.S3_pushButton_remove_band.clicked.connect(cfg.sentinel3T.removeHighlightedBand)
 			""" Split tab """
 			# connect the classification combo
 			cfg.ui.raster_name_combo.currentIndexChanged.connect(cfg.splitT.rasterLayerName)
@@ -983,6 +990,17 @@ class SemiAutomaticClassificationPlugin:
 			""" PCA tab """
 			# connect to PCA button
 			cfg.ui.pca_Button.clicked.connect(cfg.pcaT.calculatePCAAction)
+			""" K-means tab """
+			# connect to kmeans button
+			cfg.ui.kmeans_Button.clicked.connect(cfg.clusteringT.calculateClusteringAction)
+			# connect the algorithm combo
+			cfg.ui.kmean_minmax_radioButton.clicked.connect(cfg.clusteringT.radiokmean_minmaxChanged)
+			cfg.ui.kmean_siglist_radioButton.clicked.connect(cfg.clusteringT.radiokmean_siglistChanged)
+			cfg.ui.kmean_randomsiglist_radioButton.clicked.connect(cfg.clusteringT.radiokmean_randomsiglistChanged)			
+			cfg.ui.kmeans_radioButton.clicked.connect(cfg.clusteringT.radioKmeansChanged)			
+			cfg.ui.isodata_radioButton.clicked.connect(cfg.clusteringT.radioIsodataChanged)					
+			cfg.ui.min_distance_radioButton.clicked.connect(cfg.clusteringT.radioMinDistChanged)			
+			cfg.ui.spectral_angle_map_radioButton.clicked.connect(cfg.clusteringT.radioSAMChanged)			
 			""" Vector to Raster tab """
 			cfg.ui.toolButton_reload_16.clicked.connect(cfg.vctRstrT.reloadVectorList)
 			cfg.ui.toolButton_reload_17.clicked.connect(cfg.utls.refreshClassificationLayer)
@@ -1020,6 +1038,9 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.toolButton_reload_10.clicked.connect(cfg.utls.refreshClassificationLayer)
 			# connect to calculate button
 			cfg.ui.calculateReport_toolButton.clicked.connect(cfg.classRep.calculateClassReport)
+			""" Band set combination tab """
+			# connect to calculate button
+			cfg.ui.calculateBandSetComb_toolButton.clicked.connect(cfg.bsComb.calculateBandSetCombination)
 			""" Cross classification tab """
 			# connect the classification combo
 			cfg.ui.classification_name_combo_2.currentIndexChanged.connect(cfg.crossC.classificationLayerName)
@@ -1031,6 +1052,11 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.buttonReload_shape_5.clicked.connect(cfg.crossC.refreshReferenceLayer)
 			# connect to calculate error matrix button
 			cfg.ui.calculatecrossClass_toolButton.clicked.connect(cfg.crossC.calculateCrossClassification)
+			""" Class signature """
+			# connect to calculate signature
+			cfg.ui.class_signature_Button.clicked.connect(cfg.classSigT.calculateClassSignatureAction)
+			# connect to refresh button
+			cfg.ui.toolButton_reload_22.clicked.connect(cfg.utls.refreshClassificationLayer)
 			""" Classification to vector """
 			# connect to refresh button
 			cfg.ui.toolButton_reload_12.clicked.connect(cfg.utls.refreshClassificationLayer)
@@ -1123,7 +1149,7 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.toolButton_pi.clicked.connect(cfg.bCalc.buttonPi)
 			# decision rules
 			cfg.ui.decision_rules_tableWidget.cellChanged.connect(cfg.bCalc.editedDecisionRulesTable)
-			cfg.ui.band_calc_toolBox.currentChanged.connect(cfg.bCalc.toolboxChanged)
+			cfg.ui.band_calc_tabWidget.currentChanged.connect(cfg.bCalc.tabChanged)
 			# connect to add rule
 			cfg.ui.add_rule_toolButton.clicked.connect(cfg.bCalc.addRowToTable)
 			cfg.ui.remove_rule_toolButton.clicked.connect(cfg.bCalc.removeHighlightedRule)
@@ -1141,8 +1167,10 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.clear_batch_toolButton.clicked.connect(cfg.batchT.clearBatch)
 			cfg.ui.export_batch_toolButton.clicked.connect(cfg.batchT.exportBatch)
 			cfg.ui.import_batch_toolButton.clicked.connect(cfg.batchT.importBatch)
-			# connect to function combo
-			cfg.ui.batch_function_combo.currentIndexChanged.connect(cfg.batchT.setFunction)
+			# connect to signature list double click
+			cfg.ui.batch_tableWidget.doubleClicked.connect(cfg.batchT.setFunction)
+			cfg.ui.menu_tableWidget.itemSelectionChanged.connect(cfg.ipt.menuIndex)
+			cfg.ui.menu_tableWidget.clicked.connect(cfg.ipt.menuClicked)
 			""" Settings tab """
 			# connect the ID field name line
 			cfg.ui.ID_field_name_lineEdit.textChanged.connect(cfg.sets.IDFieldNameChange)
@@ -1156,6 +1184,18 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.variable_name_lineEdit.textChanged.connect(cfg.sets.VariableNameChange)
 			# connect the group name line
 			cfg.ui.group_name_lineEdit.textChanged.connect(cfg.sets.GroupNameChange)
+			# connect the SMTP line
+			cfg.ui.smtp_server_lineEdit.textChanged.connect(cfg.sets.SMTPServerChange)
+			# connect the SMTP to emails line
+			cfg.ui.to_email_lineEdit.textChanged.connect(cfg.sets.SMTPtoEmailsChange)
+			# connect the SMTP user
+			cfg.ui.smtp_user_lineEdit.editingFinished.connect(cfg.sets.rememberUser)
+			# connect the SMTP password
+			cfg.ui.smtp_password_lineEdit.editingFinished.connect(cfg.sets.rememberUser)
+			# connect the SMTP checkbox
+			cfg.ui.remeber_settings_checkBox.stateChanged.connect(cfg.sets.rememberUserCheckbox)	
+			# connect the SMTP checkBox
+			cfg.ui.smtp_checkBox.stateChanged.connect(cfg.sets.SMTPCheckbox)		
 			# connect to reset field names button
 			cfg.ui.reset_field_names_Button.clicked.connect(cfg.sets.resetFieldNames)
 			# connect to reset variable name button
@@ -1172,10 +1212,9 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.virtual_raster_checkBox.stateChanged.connect(cfg.sets.virtualRasterFormatCheckbox)
 			# connect the raster compression checkBox
 			cfg.ui.raster_compression_checkBox.stateChanged.connect(cfg.sets.rasterCompressionCheckbox)
-			# connect to raster data type
-			#cfg.ui.raster_precision_combo.currentIndexChanged.connect(cfg.sets.rasterDataTypeChange)
 			# connect to change temporary directory button
 			cfg.ui.temp_directory_Button.clicked.connect(cfg.sets.changeTempDir)
+			# connect to reset temporary directory button
 			cfg.ui.reset_temp_directory_Button.clicked.connect(cfg.sets.resetTempDir)
 			# connect to clear log button
 			cfg.ui.clearLog_Button.clicked.connect(cfg.utls.clearLogFile)
@@ -1185,14 +1224,17 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.test_dependencies_Button.clicked.connect(cfg.sets.testDependencies)
 			# connect to RAM spinbox
 			cfg.ui.RAM_spinBox.valueChanged.connect(cfg.sets.RAMSettingChange)
-			# connect to qml button
-			cfg.uidc.qml_Button.clicked.connect(cfg.classD.selectQmlStyle)
 			# connect to change color button
 			cfg.ui.change_color_Button.clicked.connect(cfg.sets.changeROIColor)
 			# connect to change color button
 			cfg.ui.reset_color_Button.clicked.connect(cfg.sets.resetROIStyle)
 			# connect to transparency slider
 			cfg.ui.transparency_Slider.valueChanged.connect(cfg.sets.changeROITransparency)
+			# first install
+			if cfg.firstInstallVal == "Yes":
+				cfg.utls.welcomeTab()
+				cfg.utls.setQGISRegSetting(cfg.regFirstInstall, "No")
+				cfg.utls.findAvailableRAM()
 			# welcome message
 			lWelcome = cfg.plgnDir + "/ui/welcome.html"
 			htmlText = open(lWelcome, 'r').read()
@@ -1214,11 +1256,12 @@ class SemiAutomaticClassificationPlugin:
 	def projectSaved(self):
 		if cfg.skipProjectSaved == "No":
 			if len(cfg.signIDs) > 0:
-				cfg.classD.saveSignatureListToFile()
+				cfg.SCPD.saveSignatureListToFile()
 			if cfg.scpFlPath is not None:
-				cfg.classD.saveMemToSHP(cfg.shpLay )
+				cfg.SCPD.saveMemToSHP(cfg.shpLay)
 				cfg.utls.createBackupFile(cfg.scpFlPath)
 				cfg.utls.zipDirectoryInFile(cfg.scpFlPath, cfg.inptDir)
+			cfg.downProd.saveDownloadTable()
 		
 	# new project
 	def newProjectLoaded(self):
@@ -1237,27 +1280,22 @@ class SemiAutomaticClassificationPlugin:
 		cfg.utls.clearTable(cfg.uisp.signature_list_plot_tableWidget)
 		cfg.utls.clearTable(cfg.uiscp.scatter_list_plot_tableWidget)
 		cfg.utls.clearTable(cfg.ui.signature_threshold_tableWidget)
-		cfg.utls.clearTable(cfg.ui.tableWidget_weight)
 		cfg.utls.clearTable(cfg.ui.LCS_tableWidget)
 		cfg.scaPlT.scatterPlotListTable(cfg.uiscp.scatter_list_plot_tableWidget)
 		cfg.spSigPlot.refreshPlot()
 		cfg.LCSignT.LCSignatureThresholdListTable()
+		# reload layers in combos
+		cfg.ipt.refreshRasterLayer()
 		# clear band set
-		cfg.utls.clearTable(cfg.ui.tableWidget)
+		t = cfg.ui.Band_set_tabWidget.count()
+		for index in reversed(list(range(0, t))):
+			cfg.bst.deleteBandSetTab(index)
+		cfg.bst.addBandSetTab()	
 		# signature table
 		cfg.utls.clearTable(cfg.uidc.signature_list_tableWidget)
 		cfg.utls.clearTable(cfg.uidc.macroclass_color_tableWidget)
 		cfg.scpFlPath = None
-		cfg.classD.openInput()
-		# reload layers in combos
-		cfg.ipt.refreshRasterLayer()
-		cfg.uidc.raster_name_combo.clear()
-		# image name
-		cfg.imgNm = None
-		# raster name
-		cfg.rstrNm = None
-		# empty item for new band set
-		cfg.ipt.raster_layer_combo("")
+		cfg.SCPD.openInput()
 		cfg.utls.refreshVectorLayer()
 		# reload layers in combos
 		cfg.utls.refreshClassificationLayer()
@@ -1268,9 +1306,6 @@ class SemiAutomaticClassificationPlugin:
 		cfg.landCC.refreshNewClassificationLayer()
 		# reload raster bands in checklist
 		cfg.bst.rasterBandName()
-		# reload rasters in checklist
-		cfg.clipMulti.rasterNameList()
-		cfg.stackRstr.rasterNameList()
 		cfg.bCalc.rasterBandName()
 		# rapid ROI band
 		cfg.uidc.rapidROI_band_spinBox.setValue(1)
@@ -1291,7 +1326,7 @@ class SemiAutomaticClassificationPlugin:
 		cfg.uidc.ROI_Macroclass_line.setText("MC 1")
 		try:
 			cfg.uidc.custom_index_lineEdit.setText("")
-		except Exception, err:
+		except Exception as err:
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 		# RGB list
@@ -1306,8 +1341,6 @@ class SemiAutomaticClassificationPlugin:
 	def projectLoaded(self):
 		cfg.projPath = cfg.qgisCoreSCP.QgsProject.instance().fileName()
 		cfg.lastSaveDir = cfg.osSCP.path.dirname(cfg.projPath)
-		# clear band set
-		cfg.utls.clearTable(cfg.ui.tableWidget)
 		cfg.signList = {}
 		cfg.signIDs = {}
 		cfg.spectrPlotList = {}
@@ -1321,17 +1354,18 @@ class SemiAutomaticClassificationPlugin:
 		cfg.utls.clearTable(cfg.uisp.signature_list_plot_tableWidget)
 		cfg.utls.clearTable(cfg.uiscp.scatter_list_plot_tableWidget)
 		cfg.utls.clearTable(cfg.ui.signature_threshold_tableWidget)
-		cfg.utls.clearTable(cfg.ui.tableWidget_weight)
 		cfg.utls.clearTable(cfg.ui.LCS_tableWidget)
 		cfg.scaPlT.scatterPlotListTable(cfg.uiscp.scatter_list_plot_tableWidget)
 		cfg.spSigPlot.refreshPlot()
 		cfg.LCSignT.LCSignatureThresholdListTable()
-		cfg.uidc.raster_name_combo.blockSignals(True)
+		cfg.ui.image_raster_name_combo.blockSignals(True)
 		cfg.rasterComboEdited = "No"
 		# read variables
 		cfg.utls.readVariables()
+		# load product download table
+		cfg.downProd.openDownloadTable()
 		# reload layers in combos
-		cfg.ipt.refreshRasterLayer()
+		#cfg.ipt.refreshRasterLayer()
 		cfg.utls.refreshVectorLayer()
 		# set ROI color
 		cfg.ui.change_color_Button.setStyleSheet("background-color :" + cfg.ROIClrVal)
@@ -1358,8 +1392,8 @@ class SemiAutomaticClassificationPlugin:
 		cfg.uidc.ROI_Macroclass_line.setText(cfg.ROIMacroClassInfo)
 		cfg.uidc.custom_index_lineEdit.setText(cfg.customExpression)
 		# ROI completer
-		cfg.classD.roiInfoCompleter()
-		cfg.classD.roiMacroclassInfoCompleter()
+		cfg.SCPD.roiInfoCompleter()
+		cfg.SCPD.roiMacroclassInfoCompleter()
 		# set signature calculation checkbox state
 		if cfg.rpdROICheck == "Yes":
 			cfg.uidc.rapid_ROI_checkBox.setCheckState(2)
@@ -1377,6 +1411,11 @@ class SemiAutomaticClassificationPlugin:
 		elif cfg.sigClcCheck == "No":
 			cfg.uidc.signature_checkBox.setCheckState(0)
 			cfg.ui.signature_checkBox2.setCheckState(0)
+		# set save input checkbox state
+		if cfg.saveInputCheck == "Yes":
+			cfg.uidc.save_input_checkBox.setCheckState(2)
+		elif cfg.saveInputCheck == "No":
+			cfg.uidc.save_input_checkBox.setCheckState(0)
 		# set ID field name line
 		cfg.ui.ID_field_name_lineEdit.setText(cfg.fldID_class)
 		cfg.ui.MID_field_name_lineEdit.setText(cfg.fldMacroID_class)
@@ -1401,67 +1440,16 @@ class SemiAutomaticClassificationPlugin:
 			cfg.algName = cfg.algMinDist
 		# reload raster bands in checklist
 		cfg.bst.rasterBandName()
-		# reload rasters in checklist
-		cfg.clipMulti.rasterNameList()
-		cfg.stackRstr.rasterNameList()
-		if cfg.bndSetPresent == "No":
-			# get wavelength
-			bSW = cfg.utls.readProjectVariable("bndSetWvLn", "")
-			bSM = cfg.utls.readProjectVariable("bndSetMultF", "")
-			bSA = cfg.utls.readProjectVariable("bndSetAddF", "")
-			# get unit
-			un = cfg.utls.readProjectVariable("bndSetUnit", cfg.noUnit)
-			bSU = cfg.bst.unitNameConversion(un, "Yes")
-			# raster name
-			cfg.rasterName = cfg.utls.readProjectVariable("rasterName", "")
-			# load project image name in combo
-			id = cfg.uidc.raster_name_combo.findText(cfg.rasterName)
-			cfg.uidc.raster_name_combo.setCurrentIndex(id)
-			try:
-				# set wavelength
-				wlg = eval(bSW)
-				try:
-					multF = eval(bSM)
-					addF = eval(bSA)
-				except:
-					pass
-				t = cfg.ui.tableWidget
-				cfg.BandTabEdited = "No"
-				t.blockSignals(True)
-				it = 0
-				for x in sorted(wlg):
-					b = wlg.index(x)
-					# add item to table
-					t.item(it, 1).setText(str(wlg[b]))
-					try:
-						cfg.utls.addTableItem(t, str(multF[it]), it, 2)
-					except:
-						cfg.utls.addTableItem(t, "1", it, 2)
-					try:
-						cfg.utls.addTableItem(t, str(addF[it]), it, 3)
-					except:
-						cfg.utls.addTableItem(t, "0", it, 3)
-					it = it + 1
-				# load project unit in combo
-				idU = cfg.ui.unit_combo.findText(bSU)
-				cfg.ui.unit_combo.setCurrentIndex(idU)
-				t.blockSignals(False)
-			except Exception, err:
-				t = cfg.ui.tableWidget
-				t.blockSignals(False)
-				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-			cfg.bst.readBandSet("No")
-			cfg.BandTabEdited = "Yes"
 		cfg.rasterComboEdited = "Yes"
-		cfg.uidc.raster_name_combo.blockSignals(False)
+		cfg.ui.image_raster_name_combo.blockSignals(False)
 		cfg.bCalc.rasterBandName()
 		# signature table
 		cfg.utls.clearTable(cfg.uidc.signature_list_tableWidget)
 		cfg.utls.clearTable(cfg.uidc.macroclass_color_tableWidget)
-		cfg.classD.openInput()
+		cfg.SCPD.openInput()
 		# RGB list
 		cfg.RGBLT.RGBListTable(cfg.RGBList)
+
 		
 	# run
 	def run(self):
@@ -1471,9 +1459,6 @@ class SemiAutomaticClassificationPlugin:
 		cfg.dlg.show()
 		# reload raster bands in checklist
 		cfg.bst.rasterBandName()
-		# reload rasters in checklist
-		cfg.clipMulti.rasterNameList()
-		cfg.stackRstr.rasterNameList()
 		# Run the dialog event loop
 		pointer_result = cfg.dlg.exec_()
 		# logger
@@ -1483,14 +1468,15 @@ class SemiAutomaticClassificationPlugin:
 	def unload(self):
 		try:
 			qgisUtils.iface.removeDockWidget(cfg.dockclassdlg)
-			del cfg.toolBar
 			del cfg.toolBar2
 			del cfg.toolBar3
 			cfg.menu.deleteLater()
 			# remove temp files
 			if cfg.tmpDir is not None and cfg.QDirSCP(cfg.tmpDir).exists():
 				cfg.shutilSCP.rmtree(cfg.tmpDir, True)
-			oDir = cfg.utls.makeDirectory(unicode(cfg.QDirSCP.tempPath() + "/" + cfg.tempDirName))
+			oDir = cfg.utls.makeDirectory(str(cfg.QDirSCP.tempPath() + "/" + cfg.tempDirName))
 		except:
 			if PluginCheck == "Yes":
-				qgisUtils.iface.messageBar().pushMessage("Semi-Automatic Classification Plugin", QApplication.translate("semiautomaticclassificationplugin", "Please, restart QGIS for executing the Semi-Automatic Classification Plugin"), level=QgsMessageBar.INFO)
+				qgisUtils.iface.messageBar().pushMessage("Semi-Automatic Classification Plugin", QApplication.translate("semiautomaticclassificationplugin", "Please, restart QGIS for executing the Semi-Automatic Classification Plugin"), level=qgisGui.QgsMessageBar.INFO)
+
+		

@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2017 by Luca Congedo
+		copyright			: (C) 2012-2018 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -32,8 +32,7 @@
 
 """
 
-from qgis.core import *
-from qgis.gui import *
+
 cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
 
 class Ui_Utils:
@@ -53,13 +52,13 @@ class Ui_Utils:
 	# Create a progress bar and a cancel button
 	def createProgressBar(self, message = "", action = "Executing"):
 		self.widgetBar = cfg.iface.messageBar().createMessage(action, message)
-		cfg.progressBar = cfg.QtGuiSCP.QProgressBar()
+		cfg.progressBar = cfg.QtWidgetsSCP.QProgressBar()
 		cfg.progressBar.setMinimum(0)
 		cfg.progressBar.setMaximum(100)
 		cfg.progressBar.setProperty("value", 0)
 		cfg.progressBar.setTextVisible(True)
 		cfg.progressBar.setObjectName("progressBar")
-		self.cancelButton = cfg.QtGuiSCP.QPushButton()
+		self.cancelButton = cfg.QtWidgetsSCP.QPushButton()
 		self.cancelButton.setEnabled(True)
 		self.cancelButton.setObjectName("cancelButton")
 		self.cancelButton.setText("Cancel")       
@@ -102,7 +101,6 @@ class Ui_Utils:
 		# main interface
 		cfg.dlg.setEnabled(state)
 		# toolbar
-		cfg.toolBar.setEnabled(state)
 		cfg.toolBar2.setEnabled(state)
 		cfg.toolBar3.setEnabled(state)
 		

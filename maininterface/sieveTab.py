@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2017 by Luca Congedo
+		copyright			: (C) 2012-2018 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -32,8 +32,8 @@
 
 """
 
-from qgis.core import *
-from qgis.gui import *
+
+
 cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
 
 class SieveRaster:
@@ -48,18 +48,14 @@ class SieveRaster:
 	# sieve classification
 	def sieveClassification(self, batch = "No", rasterInput = None, rasterOutput = None):
 		if batch == "No":
-			d = cfg.utls.getSaveFileName(None , cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Save output"), "", "Image (*.tif)")
+			outputRaster = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Save output"), "", "*.tif", "tif")
 		else:
-			d = rasterOutput
-		if len(d) > 0:
-			d = d.replace('\\', '/')
-			d = d.replace('//', '/')
-			sN = cfg.osSCP.path.basename(unicode(d))
-			if unicode(sN).endswith(".tif"):
-				outputRaster = d
+			outputRaster = rasterOutput
+		if outputRaster is not False:
+			if outputRaster.lower().endswith(".tif"):
+				pass
 			else:
-				nm = cfg.osSCP.path.splitext(sN)[0]
-				outputRaster = cfg.osSCP.path.dirname(d) + '/' + nm + ".tif"
+				outputRaster = outputRaster + ".tif"
 			if batch == "No":
 				cfg.uiUtls.addProgressBar()
 				raster = cfg.ui.sieve_raster_name_combo.currentText()
@@ -79,7 +75,7 @@ class SieveRaster:
 				connect = cfg.ui.sieve_connection_combo.currentText()
 				cfg.utls.rasterSieve(rSource, outputRaster, pixelThreshold, connect)
 				if cfg.osSCP.path.isfile(outputRaster):
-					r = cfg.utls.addRasterLayer(outputRaster, cfg.osSCP.path.basename(outputRaster))
+					r =cfg.utls.addRasterLayer(outputRaster, cfg.osSCP.path.basename(outputRaster))
 				else:
 					return "No"
 				if b != "No":

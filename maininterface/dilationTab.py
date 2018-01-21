@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2017 by Luca Congedo
+		copyright			: (C) 2012-2018 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -32,8 +32,8 @@
 
 """
 
-from qgis.core import *
-from qgis.gui import *
+
+
 cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
 
 class DilationRaster:
@@ -53,7 +53,7 @@ class DilationRaster:
 			cfg.ui.dilation_classes_lineEdit.setStyleSheet("color : green")
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode())
-		except Exception, err:
+		except Exception as err:
 			cfg.ui.dilation_classes_lineEdit.setStyleSheet("color : red")
 			valueList = []
 			# logger
@@ -70,18 +70,14 @@ class DilationRaster:
 		valueList = self.checkValueList()
 		if len(valueList) > 0:
 			if batch == "No":
-				d = cfg.utls.getSaveFileName(None , cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Save output"), "", "Image (*.tif)")
+				outputRaster = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Save output"), "", "*.tif", "tif")
 			else:
-				d = rasterOutput
-			if len(d) > 0:
-				d = d.replace('\\', '/')
-				d = d.replace('//', '/')
-				sN = cfg.osSCP.path.basename(unicode(d))
-				if unicode(sN).endswith(".tif"):
-					outputRaster = d
+				outputRaster = rasterOutput
+			if outputRaster is not False:
+				if outputRaster.lower().endswith(".tif"):
+					pass
 				else:
-					nm = cfg.osSCP.path.splitext(sN)[0]
-					outputRaster = cfg.osSCP.path.dirname(d) + '/' + nm + ".tif"
+					outputRaster = outputRaster + ".tif"
 				if batch == "No":
 					cfg.uiUtls.addProgressBar()
 					cfg.cnvs.setRenderFlag(False)
@@ -143,7 +139,7 @@ class DilationRaster:
 					if cfg.rasterCompression != "No":
 						try:
 							cfg.utls.GDALCopyRaster(tPMD, outputRaster, "GTiff", cfg.rasterCompression, "DEFLATE -co PREDICTOR=2 -co ZLEVEL=1")
-						except Exception, err:
+						except Exception as err:
 							cfg.shutilSCP.copy(tPMD, outputRaster)
 							# logger
 							if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))

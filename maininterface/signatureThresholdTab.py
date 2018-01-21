@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2017 by Luca Congedo
+		copyright			: (C) 2012-2018 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -32,8 +32,8 @@
 
 """
 
-from qgis.core import *
-from qgis.gui import *
+
+
 cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
 
 class SigThresholdTab:
@@ -48,7 +48,7 @@ class SigThresholdTab:
 		l.blockSignals(True)
 		cfg.utls.clearTable(l)
 		x = 0
-		for k in cfg.signIDs.values():
+		for k in list(cfg.signIDs.values()):
 			cfg.utls.insertTableRow(l, x)
 			cfg.utls.addTableItem(l, int(cfg.signList["MACROCLASSID_" + str(k)]), x, 0, "No")
 			cfg.utls.addTableItem(l, str(cfg.signList["MACROCLASSINFO_" + str(k)]), x, 1, "No")
@@ -117,7 +117,7 @@ class SigThresholdTab:
 	# reset thresholds
 	def resetThresholds(self):
 		# ask for confirm
-		a = cfg.utls.questionBox(cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Reset thresholds"), cfg.QtGuiSCP.QApplication.translate("semiautomaticclassificationplugin", "Are you sure you want to reset thresholds?"))
+		a = cfg.utls.questionBox(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Reset thresholds"), cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Are you sure you want to reset thresholds?"))
 		if a == "Yes":
 			tW = cfg.ui.signature_threshold_tableWidget
 			v = tW.rowCount()

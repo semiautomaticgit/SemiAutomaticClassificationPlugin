@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2017 by Luca Congedo
+		copyright			: (C) 2012-2018 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -32,8 +32,8 @@
 
 """
 
-from qgis.core import *
-from qgis.gui import *
+
+
 cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
 
 class EditRaster:
@@ -65,7 +65,7 @@ class EditRaster:
 				cfg.undoEditRasterToolbar_toolButton.setEnabled(False)
 				# create feature list
 				rId = []
-				f = QgsFeature()
+				f = cfg.qgisCoreSCP.QgsFeature()
 				# using vector
 				if cfg.ui.edit_val_use_vector_radioButton.isChecked():
 					if batch == "No":
@@ -85,7 +85,7 @@ class EditRaster:
 					vector = cfg.lstROI
 					# hide ROI
 					cfg.show_ROI_radioButton.setChecked(False)
-					cfg.ROId.showHideROI()
+					cfg.SCPD.showHideROI()
 				self.setValueRaster(rSource, vector, rId, batch, vectorFieldName)
 				if b != "No":
 					b.triggerRepaint()
@@ -117,6 +117,8 @@ class EditRaster:
 			vector = cfg.utls.addVectorLayer(tLP, cfg.osSCP.path.basename(tLP), "ogr")
 			for pI in qgisVectorFeatureList:
 				cfg.utls.copyFeatureToLayer(inputVectorQGIS, pI, vector)
+			if toolbarValue is None:
+				toolbarValue = cfg.ui.value_spinBox.value()
 			self.performEdit(inputRaster, tLP, toolbarValue)
 			cfg.ui.undo_edit_Button.setEnabled(True)
 			cfg.undoEditRasterToolbar_toolButton.setEnabled(True)
@@ -140,7 +142,9 @@ class EditRaster:
 				cfg.utls.createEmptyShapefileQGIS(crs, tLP)
 				vector = cfg.utls.addVectorLayer(tLP, cfg.osSCP.path.basename(tLP), "ogr")
 				cfg.utls.copyFeatureToLayer(inputVectorQGIS, pI, vector)
-				if cfg.ui.use_field_vector_checkBox.isChecked() is True:
+				if cfg.ui.use_constant_val_checkBox.isChecked() is True:
+					value = cfg.ui.value_spinBox.value()
+				else:
 					if vectorFieldName is None:
 						fd = cfg.ui.field_comboBox_2.currentText()
 					else:
@@ -153,9 +157,7 @@ class EditRaster:
 					fId = cfg.utls.fieldID(inputVectorQGIS, fd)
 					f = cfg.utls.getFeaturebyID(inputVectorQGIS, pI)
 					value = f.attributes()[fId]
-					self.performEdit(inputRaster, tLP, value)
-				else:
-					self.performEdit(inputRaster, tLP)
+				self.performEdit(inputRaster, tLP, value)
 			if batch == "No":
 				cfg.uiUtls.removeProgressBar()
 		
@@ -166,7 +168,7 @@ class EditRaster:
 		# convert polygon to raster 
 		tRNxs = cfg.copyTmpROI + dT + "xs.tif"
 		tRxs = str(cfg.tmpDir + "//" + tRNxs)
-		check = cfg.utls.vectorToRaster(cfg.emptyFN, unicode(inputVectorPath), cfg.emptyFN, tRxs, unicode(inputRasterPath), None, "GTiff", 1)
+		check = cfg.utls.vectorToRaster(cfg.emptyFN, str(inputVectorPath), cfg.emptyFN, tRxs, str(inputRasterPath), None, "GTiff", 1)
 		# open input with GDAL
 		rD = cfg.gdalSCP.Open(inputRasterPath, cfg.gdalSCP.GA_Update)
 		if rD is None:
@@ -225,17 +227,13 @@ class EditRaster:
 		# expression
 		if cfg.ui.use_expression_checkBox.isChecked() is True:
 			expression = " " + cfg.ui.expression_lineEdit.text() + " "
-			e = self.checkExpression(expression)
+			e = self.checkExpression(expression, editValue)
 			if e == "No":
 				return "No"
 			else:
 				dataArray = eval(e)
 		else:
-			# constant value
-			value = cfg.ui.value_spinBox.value()
-			# value from vector
-			if editValue is not None:
-				value = editValue
+			value = editValue
 			dataArray = cfg.np.where(a2 >0 , value, self.a1)
 		iRB = None
 		iRB2 = None
@@ -250,14 +248,16 @@ class EditRaster:
 	# text changed
 	def textChanged(self):
 		expression = " " + cfg.ui.expression_lineEdit.text() + " "
-		self.checkExpression(expression)
+		self.checkExpression(expression, 0)
 		
 	# check the expression and return it
-	def checkExpression(self, expression):
+	def checkExpression(self, expression, editValue):
 		expr = expression
 		expr = expr.replace(cfg.variableName, "self.a1")
 		# replace numpy operators
 		expr = cfg.utls.replaceNumpyOperators(expr)
+		# value from vector
+		expr = expr.replace(cfg.vectorVariableName, str(editValue))
 		e = "cfg.np.where(a2 >0 ," + expr + ", self.a1)"
 		# test
 		ar1 = cfg.np.arange(9).reshape(3, 3)
@@ -270,7 +270,7 @@ class EditRaster:
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode())
 			return e
-		except Exception, err:
+		except Exception as err:
 			cfg.ui.expression_lineEdit.setStyleSheet("color : red")
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
@@ -385,13 +385,13 @@ class EditRaster:
 			cfg.undoEditRasterToolbar_toolButton.setEnabled(False)
 			# create feature list
 			rId = []
-			f = QgsFeature()
+			f = cfg.qgisCoreSCP.QgsFeature()
 			for f in cfg.lstROI.getFeatures():
 				rId.append(f.id())		
 			vector = cfg.lstROI
 			# hide ROI
 			cfg.show_ROI_radioButton.setChecked(False)
-			cfg.ROId.showHideROI()
+			cfg.SCPD.showHideROI()
 			self.setValueRaster(rSource, vector, rId, "No", None, toolbarValue)
 			if b != "No":
 				b.triggerRepaint()
