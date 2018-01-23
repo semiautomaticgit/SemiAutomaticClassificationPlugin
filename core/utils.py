@@ -6252,7 +6252,7 @@ class Utils:
 		# get geometry
 		fG = f.geometry()
 		f.setGeometry(fG)
-		sF = targetLayer.pendingFields()
+		sF = targetLayer.fields()
 		f.initAttributes(sF.count())
 		if f.hasGeometry() is not True:
 			cfg.mx.msg6()
