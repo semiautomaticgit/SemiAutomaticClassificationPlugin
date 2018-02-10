@@ -57,16 +57,16 @@ class Messages:
 		
 	# Message bar information
 	def msgBar(self, title, message):
-		cfg.iface.messageBar().pushMessage(title, message, level=cfg.qgisGuiSCP.QgsMessageBar.INFO, duration=7)
+		cfg.iface.messageBar().pushMessage(title, message, level= cfg.qgisCoreSCP.Qgis.Info, duration=7)
 		
 	# Message bar error
 	def msgBarError(self, title, message):
-		cfg.iface.messageBar().pushMessage(title, message, level=cfg.qgisGuiSCP.QgsMessageBar.CRITICAL)
+		cfg.iface.messageBar().pushMessage(title, message, level= cfg.qgisCoreSCP.Qgis.Critical)
 		cfg.utls.sendSMTPMessage('SCP: ' + title, message)
 		
 	# Message bar warning
 	def msgBarWarning(self, title, message):
-		cfg.iface.messageBar().pushMessage(title, message, level=cfg.qgisGuiSCP.QgsMessageBar.WARNING, duration=7)
+		cfg.iface.messageBar().pushMessage(title, message, level= cfg.qgisCoreSCP.Qgis.Warning, duration=7)
 		
 	""" Messages """
 	""" Information """

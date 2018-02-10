@@ -68,7 +68,7 @@ class Ui_Utils:
 		# set action to yes
 		cfg.actionCheck = "Yes"
 		self.setInterface(False)
-		cfg.iface.messageBar().pushWidget(self.widgetBar, cfg.iface.messageBar().INFO)
+		cfg.iface.messageBar().pushWidget(self.widgetBar, cfg.qgisCoreSCP.Qgis.Info)
 		
 	# cancel action
 	def cancelAction(self):
