@@ -4629,7 +4629,7 @@ class Utils:
 			crs = cfg.utls.getCrs(b)
 		else:
 			# crs of loaded raster
-			b = cfg.utls.selectLayerbyNamecfg.bandSetsList[bandSetNumber][8]
+			b = cfg.utls.selectLayerbyName(cfg.bandSetsList[bandSetNumber][8])
 			crs = cfg.utls.getCrs(b)
 		# date time for temp name
 		dT = cfg.utls.getTime()
