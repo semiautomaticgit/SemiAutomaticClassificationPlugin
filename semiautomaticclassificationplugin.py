@@ -147,7 +147,7 @@ if PluginCheck == "Yes":
 		from .ui.ui_utils import Ui_Utils
 	except:
 		PluginCheck = "No"
-		qgisUtils.iface.messageBar().pushMessage("Semi-Automatic Classification Plugin", QApplication.translate("semiautomaticclassificationplugin", "Please, restart QGIS for executing the Semi-Automatic Classification Plugin"), level=qgisGui.QgsMessageBar.INFO)
+		qgisUtils.iface.messageBar().pushMessage("Semi-Automatic Classification Plugin", QApplication.translate("semiautomaticclassificationplugin", "Please, restart QGIS for executing the Semi-Automatic Classification Plugin"), level=qgisCore.Qgis.Info)
 
 	try:
 		import scipy.stats.distributions as statdistr
@@ -207,6 +207,10 @@ class SemiAutomaticClassificationPlugin:
 			cfg.minidomSCP = minidom
 			cfg.hashlibSCP = hashlib
 			cfg.ctypesSCP = ctypes
+		except:
+			qgisUtils.iface.messageBar().pushMessage("Semi-Automatic Classification Plugin", QApplication.translate("semiautomaticclassificationplugin", "Please, restart QGIS for executing the Semi-Automatic Classification Plugin"), level=qgisCore.Qgis.Info)
+			return
+		try:
 			cfg.statdistrSCP = statdistr
 			cfg.cdistSCP = cdist
 			cfg.signalSCP = signal
@@ -219,7 +223,7 @@ class SemiAutomaticClassificationPlugin:
 			cfg.mplcolorsSCP = mplcolors
 			cfg.np = np
 		except:
-			qgisUtils.iface.messageBar().pushMessage("Semi-Automatic Classification Plugin", QApplication.translate("semiautomaticclassificationplugin", "Please, restart QGIS for executing the Semi-Automatic Classification Plugin"), level=qgisGui.QgsMessageBar.INFO)
+			qgisUtils.iface.messageBar().pushMessage("Semi-Automatic Classification Plugin", QApplication.translate("semiautomaticclassificationplugin", "Check Python Numpy, Scipy, and Matplotlib installation for the Semi-Automatic Classification Plugin"), level=qgisCore.Qgis.Info)
 			return
 		if PluginCheck == "Yes":
 			# reference to QGIS interface
@@ -405,7 +409,10 @@ class SemiAutomaticClassificationPlugin:
 					from osgeo import gdal
 				except:
 					msg = "Gdal"
-				qgisUtils.iface.messageBar().pushMessage("Semi-Automatic Classification Plugin", QApplication.translate("semiautomaticclassificationplugin", "Please, restart QGIS for executing the Semi-Automatic Classification Plugin. Possible missing dependecies: " + msg), level=qgisGui.QgsMessageBar.INFO)
+				if len(msg) > 0:
+					qgisUtils.iface.messageBar().pushMessage("Semi-Automatic Classification Plugin", QApplication.translate("semiautomaticclassificationplugin", "Semi-Automatic Classification Plugin possible missing dependecies: " + msg), level=qgisCore.Qgis.Info)
+				else:
+					qgisUtils.iface.messageBar().pushMessage("Semi-Automatic Classification Plugin", QApplication.translate("semiautomaticclassificationplugin", "Please restart QGIS for installing the Semi-Automatic Classification Plugin"), level=qgisCore.Qgis.Info)
 				return
 			cfg.ipt.loadInputToolbar()
 			cfg.algMinDist = cfg.uidc.algorithm_combo.itemText(0) 
@@ -1477,6 +1484,6 @@ class SemiAutomaticClassificationPlugin:
 			oDir = cfg.utls.makeDirectory(str(cfg.QDirSCP.tempPath() + "/" + cfg.tempDirName))
 		except:
 			if PluginCheck == "Yes":
-				qgisUtils.iface.messageBar().pushMessage("Semi-Automatic Classification Plugin", QApplication.translate("semiautomaticclassificationplugin", "Please, restart QGIS for executing the Semi-Automatic Classification Plugin"), level=qgisGui.QgsMessageBar.INFO)
+				qgisUtils.iface.messageBar().pushMessage("Semi-Automatic Classification Plugin", QApplication.translate("semiautomaticclassificationplugin", "Please, restart QGIS for executing the Semi-Automatic Classification Plugin"), level=qgisCore.Qgis.Info)
 
 		

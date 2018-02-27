@@ -5511,7 +5511,7 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="semiautomaticclassificationplugin.py" line="1481"/>
+        <location filename="semiautomaticclassificationplugin.py" line="1488"/>
         <source>Please, restart QGIS for executing the Semi-Automatic Classification Plugin</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5763,6 +5763,16 @@ Possible reason: input is a virtual raster or band is not loaded</source>
     <message>
         <location filename="messages.py" line="286"/>
         <source>Memory error, too many combinations. Try to reclassify the values</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="semiautomaticclassificationplugin.py" line="226"/>
+        <source>Check Python Numpy, Scipy, and Matplotlib installation for the Semi-Automatic Classification Plugin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="semiautomaticclassificationplugin.py" line="416"/>
+        <source>Please restart QGIS for installing the Semi-Automatic Classification Plugin</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
