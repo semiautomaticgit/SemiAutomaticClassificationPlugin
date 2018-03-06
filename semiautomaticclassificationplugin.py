@@ -698,6 +698,7 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.selectUL_toolButton_3.clicked.connect(cfg.downProd.pointerActive)
 			# connect to display button
 			cfg.ui.toolButton_display.clicked.connect(cfg.downProd.displayImages)
+			cfg.ui.toolButton_OSM.clicked.connect(cfg.downProd.displayOSM)
 			cfg.ui.remove_image_toolButton.clicked.connect(cfg.downProd.removeImageFromTable)
 			cfg.ui.clear_table_toolButton.clicked.connect(cfg.downProd.clearTable)
 			cfg.ui.download_images_Button.clicked.connect(cfg.downProd.downloadImages)

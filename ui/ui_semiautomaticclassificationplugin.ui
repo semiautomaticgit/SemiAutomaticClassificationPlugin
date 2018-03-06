@@ -3826,9 +3826,100 @@ min-height: 18px;
             <attribute name="title">
              <string>Search</string>
             </attribute>
-            <layout class="QGridLayout" name="gridLayout_54">
+            <layout class="QGridLayout" name="gridLayout_264">
              <item row="0" column="0">
               <layout class="QGridLayout" name="gridLayout_133">
+               <item row="3" column="0" colspan="2">
+                <layout class="QGridLayout" name="gridLayout_54">
+                 <item row="0" column="0">
+                  <widget class="QToolButton" name="toolButton_OSM">
+                   <property name="toolTip">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add OpenStreetMap to the map&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">margin: 0px;padding: 0px;</string>
+                   </property>
+                   <property name="text">
+                    <string>Plot</string>
+                   </property>
+                   <property name="icon">
+                    <iconset resource="resources.qrc">
+                     <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_osm_add.png</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_osm_add.png</iconset>
+                   </property>
+                   <property name="iconSize">
+                    <size>
+                     <width>22</width>
+                     <height>22</height>
+                    </size>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QLabel" name="label_205">
+                   <property name="frameShadow">
+                    <enum>QFrame::Sunken</enum>
+                   </property>
+                   <property name="text">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add &lt;a href=&quot;http://www.openstreetmap.org/copyright&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;OpenStreetMap&lt;/span&gt;&lt;/a&gt; to the map&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignCenter</set>
+                   </property>
+                   <property name="openExternalLinks">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="2">
+                  <widget class="QLabel" name="label_206">
+                   <property name="frameShadow">
+                    <enum>QFrame::Sunken</enum>
+                   </property>
+                   <property name="text">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;(© OpenStreetMap contributors. The cartography is licensed as CC BY-SA. &lt;a href=&quot;https://operations.osmfoundation.org/policies/tiles/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Tile Usage Policy&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignCenter</set>
+                   </property>
+                   <property name="openExternalLinks">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="3" colspan="2">
+                  <spacer name="horizontalSpacer_2">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                </layout>
+               </item>
+               <item row="0" column="0" colspan="2">
+                <widget class="QLabel" name="label_103">
+                 <property name="styleSheet">
+                  <string notr="true">background-color : qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #535353, stop:1 #a6a6a6); color : white</string>
+                 </property>
+                 <property name="frameShape">
+                  <enum>QFrame::Panel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Sunken</enum>
+                 </property>
+                 <property name="text">
+                  <string> Search parameters</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
                <item row="1" column="0" rowspan="2" colspan="2">
                 <layout class="QGridLayout" name="gridLayout_122">
                  <item row="0" column="7">
@@ -3976,7 +4067,7 @@ min-height: 18px;
                       <string>Find</string>
                      </property>
                      <property name="alignment">
-                      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                      </property>
                     </widget>
                    </item>
@@ -4264,25 +4355,6 @@ min-height: 18px;
                   </layout>
                  </item>
                 </layout>
-               </item>
-               <item row="0" column="0" colspan="2">
-                <widget class="QLabel" name="label_103">
-                 <property name="styleSheet">
-                  <string notr="true">background-color : qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #535353, stop:1 #a6a6a6); color : white</string>
-                 </property>
-                 <property name="frameShape">
-                  <enum>QFrame::Panel</enum>
-                 </property>
-                 <property name="frameShadow">
-                  <enum>QFrame::Sunken</enum>
-                 </property>
-                 <property name="text">
-                  <string> Search parameters</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-                 </property>
-                </widget>
                </item>
               </layout>
              </item>
@@ -17297,7 +17369,6 @@ p, li { white-space: pre-wrap; }
   </layout>
  </widget>
  <resources>
-  <include location="resources.qrc"/>
   <include location="resources.qrc"/>
  </resources>
  <connections/>

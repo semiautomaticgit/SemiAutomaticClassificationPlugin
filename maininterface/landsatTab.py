@@ -216,7 +216,7 @@ class LandsatTab:
 							# band list
 							if int(nm[len(nm) - 1]) in [4, 5, 6, 7]:
 								bandSetList.append(int(nm[len(nm) - 1]))
-								bandSetNameList.append(cfg.osSCP.path.splitext(oNm)[0])
+								bandSetNameList.append(oNm)
 				elif str(sat).lower() in ['landsat_4', 'landsat4', 'landsat_5', 'landsat5', 'landsat_7', 'landsat7']:
 					# landsat bands (e.g. b10, b20, b61)
 					if nm[len(nm) - 2].isdigit() and nm[len(nm) - 1].isdigit():
@@ -230,7 +230,7 @@ class LandsatTab:
 									# band list
 									if int(nm[len(nm) - 2]) in [1, 2, 3, 4, 5]:
 										bandSetList.append(int(nm[len(nm) - 2]))
-										bandSetNameList.append(cfg.osSCP.path.splitext(oNm)[0])
+										bandSetNameList.append(oNm)
 										bandNumberList.append(int(nm[len(nm) - 2]))
 										bandPansharpList.append(outputRaster)
 										pansharpRasterList.append(panRaster)
@@ -258,7 +258,7 @@ class LandsatTab:
 								# band list
 								if int(nm[len(nm) - 1]) in [1, 2, 3, 4, 5]:
 									bandSetList.append(int(nm[len(nm) - 1]))
-									bandSetNameList.append(cfg.osSCP.path.splitext(oNm)[0])
+									bandSetNameList.append(oNm)
 									bandNumberList.append(int(nm[len(nm) - 1]))
 									bandPansharpList.append(outputRaster)
 									pansharpRasterList.append(panRaster)
@@ -286,7 +286,7 @@ class LandsatTab:
 							# band list
 							if int(nm[len(nm) - 1]) in [2, 3, 4, 5, 6, 7]:
 								bandSetList.append(int(nm[len(nm) - 1]) - 1)
-								bandSetNameList.append(cfg.osSCP.path.splitext(oNm)[0])
+								bandSetNameList.append(oNm)
 								bandNumberList.append(int(nm[len(nm) - 1]))
 								bandPansharpList.append(outputRaster)
 								pansharpRasterList.append(panRaster)
@@ -357,6 +357,7 @@ class LandsatTab:
 					if cfg.ui.add_new_bandset_checkBox_1.isChecked() is True:
 						bandSetNumber = cfg.bst.addBandSetTab()
 					cfg.bst.rasterBandName()
+					cfg.mx.msgBox("", str(bandSetNameList))
 					cfg.bst.setBandSet(bandSetNameList, bandSetNumber)
 					cfg.bandSetsList[bandSetNumber][0] = "Yes"
 					if str(sat).lower() in ['landsat_1', 'landsat1','landsat_2', 'landsat2','landsat_3', 'landsat3']:

@@ -249,11 +249,14 @@ class Sentinel3Tab:
 				rDIDSub = None
 				rDID = None
 		cfg.uiUtls.updateBar(15)
-		if SZA is None or dEsunB is None or gcpList is None:
+		if SZA is None or bool(dEsunB) is False or gcpList is None:
 			if batch == "No":
 				cfg.cnvs.setRenderFlag(True)
 				cfg.uiUtls.removeProgressBar()
 				cfg.mx.msgErr37()
+			else:
+				cfg.mx.msgErr37()
+				return
 		# name prefix
 		pre = "RT_"
 		oDir = cfg.utls.makeDirectory(out)
@@ -299,7 +302,7 @@ class Sentinel3Tab:
 				if ck != "No":
 					# band list
 					bandSetList.append(iBandN)
-					bandSetNameList.append(pre + iBand)
+					bandSetNameList.append(pre + iBand + ".tif")
 					outputRasterList.append(outputRaster)
 		if cfg.actionCheck == "Yes":
 			# load raster bands

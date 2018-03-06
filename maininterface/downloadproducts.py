@@ -396,6 +396,18 @@ class DownloadProducts:
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 	
+	# Add OpenStreetMap to the map as described in https://wiki.openstreetmap.org/wiki/QGIS (© OpenStreetMap contributors. The cartography is licensed as CC BY-SA)
+	def displayOSM(self):
+		check = cfg.utls.downloadFile( "http://www.gdal.org/frmt_wms_openstreetmap_tms.xml", cfg.tmpDir + "//OSM.xml", "OSM.xml", 10)
+		if check == "Yes":
+			r =cfg.utls.addRasterLayer(cfg.tmpDir + "//OSM.xml", "OpenStreetMap")
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " OSM added")
+		else:
+			cfg.mx.msgErr21()
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR: OSM" )
+	
 	# display images
 	def displayImages(self):
 		tW = cfg.ui.download_images_tableWidget
