@@ -293,6 +293,17 @@ class LandsatTab:
 							elif int(nm[len(nm) - 1]) == 8:
 								bandNumberList.insert(0, 8)
 								bandPansharpList.insert(0, outputRaster)
+				elif str(sat).lower() in ['landsat_1_sr', 'landsat_2_sr', 'landsat_3_sr', 'landsat_4_sr', 'landsat_5_sr', 'landsat_7_sr', 'landsat_8_sr']:
+						ck = self.landsatSurfaceReflectance(sat, str(nm[len(nm) - 1]), REFLECTANCE_MULT, REFLECTANCE_ADD, RADIANCE_MULT, RADIANCE_ADD, RADIANCE_MAXIMUM, REFLECTANCE_MAXIMUM, inputRaster, tempRaster)
+						if ck != "No":
+							rasterList.append(outputRaster)
+							# band list
+							if len(bandSetList) > 0:
+								bandSetList.append(max(bandSetList) + 1)
+							else:
+								bandSetList.append(1)
+							bandSetNameList.append(oNm)
+							bandNumberList.append(int(nm[len(nm) - 1]))
 		cfg.uiUtls.updateBar(90)
 		if cfg.actionCheck == "Yes":
 			# copy raster bands
@@ -302,14 +313,14 @@ class LandsatTab:
 					cfg.utls.GDALCopyRaster(temp, outputRasterList[bN], "GTiff", cfg.rasterCompression, "DEFLATE -co PREDICTOR=2 -co ZLEVEL=1")
 					cfg.osSCP.remove(temp)
 				except Exception as err:
+					# logger
+					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 					try:
 						cfg.shutilSCP.copy(temp, outputRasterList[bN])
 						cfg.osSCP.remove(temp)
 					except Exception as err:
 						# logger
 						if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-					# logger
-					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				bN = bN + 1
 		if cfg.actionCheck == "Yes" and cfg.ui.pansharpening_checkBox.isChecked() is True:
 			# type Brovey Transform
@@ -343,13 +354,13 @@ class LandsatTab:
 						cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "WARNING: unable to load raster" + str(outR))
 			# create band set
 			if cfg.ui.create_bandset_checkBox.isChecked() is True:
-				if str(sat).lower() in ['landsat8', 'landsat_8']:
+				if str(sat).lower() in ['landsat8', 'landsat_8', 'landsat_8_sr']:
 					satName = cfg.satLandsat8
-				elif str(sat).lower() in ['landsat_7', 'landsat7']:
+				elif str(sat).lower() in ['landsat_7','landsat_7_sr', 'landsat7']:
 					satName = cfg.satLandsat7
-				elif str(sat).lower() in ['landsat_4', 'landsat4', 'landsat_5', 'landsat5']:
+				elif str(sat).lower() in ['landsat_4', 'landsat_4_sr', 'landsat4', 'landsat_5', 'landsat_5_sr', 'landsat5']:
 					satName = cfg.satLandsat45
-				elif str(sat).lower() in ['landsat_1', 'landsat1','landsat_2', 'landsat2','landsat_3', 'landsat3']:
+				elif str(sat).lower() in ['landsat_1', 'landsat_1_sr', 'landsat1','landsat_2','landsat_2_sr', 'landsat2','landsat_3','landsat_3_sr', 'landsat3']:
 					satName = cfg.satLandsat13
 				else:
 					satName = "No"
@@ -357,7 +368,6 @@ class LandsatTab:
 					if cfg.ui.add_new_bandset_checkBox_1.isChecked() is True:
 						bandSetNumber = cfg.bst.addBandSetTab()
 					cfg.bst.rasterBandName()
-					cfg.mx.msgBox("", str(bandSetNameList))
 					cfg.bst.setBandSet(bandSetNameList, bandSetNumber)
 					cfg.bandSetsList[bandSetNumber][0] = "Yes"
 					if str(sat).lower() in ['landsat_1', 'landsat1','landsat_2', 'landsat2','landsat_3', 'landsat3']:
@@ -393,7 +403,7 @@ class LandsatTab:
 		else:
 			nD = cfg.NoDataVal
 		# TOA reflectance with correction for sun angle
-		if cfg.ui.DOS1_checkBox.isChecked() is False or DOScheck == "No":
+		if cfg.ui.DOS1_checkBox.isChecked() is False or DOScheck == "No" or str(sat).lower() in ['surface reflectance', 'surface_reflectance', 'surfacereflectance']:
 			try:
 				m = float(REFLECTANCE_MULT_BAND)
 				a = float(REFLECTANCE_ADD_BAND)
@@ -491,6 +501,57 @@ class LandsatTab:
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				return "No"
+	# landsat conversion of surface reflectance products
+	def landsatSurfaceReflectance(self, satellite, bandNumber, REFLECTANCE_MULT_BAND, REFLECTANCE_ADD_BAND, RADIANCE_MULT_BAND, RADIANCE_ADD_BAND, RADIANCE_MAXIMUM_BAND, REFLECTANCE_MAXIMUM_BAND, inputRaster, outputRaster):
+		sat = satellite
+		x = bandNumber
+		# temp files
+		dT = cfg.utls.getTime()
+		tPMN = cfg.reflectanceRasterNm + ".tif"
+		tPMD = cfg.tmpDir + "/" + dT + tPMN
+		tPMN2 = cfg.reflectanceRasterNm + "2.tif"
+		tPMD2 = cfg.tmpDir + "/" + dT + tPMN2
+		# No data value
+		if cfg.ui.nodata_checkBox_2.isChecked() is True:
+			nD = cfg.ui.nodata_spinBox_3.value()
+		else:
+			nD = cfg.NoDataVal
+		# reflectance
+		try:
+			m = float(REFLECTANCE_MULT_BAND)
+			a = float(REFLECTANCE_ADD_BAND)
+			# open input with GDAL
+			rD = cfg.gdalSCP.Open(inputRaster, cfg.gdalSCP.GA_ReadOnly)	
+			# band list
+			bL = cfg.utls.readAllBandsFromRaster(rD)
+			# output rasters
+			oM = []
+			oM.append(tPMD)
+			oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0,  None, "No")
+			o = cfg.utls.processRaster(rD, bL, None, cfg.utls.calculateRaster, None, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", "cfg.np.where(raster == " + str(nD) + ", " + str(cfg.NoDataVal) + ", ( raster *" + str("%.16f" % m) + "+ (" + str("%.16f" % a) + ")) )" , "raster", "surface reflectance b" + str(x))
+			# close GDAL rasters
+			for b in range(0, len(oMR)):
+				oMR[b] = None
+			for b in range(0, len(bL)):
+				bL[b] = None
+			rD = None
+			# reclassification <0 and >1
+			self.reclassRaster0min1max(tPMD, outputRaster)
+			try:
+				cfg.osSCP.remove(tPMD)
+				cfg.osSCP.remove(tPMD2)
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "files deleted")
+			except Exception as err:
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), str(inputRaster))
+			return "Yes"
+		except Exception as err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			return "No"
 				
 	# raster reclassification <0 and >1
 	def reclassRaster0min1max(self, inputRaster, outputRaster):
@@ -763,6 +824,7 @@ class LandsatTab:
 		dt = ""
 		sE = ""
 		esd = ""
+		surface_reflectance = "No"
 		cfg.ui.satellite_lineEdit.setText(sat)
 		cfg.ui.date_lineEdit.setText(dt)
 		cfg.ui.sun_elev_lineEdit.setText(sE)
@@ -777,7 +839,20 @@ class LandsatTab:
 			if batch == "No":
 				cfg.uiUtls.addProgressBar()
 			if len(cfg.ui.label_27.text()) == 0:
-				for f in cfg.osSCP.listdir(inp):
+				for f in cfg.osSCP.listdir(inp):					
+					#check metadata of surface reflectance level 2 products
+					if f.lower().endswith("_t1.xml"):
+						doc = cfg.minidomSCP.parse(inp + "/" + str(f))
+						satellite = doc.getElementsByTagName("satellite")[0]
+						sat = satellite.firstChild.data
+						acquisition_date = doc.getElementsByTagName("acquisition_date")[0]
+						dt = acquisition_date.firstChild.data
+						surface_reflectance = "Yes"
+						sat = sat + "_sr"
+						cfg.ui.satellite_lineEdit.setText(sat)
+						cfg.ui.date_lineEdit.setText(dt)
+						cfg.ui.sun_elev_lineEdit.setText("1")
+						cfg.ui.earth_sun_dist_lineEdit.setText("1")
 					if f.lower().endswith(".txt") and "mtl" in f.lower():
 							MTLFile = inp + "/" + str(f)
 					# for compatibility with glcf images
@@ -786,41 +861,42 @@ class LandsatTab:
 			else:
 				MTLFile = cfg.ui.label_27.text()
 		#### open MTL file
-			try:
-				# get information from MTL
-				cfg.RADIANCE_UNITS = None
-				with open(MTLFile, "r") as MTL:
-					for r in MTL:
-						# satellite
-						if "SPACECRAFT_ID" in r.split():
-							sat = str(r.split()[2]).replace('"', '')
-						if "SUN_ELEVATION" in r.split():
-							sE = str(r.split()[2])
-						if "EARTH_SUN_DISTANCE" in r.split():
-							esd = str(r.split()[2])
-						if "DATE_ACQUIRED" in r.split() or "ACQUISITION_DATE" in r.split():
-							dt = str(r.split()[2])
-						if "RADIANCE_UNITS" in r.split():
-							cfg.RADIANCE_UNITS = str(r.split()[2])
-			except Exception as err:
-				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-				if batch == "No":
-					cfg.uiUtls.removeProgressBar()
-				cfg.mx.msgErr8()
-				check = "No"						
-			if esd == "":
-				# date format
-				dFmt = "%Y-%m-%d"
+			if surface_reflectance == "No":
 				try:
-					esd = str(cfg.utls.calculateEarthSunDistance(dt, dFmt))
+					# get information from MTL
+					cfg.RADIANCE_UNITS = None
+					with open(MTLFile, "r") as MTL:
+						for r in MTL:
+							# satellite
+							if "SPACECRAFT_ID" in r.split():
+								sat = str(r.split()[2]).replace('"', '')
+							if "SUN_ELEVATION" in r.split():
+								sE = str(r.split()[2])
+							if "EARTH_SUN_DISTANCE" in r.split():
+								esd = str(r.split()[2])
+							if "DATE_ACQUIRED" in r.split() or "ACQUISITION_DATE" in r.split():
+								dt = str(r.split()[2])
+							if "RADIANCE_UNITS" in r.split():
+								cfg.RADIANCE_UNITS = str(r.split()[2])
 				except Exception as err:
 					# logger
 					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-			cfg.ui.satellite_lineEdit.setText(sat)
-			cfg.ui.date_lineEdit.setText(dt)
-			cfg.ui.sun_elev_lineEdit.setText(sE)
-			cfg.ui.earth_sun_dist_lineEdit.setText(esd)
+					if batch == "No":
+						cfg.uiUtls.removeProgressBar()
+					cfg.mx.msgErr8()
+					check = "No"						
+				if esd == "":
+					# date format
+					dFmt = "%Y-%m-%d"
+					try:
+						esd = str(cfg.utls.calculateEarthSunDistance(dt, dFmt))
+					except Exception as err:
+						# logger
+						cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.ui.satellite_lineEdit.setText(sat)
+				cfg.ui.date_lineEdit.setText(dt)
+				cfg.ui.sun_elev_lineEdit.setText(sE)
+				cfg.ui.earth_sun_dist_lineEdit.setText(esd)
 		#### list bands
 			# bands
 			dBs = {}
@@ -861,6 +937,11 @@ class LandsatTab:
 						if nm[len(nm) - 1].isdigit() :
 							dBs["BAND_{0}".format(nm[len(nm) - 1])] = str(f)
 							bandNames.append(f)
+					elif str(sat).lower() in ['landsat_1_sr', 'landsat_2_sr', 'landsat_3_sr', 'landsat_4_sr', 'landsat_5_sr', 'landsat_7_sr', 'landsat_8_sr']:
+						#  landsat bands
+						if nm[len(nm) - 1].isdigit() :
+							dBs["BAND_{0}".format(nm[len(nm) - 1])] = str(f)
+							bandNames.append(f)
 					else:
 						bandNames.append(f)
 			# add band items to table
@@ -884,53 +965,63 @@ class LandsatTab:
 				dRadMxB = {}
 				dRefMxB = {}
 				dRad = {}
-				# get information from MTL
-				with open(MTLFile, "r") as MTL:
-					for r in MTL:
-						for key, band in dBs.items():
-							try:
-								# for conversion to TOA Radiance from https://landsat.usgs.gov/landsat8_Using_Product.php
-								if "RADIANCE_MULT_" + str(key) in r.split():
-									dRadMB["RADIANCE_MULT_" + str(key)] = str(r.split()[2])
-								if "RADIANCE_ADD_" + str(key) in r.split():
-									dRadAB["RADIANCE_ADD_" + str(key)] = str(r.split()[2])
-								# for conversion to TOA Reflectance
-								if "REFLECTANCE_MULT_" + str(key) in r.split():
-									dRefMB["REFLECTANCE_MULT_" + str(key)] = str(r.split()[2])
-								if "REFLECTANCE_ADD_" + str(key) in r.split():
-									dRefAB["REFLECTANCE_ADD_" + str(key)] = str(r.split()[2])
-								# for Esun calculation
-								if "RADIANCE_MAXIMUM_" + str(key) in r.split():
-									dRadMxB["RADIANCE_MAXIMUM_" + str(key)] = str(r.split()[2])
-								if "REFLECTANCE_MAXIMUM_" + str(key) in r.split():
-									dRefMxB["REFLECTANCE_MAXIMUM_" + str(key)] = str(r.split()[2])
-								# for At-Satellite Brightness Temperature
-								if "K1_CONSTANT_" + str(key) in r.split():
-									dK1B["K1_CONSTANT_" + str(key)] = str(r.split()[2])
-								if "K2_CONSTANT_" + str(key) in r.split():
-									# rV = r.split()[2]
-									dK2B["K2_CONSTANT_" + str(key)] = str(r.split()[2])
-								# for compatibility with glcf images
-								if "LMAX_" + str(key.replace('_', '').replace('VCID', '')) in r.split():
-									dRad["LMAX_" + str(key)] = str(r.split()[2])
-								if "LMIN_" + str(key.replace('_', '').replace('VCID', '')) in r.split():
-									dRad["LMIN_" + str(key)] = str(r.split()[2])
-								if "QCALMAX_" + str(key.replace('_', '').replace('VCID', '')) in r.split():
-									dRad["QCALMAX_" + str(key)] = str(r.split()[2])
-								if "QCALMIN_" + str(key.replace('_', '').replace('VCID', '')) in r.split():
-									dRad["QCALMIN_" + str(key)] = str(r.split()[2])
-								if "GAIN_" + str(key) in r.split() or "GAIN_" + str(key).replace("BAND_", "BAND") in r.split():
-									dRadMB["RADIANCE_MULT_" + str(key)] = str(r.split()[2])
-								if "BIAS_" + str(key) in r.split() or ("BIAS_" + str(key)).replace("BAND_", "BAND") in r.split():
-									dRadAB["RADIANCE_ADD_" + str(key)] = str(r.split()[2])
-							except Exception as err:
-								# logger
-								cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))	
+				if surface_reflectance == "No":
+					# get information from MTL
+					with open(MTLFile, "r") as MTL:
+						for r in MTL:
+							for key, band in dBs.items():
+								try:
+									# for conversion to TOA Radiance from https://landsat.usgs.gov/landsat8_Using_Product.php
+									if "RADIANCE_MULT_" + str(key) in r.split():
+										dRadMB["RADIANCE_MULT_" + str(key)] = str(r.split()[2])
+									if "RADIANCE_ADD_" + str(key) in r.split():
+										dRadAB["RADIANCE_ADD_" + str(key)] = str(r.split()[2])
+									# for conversion to TOA Reflectance
+									if "REFLECTANCE_MULT_" + str(key) in r.split():
+										dRefMB["REFLECTANCE_MULT_" + str(key)] = str(r.split()[2])
+									if "REFLECTANCE_ADD_" + str(key) in r.split():
+										dRefAB["REFLECTANCE_ADD_" + str(key)] = str(r.split()[2])
+									# for Esun calculation
+									if "RADIANCE_MAXIMUM_" + str(key) in r.split():
+										dRadMxB["RADIANCE_MAXIMUM_" + str(key)] = str(r.split()[2])
+									if "REFLECTANCE_MAXIMUM_" + str(key) in r.split():
+										dRefMxB["REFLECTANCE_MAXIMUM_" + str(key)] = str(r.split()[2])
+									# for At-Satellite Brightness Temperature
+									if "K1_CONSTANT_" + str(key) in r.split():
+										dK1B["K1_CONSTANT_" + str(key)] = str(r.split()[2])
+									if "K2_CONSTANT_" + str(key) in r.split():
+										# rV = r.split()[2]
+										dK2B["K2_CONSTANT_" + str(key)] = str(r.split()[2])
+									# for compatibility with glcf images
+									if "LMAX_" + str(key.replace('_', '').replace('VCID', '')) in r.split():
+										dRad["LMAX_" + str(key)] = str(r.split()[2])
+									if "LMIN_" + str(key.replace('_', '').replace('VCID', '')) in r.split():
+										dRad["LMIN_" + str(key)] = str(r.split()[2])
+									if "QCALMAX_" + str(key.replace('_', '').replace('VCID', '')) in r.split():
+										dRad["QCALMAX_" + str(key)] = str(r.split()[2])
+									if "QCALMIN_" + str(key.replace('_', '').replace('VCID', '')) in r.split():
+										dRad["QCALMIN_" + str(key)] = str(r.split()[2])
+									if "GAIN_" + str(key) in r.split() or "GAIN_" + str(key).replace("BAND_", "BAND") in r.split():
+										dRadMB["RADIANCE_MULT_" + str(key)] = str(r.split()[2])
+									if "BIAS_" + str(key) in r.split() or ("BIAS_" + str(key)).replace("BAND_", "BAND") in r.split():
+										dRadAB["RADIANCE_ADD_" + str(key)] = str(r.split()[2])
+								except Exception as err:
+									# logger
+									cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))	
 				# add items to table
 				b = 0
 				for bandName in sorted(bandNames):	
 					for key, band in dBs.items():
 						if bandName == band:
+							if surface_reflectance == "Yes":
+								try:
+									cfg.utls.addTableItem(l, 0.0001, b, 3)
+								except:
+									pass
+								try:
+									cfg.utls.addTableItem(l, 0, b, 4)
+								except:
+									pass
 							if dRadMB:
 								try:
 									cfg.utls.addTableItem(l, dRadMB["RADIANCE_MULT_" + str(key)], b, 1)
@@ -1021,7 +1112,7 @@ class LandsatTab:
 		
 	def editedSatellite(self):
 		sat = cfg.ui.satellite_lineEdit.text()
-		if str(sat).lower() in ['landsat_1', 'landsat1','landsat_2', 'landsat2','landsat_3', 'landsat3','landsat_4', 'landsat4', 'landsat_5', 'landsat5', 'landsat_7', 'landsat7', 'landsat_8', 'landsat8']:
+		if str(sat).lower() in ['landsat_1', 'landsat1','landsat_2', 'landsat2','landsat_3', 'landsat3','landsat_4', 'landsat4', 'landsat_5', 'landsat5', 'landsat_7', 'landsat7', 'landsat_8', 'landsat8', 'landsat_1_sr', 'landsat_2_sr', 'landsat_3_sr', 'landsat_4_sr', 'landsat_5_sr', 'landsat_7_sr', 'landsat_8_sr']:
 			cfg.ui.satellite_lineEdit.setStyleSheet("color : black")
 		else:
 			cfg.ui.satellite_lineEdit.setStyleSheet("color : red")
