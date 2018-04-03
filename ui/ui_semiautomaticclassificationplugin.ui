@@ -9523,14 +9523,14 @@ min-height: 18px;
                      </item>
                      <item row="0" column="0">
                       <widget class="QCheckBox" name="cloud_buffer_checkBox">
+                       <property name="enabled">
+                        <bool>true</bool>
+                       </property>
                        <property name="toolTip">
                         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If checked, create a buffer for class values&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                        </property>
                        <property name="text">
                         <string>Use buffer of pixel size</string>
-                       </property>
-                       <property name="checked">
-                        <bool>true</bool>
                        </property>
                       </widget>
                      </item>
@@ -9770,8 +9770,8 @@ min-height: 18px;
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>866</width>
-                <height>419</height>
+                <width>335</width>
+                <height>141</height>
                </rect>
               </property>
               <attribute name="label">
@@ -11240,8 +11240,8 @@ min-height: 18px;
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>866</width>
-                <height>419</height>
+                <width>397</width>
+                <height>207</height>
                </rect>
               </property>
               <attribute name="label">
@@ -16231,8 +16231,8 @@ min-height: 18px;
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>884</width>
-            <height>447</height>
+            <width>567</width>
+            <height>281</height>
            </rect>
           </property>
           <attribute name="label">

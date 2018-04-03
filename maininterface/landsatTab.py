@@ -142,8 +142,9 @@ class LandsatTab:
 		for i in range(0, c):
 			if cfg.actionCheck == "Yes":
 				inputRaster = inp + "/" + l.item(i,0).text()				
-				oNm = pre + l.item(i,0).text()
-				outputRaster = out + "/" + oNm
+				oNme = pre + l.item(i,0).text()
+				oNm, ext = cfg.osSCP.path.splitext(oNme)
+				outputRaster = out + "/" + oNme
 				outputRasterList.append(outputRaster)
 				panRaster = out + "/" + prePAN + l.item(i,0).text()
 				tempRaster = cfg.tmpDir + "/" + dT + l.item(i,0).text()

@@ -220,7 +220,7 @@ class MosaicBandSets:
 					for b in range(0, len(bL)):
 						bL[b] = None
 					rD = None
-					rstrOut = o + "/" + outputName + str(y + 1) + ".tif"
+					rstrOut = o + "/" + outputName + str(cfg.osSCP.path.splitext(cfg.osSCP.path.basename(bndSetSources[0][y]))[0]) + ".tif"
 					if cfg.osSCP.path.isfile(tPMD2):
 						cfg.cnvs.setRenderFlag(False)
 						if cfg.rasterCompression != "No":
@@ -236,7 +236,7 @@ class MosaicBandSets:
 							cfg.shutilSCP.copy(tPMD2, rstrOut)
 							cfg.osSCP.remove(tPMD2)
 						# add raster to layers
-						cfg.utls.addRasterLayer(str(rstrOut), str(cfg.osSCP.path.basename(rstrOut)))
+						cfg.utls.addRasterLayer(str(rstrOut))
 				cfg.cnvs.setRenderFlag(True)
 				cfg.uiUtls.updateBar(100)
 				if batch == "No":

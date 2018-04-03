@@ -59,7 +59,7 @@ class VectorToRasterTab:
 			vectorSource = l.source()
 			referenceRasterPath = r.source()
 			fd = cfg.ui.field_comboBox.currentText()
-			if len(fd) == 0:
+			if len(fd) == 0 and cfg.ui.field_checkBox.isChecked():
 				cfg.utls.refreshVectorLayer()
 				return
 			rstrOut = cfg.utls.getSaveFileName(None, cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Save raster output"), "", "*.tif", "tif")

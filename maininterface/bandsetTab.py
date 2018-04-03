@@ -270,7 +270,7 @@ class BandsetTab:
 				iBC = None
 				check = "No"
 			if iBC == 1 and check == "Yes":
-				r =cfg.utls.addRasterLayer(i, cfg.osSCP.path.basename(i))
+				r =cfg.utls.addRasterLayer(i)
 				itN = r.name()
 				# count table rows
 				c = tW.rowCount()

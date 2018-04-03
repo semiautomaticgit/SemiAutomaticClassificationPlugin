@@ -248,7 +248,7 @@ class ClipMultipleRasters:
 					else:
 						cfg.shutilSCP.copy(tPMD2, f)
 						cfg.osSCP.remove(tPMD2)
-					cfg.utls.addRasterLayer(str(oD) + "/" + outputName + "_" + str(cfg.osSCP.path.basename(str(l))), str(outputName + "_" + str(cfg.osSCP.path.basename(str(l)))))
+					cfg.utls.addRasterLayer(str(oD) + "/" + outputName + "_" + str(cfg.osSCP.path.basename(str(l))))
 					# logger
 					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " rasters clipped" )
 			# using shapefile
@@ -334,7 +334,7 @@ class ClipMultipleRasters:
 									cfg.osSCP.remove(tRxs)
 								except:
 									pass
-								cfg.utls.addRasterLayer(e, c + d)
+								cfg.utls.addRasterLayer(e)
 								# logger
 								cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " rasters clipped" )
 							else:
@@ -370,7 +370,7 @@ class ClipMultipleRasters:
 								cfg.osSCP.remove(tRxs)
 							except:
 								pass
-							cfg.utls.addRasterLayer(str(oD) + "/" + outputName + "_" + str(cfg.osSCP.path.basename(str(l))), str(outputName + "_" + str(cfg.osSCP.path.basename(str(l)))))
+							cfg.utls.addRasterLayer(str(oD) + "/" + outputName + "_" + str(cfg.osSCP.path.basename(str(l))))
 							# logger
 							cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " rasters clipped" )
 						else:

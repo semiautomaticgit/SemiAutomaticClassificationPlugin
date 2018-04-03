@@ -949,6 +949,8 @@ class SemiAutomaticClassificationPlugin:
 			# connect to mask button
 			cfg.ui.cloud_mask_toolButton.clicked.connect(cfg.cloudMsk.maskAction)
 			cfg.ui.cloud_mask_classes_lineEdit.textChanged.connect(cfg.cloudMsk.textChanged)
+			# connect to refresh button
+			cfg.ui.toolButton_reload_23.clicked.connect(cfg.utls.refreshClassificationLayer)			
 			""" ASTER tab """
 			# connect to input button
 			cfg.ui.toolButton_directoryInput_ASTER.clicked.connect(cfg.ASTERT.inputASTER)

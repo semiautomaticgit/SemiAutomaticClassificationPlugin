@@ -3645,6 +3645,7 @@ class Utils:
 		# unique value list
 		uniqueVal = cfg.np.unique(A)
 		aUniqueVal = list(uniqueVal.astype(int))
+		cfg.QtWidgetsSCP.qApp.processEvents()
 		# calculate sum
 		for i in aUniqueVal:
 			C['arr_'+ str(i)] = cfg.signalSCP.convolve2d(cfg.np.where(A==i, 1,0), B, 'same')
@@ -3652,7 +3653,7 @@ class Utils:
 		D = cfg.np.ones(A.shape)
 		for v in functionVariableList:
 			D[cfg.np.where(A == v)] = 0
-
+		cfg.QtWidgetsSCP.qApp.processEvents()
 		# dilation
 		out = cfg.np.copy(A)
 		try:
@@ -3661,6 +3662,7 @@ class Utils:
 		except Exception as err:
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+		cfg.QtWidgetsSCP.qApp.processEvents()
 		oR = outputGdalRasterList[0]
 		if boundaries is None:
 			# output raster
@@ -4555,7 +4557,7 @@ class Utils:
 			if functionVariable[0] == cfg.algMinDist:
 				o = cfg.np.sqrt(((firstArray - secondArray)**2).sum(axis = 2))
 			else:
-				o = cfg.np.arccos((firstArray * secondArray).sum(axis = 2) / cfg.np.sqrt((firstArray**2).sum(axis = 2) * cfg.np.sqrt((secondArray**2).sum(axis = 2)))) * 180 / cfg.np.pi
+				o = cfg.np.arccos((firstArray * secondArray).sum(axis = 2) / cfg.np.sqrt((firstArray**2).sum(axis = 2) * (secondArray**2).sum(axis = 2))) * 180 / cfg.np.pi
 			secondArray = None
 			a = cfg.np.copy(o)
 			# create array if not
@@ -5460,7 +5462,7 @@ class Utils:
 	def addRasterLayer(self, path, name = None):
 		if cfg.osSCP.path.isfile(path):
 			if name is None:
-				name = cfg.osSCP.path.basename(path)
+				name, ext = cfg.osSCP.path.splitext(cfg.osSCP.path.basename(path))
 			r = cfg.iface.addRasterLayer(path, name)
 			r.setName(name)
 			return r
@@ -5843,8 +5845,11 @@ class Utils:
 		# check projection
 		lP = cfg.osrSCP.SpatialReference()
 		lP = gL.GetSpatialRef()
-		lP.AutoIdentifyEPSG()
-		lPRS = lP.GetAuthorityCode(None)
+		if lP is None:
+			lPRS = None
+		else:
+			lP.AutoIdentifyEPSG()
+			lPRS = lP.GetAuthorityCode(None)
 		# try with QGIS
 		if lPRS is None:
 			mL = cfg.utls.addVectorLayer(layerPath , "tempA", "ogr")
@@ -7004,7 +7009,7 @@ class Utils:
 	# select tab in signature plot tab
 	def selectSpectralPlotTabSettings(self, secondTab = None):
 		if secondTab is not None:
-			cfg.uisp.toolBox.setCurrentIndex(secondTab)
+			cfg.uisp.tabWidget.setCurrentIndex(secondTab)
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "tab selected")
 		

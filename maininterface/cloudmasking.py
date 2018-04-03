@@ -168,9 +168,12 @@ class CloudMasking:
 						tempRasterList.append(tPMD)
 						# create rasters
 						oMR = cfg.utls.createRasterFromReference(rD, 1, tempRasterList, cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0,  None, "No", "DEFLATE21")
+						cfg.uiUtls.updateBar(21)
 						o = cfg.utls.processRaster(input, bL, None, "No", cfg.utls.rasterDilation, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", struct, valueList, "buffer ")
+						cfg.uiUtls.updateBar(22)
 						# boundaries
 						o = cfg.utls.processRasterBoundaries(input, bL, None, "No", cfg.utls.rasterDilationBoundaries, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", struct, valueList, "buffer ", 2)
+						cfg.uiUtls.updateBar(23)
 						# close GDAL rasters
 						for b in range(0, len(oMR)):
 							oMR[b] = None
@@ -237,7 +240,7 @@ class CloudMasking:
 					for b in range(0, len(bL)):
 						bL[b] = None
 					rD = None
-					rstrOut = o + "/" + outputName + str(cfg.osSCP.path.splitext(cfg.osSCP.path.basename(cfg.bndSetLst[0]))[0]) + ".tif"
+					rstrOut = o + "/" + outputName + str(cfg.osSCP.path.splitext(cfg.osSCP.path.basename(cfg.bndSetLst[x]))[0]) + ".tif"
 					if cfg.osSCP.path.isfile(tPMD2):
 						cfg.cnvs.setRenderFlag(False)
 						if cfg.rasterCompression != "No":
@@ -253,7 +256,7 @@ class CloudMasking:
 							cfg.shutilSCP.copy(tPMD2, rstrOut)
 							cfg.osSCP.remove(tPMD2)
 						# add raster to layers
-						cfg.utls.addRasterLayer(str(rstrOut), str(cfg.osSCP.path.basename(rstrOut)))
+						cfg.utls.addRasterLayer(str(rstrOut))
 				cfg.cnvs.setRenderFlag(True)
 				cfg.uiUtls.updateBar(100)
 				if batch == "No":
