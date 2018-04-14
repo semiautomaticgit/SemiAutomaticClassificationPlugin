@@ -215,13 +215,14 @@ class MultipleROITab:
 			else:
 				pointListFile = pointListFile + ".csv"
 			f = open(pointListFile, 'w')
-			f.write("X;Y;MC ID;MC Info;C ID;C Info;Min size;Max width;Range radius;Rapid ROI band\n")
+			sep = "\t"
+			f.write("X\tY\tMC_ID\tMC_Info\tC_ID\tC_Info\tMin\tMax\tDist\tRapid_ROI_band\n")
 			f.close()
 			tW = cfg.ui.point_tableWidget
 			c = tW.rowCount()
 			for i in range(0, c):
 				f = open(pointListFile, 'a')
-				sep = ";"
+				sep = "\t"
 				X = tW.item(i,0).text()
 				Y = tW.item(i,1).text()
 				MID = tW.item(i,2).text()
@@ -256,9 +257,12 @@ class MultipleROITab:
 		if pointFile.lower().endswith(".csv"):
 			try:
 				f = open(pointFile)
-				sep = ";"
 				if cfg.osSCP.path.isfile(pointFile):
 					file = f.readlines()
+					if "\t" in file[0]:
+						sep = "\t"
+					else:
+						sep = ";"
 					tW = cfg.ui.point_tableWidget
 					for b in range(1, len(file)):
 						# point list
