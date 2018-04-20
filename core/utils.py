@@ -4551,8 +4551,8 @@ class Utils:
 	def spectralDistanceProcess(self, gdalBandList, rasterArray, columnNumber, rowNumber, pixelStartColumn, pixelStartRow, outputGdalRasterList, functionBandArgumentNoData, functionVariable):
 		if cfg.actionCheck == "Yes":
 			rasterArray[rasterArray==functionBandArgumentNoData] = cfg.np.nan
-			firstArray = rasterArray[::, ::, :rasterArray.shape[2]/2]
-			secondArray = rasterArray[::, ::, rasterArray.shape[2]/2:]
+			firstArray = rasterArray[::, ::, :rasterArray.shape[2]//2]
+			secondArray = rasterArray[::, ::, rasterArray.shape[2]//2:]
 			rasterArray = None
 			if functionVariable[0] == cfg.algMinDist:
 				o = cfg.np.sqrt(((firstArray - secondArray)**2).sum(axis = 2))

@@ -4376,7 +4376,7 @@ p, li { white-space: pre-wrap; }
         <translation>SCP zapisuje Plik zdarzeń</translation>
     </message>
     <message>
-        <location filename="downloadproducts.py" line="1704"/>
+        <location filename="downloadproducts.py" line="1706"/>
         <source>Error</source>
         <translation>Błąd</translation>
     </message>
@@ -4741,7 +4741,7 @@ p, li { white-space: pre-wrap; }
         <translation>Eksportuj pobrane łącza</translation>
     </message>
     <message>
-        <location filename="downloadproducts.py" line="2053"/>
+        <location filename="downloadproducts.py" line="2055"/>
         <source>Searching ...</source>
         <translation>Wyszukiwanie...</translation>
     </message>

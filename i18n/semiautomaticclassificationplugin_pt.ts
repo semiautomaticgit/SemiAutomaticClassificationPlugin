@@ -4565,7 +4565,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="downloadproducts.py" line="1704"/>
+        <location filename="downloadproducts.py" line="1706"/>
         <source>Error</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5046,7 +5046,7 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="downloadproducts.py" line="2053"/>
+        <location filename="downloadproducts.py" line="2055"/>
         <source>Searching ...</source>
         <translation type="unfinished"></translation>
     </message>

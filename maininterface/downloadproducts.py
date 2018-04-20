@@ -1305,7 +1305,7 @@ class DownloadProducts:
 						attr = xd.getAttribute("name")
 						if attr == "cloudcoverpercentage":
 							cloudcoverpercentage = xd.firstChild.data
-					if productType == "S2MSI2Ap":
+					if productType == "S2MSI2Ap" or productType == "S2MSI2A":
 						url2 = topUrl + "/odata/v1/Products('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('MTD_MSIL2A.xml')/$value"
 					else:
 						url2 = topUrl + "/odata/v1/Products('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('MTD_MSIL1C.xml')/$value"
@@ -1332,10 +1332,10 @@ class DownloadProducts:
 						try:
 							newV = None
 							doc2 = cfg.minidomSCP.parseString(xml2)
-							if productType == "S2MSI2Ap":
-								imgName2Tag = doc2.getElementsByTagName("IMAGE_FILE_2A")[0]
-							else:
+							try:
 								imgName2Tag = doc2.getElementsByTagName("IMAGE_FILE")[0]
+							except:
+								imgName2Tag = doc2.getElementsByTagName("IMAGE_FILE_2A")[0]
 							imgName2 = imgName2Tag.firstChild.data.split("/")[1]
 							if cfg.actionCheck == "Yes":								
 								for filter in imageFindList:
@@ -1350,7 +1350,7 @@ class DownloadProducts:
 										cfg.utls.addTableItem(tW, sat, c, 0)
 										cfg.utls.addTableItem(tW, imgName2, c, 1)
 										cfg.utls.addTableItem(tW, acqDateI, c, 2)
-										cfg.utls.addTableItem(tW, float(cloudcoverpercentage), c, 3)						
+										cfg.utls.addTableItem(tW, float(cloudcoverpercentage), c, 3)
 										cfg.utls.addTableItem(tW, acZoneI, c, 4)
 										cfg.utls.addTableItem(tW, "", c, 5)
 										cfg.utls.addTableItem(tW, float(min_lat), c, 6)
@@ -1362,6 +1362,7 @@ class DownloadProducts:
 										cfg.utls.addTableItem(tW, imgID, c, 12)
 										cfg.utls.addTableItem(tW, imgName, c, 13)
 										newV = "Yes"
+			
 						except Exception as err:
 							# logger
 							cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
@@ -1388,7 +1389,7 @@ class DownloadProducts:
 												cfg.utls.addTableItem(tW, imgName2, c, 1)
 												cfg.utls.addTableItem(tW, acqDateI, c, 2)
 												cfg.utls.addTableItem(tW, float(cloudcoverpercentage), c, 3)
-												cfg.utls.addTableItem(tW, acZoneI, c, 4)								
+												cfg.utls.addTableItem(tW, acZoneI, c, 4)
 												cfg.utls.addTableItem(tW, "", c, 5)
 												cfg.utls.addTableItem(tW, float(min_lat), c, 6)
 												cfg.utls.addTableItem(tW, float(min_lon), c, 7)
@@ -1615,17 +1616,18 @@ class DownloadProducts:
 						outCopyFile = outputDirectory + "//" + imgName2 + "_" + acquisitionDate[0:10] + "//L1C_" + imgName2[4:] + '_B' + bandNumber
 					elif imgName2[0:4] == "L2A_":
 						if bandNumber in ["02", "03", "04", "08"]:
-							urlL = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('IMG_DATA')/Nodes('R10m')/Nodes('L2A_" + imgName2.split("_")[1] + "_" + imgName.split("_")[2] + '_B' + bandNumber + "_10m.jp2')/$value"
-							outFile = cfg.tmpDir + "//L2A_" + imgName2.split("_")[1] + "_" + imgName.split("_")[2] + '_B' + bandNumber + '.jp2'
-							outCopyFile = outputDirectory + "//" + imgName2 + "_" + acquisitionDate[0:10] + "//L2A_" + imgName2[4:] + '_B' + bandNumber
+							#urlL = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('IMG_DATA')/Nodes('R10m')/Nodes('L2A_" + imgName2.split("_")[1] + "_" + imgName.split("_")[2] + '_B' + bandNumber + "_10m.jp2')/$value"
+							urlL = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('IMG_DATA')/Nodes('R10m')/Nodes('" + imgName2.split("_")[1] + "_" + imgName.split("_")[2] + '_B' + bandNumber + "_10m.jp2')/$value"
+							outFile = cfg.tmpDir + "//" + imgName2.split("_")[1] + "_" + imgName.split("_")[2] + '_B' + bandNumber + '.jp2'
+							outCopyFile = outputDirectory + "//" + imgName2 + "_" + acquisitionDate[0:10] + "//" + imgName2[4:] + '_B' + bandNumber
 						elif bandNumber in ["05", "06", "07", "11", "12", "8A"]:
-							urlL = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('IMG_DATA')/Nodes('R20m')/Nodes('L2A_" + imgName2.split("_")[1] + "_" + imgName.split("_")[2] + '_B' + bandNumber + "_20m.jp2')/$value"
-							outFile = cfg.tmpDir + "//L2A_" + imgName2.split("_")[1] + "_" + imgName.split("_")[2] + '_B' + bandNumber + '.jp2'
-							outCopyFile = outputDirectory + "//" + imgName2 + "_" + acquisitionDate[0:10] + "//L2A_" + imgName2[4:] + '_B' + bandNumber
+							urlL = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('IMG_DATA')/Nodes('R20m')/Nodes('" + imgName2.split("_")[1] + "_" + imgName.split("_")[2] + '_B' + bandNumber + "_20m.jp2')/$value"
+							outFile = cfg.tmpDir + "//" + imgName2.split("_")[1] + "_" + imgName.split("_")[2] + '_B' + bandNumber + '.jp2'
+							outCopyFile = outputDirectory + "//" + imgName2 + "_" + acquisitionDate[0:10] + "//" + imgName2[4:] + '_B' + bandNumber
 						elif bandNumber in ["01", "09", "10"]:
-							urlL = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('IMG_DATA')/Nodes('R60m')/Nodes('L2A_" + imgName2.split("_")[1] + "_" + imgName.split("_")[2] + '_B' + bandNumber + "_60m.jp2')/$value"
-							outFile = cfg.tmpDir + "//L2A_" + imgName2.split("_")[1] + "_" + imgName.split("_")[2] + '_B' + bandNumber + '.jp2'
-							outCopyFile = outputDirectory + "//" + imgName2 + "_" + acquisitionDate[0:10] + "//L2A_" + imgName2[4:] + '_B' + bandNumber
+							urlL = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('IMG_DATA')/Nodes('R60m')/Nodes('" + imgName2.split("_")[1] + "_" + imgName.split("_")[2] + '_B' + bandNumber + "_60m.jp2')/$value"
+							outFile = cfg.tmpDir + "//" + imgName2.split("_")[1] + "_" + imgName.split("_")[2] + '_B' + bandNumber + '.jp2'
+							outCopyFile = outputDirectory + "//" + imgName2 + "_" + acquisitionDate[0:10] + "//" + imgName2[4:] + '_B' + bandNumber
 					else:
 						urlL = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('IMG_DATA')/Nodes('" + imgName2[0:-7] + '_B' + bandNumber + ".jp2')/$value"
 						outFile = cfg.tmpDir + "//" + imgName2[0:-7] + '_B' + bandNumber + '.jp2'
