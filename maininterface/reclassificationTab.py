@@ -69,7 +69,7 @@ class ReclassificationTab:
 			list = []
 			values = valueString.split(",")
 			for v in values:
-				val = v.split("-")
+				val = v.split("_")
 				list.append([val[0], val[1]])
 			c = 1
 		if c > 0:

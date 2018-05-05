@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="/plugins/semiautomaticclassificationplugin">
+    <file>icons/semiautomaticclassificationplugin_kml_add.png</file>
     <file>icons/semiautomaticclassificationplugin_osm_add.png</file>
     <file>icons/semiautomaticclassificationplugin_roi_options.png</file>
     <file>icons/semiautomaticclassificationplugin_post_process_r.png</file>
@@ -136,7 +137,6 @@
     <file>icons/semiautomaticclassificationplugin_sign_tool.png</file>
     <file>icons/semiautomaticclassificationplugin_mosaic_tool.png</file>
   </qresource>
-  <qresource prefix="other"/>
   <qresource prefix="pointer">
     <file>icons/pointer/LCS_pointer.png</file>
     <file>icons/pointer/ROI_pointer.png</file>

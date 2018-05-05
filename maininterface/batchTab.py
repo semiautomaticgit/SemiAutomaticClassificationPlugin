@@ -1518,12 +1518,17 @@ class BatchTab:
 					pass
 				else:
 					return "No", pName
-			# reclassification values inside " " (list of oldValue-newValue separated by ,)
+			# reclassification values inside " " (list of oldValue_newValue separated by ,)
 			elif pName == "value_list":
 				pSplitX = pSplit[1]
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				values = g[0]
 				if len(values) > 0:
+					valuesStr = values.split(",")
+					valList = []
+					for v in valuesStr:
+						val = v.split("_")
+						valList.append([float(val[0]), float(val[1])])
 					values = "'" + values + "'"
 				else:
 					return "No", pName

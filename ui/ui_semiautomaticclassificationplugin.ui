@@ -3860,7 +3860,7 @@ min-height: 18px;
                     <enum>QFrame::Sunken</enum>
                    </property>
                    <property name="text">
-                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add &lt;a href=&quot;http://www.openstreetmap.org/copyright&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;OpenStreetMap&lt;/span&gt;&lt;/a&gt; to the map&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;Add &lt;/span&gt;&lt;a href=&quot;http://www.openstreetmap.org/copyright&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#000000;&quot;&gt;OpenStreetMap&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; color:#000000;&quot;&gt; to the map&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                    </property>
                    <property name="alignment">
                     <set>Qt::AlignCenter</set>
@@ -9770,8 +9770,8 @@ min-height: 18px;
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>335</width>
-                <height>141</height>
+                <width>866</width>
+                <height>419</height>
                </rect>
               </property>
               <attribute name="label">
@@ -11240,8 +11240,8 @@ min-height: 18px;
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>397</width>
-                <height>207</height>
+                <width>866</width>
+                <height>419</height>
                </rect>
               </property>
               <attribute name="label">
@@ -16231,8 +16231,8 @@ min-height: 18px;
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>567</width>
-            <height>281</height>
+            <width>884</width>
+            <height>447</height>
            </rect>
           </property>
           <attribute name="label">

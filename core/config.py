@@ -266,7 +266,7 @@ IHS_panType = "Intensity-Hue-Saturation"
 BT_panType = "Brovey Transform"
 # contrast type
 cumulativeCutContrast = "cumulativeCut"
-stdDevContrast =  "stdDev"
+stdDevContrast = "stdDev"
 defaultContrast = cumulativeCutContrast
 # settings
 testGDALV = None
@@ -284,6 +284,8 @@ lastSaveDir = ""
 # band calc
 bandCalcIndex = 0
 dockIndex = 0
+# SCP kml name
+kmlNm = "SCP_kml"
 
 """ Project variables """
 qmlFl = None
@@ -651,7 +653,7 @@ functionNames.append([['modis_conversion', 'cfg.batchT.performMODISConversion', 
 functionNames.append([['mosaic_bandsets', 'cfg.batchT.performMosaicBandSets', 'cfg.mosaicBS.mosaicBandSets', ["band_set_list : ''", "output_dir : ''", "output_name_prefix : 'mosaic'"]]])
 functionNames.append([['open_training_input', 'cfg.batchT.performOpenTrainingInput',  'cfg.SCPD.openInput', ["training_file_path : ''"]]])
 functionNames.append([['pca', 'cfg.batchT.performPCA',  'cfg.pcaT.calculatePCA', ["band_set : 1", "use_number_of_components : 0", "number_of_components : 2", "use_nodata : 1", "nodata_value : 0", "output_dir : ''"]]])
-functionNames.append([['reclassification', 'cfg.batchT.performReclassification', 'cfg.reclassification.reclassify', ["input_raster_path : ''", "value_list : 'oldVal-newVal;oldVal-newVal'", "use_signature_list_code : 1", "code_field : 'MC_ID'", "output_raster_path : ''"]]])
+functionNames.append([['reclassification', 'cfg.batchT.performReclassification', 'cfg.reclassification.reclassify', ["input_raster_path : ''", "value_list : 'oldVal_newVal,oldVal_newVal'", "use_signature_list_code : 1", "code_field : 'MC_ID'", "output_raster_path : ''"]]])
 functionNames.append([['remove_bandset', 'cfg.batchT.performRemoveBandSet',  'cfg.bst.removeBandSetTab', ["band_set : 1"]]])
 functionNames.append([['select_bandset', 'cfg.batchT.performBandSetSelection',  'cfg.bst.selectBandSetTab', ["band_set : 1"]]])
 functionNames.append([['sentinel2_conversion', 'cfg.batchT.performSentinel2Conversion', 'cfg.sentinel2T.sentinel2', ["input_dir : ''", "mtd_safl1c_file_path : ''", "apply_dos1 : 0", "dos1_only_blue_green : 1", "use_nodata : 1", "nodata_value : 0", "create_bandset : 1", "output_dir : ''", "band_set : 1"]]])

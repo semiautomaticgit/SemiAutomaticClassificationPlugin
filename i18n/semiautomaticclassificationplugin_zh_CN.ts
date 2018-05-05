@@ -3982,14 +3982,14 @@ p, li { white-space: pre-wrap; }
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add OpenStreetMap to the map&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <location filename="ui_semiautomaticclassificationplugin.ui" line="3863"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add &lt;a href=&quot;http://www.openstreetmap.org/copyright&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;OpenStreetMap&lt;/span&gt;&lt;/a&gt; to the map&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message encoding="UTF-8">
         <location filename="ui_semiautomaticclassificationplugin.ui" line="3879"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;(© OpenStreetMap contributors. The cartography is licensed as CC BY-SA. &lt;a href=&quot;https://operations.osmfoundation.org/policies/tiles/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Tile Usage Policy&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui_semiautomaticclassificationplugin.ui" line="3863"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;Add &lt;/span&gt;&lt;a href=&quot;http://www.openstreetmap.org/copyright&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#000000;&quot;&gt;OpenStreetMap&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; color:#000000;&quot;&gt; to the map&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -4420,57 +4420,57 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="281"/>
+        <location filename="input.py" line="282"/>
         <source>Band set</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="301"/>
+        <location filename="input.py" line="302"/>
         <source>Preprocessing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="335"/>
+        <location filename="input.py" line="336"/>
         <source>Postprocessing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="359"/>
+        <location filename="input.py" line="360"/>
         <source>Band calc</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="380"/>
+        <location filename="input.py" line="381"/>
         <source>Spectral plot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="382"/>
+        <location filename="input.py" line="383"/>
         <source>Scatter plot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="361"/>
+        <location filename="input.py" line="362"/>
         <source>Batch</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="363"/>
+        <location filename="input.py" line="364"/>
         <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="384"/>
+        <location filename="input.py" line="385"/>
         <source>User manual</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="386"/>
+        <location filename="input.py" line="387"/>
         <source>Online help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="277"/>
+        <location filename="input.py" line="278"/>
         <source>SCP</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5301,132 +5301,132 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="289"/>
+        <location filename="input.py" line="290"/>
         <source>Multiple ROI creation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="291"/>
+        <location filename="input.py" line="292"/>
         <source>Import signatures</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="293"/>
+        <location filename="input.py" line="294"/>
         <source>Export signatures</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="287"/>
+        <location filename="input.py" line="288"/>
         <source>Algorithm band weight</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="295"/>
+        <location filename="input.py" line="296"/>
         <source>Signature threshold</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="297"/>
+        <location filename="input.py" line="298"/>
         <source>LCS threshold</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="303"/>
+        <location filename="input.py" line="304"/>
         <source>Landsat</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="305"/>
+        <location filename="input.py" line="306"/>
         <source>Sentinel-2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="309"/>
+        <location filename="input.py" line="310"/>
         <source>ASTER</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="315"/>
+        <location filename="input.py" line="316"/>
         <source>Clip multiple rasters</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="317"/>
+        <location filename="input.py" line="318"/>
         <source>Split raster bands</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="329"/>
+        <location filename="input.py" line="330"/>
         <source>PCA</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="313"/>
+        <location filename="input.py" line="314"/>
         <source>Vector to raster</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="337"/>
+        <location filename="input.py" line="338"/>
         <source>Accuracy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="339"/>
+        <location filename="input.py" line="340"/>
         <source>Land cover change</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="341"/>
+        <location filename="input.py" line="342"/>
         <source>Classification report</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="347"/>
+        <location filename="input.py" line="348"/>
         <source>Classification to vector</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="349"/>
+        <location filename="input.py" line="350"/>
         <source>Reclassification</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="351"/>
+        <location filename="input.py" line="352"/>
         <source>Edit raster</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="353"/>
+        <location filename="input.py" line="354"/>
         <source>Classification sieve</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="355"/>
+        <location filename="input.py" line="356"/>
         <source>Classification erosion</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="357"/>
+        <location filename="input.py" line="358"/>
         <source>Classification dilation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="388"/>
+        <location filename="input.py" line="389"/>
         <source>About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="370"/>
+        <location filename="input.py" line="371"/>
         <source>Interface</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="365"/>
+        <location filename="input.py" line="366"/>
         <source>Processing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="375"/>
+        <location filename="input.py" line="376"/>
         <source>Debug</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5441,37 +5441,37 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="210"/>
+        <location filename="input.py" line="211"/>
         <source>Value 0</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="211"/>
+        <location filename="input.py" line="212"/>
         <source>Set value 0</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="213"/>
+        <location filename="input.py" line="214"/>
         <source>Value 1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="214"/>
+        <location filename="input.py" line="215"/>
         <source>Set value 1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="216"/>
+        <location filename="input.py" line="217"/>
         <source>Value 2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="217"/>
+        <location filename="input.py" line="218"/>
         <source>Set value 2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="218"/>
+        <location filename="input.py" line="219"/>
         <source>Undo edit (only for ROI polygons)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5506,22 +5506,22 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="343"/>
+        <location filename="input.py" line="344"/>
         <source>Cross classification</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="390"/>
+        <location filename="input.py" line="391"/>
         <source>Show plugin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="311"/>
+        <location filename="input.py" line="312"/>
         <source>MODIS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="319"/>
+        <location filename="input.py" line="320"/>
         <source>Stack raster bands</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5541,7 +5541,7 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="299"/>
+        <location filename="input.py" line="300"/>
         <source>Download products</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5626,12 +5626,12 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="307"/>
+        <location filename="input.py" line="308"/>
         <source>Sentinel-3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="utils.py" line="7074"/>
+        <location filename="utils.py" line="7136"/>
         <source>SCP: completed process</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5706,7 +5706,7 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="321"/>
+        <location filename="input.py" line="322"/>
         <source>Mosaic band sets</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5731,17 +5731,17 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="327"/>
+        <location filename="input.py" line="328"/>
         <source>Band combination</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="333"/>
+        <location filename="input.py" line="334"/>
         <source>Spectral distance</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="325"/>
+        <location filename="input.py" line="326"/>
         <source>Band processing</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5756,22 +5756,22 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="345"/>
+        <location filename="input.py" line="346"/>
         <source>Class signature</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="283"/>
+        <location filename="input.py" line="284"/>
         <source>Basic tools</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="input.py" line="323"/>
+        <location filename="input.py" line="324"/>
         <source>Cloud masking</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="batchTab.py" line="2448"/>
+        <location filename="batchTab.py" line="2453"/>
         <source>missing parameter</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5788,6 +5788,11 @@ Possible reason: input is a virtual raster or band is not loaded</source>
     <message>
         <location filename="semiautomaticclassificationplugin.py" line="416"/>
         <source>Please restart QGIS for installing the Semi-Automatic Classification Plugin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="input.py" line="145"/>
+        <source>Create KML</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

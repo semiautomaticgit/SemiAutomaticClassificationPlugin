@@ -870,7 +870,7 @@ class Utils:
 		dT = self.getTime()
 		outputRasterList = []
 		for s in range(0, len(signatureList)):
-			if outputName == None:
+			if outputName is None:
 				o = outputDirectory + "/" + cfg.sigRasterNm + "_" + str(signatureList[s][0]) + "_" + str(signatureList[s][2]) + "_" + dT + ".tif"
 			else:
 				o = outputDirectory + "/" + outputName + "_" + str(signatureList[s][0]) + "_" + str(signatureList[s][2]) + ".tif"
@@ -959,7 +959,7 @@ class Utils:
 							equalArray = self.findEqualArray(LCSarray, equalArray, dataValue, nodataValue, cfg.unclassValue)
 							# logger
 							cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "findMinimumArray signature" + str(itCount))
-						if classArray == None:
+						if classArray is None:
 							classArray = nodataValue
 						if macroclassCheck == "Yes":
 							classArray = self.classifyClassesLCSSimple(LCSarray, equalArray, classArray, dataValue, cfg.unclassValue, nodataValue, signatureList[n][0])
@@ -1006,7 +1006,7 @@ class Utils:
 								# logger
 								cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "classifyClasses signature" + str(itCount))
 								# classification raster
-								if classArrayAlg == None:
+								if classArrayAlg is None:
 									classArrayAlg = clA
 								else:
 									e = cfg.np.ma.masked_equal(clA, 0)
@@ -1056,7 +1056,7 @@ class Utils:
 								# logger
 								cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "classifyClasses signature" + str(itCount))
 								# classification raster
-								if classArrayAlg == None:
+								if classArrayAlg is None:
 									classArrayAlg = clA
 								else:
 									e = cfg.np.ma.masked_equal(clA, 0)
@@ -1106,7 +1106,7 @@ class Utils:
 								# logger
 								cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "classifyClasses signature" + str(itCount))
 								# classification raster
-								if classArrayAlg == None:
+								if classArrayAlg is None:
 									classArrayAlg = clA
 								else:
 									e = cfg.np.ma.masked_equal(clA, 0)
@@ -1179,7 +1179,7 @@ class Utils:
 						# logger
 						cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "classifyClasses signature" + str(itCount))
 						# classification raster
-						if classArray == None:
+						if classArray is None:
 							classArray = clA
 						else:
 							e = cfg.np.ma.masked_equal(clA, 0)
@@ -1247,7 +1247,7 @@ class Utils:
 						# logger
 						cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "classifyClasses signature" + str(itCount))
 						# classification raster
-						if classArray == None:
+						if classArray is None:
 							classArray = clA
 						else:
 							e = cfg.np.ma.masked_equal(clA, 0)
@@ -1315,7 +1315,7 @@ class Utils:
 						# logger
 						cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "classifyClasses signature" + str(itCount))
 						# classification raster
-						if classArray == None:
+						if classArray is None:
 							classArray = clA
 						else:
 							e = cfg.np.ma.masked_equal(clA, 0)
@@ -5286,6 +5286,68 @@ class Utils:
 		cfg.tmpVrt = None
 		# enable map canvas render
 		cfg.cnvs.setRenderFlag(True)
+		
+	# create KML from map
+	def createKMLFromMap(self):
+		cfg.uiUtls.addProgressBar()
+		cfg.uiUtls.updateBar(10)
+		ext1 = cfg.cnvs.extent()
+		pCrs = cfg.utls.getQGISCrs()
+		crswgs84 = cfg.qgisCoreSCP.QgsCoordinateReferenceSystem(4326)
+		cfg.utls.setQGISCrs(crswgs84)
+		cfg.cnvs.refreshAllLayers()
+		cfg.QtWidgetsSCP.qApp.processEvents()
+		cfg.uiUtls.updateBar(30)
+		cfg.timeSCP.sleep(1)
+		cfg.QtWidgetsSCP.qApp.processEvents()
+		ext = cfg.cnvs.extent()
+		# date time for temp name
+		dT = cfg.utls.getTime()
+		tPMN = cfg.kmlNm
+		tPMD = cfg.tmpDir + "/" + dT + tPMN + ".png"
+		tPMD2 = cfg.tmpDir + "/" + tPMN + ".kml"
+		cfg.cnvs.setCanvasColor(cfg.QtSCP.transparent)
+		cfg.cnvs.saveAsImage(tPMD)
+		xml = """<?xml version="1.0" encoding="UTF-8"?>
+			 <kml xmlns="http://www.opengis.net/kml/2.2">
+			  <GroundOverlay>
+			   <name>%s</name>
+			   <Icon>
+			    <href>%s</href>
+			   </Icon>
+			   <LatLonBox>
+			   <north>%.10f</north>
+			   <south>%.10f</south>
+			   <east>%.10f</east>
+			   <west>%.10f</west>
+			   </LatLonBox>
+			   <Camera>       
+			    <longitude>%.10f</longitude>       
+			    <latitude>%.10f</latitude>       
+			   <altitude>5000</altitude>
+			</Camera>
+			  </GroundOverlay>
+			 </kml>
+			"""
+		source = xml % (tPMN, dT + tPMN + ".png", ext.yMaximum(), ext.yMinimum(), ext.xMaximum(), ext.xMinimum(), (ext.xMaximum() + ext.xMinimum())/2, (ext.yMinimum() + ext.yMaximum())/2)
+		l = open(tPMD2, 'w')
+		try:
+			l.write(source)
+			l.close()
+		except:
+			pass
+		if cfg.osSCP.path.isfile(tPMD2):
+			if cfg.sysSCPNm == "Darwin":
+				sP = cfg.subprocessSCP.call(('open', tPMD2))
+			elif cfg.sysSCPNm == "Windows":
+				cfg.osSCP.startfile(tPMD2)
+			else:
+				sP = cfg.subprocessSCP.call(('xdg-open', tPMD2))
+		cfg.utls.setQGISCrs(pCrs)
+		cfg.cnvs.setExtent(ext1)
+		cfg.cnvs.refreshAllLayers()
+		cfg.uiUtls.updateBar(100)
+		cfg.uiUtls.removeProgressBar()
 			
 	# Create group
 	def createGroup(self, groupName):
