@@ -4231,32 +4231,32 @@ p, li { white-space: pre-wrap; }
         <translation>Exportar Entrada de Entrenamiento SCP</translation>
     </message>
     <message>
-        <location filename="scpdock.py" line="1282"/>
+        <location filename="scpdock.py" line="1283"/>
         <source>Select a library file</source>
         <translation>Selecciona un archivo de librería</translation>
     </message>
     <message>
-        <location filename="scpdock.py" line="1317"/>
+        <location filename="scpdock.py" line="1316"/>
         <source>Export the highlighted signatures to CSV library</source>
         <translation>Exportar las firmas seleccionadas a librería CSV</translation>
     </message>
     <message>
-        <location filename="scpdock.py" line="1390"/>
+        <location filename="scpdock.py" line="1389"/>
         <source>Calculate signatures</source>
         <translation>Calcular firmas</translation>
     </message>
     <message>
-        <location filename="scpdock.py" line="1390"/>
+        <location filename="scpdock.py" line="1389"/>
         <source>Calculate signatures for highlighted items?</source>
         <translation>¿Calcular firmas para los elementos seleccionados?</translation>
     </message>
     <message>
-        <location filename="scpdock.py" line="1419"/>
+        <location filename="scpdock.py" line="1418"/>
         <source>Merge signatures</source>
         <translation>Combinar firmas</translation>
     </message>
     <message>
-        <location filename="scpdock.py" line="1419"/>
+        <location filename="scpdock.py" line="1418"/>
         <source>Merge highlighted signatures?</source>
         <translation>¿Combinar firmas seleccionadas?</translation>
     </message>
@@ -4266,34 +4266,34 @@ p, li { white-space: pre-wrap; }
         <translation>Eliminar firmas</translation>
     </message>
     <message>
-        <location filename="scpdock.py" line="1543"/>
+        <location filename="scpdock.py" line="1542"/>
         <source>Are you sure you want to delete highlighted ROIs and signatures?</source>
         <translation>¿Estás seguro que quieres eliminar los ROIs y las firmas seleccionadas?</translation>
     </message>
     <message>
-        <location filename="scpdock.py" line="2358"/>
+        <location filename="scpdock.py" line="2357"/>
         <source>Create SCP training input</source>
         <translation>Crear Entrenamiento de Entrada SCP</translation>
     </message>
     <message>
-        <location filename="scpdock.py" line="2458"/>
+        <location filename="scpdock.py" line="2457"/>
         <source>It appears that the shapefile </source>
         <translation>Parece que el archivo shape</translation>
     </message>
     <message>
-        <location filename="scpdock.py" line="2458"/>
+        <location filename="scpdock.py" line="2457"/>
         <source> is missing some fields that are required for the signature calculation. 
 Do you want to add the required fields to this shapefile?</source>
         <translation>no se encuentran algunos campos que son requeridos para el cálculo de firmas.
 ¿Deseas agregar los campos requeridos a este archivo shape?</translation>
     </message>
     <message>
-        <location filename="scpdock.py" line="2549"/>
+        <location filename="scpdock.py" line="2548"/>
         <source>Undo save ROI</source>
         <translation>Deshacer guardar ROI</translation>
     </message>
     <message>
-        <location filename="scpdock.py" line="2549"/>
+        <location filename="scpdock.py" line="2548"/>
         <source>Are you sure you want to delete the last saved ROI?</source>
         <translation>¿Estás seguro que quieres eliminar el último ROI guardado?</translation>
     </message>
@@ -5539,7 +5539,7 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scpdock.py" line="2458"/>
+        <location filename="scpdock.py" line="2457"/>
         <source>Add required fields</source>
         <translation type="unfinished"></translation>
     </message>

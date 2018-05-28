@@ -4281,12 +4281,12 @@ p, li { white-space: pre-wrap; }
         <translation>Wyczyść listę sygnatur</translation>
     </message>
     <message>
-        <location filename="scpdock.py" line="1282"/>
+        <location filename="scpdock.py" line="1283"/>
         <source>Select a library file</source>
         <translation>Wybierz bibliotekę pliku</translation>
     </message>
     <message>
-        <location filename="scpdock.py" line="1317"/>
+        <location filename="scpdock.py" line="1316"/>
         <source>Export the highlighted signatures to CSV library</source>
         <translation>Eksportuj wybrane sygnatury do biblioteki CSV</translation>
     </message>
@@ -4301,12 +4301,12 @@ p, li { white-space: pre-wrap; }
         <translation>Czy na pewno chcesz usunąć wybrane sygnatury?</translation>
     </message>
     <message>
-        <location filename="scpdock.py" line="1419"/>
+        <location filename="scpdock.py" line="1418"/>
         <source>Merge signatures</source>
         <translation>Połącz sygnatury</translation>
     </message>
     <message>
-        <location filename="scpdock.py" line="1419"/>
+        <location filename="scpdock.py" line="1418"/>
         <source>Merge highlighted signatures?</source>
         <translation>Połączyć wybrane sygnatury?</translation>
     </message>
@@ -4846,24 +4846,24 @@ p, li { white-space: pre-wrap; }
         <translation>Czy na pewno wyczyścić progi?</translation>
     </message>
     <message>
-        <location filename="scpdock.py" line="2458"/>
+        <location filename="scpdock.py" line="2457"/>
         <source>It appears that the shapefile </source>
         <translation>Wygląda na to, że ten shapefile</translation>
     </message>
     <message>
-        <location filename="scpdock.py" line="2458"/>
+        <location filename="scpdock.py" line="2457"/>
         <source> is missing some fields that are required for the signature calculation. 
 Do you want to add the required fields to this shapefile?</source>
         <translation> nie posiada pól, które są potrzebne do wyznaczania sygnatur. 
 Chcesz dodać wymagane pola do tego shapefile?</translation>
     </message>
     <message>
-        <location filename="scpdock.py" line="2549"/>
+        <location filename="scpdock.py" line="2548"/>
         <source>Undo save ROI</source>
         <translation>Cofnij zapisywanie OT</translation>
     </message>
     <message>
-        <location filename="scpdock.py" line="2549"/>
+        <location filename="scpdock.py" line="2548"/>
         <source>Are you sure you want to delete the last saved ROI?</source>
         <translation>Czy na pewno usunąć ostatnio zapisany OT?</translation>
     </message>
@@ -4883,22 +4883,22 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation>Eksportuj dane treningowe</translation>
     </message>
     <message>
-        <location filename="scpdock.py" line="1390"/>
+        <location filename="scpdock.py" line="1389"/>
         <source>Calculate signatures</source>
         <translation>Oblicz sygnatury</translation>
     </message>
     <message>
-        <location filename="scpdock.py" line="1390"/>
+        <location filename="scpdock.py" line="1389"/>
         <source>Calculate signatures for highlighted items?</source>
         <translation>Obliczyć sygnatury wybranych obiektów?</translation>
     </message>
     <message>
-        <location filename="scpdock.py" line="1543"/>
+        <location filename="scpdock.py" line="1542"/>
         <source>Are you sure you want to delete highlighted ROIs and signatures?</source>
         <translation>Czy na pewno chcesz usunąć wybrane OT i sygnatury?</translation>
     </message>
     <message>
-        <location filename="scpdock.py" line="2358"/>
+        <location filename="scpdock.py" line="2357"/>
         <source>Create SCP training input</source>
         <translation>Stwórz dane treningowe</translation>
     </message>
@@ -5539,7 +5539,7 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scpdock.py" line="2458"/>
+        <location filename="scpdock.py" line="2457"/>
         <source>Add required fields</source>
         <translation type="unfinished"></translation>
     </message>

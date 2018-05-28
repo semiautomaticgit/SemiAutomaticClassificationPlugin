@@ -133,10 +133,11 @@ class Signature_Importer:
 					v = file[b].split(",")
 				# check if wavelength is not in micrometers
 				vL = float(v[0])
-				if vL > 30 and str(cfg.bandSetsList[cfg.bndSetNumber][5]) == cfg.unitMicro:
-					vL = vL / 1000
-				elif vL < 30 and str(cfg.bandSetsList[cfg.bndSetNumber][5]) == cfg.wlNano:
-					vL = vL * 1000
+				if v[3] != cfg.noUnit:
+					if vL > 30 and str(cfg.bandSetsList[cfg.bndSetNumber][5]) == cfg.unitMicro:
+						vL = vL / 1000
+					elif vL < 30 and str(cfg.bandSetsList[cfg.bndSetNumber][5]) == cfg.wlNano:
+						vL = vL * 1000
 				wl.append(vL)
 				ref.append(float(v[1]))
 				try:
@@ -161,12 +162,13 @@ class Signature_Importer:
 				cfg.tblOut["BAND_{0}".format(b+1)] = val
 				cfg.tblOut["WAVELENGTH_{0}".format(b + 1)] = w
 				b = b + 1
-			try:
-				self.addLibraryToSignatureList(v[3])
-			except:
+			unit = v[3].strip()
+			if str(unit) == cfg.noUnit or str(unit) == cfg.unitMicro or str(unit) == cfg.wlNano:
+				self.addLibraryToSignatureList(unit)
+			else:
 				self.addLibraryToSignatureList()
 			# logger
-			cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " spectral library imported" + str(file[0]))
+			cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " spectral library imported " + str(libraryPath))
 
 	# add library values to signature list
 	def addLibraryToSignatureList(self, unit = None):
@@ -175,8 +177,6 @@ class Signature_Importer:
 		classID = cfg.ROIID
 		classInfo = cfg.ROIInfo
 		cfg.tblOut["ROI_SIZE"] = 0
-		if unit is None:
-			unit = cfg.unitMicro
 		cfg.utls.ROIStatisticsToSignature("No", macroclassID, macroclassInfo, classID, classInfo, cfg.bndSetNumber, unit)
 		cfg.SCPD.ROIListTable(cfg.shpLay, cfg.uidc.signature_list_tableWidget)
 		

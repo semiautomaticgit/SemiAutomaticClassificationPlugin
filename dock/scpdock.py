@@ -1277,22 +1277,21 @@ class SCPDock:
 	def openLibraryFile(self, libraryFile):
 		try:
 			if cfg.bandSetsList[cfg.bndSetNumber][5] != cfg.noUnit:
-				libFile = cfg.utls.getOpenFileName(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Select a library file"), "", "SCP file (*.scp);;USGS library (*.asc);;ASTER library (*.txt);;CSV (*.csv)")
-				if len(libFile) > 0:
-					cfg.uiUtls.addProgressBar()
-					if libFile.lower().endswith(".asc"):
-						cfg.sigImport.USGSLibrary(libFile)
-					elif libFile.lower().endswith(".txt"):
-						cfg.sigImport.ASTERLibrary(libFile)
-					elif libFile.lower().endswith(".csv"):
-						cfg.sigImport.CSVLibrary(libFile)
-					elif libFile.lower().endswith(".scp"):
-						self.importSLCSignatureList(libFile, "Yes")
-					cfg.uiUtls.removeProgressBar()
-					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " spectral library " + str(libFile))
-			else:
 				cfg.mx.msgWar8()
+			libFile = cfg.utls.getOpenFileName(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Select a library file"), "", "SCP file (*.scp);;USGS library (*.asc);;ASTER library (*.txt);;CSV (*.csv)")
+			if len(libFile) > 0:
+				cfg.uiUtls.addProgressBar()
+				if libFile.lower().endswith(".asc"):
+					cfg.sigImport.USGSLibrary(libFile)
+				elif libFile.lower().endswith(".txt"):
+					cfg.sigImport.ASTERLibrary(libFile)
+				elif libFile.lower().endswith(".csv"):
+					cfg.sigImport.CSVLibrary(libFile)
+				elif libFile.lower().endswith(".scp"):
+					self.importSLCSignatureList(libFile, "Yes")
+				cfg.uiUtls.removeProgressBar()
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " spectral library " + str(libFile))
 		except Exception as err:
 			cfg.mx.msgWar8()
 			# logger

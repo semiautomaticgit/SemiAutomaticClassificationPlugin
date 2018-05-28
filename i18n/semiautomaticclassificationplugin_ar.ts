@@ -4224,32 +4224,32 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scpdock.py" line="1282"/>
+        <location filename="scpdock.py" line="1283"/>
         <source>Select a library file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scpdock.py" line="1317"/>
+        <location filename="scpdock.py" line="1316"/>
         <source>Export the highlighted signatures to CSV library</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scpdock.py" line="1390"/>
+        <location filename="scpdock.py" line="1389"/>
         <source>Calculate signatures</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scpdock.py" line="1390"/>
+        <location filename="scpdock.py" line="1389"/>
         <source>Calculate signatures for highlighted items?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scpdock.py" line="1419"/>
+        <location filename="scpdock.py" line="1418"/>
         <source>Merge signatures</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scpdock.py" line="1419"/>
+        <location filename="scpdock.py" line="1418"/>
         <source>Merge highlighted signatures?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4259,33 +4259,33 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scpdock.py" line="1543"/>
+        <location filename="scpdock.py" line="1542"/>
         <source>Are you sure you want to delete highlighted ROIs and signatures?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scpdock.py" line="2358"/>
+        <location filename="scpdock.py" line="2357"/>
         <source>Create SCP training input</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scpdock.py" line="2458"/>
+        <location filename="scpdock.py" line="2457"/>
         <source>It appears that the shapefile </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scpdock.py" line="2458"/>
+        <location filename="scpdock.py" line="2457"/>
         <source> is missing some fields that are required for the signature calculation. 
 Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scpdock.py" line="2549"/>
+        <location filename="scpdock.py" line="2548"/>
         <source>Undo save ROI</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scpdock.py" line="2549"/>
+        <location filename="scpdock.py" line="2548"/>
         <source>Are you sure you want to delete the last saved ROI?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5531,7 +5531,7 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scpdock.py" line="2458"/>
+        <location filename="scpdock.py" line="2457"/>
         <source>Add required fields</source>
         <translation type="unfinished"></translation>
     </message>
