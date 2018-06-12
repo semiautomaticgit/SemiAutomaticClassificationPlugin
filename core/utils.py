@@ -3713,6 +3713,16 @@ class Utils:
 					l = cfg.bandSetsList[bandSetNumber][3][int(bandNumber[1]) - 1]
 				else:
 					l = cfg.bandSetsList[bandSetNumber][8]
+			# in case of bandset name
+			for b in range(1, len(cfg.bandSetsList[cfg.bndSetNumber][3])+1):
+				if "bandset#b" + str(b) == l:
+					# band set
+					if cfg.bandSetsList[cfg.bndSetNumber][0] == "Yes":
+						l = cfg.bandSetsList[cfg.bndSetNumber][3][int(b) - 1]
+					else:
+						l = cfg.bandSetsList[bandSetNumber][8]
+					break
+					
 			name = '"' + name + '"'
 			r = cfg.utls.selectLayerbyName(l, "Yes")
 			if r is not None:
