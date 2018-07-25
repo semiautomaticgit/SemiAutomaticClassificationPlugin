@@ -4573,7 +4573,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation>Define un área de búsqueda</translation>
     </message>
     <message>
-        <location filename="downloadproducts.py" line="1706"/>
+        <location filename="downloadproducts.py" line="1707"/>
         <source>Error</source>
         <translation>Error</translation>
     </message>
@@ -5023,7 +5023,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation>Guardar salida</translation>
     </message>
     <message>
-        <location filename="downloadproducts.py" line="2055"/>
+        <location filename="downloadproducts.py" line="2056"/>
         <source>Searching ...</source>
         <translation>Buscando ...</translation>
     </message>

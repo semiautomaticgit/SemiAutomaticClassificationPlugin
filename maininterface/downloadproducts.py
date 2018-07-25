@@ -1290,12 +1290,13 @@ class DownloadProducts:
 						if attr == "producttype":
 							productType = x.firstChild.data
 						if attr == "footprint":
-							footprintCoord = x.firstChild.data.replace('POLYGON ((', "").replace('))', "").split(',')
+							footprintCoord = x.firstChild.data.replace('MULTIPOLYGON (((', "").replace('POLYGON ((', "").replace(')))', "").replace('))', "").split(',')
 							xList = []
 							yList = []
 							for coords in footprintCoord:
-								xList.append(float(coords.split(' ')[0]))
-								yList.append(float(coords.split(' ')[1]))
+								cc = coords.lstrip()
+								xList.append(float(cc.split(' ')[0]))
+								yList.append(float(cc.split(' ')[1]))
 							min_lon = min(xList)
 							max_lon = max(xList)
 							min_lat = min(yList)
