@@ -320,7 +320,7 @@ class Utils:
 		except Exception as err:
 			cfg.urllibSCP.request.install_opener(cfg.openerGeneral)
 			# certificate error
-			newContext = cfg.sslSCP.SSLContext(cfg.sslSCP.PROTOCOL_TLSv1) 
+			newContext = cfg.sslSCP.SSLContext(cfg.sslSCP.PROTOCOL_TLSv1_2) 
 			response1 = cfg.urllibSCP.request.urlopen(request1, context=newContext)		
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
