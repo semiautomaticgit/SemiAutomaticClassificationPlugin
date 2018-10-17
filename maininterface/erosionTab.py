@@ -78,7 +78,6 @@ class ErosionRaster:
 					pass
 				else:
 					outputRaster = outputRaster + ".tif"
-				sN = cfg.osSCP.path.basename(str(d))
 				if batch == "No":
 					cfg.uiUtls.addProgressBar()
 					cfg.cnvs.setRenderFlag(False)
