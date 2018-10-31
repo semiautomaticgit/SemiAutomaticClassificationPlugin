@@ -50,7 +50,7 @@
     <message>
         <location filename="ui_semiautomaticclassificationplugin_dock_class.ui" line="471"/>
         <source> ROI Signature list</source>
-        <translation>Liste des signature de la région d&apos;intérêt (ROI)</translation>
+        <translation>Liste des signature de la ROI</translation>
     </message>
     <message>
         <location filename="ui_semiautomaticclassificationplugin_dock_class.ui" line="804"/>
@@ -516,12 +516,12 @@
     <message>
         <location filename="ui_semiautomaticclassificationplugin_dock_class.ui" line="1243"/>
         <source>A&amp;uto-refresh ROI</source>
-        <translation>Actualiser automatiquement la ROI</translation>
+        <translation>Actualiser auto. la ROI</translation>
     </message>
     <message>
         <location filename="ui_semiautomaticclassificationplugin_dock_class.ui" line="1256"/>
         <source>Auto-plot</source>
-        <translation>Graphique automatique</translation>
+        <translation>Graphique auto.</translation>
     </message>
     <message>
         <location filename="ui_semiautomaticclassificationplugin_dock_class.ui" line="1294"/>
@@ -998,7 +998,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="ui_semiautomaticclassificationplugin.ui" line="4610"/>
         <source>Preview</source>
-        <translation type="unfinished"></translation>
+        <translation>Aperçu</translation>
     </message>
     <message>
         <location filename="ui_semiautomaticclassificationplugin.ui" line="4637"/>
@@ -1871,7 +1871,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="ui_semiautomaticclassificationplugin.ui" line="8850"/>
         <source>split</source>
-        <translation>Séparer</translation>
+        <translation>Separer</translation>
     </message>
     <message>
         <location filename="ui_semiautomaticclassificationplugin.ui" line="9999"/>
@@ -3559,7 +3559,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="ui_semiautomaticclassificationplugin.ui" line="9295"/>
         <source>mosaic</source>
-        <translation>mosaïque</translation>
+        <translation>mosaique</translation>
     </message>
     <message>
         <location filename="ui_semiautomaticclassificationplugin.ui" line="9307"/>
@@ -3969,7 +3969,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="input.py" line="133"/>
         <source>Preview </source>
-        <translation type="unfinished"></translation>
+        <translation>Aperçu </translation>
     </message>
     <message encoding="UTF-8">
         <location filename="ui_semiautomaticclassificationplugin.ui" line="2980"/>
