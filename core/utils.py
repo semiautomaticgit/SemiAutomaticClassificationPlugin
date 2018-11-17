@@ -5959,6 +5959,14 @@ class Utils:
 		rPSys.AutoIdentifyEPSG()
 		rPRS = rPSys.GetAuthorityCode(None)
 		rD = None
+		# try with QGIS
+		if rPRS is None:
+			mL = self.addRasterLayer(layerPath)
+			lPRStr = mL.crs().authid()
+			lPRStr = lPRStr.split(":")
+			if lPRStr[0] == "EPSG":
+				rPRS = lPRStr[1]
+			cfg.utls.removeLayerByLayer(mL)
 		try:
 			epsg = int(rPRS)
 		except Exception as err:
@@ -6024,6 +6032,14 @@ class Utils:
 		rPSys =cfg.osrSCP.SpatialReference(wkt=rP)
 		rPSys.AutoIdentifyEPSG()
 		rPRS = rPSys.GetAuthorityCode(None)
+		# try with QGIS
+		if rPRS is None:
+			mL = self.addRasterLayer(rS)
+			lPRStr = mL.crs().authid()
+			lPRStr = lPRStr.split(":")
+			if lPRStr[0] == "EPSG":
+				rPRS = lPRStr[1]
+			cfg.utls.removeLayerByLayer(mL)		
 		if lPRS is not None:
 			if lPRS != rPRS:
 				# date time for temp name

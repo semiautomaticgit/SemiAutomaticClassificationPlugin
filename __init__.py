@@ -42,7 +42,7 @@ def description():
 
 
 def version():
-    return "Version 6.2.6 - Greenbelt"
+    return "Version 6.2.7 - Greenbelt"
 
 
 def icon():
