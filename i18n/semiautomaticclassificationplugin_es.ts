@@ -1010,7 +1010,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="ui_semiautomaticclassificationplugin.ui" line="4637"/>
         <source>Download options</source>
-        <translation>Opciones de Desacarga</translation>
+        <translation>Opciones de Descarga</translation>
     </message>
     <message>
         <location filename="ui_semiautomaticclassificationplugin.ui" line="5140"/>
