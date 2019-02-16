@@ -5226,11 +5226,12 @@ class Utils:
 		
 	# write project variable
 	def writeProjectVariable(self, variableName, value):
-		p = cfg.qgisCoreSCP.QgsProject.instance()
-		p.writeEntry("SemiAutomaticClassificationPlugin", variableName, value)
-		cfg.QtWidgetsSCP.qApp.processEvents()
-		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "variable: " + str(variableName) + " - value: " + str(value))
+		if cfg.skipRegistry is False:
+			p = cfg.qgisCoreSCP.QgsProject.instance()
+			p.writeEntry("SemiAutomaticClassificationPlugin", variableName, value)
+			cfg.QtWidgetsSCP.qApp.processEvents()
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "variable: " + str(variableName) + " - value: " + str(value))
 		
 	# absolute to relative path
 	def qgisAbsolutePathToRelativePath(self, absolutePath, relativePath):
@@ -7302,6 +7303,8 @@ class Utils:
 				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				cfg.utls.setQGISRegSetting(cfg.regTmpDir, tmpDir0)
 				cfg.mx.msgWar17()
+				cfg.tmpDir = str(cfg.QDirSCP.tempPath() + "/" + cfg.tempDirName)
+				tmpDir0 = cfg.tmpDir
 				if not cfg.QDirSCP(tmpDir0).exists():
 					cfg.osSCP.makedirs(tmpDir0)
 		try:

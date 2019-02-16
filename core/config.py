@@ -281,6 +281,7 @@ previewSliderActive = None
 previewSliderArray = None
 msgWar8check = "No"
 lastSaveDir = ""
+skipRegistry = True
 # band calc
 bandCalcIndex = 0
 dockIndex = 0

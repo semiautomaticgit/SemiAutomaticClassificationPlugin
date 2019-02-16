@@ -1258,6 +1258,7 @@ class SemiAutomaticClassificationPlugin:
 				dStr = dateV.strftime("%Y_%m_%d") 
 				cfg.ipt.welcomeText("https://semiautomaticgit.github.io/SemiAutomaticClassificationPluginWelcome/welcome" + "_" + dStr + ".html", "https://semiautomaticgit.github.io/SemiAutomaticClassificationPluginWelcome/welcome.html")
 			cfg.utls.cleanOldTempDirectory()
+			cfg.skipRegistry = False
 		else:
 			dockclassdlg = DockClassDialog(qgisUtils.iface.mainWindow(), qgisUtils.iface)
 			qgisUtils.iface.removeDockWidget(dockclassdlg)			
