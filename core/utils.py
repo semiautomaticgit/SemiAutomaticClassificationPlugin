@@ -3051,17 +3051,23 @@ class Utils:
 		cfg.NIRBand = None
 		cfg.BLUEBand = None
 		cfg.GREENBand = None
+		cfg.SWIR1Band = None
+		cfg.SWIR2Band = None
 		try:
 			cfg.bandSetsList[cfg.bndSetNumber][5]
 		except:
 			return "No"
 		if cfg.bandSetsList[cfg.bndSetNumber][5] != cfg.noUnit:
 			if cfg.bandSetsList[cfg.bndSetNumber][5] == cfg.unitNano:
+				SWIR1 = self.findNearestValueinList(list(cfg.bandSetsList[cfg.bndSetNumber][4]), cfg.SWIR1CenterBand*1000, cfg.SWIR1Threshold*1000)
+				SWIR2 = self.findNearestValueinList(list(cfg.bandSetsList[cfg.bndSetNumber][4]), cfg.SWIR2CenterBand*1000, cfg.SWIR2Threshold*1000)
 				RED = self.findNearestValueinList(list(cfg.bandSetsList[cfg.bndSetNumber][4]), cfg.REDCenterBand*1000, cfg.REDThreshold*1000)
 				NIR = self.findNearestValueinList(list(cfg.bandSetsList[cfg.bndSetNumber][4]), cfg.NIRCenterBand*1000, cfg.NIRThreshold*1000)
 				BLUE = self.findNearestValueinList(list(cfg.bandSetsList[cfg.bndSetNumber][4]), cfg.BLUECenterBand*1000, cfg.BLUEThreshold*1000)
 				GREEN = self.findNearestValueinList(list(cfg.bandSetsList[cfg.bndSetNumber][4]), cfg.GREENCenterBand*1000, cfg.GREENThreshold*1000)
 			elif cfg.bandSetsList[cfg.bndSetNumber][5] == cfg.unitMicro:
+				SWIR1 = self.findNearestValueinList(list(cfg.bandSetsList[cfg.bndSetNumber][4]), cfg.SWIR1CenterBand, cfg.SWIR1Threshold)
+				SWIR2 = self.findNearestValueinList(list(cfg.bandSetsList[cfg.bndSetNumber][4]), cfg.SWIR2CenterBand, cfg.SWIR2Threshold)
 				RED = self.findNearestValueinList(cfg.bandSetsList[cfg.bndSetNumber][4], cfg.REDCenterBand, cfg.REDThreshold)
 				NIR = self.findNearestValueinList(cfg.bandSetsList[cfg.bndSetNumber][4], cfg.NIRCenterBand, cfg.NIRThreshold)
 				BLUE = self.findNearestValueinList(cfg.bandSetsList[cfg.bndSetNumber][4], cfg.BLUECenterBand, cfg.BLUEThreshold)
@@ -3074,8 +3080,12 @@ class Utils:
 				cfg.BLUEBand = cfg.bandSetsList[cfg.bndSetNumber][4].index(BLUE) + 1
 			if GREEN is not None:
 				cfg.GREENBand = cfg.bandSetsList[cfg.bndSetNumber][4].index(GREEN) + 1
+			if SWIR1 is not None:
+				cfg.SWIR1Band = cfg.bandSetsList[cfg.bndSetNumber][4].index(SWIR1) + 1
+			if SWIR2 is not None:
+				cfg.SWIR2Band = cfg.bandSetsList[cfg.bndSetNumber][4].index(SWIR2) + 1
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "RED =" + str(cfg.REDBand) + ", NIR =" + str(cfg.NIRBand) + ", BLUE =" + str(cfg.BLUEBand) + ", GREEN =" + str(cfg.GREENBand))
+			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "RED =" + str(cfg.REDBand) + ", NIR =" + str(cfg.NIRBand) + ", BLUE =" + str(cfg.BLUEBand) + ", GREEN =" + str(cfg.GREENBand) + ", SWIR1 =" + str(cfg.SWIR1Band) + ", SWIR2 =" + str(cfg.SWIR2Band))
 		
 	# calculation of earth sun distance
 	def calculateEarthSunDistance(self, date, dateFormat):
@@ -3699,7 +3709,7 @@ class Utils:
 			for i in nameList:
 				if l == i[0].replace('"', ''):
 					l = i[1].replace('"', '')
-			if l in cfg.variableBlueName or l in cfg.variableRedName or l in cfg.variableNIRName or l in cfg.variableGreenName :
+			if l in cfg.variableBlueName or l in cfg.variableRedName or l in cfg.variableNIRName or l in cfg.variableGreenName or l in cfg.variableSWIR1Name or l in cfg.variableSWIR2Name :
 				if cfg.bandSetsList[bandSetNumber][0] == "Yes":
 					name = "#" + name
 					if "#" + l == cfg.variableRedName :
@@ -3710,6 +3720,10 @@ class Utils:
 						bandNumber = ["", cfg.NIRBand]
 					elif "#" + l == cfg.variableBlueName :
 						bandNumber = ["", cfg.BLUEBand]
+					elif "#" + l == cfg.variableSWIR1Name :
+						bandNumber = ["", cfg.SWIR1Band]
+					elif "#" + l == cfg.variableSWIR2Name :
+						bandNumber = ["", cfg.SWIR2Band]
 					l = cfg.bandSetsList[bandSetNumber][3][int(bandNumber[1]) - 1]
 				else:
 					l = cfg.bandSetsList[bandSetNumber][8]

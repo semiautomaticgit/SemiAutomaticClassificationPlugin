@@ -859,12 +859,18 @@ class BatchTab:
 			#  wavelength unit 0=number 1=u"µm (1 E-6m)" 2="nm (1 E-9m)"
 			elif pName == "wavelength_unit":
 				if pSplit[1].replace(" ", "") == "0":
+					noUnitId = cfg.ui.unit_combo.findText(cfg.wlMicro)
+					cfg.ui.unit_combo.setCurrentIndex(noUnitId)
 					id = cfg.ui.unit_combo.findText(cfg.noUnit)
 					cfg.ui.unit_combo.setCurrentIndex(id)
 				elif pSplit[1].replace(" ", "") == "1":
+					noUnitId = cfg.ui.unit_combo.findText(cfg.noUnit)
+					cfg.ui.unit_combo.setCurrentIndex(noUnitId)
 					id = cfg.ui.unit_combo.findText(cfg.wlMicro)
 					cfg.ui.unit_combo.setCurrentIndex(id)
 				elif pSplit[1].replace(" ", "") == "2":
+					noUnitId = cfg.ui.unit_combo.findText(cfg.noUnit)
+					cfg.ui.unit_combo.setCurrentIndex(noUnitId)
 					id = cfg.ui.unit_combo.findText(cfg.wlNano)
 					cfg.ui.unit_combo.setCurrentIndex(id)
 				else:

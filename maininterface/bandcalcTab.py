@@ -319,6 +319,22 @@ class BandCalcTab:
 				cfg.utls.addTableItem(l, cfg.variableName + str(b + 1), b, 0, "No")
 				cfg.utls.addTableItem(l, bN, b, 1, "No")
 				b = b + 1		
+			if cfg.SWIR1Band is not None:
+				# band name
+				bN = cfg.variableSWIR1Name
+				# Add band to table
+				l.insertRow(b)
+				cfg.utls.addTableItem(l, cfg.variableName + str(b + 1), b, 0, "No")
+				cfg.utls.addTableItem(l, bN, b, 1, "No")
+				b = b + 1	
+			if cfg.SWIR2Band is not None:
+				# band name
+				bN = cfg.variableSWIR2Name
+				# Add band to table
+				l.insertRow(b)
+				cfg.utls.addTableItem(l, cfg.variableName + str(b + 1), b, 0, "No")
+				cfg.utls.addTableItem(l, bN, b, 1, "No")
+				b = b + 1		
 		cfg.bCalc.textChanged()
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " raster band name checklist created")
@@ -431,7 +447,15 @@ class BandCalcTab:
 						else:
 							return
 					else:
-						outF = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Save raster output"), "", "*.tif", "tif")
+						try:
+							nm = cfg.ui.plainTextEdit_calc.toPlainText().split("@")[1]
+							outF = cfg.utls.getExistingDirectory(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Select a directory"))
+							if len(outF) > 0:
+								outF = outF + "/" + cfg.calcRasterNm + ".tif"
+							else:
+								return
+						except:
+							outF = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Save raster output"), "", "*.tif", "tif")
 				# decision rules
 				elif cfg.bandCalcIndex == 1:
 					outF = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Save raster output"), "", "*.tif", "tif")
@@ -475,11 +499,11 @@ class BandCalcTab:
 							n = eN
 						if n.lower().endswith(".tif"):
 							if eN is None and len(check) == 1:
-								out = cfg.osSCP.path.dirname(outF) + "/" + n.rstrip(n[len(n) - 4: len(n)]) + ".tif"
+								out = cfg.osSCP.path.dirname(outF) + "/" + n
 							elif eN is None and len(check) > 1:
-								out = cfg.osSCP.path.dirname(outF) + "/" + n.rstrip(n[len(n) - 4: len(n)]) + "_" + str(it) + ".tif"
+								out = cfg.osSCP.path.dirname(outF) + "/" + n.replace('.tif', '') + "_" + str(it) + ".tif"
 							else:
-								out = cfg.osSCP.path.dirname(outF) + "/" + n.rstrip(n[len(n) - 4: len(n)]) + ".tif"
+								out = cfg.osSCP.path.dirname(outF) + "/" + n
 						else:
 							if eN is None and len(check) == 1:
 								out = cfg.osSCP.path.dirname(outF) + "/" + n + ".tif"
@@ -524,7 +548,7 @@ class BandCalcTab:
 												return "No"
 										bandNumberList.append(int(bandNumber[1]))
 										bList.append(bPath)
-								elif cfg.variableBlueName in bN or cfg.variableRedName in bN or cfg.variableNIRName in bN or cfg.variableGreenName in bN :
+								elif cfg.variableBlueName in bN or cfg.variableRedName in bN or cfg.variableNIRName in bN or cfg.variableGreenName in bN or cfg.variableSWIR1Name in bN or cfg.variableSWIR2Name in bN :
 									if bN == cfg.variableRedName :
 										bandNumber = ["", cfg.REDBand]
 									elif bN == cfg.variableNIRName :
@@ -533,6 +557,10 @@ class BandCalcTab:
 										bandNumber = ["", cfg.BLUEBand]
 									elif bN == cfg.variableGreenName :
 										bandNumber = ["", cfg.GREENBand]
+									elif bN == cfg.variableSWIR1Name :
+										bandNumber = ["", cfg.SWIR1Band]
+									elif bN == cfg.variableSWIR2Name :
+										bandNumber = ["", cfg.SWIR2Band]
 									else:
 										cfg.mx.msg4()
 										if outFile is None:

@@ -201,6 +201,8 @@ class BandsetTab:
 		tW.blockSignals(False)
 		cfg.BandTabEdited = "Yes"
 		cfg.bst.orderByWavelength(bandSetNumber)
+		noUnitId = cfg.ui.unit_combo.findText(cfg.noUnit)
+		cfg.ui.unit_combo.setCurrentIndex(noUnitId)
 		cfg.ui.unit_combo.setCurrentIndex(id)
 		self.readBandSet("Yes")
 		# logger

@@ -120,12 +120,15 @@ class Input:
 		cfg.redo_ROI_Button.setEnabled(False)
 		# spinbox spectral distance
 		lblSpectralDistance = cfg.ipt.addToolbarLabel(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", " Dist"), "Yes")
+		lblSpectralDistance.setStyleSheet(_fromUtf8("background-color : qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #535353, stop:1 #535353); color : white"))
 		cfg.Range_radius_spin = cfg.ipt.addToolbarSpin(cfg.SCPD.rangeRadius, cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Similarity of pixels (distance in radiometry unit)"), 6, 1e-06, 10000.0, 0.001, 0.01)
 		# spinbox min size
 		lblmin= cfg.ipt.addToolbarLabel(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", " Min"), "Yes")
+		lblmin.setStyleSheet(_fromUtf8("background-color : qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #535353, stop:1 #535353); color : white"))
 		cfg.Min_region_size_spin = cfg.ipt.addToolbarSpin(cfg.SCPD.minROISize, cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Minimum area of ROI (in pixel unit)"), 0, 1, 10000, 1, 60, 60)
 		# spinbox max size
 		lblmax = cfg.ipt.addToolbarLabel(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", " Max"), "Yes")
+		lblmax.setStyleSheet(_fromUtf8("background-color : qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #535353, stop:1 #535353); color : white"))
 		cfg.Max_ROI_width_spin = cfg.ipt.addToolbarSpin(cfg.SCPD.maxROIWidth, cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Side of a square which inscribes the ROI, defining the maximum width thereof (in pixel unit)"), 0, 1, 10000, 1, int(cfg.maxROIWdth), 60)
 		# button zoom to preview
 		cfg.zoomToTempPreview = cfg.ipt.addToolbar2Button(cfg.SCPD.zoomToPreview, "semiautomaticclassificationplugin_zoom_to_preview.png", cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Zoom to the classification preview"))
@@ -136,10 +139,12 @@ class Input:
 		cfg.redoPreviewButton = cfg.ipt.addToolbar2Button(cfg.SCPD.redoPreview, "semiautomaticclassificationplugin_preview_redo.png", cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Redo the classification preview at the same point"))
 		cfg.redoPreviewButton.setEnabled(False)
 		# spinbox transparency
-		lblmax = cfg.ipt.addToolbarLabel(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", " T"), "Yes")
+		lblT = cfg.ipt.addToolbarLabel(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", " T"), "Yes")
+		lblT.setStyleSheet(_fromUtf8("background-color : qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #535353, stop:1 #535353); color : white"))
 		cfg.preview_transp_spin = cfg.ipt.addToolbarSpin(cfg.SCPD.changePreviewTransparency, cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Set preview transparency"), 0, 0, 100, 10, 0, 50)
 		# spinbox size
-		lblmax = cfg.ipt.addToolbarLabel(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", " S"), "Yes")
+		lblS = cfg.ipt.addToolbarLabel(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", " S"), "Yes")
+		lblS.setStyleSheet(_fromUtf8("background-color : qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #535353, stop:1 #535353); color : white"))
 		cfg.preview_size_spinBox = cfg.ipt.addToolbarSpin(cfg.SCPD.previewSize, cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Set the preview size (in pixel unit)"), 0, 1, 1000000, 100, float(cfg.prvwSz), 60)
 		cfg.removeTempFilesButton = cfg.ipt.addToolbar2Button(cfg.utls.removeTempFiles, "semiautomaticclassificationplugin_remove_temp.png", cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Remove temporary files"))
 		cfg.createKMLButton = cfg.ipt.addToolbar2Button(cfg.utls.createKMLFromMap, "semiautomaticclassificationplugin_kml_add.png", cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Create KML"))

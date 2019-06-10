@@ -2,7 +2,7 @@
 name=Semi-Automatic Classification Plugin
 qgisMinimumVersion=3.00
 description= The Semi-Automatic Classification Plugin (SCP) allows for the supervised classification of remote sensing images, providing tools for the download, the preprocessing and postprocessing of images.
-version=6.2.9
+version=6.3.0
 about=Developed by Luca Congedo, the Semi-Automatic Classification Plugin (SCP) allows for the supervised classification of remote sensing images, providing tools for the download, the preprocessing and postprocessing of images. Search and download is available for ASTER, Landsat, MODIS, Sentinel-2, and Sentinel-3 images. Several algorithms are available for the land cover classification. This plugin requires the installation of GDAL, OGR, Numpy, SciPy, and Matplotlib. For more information please visit https://fromgistors.blogspot.com .
 
 author=Luca Congedo
@@ -14,6 +14,15 @@ icon=semiautomaticclassificationplugin.png
 ; start of optional metadata
 changelog=
 
+	6.3.0
+	Major update:
+	-added SWIR1 and SWIR2 variables in Band calc
+	-added NBR calculation in Band calc index calculation
+	-fixed issue with OSM tile service
+	-fixed issue with USGS Spectral Library v.6
+	-fixed issue with band set creation after multiple image download
+	-fixed issue with band calc name of outputs
+	
 	6.2.9
 	Minor update:
 	-fixed issue #53

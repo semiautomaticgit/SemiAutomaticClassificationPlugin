@@ -253,6 +253,8 @@ BLUEBand = None
 REDBand = None
 NIRBand = None
 GREENBand = None
+SWIR1Band = None
+SWIR2Band = None
 BLUECenterBand = 0.475
 BLUEThreshold = 0.2
 GREENCenterBand = 0.56
@@ -261,6 +263,10 @@ REDCenterBand = 0.65
 REDThreshold = 0.04
 NIRCenterBand = 0.85
 NIRThreshold = 0.15
+SWIR1CenterBand = 1.61
+SWIR1Threshold = 0.2
+SWIR2CenterBand = 2.2
+SWIR2Threshold = 0.2
 # pansharpening type
 IHS_panType = "Intensity-Hue-Saturation"
 BT_panType = "Brovey Transform"
@@ -402,6 +408,8 @@ variableBlueName_def = "#BLUE#"
 variableGreenName_def = "#GREEN#"
 variableRedName_def = "#RED#"
 variableNIRName_def = "#NIR#"
+variableSWIR1Name_def = "#SWIR1#"
+variableSWIR2Name_def = "#SWIR2#"
 variableOutputNameBandset_def = "#BANDSET#"
 variableOutputNameDate_def = "#DATE#"
 merged_name = "merged_"
@@ -435,6 +443,8 @@ variableBlueName = variableBlueName_def
 variableGreenName = variableGreenName_def
 variableRedName = variableRedName_def
 variableNIRName = variableNIRName_def
+variableSWIR1Name = variableSWIR1Name_def
+variableSWIR2Name = variableSWIR2Name_def
 variableOutputNameBandset = variableOutputNameBandset_def
 variableOutputNameDate = variableOutputNameDate_def
 # band set name
@@ -460,7 +470,7 @@ regRasterDataType = "SemiAutomaticClassificationPlugin/rasterDataTypeNew"
 rasterDataType = "Float32"
 # raster data type
 regExpressionListBC= "SemiAutomaticClassificationPlugin/expressionListBC"
-expressionListBCbase = [['NDVI', '( "#NIR#" - "#RED#" ) / ( "#NIR#" + "#RED#" ) @NDVI'], ['EVI', '2.5 * ( "#NIR#" - "#RED#" ) / ( "#NIR#" + 6 * "#RED#" - 7.5 * "#BLUE#" + 1) @EVI']]
+expressionListBCbase = [['NDVI', '( "#NIR#" - "#RED#" ) / ( "#NIR#" + "#RED#" ) @NDVI'], ['EVI', '2.5 * ( "#NIR#" - "#RED#" ) / ( "#NIR#" + 6 * "#RED#" - 7.5 * "#BLUE#" + 1) @EVI'], ['NBR', '( "#NIR#" - "#SWIR2#" ) / ( "#NIR#" + "#SWIR2#" )  @NBR']]
 expressionListBC = expressionListBCbase
 
 """ Names """

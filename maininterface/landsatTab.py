@@ -427,7 +427,6 @@ class LandsatTab:
 				self.reclassRaster0min1max(tPMD, outputRaster)
 				try:
 					cfg.osSCP.remove(tPMD)
-					cfg.osSCP.remove(tPMD2)
 					# logger
 					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "files deleted")
 				except Exception as err:
@@ -502,6 +501,7 @@ class LandsatTab:
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				return "No"
+				
 	# landsat conversion of surface reflectance products
 	def landsatSurfaceReflectance(self, satellite, bandNumber, REFLECTANCE_MULT_BAND, REFLECTANCE_ADD_BAND, RADIANCE_MULT_BAND, RADIANCE_ADD_BAND, RADIANCE_MAXIMUM_BAND, REFLECTANCE_MAXIMUM_BAND, inputRaster, outputRaster):
 		sat = satellite
@@ -510,8 +510,6 @@ class LandsatTab:
 		dT = cfg.utls.getTime()
 		tPMN = cfg.reflectanceRasterNm + ".tif"
 		tPMD = cfg.tmpDir + "/" + dT + tPMN
-		tPMN2 = cfg.reflectanceRasterNm + "2.tif"
-		tPMD2 = cfg.tmpDir + "/" + dT + tPMN2
 		# No data value
 		if cfg.ui.nodata_checkBox_2.isChecked() is True:
 			nD = cfg.ui.nodata_spinBox_3.value()
@@ -540,7 +538,6 @@ class LandsatTab:
 			self.reclassRaster0min1max(tPMD, outputRaster)
 			try:
 				cfg.osSCP.remove(tPMD)
-				cfg.osSCP.remove(tPMD2)
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "files deleted")
 			except Exception as err:
@@ -643,7 +640,6 @@ class LandsatTab:
 				self.reclassRaster0min1max(tPMD, outputRaster)
 				try:
 					cfg.osSCP.remove(tPMD)
-					cfg.osSCP.remove(tPMD2)
 					# logger
 					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "files deleted")
 				except Exception as err:
