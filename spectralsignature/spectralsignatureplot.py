@@ -708,7 +708,11 @@ class SpectralSignaturePlot:
 			for wl in wlg:
 				wlD = cfg.uisp.Sig_Widget.sigCanvas.ax.axvline(wl, color='black', linestyle='dashed')
 		# place legend		
-		cfg.uisp.Sig_Widget.sigCanvas.ax.legend(pL, pLN, bbox_to_anchor=(0.1, 0.0, 1.1, 1.0), loc=1, borderaxespad=0.).draggable()
+		# matplotlib API Changes for 3.1.1
+		try:
+			cfg.uisp.Sig_Widget.sigCanvas.ax.legend(pL, pLN, bbox_to_anchor=(0.1, 0.0, 1.1, 1.0), loc=1, borderaxespad=0.).set_draggable(True)
+		except:
+			cfg.uisp.Sig_Widget.sigCanvas.ax.legend(pL, pLN, bbox_to_anchor=(0.1, 0.0, 1.1, 1.0), loc=1, borderaxespad=0.).draggable()
 		# Grid for X and Y axes
 		if cfg.uisp.grid_checkBox.isChecked():
 			cfg.uisp.Sig_Widget.sigCanvas.ax.grid('on')

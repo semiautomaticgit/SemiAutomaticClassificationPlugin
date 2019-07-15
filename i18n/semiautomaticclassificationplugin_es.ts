@@ -4798,12 +4798,12 @@ Do you want to add the required fields to this shapefile?</source>
         <translation>Por favor espera ...</translation>
     </message>
     <message>
-        <location filename="../spectralsignature/spectralsignatureplot.py" line="1199"/>
+        <location filename="../spectralsignature/spectralsignatureplot.py" line="1203"/>
         <source>Set thresholds</source>
         <translation>Establecer umbrales</translation>
     </message>
     <message>
-        <location filename="../spectralsignature/spectralsignatureplot.py" line="1199"/>
+        <location filename="../spectralsignature/spectralsignatureplot.py" line="1203"/>
         <source>Are you sure you want to set thresholds for several signatures?</source>
         <translation>¿Estás seguro que quieres establecer umbrales para varias firmas?</translation>
     </message>
@@ -5268,12 +5268,12 @@ Do you want to add the required fields to this shapefile?</source>
         <translation>Valores</translation>
     </message>
     <message>
-        <location filename="../spectralsignature/spectralsignatureplot.py" line="1071"/>
+        <location filename="../spectralsignature/spectralsignatureplot.py" line="1075"/>
         <source>Undo thresholds</source>
         <translation>Deshacer umbrales</translation>
     </message>
     <message>
-        <location filename="../spectralsignature/spectralsignatureplot.py" line="1071"/>
+        <location filename="../spectralsignature/spectralsignatureplot.py" line="1075"/>
         <source>Are you sure you want to undo thresholds?</source>
         <translation>¿Estás seguro que quieres deshacer los umbrales?</translation>
     </message>

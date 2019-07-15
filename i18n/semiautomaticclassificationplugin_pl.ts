@@ -5098,12 +5098,12 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation>Wybierz shapefile</translation>
     </message>
     <message>
-        <location filename="../spectralsignature/spectralsignatureplot.py" line="1199"/>
+        <location filename="../spectralsignature/spectralsignatureplot.py" line="1203"/>
         <source>Set thresholds</source>
         <translation>Ustaw próg</translation>
     </message>
     <message>
-        <location filename="../spectralsignature/spectralsignatureplot.py" line="1199"/>
+        <location filename="../spectralsignature/spectralsignatureplot.py" line="1203"/>
         <source>Are you sure you want to set thresholds for several signatures?</source>
         <translation>Czy na pewno chcesz ustalić próg dla wielu sygnatur?</translation>
     </message>
@@ -5268,12 +5268,12 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation>Czy na pewno chcesz dodać wybrane sygnatury do listy?</translation>
     </message>
     <message>
-        <location filename="../spectralsignature/spectralsignatureplot.py" line="1071"/>
+        <location filename="../spectralsignature/spectralsignatureplot.py" line="1075"/>
         <source>Undo thresholds</source>
         <translation>Cofnij progi</translation>
     </message>
     <message>
-        <location filename="../spectralsignature/spectralsignatureplot.py" line="1071"/>
+        <location filename="../spectralsignature/spectralsignatureplot.py" line="1075"/>
         <source>Are you sure you want to undo thresholds?</source>
         <translation>Czy na pewno chcesz wyczyścić progi?</translation>
     </message>

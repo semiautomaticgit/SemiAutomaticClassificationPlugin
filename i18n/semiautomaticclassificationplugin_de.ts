@@ -4821,12 +4821,12 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../spectralsignature/spectralsignatureplot.py" line="1199"/>
+        <location filename="../spectralsignature/spectralsignatureplot.py" line="1203"/>
         <source>Set thresholds</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../spectralsignature/spectralsignatureplot.py" line="1199"/>
+        <location filename="../spectralsignature/spectralsignatureplot.py" line="1203"/>
         <source>Are you sure you want to set thresholds for several signatures?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5291,12 +5291,12 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../spectralsignature/spectralsignatureplot.py" line="1071"/>
+        <location filename="../spectralsignature/spectralsignatureplot.py" line="1075"/>
         <source>Undo thresholds</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../spectralsignature/spectralsignatureplot.py" line="1071"/>
+        <location filename="../spectralsignature/spectralsignatureplot.py" line="1075"/>
         <source>Are you sure you want to undo thresholds?</source>
         <translation type="unfinished"></translation>
     </message>
