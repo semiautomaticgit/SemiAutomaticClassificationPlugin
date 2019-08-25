@@ -75,7 +75,24 @@ class MultipleROITab:
 		cfg.utls.addTableItem(tW, RBand, c, 9)
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "added point " + str(c + 1))
-				
+			
+	# text changed
+	def textChanged(self):
+		stratifiedExpression = cfg.ui.stratified_lineEdit.text()
+		tSplit = stratifiedExpression.split(";")
+		for b in tSplit:
+			try:
+				cfg.ui.stratified_lineEdit.setStyleSheet("color : green")
+				check = "Yes"
+				eval(b.replace(cfg.variableName, "1"))
+				if b.strip() == cfg.variableName:
+					cfg.ui.stratified_lineEdit.setStyleSheet("color : red")
+					check = "No"
+			except:
+				cfg.ui.stratified_lineEdit.setStyleSheet("color : red")
+				check = "No"
+		return check
+		
 	# create random point
 	def createRandomPoint(self):
 		if cfg.bandSetsList[cfg.bndSetNumber][0] == "Yes":
@@ -90,6 +107,21 @@ class MultipleROITab:
 		crs = cfg.utls.getCrs(img)
 		geographicFlag = crs.isGeographic()
 		if geographicFlag is False:
+			minDistance = None
+			points = None
+			stratified = None
+			stratifiedExpression = None
+			bandSetNumber = None
+			if cfg.ui.stratified_point_checkBox.isChecked() is True:
+				check = cfg.multiROI.textChanged()
+				if check == "Yes":
+					stratified = "Yes"
+					stratifiedExpression = cfg.ui.stratified_lineEdit.text()
+					bandSet = cfg.ui.band_set_comb_spinBox_10.value()
+					bandSetNumber = bandSet - 1
+				else:
+					cfg.mx.msgErr64()
+					return "No"
 			cfg.uiUtls.addProgressBar()
 			tLX, tLY, lRX, lRY, pSX, pSY = cfg.utls.imageInformationSize(imageName)
 			Xmin = int(round(min(tLX, lRX)))
@@ -98,8 +130,7 @@ class MultipleROITab:
 			Ymax = int(round(max(tLY, lRY)))
 			pointNumber = int(cfg.ui.point_number_spinBox.value())
 			cfg.uiUtls.updateBar(10)
-			minDistance = None
-			points = None
+
 			if cfg.ui.point_distance_checkBox.isChecked() is True:
 				minDistance = int(cfg.ui.point_distance_spinBox.value())
 			if cfg.ui.point_grid_checkBox.isChecked() is True:
@@ -114,14 +145,31 @@ class MultipleROITab:
 					if XRange.index(x) < (len(XRange) - 1):
 						for y in YRange:
 							if YRange.index(y) < (len(YRange) - 1):
-								newpoints = cfg.utls.randomPoints(pointNumber, x, XRange[XRange.index(x)+1], y, YRange[YRange.index(y)+1], minDistance, imageName)
+								newpoints = cfg.utls.randomPoints(1, x, XRange[XRange.index(x)+1], y, YRange[YRange.index(y)+1], minDistance, imageName, None, None, None, bandSetNumber)
 								if points is None:
 									points = newpoints
 								else:
 									points.append(newpoints[0])
+			elif stratified is not None:
+				tSplit = stratifiedExpression.split(";")
+				for b in tSplit:
+					newpoints = cfg.utls.randomPoints(pointNumber, Xmin, Xmax, Ymin, Ymax, minDistance, imageName, None, stratified, b, bandSetNumber)				
+					if points is None:
+						points = newpoints
+					else:
+						points = points + newpoints
 			else:
-				points = cfg.utls.randomPoints(pointNumber, Xmin, Xmax, Ymin, Ymax, minDistance, imageName)
+				points = cfg.utls.randomPoints(pointNumber, Xmin, Xmax, Ymin, Ymax, minDistance, imageName, None, None, None, bandSetNumber)
 			cfg.uiUtls.updateBar(50)
+			# check distance
+			if minDistance is not None:
+				npPoints = cfg.np.array(points)
+				for i in range(0, len(points)):
+					distance = cfg.cdistSCP(npPoints, npPoints)
+					if i < distance.shape[0]:
+						index = cfg.np.where((distance[i,:] <= minDistance)  & (distance[i,:] > 0))
+						npPoints = cfg.np.delete(npPoints, index, 0)
+				points = npPoints.tolist()
 			for i in range(0, len(points)):
 				self.addRandomPointToTable(points[i])
 			cfg.uiUtls.updateBar(100)

@@ -70,10 +70,8 @@ class ClassReportTab:
 			else:
 				if batch == "No":
 					cfg.uiUtls.addProgressBar()
-				cfg.uiUtls.updateBar(10)				
-				DNm = 0
-				cfg.rasterBandUniqueVal = cfg.np.zeros((1, 1))
-				cfg.rasterBandUniqueVal = cfg.np.delete(cfg.rasterBandUniqueVal, 0, 1)
+				cfg.uiUtls.updateBar(10)	
+				cfg.rasterBandUniqueVal = {}
 				# open input with GDAL
 				if cfg.osSCP.path.isfile(clssRstrSrc):
 					rD = cfg.gdalSCP.Open(clssRstrSrc, cfg.gdalSCP.GA_ReadOnly)
@@ -100,31 +98,17 @@ class ClassReportTab:
 					nD = cfg.ui.nodata_spinBox_2.value()
 				else:
 					nD = None
-				o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.rasterUniqueValues, None, None, None, None, 0, None, cfg.NoDataVal, "No", nD, None, "UniqueVal")
-				cfg.rasterBandUniqueVal = cfg.np.unique(cfg.rasterBandUniqueVal).tolist()
-				cfg.rasterBandUniqueVal = sorted(cfg.rasterBandUniqueVal)
-				try:
-					cfg.rasterBandUniqueVal.remove(nD)
-				except:
-					pass
-				cfg.rasterBandPixelCount = 0
-				o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.rasterValueCount, None, None, None, None, 0, None, cfg.NoDataVal, "No", nD, cfg.rasterBandUniqueVal[-1], "Sum")
-				sum = cfg.rasterBandPixelCount
+				o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.rasterUniqueValuesWithSum, None, None, None, None, 0, None, cfg.NoDataVal, "No", nD, None, "UniqueVal")
+				sumTot = sum(cfg.rasterBandUniqueVal.values())
 				# save combination to table
 				l = open(cfg.reportPth, 'w')
 				t = cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Class') + "	" + cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'PixelSum') + "	" + cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Percentage %') + "	" + cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Area [' + un + "^2]") + str("\n")
 				l.write(t)
-				for i in cfg.rasterBandUniqueVal:
-					cfg.rasterBandPixelCount = 0
-					o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.rasterEqualValueCount, None, None, None, None, 0, None, cfg.NoDataVal, "No", nD, i, "value " + str(i))
-					p = (float(cfg.rasterBandPixelCount) /float(sum)) * 100
-					t = str(i) + "	" + str(cfg.rasterBandPixelCount) + "	" + str(p) + "	" + str(cfg.rasterBandPixelCount * cRPX * cRPY) + str("\n")
+				for i in sorted(cfg.rasterBandUniqueVal):
+					p = (float(cfg.rasterBandUniqueVal[i]) /float(sumTot)) * 100
+					t = str(i) + "	" + str(cfg.rasterBandUniqueVal[i]) + "	" + str(p) + "	" + str(cfg.rasterBandUniqueVal[i] * cRPX * cRPY) + str("\n")
 					l.write(t)
-				l.close()			
-				# close bands
-				cRB = None
-				# close rasters
-				cR = None
+				l.close()
 				cfg.uiUtls.updateBar(80)
 				# open csv
 				try:

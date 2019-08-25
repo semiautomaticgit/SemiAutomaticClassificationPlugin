@@ -143,7 +143,7 @@ class PcaTab:
 		totalVarianceCumulative = totalVarianceCumulative[:numberComponents]
 		eigenValues =eigenValues[:numberComponents]
 		# calculation
-		o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.calculatePCABands, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", comp, cfg.bandSetsList[bandSetNumber][6], "No")
+		o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.calculatePCABands, "PCA", oMR, None, None, 0, None, cfg.NoDataVal, "No", comp, cfg.bandSetsList[bandSetNumber][6], "No")
 		for b in range(0, len(oMR)):
 			oMR[b] = None
 		# copy raster
@@ -164,11 +164,11 @@ class PcaTab:
 					cfg.osSCP.remove(r)
 				# add raster to layers
 				cfg.utls.addRasterLayer(str(out), str(cfg.osSCP.path.basename(out)))
-		cfg.uiUtls.updateBar(90)		
-		# display parameters
-		self.displayParameters(covM, corrM, comp, totalVariance, totalVarianceCumulative, eigenValues, outputDirectory, str(cfg.osSCP.path.basename(out)))
-		cfg.ui.toolBox_PCA.setCurrentIndex(1)
-		cfg.uiUtls.updateBar(100)
+			cfg.uiUtls.updateBar(90)		
+			# display parameters
+			self.displayParameters(covM, corrM, comp, totalVariance, totalVarianceCumulative, eigenValues, outputDirectory, str(cfg.osSCP.path.basename(out)))
+			cfg.ui.toolBox_PCA.setCurrentIndex(1)
+			cfg.uiUtls.updateBar(100)
 		if batch == "No":
 			# enable map canvas render
 			cfg.cnvs.setRenderFlag(True)

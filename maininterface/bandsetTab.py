@@ -603,6 +603,7 @@ class BandsetTab:
 		cfg.utls.setColumnWidthList(tW, [[0, 350], [1, 150], [2, 150], [3, 150], [4, 150], [5, 150]])
 		if refresh == "Yes":
 			cfg.bst.readBandSet("Yes")
+			cfg.ui.Band_set_tabWidget.setCurrentIndex(len(cfg.bndSetTabList) - 1)
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " added band set")
 		return len(cfg.bndSetTabList) - 1
@@ -690,6 +691,7 @@ class BandsetTab:
 			bandSetList[5] = self.unitNameConversion(unit)
 			bandSetList[6] = [bndSetMultiFactorsList, bndSetAddFactorsList]					
 			cfg.bandSetsList.append(bandSetList)
+		cfg.bCalc.rasterBandName()
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " read band set")
 		cfg.bst.configureBandSet(bandsetPresent)

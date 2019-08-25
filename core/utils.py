@@ -261,8 +261,12 @@ class Utils:
 				total_size = int(f.headers["Content-Length"])
 				MB_size = round(total_size/1048576, 2)
 				block_size = 1024 * 1024
+				ratio = 0
+				tune = "Yes"
 				with open(outputPath, "wb") as file:
 					while True:
+						if tune == "Yes":
+							start = cfg.datetimeSCP.datetime.now()
 						block = f.read(block_size)
 						dSize =  round(int(cfg.osSCP.stat(outputPath).st_size)/1048576, 2)
 						cfg.uiUtls.updateBar(progress, "(" + str(dSize) + "/" + str(MB_size) + " MB) " +  url, "Downloading")
@@ -270,6 +274,16 @@ class Utils:
 						if not block:
 							break
 						file.write(block)
+						if tune == "Yes":
+							end = cfg.datetimeSCP.datetime.now()
+							delta =  end - start
+							newRatio = block_size / delta.microseconds
+							if newRatio > ratio:
+								block_size = block_size + 1024 * 1024
+							elif newRatio < ratio:
+								block_size = block_size - 1024 * 1024
+								tune = "No"
+							ratio = newRatio
 						if cfg.actionCheck == "No":
 							raise ValueError('Cancel action')
 				return "Yes"
@@ -344,6 +358,8 @@ class Utils:
 			except:
 				total_size = 1
 			block_size = 1024 * 1024
+			ratio = 0
+			tune = "Yes"
 			if block_size >= total_size:
 				response = f.read()
 				l = open(outputPath, 'wb')
@@ -352,6 +368,8 @@ class Utils:
 			else:
 				with open(outputPath, "wb") as file:
 					while True:
+						if tune == "Yes":
+							start = cfg.datetimeSCP.datetime.now()
 						block = f.read(block_size)
 						dSize =  round(int(cfg.osSCP.stat(outputPath).st_size)/1048576, 2)
 						cfg.uiUtls.updateBar(progress, "(" + str(dSize) + "/" + str(MB_size) + " MB) " +  url, "Downloading")
@@ -359,6 +377,16 @@ class Utils:
 						if not block:
 							break
 						file.write(block)
+						if tune == "Yes":
+							end = cfg.datetimeSCP.datetime.now()
+							delta =  end - start
+							newRatio = block_size / delta.microseconds
+							if newRatio > ratio:
+								block_size = block_size + 1024 * 1024
+							elif newRatio < ratio:
+								block_size = block_size - 1024 * 1024
+								tune = "No"
+							ratio = newRatio
 						if cfg.actionCheck == "No":
 							raise ValueError('Cancel action')
 			return "Yes"
@@ -408,8 +436,12 @@ class Utils:
 			total_size = int(f.headers["Content-Length"])
 			MB_size = round(total_size/1048576, 2)
 			block_size = 1024 * 1024
+			ratio = 0
+			tune = "Yes"
 			with open(outputPath, "wb") as file:
 				while True:
+					if tune == "Yes":
+						start = cfg.datetimeSCP.datetime.now()
 					block = f.read(block_size)
 					dSize =  round(int(cfg.osSCP.stat(outputPath).st_size)/1048576, 2)
 					cfg.uiUtls.updateBar(progress, "(" + str(dSize) + "/" + str(MB_size) + " MB) " +  url, "Downloading")
@@ -417,6 +449,16 @@ class Utils:
 					if not block:
 						break
 					file.write(block)
+					if tune == "Yes":
+						end = cfg.datetimeSCP.datetime.now()
+						delta =  end - start
+						newRatio = block_size / delta.microseconds
+						if newRatio > ratio:
+							block_size = block_size + 1024 * 1024
+						elif newRatio < ratio:
+							block_size = block_size - 1024 * 1024
+							tune = "No"
+						ratio = newRatio
 					if cfg.actionCheck == "No":
 						raise ValueError('Cancel action')
 						
@@ -571,8 +613,6 @@ class Utils:
 		
 	# Define class symbology
 	def rasterSymbol(self, classLayer, signatureList, macroclassCheck):
-		# QGIS3
-		#classLayer.setDrawingStyle("SingleBandPseudoColor")
 		# The band of classLayer
 		cLB = 1
 		# Color list for ramp
@@ -582,8 +622,8 @@ class Utils:
 		mc = []
 		v = signatureList
 		if cfg.unclassValue is not None:
-			cL.append(cfg.qgisCoreSCP.QgsColorRampShader.ColorRampItem(cfg.unclassValue, cfg.QtGuiSCP.QColor("#4d4d4d"), cfg.overlap))
-		cL.append(cfg.qgisCoreSCP.QgsColorRampShader.ColorRampItem(0, cfg.QtGuiSCP.QColor("#000000"), "0 - " + cfg.uncls))
+			cL.append(cfg.qgisCoreSCP.QgsPalettedRasterRenderer.Class(cfg.unclassValue, cfg.QtGuiSCP.QColor("#4d4d4d"), cfg.overlap))
+		cL.append(cfg.qgisCoreSCP.QgsPalettedRasterRenderer.Class(0, cfg.QtGuiSCP.QColor("#000000"), "0 - " + cfg.uncls))
 		for i in range(0, len(v)):
 			if macroclassCheck == "Yes":
 				if int(v[i][0]) not in mc and int(v[i][0]) != 0:
@@ -593,17 +633,9 @@ class Utils:
 				if int(v[i][2]) != 0:
 					n.append([int(v[i][2]), v[i][6], str(v[i][3])])
 		for b in sorted(n, key=lambda c: c[0]):
-			cL.append(cfg.qgisCoreSCP.QgsColorRampShader.ColorRampItem(b[0], b[1], str(b[0]) + " - " + b[2]))
-		# Create the shader
-		lS = cfg.qgisCoreSCP.QgsRasterShader()
-		# Create the color ramp function
-		cR = cfg.qgisCoreSCP.QgsColorRampShader()
-		cR.setColorRampType(cfg.qgisCoreSCP.QgsColorRampShader.Exact)
-		cR.setColorRampItemList(cL)
-		# Set the raster shader function
-		lS.setRasterShaderFunction(cR)
+			cL.append(cfg.qgisCoreSCP.QgsPalettedRasterRenderer.Class(b[0], b[1], str(b[0]) + " - " + b[2]))
 		# Create the renderer
-		lR = cfg.qgisCoreSCP.QgsSingleBandPseudoColorRenderer(classLayer.dataProvider(), cLB, lS)
+		lR = cfg.qgisCoreSCP.QgsPalettedRasterRenderer(classLayer.dataProvider(), cLB, cL)
 		# Apply the renderer to classLayer
 		classLayer.setRenderer(lR)
 		# refresh legend
@@ -616,26 +648,16 @@ class Utils:
 		
 	# Define class symbology
 	def rasterSymbolLCSAlgorithmRaster(self, classLayer):
-		# QGIS3
-		#classLayer.setDrawingStyle("SingleBandPseudoColor")
 		# The band of classLayer
 		cLB = 1
 		# Color list for ramp
 		cL = []
 		if cfg.unclassValue is not None:
-			cL.append(cfg.qgisCoreSCP.QgsColorRampShader.ColorRampItem(cfg.unclassValue, cfg.QtGuiSCP.QColor("#4d4d4d"), cfg.overlap))
-		cL.append(cfg.qgisCoreSCP.QgsColorRampShader.ColorRampItem(0, cfg.QtGuiSCP.QColor("#000000"), "0 " + cfg.uncls))
-		cL.append(cfg.qgisCoreSCP.QgsColorRampShader.ColorRampItem(1, cfg.QtGuiSCP.QColor("#ffffff"), "1 " + cfg.clasfd))
-		# Create the shader
-		lS = cfg.qgisCoreSCP.QgsRasterShader()
-		# Create the color ramp function
-		cR = cfg.qgisCoreSCP.QgsColorRampShader()
-		cR.setColorRampType(cfg.qgisCoreSCP.QgsColorRampShader.Exact)
-		cR.setColorRampItemList(cL)
-		# Set the raster shader function
-		lS.setRasterShaderFunction(cR)
+			cL.append(cfg.qgisCoreSCP.QgsPalettedRasterRenderer.Class(cfg.unclassValue, cfg.QtGuiSCP.QColor("#4d4d4d"), cfg.overlap))
+		cL.append(cfg.qgisCoreSCP.QgsPalettedRasterRenderer.Class(0, cfg.QtGuiSCP.QColor("#000000"), "0 " + cfg.uncls))
+		cL.append(cfg.qgisCoreSCP.QgsPalettedRasterRenderer.Class(1, cfg.QtGuiSCP.QColor("#ffffff"), "1 " + cfg.clasfd))
 		# Create the renderer
-		lR = cfg.qgisCoreSCP.QgsSingleBandPseudoColorRenderer(classLayer.dataProvider(), cLB, lS)
+		lR = cfg.qgisCoreSCP.QgsPalettedRasterRenderer(classLayer.dataProvider(), cLB, cL)
 		# Apply the renderer to classLayer
 		classLayer.setRenderer(lR)
 		# refresh legend
@@ -657,8 +679,6 @@ class Utils:
 			
 	# Define class symbology pseudo color
 	def rasterSymbolPseudoColor(self, layer):
-		# QGIS3
-		#layer.setDrawingStyle("SingleBandPseudoColor")
 		# Band statistics
 		bndStat = layer.dataProvider().bandStatistics(1)
 		max = bndStat.maximumValue
@@ -706,25 +726,30 @@ class Utils:
 		
 	# Define raster symbology
 	def rasterSymbolGeneric(self, rasterLayer, zeroValue = "Unchanged"):
-		# QGIS3
-		#rasterLayer.setDrawingStyle("SingleBandPseudoColor")
+		refRstrDt = cfg.gdalSCP.Open(str(rasterLayer.source()), cfg.gdalSCP.GA_ReadOnly)
+		bLR = cfg.utls.readAllBandsFromRaster(refRstrDt)
+		cfg.rasterBandUniqueVal = cfg.np.zeros((1, 1))
+		cfg.rasterBandUniqueVal = cfg.np.delete(cfg.rasterBandUniqueVal, 0, 1)
+		o = cfg.utls.processRaster(refRstrDt, bLR, None, "No", cfg.utls.rasterUniqueValues, None, None, None, None, 0, None, cfg.NoDataVal, "No", None, None, "UniqueVal")
+		cfg.rasterBandUniqueVal = cfg.np.unique(cfg.rasterBandUniqueVal).tolist()
+		refRasterBandUniqueVal = sorted(cfg.rasterBandUniqueVal)
+		maxV = max(refRasterBandUniqueVal) 
+		for b in range(0, len(bLR)):
+			bLR[b] = None
+		refRstrDt = None
+		# Color list for ramp
+		cL = [ cfg.qgisCoreSCP.QgsPalettedRasterRenderer.Class(0, cfg.QtGuiSCP.QColor(0,0,0), zeroValue)]
+		for i in refRasterBandUniqueVal:
+			if i > maxV/2:
+				c = cfg.QtGuiSCP.QColor(int(255 * (i/maxV)),int(255 * (1- (i/maxV))),int(255 * (1 - (i/maxV))))
+				cL.append(cfg.qgisCoreSCP.QgsPalettedRasterRenderer.Class(i, c, str(i)))
+			elif i > 0:
+				c = cfg.QtGuiSCP.QColor(int(255 * (i/maxV)),int(255 * (i/maxV)),int(255 * (1 - (i/maxV))))
+				cL.append(cfg.qgisCoreSCP.QgsPalettedRasterRenderer.Class(i, c, str(i)))
 		# The band of classLayer
 		classLyrBnd = 1
-		# Band statistics
-		bndStat = rasterLayer.dataProvider().bandStatistics(1)
-		classMax = bndStat.maximumValue
-		# Color list for ramp
-		clrLst = [ cfg.qgisCoreSCP.QgsColorRampShader.ColorRampItem(0, cfg.QtGuiSCP.QColor(0,0,0), zeroValue), cfg.qgisCoreSCP.QgsColorRampShader.ColorRampItem(1, cfg.QtGuiSCP.QColor(0,0,255), "1"), cfg.qgisCoreSCP.QgsColorRampShader.ColorRampItem(round(classMax/2), cfg.QtGuiSCP.QColor(255,0,0), str(round(classMax/2))), cfg.qgisCoreSCP.QgsColorRampShader.ColorRampItem(classMax, cfg.QtGuiSCP.QColor(0,255,0), str(classMax)) ]
-		# Create the shader
-		lyrShdr = cfg.qgisCoreSCP.QgsRasterShader()
-		# Create the color ramp function
-		clrFnctn = cfg.qgisCoreSCP.QgsColorRampShader()
-		clrFnctn.setColorRampType(cfg.qgisCoreSCP.QgsColorRampShader.Interpolated)
-		clrFnctn.setColorRampItemList(clrLst)
-		# Set the raster shader function
-		lyrShdr.setRasterShaderFunction(clrFnctn)
 		# Create the renderer
-		lyrRndr = cfg.qgisCoreSCP.QgsSingleBandPseudoColorRenderer(rasterLayer.dataProvider(), classLyrBnd, lyrShdr)
+		lyrRndr = cfg.qgisCoreSCP.QgsPalettedRasterRenderer(rasterLayer.dataProvider(), classLyrBnd, cL)
 		# Apply the renderer to rasterLayer
 		rasterLayer.setRenderer(lyrRndr)
 		# refresh legend
@@ -740,25 +765,15 @@ class Utils:
 		# Color list for ramp
 		cL = []
 		for i in valueColorList:
-			cL.append(cfg.qgisCoreSCP.QgsColorRampShader.ColorRampItem(i[0], cfg.QtGuiSCP.QColor(i[1]), str(i[0])))
-		# Create the shader
-		lS = cfg.qgisCoreSCP.QgsRasterShader()
-		# Create the color ramp function
-		cR = cfg.qgisCoreSCP.QgsColorRampShader()
-		cR.setColorRampType(cfg.qgisCoreSCP.QgsColorRampShader.Exact)
-		cR.setColorRampItemList(cL)
-		# Set the raster shader function
-		lS.setRasterShaderFunction(cR)
-		return lS
+			cL.append(cfg.qgisCoreSCP.QgsPalettedRasterRenderer.Class(i[0], cfg.QtGuiSCP.QColor(i[1]), str(i[0])))
+		return cL
 		
 	# set scatter raster symbology
 	def setRasterScatterSymbol(self, classLayer, shader):
-		# QGIS3
-		#classLayer.setDrawingStyle("SingleBandPseudoColor")
 		# The band of classLayer
 		cLB = 1
 		# Create the renderer
-		lR = cfg.qgisCoreSCP.QgsSingleBandPseudoColorRenderer(classLayer.dataProvider(), cLB, shader)
+		lR = cfg.qgisCoreSCP.QgsPalettedRasterRenderer(classLayer.dataProvider(), cLB, shader)
 		# Apply the renderer to classLayer
 		classLayer.setRenderer(lR)
 		# refresh legend
@@ -772,14 +787,8 @@ class Utils:
 	# copy renderer
 	def copyRenderer(self, inputRaster, outputRaster):
 		try:
-			# QGIS3
-			#outputRaster.setDrawingStyle("SingleBandPseudoColor")
-			r = inputRaster.renderer()
-			cR = r.shader()
-			# The band of classLayer
-			classLyrBnd = 1
-			# Create the renderer
-			lyrRndr = cfg.qgisCoreSCP.QgsSingleBandPseudoColorRenderer(outputRaster.dataProvider(), classLyrBnd, cR)
+			r = inputRaster.renderer().clone()
+			outputRaster.setRenderer(r)
 			# Apply the renderer to rasterLayer
 			outputRaster.setRenderer(lyrRndr)
 			outputRaster.triggerRepaint()
@@ -2142,41 +2151,23 @@ class Utils:
 	# find DNmin in raster for DOS1
 	def findDNmin(self, inputRaster, noDataVal = None):
 		DNm = 0
-		cfg.rasterBandUniqueVal = cfg.np.zeros((1, 1))
-		cfg.rasterBandUniqueVal = cfg.np.delete(cfg.rasterBandUniqueVal, 0, 1)
+		cfg.rasterBandUniqueVal = {}
 		# open input with GDAL
 		rD = cfg.gdalSCP.Open(inputRaster, cfg.gdalSCP.GA_ReadOnly)
 		# band list
 		bL = cfg.utls.readAllBandsFromRaster(rD)
 		# No data value
 		nD = noDataVal
-		o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.rasterUniqueValues, None, None, None, None, 0, None, cfg.NoDataVal, "No", nD, None, "UniqueVal")
-		cfg.rasterBandUniqueVal = cfg.np.unique(cfg.rasterBandUniqueVal).tolist()
-		cfg.rasterBandUniqueVal = sorted(cfg.rasterBandUniqueVal)
-		try:
-			cfg.rasterBandUniqueVal.remove(nD)
-		except:
-			pass
-		cfg.rasterBandPixelCount = 0
-		o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.rasterValueCount, None, None, None, None, 0, None, cfg.NoDataVal, "No", nD, cfg.rasterBandUniqueVal[-1], "Sum")
-		sum = cfg.rasterBandPixelCount
-		pT1pc = sum * 0.0001
+		o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.rasterUniqueValuesWithSum, None, None, None, None, 0, None, cfg.NoDataVal, "No", nD, None, "UniqueVal")
+		sumTot = sum(cfg.rasterBandUniqueVal.values())
+		pT1pc = sumTot * 0.0001
 		min = 0
 		max = len(cfg.rasterBandUniqueVal)
-		for i in range(0, len(cfg.rasterBandUniqueVal)):
-			if i == 0:
-				pos = int(round((max+min)/4))
-			else:
-				pos = int(round((max+min)/2))
-			DNm = cfg.rasterBandUniqueVal[pos]
-			cfg.rasterBandPixelCount = 0
-			o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.rasterValueCount, None, None, None, None, 0, None, cfg.NoDataVal, "No", nD, DNm, "DNmin " + str(DNm))
-			newSum = cfg.rasterBandPixelCount
-			if newSum <= pT1pc:
-				min = pos
-			else:
-				max = pos
-			if int(round(max-min)) <= 1:
+		newSum = 0
+		for i in sorted(cfg.rasterBandUniqueVal):
+			newSum = newSum + cfg.rasterBandUniqueVal[i]
+			if newSum >= pT1pc:
+				DNm = i
 				break
 		for b in range(0, len(bL)):
 			bL[b] = None
@@ -3511,6 +3502,11 @@ class Utils:
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				return "No"
+			values, count = cfg.np.unique(o, return_counts=True)
+			val = zip(values, count)
+			uniqueVal = cfg.counterSCP(dict(val))
+			oldUniqueVal = cfg.counterSCP(cfg.rasterBandUniqueVal)
+			cfg.rasterBandUniqueVal = uniqueVal + oldUniqueVal
 			oR = outputGdalRasterList[0]
 			# output raster
 			band = gdalBandList[0].GetBand()
@@ -3894,6 +3890,8 @@ class Utils:
 		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "start processRaster")
 		if algorithmName is None:
 			additionalLayer = 1
+		elif algorithmName == "PCA":
+			additionalLayer = 10
 		else:
 			additionalLayer = 5
 		blockSizeX = self.calculateBlockSize(len(gdalBandList) + additionalLayer)
@@ -4085,15 +4083,19 @@ class Utils:
 			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "Pansharpening")
 			
 	# calculate random points
-	def randomPoints(self, pointNumber, Xmin, Xmax, Ymin, Ymax, minDistance = None, rasterName = None, NoDataValue = None):
+	def randomPoints(self, pointNumber, Xmin, Xmax, Ymin, Ymax, minDistance = None, rasterName = None, NoDataValue = None, stratified = None, stratifiedExpression = None, bandSetNumber = None):
 		points = []
+		counter = 0
 		while len(points) < pointNumber:
+			counter = counter + 1
 			XCoords = cfg.np.random.uniform(Xmin,Xmax,1)
 			YCoords = cfg.np.random.uniform(Ymin,Ymax,1)
 			point = cfg.qgisCoreSCP.QgsPointXY(XCoords, YCoords)
+			if bandSetNumber is None:
+				bandSetNumber = cfg.bndSetNumber
 			# band set
-			if cfg.bandSetsList[cfg.bndSetNumber][0] == "Yes":
-				rast = cfg.utls.selectLayerbyName(cfg.bandSetsList[cfg.bndSetNumber][3][0], "Yes")	
+			if cfg.bandSetsList[bandSetNumber][0] == "Yes":
+				rast = cfg.utls.selectLayerbyName(cfg.bandSetsList[bandSetNumber][3][0], "Yes")	
 				# open input with GDAL
 				try:
 					Or = cfg.gdalSCP.Open(rast.source(), cfg.gdalSCP.GA_ReadOnly)
@@ -4101,7 +4103,7 @@ class Utils:
 					# logger
 					cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 					cfg.mx.msgErr4()
-					return "No"
+					return points
 			else:
 				rL = cfg.utls.selectLayerbyName(rasterName, "Yes")
 				# open input with GDAL
@@ -4111,7 +4113,7 @@ class Utils:
 					# logger
 					cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 					cfg.mx.msgErr4()
-					return "No"
+					return points
 			OrB = Or.GetRasterBand(1)
 			geoT = Or.GetGeoTransform()
 			tLX = geoT[0]
@@ -4126,16 +4128,19 @@ class Utils:
 				pass
 			elif NoDataValue is not None and bVal == float(NoDataValue):
 				pass
+			elif stratified is not None:
+				try:
+					if eval(stratifiedExpression.replace(cfg.variableName, "bVal")) is True:
+						points.append([XCoords[0], YCoords[0]])
+				except:
+					pass
+				if counter == pointNumber*100 and len(points) == 0:
+					# logger
+					cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR : maximum number of iterations" )
+					cfg.mx.msgErr64()
+					return points
 			else:
 				points.append([XCoords[0], YCoords[0]])
-		if minDistance is not None:
-			npPoints = cfg.np.array(points)
-			for i in range(0, len(points)):
-				distance = cfg.cdistSCP(npPoints, npPoints)
-				if i < distance.shape[0]:
-					index = cfg.np.where((distance[i,:] <= minDistance)  & (distance[i,:] > 0))
-					npPoints = cfg.np.delete(npPoints, index, 0)
-			points = npPoints.tolist()
 		return points
 			
 	# calculate raster unique values
@@ -4167,20 +4172,15 @@ class Utils:
 			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode())
 			return cfg.rasterBandPixelCount
 			
-	# calculate raster unique values (slow)
+	# calculate raster unique values
 	def rasterUniqueValuesWithSum(self, gdalBand, rasterArray, columnNumber, rowNumber, pixelStartColumn, pixelStartRow, outputGdalRasterList, functionBandArgumentNoData, functionVariable):
 		if cfg.actionCheck == "Yes":
-			val = cfg.np.unique(rasterArray).tolist()
-			for i in val:
-				if i != functionBandArgumentNoData:
-					sum = (rasterArray == i).sum()
-					index = cfg.np.where(cfg.rasterBandUniqueVal[1,:] == i)
-					if index[0].size > 0:
-						oldVal = cfg.rasterBandUniqueVal[0,index[0]]
-						newValue = oldVal + sum
-						cfg.rasterBandUniqueVal[0, index[0]] = newValue
-					else:
-						cfg.rasterBandUniqueVal = cfg.np.append(cfg.rasterBandUniqueVal, [[sum], [ i]], axis =1)
+			values, count = cfg.np.unique(rasterArray, return_counts=True)
+			val = zip(values, count)
+			uniqueVal = cfg.counterSCP(dict(val))
+			oldUniqueVal = cfg.counterSCP(cfg.rasterBandUniqueVal)
+			cfg.rasterBandUniqueVal = uniqueVal + oldUniqueVal
+			cfg.rasterBandUniqueVal.pop(functionBandArgumentNoData, None)
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode())
 			return cfg.rasterBandUniqueVal
@@ -4485,8 +4485,14 @@ class Utils:
 		for b in range(0, rasterArray.shape[2]):
 			rArray = rasterArray * functionVariableList[0][b] + functionVariableList[1][b] - cfg.rasterPixelCountPCA["MEAN_BAND_" + str(b)]			
 		for i in functionBandArgument:
-			a = cfg.np.array(i) * rArray
-			o = a.sum(axis=2)
+			try:
+				a = cfg.np.array(i) * rArray
+				o = a.sum(axis=2)
+			except Exception as err:
+				cfg.mx.msgErr28()
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				return "No"
 			# output raster
 			try:
 				self.writeArrayBlock(outputGdalRasterList[n], 1, o, pixelStartColumn, pixelStartRow)

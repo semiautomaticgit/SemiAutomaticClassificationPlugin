@@ -308,7 +308,7 @@ class Settings:
 	# test internet connection
 	def testInternetConnection(self):
 		dT = cfg.utls.getTime()
-		check = cfg.utls.downloadFile("http://landsat-pds.s3.amazonaws.com/L8/139/045/LC81390452014295LGN00/LC81390452014295LGN00_thumb_small.jpg", cfg.tmpDir + "//" + dT + "_thumb_small.jpg", dT + "_thumb_small.jpg", 50)
+		check = cfg.utls.downloadFile("https://semiautomaticgit.github.io/SemiAutomaticClassificationPluginWelcome/changelog.html", cfg.tmpDir + "//" + dT + "_changelog.html", dT + "_changelog.html", 50)
 		if check == "Yes":
 			test = "Success"
 		else:

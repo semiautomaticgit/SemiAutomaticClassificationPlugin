@@ -151,7 +151,7 @@ class CrossClassification:
 						fd = shapefileField
 					if batch == "No":
 						# convert reference layer to raster
-						cfg.utls.vectorToRaster(fd, str(l.source()), classification, str(tRC))
+						cfg.utls.vectorToRaster(fd, str(l.source()), classification, str(tRC), str(iClass.source()))
 					else:
 						cfg.utls.vectorToRaster(fd, str(l.source()), classification, str(tRC), classification)
 					referenceRaster = tRC
@@ -233,7 +233,9 @@ class CrossClassification:
 				bL = cfg.utls.readAllBandsFromRaster(rD)
 				# calculation
 				variableList = [["im1", "a"], ["im2", "b"]]
-				o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.bandCalculationMultipleWhere, None, oMR, None, None, 0, None, nD, "No", e, variableList, "No")
+				cfg.rasterBandUniqueVal = {}
+				o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.bandCalculationMultipleWhere, None, oMR, None, None, 0, None, nD, "No", e, variableList, "Calculating raster")
+				cfg.rasterBandUniqueVal.pop(nD, None)
 				if o == "No":
 					if batch == "No":
 						cfg.uiUtls.removeProgressBar()
@@ -300,24 +302,19 @@ class CrossClassification:
 					return "No"
 				t = cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'CrossClassCode') + "	" + cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Reference') + "	" + cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Classification') + "	" + cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'PixelSum') + "	" + cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Area [' + un + "^2]") + str("\n")
 				l.write(t)
-				# open cross raster
-				rDC = cfg.gdalSCP.Open(crossRstPath, cfg.gdalSCP.GA_ReadOnly)
-				bLC = cfg.utls.readAllBandsFromRaster(rDC)				
 				for c in cols:
 					cList = cList + str(c) + "\t"
 					for r in rows:
-						cfg.rasterBandPixelCount = 0
 						try:
 							v = cmbntns["combination_" + str(c) + "_"+ str(r)]
-							o = cfg.utls.processRaster(rDC, bLC, None, "No", cfg.utls.rasterEqualValueCount, None, None, None, None, 0, None, nD, "No", None, v, "value " + str(v))
-							area = str(cfg.rasterBandPixelCount * cRPX * cRPY)
+							area = str(cfg.rasterBandUniqueVal[v] * cRPX * cRPY)
 							if area.endswith('.0'):
 								area = area.split('.')[0]
-							t = str(v) + "\t" + str(c) + "\t" + str(r) + "\t" + str(cfg.rasterBandPixelCount) + "	" + area + str("\n")
+							t = str(v) + "\t" + str(c) + "\t" + str(r) + "\t" + str(cfg.rasterBandUniqueVal[v]) + "	" + area + str("\n")
 							l.write(t)
-							crossClass[rows.index(r), cols.index(c)] = cfg.rasterBandPixelCount * cRPX * cRPY
+							crossClass[rows.index(r), cols.index(c)] = cfg.rasterBandUniqueVal[v] * cRPX * cRPY
 						except:
-							crossClass[rows.index(r), cols.index(c)] = cfg.rasterBandPixelCount * cRPX * cRPY
+							crossClass[rows.index(r), cols.index(c)] = cfg.rasterBandUniqueVal[v] * cRPX * cRPY
 				# save combination to table
 				l.write(str("\n"))
 				tStr = "\t" + "> " + cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'CROSS MATRIX [') + str(un) + "^2]" + "\n"
@@ -344,10 +341,6 @@ class CrossClassification:
 				lL = lL + "\t" + str(totMat) + str("\n")
 				l.write(lL)
 				l.close()
-				# close bands
-				for b in range(0, len(bLC)):
-					bLC[b] = None
-				rDC = None
 				# add raster to layers
 				rstr = cfg.utls.addRasterLayer(str(crossRstPath), str(cfg.osSCP.path.basename(crossRstPath)))
 				cfg.utls.rasterSymbolGeneric(rstr, "NoData")	

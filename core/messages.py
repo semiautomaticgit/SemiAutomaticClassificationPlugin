@@ -285,6 +285,9 @@ class Messages:
 	def msgErr63(self):
 		self.msgBarError(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Error") + " [63]", cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Memory error, too many combinations. Try to reclassify the values"))
 		
+	def msgErr64(self):
+		self.msgBarError(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Error") + " [64]", cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Error, please change stratification parameters"))
+		
 	""" Warnings """
 	def msgWar2Windows(self):
 		self.msgBoxWarning(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [2]", cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "It appears that SciPy is not correctly installed. Please, update QGIS "))

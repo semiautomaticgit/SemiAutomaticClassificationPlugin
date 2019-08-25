@@ -236,7 +236,7 @@ class BandCalcTab:
 					
 	# Set raster band table
 	def rasterBandName(self, bandSetNumber = None):
-		if bandSetNumber is None:
+		if bandSetNumber is None or bandSetNumber is False:
 			bandSetNumber = cfg.bndSetNumber
 		if bandSetNumber >= len(cfg.bandSetsList):
 			cfg.mx.msgWar25(bandSetNumber + 1)
@@ -257,6 +257,11 @@ class BandCalcTab:
 				cfg.utls.addTableItem(l, cfg.variableName + str(b + 1), b, 0, "No")
 				cfg.utls.addTableItem(l, bN, b, 1, "No")
 				b = b + 1
+		# test empty band set
+		try:
+			cfg.bandSetsList[bandSetNumber][0]
+		except:
+			return
 		if cfg.bandSetsList[bandSetNumber][0] == "Yes":
 			c = 1
 			for x in range(0, len(cfg.bandSetsList[bandSetNumber][3])):
@@ -295,6 +300,14 @@ class BandCalcTab:
 				cfg.utls.addTableItem(l, cfg.variableName + str(b + 1), b, 0, "No")
 				cfg.utls.addTableItem(l, bN, b, 1, "No")
 				b = b + 1
+			if cfg.GREENBand is not None:
+				# band name
+				bN = cfg.variableGreenName
+				# Add band to table
+				l.insertRow(b)
+				cfg.utls.addTableItem(l, cfg.variableName + str(b + 1), b, 0, "No")
+				cfg.utls.addTableItem(l, bN, b, 1, "No")
+				b = b + 1	
 			if cfg.REDBand is not None:
 				# band name
 				bN = cfg.variableRedName
@@ -310,15 +323,7 @@ class BandCalcTab:
 				l.insertRow(b)
 				cfg.utls.addTableItem(l, cfg.variableName + str(b + 1), b, 0, "No")
 				cfg.utls.addTableItem(l, bN, b, 1, "No")
-				b = b + 1		
-			if cfg.GREENBand is not None:
-				# band name
-				bN = cfg.variableGreenName
-				# Add band to table
-				l.insertRow(b)
-				cfg.utls.addTableItem(l, cfg.variableName + str(b + 1), b, 0, "No")
-				cfg.utls.addTableItem(l, bN, b, 1, "No")
-				b = b + 1		
+				b = b + 1			
 			if cfg.SWIR1Band is not None:
 				# band name
 				bN = cfg.variableSWIR1Name

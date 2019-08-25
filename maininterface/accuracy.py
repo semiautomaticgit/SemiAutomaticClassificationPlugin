@@ -151,7 +151,7 @@ class Accuracy:
 						fd = shapefileField
 					if batch == "No":
 						# convert reference layer to raster
-						cfg.utls.vectorToRaster(fd, str(l.source()), classification, str(tRC))
+						cfg.utls.vectorToRaster(fd, str(l.source()), classification, str(tRC), str(iClass.source()))
 					else:
 						cfg.utls.vectorToRaster(fd, str(l.source()), classification, str(tRC), classification)
 					referenceRaster = tRC
@@ -174,9 +174,15 @@ class Accuracy:
 				refRasterBandUniqueVal = sorted(cfg.rasterBandUniqueVal)
 				# band list
 				bLN = cfg.utls.readAllBandsFromRaster(newRstrDt)
-				cfg.rasterBandUniqueVal = cfg.np.zeros((1, 1))
-				cfg.rasterBandUniqueVal = cfg.np.delete(cfg.rasterBandUniqueVal, 0, 1)
-				o = cfg.utls.processRaster(newRstrDt, bLN, None, "No", cfg.utls.rasterUniqueValues, None, None, None, None, 0, None, cfg.NoDataVal, "No", None, None, "UniqueVal")
+				cfg.rasterBandUniqueVal = {}
+				o = cfg.utls.processRaster(newRstrDt, bLN, None, "No", cfg.utls.rasterUniqueValuesWithSum, None, None, None, None, 0, None, cfg.NoDataVal, "No", None, None, "UniqueVal")
+				newRasterBandUniqueVal = []
+				pixelTotal = {} 
+				totPixelClass = 0
+				for i in sorted(cfg.rasterBandUniqueVal):
+					newRasterBandUniqueVal.append(i)
+					pixelTotal[i] = cfg.rasterBandUniqueVal[i]
+					totPixelClass = totPixelClass + cfg.rasterBandUniqueVal[i]
 				for b in range(0, len(bLR)):
 					bLR[b] = None
 				refRstrDt = None
@@ -184,7 +190,6 @@ class Accuracy:
 					bLN[b] = None
 				newRstrDt = None		
 				cfg.rasterBandUniqueVal = cfg.np.unique(cfg.rasterBandUniqueVal).tolist()
-				newRasterBandUniqueVal = sorted(cfg.rasterBandUniqueVal)	
 				cmb = list(cfg.itertoolsSCP.product(refRasterBandUniqueVal, newRasterBandUniqueVal))
 				# error matrix
 				col = []
@@ -218,11 +223,23 @@ class Accuracy:
 				oM = []
 				oM.append(tPMD2)
 				oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0, None, cfg.rasterCompression, "DEFLATE21")
+				# pixel size
+				cRG = oMR[0].GetGeoTransform()
+				cRPX = abs(cRG[1])
+				cRPY = abs(cRG[5])
+				# check projections
+				cRP = oMR[0].GetProjection()
+				cRSR = cfg.osrSCP.SpatialReference(wkt=cRP)
+				un = cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Unknown")
+				if cRSR.IsProjected:
+					un = cRSR.GetAttrValue('unit')
 				# band list
 				bL = cfg.utls.readAllBandsFromRaster(rD)
 				# calculation
 				variableList = [["im1", "a"], ["im2", "b"]]
-				o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.bandCalculationMultipleWhere, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", e, variableList, "No")
+				cfg.rasterBandUniqueVal = {}
+				o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.bandCalculationMultipleWhere, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", e, variableList, "Calculating raster")
+				cfg.rasterBandUniqueVal.pop(cfg.NoDataVal, None)
 				if o == "No":
 					if batch == "No":
 						cfg.uiUtls.removeProgressBar()
@@ -263,8 +280,9 @@ class Accuracy:
 				totX = cols
 				totX.extend(rows)
 				total = sorted(cfg.np.unique(totX).tolist())
-				errMatrix = cfg.np.zeros((len(total), len(total)))
-				cList = "V_" + cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Classification') + "\t"
+				errMatrix = cfg.np.zeros((len(total), len(total) + 1))
+				errMatrixUnbias = cfg.np.zeros((len(total), len(total) + 2))
+				cList = "V_" + cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Classified') + "\t"
 				try:
 					l = open(tblOut, 'w')
 				except Exception as err:
@@ -278,26 +296,45 @@ class Accuracy:
 					# logger
 					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 					return "No"
-				t = cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'ErrMatrixCode') + "	" + cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Reference') + "	" + cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Classification') + "	" + cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'PixelSum') + "\n"
+				# error raster table
+				t = cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'ErrMatrixCode') + "	" + cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Reference') + "	" + cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Classified') + "	" + cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'PixelSum') + "\n"
 				l.write(t)
-				# open error raster
-				rDC = cfg.gdalSCP.Open(errorRstPath, cfg.gdalSCP.GA_ReadOnly)
-				bLC = cfg.utls.readAllBandsFromRaster(rDC)
 				for c in total:
-					cList = cList + str(c) + "\t"
+					cList = cList + str(int(c)) + "\t"
 					for r in total:
-						cfg.rasterBandPixelCount = 0
 						try:
 							v = cmbntns["combination_" + str(c) + "_"+ str(r)]
-							o = cfg.utls.processRaster(rDC, bLC, None, "No", cfg.utls.rasterEqualValueCount, None, None, None, None, 0, None, cfg.NoDataVal, "No", None, v, "value " + str(v))
-							t = str(v) + "\t" + str(c) + "\t" + str(r) + "\t" + str(cfg.rasterBandPixelCount) + str("\n")
+							t = str(v) + "\t" + str(int(c)) + "\t" + str(int(r)) + "\t" + str(cfg.rasterBandUniqueVal[v]) + str("\n")
 							l.write(t)
-							errMatrix[total.index(r), total.index(c)] = cfg.rasterBandPixelCount
+							errMatrix[total.index(r), total.index(c)] = cfg.rasterBandUniqueVal[v]
+							errMatrixUnbias[total.index(r), total.index(c)] = cfg.rasterBandUniqueVal[v]
 						except:
-							errMatrix[total.index(r), total.index(c)] = cfg.rasterBandPixelCount
+							errMatrix[total.index(r), total.index(c)] = 0
+							errMatrixUnbias[total.index(r), total.index(c)] = 0
+				# sum without totals
+				totMat = int(errMatrix.sum())
+				# add totals to matrices
+				for r in total:
+					errMatrix[total.index(r), len(total)] = int(errMatrix[total.index(r), :].sum())
+					try:
+						errMatrixUnbias[total.index(r), len(total)] = pixelTotal[r] * cRPX * cRPY
+					except:
+						errMatrixUnbias[total.index(r), len(total)] = 0
+					try:
+						errMatrixUnbias[total.index(r), len(total) + 1] = pixelTotal[r] / totPixelClass
+					except:
+						errMatrixUnbias[total.index(r), len(total) + 1] = 0
+				for c in total:
+					for r in total:
+						try:
+							errMatrixUnbias[total.index(r), total.index(c)] = errMatrixUnbias[total.index(r), len(total) + 1] * (errMatrix[total.index(r), total.index(c)] ) / errMatrix[total.index(r), len(total) ]
+						except:
+							errMatrixUnbias[total.index(r), total.index(c)] = 0
+				errMatrix[cfg.np.isnan(errMatrix)] = 0
+				errMatrixUnbias[cfg.np.isnan(errMatrixUnbias)] = 0
 				# save combination to table
 				l.write(str("\n"))
-				tStr = "\t" + "> " + cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'ERROR MATRIX') + "\n"
+				tStr = "\t" + "> " + cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'ERROR MATRIX (pixel count)') + "\n"
 				l.write(tStr)
 				tStr = "\t" + "> " + cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Reference') + "\n"
 				l.write(tStr)
@@ -310,43 +347,104 @@ class Accuracy:
 				# write matrix
 				ix = 0
 				for j in tM:
-					tMR = str(total[ix]) + "\t" + j.rstrip('\n') + "\t" + str(int(errMatrix[ix, :].sum())) + str("\n")
+					tMR = str(int(total[ix])) + "\t" + j
 					l.write(tMR)
 					ix = ix + 1
-				# last line
 				lL = cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Total')
 				for c in range(0, len(total)):
 					lL = lL + "\t" + str(int(errMatrix[:, c].sum()))
-				totMat = int(errMatrix.sum())
 				lL = lL + "\t" + str(totMat) + str("\n")
 				l.write(lL)
+				
+				# area based error matrix (see Olofsson, et al., 2014, Good practices for estimating area and assessing accuracy of land change, Remote Sensing of Environment, 148, 42-57)
 				l.write(str("\n"))
-				# overall accuracy
-				oA = 100 * errMatrix.trace() / totMat
-				t = cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Overall accuracy [%] = ') + str(oA) + "\n"
-				l.write(t)
+				tStr = "\t" + "> " + cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'AREA BASED ERROR MATRIX') + "\n"
+				l.write(tStr)
+				tStr = "\t" + "> " + cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Reference') + "\n"
+				l.write(tStr)
+				tStr = cList + cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Area') + "\t" + cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Wi') + "\n"
+				l.write(tStr)
+				# temp matrix
+				# date time for temp name
+				dT = cfg.utls.getTime()
+				tmpMtrxU= cfg.tmpDir + "/" + cfg.tempMtrxNm + dT + ".txt"
+				cfg.np.savetxt(tmpMtrxU, errMatrixUnbias, delimiter="\t", fmt="%1.4f")
+				tM = open(tmpMtrxU, 'r')
+				ix = 0
+				for j in tM:
+					tMR = str(int(total[ix])) + "\t" + j
+					l.write(tMR)
+					ix = ix + 1
+				# last lines
+				lL = cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Total')
+				for c in range(0, len(total)):
+					lL = lL + "\t" + str("%1.4f " % errMatrixUnbias[:, c].sum())
+				lL = lL + "\t" + str("%1.4f " % (totPixelClass * cRPX * cRPY)) + str("\n")
+				l.write(lL)
+				lL0 = cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Area')
+				for c in range(0, len(total)):
+					lL0 = lL0 + "\t" + str( int(round(totPixelClass * cRPX * cRPY * errMatrixUnbias[:, c].sum())))
+				lL0 = lL0 + "\t" + str(int(totPixelClass * cRPX * cRPY)) + str("\n")
+				l.write(lL0)
+				lL1 = cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'SE')
+				lL2 = cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'SE area')
+				lL3 = cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", '95% CI area')
+				for c in range(0, len(total)):
+					se = 0
+					for r in range(0, len(total)):
+						se = se + (errMatrixUnbias[r, len(total) + 1]  * errMatrixUnbias[r, c] - errMatrixUnbias[r, c] * errMatrixUnbias[r, c] ) / (errMatrix[r, len(total) ] - 1)
+					lL1 = lL1 + "\t" + str("%1.4f" % cfg.np.sqrt(se))
+					lL2 = lL2 + "\t" + str(int(round(cfg.np.sqrt(se) * totPixelClass * cRPX * cRPY)))
+					lL3 = lL3 + "\t" + str(int(round(cfg.np.sqrt(se) * totPixelClass * cRPX * cRPY * 1.96)))
+				l.write(lL1)
+				l.write(str("\n"))
+				l.write(lL2)
+				l.write(str("\n"))
+				l.write(lL3)
+				l.write(str("\n"))
 				# user and producer's accuracy and kappa hat, equations from Congalton, R. & Green, K. (2009) Assessing the Accuracy of Remotely Sensed Data: Principles and Practices. CRC Press
+				lL4 = cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'PA  [%]')
+				lL5 = cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'UA  [%]')
+				lL6 = cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Kappa hat')
 				nipXnpi = 0
 				niiTot = 0
 				for g in range(0, len(total)):
-					nii = errMatrix[g,g]
+					nii = errMatrixUnbias[g,g]
 					niiTot = niiTot + nii
-					nip = errMatrix[g, :].sum()
-					npi = errMatrix[:, g].sum()
+					nip = errMatrixUnbias[g, 0:len(total)].sum()
+					npi = errMatrixUnbias[0:len(total), g].sum()
 					nipXnpi = nipXnpi + (nip * npi)
 					p = 100 * nii / npi
 					u = 100 * nii / nip
-					khatI = ((totMat * nii) - (nip * npi)) / ((totMat * nip) - (nip * npi))
-					t = cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Class ') + str(total[g]) + cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", ' producer accuracy [%] = ') + str(p) + "\t" + cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", ' user accuracy [%] = ') + str(u) + "\t" + cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Kappa hat = ') + str(khatI) + str("\n")
-					l.write(t)
-				khat = ((totMat * niiTot) - nipXnpi) / ((totMat * totMat) - nipXnpi)
-				t = cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Kappa hat classification = ') + str(khat) + str("\n")
+					khatI = ((1 * nii) - (nip * npi)) / ((1 * nip) - (nip * npi))
+					lL4 = lL4 + "\t" + str("%1.4f" % p)
+					lL5 = lL5 + "\t" + str("%1.4f" % u)
+					lL6 = lL6 + "\t" + str("%1.4f" % khatI)
+				l.write(lL4)
+				l.write(str("\n"))
+				l.write(lL5)
+				l.write(str("\n"))
+				l.write(lL6)
+				l.write(str("\n"))
+				# overall accuracy
+				l.write(str("\n"))
+				t = cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Overall accuracy [%] = ') + str("%1.4f" % (niiTot * 100)) + "\n"
+				l.write(t)
+				khat = ((1 * niiTot) - nipXnpi) / ((1 * 1) - nipXnpi)
+				t = cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Kappa hat classification = ') + str("%1.4f" % khat) + str("\n")
+				l.write(t)
+				l.write(str("\n"))
+				t = cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Area unit = ' + un + "^2") + str("\n")
+				l.write(t)
+				t = cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'SE = standard error') + str("\n")
+				l.write(t)
+				t = cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'CI = confidence interval') + str("\n")
+				l.write(t)
+				t = cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "PA = producer's accuracy") + str("\n")
+				l.write(t)
+				t = cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "UA = user's accuracy") + str("\n")
 				l.write(t)
 				l.close()
-				# close bands
-				for b in range(0, len(bLC)):
-					bLC[b] = None
-				rDC = None
 				# add raster to layers
 				rstr = cfg.utls.addRasterLayer(str(errorRstPath), str(cfg.osSCP.path.basename(errorRstPath)))
 				cfg.utls.rasterSymbolGeneric(rstr, "NoData")	

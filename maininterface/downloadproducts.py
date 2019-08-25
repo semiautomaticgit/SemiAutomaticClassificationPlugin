@@ -474,19 +474,20 @@ class DownloadProducts:
 	def tableClick(self):
 		tW = cfg.ui.download_images_tableWidget
 		i = tW.currentRow()
-		cfg.uiUtls.addProgressBar()
-		progress = 10
-		sat = str(tW.item(i, 0).text())
-		if sat in cfg.satSentinelList:
-			self.displayGranulesSentinel2(i, progress, "Yes")
-		elif sat in cfg.satSentinel3List:
-			self.displayGranulesSentinel3(i, progress, "Yes")
-		elif sat in cfg.satLandsatList or sat in cfg.satASTERtList or sat in cfg.satMODIStList:
-			self.displayImagesNASA(i, progress, "Yes")
-		cfg.uiUtls.updateBar(progress, cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Downloading ..."))
-		cfg.uiUtls.removeProgressBar()
-		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " image index: " + str(i))
+		if i >= 0:
+			cfg.uiUtls.addProgressBar()
+			progress = 10
+			sat = str(tW.item(i, 0).text())
+			if sat in cfg.satSentinelList:
+				self.displayGranulesSentinel2(i, progress, "Yes")
+			elif sat in cfg.satSentinel3List:
+				self.displayGranulesSentinel3(i, progress, "Yes")
+			elif sat in cfg.satLandsatList or sat in cfg.satASTERtList or sat in cfg.satMODIStList:
+				self.displayImagesNASA(i, progress, "Yes")
+			cfg.uiUtls.updateBar(progress, cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Downloading ..."))
+			cfg.uiUtls.removeProgressBar()
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " image index: " + str(i))
 						
 	# download thumbnail
 	def downloadThumbnail(self, imgID, path, row, min_lat, min_lon, max_lat, max_lon, imageJPG, sat, progress = None, preview = "No"):
@@ -527,7 +528,7 @@ class DownloadProducts:
 				self.downloadASTERImages(d)
 				self.downloadMODISImages(d)
 		
-	# download Landsat 8 data using the service http://aws.amazon.com/public-data-sets/landsat/
+	# download Landsat 8 data
 	def downloadLandsatImages(self, outputDirectory, exporter = "No"):
 		cfg.uiUtls.addProgressBar()
 		tW = cfg.ui.download_images_tableWidget
@@ -571,14 +572,6 @@ class DownloadProducts:
 							meta = open(outDir + "//" + imgID + "_MTL.txt", 'r').read()
 							if "NoSuchKey" in meta:
 								check = "No"
-						# download Landsat 8 data using the service http://landsat-pds.s3.amazonaws.com
-						if check != "Yes" and NASAcollection == cfg.NASALandsat8Collection:
-							urlL = "http://landsat-pds.s3.amazonaws.com/c1/L8/" + path.zfill(3) + "/" + row.zfill(3) +"/" + imgID + "/" + imgID + "_"
-							check = cfg.utls.downloadFile( urlL + "MTL.txt", outDir + "//" + imgID + "_MTL.txt", imgID + "_MTL.txt", progress)
-							if check == "Yes":
-								meta = open(outDir + "//" + imgID + "_MTL.txt", 'r').read()
-								if "NoSuchKey" in meta:
-									check = "No"
 						if check == "Yes":
 							links.append(urlL + "MTL.txt")
 							if NASAcollection == cfg.NASALandsat8Collection:
@@ -790,8 +783,7 @@ class DownloadProducts:
 		password =cfg.ui.password_scihub_lineEdit.text()
 		imageTableList = []
 		# check url
-		#topLevelUrl = cfg.ui.sentinel_service_lineEdit.text()
-		topLevelUrl = "https://scihub.copernicus.eu/s3"
+		topLevelUrl = cfg.ui.sentinel_service_lineEdit.text()
 		topUrl =topLevelUrl
 		# loop for results
 		maxResultNum = resultNum
@@ -931,8 +923,7 @@ class DownloadProducts:
 		user = cfg.ui.user_scihub_lineEdit.text()
 		password =cfg.ui.password_scihub_lineEdit.text()
 		# check url
-		topLevelUrl = "https://scihub.copernicus.eu/s3"
-		#topLevelUrl = cfg.ui.sentinel_service_lineEdit.text()
+		topLevelUrl = cfg.ui.sentinel_service_lineEdit.text()
 		topUrl =topLevelUrl
 		check = cfg.utls.passwordConnectPython(user, password, imageJPG, topLevelUrl, imOut, progress)
 		if check == "Yes":
@@ -958,8 +949,7 @@ class DownloadProducts:
 		user = cfg.ui.user_scihub_lineEdit.text()
 		password =cfg.ui.password_scihub_lineEdit.text()
 		# check url
-		topLevelUrl = "https://scihub.copernicus.eu/s3"
-		#topLevelUrl = cfg.ui.sentinel_service_lineEdit.text()
+		topLevelUrl = cfg.ui.sentinel_service_lineEdit.text()
 		topUrl =topLevelUrl + '/odata/v1/Products'
 		topUrl2 =topLevelUrl
 		for i in range(0, c):
@@ -1042,8 +1032,7 @@ class DownloadProducts:
 				user = cfg.ui.user_scihub_lineEdit.text()
 				password =cfg.ui.password_scihub_lineEdit.text()
 				# check url
-				topLevelUrl = "https://scihub.copernicus.eu/s3"
-				#topLevelUrl = cfg.ui.sentinel_service_lineEdit.text()
+				topLevelUrl = cfg.ui.sentinel_service_lineEdit.text()
 				topUrl =topLevelUrl + '/odata/v1/Products'
 				topUrl2 =topLevelUrl
 				if bandNumber == "ancillary1":				
@@ -1088,8 +1077,7 @@ class DownloadProducts:
 		user = cfg.ui.user_scihub_lineEdit.text()
 		password =cfg.ui.password_scihub_lineEdit.text()
 		# check url
-		topLevelUrl = "https://scihub.copernicus.eu/s3"
-		#topLevelUrl = cfg.ui.sentinel_service_lineEdit.text()
+		topLevelUrl = cfg.ui.sentinel_service_lineEdit.text()
 		topUrl =topLevelUrl
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " " + topLevelUrl)
@@ -1126,13 +1114,6 @@ class DownloadProducts:
 	def rememberService(self):
 		service = cfg.ui.sentinel_service_lineEdit.text()
 		cfg.utls.setQGISRegSetting(cfg.regSciHubService, service)
-		
-	# download image preview from Amazon
-	def downloadPreviewAmazon(self, imgID, imgIDN, imgIDT, imgIDTT, acquisitionDate, progress = None, preview = "No"):
-		imOut = cfg.tmpDir + "//" + imgID + '_p.jp2'
-		url = "http://sentinel-s2-l1c.s3.amazonaws.com/tiles/" + imgIDN + "/" + imgIDT + "/" + imgIDTT + "/" + acquisitionDate[0:4] + "/" + acquisitionDate[5:7].lstrip('0') + "/" + acquisitionDate[8:10].lstrip('0') + "/0/preview.jp2"
-		check = cfg.utls.downloadFile(url, imOut, imgID, progress)
-		return check
 		
 	# download file
 	def downloadFileSentinel2(self, url, output, progress = None):
@@ -1572,74 +1553,48 @@ class DownloadProducts:
 		if cfg.actionCheck == "Yes":
 			check = "No"
 			if checkbox.isChecked():
-				# download using the service http://sentinel-s2-l1c.s3-website.eu-central-1.amazonaws.com
-				urlL = "http://sentinel-s2-l1c.s3.amazonaws.com/tiles/" + imgID[-5:-3] + "/" + imgID[-3] + "/" + imgID[-2:] + "/" + acquisitionDate[0:4] + "/" + acquisitionDate[5:7].replace("0", "") + "/" + acquisitionDate[8:10].replace("0", "") + "/0/"
-				check = cfg.utls.downloadFile( urlL + "metadata.xml", cfg.tmpDir  + "//" + imgID + "_metadata.xml", imgID + "_metadata.xml", progress)
-				if check == "Yes":
-					meta = open(cfg.tmpDir  + "//" + imgID + "_metadata.xml", 'r').read()
-					if "NoSuchKey" in meta:
-						check = "No"
-				if check == "Yes":
-					if cfg.actionCheck == "Yes":
-						if exporter == "Yes":
-							linksList.append(urlL + 'B' + bandNumber + '.jp2')
-						else:
-							if imgName2[0:4] == "L1C_":
-								outFile = cfg.tmpDir + "//" + imgName2[4:]  + '_B' + bandNumber + '.jp2'
-								outCopyFile = outputDirectory + "//" + imgName2 + "//" + imgName2[4:]  + '_B' + bandNumber
-								check = cfg.utls.downloadFile( urlL + 'B' + bandNumber + ".jp2", outFile, imgName2[4:] + '_B' + bandNumber + '.jp2', progress)
-							elif imgName2[0:4] == "L2A_":
-								outFile = cfg.tmpDir + "//" + imgName2[4:]  + '_B' + bandNumber + '.jp2'
-								outCopyFile = outputDirectory + "//" + imgName2 + "//" + imgName2[4:]  + '_B' + bandNumber
-								check = cfg.utls.downloadFile( urlL + 'B' + bandNumber + ".jp2", outFile, imgName2[4:] + '_B' + bandNumber + '.jp2', progress)
-							else:
-								outFile = cfg.tmpDir + "//" + imgName2[0:-7] + '_B' + bandNumber + '.jp2'
-								outCopyFile = outputDirectory + "//" + imgName2[0:-7] + "//" + imgName2[0:-7] + '_B' + bandNumber
-								check = cfg.utls.downloadFile( urlL + 'B' + bandNumber + ".jp2", outFile, imgName2[0:-7] + '_B' + bandNumber + '.jp2', progress)
-							outFilesList.append([outFile, outCopyFile])
 				# download from hub
-				else:
-					user = cfg.ui.user_scihub_lineEdit.text()
-					password =cfg.ui.password_scihub_lineEdit.text()
-					# check url
-					topLevelUrl = cfg.ui.sentinel_service_lineEdit.text()
-					topUrl =topLevelUrl + '/odata/v1/Products'
-					topUrl2 =topLevelUrl
-					if imgName2[0:4] == "L1C_":
-						urlL = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('IMG_DATA')/Nodes('" + imgName2.split("_")[1] + "_" + imgName.split("_")[2] + '_B' + bandNumber + ".jp2')/$value"
+				user = cfg.ui.user_scihub_lineEdit.text()
+				password =cfg.ui.password_scihub_lineEdit.text()
+				# check url
+				topLevelUrl = cfg.ui.sentinel_service_lineEdit.text()
+				topUrl =topLevelUrl + '/odata/v1/Products'
+				topUrl2 =topLevelUrl
+				if imgName2[0:4] == "L1C_":
+					urlL = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('IMG_DATA')/Nodes('" + imgName2.split("_")[1] + "_" + imgName.split("_")[2] + '_B' + bandNumber + ".jp2')/$value"
+					outFile = cfg.tmpDir + "//" + imgName2.split("_")[1] + "_" + imgName.split("_")[2] + '_B' + bandNumber + '.jp2'
+					outCopyFile = outputDirectory + "//" + imgName2 + "_" + acquisitionDate[0:10] + "//L1C_" + imgName2[4:] + '_B' + bandNumber
+				elif imgName2[0:4] == "L2A_":
+					if bandNumber in ["02", "03", "04", "08"]:
+						#urlL = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('IMG_DATA')/Nodes('R10m')/Nodes('L2A_" + imgName2.split("_")[1] + "_" + imgName.split("_")[2] + '_B' + bandNumber + "_10m.jp2')/$value"
+						urlL = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('IMG_DATA')/Nodes('R10m')/Nodes('" + imgName2.split("_")[1] + "_" + imgName.split("_")[2] + '_B' + bandNumber + "_10m.jp2')/$value"
 						outFile = cfg.tmpDir + "//" + imgName2.split("_")[1] + "_" + imgName.split("_")[2] + '_B' + bandNumber + '.jp2'
-						outCopyFile = outputDirectory + "//" + imgName2 + "_" + acquisitionDate[0:10] + "//L1C_" + imgName2[4:] + '_B' + bandNumber
-					elif imgName2[0:4] == "L2A_":
-						if bandNumber in ["02", "03", "04", "08"]:
-							#urlL = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('IMG_DATA')/Nodes('R10m')/Nodes('L2A_" + imgName2.split("_")[1] + "_" + imgName.split("_")[2] + '_B' + bandNumber + "_10m.jp2')/$value"
-							urlL = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('IMG_DATA')/Nodes('R10m')/Nodes('" + imgName2.split("_")[1] + "_" + imgName.split("_")[2] + '_B' + bandNumber + "_10m.jp2')/$value"
-							outFile = cfg.tmpDir + "//" + imgName2.split("_")[1] + "_" + imgName.split("_")[2] + '_B' + bandNumber + '.jp2'
-							outCopyFile = outputDirectory + "//" + imgName2 + "_" + acquisitionDate[0:10] + "//" + imgName2[4:] + '_B' + bandNumber
-						elif bandNumber in ["05", "06", "07", "11", "12", "8A"]:
-							urlL = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('IMG_DATA')/Nodes('R20m')/Nodes('" + imgName2.split("_")[1] + "_" + imgName.split("_")[2] + '_B' + bandNumber + "_20m.jp2')/$value"
-							outFile = cfg.tmpDir + "//" + imgName2.split("_")[1] + "_" + imgName.split("_")[2] + '_B' + bandNumber + '.jp2'
-							outCopyFile = outputDirectory + "//" + imgName2 + "_" + acquisitionDate[0:10] + "//" + imgName2[4:] + '_B' + bandNumber
-						elif bandNumber in ["01", "09", "10"]:
-							urlL = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('IMG_DATA')/Nodes('R60m')/Nodes('" + imgName2.split("_")[1] + "_" + imgName.split("_")[2] + '_B' + bandNumber + "_60m.jp2')/$value"
-							outFile = cfg.tmpDir + "//" + imgName2.split("_")[1] + "_" + imgName.split("_")[2] + '_B' + bandNumber + '.jp2'
-							outCopyFile = outputDirectory + "//" + imgName2 + "_" + acquisitionDate[0:10] + "//" + imgName2[4:] + '_B' + bandNumber
-					else:
-						urlL = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('IMG_DATA')/Nodes('" + imgName2[0:-7] + '_B' + bandNumber + ".jp2')/$value"
-						outFile = cfg.tmpDir + "//" + imgName2[0:-7] + '_B' + bandNumber + '.jp2'
-						outCopyFile = outputDirectory + "//" + imgName2[0:-7]  + "_" + acquisitionDate[0:10] + "//" + imgName2[0:-7] + '_B' + bandNumber
-					if exporter == "No":
-						self.downloadFileSentinel2(urlL, outFile, progress)
-						try:
+						outCopyFile = outputDirectory + "//" + imgName2 + "_" + acquisitionDate[0:10] + "//" + imgName2[4:] + '_B' + bandNumber
+					elif bandNumber in ["05", "06", "07", "11", "12", "8A"]:
+						urlL = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('IMG_DATA')/Nodes('R20m')/Nodes('" + imgName2.split("_")[1] + "_" + imgName.split("_")[2] + '_B' + bandNumber + "_20m.jp2')/$value"
+						outFile = cfg.tmpDir + "//" + imgName2.split("_")[1] + "_" + imgName.split("_")[2] + '_B' + bandNumber + '.jp2'
+						outCopyFile = outputDirectory + "//" + imgName2 + "_" + acquisitionDate[0:10] + "//" + imgName2[4:] + '_B' + bandNumber
+					elif bandNumber in ["01", "09", "10"]:
+						urlL = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('IMG_DATA')/Nodes('R60m')/Nodes('" + imgName2.split("_")[1] + "_" + imgName.split("_")[2] + '_B' + bandNumber + "_60m.jp2')/$value"
+						outFile = cfg.tmpDir + "//" + imgName2.split("_")[1] + "_" + imgName.split("_")[2] + '_B' + bandNumber + '.jp2'
+						outCopyFile = outputDirectory + "//" + imgName2 + "_" + acquisitionDate[0:10] + "//" + imgName2[4:] + '_B' + bandNumber
+				else:
+					urlL = topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('IMG_DATA')/Nodes('" + imgName2[0:-7] + '_B' + bandNumber + ".jp2')/$value"
+					outFile = cfg.tmpDir + "//" + imgName2[0:-7] + '_B' + bandNumber + '.jp2'
+					outCopyFile = outputDirectory + "//" + imgName2[0:-7]  + "_" + acquisitionDate[0:10] + "//" + imgName2[0:-7] + '_B' + bandNumber
+				if exporter == "No":
+					self.downloadFileSentinel2(urlL, outFile, progress)
+					try:
+						if cfg.osSCP.path.getsize(outFile) < 100000:
+							self.downloadFileSentinel2(urlL, outFile, progress)
 							if cfg.osSCP.path.getsize(outFile) < 100000:
-								self.downloadFileSentinel2(urlL, outFile, progress)
-								if cfg.osSCP.path.getsize(outFile) < 100000:
-									cfg.mx.msgWar23(imgName2[0:-7] + '_B' + bandNumber + '.jp2')
-							outFilesList.append([outFile, outCopyFile])
-						except Exception as err:
-							# logger
-							cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-					else:
-						linksList.append(urlL)
+								cfg.mx.msgWar23(imgName2[0:-7] + '_B' + bandNumber + '.jp2')
+						outFilesList.append([outFile, outCopyFile])
+					except Exception as err:
+						# logger
+						cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				else:
+					linksList.append(urlL)
 		else:
 			cfg.uiUtls.removeProgressBar()
 			return "No"

@@ -166,7 +166,9 @@ class LandCoverChange:
 					bL = cfg.utls.readAllBandsFromRaster(rD)
 					# calculation
 					variableList = [["im1", "a"], ["im2", "b"]]
-					o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.bandCalculationMultipleWhere, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", e, variableList, "No")
+					cfg.rasterBandUniqueVal = {}
+					o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.bandCalculationMultipleWhere, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", e, variableList, "Calculating raster")
+					cfg.rasterBandUniqueVal.pop(cfg.NoDataVal, None)
 					# logger
 					cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "change raster output: " + str(chngRstPath))
 					# close GDAL rasters
@@ -195,8 +197,6 @@ class LandCoverChange:
 					t = cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'ChangeCode') + "	" + cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'ReferenceClass') + "	" + cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'NewClass') + "	" + cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'PixelSum') + str("\n")
 					l.write(t)
 					# change stats
-					rDC = cfg.gdalSCP.Open(chngRstPath, cfg.gdalSCP.GA_ReadOnly)
-					bLC = cfg.utls.readAllBandsFromRaster(rDC)
 					for i in cmb:
 						try:
 							v = cmbntns["combination_" + str(i[0]) + "_"+ str(i[1])]
@@ -204,14 +204,9 @@ class LandCoverChange:
 						except:
 							combOK = "No"
 						if combOK == "Yes":
-							cfg.rasterBandPixelCount = 0
-							o = cfg.utls.processRaster(rDC, bLC, None, "No", cfg.utls.rasterEqualValueCount, None, None, None, None, 0, None, cfg.NoDataVal, "No", None, v, "value " + str(v))
-							t = str(v) + "	" + str(i[0]) + "	" + str(i[1]) + "	" + str(cfg.rasterBandPixelCount) + str("\n")
+							t = str(v) + "	" + str(i[0]) + "	" + str(i[1]) + "	" + str(cfg.rasterBandUniqueVal[v]) + str("\n")
 							l.write(t)
 					l.close()
-					for b in range(0, len(bLC)):
-						bLC[b] = None
-					rDC = None
 					# open csv
 					try:
 						f = open(tblOut)

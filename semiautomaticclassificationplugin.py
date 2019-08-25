@@ -55,6 +55,7 @@ import xml.etree.cElementTree as ET
 from xml.dom import minidom
 import hashlib
 import ctypes
+from collections import Counter
 # Import the PyQt libraries
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt, QObject, QFileInfo, QSettings, QDir, QDate, QVariant, pyqtSignal
@@ -207,6 +208,7 @@ class SemiAutomaticClassificationPlugin:
 			cfg.minidomSCP = minidom
 			cfg.hashlibSCP = hashlib
 			cfg.ctypesSCP = ctypes
+			cfg.counterSCP = Counter
 		except:
 			qgisUtils.iface.messageBar().pushMessage("Semi-Automatic Classification Plugin", QApplication.translate("semiautomaticclassificationplugin", "Please, restart QGIS for executing the Semi-Automatic Classification Plugin"), level=qgisCore.Qgis.Info)
 			return
@@ -639,6 +641,8 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.export_point_list_pushButton.clicked.connect(cfg.multiROI.exportPointList)
 			# connect the signature calculation checkBox 2
 			cfg.ui.signature_checkBox2.stateChanged.connect(cfg.multiROI.signatureCheckbox2)
+			# connect to text changed
+			cfg.ui.stratified_lineEdit.textChanged.connect(cfg.multiROI.textChanged)
 			""" Import spectral signature tab """
 			# connect the import library
 			cfg.ui.open_library_pushButton.clicked.connect(cfg.SCPD.openLibraryFile)
@@ -1291,6 +1295,7 @@ class SemiAutomaticClassificationPlugin:
 		cfg.utls.clearTable(cfg.uisp.signature_list_plot_tableWidget)
 		cfg.utls.clearTable(cfg.uiscp.scatter_list_plot_tableWidget)
 		cfg.utls.clearTable(cfg.ui.signature_threshold_tableWidget)
+		cfg.utls.clearTable(cfg.ui.download_images_tableWidget)
 		cfg.utls.clearTable(cfg.ui.LCS_tableWidget)
 		cfg.scaPlT.scatterPlotListTable(cfg.uiscp.scatter_list_plot_tableWidget)
 		cfg.spSigPlot.refreshPlot()
@@ -1365,6 +1370,7 @@ class SemiAutomaticClassificationPlugin:
 		cfg.utls.clearTable(cfg.uisp.signature_list_plot_tableWidget)
 		cfg.utls.clearTable(cfg.uiscp.scatter_list_plot_tableWidget)
 		cfg.utls.clearTable(cfg.ui.signature_threshold_tableWidget)
+		cfg.utls.clearTable(cfg.ui.download_images_tableWidget)
 		cfg.utls.clearTable(cfg.ui.LCS_tableWidget)
 		cfg.scaPlT.scatterPlotListTable(cfg.uiscp.scatter_list_plot_tableWidget)
 		cfg.spSigPlot.refreshPlot()

@@ -215,7 +215,9 @@ class BandCombination:
 			variableList = []
 			for c in range(0, len(cmb[0])):
 				variableList.append(["im" + str(c), "im" + str(c)])
-			o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.bandCalculationMultipleWhere, None, oMR, None, None, 0, None, nD, "No", e, variableList, "No")
+			cfg.rasterBandUniqueVal = {}
+			o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.bandCalculationMultipleWhere, None, oMR, None, None, 0, None, nD, "No", e, variableList, "Calculating raster")
+			cfg.rasterBandUniqueVal.pop(nD, None)
 			if o == "No":
 				if batch == "No":
 					cfg.uiUtls.removeProgressBar()
@@ -262,28 +264,19 @@ class BandCombination:
 				return "No"
 			t = cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'RasterValue') + "\t" + cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Combination') + "\t" + cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'PixelSum') + "\t" + cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Area [' + un + "^2]") + str("\n")
 			l.write(t)
-			# open combination raster
-			rDC = cfg.gdalSCP.Open(combRstPath, cfg.gdalSCP.GA_ReadOnly)
-			bLC = cfg.utls.readAllBandsFromRaster(rDC)	
-			for c in cmbntns:			
-				cfg.rasterBandPixelCount = 0
+			for c in cmbntns:
 				try:
 					v = c[0]
-					o = cfg.utls.processRaster(rDC, bLC, None, "No", cfg.utls.rasterEqualValueCount, None, None, None, None, 0, None, nD, "No", None, v, "value " + str(v))
-					if cfg.rasterBandPixelCount > 0:
-						area = str(cfg.rasterBandPixelCount * cRPX * cRPY)
+					if cfg.rasterBandUniqueVal[v] > 0:
+						area = str(cfg.rasterBandUniqueVal[v] * cRPX * cRPY)
 						if area.endswith('.0'):
 							area = area.split('.')[0]
-						cList = str(c[0]) + "\t" + str(c[1]) + "\t" + str(cfg.rasterBandPixelCount) + "\t" + area + str("\n")
+						cList = str(c[0]) + "\t" + str(c[1]) + "\t" + str(cfg.rasterBandUniqueVal[v]) + "\t" + area + str("\n")
 						l.write(cList)
 				except Exception as err:
 					# logger
 					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			l.close()
-			# close bands
-			for b in range(0, len(bLC)):
-				bLC[b] = None
-			rDC = None
 			# add raster to layers
 			rstr =cfg.utls.addRasterLayer(str(combRstPath), str(cfg.osSCP.path.basename(combRstPath)))
 			cfg.utls.rasterSymbolGeneric(rstr, "NoData")	

@@ -151,7 +151,7 @@ class MODISTab:
 				if len(bandSetNameList) > 2:
 					cfg.bst.setSatelliteWavelength(cfg.satMODIS, None, bandSetNumber)
 				else:
-					cfg.bst.setSatelliteWavelength(cfg.satMODIS2, None, bandSetNumber)				
+					cfg.bst.setSatelliteWavelength(cfg.satMODIS2, None, bandSetNumber)	
 				if bandSetNumber == None:
 					bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
 				tW = eval("cfg.ui.tableWidget__" + cfg.bndSetTabList[bandSetNumber])
