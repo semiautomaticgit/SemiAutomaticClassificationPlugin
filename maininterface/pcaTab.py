@@ -78,7 +78,7 @@ class PcaTab:
 			else:
 				r = cfg.utls.selectLayerbyName(imageName, "Yes")
 				try:
-					iR = r.source()
+					iR = cfg.utls.layerSource(r)
 					# open input with GDAL
 					rD = cfg.gdalSCP.Open(iR, cfg.gdalSCP.GA_ReadOnly)
 				except Exception as err:

@@ -57,7 +57,7 @@ class LandCoverChange:
 			# input
 			refRstr = cfg.utls.selectLayerbyName(cfg.refClssfctnNm, "Yes")
 			try:
-				refRstrSrc = refRstr.source()
+				refRstrSrc = cfg.utls.layerSource(refRstr)
 				rstrCheck = "Yes"
 			except Exception as err:
 				# logger
@@ -65,7 +65,7 @@ class LandCoverChange:
 				rstrCheck = "No"
 			newRstr = cfg.utls.selectLayerbyName(cfg.newClssfctnNm, "Yes")
 			try:
-				newRstrSrc = newRstr.source()
+				newRstrSrc = cfg.utls.layerSource(newRstr)
 				rstrCheck = "Yes"
 			except Exception as err:
 				# logger

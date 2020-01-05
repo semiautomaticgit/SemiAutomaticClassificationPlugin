@@ -1178,7 +1178,7 @@ class BandsetTab:
 						b = b + 1
 				else:
 					image = cfg.utls.selectLayerbyName(cfg.bandSetsList[bandSetNumber][8], "Yes")
-					i = image.source()
+					i = cfg.utls.layerSource(image)
 					cfg.uiUtls.updateBar(50, cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", " building overviews"))
 					cfg.utls.buildOverviewsGDAL(i)
 				cfg.uiUtls.updateBar(100)

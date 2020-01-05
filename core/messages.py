@@ -288,6 +288,9 @@ class Messages:
 	def msgErr64(self):
 		self.msgBarError(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Error") + " [64]", cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Error, please change stratification parameters"))
 		
+	def msgErr65(self):
+		self.msgBarError(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Error") + " [65]", cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Error, extent of vector too large"))
+		
 	""" Warnings """
 	def msgWar2Windows(self):
 		self.msgBoxWarning(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Warning") + " [2]", cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "It appears that SciPy is not correctly installed. Please, update QGIS "))

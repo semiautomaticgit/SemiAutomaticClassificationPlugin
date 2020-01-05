@@ -276,7 +276,7 @@ class BandCalcTab:
 		else:
 			try:
 				r = cfg.utls.selectLayerbyName(cfg.bandSetsList[bandSetNumber][8], "Yes")
-				iR = r.source()
+				iR = cfg.utls.layerSource(r)
 			except:
 				check = "No"
 			if check == "Yes":
@@ -541,7 +541,7 @@ class BandCalcTab:
 									else:
 										i = cfg.utls.selectLayerbyName(cfg.bandSetsList[bandSetNumber][8], "Yes")
 										try:
-											bPath = i.source()
+											bPath = cfg.utls.layerSource(i)
 										except Exception as err:
 											cfg.mx.msg4()
 											self.rasterBandName(bandSetNumber)
@@ -579,7 +579,7 @@ class BandCalcTab:
 									else:
 										i = cfg.utls.selectLayerbyName(cfg.bandSetsList[bandSetNumber][8], "Yes")
 										try:
-											bPath = i.source()
+											bPath = cfg.utls.layerSource(i)
 										except Exception as err:
 											cfg.mx.msg4()
 											self.rasterBandName(bandSetNumber)
@@ -594,7 +594,7 @@ class BandCalcTab:
 								else:
 									i = cfg.utls.selectLayerbyName(bN, "Yes")
 									try:
-										bPath = i.source()
+										bPath = cfg.utls.layerSource(i)
 									except Exception as err:
 										cfg.mx.msg4()
 										self.rasterBandName(bandSetNumber)
@@ -685,7 +685,7 @@ class BandCalcTab:
 										# add extent raster to virtual raster list
 										i = cfg.utls.selectLayerbyName(extRaster, "Yes")
 										try:
-											bPath = i.source()
+											bPath = cfg.utls.layerSource(i)
 										except Exception as err:
 											cfg.mx.msg4()
 											self.rasterBandName(bandSetNumber)

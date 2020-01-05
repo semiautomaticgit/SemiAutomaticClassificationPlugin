@@ -123,7 +123,7 @@ class ClipMultipleRasters:
 					sN = cfg.ui.shapefile_comboBox.currentText()
 					sL = cfg.utls.selectLayerbyName(sN)
 					try:
-						s = sL.source()
+						s = cfg.utls.layerSource(sL)
 						if cfg.ui.vector_field_checkBox.isChecked() is True:
 							uSF = 1
 							if vectorField is None:
@@ -222,7 +222,7 @@ class ClipMultipleRasters:
 						pass
 					else:
 						l = l + ".tif"
-					cL = lC.source()
+					cL = cfg.utls.layerSource(lC)
 					dT = cfg.utls.getTime()
 					c = oD + "/"
 					d = outputName + "_" 
@@ -259,7 +259,7 @@ class ClipMultipleRasters:
 					# temp shapefile
 					tSHP = cfg.tmpDir + "/" + sN + dT + ".shp"
 					s = cfg.utls.saveMemoryLayerToShapefile(sL, tSHP)
-					s = s.source()
+					s = cfg.utls.layerSource(s)
 					vEPSG = cfg.utls.getEPSGVector(tSHP)
 				elif "QgsVectorLayer" in str(s):
 					# temporary layer
@@ -287,7 +287,7 @@ class ClipMultipleRasters:
 						pass
 					else:
 						l = l + ".tif"
-					cL = lC.source()
+					cL = cfg.utls.layerSource(lC)
 					dT = cfg.utls.getTime()
 					# convert polygon to raster 
 					tRNxs = cfg.copyTmpROI + dT + "xs.tif"

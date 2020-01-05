@@ -105,27 +105,35 @@ class Accuracy:
 						return "No"
 				else:
 					# vector EPSG
-					if "MultiPolygon?crs=PROJCS" in str(l.source()):
+					ql = cfg.utls.layerSource(l)
+					if "MultiPolygon?crs=PROJCS" in str(ql):
 						# temp shapefile
 						tSHP = cfg.tmpDir + "/" + cfg.rclssTempNm + dT + ".shp"
 						l = cfg.utls.saveMemoryLayerToShapefile(l, tSHP)
 						vEPSG = cfg.utls.getEPSGVector(tSHP)
 					else:
-						vEPSG = cfg.utls.getEPSGVector(l.source())
+						ql = cfg.utls.layerSource(l)
+						vEPSG = cfg.utls.getEPSGVector(ql)
 					dT = cfg.utls.getTime()
 					# in case of reprojection
-					reprjShapefile = cfg.tmpDir + "/" + dT + cfg.osSCP.path.basename(l.source())
-					rEPSG = cfg.utls.getEPSGRaster(iClass.source())
+					qll = cfg.utls.layerSource(l)
+					reprjShapefile = cfg.tmpDir + "/" + dT + cfg.osSCP.path.basename(qll)
+					qlll = cfg.utls.layerSource(iClass)
+					rEPSG = cfg.utls.getEPSGRaster(qlll)
 					if vEPSG != rEPSG:
 						if cfg.osSCP.path.isfile(reprjShapefile):
 							pass
 						else:
 							try:
-								cfg.utls.repojectShapefile(l.source(), int(vEPSG), reprjShapefile, int(rEPSG))
+								qllll = cfg.utls.layerSource(l)
+								cfg.utls.repojectShapefile(qllll, int(vEPSG), reprjShapefile, int(rEPSG))
 							except Exception as err:
 								# remove temp layers
-								cfg.utls.removeLayerByLayer(reml)
-								cfg.utls.removeLayerByLayer(remiClass)
+								try:
+									cfg.utls.removeLayerByLayer(reml)
+									cfg.utls.removeLayerByLayer(remiClass)
+								except:
+									pass
 								# logger
 								cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 								return "No"
@@ -151,19 +159,29 @@ class Accuracy:
 						fd = shapefileField
 					if batch == "No":
 						# convert reference layer to raster
-						cfg.utls.vectorToRaster(fd, str(l.source()), classification, str(tRC), str(iClass.source()))
+						qlllll = cfg.utls.layerSource(l)
+						qllllll = cfg.utls.layerSource(iClass)
+						vect = cfg.utls.vectorToRaster(fd, str(qlllll), classification, str(tRC), str(qllllll), extent = "Yes")
 					else:
-						cfg.utls.vectorToRaster(fd, str(l.source()), classification, str(tRC), classification)
+						qlllllll = cfg.utls.layerSource(l)
+						vect = cfg.utls.vectorToRaster(fd, str(qlllllll), classification, str(tRC), classification, extent = "Yes")
+					if vect == "No":
+						if batch == "No":
+							# enable map canvas render
+							cfg.cnvs.setRenderFlag(True)
+							cfg.uiUtls.removeProgressBar()
+						return "No"	
 					referenceRaster = tRC
 				# if reference raster
 				elif l.type()== 1:
 					if batch == "No":
-						referenceRaster = l.source()
+						referenceRaster = cfg.utls.layerSource(l)
 					else:
 						referenceRaster = reference
 				# open input with GDAL
 				refRstrDt = cfg.gdalSCP.Open(str(referenceRaster), cfg.gdalSCP.GA_ReadOnly)
-				newRstrDt = cfg.gdalSCP.Open(iClass.source(), cfg.gdalSCP.GA_ReadOnly)
+				qllllllll = cfg.utls.layerSource(iClass)
+				newRstrDt = cfg.gdalSCP.Open(qllllllll, cfg.gdalSCP.GA_ReadOnly)
 				# combination finder
 				# band list
 				bLR = cfg.utls.readAllBandsFromRaster(refRstrDt)
@@ -214,7 +232,7 @@ class Accuracy:
 				tPMD = cfg.tmpDir + "/" + dT + tPMN
 				tPMN2 = dT + cfg.calcRasterNm + ".tif"
 				tPMD2 = cfg.tmpDir + "/" + tPMN2
-				bList = [str(referenceRaster), iClass.source()]
+				bList = [str(referenceRaster), cfg.utls.layerSource(iClass)]
 				bandNumberList = [1, 1]
 				vrtCheck = cfg.utls.createVirtualRaster(bList, tPMD, bandNumberList, "Yes", "Yes", 0, "No", "No")
 				# open input with GDAL
@@ -467,8 +485,11 @@ class Accuracy:
 					cfg.uiUtls.removeProgressBar()
 				else:
 					# remove temp layers
-					cfg.utls.removeLayerByLayer(reml)
-					cfg.utls.removeLayerByLayer(remiClass)
+					try:
+						cfg.utls.removeLayerByLayer(reml)
+						cfg.utls.removeLayerByLayer(remiClass)
+					except:
+						pass
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "finished")
 			else:

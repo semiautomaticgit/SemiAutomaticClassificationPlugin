@@ -156,7 +156,7 @@ class ClusteringTab:
 			else:
 				r = cfg.utls.selectLayerbyName(imageName, "Yes")
 				try:
-					iR = r.source()
+					iR = cfg.utls.layerSource(r)
 				except:
 					return None
 				# open input with GDAL

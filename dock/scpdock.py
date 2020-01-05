@@ -427,7 +427,7 @@ class SCPDock:
 				iR = cfg.maskRstSrc
 			else:
 				r = cfg.utls.selectLayerbyName(imageName, "Yes")
-				iR = r.source()
+				iR = cfg.utls.layerSource(r)
 			# open input with GDAL
 			rD = cfg.gdalSCP.Open(iR, cfg.gdalSCP.GA_ReadOnly)
 			# band list
@@ -587,7 +587,8 @@ class SCPDock:
 							# temp masked raster
 							cfg.maskRstSrc = cfg.tmpDir + "/" + tCN 
 							b = cfg.utls.selectLayerbyName(cfg.bandSetsList[bandSetNumber][8])
-							cfg.utls.clipRasterByShapefile(m, b.source(), str(cfg.maskRstSrc), cfg.outTempRastFormat)
+							ql = cfg.utls.layerSource(b)
+							cfg.utls.clipRasterByShapefile(m, ql, str(cfg.maskRstSrc), cfg.outTempRastFormat)
 						img = cfg.maskRasterNm
 				### if not mask
 					cfg.uiUtls.updateBar(20)
@@ -886,7 +887,8 @@ class SCPDock:
 				rEPSG = cfg.utls.getEPSGRaster(cfg.bndSetLst[0])
 			else:
 				b = cfg.utls.selectLayerbyName(cfg.bandSetsList[cfg.bndSetNumber][8])
-				rEPSG = cfg.utls.getEPSGRaster(b.source())
+				ql = cfg.utls.layerSource(b)
+				rEPSG = cfg.utls.getEPSGRaster(ql)
 		except Exception as err:
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
@@ -1890,17 +1892,21 @@ class SCPDock:
 		c = cfg.QtGuiSCP.QCursor(px)
 		if cfg.uidc.display_cursor_checkBox.isChecked() is True:
 			nm = "No"
-			if len(cfg.bandSetsList[cfg.bndSetNumber][3]) > 0:
-				point = cfg.utls.checkPointImage(cfg.bandSetsList[cfg.bndSetNumber][8], point, "Yes")
-				if point is not None and point != "No":
-					if str(cfg.indName) == cfg.indNDVI:
-						nm = cfg.utls.NDVIcalculator(cfg.bandSetsList[cfg.bndSetNumber][8], point)
-					elif str(cfg.indName) == cfg.indEVI:
-						nm = cfg.utls.EVIcalculator(cfg.bandSetsList[cfg.bndSetNumber][8], point)
-					elif str(cfg.indName) == cfg.indCustom:
-						nm = cfg.utls.customIndexCalculator(cfg.bandSetsList[cfg.bndSetNumber][8], point)
-				if nm != "No":
-					c = cfg.SCPD.cursorCreation(nm)
+			try:
+				if len(cfg.bandSetsList[cfg.bndSetNumber][3]) > 0:
+					point = cfg.utls.checkPointImage(cfg.bandSetsList[cfg.bndSetNumber][8], point, "Yes")
+					if point is not None and point != "No":
+						if str(cfg.indName) == cfg.indNDVI:
+							nm = cfg.utls.NDVIcalculator(cfg.bandSetsList[cfg.bndSetNumber][8], point)
+						elif str(cfg.indName) == cfg.indEVI:
+							nm = cfg.utls.EVIcalculator(cfg.bandSetsList[cfg.bndSetNumber][8], point)
+						elif str(cfg.indName) == cfg.indCustom:
+							nm = cfg.utls.customIndexCalculator(cfg.bandSetsList[cfg.bndSetNumber][8], point)
+					if nm != "No":
+						c = cfg.SCPD.cursorCreation(nm)
+			except Exception as err:
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 		cfg.cnvs.setCursor(c)
 		
 	# Activate pointer for ROI creation
@@ -2420,6 +2426,8 @@ class SCPDock:
 		# check if no ROI created
 		elif cfg.lstROI is None:
 			cfg.mx.msg6()
+		elif len(cfg.bandSetsList[cfg.bndSetNumber][3])==0:
+			cfg.mx.msgErr2()
 		else:
 			if progressbar == "Yes":
 				cfg.uiUtls.addProgressBar()
@@ -2617,99 +2625,96 @@ class SCPDock:
 	# left click
 	def clckL(self, pnt):
 		pntO = pnt
-		pnt = cfg.utls.checkPointImage(cfg.bandSetsList[cfg.bndSetNumber][8], pnt)
-		if cfg.pntCheck == "Yes":
-			dT = cfg.utls.getTime()
-			# temp name
-			tN = cfg.subsTmpROI + dT
-			# crs
-			pCrs = cfg.utls.getQGISCrs()
-			mL = cfg.qgisCoreSCP.QgsVectorLayer("MultiPolygon?crs=" + str(pCrs.toWkt()), tN, "memory")
-			mL.setCrs(pCrs) 
-			cfg.lastVrt.append(pnt)
-			cfg.rbbrBnd.addPoint(cfg.qgisCoreSCP.QgsPointXY(pntO))
-			geom = cfg.rbbrBnd.asGeometry()
-			v = cfg.qgisGuiSCP.QgsVertexMarker(cfg.cnvs)
-			v.setCenter(pntO)
-			cfg.mrctrVrtc.append(v)
-			cfg.rbbrBnd.setToGeometry(geom, mL)
-			cfg.rbbrBnd.show()
+		# band set
+		if len(cfg.bandSetsList[cfg.bndSetNumber][3])>0:
+			pnt = cfg.utls.checkPointImage(cfg.bandSetsList[cfg.bndSetNumber][8], pnt)
+			if cfg.pntCheck == "No":
+				return "No"
+		dT = cfg.utls.getTime()
+		# temp name
+		tN = cfg.subsTmpROI + dT
+		# crs
+		pCrs = cfg.utls.getQGISCrs()
+		mL = cfg.qgisCoreSCP.QgsVectorLayer("MultiPolygon?crs=" + str(pCrs.toWkt()), tN, "memory")
+		mL.setCrs(pCrs) 
+		cfg.lastVrt.append(pnt)
+		cfg.rbbrBnd.addPoint(cfg.qgisCoreSCP.QgsPointXY(pntO))
+		geom = cfg.rbbrBnd.asGeometry()
+		v = cfg.qgisGuiSCP.QgsVertexMarker(cfg.cnvs)
+		v.setCenter(pntO)
+		cfg.mrctrVrtc.append(v)
+		cfg.rbbrBnd.setToGeometry(geom, mL)
+		cfg.rbbrBnd.show()
 		
 	# right click
 	def clckR(self, pnt):
-		cfg.utls.checkPointImage(cfg.bandSetsList[cfg.bndSetNumber][8], pnt)
-		if cfg.pntCheck == "Yes":
-			self.clckL(pnt)
-			f = cfg.qgisCoreSCP.QgsFeature()
-			dT = cfg.utls.getTime()
-			# temp name
-			tN = cfg.subsTmpROI + dT
-			# band set
-			if cfg.bandSetsList[cfg.bndSetNumber][0] == "Yes":
+		self.clckL(pnt)
+		f = cfg.qgisCoreSCP.QgsFeature()
+		dT = cfg.utls.getTime()
+		# temp name
+		tN = cfg.subsTmpROI + dT
+		crs = cfg.utls.getQGISCrs()
+		# band set
+		if cfg.bandSetsList[cfg.bndSetNumber][0] == "Yes":
+			try:
 				# crs of loaded raster
 				bN = cfg.utls.selectLayerbyName(cfg.bandSetsList[cfg.bndSetNumber][3][0], "Yes")
 				crs = cfg.utls.getCrs(bN)
-				ck = "Yes"
-			else:
-				try:
-					# crs of loaded raster
-					b = cfg.utls.selectLayerbyName(cfg.bandSetsList[cfg.bndSetNumber][8])
-					crs = cfg.utls.getCrs(b)
-					ck = "Yes"
-				except:
-					ck = "No"
-			if crs is None:
-				ck = "No"
-			if ck == "Yes":
-				mL = cfg.qgisCoreSCP.QgsVectorLayer("MultiPolygon?crs=" + str(crs.toWkt()), tN, "memory")
-				mL.setCrs(crs) 
-				if not len(cfg.lastVrt) >= 3:
-					cfg.mx.msg16()
-					self.clearCanvas()
-					return
-				pointF = cfg.QtCoreSCP.QPointF()
-				polF = cfg.QtGuiSCP.QPolygonF()
-				for v in cfg.lastVrt:
-					pointF.setX(v.x())
-					pointF.setY(v.y())
-					polF.append(pointF)
-				pointF.setX(cfg.lastVrt[0].x())
-				pointF.setY(cfg.lastVrt[0].y())
-				polF.append(pointF)
-				g = cfg.qgisCoreSCP.QgsGeometry().fromQPolygonF(polF)
-				mL.addTopologicalPoints(g)
-				pr = mL.dataProvider()
-				# create temp ROI
-				mL.startEditing()		
-				# add fields
-				pr.addAttributes( [cfg.qgisCoreSCP.QgsField("ID",  cfg.QVariantSCP.Int)] )
-				# add a feature
-				if cfg.ctrlClick is not None:
-					g = self.addPartToROI(g)
-				else:
-					cfg.lstROI2 = cfg.lstROI2 
-				f.setGeometry(g)
-				f.setAttributes([1])
-				pr.addFeatures([f])
-				mL.commitChanges()
-				mL.updateExtents()
-				self.clearCanvas()
-				# add ROI layer
-				cfg.lstROI = mL
-				self.addHighlightPolygon(cfg.lstROI, 1)
-				if cfg.uidc.auto_calculate_ROI_signature_radioButton.isChecked():
-					cfg.uiUtls.addProgressBar()
-					cfg.uiUtls.updateBar(10)
-					# ROI date time for temp name
-					cfg.ROITime = cfg.datetimeSCP.datetime.now()
-					self.tempROISpectralSignature()
-					cfg.uiUtls.removeProgressBar()
-				cfg.uidc.button_Save_ROI.setEnabled(True)
-				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "<<< ROI created: " + str(tN))
-			else:
-				cfg.mx.msg4()
-				self.clearCanvas()
+			except:
+				crs = cfg.utls.getQGISCrs()
+		else:
+			try:
+				# crs of loaded raster
+				b = cfg.utls.selectLayerbyName(cfg.bandSetsList[cfg.bndSetNumber][8])
+				crs = cfg.utls.getCrs(b)
+			except:
+				crs = cfg.utls.getQGISCrs()
+		mL = cfg.qgisCoreSCP.QgsVectorLayer("MultiPolygon?crs=" + str(crs.toWkt()), tN, "memory")
+		mL.setCrs(crs) 
+		if not len(cfg.lastVrt) >= 3:
+			cfg.mx.msg16()
+			self.clearCanvas()
+			return
+		pointF = cfg.QtCoreSCP.QPointF()
+		polF = cfg.QtGuiSCP.QPolygonF()
+		for v in cfg.lastVrt:
+			pointF.setX(v.x())
+			pointF.setY(v.y())
+			polF.append(pointF)
+		pointF.setX(cfg.lastVrt[0].x())
+		pointF.setY(cfg.lastVrt[0].y())
+		polF.append(pointF)
+		g = cfg.qgisCoreSCP.QgsGeometry().fromQPolygonF(polF)
+		mL.addTopologicalPoints(g)
+		pr = mL.dataProvider()
+		# create temp ROI
+		mL.startEditing()		
+		# add fields
+		pr.addAttributes( [cfg.qgisCoreSCP.QgsField("ID",  cfg.QVariantSCP.Int)] )
+		# add a feature
+		if cfg.ctrlClick is not None:
+			g = self.addPartToROI(g)
+		else:
+			cfg.lstROI2 = cfg.lstROI2 
+		f.setGeometry(g)
+		f.setAttributes([1])
+		pr.addFeatures([f])
+		mL.commitChanges()
+		mL.updateExtents()
+		self.clearCanvas()
+		# add ROI layer
+		cfg.lstROI = mL
+		self.addHighlightPolygon(cfg.lstROI, 1)
+		if cfg.uidc.auto_calculate_ROI_signature_radioButton.isChecked():
+			cfg.uiUtls.addProgressBar()
+			cfg.uiUtls.updateBar(10)
+			# ROI date time for temp name
+			cfg.ROITime = cfg.datetimeSCP.datetime.now()
+			self.tempROISpectralSignature()
+			cfg.uiUtls.removeProgressBar()
+		cfg.uidc.button_Save_ROI.setEnabled(True)
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "<<< ROI created: " + str(tN))
 			
 	# add multipart ROI
 	def addPartToROI(self, part):

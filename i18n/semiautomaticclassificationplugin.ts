@@ -4224,57 +4224,57 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="616"/>
+        <location filename="../dock/scpdock.py" line="617"/>
         <source> conversion to vector. Please wait ...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="730"/>
+        <location filename="../dock/scpdock.py" line="731"/>
         <source>Select a qml style</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="800"/>
+        <location filename="../dock/scpdock.py" line="801"/>
         <source>Select a signature list file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="814"/>
+        <location filename="../dock/scpdock.py" line="815"/>
         <source>Select a SCP training input</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1226"/>
+        <location filename="../dock/scpdock.py" line="1228"/>
         <source>Export SCP training input</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1283"/>
+        <location filename="../dock/scpdock.py" line="1285"/>
         <source>Select a library file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1316"/>
+        <location filename="../dock/scpdock.py" line="1318"/>
         <source>Export the highlighted signatures to CSV library</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1389"/>
+        <location filename="../dock/scpdock.py" line="1391"/>
         <source>Calculate signatures</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1389"/>
+        <location filename="../dock/scpdock.py" line="1391"/>
         <source>Calculate signatures for highlighted items?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1418"/>
+        <location filename="../dock/scpdock.py" line="1420"/>
         <source>Merge signatures</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1418"/>
+        <location filename="../dock/scpdock.py" line="1420"/>
         <source>Merge highlighted signatures?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4284,33 +4284,33 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1542"/>
+        <location filename="../dock/scpdock.py" line="1544"/>
         <source>Are you sure you want to delete highlighted ROIs and signatures?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="2357"/>
+        <location filename="../dock/scpdock.py" line="2363"/>
         <source>Create SCP training input</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="2457"/>
+        <location filename="../dock/scpdock.py" line="2465"/>
         <source>It appears that the shapefile </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="2457"/>
+        <location filename="../dock/scpdock.py" line="2465"/>
         <source> is missing some fields that are required for the signature calculation. 
 Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="2548"/>
+        <location filename="../dock/scpdock.py" line="2556"/>
         <source>Undo save ROI</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="2548"/>
+        <location filename="../dock/scpdock.py" line="2556"/>
         <source>Are you sure you want to delete the last saved ROI?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4771,67 +4771,67 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="366"/>
+        <location filename="../core/messages.py" line="369"/>
         <source>Warning</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="293"/>
+        <location filename="../core/messages.py" line="296"/>
         <source>It appears that SciPy is not correctly installed. Please, update QGIS </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="299"/>
+        <location filename="../core/messages.py" line="302"/>
         <source>Wavelength already present</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="302"/>
+        <location filename="../core/messages.py" line="305"/>
         <source>Wavelength unit not provided in band set</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="312"/>
+        <location filename="../core/messages.py" line="315"/>
         <source>RAM value was too high. Value has been decreased automatically</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="318"/>
+        <location filename="../core/messages.py" line="321"/>
         <source>Unable to load the virtual raster. Please create it manually</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="321"/>
+        <location filename="../core/messages.py" line="324"/>
         <source>Unable to proceed. The raster must be in projected coordinates</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="327"/>
+        <location filename="../core/messages.py" line="330"/>
         <source>Incorrect expression</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="330"/>
+        <location filename="../core/messages.py" line="333"/>
         <source>Unable to access the temporary directory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="333"/>
+        <location filename="../core/messages.py" line="336"/>
         <source>Reduce the search area extent within 10 degrees of latitude and 10 degrees of longitude</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="336"/>
+        <location filename="../core/messages.py" line="339"/>
         <source>Macroclass symbology is missing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="339"/>
+        <location filename="../core/messages.py" line="342"/>
         <source>Missing bands</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="342"/>
+        <location filename="../core/messages.py" line="345"/>
         <source>No metadata found inside the input directory. Default values will be used</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4841,7 +4841,7 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="2215"/>
+        <location filename="../core/utils.py" line="2223"/>
         <source>Please wait ...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4861,17 +4861,17 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/crossclassificationTab.py" line="303"/>
+        <location filename="../maininterface/crossclassificationTab.py" line="322"/>
         <source>Classification</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="300"/>
+        <location filename="../maininterface/accuracy.py" line="318"/>
         <source>ErrMatrixCode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/crossclassificationTab.py" line="322"/>
+        <location filename="../maininterface/crossclassificationTab.py" line="341"/>
         <source>Reference</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4881,17 +4881,17 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/crossclassificationTab.py" line="337"/>
+        <location filename="../maininterface/crossclassificationTab.py" line="356"/>
         <source>Total</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="431"/>
+        <location filename="../maininterface/accuracy.py" line="449"/>
         <source>Overall accuracy [%] = </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="434"/>
+        <location filename="../maininterface/accuracy.py" line="452"/>
         <source>Kappa hat classification = </source>
         <translation type="unfinished"></translation>
     </message>
@@ -5016,7 +5016,7 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/crossclassificationTab.py" line="262"/>
+        <location filename="../maininterface/crossclassificationTab.py" line="281"/>
         <source>Unknown</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5431,7 +5431,7 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="345"/>
+        <location filename="../core/messages.py" line="348"/>
         <source>The coordinate system of training input is different from the input image. Please create a new training input</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5486,7 +5486,7 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="351"/>
+        <location filename="../core/messages.py" line="354"/>
         <source>Search error HTTP Status 500, reduce the result number</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5496,12 +5496,12 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/crossclassificationTab.py" line="303"/>
+        <location filename="../maininterface/crossclassificationTab.py" line="322"/>
         <source>CrossClassCode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/crossclassificationTab.py" line="320"/>
+        <location filename="../maininterface/crossclassificationTab.py" line="339"/>
         <source>CROSS MATRIX [</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5531,7 +5531,7 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="2457"/>
+        <location filename="../dock/scpdock.py" line="2465"/>
         <source>Add required fields</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5601,7 +5601,7 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="296"/>
+        <location filename="../core/messages.py" line="299"/>
         <source>It appears that SciPy is not correctly installed. Please, check the user manual</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5631,7 +5631,7 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7183"/>
+        <location filename="../core/utils.py" line="7219"/>
         <source>SCP: completed process</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5691,17 +5691,17 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="360"/>
+        <location filename="../core/messages.py" line="363"/>
         <source>Signature bands don&apos;t match band set. Calculate the spectral signature again</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="324"/>
+        <location filename="../core/messages.py" line="327"/>
         <source>Select at least one raster band</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="363"/>
+        <location filename="../core/messages.py" line="366"/>
         <source>Please define band sets with matching number of bands</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5716,7 +5716,7 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="366"/>
+        <location filename="../core/messages.py" line="369"/>
         <source>Please add single band rasters to the band set</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5796,12 +5796,12 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="365"/>
+        <location filename="../maininterface/accuracy.py" line="383"/>
         <source>Wi</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="390"/>
+        <location filename="../maininterface/accuracy.py" line="408"/>
         <source>SE area</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5811,68 +5811,73 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="300"/>
+        <location filename="../maininterface/accuracy.py" line="318"/>
         <source>Classified</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="337"/>
+        <location filename="../maininterface/accuracy.py" line="355"/>
         <source>ERROR MATRIX (pixel count)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="384"/>
+        <location filename="../maininterface/accuracy.py" line="402"/>
         <source>Area</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="389"/>
+        <location filename="../maininterface/accuracy.py" line="407"/>
         <source>SE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="391"/>
+        <location filename="../maininterface/accuracy.py" line="409"/>
         <source>95% CI area</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="406"/>
+        <location filename="../maininterface/accuracy.py" line="424"/>
         <source>PA  [%]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="407"/>
+        <location filename="../maininterface/accuracy.py" line="425"/>
         <source>UA  [%]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="408"/>
+        <location filename="../maininterface/accuracy.py" line="426"/>
         <source>Kappa hat</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="443"/>
+        <location filename="../maininterface/accuracy.py" line="461"/>
         <source>PA = producer&apos;s accuracy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="445"/>
+        <location filename="../maininterface/accuracy.py" line="463"/>
         <source>UA = user&apos;s accuracy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="439"/>
+        <location filename="../maininterface/accuracy.py" line="457"/>
         <source>SE = standard error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="441"/>
+        <location filename="../maininterface/accuracy.py" line="459"/>
         <source>CI = confidence interval</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="361"/>
+        <location filename="../maininterface/accuracy.py" line="379"/>
         <source>AREA BASED ERROR MATRIX</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../core/messages.py" line="292"/>
+        <source>Error, extent of vector too large</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

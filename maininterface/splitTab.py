@@ -96,7 +96,7 @@ class SplitTab:
 				cfg.cnvs.setRenderFlag(False)
 				cfg.uiUtls.addProgressBar()
 				i = cfg.utls.selectLayerbyName(rasterName, "Yes")
-				rPath = i.source()
+				rPath = cfg.utls.layerSource(i)
 			else:
 				rPath = inputFile
 			try:

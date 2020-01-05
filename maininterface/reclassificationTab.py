@@ -51,7 +51,7 @@ class ReclassificationTab:
 			self.clssfctnNm = cfg.ui.reclassification_name_combo.currentText()
 			i = cfg.utls.selectLayerbyName(self.clssfctnNm, "Yes")
 			try:
-				classificationPath = i.source()
+				classificationPath = cfg.utls.layerSource(i)
 			except Exception as err:
 				cfg.mx.msg4()
 				cfg.utls.refreshClassificationLayer()
@@ -148,7 +148,7 @@ class ReclassificationTab:
 		self.clssfctnNm = cfg.ui.reclassification_name_combo.currentText()
 		i = cfg.utls.selectLayerbyName(self.clssfctnNm, "Yes")
 		try:
-			classificationPath = i.source()
+			classificationPath = cfg.utls.layerSource(i)
 		except Exception as err:
 			cfg.mx.msg4()
 			cfg.utls.refreshClassificationLayer()

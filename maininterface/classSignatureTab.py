@@ -48,7 +48,7 @@ class ClassSignatureTab:
 		if inputClassification is None:
 			clssfctnNm = cfg.ui.classification_name_combo_3.currentText()
 			clss = cfg.utls.selectLayerbyName(clssfctnNm, "Yes")
-			inputClassification = clss.source()
+			inputClassification = cfg.utls.layerSource(clss)
 		if bandSetNumber is None:
 			bandSet = cfg.ui.band_set_comb_spinBox_8.value()
 			bandSetNumber = bandSet - 1

@@ -87,7 +87,7 @@ class ErosionRaster:
 					r = "No"
 				if r is not None:
 					if batch == "No":
-						rSource = r.source()
+						rSource = cfg.utls.layerSource(r)
 					else:
 						if cfg.osSCP.path.isfile(rasterInput):
 							rSource = rasterInput

@@ -56,8 +56,8 @@ class VectorToRasterTab:
 				cfg.utls.refreshVectorLayer()
 				cfg.utls.refreshClassificationLayer()
 				return
-			vectorSource = l.source()
-			referenceRasterPath = r.source()
+			vectorSource = cfg.utls.layerSource(l)
+			referenceRasterPath = cfg.utls.layerSource(r)
 			fd = cfg.ui.field_comboBox.currentText()
 			if len(fd) == 0 and cfg.ui.field_checkBox.isChecked():
 				cfg.utls.refreshVectorLayer()

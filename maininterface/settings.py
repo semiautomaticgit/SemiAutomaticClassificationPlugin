@@ -266,6 +266,8 @@ class Settings:
 			test = "Fail"
 		else:
 			v = cfg.utls.getGDALVersion()
+			# logger		
+			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " gdal version:" + str(v[0]) + "." + str(v[1])  )
 			if int(v[0]) == 1 and int(v[1]) < 10:
 				test = "Success (GDAL version outdated " + str(v[0]) + "." + str(v[1]) + ")"
 			# check OGR drivers
@@ -301,6 +303,12 @@ class Settings:
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				test = "Fail"
+		try:
+			cfg.utls.GDALCopyRaster(str(r), cfg.tmpDir + "/" + dT + "test.tif", "GTiff", cfg.rasterCompression, "DEFLATE -co PREDICTOR=2 -co ZLEVEL=1")
+		except Exception as err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			test = "Fail"
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " test: " + str(test))
 		return test

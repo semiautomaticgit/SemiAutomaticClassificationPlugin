@@ -58,7 +58,7 @@ class EditRaster:
 				b = "No"
 			if b is not None:
 				if batch == "No":
-					rSource = b.source()
+					rSource = cfg.utls.layerSource(b)
 				else:
 					rSource = rasterInput
 				cfg.ui.undo_edit_Button.setEnabled(False)
@@ -88,6 +88,7 @@ class EditRaster:
 					cfg.SCPD.showHideROI()
 				self.setValueRaster(rSource, vector, rId, batch, vectorFieldName)
 				if b != "No":
+					b.reload()
 					b.triggerRepaint()
 					cfg.cnvs.refresh()
 				if batch == "No":
@@ -280,13 +281,14 @@ class EditRaster:
 	def undoEdit(self):
 		try:
 			b = cfg.utls.selectLayerbyName(self.rstrNm, "Yes")
-			rSource = b.source()
+			rSource = cfg.utls.layerSource(b)
 			# open input with GDAL
 			rD = cfg.gdalSCP.Open(rSource, cfg.gdalSCP.GA_Update)
 			if rD is None:
 				return "No"
 			self.writeArrayBlock(rD, 1, self.a1, self.pixelStartColumn, self.pixelStartRow)
 			rD = None
+			b.reload()
 			b.triggerRepaint()
 			cfg.cnvs.refresh()
 			cfg.ui.undo_edit_Button.setEnabled(False)
@@ -380,7 +382,7 @@ class EditRaster:
 		self.rstrNm = cfg.ui.edit_raster_name_combo.currentText()
 		b = cfg.utls.selectLayerbyName(self.rstrNm, "Yes")
 		if b is not None:
-			rSource = b.source()
+			rSource = cfg.utls.layerSource(b)
 			cfg.ui.undo_edit_Button.setEnabled(False)
 			cfg.undoEditRasterToolbar_toolButton.setEnabled(False)
 			# create feature list
@@ -394,6 +396,7 @@ class EditRaster:
 			cfg.SCPD.showHideROI()
 			self.setValueRaster(rSource, vector, rId, "No", None, toolbarValue)
 			if b != "No":
+				b.reload()
 				b.triggerRepaint()
 				cfg.cnvs.refresh()
 				

@@ -64,7 +64,7 @@ class SieveRaster:
 				b = "No"
 			if b is not None:
 				if batch == "No":
-					rSource = b.source()
+					rSource = cfg.utls.layerSource(b)
 				else:
 					if cfg.osSCP.path.isfile(rasterInput):
 						rSource = rasterInput

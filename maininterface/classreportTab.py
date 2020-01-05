@@ -105,9 +105,12 @@ class ClassReportTab:
 				t = cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Class') + "	" + cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'PixelSum') + "	" + cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Percentage %') + "	" + cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Area [' + un + "^2]") + str("\n")
 				l.write(t)
 				for i in sorted(cfg.rasterBandUniqueVal):
-					p = (float(cfg.rasterBandUniqueVal[i]) /float(sumTot)) * 100
-					t = str(i) + "	" + str(cfg.rasterBandUniqueVal[i]) + "	" + str(p) + "	" + str(cfg.rasterBandUniqueVal[i] * cRPX * cRPY) + str("\n")
-					l.write(t)
+					if str(i) == "nan":
+						pass
+					else:
+						p = (float(cfg.rasterBandUniqueVal[i]) /float(sumTot)) * 100
+						t = str(i) + "	" + str(cfg.rasterBandUniqueVal[i]) + "	" + str(p) + "	" + str(cfg.rasterBandUniqueVal[i] * cRPX * cRPY) + str("\n")
+						l.write(t)
 				l.close()
 				cfg.uiUtls.updateBar(80)
 				# open csv
@@ -141,7 +144,8 @@ class ClassReportTab:
 		c = str(cfg.ui.classification_report_name_combo.currentText())
 		r = cfg.utls.selectLayerbyName(c, "Yes")
 		if r is not None:
-			self.calculateClassificationReport(r.source())
+			ql = cfg.utls.layerSource(r)
+			self.calculateClassificationReport(ql)
 		else:
 			cfg.mx.msg4()
 			cfg.utls.refreshClassificationLayer()

@@ -80,7 +80,7 @@ class CloudMasking:
 			if inputClassification is None:
 				clssfctnNm = cfg.ui.classification_name_combo_4.currentText()
 				clss = cfg.utls.selectLayerbyName(clssfctnNm, "Yes")
-				inputClassification = clss.source()
+				inputClassification = cfg.utls.layerSource(clss)
 			if batch == "No":
 				o = cfg.utls.getExistingDirectory(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Select a directory"))
 			else:

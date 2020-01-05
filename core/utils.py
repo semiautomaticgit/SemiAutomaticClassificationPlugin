@@ -643,8 +643,9 @@ class Utils:
 			classLayer.setCacheImage(None)
 		classLayer.triggerRepaint()
 		cfg.utls.refreshLayerSymbology(classLayer)
+		ql = cfg.utls.layerSource(classLayer)
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "" + str(classLayer.source()))
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "" + str(ql))
 		
 	# Define class symbology
 	def rasterSymbolLCSAlgorithmRaster(self, classLayer):
@@ -665,8 +666,9 @@ class Utils:
 			classLayer.setCacheImage(None)
 		classLayer.triggerRepaint()
 		cfg.utls.refreshLayerSymbology(classLayer)
+		ql = cfg.utls.layerSource(classLayer)
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "" + str(classLayer.source()))
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "" + str(ql))
 		
 	# Define class symbology
 	def rasterPreviewSymbol(self, previewLayer, algorithmName):
@@ -708,8 +710,9 @@ class Utils:
 			layer.setCacheImage(None)
 		layer.triggerRepaint()
 		cfg.utls.refreshLayerSymbology(layer)
+		ql = cfg.utls.layerSource(layer)
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "" + str(layer.source()))
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "" + str(ql))
 		
 	# Define class symbology single band grey
 	def rasterSymbolSingleBandGray(self, layer):
@@ -721,12 +724,14 @@ class Utils:
 			layer.setCacheImage(None)
 		layer.triggerRepaint()
 		cfg.utls.refreshLayerSymbology(layer)
+		ql = cfg.utls.layerSource(layer)
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "" + str(layer.source()))
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "" + str(ql))
 		
 	# Define raster symbology
 	def rasterSymbolGeneric(self, rasterLayer, zeroValue = "Unchanged"):
-		refRstrDt = cfg.gdalSCP.Open(str(rasterLayer.source()), cfg.gdalSCP.GA_ReadOnly)
+		ql = cfg.utls.layerSource(rasterLayer)
+		refRstrDt = cfg.gdalSCP.Open(str(ql), cfg.gdalSCP.GA_ReadOnly)
 		bLR = cfg.utls.readAllBandsFromRaster(refRstrDt)
 		cfg.rasterBandUniqueVal = cfg.np.zeros((1, 1))
 		cfg.rasterBandUniqueVal = cfg.np.delete(cfg.rasterBandUniqueVal, 0, 1)
@@ -781,8 +786,9 @@ class Utils:
 			classLayer.setCacheImage(None)
 		classLayer.triggerRepaint()
 		cfg.utls.refreshLayerSymbology(classLayer)
+		ql = cfg.utls.layerSource(classLayer)
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "" + str(classLayer.source()))
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "" + str(ql))
 		
 	# copy renderer
 	def copyRenderer(self, inputRaster, outputRaster):
@@ -1786,7 +1792,8 @@ class Utils:
 				rast = cfg.utls.selectLayerbyName(cfg.bandSetsList[bandSetNumber][3][b], "Yes")	
 				# open input with GDAL
 				try:
-					Or = cfg.gdalSCP.Open(rast.source(), cfg.gdalSCP.GA_ReadOnly)
+					ql = cfg.utls.layerSource(rast)
+					Or = cfg.gdalSCP.Open(ql, cfg.gdalSCP.GA_ReadOnly)
 				except Exception as err:
 					# logger
 					cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
@@ -1809,7 +1816,8 @@ class Utils:
 			rL = cfg.utls.selectLayerbyName(rasterName, "Yes")
 			# open input with GDAL
 			try:
-				Or = cfg.gdalSCP.Open(rL.source(), cfg.gdalSCP.GA_ReadOnly)
+				qll = cfg.utls.layerSource(rL)
+				Or = cfg.gdalSCP.Open(qll, cfg.gdalSCP.GA_ReadOnly)
 			except Exception as err:
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
@@ -2229,7 +2237,8 @@ class Utils:
 		for x in range(0, len(cfg.bandSetsList[bandSetNumber][3])):
 			b = cfg.utls.selectLayerbyName(cfg.bandSetsList[bandSetNumber][3][x], "Yes")
 			if b is not None:
-				cfg.bndSetLst.append(b.source())
+				ql = cfg.utls.layerSource(b)
+				cfg.bndSetLst.append(ql)
 			else:
 				ck = "No"
 				# logger
@@ -2247,7 +2256,8 @@ class Utils:
 		b = cfg.utls.selectLayerbyName(cfg.bandSetsList[bandSetNumber][8], "Yes")
 		for x in range(0, len(cfg.bandSetsList[bandSetNumber][3])):			
 			if b is not None:
-				cfg.bndSetLst.append(b.source())
+				ql = cfg.utls.layerSource(b)
+				cfg.bndSetLst.append(ql)
 			else:
 				ck = "No"
 				# logger
@@ -2905,6 +2915,9 @@ class Utils:
 				oR = tD.Create(o, c, r, bandNumber, format, options = ['COMPRESS=DEFLATE', 'PREDICTOR=2', 'ZLEVEL=1'])
 			else:
 				oR = tD.Create(o, c, r, bandNumber, format, ['COMPRESS=' + compressFormat])
+			if oR is None:
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "Error GDAL raster")
 			# set raster projection from reference
 			oR.SetGeoTransform(rGT)
 			oR.SetProjection(rP)
@@ -3138,8 +3151,8 @@ class Utils:
 				REDRaster = cfg.utls.selectLayerbyName(cfg.bandSetsList[cfg.bndSetNumber][3][int(cfg.REDBand) - 1], "Yes")	
 				# open input with GDAL
 				try:
-					NIRr = cfg.gdalSCP.Open(NIRRaster.source(), cfg.gdalSCP.GA_ReadOnly)
-					REDr = cfg.gdalSCP.Open(REDRaster.source(), cfg.gdalSCP.GA_ReadOnly)
+					NIRr = cfg.gdalSCP.Open(cfg.utls.layerSource(NIRRaster), cfg.gdalSCP.GA_ReadOnly)
+					REDr = cfg.gdalSCP.Open(cfg.utls.layerSource(REDRaster), cfg.gdalSCP.GA_ReadOnly)
 				except Exception as err:
 					# logger
 					cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
@@ -3151,7 +3164,8 @@ class Utils:
 			inputRaster = cfg.utls.selectLayerbyName(imageName, "Yes")	
 			# open input with GDAL
 			try:
-				rD = cfg.gdalSCP.Open(inputRaster.source(), cfg.gdalSCP.GA_ReadOnly)
+				ql = cfg.utls.layerSource(inputRaster)
+				rD = cfg.gdalSCP.Open(ql, cfg.gdalSCP.GA_ReadOnly)
 			except Exception as err:
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
@@ -3220,9 +3234,9 @@ class Utils:
 				BLUERaster = cfg.utls.selectLayerbyName(cfg.bandSetsList[cfg.bndSetNumber][3][int(cfg.BLUEBand) - 1], "Yes")
 				# open input with GDAL
 				try:
-					NIRr = cfg.gdalSCP.Open(NIRRaster.source(), cfg.gdalSCP.GA_ReadOnly)
-					REDr = cfg.gdalSCP.Open(REDRaster.source(), cfg.gdalSCP.GA_ReadOnly)
-					BLUEr = cfg.gdalSCP.Open(BLUERaster.source(), cfg.gdalSCP.GA_ReadOnly)
+					NIRr = cfg.gdalSCP.Open(cfg.utls.layerSource(NIRRaster), cfg.gdalSCP.GA_ReadOnly)
+					REDr = cfg.gdalSCP.Open(cfg.utls.layerSource(REDRaster), cfg.gdalSCP.GA_ReadOnly)
+					BLUEr = cfg.gdalSCP.Open(cfg.utls.layerSource(BLUERaster), cfg.gdalSCP.GA_ReadOnly)
 				except Exception as err:
 					# logger
 					cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
@@ -3235,7 +3249,8 @@ class Utils:
 			inputRaster = cfg.utls.selectLayerbyName(imageName, "Yes")	
 			# open input with GDAL
 			try:
-				rD = cfg.gdalSCP.Open(inputRaster.source(), cfg.gdalSCP.GA_ReadOnly)
+				ql = cfg.utls.layerSource(inputRaster)
+				rD = cfg.gdalSCP.Open(ql, cfg.gdalSCP.GA_ReadOnly)
 			except Exception as err:
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
@@ -3298,7 +3313,8 @@ class Utils:
 				# band set
 				if cfg.bandSetsList[cfg.bndSetNumber][0] == "Yes":
 					raster = cfg.utls.selectLayerbyName(cfg.bandSetsList[cfg.bndSetNumber][3][int(b) - 1], "Yes")
-					rRaster = cfg.gdalSCP.Open(raster.source(), cfg.gdalSCP.GA_ReadOnly)
+					ql = cfg.utls.layerSource(raster)
+					rRaster = cfg.gdalSCP.Open(ql, cfg.gdalSCP.GA_ReadOnly)
 					rasterB = rRaster.GetRasterBand(1)
 					if geoT is None:
 						geoT = rRaster.GetGeoTransform()
@@ -3319,7 +3335,8 @@ class Utils:
 					inputRaster = cfg.utls.selectLayerbyName(imageName, "Yes")	
 					# open input with GDAL
 					try:
-						rD = cfg.gdalSCP.Open(inputRaster.source(), cfg.gdalSCP.GA_ReadOnly)
+						qll = cfg.utls.layerSource(inputRaster)
+						rD = cfg.gdalSCP.Open(qll, cfg.gdalSCP.GA_ReadOnly)
 					except Exception as err:
 						# logger
 						cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
@@ -3736,7 +3753,8 @@ class Utils:
 			name = '"' + name + '"'
 			r = cfg.utls.selectLayerbyName(l, "Yes")
 			if r is not None:
-				nd = cfg.utls.imageNoDataValue(r.source())
+				ql = cfg.utls.layerSource(r)
+				nd = cfg.utls.imageNoDataValue(ql)
 				expression = expression.replace('nodata(' + name + ')', str(nd))
 		# find Nodata values
 		return expression
@@ -4098,7 +4116,8 @@ class Utils:
 				rast = cfg.utls.selectLayerbyName(cfg.bandSetsList[bandSetNumber][3][0], "Yes")	
 				# open input with GDAL
 				try:
-					Or = cfg.gdalSCP.Open(rast.source(), cfg.gdalSCP.GA_ReadOnly)
+					ql = cfg.utls.layerSource(rast)
+					Or = cfg.gdalSCP.Open(ql, cfg.gdalSCP.GA_ReadOnly)
 				except Exception as err:
 					# logger
 					cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
@@ -4108,7 +4127,8 @@ class Utils:
 				rL = cfg.utls.selectLayerbyName(rasterName, "Yes")
 				# open input with GDAL
 				try:
-					Or = cfg.gdalSCP.Open(rL.source(), cfg.gdalSCP.GA_ReadOnly)
+					qll = cfg.utls.layerSource(rL)
+					Or = cfg.gdalSCP.Open(qll, cfg.gdalSCP.GA_ReadOnly)
 				except Exception as err:
 					# logger
 					cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
@@ -4755,7 +4775,7 @@ class Utils:
 	def subsetImageByShapefile(self, vector, rasterName, bandList, bandSetNumber = None):
 		if bandSetNumber is None:
 			bandSetNumber = cfg.bndSetNumber
-		tLP = vector.source()
+		tLP = cfg.utls.layerSource(vector)
 		# date time for temp name
 		dT = cfg.utls.getTime()
 		# calculate ROI center, height and width
@@ -5452,7 +5472,6 @@ class Utils:
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 
-
 	# Set layer visible
 	def setLayerVisible(self, layer, visible = True):
 		root = cfg.qgisCoreSCP.QgsProject.instance().layerTreeRoot()
@@ -5484,7 +5503,7 @@ class Utils:
 	def getFilePath(self, layerName):
 		try:
 			l = cfg.utls.selectLayerbyName(layerName)
-			filePath = l.source()
+			filePath = cfg.utls.layerSource(l)
 			return filePath
 		except Exception as err:
 			# logger
@@ -5570,6 +5589,11 @@ class Utils:
 	# Set QGIS project CRS
 	def setQGISCrs(self, crs):
 		cfg.cnvs.setDestinationCrs(crs)
+		
+	# layer source
+	def layerSource(self, layer):
+		s = layer.source().split("|layername=")[0]
+		return s
 		
 ##################################
 	""" raster GDAL functions """
@@ -5881,7 +5905,7 @@ class Utils:
 			bandNumberList = []
 			for bb in range(1, i.bandCount()+1):
 				bandNumberList.append(bb)
-			i = i.source()
+			i = cfg.utls.layerSource(i)
 			st = "No"
 			# raster top left origin and pixel size
 			tLX, tLY, lRX, lRY, pSX, pSY = self.imageInformationSize(imageName)
@@ -5997,7 +6021,7 @@ class Utils:
 		return epsg
 		
 	# convert reference layer to raster based on the resolution of a raster
-	def vectorToRaster(self, fieldName, layerPath, referenceRasterName, outputRaster, referenceRasterPath=None, ALL_TOUCHED=None, outFormat = "GTiff", burnValues = None, filter = None):
+	def vectorToRaster(self, fieldName, layerPath, referenceRasterName, outputRaster, referenceRasterPath=None, ALL_TOUCHED=None, outFormat = "GTiff", burnValues = None, filter = None, extent = None):
 		if referenceRasterPath is None:
 			# band set
 			if cfg.bandSetsList[cfg.bndSetNumber][0] == "Yes":
@@ -6012,7 +6036,7 @@ class Utils:
 					# input
 					r = self.selectLayerbyName(referenceRasterName, "Yes")
 			try:
-				rS = r.source()
+				rS = cfg.utls.layerSource(r)
 				ck = "Yes"
 			except Exception as err:
 				# logger
@@ -6033,6 +6057,8 @@ class Utils:
 			rP = rD.GetProjection()
 			# pixel size and origin
 			rGT = rD.GetGeoTransform()
+			origX = rGT[0]
+			origY = rGT[3]
 		# in case of errors
 		except Exception as err:
 			# logger
@@ -6086,14 +6112,22 @@ class Utils:
 				minX, maxX, minY, maxY = ou.GetExtent()
 			else:
 				minX, maxX, minY, maxY = gL.GetExtent()
-			origX = rGT[0] +  rGT[1] * int(round((minX - rGT[0]) / rGT[1]))
-			origY = rGT[3] + rGT[5] * int(round((maxY - rGT[3]) / rGT[5]))
-			rC = abs(int(round((maxX - minX) / rGT[1])))
-			rR = abs(int(round((maxY - minY) / rGT[5])))
+			if extent is None:
+				origX = rGT[0] +  rGT[1] * int(round((minX - rGT[0]) / rGT[1]))
+				origY = rGT[3] + rGT[5] * int(round((maxY - rGT[3]) / rGT[5]))
+				rC = abs(int(round((maxX - minX) / rGT[1])))
+				rR = abs(int(round((maxY - minY) / rGT[5])))
 			tD = cfg.gdalSCP.GetDriverByName(outFormat)
 			tPMN2 = dT + cfg.calcRasterNm + ".tif"
 			tPMD2 = cfg.tmpDir + "/" + tPMN2
 			oR = tD.Create(tPMD2, rC, rR, 1, cfg.gdalSCP.GDT_Float32)
+			if oR is None:
+				oR = tD.Create(tPMD2, rC, rR, 1, cfg.gdalSCP.GDT_Int16)
+			if oR is None:
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: raster size")
+				cfg.mx.msgErr65()
+				return "No"
 			try:
 				oRB = oR.GetRasterBand(1)
 			# in case of errors
@@ -6258,7 +6292,8 @@ class Utils:
 	def getShapefileRectangleBox(self, layer):
 		try:
 			d = cfg.ogrSCP.GetDriverByName("ESRI Shapefile")
-			dr = d.Open(layer.source(), 1)
+			ql = cfg.utls.layerSource(layer)
+			dr = d.Open(ql, 1)
 			l = dr.GetLayer()
 			e = l.GetExtent()
 			minX = e[0]
@@ -6317,7 +6352,8 @@ class Utils:
 	def getFeatureRectangleBoxbyID(self, layer, ID):
 		try:
 			d = cfg.ogrSCP.GetDriverByName("ESRI Shapefile")
-			dr = d.Open(layer.source(), 1)
+			ql = cfg.utls.layerSource(layer)
+			dr = d.Open(ql, 1)
 			l = dr.GetLayer()
 			f = l.GetFeature(ID)
 			# bounding box rectangle
