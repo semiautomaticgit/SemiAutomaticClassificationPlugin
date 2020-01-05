@@ -5218,6 +5218,12 @@ class Utils:
 			iSR.ImportFromWkt(inputCoordinates.toWkt())
 			oSR = cfg.osrSCP.SpatialReference()
 			oSR.ImportFromWkt(outputCoordinates.toWkt())
+			# required by GDAL 3 coordinate order
+			try:
+				iSR.SetAxisMappingStrategy(cfg.osrSCP.OAMS_TRADITIONAL_GIS_ORDER)
+				oSR.SetAxisMappingStrategy(cfg.osrSCP.OAMS_TRADITIONAL_GIS_ORDER)
+			except:
+				pass
 			# Coordinate Transformation
 			cT = cfg.osrSCP.CoordinateTransformation(iSR, oSR)
 			pointT = cfg.ogrSCP.Geometry(cfg.ogrSCP.wkbPoint)
