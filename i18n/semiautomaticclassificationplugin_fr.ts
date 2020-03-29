@@ -20,7 +20,7 @@
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="297"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;User manual&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Manuel utilisateur&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Manuel d'utilisateur&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="442"/>
@@ -50,7 +50,7 @@
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="471"/>
         <source> ROI Signature list</source>
-        <translation>Liste des signature de la ROI</translation>
+        <translation>Liste des signatures des ROI</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="804"/>
@@ -411,7 +411,7 @@
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1801"/>
         <source>Save algorithm files</source>
-        <translation>Sauvegarde les fichiers temporaires</translation>
+        <translation>Sauvegarder les fichiers temporaires</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1831"/>
@@ -451,12 +451,12 @@
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="250"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Basic tools&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Outils basic&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Outils basiques&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="312"/>
         <source>User manual</source>
-        <translation>Manuel utilisateur</translation>
+        <translation>Manuel d'utilisateur</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="330"/>
@@ -481,7 +481,7 @@
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="391"/>
         <source>Training input</source>
-        <translation>Entrée données entrainement</translation>
+        <translation>Entrée données d'entrainement</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="515"/>
@@ -501,7 +501,7 @@
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1017"/>
         <source>Macroclass list</source>
-        <translation>Liste des macroclasse</translation>
+        <translation>Liste des macroclasses</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1145"/>
@@ -563,7 +563,7 @@ p, li { white-space: pre-wrap; }
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Noto Sans&apos;; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p align=&quot;center&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:11pt;&quot;&gt;Première fois sur &lt;/span&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:11pt; font-weight:600;&quot;&gt;Semi-Automatic Classification Plugin&lt;/span&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:11pt;&quot;&gt; (SCP)?&lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:11pt;&quot;&gt;Veuillez lire &lt;/span&gt;&lt;a href=&quot;https://fromgistors.blogspot.com/p/user-manual.html.&quot;&gt;&lt;span style=&quot; font-size:11pt; text-decoration: underline; color:#0000ff;&quot;&gt;le manuel utilisateur&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:11pt;&quot;&gt; avec des tutorials en plusieurs langues.&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:11pt;&quot;&gt;Veuillez lire &lt;/span&gt;&lt;a href=&quot;https://fromgistors.blogspot.com/p/user-manual.html.&quot;&gt;&lt;span style=&quot; font-size:11pt; text-decoration: underline; color:#0000ff;&quot;&gt;le manuel d'utilisateur&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:11pt;&quot;&gt; avec des tutorials en plusieurs langues.&lt;/span&gt;&lt;/p&gt;
 &lt;p align=&quot;center&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:11pt;&quot;&gt;Vous pouvez aussi contribuer à SCP.&lt;/span&gt;&lt;/p&gt;
 &lt;p align=&quot;center&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:11pt;&quot;&gt;N&apos;oublier pas de nous rejoindre sur &lt;/span&gt;&lt;a href=&quot;https://www.facebook.com/groups/SemiAutomaticClassificationPlugin&quot;&gt;&lt;span style=&quot; font-size:11pt; text-decoration: underline; color:#0000ff;&quot;&gt;SCP group in Facebook&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt; or &lt;/span&gt;&lt;a href=&quot;https://plus.google.com/communities/107833394986612468374&quot;&gt;&lt;span style=&quot; font-size:11pt; text-decoration: underline; color:#0000ff;&quot;&gt;SCP community sur Google+&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt; .&lt;/span&gt;&lt;/p&gt;
 &lt;p align=&quot;center&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:11pt;&quot;&gt;Merci !&lt;/span&gt;&lt;/p&gt;
@@ -1068,7 +1068,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="1621"/>
         <source>Multiple ROI creation</source>
-        <translation>Creation de ROI multiple</translation>
+        <translation>Création de ROI multiple</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="1647"/>
@@ -2981,7 +2981,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="12221"/>
         <source>Cross classification</source>
-        <translation>Classification croisé</translation>
+        <translation>Classification croisée</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="5105"/>
@@ -3041,12 +3041,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="1013"/>
         <source>Basic tools</source>
-        <translation>Outils basic</translation>
+        <translation>Outils basiques</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="3590"/>
         <source>Download products</source>
-        <translation>Télécharger de produits</translation>
+        <translation>Téléchargement de produits</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="9792"/>
@@ -3056,7 +3056,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="246"/>
         <source>User manual</source>
-        <translation>Manuel utilisateur</translation>
+        <translation>Manuel d'utilisateur</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="255"/>
@@ -3526,12 +3526,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="9190"/>
         <source>Mosaic band sets</source>
-        <translation>Mosaïque de jeu de bandes</translation>
+        <translation>Mosaïque de jeux de bandes</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="9209"/>
         <source> Mosaic of band sets</source>
-        <translation>Mosaïque de jeu de bandes</translation>
+        <translation>Mosaïque de jeux de bandes</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="9356"/>
@@ -3821,12 +3821,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="12596"/>
         <source>Class signature</source>
-        <translation>Classe signature</translation>
+        <translation>Signature de classe</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="12845"/>
         <source> Class signature</source>
-        <translation> Classe signature</translation>
+        <translation>Signature de classe</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="13131"/>
@@ -4531,7 +4531,7 @@ Do you want to add the required fields to this shapefile?</source>
     <message>
         <location filename="../core/input.py" line="289"/>
         <source>Basic tools</source>
-        <translation type="unfinished">Outils basic</translation>
+        <translation type="unfinished">Outils basiques</translation>
     </message>
     <message>
         <location filename="../maininterface/rgblistTab.py" line="218"/>
@@ -4546,7 +4546,7 @@ Do you want to add the required fields to this shapefile?</source>
     <message>
         <location filename="../core/input.py" line="295"/>
         <source>Multiple ROI creation</source>
-        <translation type="unfinished">Creation de ROI multiple</translation>
+        <translation type="unfinished">Création de ROI multiple</translation>
     </message>
     <message>
         <location filename="../core/input.py" line="297"/>
@@ -4571,7 +4571,7 @@ Do you want to add the required fields to this shapefile?</source>
     <message>
         <location filename="../core/input.py" line="305"/>
         <source>Download products</source>
-        <translation type="unfinished">Télécharger de produits</translation>
+        <translation type="unfinished">Téléchargement de produits</translation>
     </message>
     <message>
         <location filename="../core/input.py" line="307"/>
@@ -4626,7 +4626,7 @@ Do you want to add the required fields to this shapefile?</source>
     <message>
         <location filename="../core/input.py" line="327"/>
         <source>Mosaic band sets</source>
-        <translation type="unfinished">Mosaïque de jeu de bandes</translation>
+        <translation type="unfinished">Mosaïque de jeux de bandes</translation>
     </message>
     <message>
         <location filename="../core/input.py" line="329"/>
@@ -4681,12 +4681,12 @@ Do you want to add the required fields to this shapefile?</source>
     <message>
         <location filename="../core/input.py" line="349"/>
         <source>Cross classification</source>
-        <translation type="unfinished">Classification croisé</translation>
+        <translation type="unfinished">Classification croisée</translation>
     </message>
     <message>
         <location filename="../core/input.py" line="351"/>
         <source>Class signature</source>
-        <translation type="unfinished">Classe signature</translation>
+        <translation type="unfinished">Signature de classe</translation>
     </message>
     <message>
         <location filename="../core/input.py" line="353"/>
@@ -4746,17 +4746,17 @@ Do you want to add the required fields to this shapefile?</source>
     <message>
         <location filename="../core/input.py" line="386"/>
         <source>Spectral plot</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Graphique des signatures spectrales</translation>
     </message>
     <message>
         <location filename="../core/input.py" line="388"/>
         <source>Scatter plot</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Graphique nuage de points</translation>
     </message>
     <message>
         <location filename="../core/input.py" line="390"/>
         <source>User manual</source>
-        <translation type="unfinished">Manuel utilisateur</translation>
+        <translation type="unfinished">Manuel d'utilisateur</translation>
     </message>
     <message>
         <location filename="../core/input.py" line="392"/>
@@ -4771,7 +4771,7 @@ Do you want to add the required fields to this shapefile?</source>
     <message>
         <location filename="../core/input.py" line="396"/>
         <source>Show plugin</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Montrer le plugin</translation>
     </message>
     <message>
         <location filename="../core/messages.py" line="74"/>
