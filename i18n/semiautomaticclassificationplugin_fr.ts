@@ -3066,7 +3066,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="264"/>
         <source>Support the SCP</source>
-        <translation>Suppport SCP</translation>
+        <translation>Supportez SCP!</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="444"/>
