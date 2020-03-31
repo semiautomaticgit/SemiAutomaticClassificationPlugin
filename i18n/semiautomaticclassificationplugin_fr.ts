@@ -2056,7 +2056,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="12249"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If checked, NoData value will be excluded from the report&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Si coché, les valeurs NoDate seront exclus du rapport&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Si coché, les valeurs NoData seront exclus du rapport&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="12903"/>
@@ -2291,7 +2291,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="15283"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Inverse cosine&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Inverser cosinus&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Cosinus inverse&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="15286"/>
@@ -2311,7 +2311,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="15315"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Inverse sine&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Inverser sinus&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sinus inverse&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="15318"/>
@@ -2341,7 +2341,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="15363"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Inverse tangent&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Inverser tangente&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Tangente inverse&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="15366"/>
@@ -2351,7 +2351,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="15383"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;NoData value of raster (e.g.  nodata(&amp;quot;raster1&amp;quot;) )&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Valeur NoData du raster (e.g.  nodata(&amp;quot;raster1&amp;quot;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Valeur NoData du raster (ex: nodata(&amp;quot;raster1&amp;quot;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="15386"/>
@@ -2361,7 +2361,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="15401"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Conditional where function&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Fonction conditionnelle (e.g.  nodata(&amp;quot;raster1&amp;quot;) )&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Fonction où conditionnelle (ex: nodata(&amp;quot;raster1&amp;quot;) )&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="15404"/>
@@ -2381,7 +2381,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="15437"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Not equals&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Non égal&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Différent&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="15440"/>
@@ -2501,7 +2501,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="15651"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Less than&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;inférieur à&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Inférieur à&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="15654"/>
@@ -2576,7 +2576,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="15086"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If checked, pixels equal to NoData value will be excluded from the output raster&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Si coché, les pixels de valeur NoDate seront exclus du raster de sortie&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Si coché, les pixels de valeur NoData seront exclus du raster de sortie&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="15089"/>
@@ -2601,7 +2601,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="15119"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If checked, the extent of raster ouput equals the intersection of input rasters&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Si coché, l&apos;étendue du raster de sortie sera égale à l&apos;intersection des rasters en entrées&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Si coché, l&apos;étendue du raster de sortie sera égale à l&apos;intersection des rasters en entrée&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="15122"/>
