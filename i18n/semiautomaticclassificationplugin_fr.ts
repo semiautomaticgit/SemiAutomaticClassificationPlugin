@@ -3046,7 +3046,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="3590"/>
         <source>Download products</source>
-        <translation>Télécharger de produits</translation>
+        <translation>Téléchargement de produits</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="9792"/>
@@ -4571,7 +4571,7 @@ Do you want to add the required fields to this shapefile?</source>
     <message>
         <location filename="../core/input.py" line="305"/>
         <source>Download products</source>
-        <translation type="unfinished">Télécharger de produits</translation>
+        <translation type="unfinished">Téléchargement de produits</translation>
     </message>
     <message>
         <location filename="../core/input.py" line="307"/>
