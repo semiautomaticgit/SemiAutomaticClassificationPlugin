@@ -20,7 +20,7 @@
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="297"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;User manual&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Manuel d'utilisateur&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Manuel d&apos;utilisateur&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="442"/>
@@ -456,7 +456,7 @@
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="312"/>
         <source>User manual</source>
-        <translation>Manuel d'utilisateur</translation>
+        <translation>Manuel d&apos;utilisateur</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="330"/>
@@ -481,7 +481,7 @@
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="391"/>
         <source>Training input</source>
-        <translation>Entrée données d'entrainement</translation>
+        <translation>Entrée données d&apos;entrainement</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="515"/>
@@ -563,7 +563,7 @@ p, li { white-space: pre-wrap; }
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Noto Sans&apos;; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p align=&quot;center&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:11pt;&quot;&gt;Première fois sur &lt;/span&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:11pt; font-weight:600;&quot;&gt;Semi-Automatic Classification Plugin&lt;/span&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:11pt;&quot;&gt; (SCP)?&lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:11pt;&quot;&gt;Veuillez lire &lt;/span&gt;&lt;a href=&quot;https://fromgistors.blogspot.com/p/user-manual.html.&quot;&gt;&lt;span style=&quot; font-size:11pt; text-decoration: underline; color:#0000ff;&quot;&gt;le manuel d'utilisateur&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:11pt;&quot;&gt; avec des tutorials en plusieurs langues.&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:11pt;&quot;&gt;Veuillez lire &lt;/span&gt;&lt;a href=&quot;https://fromgistors.blogspot.com/p/user-manual.html.&quot;&gt;&lt;span style=&quot; font-size:11pt; text-decoration: underline; color:#0000ff;&quot;&gt;le manuel d&apos;utilisateur&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:11pt;&quot;&gt; avec des tutorials en plusieurs langues.&lt;/span&gt;&lt;/p&gt;
 &lt;p align=&quot;center&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:11pt;&quot;&gt;Vous pouvez aussi contribuer à SCP.&lt;/span&gt;&lt;/p&gt;
 &lt;p align=&quot;center&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:11pt;&quot;&gt;N&apos;oublier pas de nous rejoindre sur &lt;/span&gt;&lt;a href=&quot;https://www.facebook.com/groups/SemiAutomaticClassificationPlugin&quot;&gt;&lt;span style=&quot; font-size:11pt; text-decoration: underline; color:#0000ff;&quot;&gt;SCP group in Facebook&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt; or &lt;/span&gt;&lt;a href=&quot;https://plus.google.com/communities/107833394986612468374&quot;&gt;&lt;span style=&quot; font-size:11pt; text-decoration: underline; color:#0000ff;&quot;&gt;SCP community sur Google+&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt; .&lt;/span&gt;&lt;/p&gt;
 &lt;p align=&quot;center&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:11pt;&quot;&gt;Merci !&lt;/span&gt;&lt;/p&gt;
@@ -1566,7 +1566,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="7180"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enable/Disable the DOS1 atmospheric correction (thermal band is not corrected)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Activer/Désactiver la correction atmosphérique DOS1 (la bande thermique n'est pas corrigée)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Activer/Désactiver la correction atmosphérique DOS1 (la bande thermique n&apos;est pas corrigée)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="7183"/>
@@ -1731,7 +1731,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="6827"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enable/Disable the DOS1 atmospheric correction&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Activer/Désactiver la correction atmosphérique DOS1 (la bande thermique n'est pas corrigée)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Activer/Désactiver la correction atmosphérique DOS1 (la bande thermique n&apos;est pas corrigée)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="6310"/>
@@ -1769,11 +1769,6 @@ p, li { white-space: pre-wrap; }
         <translation>Sélectionner un fichier ASTER L1T (.hdf)</translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="7816"/>
-        <source>Unit conversion coefficient</source>
-        <translation type="unfinished">Coefficient de conversion des unités</translation>
-    </message>
-    <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="7329"/>
         <source>PixelSize</source>
         <translation>Taille de pixel</translation>
@@ -1784,11 +1779,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="7444"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Upper Left (meters)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Haut gauche (mètres)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="7460"/>
         <source>UTM zone</source>
         <translation type="unfinished">Zone UTM</translation>
@@ -1797,11 +1787,6 @@ p, li { white-space: pre-wrap; }
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="7470"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;UTM zone&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="7508"/>
-        <source>UpperLeft (meters)</source>
-        <translation type="unfinished">Haut gauche (mètres)</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="8328"/>
@@ -2629,11 +2614,6 @@ p, li { white-space: pre-wrap; }
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ajouter une bande au jeu de bandes&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="346"/>
-        <source>Band set definition</source>
-        <translation>Détail du jeu de bandes</translation>
-    </message>
-    <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="375"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sort bands by name (priority to ending number)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Trier les bandes par nom (priorité au nombre final)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
@@ -2702,11 +2682,6 @@ p, li { white-space: pre-wrap; }
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="722"/>
         <source>Build band overviews</source>
         <translation>Créer un aperçu</translation>
-    </message>
-    <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="738"/>
-        <source>Band set tools</source>
-        <translation>Outils sur les bandes</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="16194"/>
@@ -3056,7 +3031,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="246"/>
         <source>User manual</source>
-        <translation>Manuel d'utilisateur</translation>
+        <translation>Manuel d&apos;utilisateur</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="255"/>
@@ -3459,11 +3434,6 @@ p, li { white-space: pre-wrap; }
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Si coché, la correction atmosphérique DOS1 est appliquée uniquement sur la bande verte&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="7129"/>
-        <source> only to green band</source>
-        <translation>uniquement sur la bande verte</translation>
-    </message>
-    <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="8314"/>
         <source> Convert vector to raster</source>
         <translation>Convertir vecteur vers raster</translation>
@@ -3491,7 +3461,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="8650"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Use vector boundaries for clipping rasters&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Utiliser les limites d'un vecteur pour découper les rasters&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Utiliser les limites d&apos;un vecteur pour découper les rasters&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="8653"/>
@@ -3987,31 +3957,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="17397"/>
-        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;;&quot;&gt;Developed by &lt;/span&gt;&lt;a href=&quot;http://www.researchgate.net/profile/Luca_Congedo&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; text-decoration: underline; color:#0057ae;&quot;&gt;Luca Congedo&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;;&quot;&gt; (ing.congedoluca@gmail.com), the &lt;/span&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-weight:600;&quot;&gt;Semi-Automatic Classification Plugin&lt;/span&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;;&quot;&gt; (SCP) is a free open source plugin for QGIS that allows for the semi-automatic classification (also supervised classification) of remote sensing images.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;;&quot;&gt;It provides several tools for the download of free images, the preprocessing, the postprocessing, and the raster calculation.&lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:9pt;&quot;&gt;&lt;br /&gt;&lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;;&quot;&gt;For more information and tutorials visit the official site &lt;/span&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-weight:600;&quot;&gt;From GIS to Remote Sensing.&lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:9pt;&quot;&gt;&lt;br /&gt;&lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;img src=&quot;:/plugins/semiautomaticclassificationplugin/icons/fromGIStoRS.png&quot; /&gt;&lt;a href=&quot;https://fromgistors.blogspot.com/p/semi-automatic-classification-plugin.html?spref=sacp&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:14pt; text-decoration: underline; color:#0000ff;&quot;&gt;From GIS to Remote Sensing&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:9pt;&quot;&gt;&lt;br /&gt;&lt;/span&gt;&lt;a href=&quot;https://www.facebook.com/groups/SemiAutomaticClassificationPlugin&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:9pt; text-decoration: underline; color:#0057ae;&quot;&gt;Semi-Automatic Classification Plugin group on Facebook&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;https://plus.google.com/communities/107833394986612468374&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:9pt; text-decoration: underline; color:#0057ae;&quot;&gt;Semi-Automatic Classification Plugin community on Google+&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:9pt;&quot;&gt;&lt;br /&gt;&lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-style:italic;&quot;&gt;This plugin requires the installation of GDAL, OGR, Numpy, SciPy, and Matplotlib (already bundled with QGIS).&lt;/span&gt;&lt;/p&gt;
-&lt;hr /&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:8pt;&quot;&gt;&lt;br /&gt;The Semi-Automatic Classification Plugin is developed by Luca Congedo.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:9pt;&quot;&gt;Translators:&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:9pt;&quot;&gt;Language: Author&lt;br /&gt;&lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:8pt;&quot;&gt;Semi-Automatic Classification Plugin is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, version 3 of the License.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:8pt;&quot;&gt;Semi-Automatic Classification Plugin is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:8pt;&quot;&gt;See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with Semi-Automatic Classification Plugin. If not, see &amp;lt;&lt;/span&gt;&lt;a href=&quot;http://www.gnu.org/licenses/&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:8pt; text-decoration: underline; color:#0000ff;&quot;&gt;http://www.gnu.org/licenses/&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:8pt;&quot;&gt;&amp;gt;.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="1863"/>
         <source>raster &gt; 0</source>
         <translation type="unfinished"></translation>
@@ -4025,6 +3970,60 @@ p, li { white-space: pre-wrap; }
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="1838"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Create stratified random points&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished">Créer des points aléatoires stratifiés</translation>
+    </message>
+    <message>
+        <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="346"/>
+        <source> Band set definition</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="738"/>
+        <source> Band set tools</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="7129"/>
+        <source> only to green bands</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="7816"/>
+        <source>UnitConversionCoeff</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="7444"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Upper left (meters)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="7508"/>
+        <source>UPPERLEFTM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="17397"/>
+        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;;&quot;&gt;Developed by &lt;/span&gt;&lt;a href=&quot;http://www.researchgate.net/profile/Luca_Congedo&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; text-decoration: underline; color:#0057ae;&quot;&gt;Luca Congedo&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;;&quot;&gt; (ing.congedoluca@gmail.com), the &lt;/span&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-weight:600;&quot;&gt;Semi-Automatic Classification Plugin&lt;/span&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;;&quot;&gt; (SCP) is a free open source plugin for QGIS that allows for the semi-automatic classification (also supervised classification) of remote sensing images.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;;&quot;&gt;It provides several tools for the download of free images, the preprocessing, the postprocessing, and the raster calculation.&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:9pt;&quot;&gt;&lt;br /&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;;&quot;&gt;For more information and tutorials visit the official site &lt;/span&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-weight:600;&quot;&gt;From GIS to Remote Sensing.&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:9pt;&quot;&gt;&lt;br /&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;img src=&quot;:/plugins/semiautomaticclassificationplugin/icons/fromGIStoRS.png&quot; /&gt;&lt;a href=&quot;https://fromgistors.blogspot.com/p/semi-automatic-classification-plugin.html?spref=sacp&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:14pt; text-decoration: underline; color:#0000ff;&quot;&gt;From GIS to Remote Sensing&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:9pt;&quot;&gt;&lt;br /&gt;&lt;/span&gt;&lt;a href=&quot;https://www.facebook.com/groups/SemiAutomaticClassificationPlugin&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:9pt; text-decoration: underline; color:#0057ae;&quot;&gt;Semi-Automatic Classification Plugin group on Facebook&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-style:italic;&quot;&gt;This plugin requires the installation of GDAL, OGR, Numpy, SciPy, and Matplotlib (already bundled with QGIS).&lt;/span&gt;&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:8pt;&quot;&gt;&lt;br /&gt;The Semi-Automatic Classification Plugin is developed by Luca Congedo.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:9pt;&quot;&gt;Translators:&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:9pt;&quot;&gt;Language: Author&lt;br /&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:8pt;&quot;&gt;Semi-Automatic Classification Plugin is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, version 3 of the License.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:8pt;&quot;&gt;Semi-Automatic Classification Plugin is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:8pt;&quot;&gt;See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with Semi-Automatic Classification Plugin. If not, see &amp;lt;&lt;/span&gt;&lt;a href=&quot;http://www.gnu.org/licenses/&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:8pt; text-decoration: underline; color:#0000ff;&quot;&gt;http://www.gnu.org/licenses/&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:8pt;&quot;&gt;&amp;gt;.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -4756,7 +4755,7 @@ Do you want to add the required fields to this shapefile?</source>
     <message>
         <location filename="../core/input.py" line="390"/>
         <source>User manual</source>
-        <translation type="unfinished">Manuel d'utilisateur</translation>
+        <translation type="unfinished">Manuel d&apos;utilisateur</translation>
     </message>
     <message>
         <location filename="../core/input.py" line="392"/>
