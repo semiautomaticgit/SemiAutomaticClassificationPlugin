@@ -2056,7 +2056,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="12249"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If checked, NoData value will be excluded from the report&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Si coché, les valeurs NoData seront exclus du rapport&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Si coché, les valeurs NoData seront exclues du rapport&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="12903"/>
@@ -2106,7 +2106,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="13258"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enable this for reclassification from C ID to MC ID; if checked, unique values are calculated from the Signature list, setting old value C ID and new value MC ID&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Activer pour la reclassification de C ID vers MC ID; si coché, les valeurs uniques seront calculées depuis la liste des signatures&lt;/p&gt;&lt;/body&gt;&lt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;A activer pour la reclassification de C ID vers MC ID; si coché, les valeurs uniques sont calculées depuis la Liste des signatures&lt;/p&gt;&lt;/body&gt;&lt;</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="13261"/>
@@ -2146,7 +2146,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="13629"/>
         <source>Select the input raster</source>
-        <translation>Sélectionner les entrées raster</translation>
+        <translation>Sélectionner les rasters en entrée</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="13645"/>
@@ -2156,12 +2156,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="13722"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Use expression&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Utiliser expression&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Utiliser une expression&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="13725"/>
         <source>Use expression</source>
-        <translation>Utiliser expression</translation>
+        <translation>Utiliser une expression</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="13744"/>
@@ -2191,7 +2191,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="13884"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Edit values using temporary ROIs&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Editer les valeurs par des ROI temporaires&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;head/&gt;&lt;body&gt;&lt;p&gt;Editer les valeurs par des ROIs temporaires&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="13887"/>
