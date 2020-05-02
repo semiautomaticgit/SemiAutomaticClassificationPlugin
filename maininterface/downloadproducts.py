@@ -762,10 +762,10 @@ class DownloadProducts:
 				imgIDLineSplit = str(imgIDLine).replace(" ", "").split(",")
 			for m in imgIDLineSplit:
 				imageFindList.append(m.lower())
-			imgQuery = "*efr*"
+			imgQuery = "OL_1_EFR*"
 		else:
 			imageFindList.append("s3")
-			imgQuery = "*efr*"
+			imgQuery = "OL_1_EFR*"
 		try:
 			rubbRect = cfg.qgisCoreSCP.QgsRectangle(float(cfg.ui.UX_lineEdit_3.text()), float(cfg.ui.UY_lineEdit_3.text()), float(cfg.ui.LX_lineEdit_3.text()), float(cfg.ui.LY_lineEdit_3.text()))
 			if abs(float(cfg.ui.UX_lineEdit_3.text()) - float(cfg.ui.LX_lineEdit_3.text())) > 10 or abs(float(cfg.ui.UY_lineEdit_3.text()) - float(cfg.ui.LY_lineEdit_3.text())) > 10:
