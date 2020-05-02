@@ -4858,12 +4858,12 @@ Do you want to add the required fields to this shapefile?</source>
         <translation>Total</translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="449"/>
+        <location filename="../maininterface/accuracy.py" line="453"/>
         <source>Overall accuracy [%] = </source>
         <translation>Precisión total [%] =</translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="452"/>
+        <location filename="../maininterface/accuracy.py" line="456"/>
         <source>Kappa hat classification = </source>
         <translation>Clasificación Kappa =</translation>
     </message>
@@ -5839,37 +5839,37 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="424"/>
+        <location filename="../maininterface/accuracy.py" line="428"/>
         <source>PA  [%]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="425"/>
+        <location filename="../maininterface/accuracy.py" line="429"/>
         <source>UA  [%]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="426"/>
+        <location filename="../maininterface/accuracy.py" line="430"/>
         <source>Kappa hat</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="461"/>
+        <location filename="../maininterface/accuracy.py" line="465"/>
         <source>PA = producer&apos;s accuracy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="463"/>
+        <location filename="../maininterface/accuracy.py" line="467"/>
         <source>UA = user&apos;s accuracy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="457"/>
+        <location filename="../maininterface/accuracy.py" line="461"/>
         <source>SE = standard error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="459"/>
+        <location filename="../maininterface/accuracy.py" line="463"/>
         <source>CI = confidence interval</source>
         <translation type="unfinished"></translation>
     </message>

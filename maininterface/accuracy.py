@@ -411,6 +411,10 @@ class Accuracy:
 					se = 0
 					for r in range(0, len(total)):
 						se = se + (errMatrixUnbias[r, len(total) + 1]  * errMatrixUnbias[r, c] - errMatrixUnbias[r, c] * errMatrixUnbias[r, c] ) / (errMatrix[r, len(total) ] - 1)
+						try:
+							int(se)
+						except:
+							se = 0
 					lL1 = lL1 + "\t" + str("%1.4f" % cfg.np.sqrt(se))
 					lL2 = lL2 + "\t" + str(int(round(cfg.np.sqrt(se) * totPixelClass * cRPX * cRPY)))
 					lL3 = lL3 + "\t" + str(int(round(cfg.np.sqrt(se) * totPixelClass * cRPX * cRPY * 1.96)))
