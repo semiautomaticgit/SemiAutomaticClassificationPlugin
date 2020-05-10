@@ -922,7 +922,7 @@ class Utils:
 				if cfg.actionCheck == "Yes":
 					# progress bar
 					progress = progressStart + n * progresStep
-					EndT = cfg.timeSCP.clock()
+					EndT = cfg.timeSCP.time()
 					itCount = itCount + 1
 					if StartT != 0:
 						processT = EndT - StartT
@@ -933,7 +933,7 @@ class Utils:
 						pass
 					else:
 						cfg.uiUtls.updateBar(progress)
-					StartT = cfg.timeSCP.clock()
+					StartT = cfg.timeSCP.time()
 					# algorithm
 					rasterArrayx = cfg.np.copy(rasterArray)
 					# threshold
@@ -1151,7 +1151,7 @@ class Utils:
 				if cfg.actionCheck == "Yes":
 					# progress bar
 					progress = progressStart + n * progresStep
-					EndT = cfg.timeSCP.clock()
+					EndT = cfg.timeSCP.time()
 					itCount = itCount + 1
 					if StartT != 0:
 						processT = EndT - StartT
@@ -1161,7 +1161,7 @@ class Utils:
 						cfg.uiUtls.updateBar(progress, progressMessage + self.timeToHMS(cfg.remainingTime) + " remaining")
 					else:
 						cfg.uiUtls.updateBar(progress)
-					StartT = cfg.timeSCP.clock()
+					StartT = cfg.timeSCP.time()
 					# algorithm
 					rasterArrayx = cfg.np.copy(rasterArray)
 					c = self.algorithmMinimumDistance(rasterArrayx, s, cfg.algBandWeigths)
@@ -1216,7 +1216,7 @@ class Utils:
 				if cfg.actionCheck == "Yes":
 					# progress bar
 					progress = progressStart + n * progresStep
-					EndT = cfg.timeSCP.clock()
+					EndT = cfg.timeSCP.time()
 					itCount = itCount + 1
 					if StartT != 0:
 						processT = EndT - StartT
@@ -1227,7 +1227,7 @@ class Utils:
 						pass
 					else:
 						cfg.uiUtls.updateBar(progress)
-					StartT = cfg.timeSCP.clock()
+					StartT = cfg.timeSCP.time()
 					# algorithm
 					rasterArrayx = cfg.np.copy(rasterArray)
 					c = self.algorithmSAM(rasterArrayx, s, cfg.algBandWeigths)
@@ -1285,7 +1285,7 @@ class Utils:
 				if cfg.actionCheck == "Yes":
 					# progress bar
 					progress = progressStart + n * progresStep
-					EndT = cfg.timeSCP.clock()
+					EndT = cfg.timeSCP.time()
 					itCount = itCount + 1
 					if StartT != 0:
 						processT = EndT - StartT
@@ -1295,7 +1295,7 @@ class Utils:
 						cfg.uiUtls.updateBar(progress, progressMessage + self.timeToHMS(cfg.remainingTime) + " remaining")
 					else:
 						cfg.uiUtls.updateBar(progress)
-					StartT = cfg.timeSCP.clock()
+					StartT = cfg.timeSCP.time()
 					# algorithm
 					rasterArrayx = cfg.np.copy(rasterArray)
 					# threshold
