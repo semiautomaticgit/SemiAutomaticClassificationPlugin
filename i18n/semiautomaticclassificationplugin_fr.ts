@@ -4222,17 +4222,12 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>semiautomaticclassificationplugin</name>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="1498"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="1508"/>
         <source>Please, restart QGIS for executing the Semi-Automatic Classification Plugin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="228"/>
-        <source>Check Python Numpy, Scipy, and Matplotlib installation for the Semi-Automatic Classification Plugin</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="418"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="428"/>
         <source>Please restart QGIS for installing the Semi-Automatic Classification Plugin</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5214,7 +5209,7 @@ Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7225"/>
+        <location filename="../core/utils.py" line="7243"/>
         <source>SCP: completed process</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5886,6 +5881,21 @@ Possible reason: input is a virtual raster or band is not loaded</source>
     <message>
         <location filename="../core/messages.py" line="292"/>
         <source>Error, extent of vector too large</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../semiautomaticclassificationplugin.py" line="220"/>
+        <source>Error. Check Python Numpy installation for the Semi-Automatic Classification Plugin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../semiautomaticclassificationplugin.py" line="237"/>
+        <source>Error. Check Python Scipy installation for the Semi-Automatic Classification Plugin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../semiautomaticclassificationplugin.py" line="239"/>
+        <source>Error. Check Python Matplotlib installation for the Semi-Automatic Classification Plugin</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

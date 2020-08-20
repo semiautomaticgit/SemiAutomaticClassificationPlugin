@@ -156,15 +156,17 @@ if PluginCheck == "Yes":
 		from scipy import signal
 		from scipy.ndimage import label
 		from scipy.cluster.vq import vq, kmeans, whiten
-		cfg.scipyCheck = "Yes"
+		cfg.scipyCheck = 'Yes'
 	except:
-		cfg.scipyCheck = "No"
+		cfg.scipyCheck = 'No'
 	try:
 		from matplotlib.ticker import MaxNLocator
 		import matplotlib.pyplot as mplplt
 		import matplotlib.colors as mplcolors
+		cfg.matplotlibCheck = 'Yes'
 	except Exception as err:
 		cfg.testMatplotlibV = err
+		cfg.matplotlibCheck = 'No'
 
 	
 class SemiAutomaticClassificationPlugin:
@@ -210,24 +212,32 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ctypesSCP = ctypes
 			cfg.counterSCP = Counter
 		except:
-			qgisUtils.iface.messageBar().pushMessage("Semi-Automatic Classification Plugin", QApplication.translate("semiautomaticclassificationplugin", "Please, restart QGIS for executing the Semi-Automatic Classification Plugin"), level=qgisCore.Qgis.Info)
+			qgisUtils.iface.messageBar().pushMessage('Semi-Automatic Classification Plugin', QApplication.translate('semiautomaticclassificationplugin', 'Please, restart QGIS for executing the Semi-Automatic Classification Plugin'), level=qgisCore.Qgis.Critical)
 			return
 		try:
-			cfg.statdistrSCP = statdistr
-			cfg.cdistSCP = cdist
-			cfg.signalSCP = signal
-			cfg.labelSCP = label
-			cfg.vqSCP = vq
-			cfg.kmeansSCP = kmeans
-			cfg.whitenSCP = whiten
-			cfg.MaxNLocatorSCP = MaxNLocator
-			cfg.mplpltSCP = mplplt
-			cfg.mplcolorsSCP = mplcolors
 			cfg.np = np
 		except:
-			qgisUtils.iface.messageBar().pushMessage("Semi-Automatic Classification Plugin", QApplication.translate("semiautomaticclassificationplugin", "Check Python Numpy, Scipy, and Matplotlib installation for the Semi-Automatic Classification Plugin"), level=qgisCore.Qgis.Info)
-			return
-		if PluginCheck == "Yes":
+			qgisUtils.iface.messageBar().pushMessage('Semi-Automatic Classification Plugin', QApplication.translate('semiautomaticclassificationplugin', 'Error. Check Python Numpy installation for the Semi-Automatic Classification Plugin'), level=qgisCore.Qgis.Critical)
+		try:
+			if cfg.scipyCheck == 'Yes':
+				cfg.statdistrSCP = statdistr
+				cfg.cdistSCP = cdist
+				cfg.signalSCP = signal
+				cfg.labelSCP = label
+				cfg.vqSCP = vq
+				cfg.kmeansSCP = kmeans
+				cfg.whitenSCP = whiten
+			if cfg.matplotlibCheck == 'Yes':
+				cfg.MaxNLocatorSCP = MaxNLocator
+				cfg.mplpltSCP = mplplt
+				cfg.mplcolorsSCP = mplcolors
+		except:
+			pass
+		if cfg.scipyCheck == 'No':
+			qgisUtils.iface.messageBar().pushMessage('Semi-Automatic Classification Plugin', QApplication.translate('semiautomaticclassificationplugin', 'Error. Check Python Scipy installation for the Semi-Automatic Classification Plugin'), level=qgisCore.Qgis.Critical)
+		if cfg.matplotlibCheck == 'No':
+			qgisUtils.iface.messageBar().pushMessage('Semi-Automatic Classification Plugin', QApplication.translate('semiautomaticclassificationplugin', 'Error. Check Python Matplotlib installation for the Semi-Automatic Classification Plugin'), level=qgisCore.Qgis.Critical)
+		if PluginCheck == 'Yes':
 			# reference to QGIS interface
 			cfg.iface = iface
 			# reference to map canvas

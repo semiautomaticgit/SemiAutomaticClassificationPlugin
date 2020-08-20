@@ -5492,7 +5492,7 @@ class Utils:
 		model.refreshLayerLegend(g)
 
 	# Select layer by name thereof
-	def selectLayerbyName(self, layerName, filterRaster=None):
+	def selectLayerbyNameOld(self, layerName, filterRaster=None):
 		ls = cfg.qgisCoreSCP.QgsProject.instance().mapLayers().values()
 		for l in ls:
 			lN = l.name()
@@ -5505,6 +5505,24 @@ class Utils:
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "layer selected: " + str(layerName))
 	
+	# Select layer by name thereof
+	def selectLayerbyName(self, layerName, filterRaster=None):
+		ls = cfg.qgisCoreSCP.QgsProject.instance().mapLayers().values()
+		for l in ls:
+			lN = l.name()
+			if lN == layerName:
+				if filterRaster is None:
+					return l
+				else:
+					try:
+						if l.type().value == 1:
+							return l
+					except:
+						if l.type() == 1:
+							return l
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "layer selected: " + str(layerName))
+		
 	# file path
 	def getFilePath(self, layerName):
 		try:
