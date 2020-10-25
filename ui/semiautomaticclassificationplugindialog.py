@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
+'''
 /**************************************************************************************************************************
  SemiAutomaticClassificationPlugin
 
@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2018 by Luca Congedo
+		copyright		: (C) 2012-2021 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -30,7 +30,7 @@
  * 
 **************************************************************************************************************************/
 
-"""
+'''
 
 from PyQt5 import QtGui
 from PyQt5 import QtWidgets
@@ -40,7 +40,7 @@ from .ui_semiautomaticclassificationplugin_scatter_plot import Ui_ScatterPlot
 from .ui_semiautomaticclassificationplugin_welcome import Ui_SCP_Welcome
 from .ui_semiautomaticclassificationplugin_signature_plot import Ui_SpectralSignaturePlot
 try:
-	cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
+	cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 except:
 	pass
 
@@ -87,6 +87,9 @@ class SemiAutomaticClassificationPluginDialog(QtWidgets.QDialog):
 	def classification_layer_combo_3(self, layer):
 		self.ui.classification_name_combo_3.addItem(layer)
 		
+	def classification_layer_combo_5(self, layer):
+		self.ui.classification_name_combo_5.addItem(layer)
+		
 	def classification_report_combo(self, layer):
 		self.ui.classification_report_name_combo.addItem(layer)
 		
@@ -101,6 +104,9 @@ class SemiAutomaticClassificationPluginDialog(QtWidgets.QDialog):
 		
 	def reference_layer_combo_2(self, shape):
 		self.ui.reference_name_combo_2.addItem(shape)
+		
+	def reference_layer_combo_3(self, shape):
+		self.ui.reference_name_combo_3.addItem(shape)
 		
 	def classification_reference_layer_combo(self, layer):
 		self.ui.classification_reference_name_combo.addItem(layer)
@@ -132,6 +138,9 @@ class SemiAutomaticClassificationPluginDialog(QtWidgets.QDialog):
 	def reference_raster_combo(self, layer):
 		self.ui.reference_raster_name_combo.addItem(layer)
 		
+	def project_raster_combo(self, layer):
+		self.ui.raster_align_comboBox.addItem(layer)
+		
 	def raster_data_type_combo(self, dataType):
 		self.ui.raster_precision_combo.addItem(dataType)
 		
@@ -143,12 +152,18 @@ class SemiAutomaticClassificationPluginDialog(QtWidgets.QDialog):
 				
 	def class_field_combo_3(self, field):
 		self.ui.class_field_comboBox_3.addItem(field)
+		
+	def class_field_combo_4(self, field):
+		self.ui.class_field_comboBox_4.addItem(field)
 				
 	def reference_field_combo(self, field):
 		self.ui.field_comboBox.addItem(field)
 		
 	def reference_field_combo2(self, field):
 		self.ui.field_comboBox_2.addItem(field)
+		
+	def statistic_name_combo(self, field):
+		self.ui.statistic_name_combobox.addItem(field)
 		
 # create the dialog
 class DockClassDialog(QtWidgets.QDockWidget):

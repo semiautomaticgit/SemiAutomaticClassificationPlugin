@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
+'''
 /**************************************************************************************************************************
  SemiAutomaticClassificationPlugin
 
@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2018 by Luca Congedo
+		copyright		: (C) 2012-2021 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -30,11 +30,11 @@
  * 
 **************************************************************************************************************************/
 
-"""
+'''
 
 
 
-cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
+cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
 class VectorToRasterTab:
 
@@ -46,8 +46,8 @@ class VectorToRasterTab:
 		self.convertToRaster()
 		
 	# convert to raster
-	def convertToRaster(self, batch = "No", rasterOutput = None, vectorPath = None, fieldName = None, rasterPath = None):
-		if batch == "No":
+	def convertToRaster(self, batch = 'No', rasterOutput = None, vectorPath = None, fieldName = None, rasterPath = None):
+		if batch == 'No':
 			vector = cfg.ui.vector_name_combo.currentText()
 			l = cfg.utls.selectLayerbyName(vector)
 			referenceRasterName = cfg.ui.reference_raster_name_combo.currentText()
@@ -66,7 +66,7 @@ class VectorToRasterTab:
 		else:
 			vectorSource = vectorPath
 			referenceRasterPath = rasterPath
-			referenceRasterName = "No"
+			referenceRasterName = 'No'
 			rstrOut = rasterOutput
 			fd = fieldName
 		if rstrOut is not False:
@@ -74,16 +74,14 @@ class VectorToRasterTab:
 				pass
 			else:
 				rstrOut = rstrOut + ".tif"
-			if batch == "No":
+			if batch == 'No':
 				cfg.uiUtls.addProgressBar()
 				# disable map canvas render for speed
 				cfg.cnvs.setRenderFlag(False)
-			# date time for temp name
-			dT = cfg.utls.getTime()
 			# vector EPSG
-			if "MultiPolygon?crs=PROJCS" in str(vectorSource):
+			if 'Polygon?crs=' in str(vectorSource) or 'memory?geometry=' in str(vectorSource):
 				# temp shapefile
-				tSHP = cfg.tmpDir + "/" + cfg.rclssTempNm + dT + ".shp"
+				tSHP = cfg.utls.createTempRasterPath('shp')
 				l = cfg.utls.saveMemoryLayerToShapefile(l, tSHP)
 				vectorSource = tSHP
 			if cfg.ui.field_checkBox.isChecked():
@@ -100,17 +98,18 @@ class VectorToRasterTab:
 			cfg.uiUtls.updateBar(100)
 			# add raster to layers
 			if cfg.osSCP.path.isfile(rstrOut):
-				rstr = cfg.utls.addRasterLayer(rstrOut, cfg.osSCP.path.basename(rstrOut))
+				rstr = cfg.utls.addRasterLayer(rstrOut)
 			else:
-				return "No"
+				return 'No'
 			cfg.utls.rasterSymbolSingleBandGray(rstr)
-			if batch == "No":
+			if batch == 'No':
 				# enable map canvas render
 				cfg.cnvs.setRenderFlag(True)
 				cfg.utls.finishSound()
+				cfg.utls.sendSMTPMessage(None, str(__name__))
 				cfg.uiUtls.removeProgressBar()
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "finished")
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "finished")
 		
 	# reload vector list
 	def reloadVectorList(self):

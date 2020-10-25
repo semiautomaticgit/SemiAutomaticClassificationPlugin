@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="34.133335"
+   height="34.133335"
+   id="svg5320"
+   version="1.1"
+   inkscape:version="0.92.1 r15371"
+   sodipodi:docname="semiautomaticclassificationplugin_download_arrow.svg"
+   inkscape:export-filename="/home/luca/Scrivania/semiautomaticclassificationplugin_download_arrow.png"
+   inkscape:export-xdpi="67.5"
+   inkscape:export-ydpi="67.5">
+  <defs
+     id="defs5322" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="7.9180417"
+     inkscape:cx="-18.867373"
+     inkscape:cy="10.498552"
+     inkscape:current-layer="layer3"
+     showgrid="true"
+     inkscape:grid-bbox="true"
+     inkscape:document-units="px"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:window-width="1366"
+     inkscape:window-height="708"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid5346"
+       originx="0"
+       originy="0"
+       spacingx="1.0666667"
+       spacingy="1.0666667" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata5325">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer">
+    <path
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#000f22;fill-opacity:1;fill-rule:nonzero;stroke-width:1.29299533;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate"
+       d="m 13.7,0.16666667 c -1.092615,0 -1.966667,0.87405183 -1.966667,1.96666663 V 16.433333 H 4.2666667 c -2.1333337,0 11.7333333,16 11.7333333,16 L 17.066667,33.5 18.133333,32.433333 c 0,0 13.866668,-16 11.733334,-16 H 22.4 V 2.1333333 c 0,-1.0926148 -0.874051,-1.96666663 -1.966667,-1.96666663 z"
+       id="rect5348"
+       inkscape:connector-curvature="0" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="Livello">
+    <ellipse
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#00234c;fill-opacity:1;fill-rule:nonzero;stroke:#e5e5e5;stroke-width:1.33571243;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate"
+       id="path5982"
+       cx="25.599998"
+       cy="27.733334"
+       rx="7.4666653"
+       ry="6.6666665" />
+    <ellipse
+       style="fill:none;stroke:#e5e5e5;stroke-width:0.20201878;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path6043"
+       cx="25.288887"
+       cy="27.733334"
+       rx="2.7999995"
+       ry="6.3768115" />
+    <ellipse
+       id="path6045"
+       style="fill:none;stroke:#e5e5e5;stroke-width:0.30115181;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       cx="25.599997"
+       cy="27.733334"
+       rx="6.2222214"
+       ry="6.3768115" />
+    <ellipse
+       transform="matrix(0.00637587,0.99997967,-1,0,0,0)"
+       id="path6047"
+       style="fill:none;stroke:#e5e5e5;stroke-width:0.2087952;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       cx="27.733896"
+       cy="-25.578781"
+       rx="2.608789"
+       ry="7.3110561" />
+  </g>
+</svg>

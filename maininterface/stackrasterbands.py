@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
+'''
 /**************************************************************************************************************************
  SemiAutomaticClassificationPlugin
 
@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2018 by Luca Congedo
+		copyright		: (C) 2012-2021 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -30,11 +30,11 @@
  * 
 **************************************************************************************************************************/
 
-"""
+'''
 
 
 
-cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
+cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
 class StackRasterBands:
 
@@ -46,36 +46,36 @@ class StackRasterBands:
 		self.stackRasters()
 		
 	# stack multiple rasters
-	def stackRasters(self, batch = "No", outputFile = None, bandSetNumber = None):
+	def stackRasters(self, batch = 'No', outputFile = None, bandSetNumber = None):
 		if bandSetNumber is None:
 			bandSetNumber = cfg.bndSetNumber
 		if bandSetNumber >= len(cfg.bandSetsList):
 			cfg.mx.msgWar25(bandSetNumber + 1)
-			return "No"
+			return 'No'
 		cfg.uiUtls.addProgressBar()
-		if cfg.bandSetsList[bandSetNumber][0] == "Yes":
+		if cfg.bandSetsList[bandSetNumber][0] == 'Yes':
 			ckB = cfg.utls.checkBandSet(bandSetNumber)
-			if ckB == "Yes":
+			if ckB == 'Yes':
 				if len(cfg.bndSetLst) == 0:
-					if batch == "No":
+					if batch == 'No':
 						cfg.uiUtls.removeProgressBar()
 					cfg.mx.msgWar28()
 					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " Warning")
-					return "No"
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " Warning")
+					return 'No'
 				if outputFile is None:
 					rstrOut = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Save raster"), "", "*.tif", "tif")
 					if rstrOut is False:
-						if batch == "No":
+						if batch == 'No':
 							cfg.uiUtls.removeProgressBar()
-						return "No"
+						return 'No'
 				else:
 					rstrOut = outputFile
 		else:
 			cfg.mx.msgWar15()
-			if batch == "No":
+			if batch == 'No':
 				cfg.uiUtls.removeProgressBar()
-			return "No"
+			return 'No'
 		if rstrOut is not False:
 			if rstrOut.lower().endswith(".tif"):
 				pass
@@ -83,18 +83,18 @@ class StackRasterBands:
 				rstrOut = rstrOut + ".tif"
 			if outputFile is None:
 				cfg.uiUtls.addProgressBar()
-			
 			cfg.uiUtls.updateBar(10)
-			st = cfg.utls.mergeRasterBands(cfg.bndSetLst, rstrOut)
+			st = cfg.utls.mergeRasterBands(cfg.bndSetLst, rstrOut, compress = 'Yes')
 			if cfg.osSCP.path.isfile(rstrOut):
 				cfg.cnvs.setRenderFlag(False)
-				cfg.utls.addRasterLayer(str(rstrOut), str(cfg.osSCP.path.basename(rstrOut)))
+				cfg.utls.addRasterLayer(rstrOut)
 				cfg.cnvs.setRenderFlag(True)
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " raster: " + str(st))
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " raster: " + str(st))
 				cfg.uiUtls.updateBar(100)
 			if outputFile is None:
-				if batch == "No":
+				if batch == 'No':
 					cfg.utls.finishSound()
+					cfg.utls.sendSMTPMessage(None, str(__name__))
 					cfg.uiUtls.removeProgressBar()
 				

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
+'''
 /**************************************************************************************************************************
  SemiAutomaticClassificationPlugin
 
@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2018 by Luca Congedo
+		copyright		: (C) 2012-2021 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -30,21 +30,21 @@
  * 
 **************************************************************************************************************************/
 
-"""
+'''
 
 
 
-cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
+cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
 class RGBListTab:
 
 	def __init__(self):
-		self.tableEdited = "Yes"
+		self.tableEdited = 'Yes'
 	
 	# Create RGB list table
 	def RGBListTable(self, list):
 		l = cfg.ui.RGB_tableWidget
-		self.tableEdited = "No"
+		self.tableEdited = 'No'
 		l.blockSignals(True)
 		cfg.utls.clearTable(l)
 		x = 0
@@ -54,21 +54,21 @@ class RGBListTab:
 				cfg.utls.addTableItem(l, i, x, 0)
 				x = x + 1
 		l.blockSignals(False)
-		self.tableEdited = "Yes"
+		self.tableEdited = 'Yes'
 
 	# edited table
 	def editedTable(self, row, column):
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
-		if self.tableEdited == "Yes":
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "")
+		if self.tableEdited == 'Yes':
 			tW = cfg.ui.RGB_tableWidget
 			t = tW.item(row, column).text()
 			try:
 				check = cfg.utls.createRGBColorComposite(t)
 			except Exception as err:
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-				check = "No"
-			if check == "Yes":
+				cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+				check = 'No'
+			if check == 'Yes':
 				listA = self.readRGBListTable()
 				cfg.RGBList = listA
 				cfg.utls.writeProjectVariable("SCP_RGBList", str(cfg.RGBList))
@@ -80,7 +80,7 @@ class RGBListTab:
 					
 	# read RGB List table
 	def readRGBListTable(self):
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "")
 		tW = cfg.ui.RGB_tableWidget
 		c = tW.rowCount()
 		list = []
@@ -99,7 +99,7 @@ class RGBListTab:
 		tW.setRowCount(c + 1)
 		cfg.utls.addTableItem(tW, "0-0-0", c, 0)
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "added RGB " + str(c + 1))
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "added RGB " + str(c + 1))
 
 	# remove RGB
 	def removeRGBFromTable(self):
@@ -123,13 +123,13 @@ class RGBListTab:
 		self.clearTable()
 		
 	# clear Table
-	def clearTable(self, question = "Yes"):
-		if question == "Yes":
+	def clearTable(self, question = 'Yes'):
+		if question == 'Yes':
 			# ask for confirm
 			a = cfg.utls.questionBox(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Reset RGB list"), cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Are you sure you want to clear the RGB list?"))
 		else:
-			a = "Yes"
-		if a == "Yes":
+			a = 'Yes'
+		if a == 'Yes':
 			tW = cfg.ui.RGB_tableWidget
 			cfg.utls.clearTable(tW)
 			listA = self.readRGBListTable()
@@ -140,7 +140,7 @@ class RGBListTab:
 	# move up selected RGB
 	def moveUpRGB(self):
 		tW = cfg.ui.RGB_tableWidget
-		self.tableEdited = "No"
+		self.tableEdited = 'No'
 		tW.blockSignals(True)
 		c = tW.rowCount()
 		s = tW.selectedItems()
@@ -161,21 +161,21 @@ class RGBListTab:
 				tW.selectRow(v[i])
 		except Exception as err:
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			tW.clearSelection()
-		self.tableEdited = "Yes"
+		self.tableEdited = 'Yes'
 		tW.blockSignals(False)
 		listA = self.readRGBListTable()
 		cfg.RGBList = listA
 		cfg.utls.writeProjectVariable("SCP_RGBList", str(cfg.RGBList))
 		cfg.utls.setComboboxItems(cfg.rgb_combo, cfg.RGBList)
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " RGB moved")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " RGB moved")
 				
 	# move down selected RGB
 	def moveDownRGB(self):
 		tW = cfg.ui.RGB_tableWidget
-		self.tableEdited = "No"
+		self.tableEdited = 'No'
 		tW.blockSignals(True)
 		c = tW.rowCount()
 		s = tW.selectedItems()
@@ -196,37 +196,37 @@ class RGBListTab:
 				tW.selectRow(v[i])
 		except Exception as err:
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			tW.clearSelection()
-		self.tableEdited = "Yes"
+		self.tableEdited = 'Yes'
 		tW.blockSignals(False)
 		listA = self.readRGBListTable()
 		cfg.RGBList = listA
 		cfg.utls.writeProjectVariable("SCP_RGBList", str(cfg.RGBList))
 		cfg.utls.setComboboxItems(cfg.rgb_combo, cfg.RGBList)
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " RGB moved")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " RGB moved")
 				
 	# all RGB List 
 	def allRGBListAction(self):
 		self.allRGBList()
 
 	# all RGB List 
-	def allRGBList(self, question = "Yes", bandSetNumber = None):
-		if question == "Yes":
+	def allRGBList(self, question = 'Yes', bandSetNumber = None):
+		if question == 'Yes':
 			# ask for confirm
 			a = cfg.utls.questionBox(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "RGB list"), cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Calculate all the RGB combinations?"))
 		else:
-			a = "Yes"
-		if a == "Yes":
+			a = 'Yes'
+		if a == 'Yes':
 			if bandSetNumber is None:
 				bandSetNumber = cfg.bndSetNumber
 			if bandSetNumber >= len(cfg.bandSetsList):
 				cfg.mx.msgWar25(bandSetNumber + 1)
-				return "No"
+				return 'No'
 			perm = list(cfg.itertoolsSCP.permutations(list(range(1, len(cfg.bandSetsList[bandSetNumber][3])+1)), 3))
 			tW = cfg.ui.RGB_tableWidget
-			self.tableEdited = "No"
+			self.tableEdited = 'No'
 			tW.blockSignals(True)
 			cfg.utls.clearTable(tW)
 			for x in perm:
@@ -234,14 +234,14 @@ class RGBListTab:
 				# add list items to table
 				tW.setRowCount(c + 1)
 				cfg.utls.addTableItem(tW, str(x[0]) + "-" + str(x[1]) + "-" + str(x[2]), c, 0)
-			self.tableEdited = "Yes"
+			self.tableEdited = 'Yes'
 			tW.blockSignals(False)
 			listA = self.readRGBListTable()
 			cfg.RGBList = listA
 			cfg.utls.writeProjectVariable("SCP_RGBList", str(cfg.RGBList))
 			cfg.utls.setComboboxItems(cfg.rgb_combo, cfg.RGBList)
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "")
 		
 # export RGB list to file
 	def exportRGBList(self):
@@ -262,10 +262,10 @@ class RGBListTab:
 						f.write(txt)
 				f.close()
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " list exported")
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " list exported")
 			except Exception as err:
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 		
 	# import RGB from file
 	def importRGB(self):
@@ -283,9 +283,9 @@ class RGBListTab:
 					tW.setRowCount(c + 1)
 					cfg.utls.addTableItem(tW, file[b].strip(), c, 0)
 					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " list imported")
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " list imported")
 		except Exception as err:
 			cfg.mx.msgErr19()
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 		

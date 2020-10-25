@@ -21,7 +21,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="resources.qrc">
-    <normaloff>:/plugins/semiautomaticclassificationplugin/semiautomaticclassificationplugin.png</normaloff>:/plugins/semiautomaticclassificationplugin/semiautomaticclassificationplugin.png</iconset>
+    <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin.svg</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout_7">
    <item row="0" column="0">
@@ -55,7 +55,7 @@
           <bool>true</bool>
          </property>
          <attribute name="horizontalHeaderDefaultSectionSize">
-          <number>50</number>
+          <number>62</number>
          </attribute>
          <attribute name="horizontalHeaderStretchLastSection">
           <bool>true</bool>
@@ -75,7 +75,7 @@
          </column>
          <column>
           <property name="text">
-           <string>MC Info</string>
+           <string>MC Name</string>
           </property>
          </column>
          <column>
@@ -85,7 +85,7 @@
          </column>
          <column>
           <property name="text">
-           <string>C Info</string>
+           <string>C Name</string>
           </property>
          </column>
          <column>
@@ -138,7 +138,7 @@
              </font>
             </property>
             <property name="styleSheet">
-             <string notr="true">background-color : qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #535353, stop:1 #a6a6a6); color : white</string>
+             <string notr="true">background-color : #656565; color : white</string>
             </property>
             <property name="frameShape">
              <enum>QFrame::Panel</enum>
@@ -179,7 +179,7 @@
               </property>
               <property name="icon">
                <iconset resource="resources.qrc">
-                <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_enter.png</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_enter.png</iconset>
+                <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_enter.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_enter.svg</iconset>
               </property>
               <property name="iconSize">
                <size>
@@ -208,7 +208,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_scatter_show_raster.png</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_scatter_show_raster.png</iconset>
+                  <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_scatter_show_raster.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_scatter_show_raster.svg</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -231,7 +231,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_save_plot.png</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_save_plot.png</iconset>
+                  <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_add_sign_tool.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_add_sign_tool.svg</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -291,7 +291,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_fit_plot.png</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_fit_plot.png</iconset>
+                  <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_fit_plot.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_fit_plot.svg</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -314,7 +314,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_save_plot_image.png</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_save_plot_image.png</iconset>
+                  <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_save_plot_image.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_save_plot_image.svg</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -336,7 +336,7 @@
                </font>
               </property>
               <property name="styleSheet">
-               <string notr="true">background-color : qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #535353, stop:1 #a6a6a6); color : white</string>
+               <string notr="true">background-color : #656565; color : white</string>
               </property>
               <property name="frameShape">
                <enum>QFrame::Panel</enum>
@@ -402,7 +402,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_enter.png</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_enter.png</iconset>
+                  <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_enter.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_enter.svg</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -471,7 +471,7 @@
               </property>
               <property name="icon">
                <iconset resource="resources.qrc">
-                <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_scatter_edit_polygon.png</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_scatter_edit_polygon.png</iconset>
+                <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_scatter_edit_polygon.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_scatter_edit_polygon.svg</iconset>
               </property>
               <property name="iconSize">
                <size>
@@ -520,7 +520,7 @@
               </property>
               <property name="icon">
                <iconset resource="resources.qrc">
-                <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_scatter_reset_polygon.png</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_scatter_reset_polygon.png</iconset>
+                <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_scatter_reset_polygon.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_scatter_reset_polygon.svg</iconset>
               </property>
               <property name="iconSize">
                <size>
@@ -732,7 +732,7 @@
               </property>
               <property name="icon">
                <iconset resource="resources.qrc">
-                <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_remove.png</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_remove.png</iconset>
+                <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_remove.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_remove.svg</iconset>
               </property>
               <property name="iconSize">
                <size>
@@ -755,7 +755,7 @@
               </property>
               <property name="icon">
                <iconset resource="resources.qrc">
-                <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_scatter_raster_temp_ROI.png</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_scatter_raster_temp_ROI.png</iconset>
+                <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_scatter_raster_temp_ROI.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_scatter_raster_temp_ROI.svg</iconset>
               </property>
               <property name="iconSize">
                <size>
@@ -778,7 +778,7 @@
               </property>
               <property name="icon">
                <iconset resource="resources.qrc">
-                <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_scatter_raster_display.png</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_scatter_raster_display.png</iconset>
+                <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_scatter_raster_display.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_scatter_raster_display.svg</iconset>
               </property>
               <property name="iconSize">
                <size>
@@ -801,7 +801,7 @@
               </property>
               <property name="icon">
                <iconset resource="resources.qrc">
-                <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_scatter_raster_image.png</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_scatter_raster_image.png</iconset>
+                <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_scatter_raster_image.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_scatter_raster_image.svg</iconset>
               </property>
               <property name="iconSize">
                <size>
@@ -831,7 +831,7 @@
           </font>
          </property>
          <property name="styleSheet">
-          <string notr="true">background-color : qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 #535353, stop:1 #a6a6a6); color : white</string>
+          <string notr="true">background-color : #656565; color : white</string>
          </property>
          <property name="frameShape">
           <enum>QFrame::Panel</enum>

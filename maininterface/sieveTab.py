@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
+'''
 /**************************************************************************************************************************
  SemiAutomaticClassificationPlugin
 
@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2018 by Luca Congedo
+		copyright		: (C) 2012-2021 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -30,11 +30,11 @@
  * 
 **************************************************************************************************************************/
 
-"""
+'''
 
 
 
-cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
+cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
 class SieveRaster:
 
@@ -46,8 +46,8 @@ class SieveRaster:
 		self.sieveClassification()
 		
 	# sieve classification
-	def sieveClassification(self, batch = "No", rasterInput = None, rasterOutput = None):
-		if batch == "No":
+	def sieveClassification(self, batch = 'No', rasterInput = None, rasterOutput = None):
+		if batch == 'No':
 			outputRaster = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Save output"), "", "*.tif", "tif")
 		else:
 			outputRaster = rasterOutput
@@ -56,41 +56,42 @@ class SieveRaster:
 				pass
 			else:
 				outputRaster = outputRaster + ".tif"
-			if batch == "No":
+			if batch == 'No':
 				cfg.uiUtls.addProgressBar()
 				raster = cfg.ui.sieve_raster_name_combo.currentText()
-				b = cfg.utls.selectLayerbyName(raster, "Yes")
+				b = cfg.utls.selectLayerbyName(raster, 'Yes')
 			else:
-				b = "No"
+				b = 'No'
 			if b is not None:
-				if batch == "No":
+				if batch == 'No':
 					rSource = cfg.utls.layerSource(b)
 				else:
 					if cfg.osSCP.path.isfile(rasterInput):
 						rSource = rasterInput
 					else:
-						return "No"
+						return 'No'
 				cfg.uiUtls.updateBar(40)
 				pixelThreshold =  cfg.ui.sieve_threshold_spinBox.value()
 				connect = cfg.ui.sieve_connection_combo.currentText()
 				cfg.utls.rasterSieve(rSource, outputRaster, pixelThreshold, connect)
 				if cfg.osSCP.path.isfile(outputRaster):
-					r =cfg.utls.addRasterLayer(outputRaster, cfg.osSCP.path.basename(outputRaster))
+					r =cfg.utls.addRasterLayer(outputRaster)
 				else:
-					return "No"
-				if b != "No":
+					return 'No'
+				if b != 'No':
 					cfg.utls.copyRenderer(b, r)
-				if batch == "No":
+				if batch == 'No':
 					cfg.utls.finishSound()
+					cfg.utls.sendSMTPMessage(None, str(__name__))
 					cfg.uiUtls.updateBar(100)
 					cfg.uiUtls.removeProgressBar()
 			else:
-				if batch == "No":
+				if batch == 'No':
 					cfg.uiUtls.removeProgressBar()
 				cfg.utls.refreshClassificationLayer()
 				cfg.mx.msgErr9()
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "Error raster not found")
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "Error raster not found")
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode())
 			

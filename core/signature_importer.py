@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
+'''
 /**************************************************************************************************************************
  SemiAutomaticClassificationPlugin
 
@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2018 by Luca Congedo
+		copyright		: (C) 2012-2021 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -30,9 +30,9 @@
  * 
 **************************************************************************************************************************/
 
-"""
+'''
 
-cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
+cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
 class Signature_Importer:
 	def __init__(self):
@@ -177,8 +177,8 @@ class Signature_Importer:
 		classID = cfg.ROIID
 		classInfo = cfg.ROIInfo
 		cfg.tblOut["ROI_SIZE"] = 0
-		cfg.utls.ROIStatisticsToSignature("No", macroclassID, macroclassInfo, classID, classInfo, cfg.bndSetNumber, unit)
-		cfg.SCPD.ROIListTable(cfg.shpLay, cfg.uidc.signature_list_tableWidget)
+		cfg.utls.ROIStatisticsToSignature('No', macroclassID, macroclassInfo, classID, classInfo, cfg.bndSetNumber, unit)
+		cfg.SCPD.ROIListTableTree(cfg.shpLay, cfg.uidc.signature_list_treeWidget)
 		
 	# open a shapefile
 	def openShapefileI(self):

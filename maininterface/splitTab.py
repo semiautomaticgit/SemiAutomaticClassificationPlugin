@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
+'''
 /**************************************************************************************************************************
  SemiAutomaticClassificationPlugin
 
@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2018 by Luca Congedo
+		copyright		: (C) 2012-2021 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -30,11 +30,11 @@
  * 
 **************************************************************************************************************************/
 
-"""
+'''
 
 
 
-cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
+cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
 class SplitTab:
 
@@ -53,7 +53,7 @@ class SplitTab:
 		# raster name
 		self.rstrLyNm = None
 		for l in sorted(ls, key=lambda c: c.name()):
-			if (l.type()== cfg.qgisCoreSCP.QgsMapLayer.RasterLayer):
+			if (l.type() == cfg.qgisCoreSCP.QgsMapLayer.RasterLayer):
 				if l.bandCount() > 1:
 					cfg.dlg.raster_layer_combo(l.name())
 		# logger
@@ -65,7 +65,7 @@ class SplitTab:
 			i = len(cfg.ui.raster_name_combo.currentText())
 		except:
 			self.refreshClassificationLayer()
-			return "No"
+			return 'No'
 		if i > 0:
 			self.splitRasterToBands(self.rstrLyNm)
 			# logger
@@ -74,8 +74,8 @@ class SplitTab:
 			self.refreshClassificationLayer()
 		
 	# split raster to bands
-	def splitRasterToBands(self, rasterName, batch = "No",  inputFile = None, outputDirectory = None):
-		if batch == "No":
+	def splitRasterToBands(self, rasterName, batch = 'No',  inputFile = None, outputDirectory = None):
+		if batch == 'No':
 			o = cfg.utls.getExistingDirectory(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Select a directory"))
 		else:
 			o = outputDirectory
@@ -85,36 +85,37 @@ class SplitTab:
 		if len(o) > 0:
 			oDir = cfg.utls.makeDirectory(o)
 			if oDir is None:
-				if batch == "No":
+				if batch == 'No':
 					# enable map canvas render
 					cfg.cnvs.setRenderFlag(True)
 					cfg.uiUtls.removeProgressBar()
 				cfg.mx.msgErr58()
-				return "No"
-			if batch == "No":
+				return 'No'
+			if batch == 'No':
 				# disable map canvas render for speed
 				cfg.cnvs.setRenderFlag(False)
 				cfg.uiUtls.addProgressBar()
-				i = cfg.utls.selectLayerbyName(rasterName, "Yes")
+				i = cfg.utls.selectLayerbyName(rasterName, 'Yes')
 				rPath = cfg.utls.layerSource(i)
 			else:
 				rPath = inputFile
 			try:
-				iL = cfg.utls.rasterToBands(rPath, cfg.tmpDir, outputName + rasterName, "Yes")
+				iL = cfg.utls.rasterToBands(rPath, cfg.tmpDir, outputName + rasterName, 'Yes')
 				for r in iL:
-					if cfg.rasterCompression != "No":
+					if cfg.rasterCompression != 'No':
 						try:
-							cfg.utls.GDALCopyRaster(r, o + "/" + cfg.osSCP.path.basename(r), "GTiff", cfg.rasterCompression, "DEFLATE -co PREDICTOR=2 -co ZLEVEL=1")
+							cfg.utls.GDALCopyRaster(r, o + '/' + cfg.utls.fileName(r), 'GTiff', cfg.rasterCompression, 'LZW')
 						except Exception as err:
-							cfg.shutilSCP.copy(r, o + "/" + cfg.osSCP.path.basename(r))
+							cfg.shutilSCP.copy(r, o + '/' + cfg.utls.fileName(r))
 							# logger
-							if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+							if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 					else:
-						cfg.shutilSCP.copy(r, o + "/" + cfg.osSCP.path.basename(r))
-					cfg.utls.addRasterLayer(o + "/" + cfg.osSCP.path.basename(r), cfg.osSCP.path.basename(r))
+						cfg.shutilSCP.copy(r, o + '/' + cfg.utls.fileName(r))
+					cfg.utls.addRasterLayer(o + '/' + cfg.utls.fileName(r))
 					cfg.osSCP.remove(r)
-				if batch == "No":
+				if batch == 'No':
 					cfg.utls.finishSound()
+					cfg.utls.sendSMTPMessage(None, str(__name__))
 					# enable map canvas render
 					cfg.cnvs.setRenderFlag(True)
 					cfg.uiUtls.removeProgressBar()
@@ -123,10 +124,10 @@ class SplitTab:
 			except Exception as err:
 				# logger
 				cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-				if batch == "No":
+				if batch == 'No':
 					# enable map canvas render
 					cfg.cnvs.setRenderFlag(True)
 					cfg.uiUtls.removeProgressBar()
 				cfg.mx.msgErr32()
-				return "No"
+				return 'No'
 				

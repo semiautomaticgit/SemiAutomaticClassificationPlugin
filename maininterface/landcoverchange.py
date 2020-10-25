@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
+'''
 /**************************************************************************************************************************
  SemiAutomaticClassificationPlugin
 
@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2018 by Luca Congedo
+		copyright		: (C) 2012-2021 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -30,11 +30,11 @@
  * 
 **************************************************************************************************************************/
 
-"""
+'''
 
 
 
-cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
+cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
 class LandCoverChange:
 
@@ -45,39 +45,39 @@ class LandCoverChange:
 	def classificationReferenceLayerName(self):
 		cfg.refClssfctnNm = cfg.ui.classification_reference_name_combo.currentText()
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "reference classification name: " + str(cfg.refClssfctnNm))
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "reference classification name: " + str(cfg.refClssfctnNm))
 					
 	# start land cover change calculation
 	def landCoverChangeAction(self):			
 		self.landCoverChange()
 		
 	# start land cover change calculation
-	def landCoverChange(self, batch = "No", referenceRaster = None, newRaster = None, rasterOutput = None):
-		if batch == "No":
+	def landCoverChange(self, batch = 'No', referenceRaster = None, newRaster = None, rasterOutput = None):
+		if batch == 'No':
 			# input
-			refRstr = cfg.utls.selectLayerbyName(cfg.refClssfctnNm, "Yes")
+			refRstr = cfg.utls.selectLayerbyName(cfg.refClssfctnNm, 'Yes')
 			try:
 				refRstrSrc = cfg.utls.layerSource(refRstr)
-				rstrCheck = "Yes"
+				rstrCheck = 'Yes'
 			except Exception as err:
 				# logger
 				cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-				rstrCheck = "No"
-			newRstr = cfg.utls.selectLayerbyName(cfg.newClssfctnNm, "Yes")
+				rstrCheck = 'No'
+			newRstr = cfg.utls.selectLayerbyName(cfg.newClssfctnNm, 'Yes')
 			try:
 				newRstrSrc = cfg.utls.layerSource(newRstr)
-				rstrCheck = "Yes"
+				rstrCheck = 'Yes'
 			except Exception as err:
 				# logger
 				cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-				rstrCheck = "No"
+				rstrCheck = 'No'
 		else:
 			refRstrSrc = referenceRaster
 			newRstrSrc = newRaster
 			if cfg.osSCP.path.isfile(refRstrSrc) and cfg.osSCP.path.isfile(newRstrSrc):
-				rstrCheck = "Yes"
+				rstrCheck = 'Yes'
 			else:
-				rstrCheck = "No"
+				rstrCheck = 'No'
 		# check if numpy is updated
 		try:
 			cfg.np.count_nonzero([1,1,0])
@@ -85,8 +85,8 @@ class LandCoverChange:
 			# logger
 			cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			cfg.mx.msgErr26()
-			return "No"
-		if rstrCheck == "No":
+			return 'No'
+		if rstrCheck == 'No':
 			cfg.mx.msg4()
 		else:
 			# open input with GDAL
@@ -98,7 +98,7 @@ class LandCoverChange:
 			if refRstrProj != newRstrProj:
 				cfg.mx.msg9()
 			else:
-				if batch == "No":
+				if batch == 'No':
 					chngRstPath = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Save land cover change raster output"), "", "*.tif", "tif")
 				else:
 					chngRstPath = rasterOutput
@@ -107,25 +107,24 @@ class LandCoverChange:
 						pass
 					else:
 						chngRstPath = chngRstPath + ".tif"
-					if batch == "No":
+					if batch == 'No':
 						cfg.uiUtls.addProgressBar()
 						# disable map canvas render for speed
 						cfg.cnvs.setRenderFlag(False)
-					tblOut = cfg.osSCP.path.dirname(chngRstPath) + "/" + cfg.osSCP.path.basename(chngRstPath)
-					tblOut = cfg.osSCP.path.splitext(tblOut)[0] + ".csv"
+					tblOut = cfg.osSCP.path.dirname(chngRstPath) + "/" + cfg.utls.fileNameNoExt(chngRstPath) + ".csv"
 					# combination finder
 					# band list
 					bLR = cfg.utls.readAllBandsFromRaster(refRstrDt)
 					cfg.rasterBandUniqueVal = cfg.np.zeros((1, 1))
 					cfg.rasterBandUniqueVal = cfg.np.delete(cfg.rasterBandUniqueVal, 0, 1)
-					o = cfg.utls.processRaster(refRstrDt, bLR, None, "No", cfg.utls.rasterUniqueValues, None, None, None, None, 0, None, cfg.NoDataVal, "No", None, None, "UniqueVal")
+					o = cfg.utls.processRasterOld(refRstrDt, bLR, None, 'No', cfg.utls.rasterUniqueValues, None, None, None, None, 0, None, cfg.NoDataVal, 'No', None, None, "UniqueVal")
 					cfg.rasterBandUniqueVal = cfg.np.unique(cfg.rasterBandUniqueVal).tolist()
 					refRasterBandUniqueVal = sorted(cfg.rasterBandUniqueVal)	
 					# band list
 					bLN = cfg.utls.readAllBandsFromRaster(newRstrDt)
 					cfg.rasterBandUniqueVal = cfg.np.zeros((1, 1))
 					cfg.rasterBandUniqueVal = cfg.np.delete(cfg.rasterBandUniqueVal, 0, 1)
-					o = cfg.utls.processRaster(newRstrDt, bLN, None, "No", cfg.utls.rasterUniqueValues, None, None, None, None, 0, None, cfg.NoDataVal, "No", None, None, "UniqueVal")
+					o = cfg.utls.processRasterOld(newRstrDt, bLN, None, 'No', cfg.utls.rasterUniqueValues, None, None, None, None, 0, None, cfg.NoDataVal, 'No', None, None, "UniqueVal")
 					for b in range(0, len(bLR)):
 						bLR[b] = None
 					refRstrDt = None
@@ -134,7 +133,7 @@ class LandCoverChange:
 					newRstrDt = None		
 					cfg.rasterBandUniqueVal = cfg.np.unique(cfg.rasterBandUniqueVal).tolist()
 					newRasterBandUniqueVal = sorted(cfg.rasterBandUniqueVal)
-					cmb = list(cfg.itertoolsSCP.product(refRasterBandUniqueVal, newRasterBandUniqueVal))
+					cmb = cfg.np.array(cfg.np.meshgrid(refRasterBandUniqueVal, newRasterBandUniqueVal)).T.reshape(-1,2).tolist()
 					cmbntns = {}
 					# expression builder
 					n = 1
@@ -146,28 +145,20 @@ class LandCoverChange:
 							e.append("cfg.np.where( (a == " + str(i[0]) + ") & (b == " + str(i[1]) + "), " + str(n) + ", 0)")
 							cmbntns["combination_" + str(i[0]) + "_"+ str(i[1])] = n
 							n = n + 1
-					# virtual raster
-					tPMN = cfg.tmpVrtNm + ".vrt"
-					# date time for temp name
-					dT = cfg.utls.getTime()
-					tPMD = cfg.tmpDir + "/" + dT + tPMN
-					tPMN2 = dT + cfg.calcRasterNm + ".tif"
-					tPMD2 = cfg.tmpDir + "/" + tPMN2
+					tPMD2 = cfg.utls.createTempRasterPath('tif')
 					bList = [refRstrSrc, newRstrSrc]
 					bandNumberList = [1, 1]
-					vrtCheck = cfg.utls.createVirtualRaster(bList, tPMD, bandNumberList, "Yes", "Yes", 0, "No", "No")
+					vrtCheck = cfg.utls.createTempVirtualRaster(bList, bandNumberList, 'Yes', 'Yes', 0, 'No', 'No')
 					# open input with GDAL
-					rD = cfg.gdalSCP.Open(tPMD, cfg.gdalSCP.GA_ReadOnly)
+					rD = cfg.gdalSCP.Open(vrtCheck, cfg.gdalSCP.GA_ReadOnly)
 					# output rasters
-					oM = []
-					oM.append(tPMD2)
-					oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0, None, cfg.rasterCompression)
+					oMR = cfg.utls.createRasterFromReference(rD, 1, [tPMD2], cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0, None, cfg.rasterCompression)
 					# band list
 					bL = cfg.utls.readAllBandsFromRaster(rD)
 					# calculation
 					variableList = [["im1", "a"], ["im2", "b"]]
 					cfg.rasterBandUniqueVal = {}
-					o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.bandCalculationMultipleWhere, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", e, variableList, "Calculating raster")
+					o = cfg.utls.processRasterOld(rD, bL, None, 'No', cfg.utls.bandCalculationMultipleWhere, None, oMR, None, None, 0, None, cfg.NoDataVal, 'No', e, variableList, "Calculating raster")
 					cfg.rasterBandUniqueVal.pop(cfg.NoDataVal, None)
 					# logger
 					cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "change raster output: " + str(chngRstPath))
@@ -177,7 +168,7 @@ class LandCoverChange:
 					for b in range(0, len(bL)):
 						bL[b] = None
 					rD = None
-					if cfg.rasterCompression != "No":
+					if cfg.rasterCompression != 'No':
 						try:
 							cfg.utls.GDALCopyRaster(tPMD2, chngRstPath, "GTiff", cfg.rasterCompression, "DEFLATE -co PREDICTOR=2 -co ZLEVEL=1")
 							cfg.osSCP.remove(tPMD2)
@@ -185,7 +176,7 @@ class LandCoverChange:
 							cfg.shutilSCP.copy(tPMD2, chngRstPath)
 							cfg.osSCP.remove(tPMD2)
 							# logger
-							if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+							if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 					else:
 						cfg.shutilSCP.copy(tPMD2, chngRstPath)
 						cfg.osSCP.remove(tPMD2)
@@ -193,17 +184,17 @@ class LandCoverChange:
 					try:
 						l = open(tblOut, 'w')
 					except:
-						return "No"
+						return 'No'
 					t = cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'ChangeCode') + "	" + cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'ReferenceClass') + "	" + cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'NewClass') + "	" + cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'PixelSum') + str("\n")
 					l.write(t)
 					# change stats
 					for i in cmb:
 						try:
 							v = cmbntns["combination_" + str(i[0]) + "_"+ str(i[1])]
-							combOK = "Yes"
+							combOK = 'Yes'
 						except:
-							combOK = "No"
-						if combOK == "Yes":
+							combOK = 'No'
+						if combOK == 'Yes':
 							t = str(v) + "	" + str(i[0]) + "	" + str(i[1]) + "	" + str(cfg.rasterBandUniqueVal[v]) + str("\n")
 							l.write(t)
 					l.close()
@@ -215,19 +206,20 @@ class LandCoverChange:
 							cfg.ui.change_textBrowser.setText(str(changeTxt))
 					except Exception as err:
 						# logger
-						cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 					# add raster to layers
-					rstr = cfg.utls.addRasterLayer(str(chngRstPath), str(cfg.osSCP.path.basename(chngRstPath)))
+					rstr = cfg.utls.addRasterLayer(chngRstPath)
 					cfg.utls.rasterSymbolGeneric(rstr)	
 					cfg.uiUtls.updateBar(100)
-					if batch == "No":
+					if batch == 'No':
 						# enable map canvas render
 						cfg.cnvs.setRenderFlag(True)
 						cfg.utls.finishSound()
+						cfg.utls.sendSMTPMessage(None, str(__name__))
 						cfg.ui.toolBox_landCoverChange.setCurrentIndex(1)
 						cfg.uiUtls.removeProgressBar()
 					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "finished")
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "finished")
 						
 	# state of checkbox for mask unchanged
 	def maskUnchangedCheckbox(self):
@@ -235,13 +227,13 @@ class LandCoverChange:
 			cfg.unchngMaskCheck = True
 		else:
 			cfg.unchngMaskCheck = False
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " checkbox set: " + str(cfg.unchngMaskCheck))
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " checkbox set: " + str(cfg.unchngMaskCheck))
 	
 	# new classification name
 	def newClassificationLayerName(self):
 		cfg.newClssfctnNm = cfg.ui.new_classification_name_combo.currentText()
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "reference classification name: " + str(cfg.newClssfctnNm))
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "reference classification name: " + str(cfg.newClssfctnNm))
 	
 	# refresh reference classification name
 	def refreshClassificationReferenceLayer(self):
@@ -250,11 +242,11 @@ class LandCoverChange:
 		# reference classification name
 		cfg.refClssfctnNm = None
 		for l in sorted(ls, key=lambda c: c.name()):
-			if (l.type()== cfg.qgisCoreSCP.QgsMapLayer.RasterLayer):
+			if (l.type() == cfg.qgisCoreSCP.QgsMapLayer.RasterLayer):
 				if l.bandCount() == 1:
 					cfg.dlg.classification_reference_layer_combo(l.name())
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "reference classification layers refreshed")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "reference classification layers refreshed")
 	
 	# refresh new classification name
 	def refreshNewClassificationLayer(self):
@@ -263,8 +255,8 @@ class LandCoverChange:
 		# new classification name
 		cfg.newClssfctnNm = None
 		for l in sorted(ls, key=lambda c: c.name()):
-			if (l.type()== cfg.qgisCoreSCP.QgsMapLayer.RasterLayer):
+			if (l.type() == cfg.qgisCoreSCP.QgsMapLayer.RasterLayer):
 				if l.bandCount() == 1:
 					cfg.dlg.new_classification_layer_combo(l.name())
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "new classification layers refreshed")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "new classification layers refreshed")

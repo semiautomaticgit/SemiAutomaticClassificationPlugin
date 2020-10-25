@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
+'''
 /**************************************************************************************************************************
  SemiAutomaticClassificationPlugin
 
@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2018 by Luca Congedo
+		copyright		: (C) 2012-2021 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -30,11 +30,11 @@
  * 
 **************************************************************************************************************************/
 
-"""
+'''
 
 
 
-cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
+cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
 class LCSigThresholdTab:
 
@@ -44,7 +44,7 @@ class LCSigThresholdTab:
 	# Create signature list table
 	def LCSignatureThresholdListTable(self):
 		l = cfg.ui.LCS_tableWidget
-		self.tableEdited = "No"
+		self.tableEdited = 'No'
 		l.blockSignals(True)
 		l.setSortingEnabled(False)
 		# column width
@@ -99,31 +99,31 @@ class LCSigThresholdTab:
 		except:
 			pass
 		# signature ID column
-		cfg.utls.insertTableColumn(l, v, cfg.tableColString, 60, "Yes")
+		cfg.utls.insertTableColumn(l, v, cfg.tableColString, 60, 'Yes')
 		x = 0
 		try:
 			for k in list(cfg.signIDs.values()):
 				cfg.utls.insertTableRow(l, x)
-				cfg.utls.addTableItem(l, int(cfg.signList["MACROCLASSID_" + str(k)]), x, 0, "No")
-				cfg.utls.addTableItem(l, str(cfg.signList["MACROCLASSINFO_" + str(k)]), x, 1, "No")
-				cfg.utls.addTableItem(l, int(cfg.signList["CLASSID_" + str(k)]), x, 2, "No")
-				cfg.utls.addTableItem(l, str(cfg.signList["CLASSINFO_" + str(k)]), x, 3, "No")
+				cfg.utls.addTableItem(l, int(cfg.signList["MACROCLASSID_" + str(k)]), x, 0, 'No')
+				cfg.utls.addTableItem(l, str(cfg.signList["MACROCLASSINFO_" + str(k)]), x, 1, 'No')
+				cfg.utls.addTableItem(l, int(cfg.signList["CLASSID_" + str(k)]), x, 2, 'No')
+				cfg.utls.addTableItem(l, str(cfg.signList["CLASSINFO_" + str(k)]), x, 3, 'No')
 				c = cfg.signList["COLOR_" + str(k)]
-				cfg.utls.addTableItem(l,  str(""), x, 4, "No", c)
+				cfg.utls.addTableItem(l,  str(""), x, 4, 'No', c)
 				vb = 5
 				for b in range(0, cfg.bandSetsList[cfg.bndSetNumber][2]):
 					cfg.utls.addTableItem(l, str(cfg.signList["LCS_MIN_" + str(k)][b]), x, vb)
 					vb = vb + 1
 					cfg.utls.addTableItem(l, str(cfg.signList["LCS_MAX_" + str(k)][b]), x, vb)
 					vb = vb + 1
-				cfg.utls.addTableItem(l, str(cfg.signIDs["ID_" + str(k)]), x, v, "No")
+				cfg.utls.addTableItem(l, str(cfg.signIDs["ID_" + str(k)]), x, v, 'No')
 				x = x + 1
 		except Exception as err:
 			cfg.utls.clearTable(l)
 			cfg.mx.msgErr57("MC" +str(cfg.signList["MACROCLASSID_" + str(k)]) + ";C" + str(cfg.signList["CLASSID_" + str(k)]) + ";" + str(cfg.signList["CLASSINFO_" + str(k)]) )
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-			return "No"
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			return 'No'
 		cfg.utls.setColumnWidthList(l, [[0, 40]])
 		try:
 			vOrd = self.orderColumn
@@ -134,16 +134,16 @@ class LCSigThresholdTab:
 		cfg.utls.sortTableColumn(l, vOrd, order)
 		l.setSortingEnabled(True)
 		l.blockSignals(False)
-		self.tableEdited = "Yes"
+		self.tableEdited = 'Yes'
 		self.orderedTable(vOrd)
 		intersect = cfg.LCSignT.checkIntersections()
 		cfg.LCSignT.higlightRowsByID(intersect)
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " signature list threshold created")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " signature list threshold created")
 		
 	# read threshold table
 	def readThresholdTable(self):
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "")
 		tW = cfg.ui.LCS_tableWidget
 		c = tW.rowCount()
 		for b in range(0, c):
@@ -169,7 +169,7 @@ class LCSigThresholdTab:
 		
 	# check in thresholds are intersecting
 	def checkIntersections(self):
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "")
 		intersect = []
 		cmb = list(cfg.itertoolsSCP.combinations(list(cfg.signIDs.values()), 2))
 		for a in cmb:
@@ -179,7 +179,7 @@ class LCSigThresholdTab:
 			id1 = a[1]
 			minB = cfg.np.array(cfg.signList["LCS_MIN_" + str(id1)])
 			maxB= cfg.np.array(cfg.signList["LCS_MAX_" + str(id1)])
-			if cfg.macroclassCheck == "Yes":
+			if cfg.macroclassCheck == 'Yes':
 				class0 = cfg.signList["MACROCLASSID_" + str(id0)]
 				class1 = cfg.signList["MACROCLASSID_" + str(id1)]
 			else:
@@ -191,8 +191,8 @@ class LCSigThresholdTab:
 				if int((tW.columnCount() - 6)/2) != len(cfg.signList["LCS_MIN_" + str(id0)]):
 					cfg.mx.msgWar26(str(cfg.bndSetNumber))
 					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " Error bands")
-					return "No"
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " Error bands")
+					return 'No'
 				for i in range(0, len(cfg.signList["LCS_MIN_" + str(id0)])):
 					if max(cfg.signList["LCS_MIN_" + str(id0)][i], cfg.signList["LCS_MIN_" + str(id1)][i]) <= min(cfg.signList["LCS_MAX_" + str(id1)][i], cfg.signList["LCS_MAX_" + str(id0)][i]):
 						test.append(1)
@@ -217,10 +217,10 @@ class LCSigThresholdTab:
 		
 	# highlight rows by ID
 	def higlightRowsByID(self, IDComb):
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "")
 		tW = cfg.ui.LCS_tableWidget
 		c = tW.rowCount()
-		self.tableEdited = "No"
+		self.tableEdited = 'No'
 		tW.setSortingEnabled(False)
 		tW.blockSignals(True)
 		for b in range(0, c):
@@ -234,8 +234,8 @@ class LCSigThresholdTab:
 			except:
 				cfg.mx.msgWar27()
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " Error bands")
-				return "No"
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " Error bands")
+				return 'No'
 			for x in range(0, 4):
 				tW.item(row0, x).setBackground(cfg.QtGuiSCP.QColor(255,203,69))
 				tW.item(row1, x).setBackground(cfg.QtGuiSCP.QColor(255,203,69))
@@ -251,19 +251,19 @@ class LCSigThresholdTab:
 			tW.item(row1, 4).setText(text0)
 		tW.blockSignals(False)
 		tW.setSortingEnabled(True)
-		self.tableEdited = "Yes"
+		self.tableEdited = 'Yes'
 		
 	# edited threshold table
 	def editedThresholdTable(self, row, column):
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
-		if self.tableEdited == "Yes":
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "")
+		if self.tableEdited == 'Yes':
 			tW = cfg.ui.LCS_tableWidget
 			t = tW.item(row, column).text()
 			if tW.columnCount() != cfg.bandSetsList[cfg.bndSetNumber][2]:
 				cfg.mx.msgWar26(str(cfg.bndSetNumber))
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " Error bands")
-				return "No"
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " Error bands")
+				return 'No'
 			try:
 				tr = float(t)
 				v = cfg.bandSetsList[cfg.bndSetNumber][2] * 2 +5
@@ -274,21 +274,21 @@ class LCSigThresholdTab:
 					if column == vb:
 						if tr >= values[b * 2]:
 							val = str(values[b * 2])
-							self.tableEdited = "No"
+							self.tableEdited = 'No'
 							tW.blockSignals(True)
 							cfg.utls.setTableItem(tW, row, column, val)
 							tW.blockSignals(False)
-							self.tableEdited = "Yes"
+							self.tableEdited = 'Yes'
 						break
 					vb = vb + 1
 					if column == vb:
 						if tr <= values[b * 2]:
 							val = str(values[b * 2])
-							self.tableEdited = "No"
+							self.tableEdited = 'No'
 							tW.blockSignals(True)
 							cfg.utls.setTableItem(tW, row, column, val)
 							tW.blockSignals(False)
-							self.tableEdited = "Yes"
+							self.tableEdited = 'Yes'
 						break
 					vb = vb + 1
 			except:
@@ -304,16 +304,16 @@ class LCSigThresholdTab:
 						val = str(cfg.signList["LCS_MAX_" + str(id)][b])
 						break
 					vb = vb + 1
-				self.tableEdited = "No"
+				self.tableEdited = 'No'
 				tW.blockSignals(True)
 				cfg.utls.setTableItem(tW, row, column, val)
 				tW.blockSignals(False)
-				self.tableEdited = "Yes"
+				self.tableEdited = 'Yes'
 				cfg.LCSignT.readThresholdTable()
 				cfg.spSigPlot.refreshPlot()
 				return 0
 			cfg.LCSignT.readThresholdTable()
-			#cfg.spSigPlot.signatureListPlotTable(cfg.uisp.signature_list_plot_tableWidget, "Yes")
+			#cfg.spSigPlot.signatureListPlotTable(cfg.uisp.signature_list_plot_tableWidget, 'Yes')
 			cfg.spSigPlot.signatureListPlotTable(cfg.uisp.signature_list_plot_tableWidget)
 			cfg.spSigPlot.refreshPlot()
 
@@ -330,12 +330,12 @@ class LCSigThresholdTab:
 		if len(v) > 1:
 			# ask for confirm
 			a = cfg.utls.questionBox(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Set thresholds"), cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Are you sure you want to set thresholds for several signatures?"))
-			if a == "Yes":
+			if a == 'Yes':
 				pass
 			else:
-				return "No"
+				return 'No'
 		cfg.uiUtls.addProgressBar()
-		self.tableEdited = "No"
+		self.tableEdited = 'No'
 		tW.setSortingEnabled(False)
 		tW.blockSignals(True)
 		progrStep = 0
@@ -359,30 +359,30 @@ class LCSigThresholdTab:
 				pass
 		tW.blockSignals(False)
 		tW.setSortingEnabled(True)
-		self.tableEdited = "Yes"
+		self.tableEdited = 'Yes'
 		cfg.LCSignT.readThresholdTable()
-		cfg.spSigPlot.signatureListPlotTable(cfg.uisp.signature_list_plot_tableWidget, "Yes")
+		cfg.spSigPlot.signatureListPlotTable(cfg.uisp.signature_list_plot_tableWidget, 'Yes')
 		#cfg.spSigPlot.refreshPlot()
 		cfg.uiUtls.removeProgressBar()
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "set")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "set")
 		
 	# Activate pointer for pixel threshold
 	def pointerActive(self):
 		# connect to click
 		t = cfg.LCSPixel
 		cfg.cnvs.setMapTool(t)
-		px = cfg.QtGuiSCP.QPixmap(":/pointer/icons/pointer/ROI_pointer.png")
+		px = cfg.QtGuiSCP.QPixmap(":/pointer/icons/pointer/ROI_pointer.svg")
 		c = cfg.QtGuiSCP.QCursor(px)
 		cfg.cnvs.setCursor(c)
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "pointer active: LCS pixel")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "pointer active: LCS pixel")
 		
 	# left click ROI pointer for pixel signature
 	def pointerLeftClick(self, point):
 		point = cfg.utls.checkPointImage(cfg.bandSetsList[cfg.bndSetNumber][8], point)
-		if cfg.pntCheck == "Yes":
-			sig = cfg.utls.calculatePixelSignature(point, cfg.bandSetsList[cfg.bndSetNumber][8], cfg.bndSetNumber,  "Pixel", "No")
+		if cfg.pntCheck == 'Yes':
+			sig = cfg.utls.calculatePixelSignature(point, cfg.bandSetsList[cfg.bndSetNumber][8], cfg.bndSetNumber,  "Pixel", 'No')
 			tW = cfg.ui.LCS_tableWidget
 			iR = []
 			for i in tW.selectedIndexes():
@@ -394,12 +394,12 @@ class LCSigThresholdTab:
 			if len(v) > 1:
 				# ask for confirm
 				a = cfg.utls.questionBox(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Set thresholds"), cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Are you sure you want to set thresholds for several signatures?"))
-				if a == "Yes":
+				if a == 'Yes':
 					pass
 				else:
-					return "No"
+					return 'No'
 			cfg.uiUtls.addProgressBar()
-			self.tableEdited = "No"
+			self.tableEdited = 'No'
 			tW.blockSignals(True)
 			tW.setSortingEnabled(False)
 			progrStep = 0
@@ -441,12 +441,12 @@ class LCSigThresholdTab:
 					vb = vb + 1
 			tW.blockSignals(False)
 			tW.setSortingEnabled(True)
-			self.tableEdited = "Yes"
+			self.tableEdited = 'Yes'
 			cfg.LCSignT.readThresholdTable()
-			cfg.spSigPlot.signatureListPlotTable(cfg.uisp.signature_list_plot_tableWidget, "Yes")
+			cfg.spSigPlot.signatureListPlotTable(cfg.uisp.signature_list_plot_tableWidget, 'Yes')
 			cfg.uiUtls.removeProgressBar()
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "pointer")
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "pointer")
 				
 	# include checkbox
 	def includeCheckbox(self):
@@ -495,12 +495,12 @@ class LCSigThresholdTab:
 		if len(v) > 1:
 			# ask for confirm
 			a = cfg.utls.questionBox(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Set thresholds"), cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Are you sure you want to set thresholds for several signatures?"))
-			if a == "Yes":
+			if a == 'Yes':
 				pass
 			else:
-				return "No"
+				return 'No'
 		cfg.uiUtls.addProgressBar()
-		self.tableEdited = "No"
+		self.tableEdited = 'No'
 		tW.setSortingEnabled(False)
 		tW.blockSignals(True)
 		progrStep = 0
@@ -519,12 +519,12 @@ class LCSigThresholdTab:
 				vb = vb + 1
 		tW.blockSignals(False)
 		tW.setSortingEnabled(True)
-		self.tableEdited = "Yes"
+		self.tableEdited = 'Yes'
 		cfg.LCSignT.readThresholdTable()
-		cfg.spSigPlot.signatureListPlotTable(cfg.uisp.signature_list_plot_tableWidget, "Yes")
+		cfg.spSigPlot.signatureListPlotTable(cfg.uisp.signature_list_plot_tableWidget, 'Yes')
 		cfg.uiUtls.removeProgressBar()
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "set")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "set")
 
 	def ROIThreshold(self):
 		if cfg.lstROI is not None:
@@ -539,12 +539,12 @@ class LCSigThresholdTab:
 			if len(v) > 1:
 				# ask for confirm
 				a = cfg.utls.questionBox(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Set thresholds"), cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Are you sure you want to set thresholds for several signatures?"))
-				if a == "Yes":
+				if a == 'Yes':
 					pass
 				else:
-					return "No"
+					return 'No'
 			cfg.uiUtls.addProgressBar()
-			self.tableEdited = "No"
+			self.tableEdited = 'No'
 			tW.setSortingEnabled(False)
 			tW.blockSignals(True)
 			progrStep = 0
@@ -586,18 +586,18 @@ class LCSigThresholdTab:
 					vb = vb + 1
 			tW.blockSignals(False)
 			tW.setSortingEnabled(True)
-			self.tableEdited = "Yes"
+			self.tableEdited = 'Yes'
 			cfg.LCSignT.readThresholdTable()
-			cfg.spSigPlot.signatureListPlotTable(cfg.uisp.signature_list_plot_tableWidget, "Yes")
+			cfg.spSigPlot.signatureListPlotTable(cfg.uisp.signature_list_plot_tableWidget, 'Yes')
 			cfg.uiUtls.removeProgressBar()
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "set")
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "set")
 	
 	# add signatures to spectral plot
 	def addSignatureToSpectralPlot(self):
 		tW = cfg.ui.LCS_tableWidget
 		r = []
-		check = "Yes"
+		check = 'Yes'
 		for i in tW.selectedIndexes():
 			r.append(i.row())
 		v = list(set(r))
@@ -614,12 +614,12 @@ class LCSigThresholdTab:
 						cfg.SCPD.sigListToPlot(id)
 				else:
 					rId = cfg.utls.getIDByAttributes(cfg.shpLay, cfg.fldSCP_UID, str(id))
-					cfg.utls.calculateSignature(cfg.shpLay, cfg.bandSetsList[cfg.bndSetNumber][8], rId, cfg.ROI_MC_ID[id], cfg.ROI_MC_Info[id], cfg.ROI_C_ID[id], cfg.ROI_C_Info[id], progress, progresStep, "No", "No", id)
+					cfg.utls.calculateSignature(cfg.shpLay, cfg.bandSetsList[cfg.bndSetNumber][8], rId, cfg.ROI_MC_ID[id], cfg.ROI_MC_Info[id], cfg.ROI_C_ID[id], cfg.ROI_C_Info[id], progress, progresStep, 'No', 'No', id)
 					cfg.SCPD.sigListToPlot(id)
-					check = "No"
+					check = 'No'
 			cfg.uiUtls.removeProgressBar()
-			if check == "No":
-				cfg.SCPD.ROIListTable(cfg.shpLay, cfg.uidc.signature_list_tableWidget)
+			if check == 'No':
+				cfg.SCPD.ROIListTableTree(cfg.shpLay, cfg.uidc.signature_list_treeWidget)
 			cfg.spSigPlot.signatureListPlotTable(cfg.uisp.signature_list_plot_tableWidget)
 			cfg.utls.spectralPlotTab()
 		else:

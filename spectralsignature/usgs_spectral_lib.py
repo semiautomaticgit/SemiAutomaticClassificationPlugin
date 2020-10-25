@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
+'''
 /**************************************************************************************************************************
  SemiAutomaticClassificationPlugin
 
@@ -9,7 +9,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2018 by Luca Congedo
+		copyright		: (C) 2012-2021 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -31,11 +31,11 @@
  * 
 **************************************************************************************************************************/
 
-"""
+'''
 
 
 
-cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
+cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
 class USGS_Spectral_Lib:
 
@@ -108,13 +108,13 @@ class USGS_Spectral_Lib:
 			check = cfg.utls.downloadFile(link, cfg.tmpDir + "/" + dT + ".asc", "query")
 			# logger
 			cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "library downloaded: " + str(link))
-			if check == "Yes":
+			if check == 'Yes':
 				return cfg.tmpDir + "/" + dT + ".asc"
 			else:
 				raise ValueError('No')
 		except Exception as err:
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			cfg.mx.msgErr21()
 		
 	# download signature description and display
@@ -125,7 +125,7 @@ class USGS_Spectral_Lib:
 			check = cfg.utls.downloadFile(link, cfg.tmpDir + "/" + dT + ".html", "query")
 			# logger
 			cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "library downloaded: " + str(link))
-			if check == "Yes":
+			if check == 'Yes':
 				f =  open(cfg.tmpDir + "/" + dT + ".html", 'r')
 				dHtml = f.read()
 				cfg.ui.USGS_library_textBrowser.setHtml(dHtml)
@@ -133,7 +133,7 @@ class USGS_Spectral_Lib:
 				raise ValueError('No')
 		except Exception as err:
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			cfg.mx.msgErr21()
 		# logger
 		cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "library description: " + str(link))

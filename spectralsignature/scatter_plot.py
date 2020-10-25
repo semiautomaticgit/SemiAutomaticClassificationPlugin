@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
+'''
 /**************************************************************************************************************************
  SemiAutomaticClassificationPlugin
 
@@ -9,7 +9,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2018 by Luca Congedo
+		copyright		: (C) 2012-2021 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -31,11 +31,11 @@
  * 
 **************************************************************************************************************************/
 
-"""
+'''
 
 
 
-cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
+cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 	
 class Scatter_Plot:
 
@@ -67,7 +67,7 @@ class Scatter_Plot:
 		for i in list:
 			cfg.uiscp.colormap_comboBox.addItem(i)
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " list added")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " list added")
 	
 	def motion_event(self, event):
 		if event.inaxes is not None:
@@ -134,14 +134,14 @@ class Scatter_Plot:
 	
 	# edited cell
 	def editedCell(self, row, column):
-		if cfg.ScatterTabEdited == "Yes":
+		if cfg.ScatterTabEdited == 'Yes':
 			tW = cfg.uiscp.scatter_list_plot_tableWidget
 			id = tW.item(row, 6).text()
 			if column == 0:
 				cfg.scatterPlotList["CHECKBOX_" + str(id)] = tW.item(row, 0).checkState()
 			cfg.scaPlT.scatterPlot()
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "edited cell" + str(row) + ";" + str(column))
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "edited cell" + str(row) + ";" + str(column))
 			
 	def scatterPlotDoubleClick(self, index):
 		if index.column() == 5:
@@ -186,15 +186,15 @@ class Scatter_Plot:
 		try:
 			cfg.uiUtls.addProgressBar()
 			# select all
-			if cfg.allSignCheck3 == "Yes":
+			if cfg.allSignCheck3 == 'Yes':
 				cfg.utls.allItemsSetState(cfg.uiscp.scatter_list_plot_tableWidget, 2)
 				# set check all plot
-				cfg.allSignCheck3 = "No"
+				cfg.allSignCheck3 = 'No'
 			# unselect all if previously selected all
-			elif cfg.allSignCheck3 == "No":
+			elif cfg.allSignCheck3 == 'No':
 				cfg.utls.allItemsSetState(cfg.uiscp.scatter_list_plot_tableWidget, 0)
 				# set check all plot
-				cfg.allSignCheck3 = "Yes"
+				cfg.allSignCheck3 = 'Yes'
 			tW = cfg.uiscp.scatter_list_plot_tableWidget
 			r = tW.rowCount()
 			for b in range(0, r):
@@ -202,10 +202,10 @@ class Scatter_Plot:
 				cfg.scatterPlotList["CHECKBOX_" + str(id)] = tW.item(b, 0).checkState()
 			cfg.uiUtls.removeProgressBar()
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " all signatures")
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " all signatures")
 		except Exception as err:
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			cfg.uiUtls.removeProgressBar()
 			
 	# signature list to plot list
@@ -223,7 +223,7 @@ class Scatter_Plot:
 		except:
 			cfg.scatterPlotList["COLORMAP_" + str(id)] = None
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "")
 		
 	# temp ROI to plot list
 	def tempROIToScatterPlot(self, id, histogram, bandList):
@@ -240,7 +240,7 @@ class Scatter_Plot:
 		except:
 			cfg.scatterPlotList["COLORMAP_" + str(id)] = None
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "")
 		
 	# add temp ROI to scatter plot
 	def addTempROIToScatterPlot(self):
@@ -251,7 +251,7 @@ class Scatter_Plot:
 			cfg.sctrROIID_h["HISTOGRAM_" + str(cfg.sctrROIID) + "_" + str([bX, bY])] = self.calculateTempROIToScatterPlot()
 			cfg.uiUtls.removeProgressBar()
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "")
 			
 	# add image extent to scatter plot
 	def addImageToScatterPlot(self):	
@@ -259,7 +259,7 @@ class Scatter_Plot:
 		rectangle = cfg.cnvs.extent()
 		imageName = cfg.bandSetsList[cfg.bndSetNumber][8]
 		# band set
-		if cfg.bandSetsList[cfg.bndSetNumber][0] == "Yes":
+		if cfg.bandSetsList[cfg.bndSetNumber][0] == 'Yes':
 			imageName = cfg.bandSetsList[cfg.bndSetNumber][3][0]
 		tLX, tLY, lRX, lRY, pSX, pSY = cfg.utls.imageInformationSize(imageName)
 		pol = []
@@ -270,7 +270,7 @@ class Scatter_Plot:
 		self.calculatePolygonScatterPlot(pol)
 		cfg.uiUtls.removeProgressBar()
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "")
 		
 	# add display extent to scatter plot
 	def addDisplayToScatterPlot(self):
@@ -278,7 +278,7 @@ class Scatter_Plot:
 		rectangle = cfg.cnvs.extent()
 		imageName = cfg.bandSetsList[cfg.bndSetNumber][8]
 		# band set
-		if cfg.bandSetsList[cfg.bndSetNumber][0] == "Yes":
+		if cfg.bandSetsList[cfg.bndSetNumber][0] == 'Yes':
 			imageName = cfg.bandSetsList[cfg.bndSetNumber][3][0]
 		tLX, tLY, lRX, lRY, pSX, pSY = cfg.utls.imageInformationSize(imageName)
 		pol = []
@@ -289,7 +289,7 @@ class Scatter_Plot:
 		self.calculatePolygonScatterPlot(pol)
 		cfg.uiUtls.removeProgressBar()
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "")
 		
 	# calculate polygon scatter plot
 	def calculatePolygonScatterPlot(self, polygon):
@@ -297,14 +297,14 @@ class Scatter_Plot:
 		bY = cfg.scatterBandY
 		imageName = cfg.bandSetsList[cfg.bndSetNumber][8]
 		# band set
-		if cfg.bandSetsList[cfg.bndSetNumber][0] == "Yes":
+		if cfg.bandSetsList[cfg.bndSetNumber][0] == 'Yes':
 			imageName = cfg.bandSetsList[cfg.bndSetNumber][3][0]
 			# image CRS
-			bN0 = cfg.utls.selectLayerbyName(imageName, "Yes")
+			bN0 = cfg.utls.selectLayerbyName(imageName, 'Yes')
 			pCrs = cfg.utls.getCrs(bN0)
 		else:
 			# image CRS
-			bN0 = cfg.utls.selectLayerbyName(imageName, "Yes")
+			bN0 = cfg.utls.selectLayerbyName(imageName, 'Yes')
 			pCrs = cfg.utls.getCrs(bN0)
 		if pCrs is None:
 			pCrs = cfg.utls.getQGISCrs()
@@ -330,19 +330,19 @@ class Scatter_Plot:
 		mL.updateExtents()
 		cfg.sctrROIID_h["HISTOGRAM_" + str(cfg.sctrROIID) + "_" + str([bX, bY])] = self.calculateTempROIToScatterPlot(mL)
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "")
 			
 	# add temp ROI to scatter plot
 	def calculateTempROIToScatterPlot(self, vector = None):
 		if vector is None:
 			vector = cfg.lstROI
 		cfg.sctrROIID = cfg. tempScatterNm
-		h = cfg.utls.calculateScatterPlot(vector, "ID", str(cfg.sctrROIID), "Yes")
+		h = cfg.utls.calculateScatterPlot(vector, "ID", str(cfg.sctrROIID), 'Yes')
 		# add ROI to scatter plot table
 		cfg.scaPlT.tempROIToScatterPlot(cfg.sctrROIID, h, [cfg.scatterBandX, cfg.scatterBandY])
 		cfg.scaPlT.scatterPlotListTable(cfg.uiscp.scatter_list_plot_tableWidget)
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "")
 		return h
 	
 	# calculate scatter plot
@@ -364,7 +364,7 @@ class Scatter_Plot:
 		cfg.uiUtls.removeProgressBar()
 		cfg.scaPlT.scatterPlot()
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "")
 			
 	# plot colormap
 	def colorPlot(self):
@@ -381,10 +381,10 @@ class Scatter_Plot:
 			ids.append(tW.item(x, 6).text())
 		cfg.scaPlT.scatterPlot(ids)
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "")
 		
 	# Create scatter plot
-	def scatterPlot(self, colorMap = "No"):
+	def scatterPlot(self, colorMap = 'No'):
 		cfg.uiUtls.addProgressBar()
 		tW = cfg.uiscp.scatter_list_plot_tableWidget
 		# Clear plot
@@ -433,26 +433,26 @@ class Scatter_Plot:
 						pal = cfg.scatterPlotList["COLORMAP_" + str(i)]
 				try:
 					h = cfg.scatterPlotList["HISTOGRAM_" + str(i) + "_" + str([bX, bY])]
-					if h != "No":
+					if h != 'No':
 						p = cfg.uiscp.Scatter_Widget_2.sigCanvas.ax.imshow(h[0].T, origin='low', interpolation='none', extent=[h[1][0], h[1][-1], h[2][0], h[2][-1]], cmap=pal, vmin = 0.001)
 					else:
 						cfg.uiUtls.removeProgressBar()
-						return "No"
+						return 'No'
 				except:
 					if str(i) == cfg.sctrROIID:
 						try:
 							h = cfg.sctrROIID_h["HISTOGRAM_" + str(i) + "_" + str([bX, bY])]
 						except:
 							cfg.uiUtls.removeProgressBar()
-							return "No"
-						if h != "No":
+							return 'No'
+						if h != 'No':
 							p = cfg.uiscp.Scatter_Widget_2.sigCanvas.ax.imshow(h[0].T, origin='low', interpolation='none', extent=[h[1][0], h[1][-1], h[2][0], h[2][-1]], cmap=pal, vmin = 0.001)
 						else:
 							cfg.uiUtls.removeProgressBar()
-							return "No"
+							return 'No'
 					else:
 						cfg.uiUtls.removeProgressBar()
-						return "No"
+						return 'No'
 				xMins.append(h[1][0])
 				xMaxs.append(h[1][-1])
 				yMins.append(h[2][0])
@@ -478,16 +478,16 @@ class Scatter_Plot:
 		for pol in self.patches:
 			self.polP.append(cfg.uiscp.Scatter_Widget_2.sigCanvas.ax.add_patch(pol))
 		# Draw the plot
-		cfg.scaPlT.fitPlotToAxes("Yes")
+		cfg.scaPlT.fitPlotToAxes('Yes')
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " scatter plot created")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " scatter plot created")
 		cfg.uiUtls.removeProgressBar()
 		
 	# remove scatter plot from list
 	def removeScatter(self):
 		# ask for confirm
 		a = cfg.utls.questionBox(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Delete scatter plot"), cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Are you sure you want to delete highlighted scatter plots?"))
-		if a == "Yes":
+		if a == 'Yes':
 			tW =cfg.uiscp.scatter_list_plot_tableWidget
 			r = []
 			for i in tW.selectedIndexes():
@@ -496,7 +496,7 @@ class Scatter_Plot:
 			for x in v:
 				id = tW.item(x, 6).text()
 				self.removeScatterByID(id)
-			cfg.scaPlT.scatterPlotListTable(cfg.uiscp.scatter_list_plot_tableWidget, "Yes")
+			cfg.scaPlT.scatterPlotListTable(cfg.uiscp.scatter_list_plot_tableWidget, 'Yes')
 			# logger
 			cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " removed plots: " + str(v))
 		
@@ -512,13 +512,13 @@ class Scatter_Plot:
 		cfg.scatterPlotList.pop("COLORMAP_" + str(id))
 		cfg.scatterPlotList.pop("ROW_" + str(id))
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "")
 			
 	# Create signature list for plot
-	def scatterPlotListTable(self, table, skipPlot = "No"):
+	def scatterPlotListTable(self, table, skipPlot = 'No'):
 		# checklist
 		l = table
-		cfg.ScatterTabEdited = "No"
+		cfg.ScatterTabEdited = 'No'
 		l.setSortingEnabled(False)
 		l.blockSignals(True)
 		# column width
@@ -545,19 +545,19 @@ class Scatter_Plot:
 		cfg.utls.insertTableColumn(l, 4, cfg.tableCInfo, wid4)
 		cfg.utls.insertTableColumn(l, 5, cfg.tableColor2, wid5)
 		# signature ID column
-		cfg.utls.insertTableColumn(l, 6, cfg.tableColString, 60, "Yes")
+		cfg.utls.insertTableColumn(l, 6, cfg.tableColString, 60, 'Yes')
 		# add signature items
 		x = 0
 		for k in list(cfg.scatterPlotIDs.values()):
 			cfg.utls.insertTableRow(l, x, 20)
-			cfg.utls.addTableItem(l, "checkbox", x, 0, "Yes", None, cfg.scatterPlotList["CHECKBOX_" + str(k)])
+			cfg.utls.addTableItem(l, "checkbox", x, 0, 'Yes', None, cfg.scatterPlotList["CHECKBOX_" + str(k)])
 			cfg.utls.addTableItem(l, int(cfg.scatterPlotList["MACROCLASSID_" + str(k)]), x, 1)
 			cfg.utls.addTableItem(l, str(cfg.scatterPlotList["MACROCLASSINFO_" + str(k)]), x, 2)
 			cfg.utls.addTableItem(l, int(cfg.scatterPlotList["CLASSID_" + str(k)]), x, 3)
 			cfg.utls.addTableItem(l, str(cfg.scatterPlotList["CLASSINFO_" + str(k)]), x, 4)
 			c = cfg.scatterPlotList["COLOR_" + str(k)]
-			cfg.utls.addTableItem(l, "", x, 5, "Yes", c)
-			cfg.utls.addTableItem(l, str(cfg.scatterPlotIDs["ID_" + str(k)]), x, 6, "No")
+			cfg.utls.addTableItem(l, "", x, 5, 'Yes', c)
+			cfg.utls.addTableItem(l, str(cfg.scatterPlotIDs["ID_" + str(k)]), x, 6, 'No')
 			x = x + 1
 		l.show()
 		l.setColumnWidth(0, wid0)
@@ -568,13 +568,13 @@ class Scatter_Plot:
 		cfg.utls.sortTableColumn(l, vOrd,l.horizontalHeader().sortIndicatorOrder())
 		l.setSortingEnabled(True)
 		l.blockSignals(False)
-		cfg.ScatterTabEdited = "Yes"
+		cfg.ScatterTabEdited = 'Yes'
 		self.orderedTable(vOrd)
 		# Create plot
-		if skipPlot == "No":
+		if skipPlot == 'No':
 			self.scatterPlot()
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " list created")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " list created")
 		
 	# ordered table
 	def orderedTable(self, column):
@@ -590,43 +590,43 @@ class Scatter_Plot:
 	def bandXPlot(self):
 		self.removePolygons()
 		# band set
-		if cfg.bandSetsList[cfg.bndSetNumber][0] == "Yes":
+		if cfg.bandSetsList[cfg.bndSetNumber][0] == 'Yes':
 			b = len(cfg.bandSetsList[cfg.bndSetNumber][3])
 		else:
-			i = cfg.utls.selectLayerbyName(cfg.bandSetsList[cfg.bndSetNumber][8], "Yes")
+			i = cfg.utls.selectLayerbyName(cfg.bandSetsList[cfg.bndSetNumber][8], 'Yes')
 			try:
 				b = i.bandCount()
 			except Exception as err:
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				b = 1
 		if cfg.uiscp.bandX_spinBox.value() > b:
 			cfg.uiscp.bandX_spinBox.setValue(b)
 		cfg.scatterBandX = cfg.uiscp.bandX_spinBox.value()
 		cfg.scaPlT.scatterPlot()
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "scatter band X: " + str(cfg.scatterBandX))
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "scatter band X: " + str(cfg.scatterBandX))
 		
 	# set band Y
 	def bandYPlot(self):
 		self.removePolygons()
 		# band set
-		if cfg.bandSetsList[cfg.bndSetNumber][0] == "Yes":
+		if cfg.bandSetsList[cfg.bndSetNumber][0] == 'Yes':
 			b = len(cfg.bandSetsList[cfg.bndSetNumber][3])
 		else:
-			i = cfg.utls.selectLayerbyName(cfg.bandSetsList[cfg.bndSetNumber][8], "Yes")
+			i = cfg.utls.selectLayerbyName(cfg.bandSetsList[cfg.bndSetNumber][8], 'Yes')
 			try:
 				b = i.bandCount()
 			except Exception as err:
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				b = 1
 		if cfg.uiscp.bandY_spinBox.value() > b:
 			cfg.uiscp.bandY_spinBox.setValue(b)
 		cfg.scatterBandY = cfg.uiscp.bandY_spinBox.value()
 		cfg.scaPlT.scatterPlot()
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "scatter band X: " + str(cfg.scatterBandY))
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "scatter band X: " + str(cfg.scatterBandY))
 		
 	# resize plot
 	def resize(self):
@@ -681,8 +681,8 @@ class Scatter_Plot:
 				cfg.uiscp.Scatter_Widget_2.sigCanvas.draw()
 			except Exception as err:
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-				return "No"
+				cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+				return 'No'
 			
 	# draw polygon
 	def drawPolygon(self, fillColor, transparency, fillOption = True):
@@ -701,20 +701,17 @@ class Scatter_Plot:
 				cfg.uiscp.Scatter_Widget_2.sigCanvas.draw()
 			except Exception as err:
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-				return "No"
+				cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+				return 'No'
 		
 	# calculate scatter raster and add to signature list
 	def addToSignatureList(self):
 		cfg.uiUtls.addProgressBar()
-		r = self.calculatePolygonIntersection("Yes")
-		# date time for temp name
-		dT = cfg.utls.getTime()
+		r = self.calculatePolygonIntersection('Yes')
 		# temporary layer
-		tLN = cfg.tempROINm + dT + ".shp"
-		tLP = cfg.tmpDir + "/" + tLN
-		cfg.utls.rasterToVector(r, tLP)
-		vl = cfg.utls.addVectorLayer(tLP, tLN, "ogr")
+		tLP = cfg.utls.createTempRasterPath('gpkg')
+		cfg.utls.multiProcessRasterToVector(rasterPath = r, outputVectorPath = tLP, dissolveOutput = 'Yes')
+		vl = cfg.utls.addVectorLayer(tLP, tLN, 'ogr')
 		f = cfg.qgisCoreSCP.QgsFeature()
 		ids = []
 		for f in vl.getFeatures():
@@ -724,7 +721,7 @@ class Scatter_Plot:
 			vl2 = cfg.utls.mergePolygonsToNewLayer(vl, ids, [0])
 			roi = cfg.lstROI
 			cfg.lstROI = vl2
-			cfg.SCPD.saveROItoShapefile("No")
+			cfg.SCPD.saveROItoShapefile('No')
 			cfg.lstROI = roi
 			vl = None
 			vl2 = None
@@ -738,16 +735,13 @@ class Scatter_Plot:
 			
 	# conver polygon to raster
 	def polygonToRaster(self, polygon, xMin, xMax, yMin, yMax, dX, dY):
-		# date time for temp name
-		dT = cfg.utls.getTime()
 		# temporary layer
-		tLN = cfg.polyRasterNm + dT + ".shp"
-		tLP = cfg.tmpDir + "/" + tLN
+		tLP = cfg.utls.createTempRasterPath('shp')
 		# get layer crs
 		crs = cfg.qgisCoreSCP.QgsCoordinateReferenceSystem("EPSG:4326")
 		# create a temp shapefile with a field
 		cfg.utls.createEmptyShapefileQGIS(crs, tLP)
-		tSS = cfg.utls.addVectorLayer(tLP , tLN, "ogr")
+		tSS = cfg.utls.addVectorLayer(tLP)
 		pointF = cfg.QtCoreSCP.QPointF()
 		polF = cfg.QtGuiSCP.QPolygonF()
 		for v in polygon:
@@ -770,18 +764,15 @@ class Scatter_Plot:
 			tSS.updateExtents()
 		a = self.rasterizePolygon(tLP, xMin, xMax, yMin, yMax, dX, dY)
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "")
 		return a
 			
 	# rasterize polygon
 	def rasterizePolygon(self, shapefile, xMin, xMax, yMin, yMax, dX, dY):
 		shp = cfg.ogrSCP.Open(shapefile)
 		gL = shp.GetLayer()
-		# date time for temp name
-		dT = cfg.utls.getTime()
 		# temporary layer
-		tLN = cfg.polyRasterNm + dT + ".tif"
-		tLP = cfg.tmpDir + "/" + tLN
+		tLP = cfg.utls.createTempRasterPath('tif')
 		rC = abs(int(round((xMax - xMin) / dX)))
 		rR = abs(int(round((yMax - yMin) / dY)))
 		tD = cfg.gdalSCP.GetDriverByName("GTiff")
@@ -791,8 +782,8 @@ class Scatter_Plot:
 		# in case of errors
 		except Exception as err:
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-			return "No"
+			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+			return 'No'
 		oR.SetGeoTransform( [ xMin , dX, 0 , yMin , 0 , dY ] )
 		oRB.SetNoDataValue(cfg.NoDataVal)
 		m = cfg.np.zeros((rR, rC), dtype='int32')
@@ -800,13 +791,23 @@ class Scatter_Plot:
 		oRB.FlushCache()
 		# convert reference layer to raster
 		oC = cfg.gdalSCP.RasterizeLayer(oR, [1], gL, options = ["ATTRIBUTE=" + str("DN"), "ALL_TOUCHED=TRUE"])
-		a =  oRB.ReadAsArray()
+		try:
+			o = oRB.GetOffset()
+			s = oRB.GetScale()
+			if o is None:
+				o = 0
+			if s is None:
+				s = 1
+		except:
+			o = 0
+			s = 1
+		a =  oRB.ReadAsArray()*s+o
 		# close bands
 		oRB = None
 		# close rasters
 		oR = None
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "")
 		return a
 
 	# create grid
@@ -830,9 +831,9 @@ class Scatter_Plot:
 			rangeX = [xMin + rXmin * dX, xMin + (1 + rXmax) * dX]
 			ranges.append([rangeX, rangeY])
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "")
 		return ranges
-
+		
 	# calculate polygon intersection
 	def calculatePolygonIntersection(self, saveSignature = None):
 		if len(self.polygons)>0:
@@ -875,31 +876,31 @@ class Scatter_Plot:
 			else:
 				imageName = cfg.bandSetsList[cfg.bndSetNumber][8]
 				# band set
-				if cfg.bandSetsList[cfg.bndSetNumber][0] == "Yes":
+				if cfg.bandSetsList[cfg.bndSetNumber][0] == 'Yes':
 					imageName = cfg.bandSetsList[cfg.bndSetNumber][3][0]
-				i = cfg.utls.selectLayerbyName(imageName, "Yes")
+				i = cfg.utls.selectLayerbyName(imageName, 'Yes')
 				rectangle = i.extent()
 			# output raster
-			tPMN2 = dT + cfg.scatterRasterNm + ".tif"
-			tPMD2 = cfg.tmpDir + "/" + tPMN2
+			tPMD2 = cfg.utls.createTempRasterPath('tif')
 			oM = []
 			oM.append(tPMD2)
 			# clip by ROI
 			bList = cfg.utls.subsetImageByRectangle([rectangle.xMinimum(), rectangle.xMaximum(), rectangle.yMinimum(), rectangle.yMaximum()], cfg.bandSetsList[cfg.bndSetNumber][8], [aX, aY], cfg.bndSetNumber)
+
 			bandNumberList = [1, 1]
-			vrtCheck = cfg.utls.createVirtualRaster(bList, tPMD, bandNumberList, "Yes", "Yes", 0, "No", "No")
+			vrtCheck = cfg.utls.createTempVirtualRaster(bList, bandNumberList, 'Yes', 'Yes', 0, 'No', 'No')
 			# open input with GDAL
-			rD = cfg.gdalSCP.Open(tPMD, cfg.gdalSCP.GA_ReadOnly)
+			rD = cfg.gdalSCP.Open(vrtCheck, cfg.gdalSCP.GA_ReadOnly)
 			oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0, None, cfg.rasterCompression)
 			# band list
 			bL = cfg.utls.readAllBandsFromRaster(rD)
 			variableList = [["bandX", "a"], ["bandY", "b"]]
 			if condition == 0:
 				conditions = cfg.utls.singleScatterPlotRasterCondition(rangeList)
-				o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.scatterRasterMultipleWhere, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", conditions, variableList, "No")	
+				o = cfg.utls.processRasterOld(rD, bL, None, 'No', cfg.utls.scatterRasterMultipleWhere, None, oMR, None, None, 0, None, cfg.NoDataVal, 'No', conditions, variableList, 'No')	
 			else:
 				# calculation
-				o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.scatterRasterBandCalculation, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", condition, variableList, "No")
+				o = cfg.utls.processRasterOld(rD, bL, None, 'No', cfg.utls.scatterRasterBandCalculation, None, oMR, None, None, 0, None, cfg.NoDataVal, 'No', condition, variableList, 'No')
 			# close GDAL rasters
 			for b in range(0, len(oMR)):
 				oMR[b] = None
@@ -915,13 +916,13 @@ class Scatter_Plot:
 				if preP is not None:
 					cfg.utls.moveLayer(preP, cfg.grpNm)
 				cfg.lastScattRaster = cfg.osSCP.path.basename(tPMD2)
-				r = cfg.utls.addRasterLayer(str(tPMD2), str(cfg.osSCP.path.basename(tPMD2)))
+				r = cfg.utls.addRasterLayer(tPMD2)
 				cfg.utls.setRasterScatterSymbol(r, rasterSymbol)
 				cfg.utls.moveLayerTop(r)
 				cfg.utls.setGroupVisible(g, False)
 				cfg.utls.setGroupExpanded(g, False)
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "")
 			return tPMD2
 		
 	# remove polygons
@@ -953,8 +954,8 @@ class Scatter_Plot:
 				cfg.uiscp.Scatter_Widget_2.sigCanvas.figure.savefig(imgOut, format="jpg", dpi=300, quality=90)
 			
 	# fit plot to axes
-	def fitPlotToAxes(self, preserveLast = "No"):
-		if preserveLast == "Yes":
+	def fitPlotToAxes(self, preserveLast = 'No'):
+		if preserveLast == 'Yes':
 			xMin = self.lastxMin
 			xMax = self.lastxMax
 			yMin = self.lastyMin
@@ -974,10 +975,10 @@ class Scatter_Plot:
 			# Draw the plot
 			cfg.uiscp.Scatter_Widget_2.sigCanvas.draw()
 		except Exception as err:
-			cfg.mx.msgErr53()
+			cfg.mx.msgErr53(None)
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-			return "No"
+			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+			return 'No'
 			
 	# Change ROI color
 	def changePolygonColor(self):
@@ -986,5 +987,5 @@ class Scatter_Plot:
 			self.color = c.name()
 			cfg.uiscp.polygon_color_Button.setStyleSheet("background-color :" + self.color)
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "")
 			

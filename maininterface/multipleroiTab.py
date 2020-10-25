@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
+'''
 /**************************************************************************************************************************
  SemiAutomaticClassificationPlugin
 
@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2018 by Luca Congedo
+		copyright		: (C) 2012-2021 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -30,11 +30,11 @@
  * 
 **************************************************************************************************************************/
 
-"""
+'''
 
 
 
-cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
+cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
 class MultipleROITab:
 
@@ -49,7 +49,7 @@ class MultipleROITab:
 		# add list items to table
 		tW.setRowCount(c + 1)
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "added point " + str(c + 1))
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "added point " + str(c + 1))
 		
 	# add random point
 	def addRandomPointToTable(self, point):
@@ -74,7 +74,7 @@ class MultipleROITab:
 		cfg.utls.addTableItem(tW, str(cfg.rngRad), c, 8)
 		cfg.utls.addTableItem(tW, RBand, c, 9)
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "added point " + str(c + 1))
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "added point " + str(c + 1))
 			
 	# text changed
 	def textChanged(self):
@@ -83,27 +83,27 @@ class MultipleROITab:
 		for b in tSplit:
 			try:
 				cfg.ui.stratified_lineEdit.setStyleSheet("color : green")
-				check = "Yes"
+				check = 'Yes'
 				eval(b.replace(cfg.variableName, "1"))
 				if b.strip() == cfg.variableName:
 					cfg.ui.stratified_lineEdit.setStyleSheet("color : red")
-					check = "No"
+					check = 'No'
 			except:
 				cfg.ui.stratified_lineEdit.setStyleSheet("color : red")
-				check = "No"
+				check = 'No'
 		return check
 		
 	# create random point
 	def createRandomPoint(self):
-		if cfg.bandSetsList[cfg.bndSetNumber][0] == "Yes":
+		if cfg.bandSetsList[cfg.bndSetNumber][0] == 'Yes':
 			imageName = cfg.bandSetsList[cfg.bndSetNumber][3][0]
 		else:
 			try:
 				imageName = cfg.bandSetsList[cfg.bndSetNumber][8]
 			except:
 				cfg.mx.msg4()
-				return "No"
-		img = cfg.utls.selectLayerbyName(imageName, "Yes")
+				return 'No'
+		img = cfg.utls.selectLayerbyName(imageName, 'Yes')
 		crs = cfg.utls.getCrs(img)
 		geographicFlag = crs.isGeographic()
 		if geographicFlag is False:
@@ -114,14 +114,14 @@ class MultipleROITab:
 			bandSetNumber = None
 			if cfg.ui.stratified_point_checkBox.isChecked() is True:
 				check = cfg.multiROI.textChanged()
-				if check == "Yes":
-					stratified = "Yes"
+				if check == 'Yes':
+					stratified = 'Yes'
 					stratifiedExpression = cfg.ui.stratified_lineEdit.text()
 					bandSet = cfg.ui.band_set_comb_spinBox_10.value()
 					bandSetNumber = bandSet - 1
 				else:
 					cfg.mx.msgErr64()
-					return "No"
+					return 'No'
 			cfg.uiUtls.addProgressBar()
 			tLX, tLY, lRX, lRY, pSX, pSY = cfg.utls.imageInformationSize(imageName)
 			Xmin = int(round(min(tLX, lRX)))
@@ -188,21 +188,22 @@ class MultipleROITab:
 			except:
 				pass
 			cfg.uiUtls.addProgressBar()
+			rpdROICheckOrig = cfg.rpdROICheck
 			for i in range(0, c):
 				cfg.QtWidgetsSCP.qApp.processEvents()
-				if cfg.actionCheck != "No":
+				if cfg.actionCheck != 'No':
 					cfg.uiUtls.updateBar((i+1) * 100 / (c + 1))
 					try:
 						X = tW.item(i,0).text()
 						Y = tW.item(i,1).text()
 					except Exception as err:
 						# logger
-						cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 						cfg.mx.msg6()
 					try:
 						p = cfg.qgisCoreSCP.QgsPointXY(float(X), float(Y))
 						cfg.utls.checkPointImage(cfg.bandSetsList[cfg.bndSetNumber][8], p)
-						if cfg.pntCheck == "Yes":
+						if cfg.pntCheck == 'Yes':
 							cfg.pntROI = cfg.lstPnt
 							# create ROI
 							if len(tW.item(i,6).text()) > 0:
@@ -217,9 +218,9 @@ class MultipleROITab:
 							if len(tW.item(i,9).text()) > 0:
 								v = int(tW.item(i,9).text())
 								cfg.ROIband = v
-								cfg.rpdROICheck = "Yes"
+								cfg.rpdROICheck = "2"
 							cfg.origPoint = cfg.pntROI
-							cfg.SCPD.createROI(cfg.pntROI, "No")
+							cfg.SCPD.createROI(cfg.pntROI, 'No')
 							# save ROI
 							v = int(tW.item(i, 2).text())
 							cfg.ROIMacroID = v
@@ -227,12 +228,12 @@ class MultipleROITab:
 							v = int(tW.item(i, 4).text())
 							cfg.ROIID = v
 							cfg.ROIInfo = tW.item(i, 5).text()
-							cfg.SCPD.saveROItoShapefile("No")
+							cfg.SCPD.saveROItoShapefile('No')
 							# disable undo save ROI
 							cfg.uidc.undo_save_Button.setEnabled(False)
 					except Exception as err:
 						# logger
-						cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 						cfg.mx.msgErr20()
 				# restore settings for single ROI 
 				cfg.SCPD.setROIMacroID()
@@ -245,14 +246,16 @@ class MultipleROITab:
 				cfg.SCPD.rapidROIband()
 				cfg.SCPD.rapidROICheckbox()
 			cfg.utls.finishSound()
+			cfg.utls.sendSMTPMessage(None, str(__name__))
 			cfg.uiUtls.removeProgressBar()
+			cfg.rpdROICheck = rpdROICheckOrig
 			# restore previous point for single ROI
 			try:
 				cfg.lstPnt = pP
 			except:
 				pass
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ROI created")
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ROI created")
 
 	# export point list to file
 	def exportPointList(self):
@@ -294,10 +297,10 @@ class MultipleROITab:
 				f.write(txt)
 				f.close()
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " point list exported")
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " point list exported")
 		except Exception as err:
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 		
 	# import points from file
 	def importPoints(self):
@@ -341,27 +344,27 @@ class MultipleROITab:
 						cfg.utls.addTableItem(tW, RangRad, c, 8)
 						cfg.utls.addTableItem(tW, RBand, c, 9)
 						# logger
-						cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " points imported")
+						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " points imported")
 			except Exception as err:
 				cfg.mx.msgErr19()
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 		elif pointFile.lower().endswith(".shp"):
 			try:
 				lPRS = cfg.utls.getEPSGVector(pointFile)
 				# band set
-				if cfg.bandSetsList[cfg.bndSetNumber][0] == "Yes":
+				if cfg.bandSetsList[cfg.bndSetNumber][0] == 'Yes':
 					try:
 						imageName = cfg.bandSetsList[cfg.bndSetNumber][3][0]
 					except:
 						cfg.mx.msgWar25(str(cfg.bndSetNumber + 1))
-						return "No"
+						return 'No'
 					# image CRS
-					bN0 = cfg.utls.selectLayerbyName(imageName, "Yes")
+					bN0 = cfg.utls.selectLayerbyName(imageName, 'Yes')
 					iCrs = cfg.utls.getCrs(bN0)
 				else:
 					# image CRS
-					bN0 = cfg.utls.selectLayerbyName(imageName, "Yes")
+					bN0 = cfg.utls.selectLayerbyName(imageName, 'Yes')
 					iCrs = cfg.utls.getCrs(bN0)
 				rPSys = cfg.osrSCP.SpatialReference(wkt=iCrs.toWkt())
 				rPSys.AutoIdentifyEPSG()
@@ -369,7 +372,7 @@ class MultipleROITab:
 				if str(lPRS) != str(rPRS):
 					# date time for temp name
 					dT = cfg.utls.getTime()
-					reprjShapefile = cfg.tmpDir + "/" + dT + cfg.osSCP.path.basename(pointFile)
+					reprjShapefile = cfg.tmpDir + "/" + dT + cfg.utls.fileName(pointFile)
 					cfg.utls.repojectShapefile(pointFile, int(lPRS), reprjShapefile, int(rPRS), "wkbPoint")
 					pointFile = reprjShapefile
 				d = cfg.ogrSCP.GetDriverByName("ESRI Shapefile")
@@ -387,7 +390,7 @@ class MultipleROITab:
 			except Exception as err:
 				cfg.mx.msgErr19()
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				
 	def removePointFromTable(self):
 		cfg.utls.removeRowsFromTable(cfg.ui.point_tableWidget)
@@ -396,12 +399,12 @@ class MultipleROITab:
 	def signatureCheckbox2(self):
 		p = cfg.qgisCoreSCP.QgsProject.instance()
 		if cfg.ui.signature_checkBox2.isChecked() is True:
-			p.writeEntry("SemiAutomaticClassificationPlugin", "calculateSignature", "Yes")
-			cfg.sigClcCheck = "Yes"
+			p.writeEntry("SemiAutomaticClassificationPlugin", "calculateSignature", 'Yes')
+			cfg.sigClcCheck = "2"
 			cfg.uidc.signature_checkBox.setCheckState(2)
 		else:
-			p.writeEntry("SemiAutomaticClassificationPlugin", "calculateSignature", "No")
-			cfg.sigClcCheck = "No"
+			p.writeEntry("SemiAutomaticClassificationPlugin", "calculateSignature", 'No')
+			cfg.sigClcCheck = "0"
 			cfg.uidc.signature_checkBox.setCheckState(0)
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " checkbox set: " + str(cfg.sigClcCheck))
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " checkbox set: " + str(cfg.sigClcCheck))
 	

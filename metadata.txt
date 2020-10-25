@@ -1,9 +1,9 @@
 [general]
 name=Semi-Automatic Classification Plugin
 qgisMinimumVersion=3.00
-description= The Semi-Automatic Classification Plugin (SCP) allows for the supervised classification of remote sensing images, providing tools for the download, the preprocessing and postprocessing of images.
-version=6.4.7
-about=Developed by Luca Congedo, the Semi-Automatic Classification Plugin (SCP) allows for the supervised classification of remote sensing images, providing tools for the download, the preprocessing and postprocessing of images. Search and download is available for ASTER, Landsat, MODIS, Sentinel-2, and Sentinel-3 images. Several algorithms are available for the land cover classification. This plugin requires the installation of GDAL, OGR, Numpy, SciPy, and Matplotlib. For more information please visit https://fromgistors.blogspot.com .
+description=The Semi-Automatic Classification Plugin (SCP) allows for the supervised classification of remote sensing images, providing tools for the download, the preprocessing and postprocessing of images.
+version=7.0.0
+about=Developed by Luca Congedo, the Semi-Automatic Classification Plugin (SCP) allows for the supervised classification of remote sensing images, providing tools for the download, the preprocessing and postprocessing of images. Search and download is available for ASTER, GOES, Landsat, MODIS, Sentinel-1, Sentinel-2, and Sentinel-3 images. Several algorithms are available for the land cover classification. This plugin requires the installation of GDAL, OGR, Numpy, SciPy, and Matplotlib. Some tools require also the installation of SNAP (ESA Sentinel Application Platform). For more information please visit https://fromgistors.blogspot.com .
 
 author=Luca Congedo
 email=ing.congedoluca@gmail.com
@@ -13,185 +13,111 @@ icon=semiautomaticclassificationplugin.png
 
 ; start of optional metadata
 changelog=
+	7.0.0
+	New version with several improvements
 	
-	6.4.7
-	Minor update:
-	-fixed Scipy dependency issue crash related to https://github.com/qgis/QGIS/issues/38372
-	-fixed select by layer
+	New tools
+	- Band set list tab for managing band sets and double click to define active band set and functions to import export band sets and button to display RGB composite
+	- Random forest tab for classifying the band set using training input with Random Forest (ESA SNAP required)
+	- Sentinel-1 tab for processing Sentinel-1 GRD products polarizations VH and VV (ESA SNAP required) based on the preprocessing steps in https://developers.google.com/earth-engine/sentinel1
+	- GOES tab for processing GOES 16 and GOES 17 images
+	- Zonal stat raster tab for calculating raster statistic in zones defined by a reference vector or raster and for each zone value creating rasters filled woth the corresponding output statistic, named as outputnameZoneValue (e.g. output1, output2, output3)
+	- Classification tab that replaces the classification dock
+	- Reproject raster bands that allows for reprojecting a band set to a new projection with the option of using a reference raster for alignment and extent or setting the EPSG value and pixel resolution manually; methods of resampling: nearest_neighbour, average, sum, maximum, minimum, mode, median, first_quartile, third_quartile
 	
-	6.4.6
-	Minor update:
-	-fixed time issue (thanks to Sayantan Majumdar)
+	Implemented parallel processing for several tools
+	- Classification
+	- Band calc
+	- ASTER preprocessing
+	- GOES preprocessing
+	- Landsat preprocessing
+	- MODIS preprocessing
+	- Sentinel-2 preprocessing
+	- Sentinel-3 preprocessing
+	- Clip multiple rasters
+	- Zonal stat raster
+	- Reclassification
+	- Cross classification
+	- Band combination
+	- Classification to vector
+	- ROI creation and signature calculation
+	- Spectral distance of band sets
 	
-	6.4.5
-	Minor update:
-	-fixed accuracy issue if Standard Error is nan
+	Main interface window
+	- Renewed interface with tree view menu, a filter for searching tools, and a new tab Help for displaying the guide of tools
 	
-	6.4.4
-	Minor update:
-	-fixed Sentinel-3 search
+	SCP Dock
+	- ROI signature list structured as tree of macroclasses
+	- added table filter for ROIs
+	- new button for removing training input
+	- Classification moved to main interface
 	
-	6.4.3
-	Minor update:
-	-several improvements to French translation of the interface (many thanks to Antoine Denis)
+	Tab Band calc
+	- added the iteration of calculations over band sets entering in the first line forbandsets e.g. forbandsets[1:3] for iterating over a range or forbandsets[1,2,3] for iterating selected band sets; it is possible to enter a string after ] to filter names of first band in band set (e.g. forbandsets[1,2,3]RT)
+	- added the iteration of calculations over dates (format yyyy-mm-dd) of band sets entering in the first line forbsdates e.g. forbsdates[2020-01-01:2020-03-30] for iterating over a range or forbsdates[2020-02-01,2020-03-11,2020-04-21] for iterating selected dates, also list of ranges such as forbsdates[2010-01-01:2010-03-30, 2010-08-01:2010-08-31, 2010-10-01:2010-12-31]; it is possible to enter a string after ] to filter names of first band in band set
+	- added the iteration of bands in a band set or a range of band sets entering in the first line forbandsinbandset (e.g. forbandsinbandset[1] for iterating over bands in the first band set) and in the following expression the variable #BAND# to refer to the iterated band (e.g. where("#BAND#">1, 1, 2) @"#BAND#")
+	- added the possibility to use the output name of calculation as variable for following calculations
+	- added the possibility to add the calculation result to a band set using the %number in the output name such as @output%1 or to current band set with # such as @output%#
+	- added the possibility to set the output path defining the output name with this structure @path@name, also with the variable #BANDSET# such as @#BANDSET#@name to save the calculation in the directory containing the first band of the current band set. It is recommended to avoid the use of characters # and @ in the raster name
+	- added the possibility to create temporary output defining the output path (i.e. temp) and output name with this structure @temp@name
+	- added the option to create virtual raster output (i.e. .vrt files) made of .tif files from parallel processing
+	- added the variable "bandset#b*" for using all the bands of active band set in expressions such as np.max("bandset#b*")
+	- added the variable "bandsetNb*" for using all the bands of band set N in expressions such as np.max("bandset1b*")
+	- added the variable "bandsetNbL" for referring to band set N and Band L in expressions such as "bandset1b1"
+	- added the variable "bandset*bL" for using the L band of all the band sets in expressions such as np.max("bandset*b1")
+	- added the variable "bandset{date}bL" for using the L band of all the band sets in the list of dates or range of dates e.g. median("bandset{2019-01-01,2019-03-30}b1") 
+	- added table filter for band names
+	- added the possibility to enter !function! followed by an expression of Batch to execute a function using raster names (also previous output names) in the command and the variables !directory! and !file! to refer to the output directory (defined after Run) and relative output file name (defined with @ after the command) respectively e.g. !function!  stack_raster_bands;band_set : 1;output_raster_path : '!directory!' ; it is required to use section character $ instead of apostrophe ' and !! instead of ; for functions ' e.g. !function! add_raster!!input_raster_name : $#NIR#$!!band_set : 1
+	- added the option to select output raster type as Float32, Int32, Int16, UInt32, UInt16, Byte
+	- added settings for output nodata value
+	- added settings for scale and offset values directly in the output .tif file
+	- the option Input NoData as value allows for using NoData values as regular values
+	- the option Use NoData value allows for defining a regular value to be used as NoData during calculation
 	
-	6.4.2
-	Minor update:
-	-fixed issue with coordinates using GDAL 3
+	Tab Download products
+	- the Sentinel-2 search works also without search coordinates if a string is entered in Advanced search (e.g. 33TTG)
+	- Sentinel-2 level 2A can be filtered entering S2A_MSIL2A* in Advanced search
+	- Sentinel-2 are downloaded also from Google public service https://storage.googleapis.com/gcp-public-data-sentinel-2
+	- added table filter for names
+	- added search and download of Sentinel-1 GRD products
+	- added search and download of GOES 16 and GOES 17 products downloaded from Amazon Web Services https://registry.opendata.aws/noaa-goes/
 	
-	6.4.1
-	Minor update:
-	-manual ROI creation allowed without band set definition
-	-fixed edit raster tool to update raster view
-	-fixed the tools Accuracy and Cross Classification
-	-added GDAL test
-	-fixed report tool to hide nodata
+	Tab Preprocessing Landsat
+	- tha panchromatic band is preprocessed only if pansharpening is checked
 	
-	6.4.0
-	Major update:
-	-in Multiple ROI creation tool added a stratification option based on raster values
-	-in Accuracy tool added the calculation of area based error matrix
-	-optimization of raster computation for several functions such as DOS1 and accuracy and classification report
-	-fixed symbology of classification raster
-	-bugfixing
+	Tab Preprocessing Sentinel-2
+	- added checkbox for processing also bands 1, 9, 10
+	- if Add bands in a new band set is checked an existing empty band set is used first
 	
-	6.3.1
-	Minor update:
-	-fixed issue #63 with matplotlib API change
+	Tab Band set
+	- added the date field (optional) to store image acquisition date (format yyyy-mm-dd) that can be used for expressions in Band calc
+	- added table filter for band names
+	- added Sentinel-2 list with all the bands
 	
-	6.3.0
-	Major update:
-	-added SWIR1 and SWIR2 variables in Band calc
-	-added NBR calculation in Band calc index calculation
-	-fixed issue with OSM tile service
-	-fixed issue with USGS Spectral Library v.6
-	-fixed issue with band set creation after multiple image download
-	-fixed issue with band calc name of outputs
+	Tab Batch
+	- added function qgis_processing to access QGIS Processing tools (e.g. qgis_processing;command : 'grass7:v.dissolve';parameters : 'input': 'input_path', 'column': 'cat','output': 'output_path')
+	- added function !for_directory_in! to iterate commands for all the directories in a directory path (e.g. !for_directory_in!;'directoryPath') with the variables !directory_name! to use the current directory name and !directory! to use the current directory path. The commands are performed in batch until the command !end_for_directory! . Optionally a directory level and a name filter can be set (e.g. !for_directory_in!;'directoryPath';2;'name'). Multiple name filters can be set with | (e.g. !for_directory_in!;'directoryPath';2;'name1|name2'). It is possible to filter by date if the name ends with the date format yyyy-mm-dd using a range (e.g. 2020-01-01:2020-03-31)
+	- added function !for_file_in!;directoryPath to iterate commands for all the files (calling !file! in a command) in a directoryPath until !end_for_file! . Optionally a directory level and a file filter (e.g. !for_file_in!;'directoryPath';0;'jpg'). Multiple name filters can be set with | (e.g. !for_file_in!;'directoryPath';0;'jpg|tif'). It is possible to filter by date if the name ends with the date format yyyy-mm-dd using a range (e.g. 2020-01-01:2020-03-31). Also !file_directory! can be used to refer to the parent directory of the file
+	- added function '!start_for_band_set!';bandsetNumber to iterate commands for all the band sets (calling '!band_set!' in a command) until !end_for_band_set! . It is possible to enter a list of numbers (separated by commas), a range separated by colon, or a list of ranges (e.g. !start_for_band_set!;'2:3' add_new_bandset;band_set : !band_set! !end_for_band_set!
+	- added the function !temp_raster_#! (replacing # with a number or string e.g. !temp_raster_1!) to create a temporary raster to be used with other functions such as band_calc;expression : '"raster1"';output_raster_path : '!temp_raster_1!'. !temp_raster_1! replaces the path to the raster and temp_raster_1 is the actual name of the raster
+	- added the possibility to create custom variables entering a line such as !customName! = value (value can be either number or text), for instance !number! = 20, this variable !number! will be replaced in the following parts of the batch script
+	- added the function remove_band_from_bandset to remove bands from a band set (e.g. remove_band_from_bandset;band_set : 1;band_list : '1, 2')
+	- the function to create band set accepts a directory and a file name filter as raster_path_list option (e.g. '/dir, tif')
+	- the function to create band set accepts the satellite name as center_wavelength option to set the band wavelength center
+	- the function add_raster allows to add the raster to an existing band set (band_set) and optionally set the wavelength (center_wavelength)
+	- if using Band calc function, it is required to use section character $ instead of apostrophe ' and !! instead of ; for functions expressions
 	
-	6.2.9
-	Minor update:
-	-fixed issue #53
-	-minor fixing
+	Tab Reclassification
+	- added new button Incremental new value for calculating a new unique value for every old value
 	
-	Minor update:
-	-fixed Spanish language (thanks to enzopolo)
-	
-	6.2.7
-	Minor update:
-	-fixed issues with raster coordinate reference system
-	
-	6.2.6
-	Minor update:
-	-fixed small issues with French translation
-	
-	6.2.5
-	Minor update:
-	-closed issue #46 with the erosion tool
-	-added French translation of the SCP interface (translated by Sebastien Peillet)
-	
-	6.2.4
-	Minor update:
-	-fixed issue with Landsat search
-	
-	6.2.3
-	Minor update:
-	-fixed issue with Sentinel-2 search
-	
-	6.2.2
-	Minor update:
-	-fixed issue with Band calc NoData value
-	
-	6.2.1
-	Minor update:
-	-fixed issue importing spectral signatures as csv
-	
-	6.2.0
-	Major update:
-	-added button generating a kml file useful for displaying the classification preview in other programs
-	-fixed Batch function reclassification, now _ is used for separating old values and new values
-	-fixed issue when checking if classification array is None
-
-	6.1.5
-	Minor update:
-	-fixed Sentinel-2 download of level 2A images
-	-fixed issue of the tool Spectral distance
-	
-	6.1.4
-	Minor update:
-	-fixed #36
-	
-	6.1.3
-	Minor update:
-	-bug fixing
-	
-	6.1.2
-	Minor update:
-	-fixed #33
-	
-	6.1.1
-	Minor update:
-	-added compatibility for DN conversion of Landsat surface reflectance products
-	
-	6.1.0
-	Major update:
-	-new button in Download products tab for adding OpenStreetMap to the map
-	-fixed bugs
-	
-	6.0.4
-	Minor update:
-	-fixed bug related to QgsMessageBar INFO when missing dependency
-	
-	6.0.3
-	Minor update:
-	-fixed #32
-	
-	6.0.2
-	Minor update:
-	-fixed bug related to missing QgsMessageBar INFO
-	
-	6.0.1
-	Minor update:
-	-fixed #28
-	
-	6.0.0
-	Major update:
-	-version updated for QGIS 3
-	-updated the Main interface with new tabs and design
-	-in tab Band set added option for multiple band set definition that can be moved and closed
-	-in tab Band set quick wavelength set according to band number of sensor
-	-new tab Download products for searching and downloading free images and products
-	-in tab Download products added download and preprocessing of Sentinel-2 Level 2A
-	-in tab Download products added download of Sentinel-3 OLCI
-	-in tab Download products added image preview with click on Product list items
-	-in tab Download products added option to import and export table of product download
-	-in tab Download products the Product list is saved with the project
-	-in tabs Landsat Sentinel-2 and ASTER added option to limit DOS1 correction only to blue and green bands
-	-in tab Preprocessing added tool for Sentinel-3 OLCI
-	-in tab Preprocessing added tool Mosaic band sets for the creation of multiband mosaics
-	-in tab Preprocessing added tool Cloud masking of a band set which is based on the values of a classification
-	-in tab Band processing added tool Clustering with K-means and ISODATA algorithms
-	-in tab Band processing added tool Spectral distance for calculating pixel distance between two band sets
-	-in tab Band processing added tool Band combination for calculating a raster of band combinations from a band set
-	-in tab Postprocessing added tool Class signature for calculating the spectral signatures of classes in a classification using a band set
-	-in tab ROI Creation added option to autosave training input (backup file created when saving QGIS project)
-	-in tab Clip Multiple Rasters added option to select a vector field for iterating through each vector polygon and add field value to the output name
-	-in Working toolbar added possibility to plot spectral signatures of the same pixel for all the band sets (pressing the button ROI region growing then CTRL + mouse right click in the map)
-	-in tab Classification the threshold value if > 0 is used for all the spectral signatures;
-	-in tab Edit raster added vector as variable name for using vector value in expression
-	-in tab Batch added several new functions and changed some of the function variable names
-	-in tab Batch added label for checking the expression
-	-in tab Batch added table containing the list of functions
-	-in tab Settings Processing added SMTP process notification
-	-in tab Settings Debug added table of Log
-	-in tab Multiple ROI creation now can import a point shapefile for point coordinates
-	-in tab Multiple ROI creation the random point creation avoids raster NoData
-	-in Spectral Signature Plot fixed signature plot for large values
-	-various bugfixing and improvements 
+	Tab Settings
+	- added option to create RGB composite of band set when a project is loaded
+	- added option for using multiple CPU threads (it is recommended to set a value lower than the number of available CPUs)
 
 experimental=False
 deprecated=False
 
-tags = Raster, Classification, Land Cover, Remote Sensing, Analysis, Landsat, Sentinel, Supervised classification, Spectral signature, Mask, Clip, Accuracy, Landscape
+tags = Raster, Classification, Land Cover, Remote Sensing, Analysis, ASTER, GOES, Landsat, Sentinel, Supervised classification, Spectral signature, Mask, Clip, Accuracy, Landscape, Copernicus, Random Forest, SNAP, Processing
 
 homepage=https://fromgistors.blogspot.com/p/semi-automatic-classification-plugin.html
 tracker=https://github.com/semiautomaticgit/SemiAutomaticClassificationPlugin/issues

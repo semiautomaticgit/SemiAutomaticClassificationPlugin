@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
+'''
 /**************************************************************************************************************************
  SemiAutomaticClassificationPlugin
 
@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2018 by Luca Congedo
+		copyright		: (C) 2012-2021 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -30,47 +30,47 @@
  * 
 **************************************************************************************************************************/
 
-"""
+'''
 
 
 def name():
-    return "Semi-Automatic Classification Plugin"
+    return 'Semi-Automatic Classification Plugin'
 
 
 def description():
-    return "A plugin which allows for the semi-automatic supervised classification of remote sensing images, providing tools for the download, the preprocessing and postprocessing of images."
+    return 'A plugin that integrates tools for easing the download, the preprocessing, processing, and postprocessing of remote sensing images.'
 
 
 def version():
-    return "Version 6.4.7 - Greenbelt"
+    return 'Version 7.0.0 - Matera'
 
 
 def icon():
-    return "semiautomaticclassificationplugin.png"
+    return 'semiautomaticclassificationplugin.png'
 
 
 def qgisMinimumVersion():
-    return "2.99"
+    return '2.99'
 
 def author():
-    return "Luca Congedo"
+    return 'Luca Congedo'
 
 def email():
-    return "ing.congedoluca@gmail.com"
+    return 'ing.congedoluca@gmail.com'
 
 def category():
-    return "Raster"
+    return 'Raster'
 
 def classFactory(iface):
     from .semiautomaticclassificationplugin import SemiAutomaticClassificationPlugin
     return SemiAutomaticClassificationPlugin(iface)
 
 def homepage():
-    return "https://fromgistors.blogspot.com/p/semi-automatic-classification-plugin.html"
+    return 'https://fromgistors.blogspot.com/p/semi-automatic-classification-plugin.html'
 
 def tracker():
-    return "https://github.com/semiautomaticgit/SemiAutomaticClassificationPlugin/issues"
+    return 'https://github.com/semiautomaticgit/SemiAutomaticClassificationPlugin/issues'
 	
 def repository():
-	return "https://github.com/semiautomaticgit/SemiAutomaticClassificationPlugin"
+	return 'https://github.com/semiautomaticgit/SemiAutomaticClassificationPlugin'
 

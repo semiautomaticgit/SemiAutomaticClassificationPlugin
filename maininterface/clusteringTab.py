@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
+'''
 /**************************************************************************************************************************
  SemiAutomaticClassificationPlugin
 
@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2018 by Luca Congedo
+		copyright		: (C) 2012-2021 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -30,9 +30,9 @@
  * 
 **************************************************************************************************************************/
 
-"""
+'''
 
-cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
+cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
 class ClusteringTab:
 
@@ -120,14 +120,14 @@ class ClusteringTab:
 		self.calculateClustering()
 		
 	# calculate clustering
-	def calculateClustering(self, batch = "No", outputFile = None, bandSetNumber = None):
+	def calculateClustering(self, batch = 'No', outputFile = None, bandSetNumber = None):
 		if bandSetNumber is None:
 			bandSet = cfg.ui.band_set_comb_spinBox_5.value()
 			bandSetNumber = bandSet - 1
 		if bandSetNumber >= len(cfg.bandSetsList):
 			cfg.mx.msgWar25(bandSetNumber + 1)
-			return "No"
-		if batch == "No":
+			return 'No'
+		if batch == 'No':
 			clssOut = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Save clustering output"), "", "*.tif", "tif")
 		else:
 			clssOut = outputFile
@@ -136,12 +136,12 @@ class ClusteringTab:
 				pass
 			else:
 				clssOut = clssOut + ".tif"
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "clustering")
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "clustering")
 			imageName = cfg.bandSetsList[bandSetNumber][8]
 			# if band set
-			if cfg.bandSetsList[bandSetNumber][0] == "Yes":
+			if cfg.bandSetsList[bandSetNumber][0] == 'Yes':
 				ckB = cfg.utls.checkBandSet(bandSetNumber)
-				if ckB == "Yes":
+				if ckB == 'Yes':
 					bS = cfg.bndSetLst
 					# open input with GDAL
 					bL = []
@@ -151,10 +151,10 @@ class ClusteringTab:
 				else:
 					cfg.mx.msgErr6()
 					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "Error no band set")	
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "Error no band set")	
 					return None
 			else:
-				r = cfg.utls.selectLayerbyName(imageName, "Yes")
+				r = cfg.utls.selectLayerbyName(imageName, 'Yes')
 				try:
 					iR = cfg.utls.layerSource(r)
 				except:
@@ -168,12 +168,12 @@ class ClusteringTab:
 			except Exception as err:
 				cfg.mx.msgErr6()
 				# logger
-				if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				return None				
 			if rD is not None:
 				k_or_sigs = cfg.ui.kmeans_classes_spinBox.value()				
 				if cfg.ui.kmean_siglist_radioButton.isChecked() is True:					
-					sL = cfg.SCPD.getSignatureList()					
+					sL = cfg.classTab.getSignatureList()					
 					if len(sL) > 0:
 						k_or_sigs = []
 						for s in sL:
@@ -197,10 +197,10 @@ class ClusteringTab:
 					bL[b] = None	
 					
 	# ISODATA calculation (adapted from Ball & Hall, 1965. ISODATA. A novel method of data analysis and pattern classification)
-	def isodataCalculation(self, inputGDALRaster, bandList, outputFile, k_or_sigs, iterations = 10, thresh = 0.000001, minSize = 10, maxStandardDeviation = 0.000001, NoDataValue = None, batch = "No", bandSetNumber = None):
+	def isodataCalculation(self, inputGDALRaster, bandList, outputFile, k_or_sigs, iterations = 10, thresh = 0.000001, minSize = 10, maxStandardDeviation = 0.000001, NoDataValue = None, batch = 'No', bandSetNumber = None):
 		if bandSetNumber is None:
 			bandSetNumber = cfg.bndSetNumber
-		if batch == "No":
+		if batch == 'No':
 			cfg.uiUtls.addProgressBar()
 			# disable map canvas render for speed
 			cfg.cnvs.setRenderFlag(False)
@@ -217,7 +217,7 @@ class ClusteringTab:
 			classNumber = len(k_or_sigs)
 		progressStep = int(60 / iterations)
 		for iteration in range(0, iterations):
-			if cfg.actionCheck == "Yes":
+			if cfg.actionCheck == 'Yes':
 				# remove previous raster
 				try:
 					cfg.osSCP.remove(r)
@@ -229,12 +229,13 @@ class ClusteringTab:
 				if r is None:
 					break
 			else:
-				if batch == "No":
+				if batch == 'No':
 					# enable map canvas render
 					cfg.cnvs.setRenderFlag(True)
 					cfg.utls.finishSound()
+					cfg.utls.sendSMTPMessage(None, str(__name__))
 					cfg.uiUtls.removeProgressBar()
-					return "No"
+					return 'No'
 		r, sigs, sL = self.isodataIteration(rD, bL, -2, k_or_sigs, classNumber, iterations, thresh, minSize, maxStandardDeviation, NoDataValue, batch, bandSetNumber)
 		k_or_sigs = sigs
 		cfg.uiUtls.updateBar(80, cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", " Calculating classification. Please wait ..."))
@@ -243,18 +244,19 @@ class ClusteringTab:
 			bL[x] = None
 		rD = None
 		cfg.uiUtls.updateBar(90)
-		if r == "No":
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " Error")
+		if r == 'No':
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " Error")
 			cfg.mx.msgErr45()
-			if batch == "No":
+			if batch == 'No':
 				# enable map canvas render
 				cfg.cnvs.setRenderFlag(True)
 				cfg.utls.finishSound()
+				cfg.utls.sendSMTPMessage(None, str(__name__))
 				cfg.uiUtls.removeProgressBar()
-				return "No"
+				return 'No'
 		else:
 			# copy raster
-			if cfg.rasterCompression != "No":
+			if cfg.rasterCompression != 'No':
 				try:
 					cfg.utls.GDALCopyRaster(r, outputFile, "GTiff", cfg.rasterCompression, "DEFLATE -co PREDICTOR=2 -co ZLEVEL=1")
 					cfg.osSCP.remove(r)
@@ -262,16 +264,16 @@ class ClusteringTab:
 					cfg.shutilSCP.copy(r, outputFile)
 					cfg.osSCP.remove(r)
 					# logger
-					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			else:
 				cfg.shutilSCP.copy(r, outputFile)
 				cfg.osSCP.remove(r)
 			# add raster to layers
-			l =cfg.utls.addRasterLayer(str(outputFile), str(cfg.osSCP.path.basename(outputFile)))
-			cfg.utls.rasterSymbol(l, sL, "No")
+			l =cfg.utls.addRasterLayer(outputFile)
+			cfg.utls.rasterSymbol(l, sL, 'No')
 		cfg.uiUtls.updateBar(90)		
 		# display parameters
-		self.displayParameters(sL, None, outputDirectory, str(cfg.osSCP.path.basename(outputFile)))
+		self.displayParameters(sL, None, outputDirectory, cfg.utls.fileName(outputFile))
 		if cfg.ui.kmean_save_siglist_checkBox.isChecked() is True:
 			for x in sL:
 				id = cfg.utls.signatureID()
@@ -297,26 +299,27 @@ class ClusteringTab:
 				cfg.signList["COLOR_" + str(id)] = x[6]
 				cfg.signList["CHECKBOX_" + str(id)] = 2
 				cfg.signList["UNIT_" + str(id)] = cfg.bandSetsList[bandSetNumber][5]
-				cfg.signList["COVMATRIX_" + str(id)] = "No"
+				cfg.signList["COVMATRIX_" + str(id)] = 'No'
 				cfg.signList["ROI_SIZE_" + str(id)] = 0
 				cfg.signList["MD_THRESHOLD_" + str(id)] = 0
 				cfg.signList["ML_THRESHOLD_" + str(id)] = 0
 				cfg.signList["SAM_THRESHOLD_" + str(id)] = 0
-			cfg.SCPD.ROIListTable(cfg.shpLay, cfg.uidc.signature_list_tableWidget)
+			cfg.SCPD.ROIListTableTree(cfg.shpLay, cfg.uidc.signature_list_treeWidget)
 			cfg.ui.toolBox_kmeans.setCurrentIndex(1)			
 		cfg.uiUtls.updateBar(100)
-		if batch == "No":
+		if batch == 'No':
 			# enable map canvas render
 			cfg.cnvs.setRenderFlag(True)
 			cfg.utls.finishSound()
+			cfg.utls.sendSMTPMessage(None, str(__name__))
 			cfg.uiUtls.removeProgressBar()
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ISODATA calculated")	
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ISODATA calculated")	
 		
 	# isodata iteration
-	def isodataIteration(self, inputGDALRaster, bandList, iteration, k_or_sigs, classNumber, iterations = 20, thresh = 0.00001, minSize = 10, maxStandardDeviation = 0.000001, NoDataValue = None, batch = "No", bandSetNumber = None):
+	def isodataIteration(self, inputGDALRaster, bandList, iteration, k_or_sigs, classNumber, iterations = 20, thresh = 0.00001, minSize = 10, maxStandardDeviation = 0.000001, NoDataValue = None, batch = 'No', bandSetNumber = None):
 		if bandSetNumber is None:
 			bandSetNumber = cfg.bndSetNumber
-		if cfg.actionCheck == "Yes":
+		if cfg.actionCheck == 'Yes':
 			algorithmName = cfg.algMinDist
 			# calculate band mean
 			cfg.rasterClustering = {}
@@ -335,10 +338,10 @@ class ClusteringTab:
 				if cfg.ui.kmean_minmax_radioButton.isChecked() is True:
 					try:
 						# signatures from minimum maximum values
-						o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.rasterMinimumMaximum, None, None, None, None, 0, None, cfg.NoDataVal, "No", nD, cfg.bandSetsList[bandSetNumber][6], "Calculating minimum maximum values")
+						o = cfg.utls.processRasterOld(rD, bL, None, 'No', cfg.utls.rasterMinimumMaximum, None, None, None, None, 0, None, cfg.NoDataVal, 'No', nD, cfg.bandSetsList[bandSetNumber][6], "Calculating minimum maximum values")
 					except Exception as err:
 						# logger
-						if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+						if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 					signatures1 = []
 					signatureList = []
 					kN = 1
@@ -363,7 +366,7 @@ class ClusteringTab:
 						s.append(cfg.bandSetsList[bandSetNumber][4])
 						c, cc = cfg.utls.randomColor()
 						s.append(c)
-						s.append("No")
+						s.append('No')
 						s.append(signature)
 						s.append(signature)
 						s.append(0)
@@ -378,7 +381,7 @@ class ClusteringTab:
 					kN = 1
 					classes = []
 					for p in range(0, len(points)):
-						sig = cfg.utls.calculatePixelSignature(cfg.qgisCoreSCP.QgsPointXY(points[p][0], points[p][1]), cfg.bandSetsList[bandSetNumber][8], bandSetNumber, "Pixel", "No")
+						sig = cfg.utls.calculatePixelSignature(cfg.qgisCoreSCP.QgsPointXY(points[p][0], points[p][1]), cfg.bandSetsList[bandSetNumber][8], bandSetNumber, "Pixel", 'No')
 						signatures1.append(sig)
 						signature = []
 						for v in range(0, len(sig)):
@@ -393,7 +396,7 @@ class ClusteringTab:
 						s.append(cfg.bandSetsList[bandSetNumber][4])
 						c, cc = cfg.utls.randomColor()
 						s.append(c)
-						s.append("No")
+						s.append('No')
 						s.append(signature)
 						s.append(signature)
 						s.append(0)
@@ -406,8 +409,8 @@ class ClusteringTab:
 					k = len(k_or_sigs)
 				except Exception as err:
 					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-					return "No", None, None
+					cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+					return 'No', None, None
 				signatures1 = k_or_sigs
 				signatureList = []
 				classes = []
@@ -425,7 +428,7 @@ class ClusteringTab:
 					s.append(signature)
 					s.append(cfg.bandSetsList[bandSetNumber][4])
 					s.append(signatures1[p][2])
-					s.append("No")
+					s.append('No')
 					s.append(signature)
 					s.append(signature)
 					s.append(0)
@@ -436,24 +439,19 @@ class ClusteringTab:
 			previewPoint = None
 			compress = cfg.rasterCompression
 			# signature rasters
-			oRL, opOut = cfg.utls.createSignatureClassRaster(signatureList, rD, cfg.tmpDir, cfg.NoDataVal, None, previewSize, previewPoint, "No")
+			oRL, opOut = cfg.utls.createSignatureClassRaster(signatureList, rD, cfg.tmpDir, cfg.NoDataVal, None, previewSize, previewPoint, 'No')
 			# output rasters
 			oM = []
 			oC = []
-			# date time for temp name
-			dT = cfg.utls.getTime()
-			# temp files
-			tPMN = dT + cfg.algRasterNm + "_" + str(iteration) + ".tif"
-			tPMD = cfg.tmpDir + "/" + tPMN	
-			tPMN2 = dT + cfg.classRasterNm + "_" + str(iteration) + ".tif"
-			tPMD2 = cfg.tmpDir + "/" + tPMN2
+			tPMD = cfg.utls.createTempRasterPath('tif')
+			tPMD2 = cfg.utls.createTempRasterPath('tif')
 			oM.append(tPMD)
 			oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, previewSize, previewPoint, compress)
 			oC.append(tPMD2)
 			oCR = cfg.utls.createRasterFromReference(rD, 1, oC, cfg.NoDataVal, "GTiff", cfg.gdalSCP.GDT_Int32, previewSize, previewPoint, compress, "DEFLATE")
-			o = cfg.utls.processRaster(rD, bL, signatureList, None, cfg.utls.classification, algorithmName, oRL, oMR[0], oCR[0], previewSize, previewPoint, cfg.NoDataVal, "No", cfg.multiAddFactorsVar, cfg.bandSetsList[bandSetNumber][6])
-			if o == "No":
-				return "No", None, None
+			o = cfg.utls.processRasterOld(rD, bL, signatureList, None, cfg.utls.classification, algorithmName, oRL, oMR[0], oCR[0], previewSize, previewPoint, cfg.NoDataVal, 'No', cfg.multiAddFactorsVar, cfg.bandSetsList[bandSetNumber][6])
+			if o == 'No':
+				return 'No', None, None
 			# last classification
 			if iteration == -1:
 				# close GDAL rasters
@@ -475,7 +473,7 @@ class ClusteringTab:
 			bLC = bL.copy()
 			bLC.append(oCR[0])
 			bLC.append(oMR[0])
-			o = cfg.utls.processRaster(rD, bLC, None, "No", cfg.utls.rasterPixelCountISODATA, None, None, None, None, 0, None, cfg.NoDataVal, "No", nD, [classes, cfg.bandSetsList[bandSetNumber][6]], "Sum")
+			o = cfg.utls.processRasterOld(rD, bLC, None, 'No', cfg.utls.rasterPixelCountISODATA, None, None, None, None, 0, None, cfg.NoDataVal, 'No', nD, [classes, cfg.bandSetsList[bandSetNumber][6]], "Sum")
 			# calculate band mean
 			for c in classes:
 				for b in range(0, len(bL)):	
@@ -483,9 +481,9 @@ class ClusteringTab:
 						cfg.rasterClustering["MEAN_BAND_" + str(b) + "_c_" + str(c[0])] = cfg.rasterClustering["SUM_BAND_" + str(b) + "_c_" + str(c[0])] / cfg.rasterClustering["COUNT_BAND_" + str(b) + "_c_" + str(c[0])]
 					except Exception as err:
 						# logger
-						cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-						return "No", None, None
-			o = cfg.utls.processRaster(rD, bLC, None, "No", cfg.utls.rasterStandardDeviationISODATA, None, None, None, None, 0, None, cfg.NoDataVal, "No", nD, [classes, cfg.bandSetsList[bandSetNumber][6]], "Standard deviation")
+						cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+						return 'No', None, None
+			o = cfg.utls.processRasterOld(rD, bLC, None, 'No', cfg.utls.rasterStandardDeviationISODATA, None, None, None, None, 0, None, cfg.NoDataVal, 'No', nD, [classes, cfg.bandSetsList[bandSetNumber][6]], "Standard deviation")
 			classes2 = []
 			avDistance = 0
 			sumNi = 0
@@ -514,8 +512,8 @@ class ClusteringTab:
 						classes2.append([c[0], c[1], s2, Ni, avDist, maxStdDev, maxStdDevK])
 				except Exception as err:
 					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-					return "No", None, None
+					cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+					return 'No', None, None
 			# penultimate iteration
 			if iteration == -2:
 				signatures2 = []
@@ -537,7 +535,7 @@ class ClusteringTab:
 					s.append(signature)
 					s.append(cfg.bandSetsList[bandSetNumber][4])
 					s.append(c[1])
-					s.append("No")
+					s.append('No')
 					s.append("")
 					s.append("")
 					s.append(0)
@@ -550,8 +548,8 @@ class ClusteringTab:
 					maxClass = max(maxClasses)
 				except Exception as err:
 					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-					return "No", None, None
+					cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+					return 'No', None, None
 				classes3 = []
 				# check split
 				if len(classes2) <= classNumber:
@@ -621,7 +619,7 @@ class ClusteringTab:
 					s.append(signature)
 					s.append(cfg.bandSetsList[bandSetNumber][4])
 					s.append(c[1])
-					s.append("No")
+					s.append('No')
 					s.append("")
 					s.append("")
 					s.append(0)
@@ -643,13 +641,13 @@ class ClusteringTab:
 				pass
 			return tPMD2, signatures2, signatureList2
 		else:
-			return "No", None, None
+			return 'No', None, None
 			
 	# K-means calculation
-	def kmeansCalculation(self, inputGDALRaster, bandList, outputFile, k_or_sigs, iterations = 10, thresh = 0.000001, NoDataValue = None, batch = "No", bandSetNumber = None):
+	def kmeansCalculation(self, inputGDALRaster, bandList, outputFile, k_or_sigs, iterations = 10, thresh = 0.000001, NoDataValue = None, batch = 'No', bandSetNumber = None):
 		if bandSetNumber is None:
 			bandSetNumber = cfg.bndSetNumber
-		if batch == "No":
+		if batch == 'No':
 			cfg.uiUtls.addProgressBar()
 			# disable map canvas render for speed
 			cfg.cnvs.setRenderFlag(False)
@@ -662,7 +660,7 @@ class ClusteringTab:
 		cfg.uiUtls.updateBar(20, cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", " Calculating. Please wait ..."))
 		progressStep = int(60 / iterations)
 		for iteration in range(0, iterations):
-			if cfg.actionCheck == "Yes":
+			if cfg.actionCheck == 'Yes':
 				# remove previous raster
 				try:
 					cfg.osSCP.remove(r)
@@ -674,24 +672,25 @@ class ClusteringTab:
 				if r is None:
 					break
 			else:
-				if batch == "No":
+				if batch == 'No':
 					# enable map canvas render
 					cfg.cnvs.setRenderFlag(True)
 					cfg.utls.finishSound()
+					cfg.utls.sendSMTPMessage(None, str(__name__))
 					cfg.uiUtls.removeProgressBar()
-					return "No"
+					return 'No'
 		r, sigs0, sL0, distances0 = self.kmeansIteration(rD, bL, -1, k_or_sigs, iterations, thresh, NoDataValue, batch, bandSetNumber)
 		cfg.uiUtls.updateBar(80, cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", " Calculating classification. Please wait ..."))
 		for x in range(0, len(bL)):
 			bL[x] = None
 		rD = None
 		cfg.uiUtls.updateBar(90)
-		if r == "No":
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " Error")
+		if r == 'No':
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " Error")
 			cfg.mx.msgErr45()
 		else:
 			# copy raster
-			if cfg.rasterCompression != "No":
+			if cfg.rasterCompression != 'No':
 				try:
 					cfg.utls.GDALCopyRaster(r, outputFile, "GTiff", cfg.rasterCompression, "DEFLATE -co PREDICTOR=2 -co ZLEVEL=1")
 					cfg.osSCP.remove(r)
@@ -699,16 +698,16 @@ class ClusteringTab:
 					cfg.shutilSCP.copy(r, outputFile)
 					cfg.osSCP.remove(r)
 					# logger
-					if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			else:
 				cfg.shutilSCP.copy(r, outputFile)
 				cfg.osSCP.remove(r)
 			# add raster to layers
-			l =cfg.utls.addRasterLayer(str(outputFile), str(cfg.osSCP.path.basename(outputFile)))
-			cfg.utls.rasterSymbol(l, sL, "No")
+			l =cfg.utls.addRasterLayer(outputFile)
+			cfg.utls.rasterSymbol(l, sL, 'No')
 		cfg.uiUtls.updateBar(90)		
 		# display parameters
-		self.displayParameters(sL, distances, outputDirectory, str(cfg.osSCP.path.basename(outputFile)))
+		self.displayParameters(sL, distances, outputDirectory, cfg.utls.fileName(outputFile))
 		if cfg.ui.kmean_save_siglist_checkBox.isChecked() is True:
 			for x in sL:
 				id = cfg.utls.signatureID()
@@ -734,26 +733,27 @@ class ClusteringTab:
 				cfg.signList["COLOR_" + str(id)] = x[6]
 				cfg.signList["CHECKBOX_" + str(id)] = 2
 				cfg.signList["UNIT_" + str(id)] = cfg.bandSetsList[bandSetNumber][5]
-				cfg.signList["COVMATRIX_" + str(id)] = "No"
+				cfg.signList["COVMATRIX_" + str(id)] = 'No'
 				cfg.signList["ROI_SIZE_" + str(id)] = 0
 				cfg.signList["MD_THRESHOLD_" + str(id)] = 0
 				cfg.signList["ML_THRESHOLD_" + str(id)] = 0
 				cfg.signList["SAM_THRESHOLD_" + str(id)] = 0
-			cfg.SCPD.ROIListTable(cfg.shpLay, cfg.uidc.signature_list_tableWidget)
+			cfg.SCPD.ROIListTableTree(cfg.shpLay, cfg.uidc.signature_list_treeWidget)
 			cfg.ui.toolBox_kmeans.setCurrentIndex(1)			
 		cfg.uiUtls.updateBar(100)
-		if batch == "No":
+		if batch == 'No':
 			# enable map canvas render
 			cfg.cnvs.setRenderFlag(True)
 			cfg.utls.finishSound()
+			cfg.utls.sendSMTPMessage(None, str(__name__))
 			cfg.uiUtls.removeProgressBar()
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " K-means calculated")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " K-means calculated")
 				
 	# K-means iteration
-	def kmeansIteration(self, inputGDALRaster, bandList, iteration, k_or_sigs, iterations = 20, thresh = 0.00001, NoDataValue = None, batch = "No", bandSetNumber = None):
+	def kmeansIteration(self, inputGDALRaster, bandList, iteration, k_or_sigs, iterations = 20, thresh = 0.00001, NoDataValue = None, batch = 'No', bandSetNumber = None):
 		if bandSetNumber is None:
 			bandSetNumber = cfg.bndSetNumber
-		if cfg.actionCheck == "Yes":
+		if cfg.actionCheck == 'Yes':
 			if cfg.ui.min_distance_radioButton.isChecked() is True: 
 				algorithmName = cfg.algMinDist
 			else:
@@ -775,10 +775,10 @@ class ClusteringTab:
 				if cfg.ui.kmean_minmax_radioButton.isChecked() is True:
 					try:
 						# signatures from minimum maximum values
-						o = cfg.utls.processRaster(rD, bL, None, "No", cfg.utls.rasterMinimumMaximum, None, None, None, None, 0, None, cfg.NoDataVal, "No", nD, cfg.bandSetsList[bandSetNumber][6], "Calculating minimum maximum values")
+						o = cfg.utls.processRasterOld(rD, bL, None, 'No', cfg.utls.rasterMinimumMaximum, None, None, None, None, 0, None, cfg.NoDataVal, 'No', nD, cfg.bandSetsList[bandSetNumber][6], "Calculating minimum maximum values")
 					except Exception as err:
 						# logger
-						if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+						if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 					signatures1 = []
 					signatureList = []
 					kN = 1
@@ -803,7 +803,7 @@ class ClusteringTab:
 						s.append(cfg.bandSetsList[bandSetNumber][4])
 						c, cc = cfg.utls.randomColor()
 						s.append(c)
-						s.append("No")
+						s.append('No')
 						s.append(signature)
 						s.append(signature)
 						s.append(0)
@@ -818,7 +818,7 @@ class ClusteringTab:
 					kN = 1
 					classes = []
 					for p in range(0, len(points)):
-						sig = cfg.utls.calculatePixelSignature(cfg.qgisCoreSCP.QgsPointXY(points[p][0], points[p][1]), cfg.bandSetsList[bandSetNumber][8], bandSetNumber, "Pixel", "No")
+						sig = cfg.utls.calculatePixelSignature(cfg.qgisCoreSCP.QgsPointXY(points[p][0], points[p][1]), cfg.bandSetsList[bandSetNumber][8], bandSetNumber, "Pixel", 'No')
 						signatures1.append(sig)
 						signature = []
 						for v in range(0, len(sig)):
@@ -833,7 +833,7 @@ class ClusteringTab:
 						s.append(cfg.bandSetsList[bandSetNumber][4])
 						c, cc = cfg.utls.randomColor()
 						s.append(c)
-						s.append("No")
+						s.append('No')
 						s.append(signature)
 						s.append(signature)
 						s.append(0)
@@ -860,7 +860,7 @@ class ClusteringTab:
 					s.append(signature)
 					s.append(cfg.bandSetsList[bandSetNumber][4])
 					s.append(signatures1[p][2])
-					s.append("No")
+					s.append('No')
 					s.append(signature)
 					s.append(signature)
 					s.append(0)
@@ -871,24 +871,20 @@ class ClusteringTab:
 			previewPoint = None
 			compress = cfg.rasterCompression
 			# signature rasters
-			oRL, opOut = cfg.utls.createSignatureClassRaster(signatureList, rD, cfg.tmpDir, cfg.NoDataVal, None, previewSize, previewPoint, "No")
+			oRL, opOut = cfg.utls.createSignatureClassRaster(signatureList, rD, cfg.tmpDir, cfg.NoDataVal, None, previewSize, previewPoint, 'No')
 			# output rasters
 			oM = []
 			oC = []
-			# date time for temp name
-			dT = cfg.utls.getTime()
 			# temp files
-			tPMN = dT + cfg.algRasterNm + "_" + str(iteration) + ".tif"
-			tPMD = cfg.tmpDir + "/" + tPMN	
-			tPMN2 = dT + cfg.classRasterNm + "_" + str(iteration) + ".tif"
-			tPMD2 = cfg.tmpDir + "/" + tPMN2
+			tPMD = cfg.utls.createTempRasterPath('tif')
+			tPMD2 = cfg.utls.createTempRasterPath('tif')
 			oM.append(tPMD)
 			oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, previewSize, previewPoint, compress)
 			oC.append(tPMD2)
 			oCR = cfg.utls.createRasterFromReference(rD, 1, oC, cfg.NoDataVal, "GTiff", cfg.gdalSCP.GDT_Int32, previewSize, previewPoint, compress, "DEFLATE")
-			o = cfg.utls.processRaster(rD, bL, signatureList, None, cfg.utls.classification, algorithmName, oRL, oMR[0], oCR[0], previewSize, previewPoint, cfg.NoDataVal, "No", cfg.multiAddFactorsVar, cfg.bandSetsList[bandSetNumber][6])
-			if o == "No":
-				return "No", None, None, None
+			o = cfg.utls.processRasterOld(rD, bL, signatureList, None, cfg.utls.classificationOld, algorithmName, oRL, oMR[0], oCR[0], previewSize, previewPoint, cfg.NoDataVal, 'No', cfg.multiAddFactorsVar, cfg.bandSetsList[bandSetNumber][6])
+			if o == 'No':
+				return 'No', None, None, None
 			# last classification
 			if iteration == -1:
 				# close GDAL rasters
@@ -911,7 +907,7 @@ class ClusteringTab:
 			bLC = bL.copy()
 			bLC.append(oCR[0])
 			signatures2 = []
-			o = cfg.utls.processRaster(rD, bLC, None, "No", cfg.utls.rasterPixelCountKmeans, None, None, None, None, 0, None, cfg.NoDataVal, "No", nD, [classes, cfg.bandSetsList[bandSetNumber][6]], "Sum")
+			o = cfg.utls.processRasterOld(rD, bLC, None, 'No', cfg.utls.rasterPixelCountKmeans, None, None, None, None, 0, None, cfg.NoDataVal, 'No', nD, [classes, cfg.bandSetsList[bandSetNumber][6]], "Sum")
 			for c in classes:
 				signature = []
 				s2 = []
@@ -923,8 +919,8 @@ class ClusteringTab:
 						signature.append(0)
 					except Exception as err:
 						# logger
-						cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-						return "No", None, None, None
+						cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+						return 'No', None, None, None
 				signatures2.append([s2, c[0], c[1]])
 				s = []
 				s.append( c[0])
@@ -934,7 +930,7 @@ class ClusteringTab:
 				s.append(signature)
 				s.append(cfg.bandSetsList[bandSetNumber][4])
 				s.append(c[1])
-				s.append("No")
+				s.append('No')
 				s.append("")
 				s.append("")
 				s.append(0)
@@ -967,24 +963,24 @@ class ClusteringTab:
 			else:
 				return tPMD2, signatures2, signatureList2, distances
 		else:
-			return "No", None, None, None
+			return 'No', None, None, None
 			
 	# create random point
 	def createRandomSeeds(self, pointNumber, NoDataValue = None, bandSetNumber = None):
 		if bandSetNumber is None:
 			bandSetNumber = cfg.bndSetNumber
 		try:
-			if cfg.bandSetsList[bandSetNumber][0] == "Yes":
+			if cfg.bandSetsList[bandSetNumber][0] == 'Yes':
 				imageName = cfg.bandSetsList[bandSetNumber][3][0]
 			else:
-				if cfg.utls.selectLayerbyName(cfg.bandSetsList[bandSetNumber][8], "Yes") is None:
+				if cfg.utls.selectLayerbyName(cfg.bandSetsList[bandSetNumber][8], 'Yes') is None:
 					cfg.mx.msg4()
-					return "No"
+					return 'No'
 				else:
 					imageName = cfg.bandSetsList[bandSetNumber][8]	
 					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "No image selected")
-			img = cfg.utls.selectLayerbyName(imageName, "Yes")
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "No image selected")
+			img = cfg.utls.selectLayerbyName(imageName, 'Yes')
 			crs = cfg.utls.getCrs(img)
 			geographicFlag = crs.isGeographic()
 			if geographicFlag is False:
@@ -999,7 +995,7 @@ class ClusteringTab:
 				cfg.mx.msgWar14()
 		except Exception as err:
 			# logger
-			if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 					
 	# display parameters
 	def displayParameters(self, signatureList, distances = None, outputDirectory = None, outputFileName = None):
@@ -1008,8 +1004,8 @@ class ClusteringTab:
 			l = open(tblOut, 'w')
 		except Exception as err:
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-			return "No"
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			return 'No'
 		t = str(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Clustering')) + "	" + str("\n") + str("\n")
 		l.write(t)
 		tB = str(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Class')) + "	" + str(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Signature')) + "	" + str(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", 'Distance')) + str("\n")
@@ -1038,7 +1034,7 @@ class ClusteringTab:
 				cfg.ui.report_textBrowser_3.setText(str(eM))
 				cfg.ui.toolBox_kmeans.setCurrentIndex(1)
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "calculated")
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "calculated")
 		except Exception as err:
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))

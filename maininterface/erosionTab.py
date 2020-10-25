@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
+'''
 /**************************************************************************************************************************
  SemiAutomaticClassificationPlugin
 
@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2018 by Luca Congedo
+		copyright		: (C) 2012-2021 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -30,11 +30,11 @@
  * 
 **************************************************************************************************************************/
 
-"""
+'''
 
 
 
-cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
+cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
 class ErosionRaster:
 
@@ -57,7 +57,7 @@ class ErosionRaster:
 			cfg.ui.erosion_classes_lineEdit.setStyleSheet("color : red")
 			valueList = []
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 		return valueList
 		
 	# erosion classification
@@ -65,11 +65,11 @@ class ErosionRaster:
 		self.erosionClassification()
 		
 	# erosion classification
-	def erosionClassification(self, batch = "No", rasterInput = None, rasterOutput = None):
+	def erosionClassification(self, batch = 'No', rasterInput = None, rasterOutput = None):
 		# class value list
 		valueList = self.checkValueList()
 		if len(valueList) > 0:
-			if batch == "No":
+			if batch == 'No':
 				outputRaster = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Save output"), "", "*.tif", "tif")
 			else:
 				outputRaster = rasterOutput
@@ -78,21 +78,21 @@ class ErosionRaster:
 					pass
 				else:
 					outputRaster = outputRaster + ".tif"
-				if batch == "No":
+				if batch == 'No':
 					cfg.uiUtls.addProgressBar()
 					cfg.cnvs.setRenderFlag(False)
 					raster = cfg.ui.erosion_raster_name_combo.currentText()
-					r = cfg.utls.selectLayerbyName(raster, "Yes")
+					r = cfg.utls.selectLayerbyName(raster, 'Yes')
 				else:
-					r = "No"
+					r = 'No'
 				if r is not None:
-					if batch == "No":
+					if batch == 'No':
 						rSource = cfg.utls.layerSource(r)
 					else:
 						if cfg.osSCP.path.isfile(rasterInput):
 							rSource = rasterInput
 						else:
-							return "No"
+							return 'No'
 					cfg.uiUtls.updateBar(40)
 					# open input with GDAL
 					rD = cfg.gdalSCP.Open(rSource, cfg.gdalSCP.GA_ReadOnly)
@@ -103,24 +103,20 @@ class ErosionRaster:
 						cfg.mx.msg4()
 						# logger
 						cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " None raster")
-						if batch == "No":
+						if batch == 'No':
 							cfg.uiUtls.removeProgressBar()
 							cfg.cnvs.setRenderFlag(True)
-						return "No"
+						return 'No'
 					size =  cfg.ui.erosion_threshold_spinBox.value()
 					connect = cfg.ui.erosion_connection_combo.currentText()
 					struct = cfg.utls.create3x3Window(connect)
 					for s in range(0, size):
-						# date time for temp name
-						dT = cfg.utls.getTime()
-						tPMD = cfg.tmpDir + "/" + dT + "erosion" + str(s) + ".tif"
-						tempRasterList = []
-						tempRasterList.append(tPMD)
+						tPMD = cfg.utls.createTempRasterPath('tif')
 						# create rasters
-						oMR = cfg.utls.createRasterFromReference(rD, 1, tempRasterList, cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0,  None, "No", "DEFLATE21")
-						o = cfg.utls.processRaster(input, bL, None, "No", cfg.utls.rasterErosion, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", struct, valueList, "erosion ")
+						oMR = cfg.utls.createRasterFromReference(rD, 1, [tPMD], cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0,  None, 'No', "DEFLATE21")
+						o = cfg.utls.processRasterOld(input, bL, None, 'No', cfg.utls.rasterErosion, None, oMR, None, None, 0, None, cfg.NoDataVal, 'No', struct, valueList, "erosion ")
 						# boundaries
-						o = cfg.utls.processRasterBoundaries(input, bL, None, "No", cfg.utls.rasterErosionBoundaries, None, oMR, None, None, 0, None, cfg.NoDataVal, "No", struct, valueList, "erosion ", 2)
+						o = cfg.utls.processRasterBoundaries(input, bL, None, 'No', cfg.utls.rasterErosionBoundaries, None, oMR, None, None, 0, None, cfg.NoDataVal, 'No', struct, valueList, "erosion ", 2)
 						# close GDAL rasters
 						for b in range(0, len(oMR)):
 							oMR[b] = None
@@ -136,31 +132,32 @@ class ErosionRaster:
 						bL[b] = None
 					rD = None
 					# copy raster
-					if cfg.rasterCompression != "No":
+					if cfg.rasterCompression != 'No':
 						try:
 							cfg.utls.GDALCopyRaster(tPMD, outputRaster, "GTiff", cfg.rasterCompression, "DEFLATE -co PREDICTOR=2 -co ZLEVEL=1")
 						except Exception as err:
 							cfg.shutilSCP.copy(tPMD, outputRaster)
 							# logger
-							if cfg.logSetVal == "Yes": cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+							if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 					else:
 						cfg.shutilSCP.copy(tPMD, outputRaster)
 					if cfg.osSCP.path.isfile(outputRaster):
-						oR =cfg.utls.addRasterLayer(outputRaster, cfg.osSCP.path.basename(outputRaster))
-					if r != "No":
+						oR =cfg.utls.addRasterLayer(outputRaster)
+					if r != 'No':
 						cfg.utls.copyRenderer(r, oR)
-					if batch == "No":
+					if batch == 'No':
 						cfg.utls.finishSound()
+						cfg.utls.sendSMTPMessage(None, str(__name__))
 						cfg.uiUtls.removeProgressBar()
 						cfg.cnvs.setRenderFlag(True)
 				else:
-					if batch == "No":
+					if batch == 'No':
 						cfg.uiUtls.removeProgressBar()
 						cfg.cnvs.setRenderFlag(True)
 					cfg.utls.refreshClassificationLayer()
 					cfg.mx.msgErr9()
 					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "Error raster not found")
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "Error raster not found")
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode())
 			

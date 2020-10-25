@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
+'''
 /**************************************************************************************************************************
  SemiAutomaticClassificationPlugin
 
@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2018 by Luca Congedo
+		copyright		: (C) 2012-2021 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -30,11 +30,11 @@
  * 
 **************************************************************************************************************************/
 
-"""
+'''
 
 
 
-cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
+cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
 class ClassToVectorTab:
 
@@ -46,55 +46,63 @@ class ClassToVectorTab:
 		self.convertClassificationToVector()
 		
 	# convert classification to vector
-	def convertClassificationToVector(self, batch = "No", inputRaster = None, outputVector = None,):
-		if batch == "No":
+	def convertClassificationToVector(self, batch = 'No', inputRaster = None, outputVector = None, dissolve = None, useCode = None):
+		if batch == 'No':
 			self.clssfctnNm = str(cfg.ui.classification_vector_name_combo.currentText())
-			i = cfg.utls.selectLayerbyName(self.clssfctnNm, "Yes")
+			i = cfg.utls.selectLayerbyName(self.clssfctnNm, 'Yes')
 			try:
 				classificationPath = cfg.utls.layerSource(i)
 			except Exception as err:
 				cfg.mx.msg4()
 				cfg.utls.refreshClassificationLayer()
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-				return "No"
-			out = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Save shapefile output"), "", "*.shp", "shp")
+				cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+				return 'No'
+			out = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Save vector output'), '', '*.gpkg', 'gpkg')
 		else:
 			if cfg.osSCP.path.isfile(inputRaster):
 				classificationPath = inputRaster
 			else:
-				return "No"
+				return 'No'
 			out = outputVector
 		if out is not False:
-			if out.lower().endswith(".shp"):
+			if out.lower().endswith('.gpkg'):
 				pass
 			else:
-				out = out + ".shp"
-			if batch == "No":
+				out = out + '.gpkg'
+			if batch == 'No':
 				cfg.uiUtls.addProgressBar()
 				# disable map canvas render
 				cfg.cnvs.setRenderFlag(False)
 			cfg.uiUtls.updateBar(10)
-			n = cfg.osSCP.path.basename(out)
+			n = cfg.utls.fileName(out)
 			cfg.uiUtls.updateBar(20)
 			if str(cfg.ui.class_macroclass_comboBox.currentText()) == cfg.fldMacroID_class_def:
-				mc = "Yes"
+				mc = 'Yes'
 				sL = cfg.SCPD.createMCIDList()
 			else:
-				mc = "No"
-				sL = cfg.SCPD.getSignatureList()
-			cfg.utls.rasterToVector(classificationPath, out)
+				mc = 'No'
+				sL = cfg.classTab.getSignatureList()
+			if dissolve is None:
+				if cfg.ui.dissolve_output_checkBox.isChecked() is True:
+					dissolve = 'Yes'
+				else:
+					dissolve = 'No'
+			res = cfg.utls.multiProcessRasterToVector(rasterPath = classificationPath, outputVectorPath = out, dissolveOutput = dissolve)
 			cfg.uiUtls.updateBar(80)
-			vl = cfg.utls.addVectorLayer(out, cfg.osSCP.path.basename(out), "ogr")
-			if cfg.ui.use_class_code_checkBox.isChecked() is True:
-				cfg.utls.vectorSymbol(vl, sL, mc)
-				# save qml file
-				nm = cfg.osSCP.path.splitext(n)[0]
-				cfg.utls.saveQmlStyle(vl, cfg.osSCP.path.dirname(out) + '/' + nm + ".qml")
-			cfg.uiUtls.updateBar(100)
-			cfg.utls.addLayerToMap(vl)
-			if batch == "No":
+			if res != 'No':
+				vl = cfg.utls.addVectorLayer(out, cfg.utls.fileName(out), 'ogr')
+				if useCode is None or useCode == 'Yes':
+					if cfg.ui.use_class_code_checkBox.isChecked() is True or useCode == 'Yes':
+						cfg.utls.vectorSymbol(vl, sL, mc)
+						# save qml file
+						nm = cfg.osSCP.path.splitext(n)[0]
+						cfg.utls.saveQmlStyle(vl, cfg.osSCP.path.dirname(out) + '/' + nm + '.qml')
+				cfg.uiUtls.updateBar(100)
+				cfg.utls.addLayerToMap(vl)
+			if batch == 'No':
 				# enable map canvas render
 				cfg.cnvs.setRenderFlag(True)
 				cfg.utls.finishSound()
+				cfg.utls.sendSMTPMessage(None, str(__name__))
 				cfg.uiUtls.removeProgressBar()

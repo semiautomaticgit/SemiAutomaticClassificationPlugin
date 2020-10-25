@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
+'''
 /**************************************************************************************************************************
  SemiAutomaticClassificationPlugin
 
@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2018 by Luca Congedo
+		copyright		: (C) 2012-2021 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -30,11 +30,11 @@
  * 
 **************************************************************************************************************************/
 
-"""
+'''
 
 
 
-cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
+cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
 class EditRaster:
 
@@ -46,18 +46,18 @@ class EditRaster:
 		self.setRasterValue()
 		
 	# set raster value
-	def setRasterValue(self, batch = "No", rasterInput = None, vectorInput = None, vectorFieldName = None):
+	def setRasterValue(self, batch = 'No', rasterInput = None, vectorInput = None, vectorFieldName = None):
 		if cfg.ui.edit_val_use_ROI_radioButton.isChecked() and cfg.lstROI is None:
 			cfg.mx.msg22()
 			return
 		else:
-			if batch == "No":
+			if batch == 'No':
 				self.rstrNm = cfg.ui.edit_raster_name_combo.currentText()
-				b = cfg.utls.selectLayerbyName(self.rstrNm, "Yes")
+				b = cfg.utls.selectLayerbyName(self.rstrNm, 'Yes')
 			else:
-				b = "No"
+				b = 'No'
 			if b is not None:
-				if batch == "No":
+				if batch == 'No':
 					rSource = cfg.utls.layerSource(b)
 				else:
 					rSource = rasterInput
@@ -68,11 +68,11 @@ class EditRaster:
 				f = cfg.qgisCoreSCP.QgsFeature()
 				# using vector
 				if cfg.ui.edit_val_use_vector_radioButton.isChecked():
-					if batch == "No":
+					if batch == 'No':
 						shapeNm = cfg.ui.vector_name_combo_2.currentText()
 						shape = cfg.utls.selectLayerbyName(shapeNm)
 					else:
-						shape = cfg.utls.addVectorLayer(vectorInput , cfg.osSCP.path.basename(vectorInput), "ogr")
+						shape = cfg.utls.addVectorLayer(vectorInput , cfg.utls.fileName(vectorInput), "ogr")
 					if shape is None:
 						return
 					for f in shape.getFeatures():
@@ -87,11 +87,11 @@ class EditRaster:
 					cfg.show_ROI_radioButton.setChecked(False)
 					cfg.SCPD.showHideROI()
 				self.setValueRaster(rSource, vector, rId, batch, vectorFieldName)
-				if b != "No":
+				if b != 'No':
 					b.reload()
 					b.triggerRepaint()
 					cfg.cnvs.refresh()
-				if batch == "No":
+				if batch == 'No':
 					pass
 				else:
 					cfg.utls.removeLayerByLayer(shape)
@@ -99,23 +99,20 @@ class EditRaster:
 				cfg.utls.refreshClassificationLayer()
 				cfg.mx.msgErr9()
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "Error raster not found")
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "Error raster not found")
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode())
 
 	# set value raster
-	def setValueRaster(self, inputRaster, inputVectorQGIS, qgisVectorFeatureList, batch = "No", vectorFieldName = None, toolbarValue = None):
+	def setValueRaster(self, inputRaster, inputVectorQGIS, qgisVectorFeatureList, batch = 'No', vectorFieldName = None, toolbarValue = None):
 		crs = cfg.utls.getCrs(inputVectorQGIS)
 		# using ROI polygon
 		if cfg.ui.edit_val_use_ROI_radioButton.isChecked() or toolbarValue is not None:
-			# date time for temp name
-			dT = cfg.utls.getTime()
 			# temporary layer
-			tLN = cfg.subsTmpROI + dT + ".shp"
-			tLP = cfg.tmpDir + "/" + dT + tLN
+			tLP = cfg.utls.createTempRasterPath('shp')
 			# create a temp shapefile with a field
 			cfg.utls.createEmptyShapefileQGIS(crs, tLP)
-			vector = cfg.utls.addVectorLayer(tLP, cfg.osSCP.path.basename(tLP), "ogr")
+			vector = cfg.utls.addVectorLayer(tLP, cfg.utls.fileName(tLP), "ogr")
 			for pI in qgisVectorFeatureList:
 				cfg.utls.copyFeatureToLayer(inputVectorQGIS, pI, vector)
 			if toolbarValue is None:
@@ -125,7 +122,7 @@ class EditRaster:
 			cfg.undoEditRasterToolbar_toolButton.setEnabled(True)
 		# using vector
 		else:
-			if batch == "No":
+			if batch == 'No':
 				cfg.uiUtls.addProgressBar()
 			progress = 0
 			progressStep = 100 / (len(qgisVectorFeatureList) + 1)
@@ -134,14 +131,11 @@ class EditRaster:
 				n = n + 1
 				progress = progress + progressStep
 				cfg.uiUtls.updateBar(progress)
-				# date time for temp name
-				dT = cfg.utls.getTime()
 				# temporary layer
-				tLN = cfg.subsTmpROI + dT + ".shp"
-				tLP = cfg.tmpDir + "/" + dT + tLN
+				tLP = cfg.utls.createTempRasterPath('tif')
 				# create a temp shapefile with a field
 				cfg.utls.createEmptyShapefileQGIS(crs, tLP)
-				vector = cfg.utls.addVectorLayer(tLP, cfg.osSCP.path.basename(tLP), "ogr")
+				vector = cfg.utls.addVectorLayer(tLP, cfg.utls.fileName(tLP), "ogr")
 				cfg.utls.copyFeatureToLayer(inputVectorQGIS, pI, vector)
 				if cfg.ui.use_constant_val_checkBox.isChecked() is True:
 					value = cfg.ui.value_spinBox.value()
@@ -152,31 +146,28 @@ class EditRaster:
 						fd = vectorFieldName
 					if len(fd) == 0:
 						cfg.utls.refreshVectorLayer()
-						if batch == "No":
+						if batch == 'No':
 							cfg.uiUtls.removeProgressBar()
-						return "No"
+						return 'No'
 					fId = cfg.utls.fieldID(inputVectorQGIS, fd)
 					f = cfg.utls.getFeaturebyID(inputVectorQGIS, pI)
 					value = f.attributes()[fId]
 				self.performEdit(inputRaster, tLP, value)
-			if batch == "No":
+			if batch == 'No':
 				cfg.uiUtls.removeProgressBar()
 		
 	# perform raster edit
 	def performEdit(self, inputRasterPath, inputVectorPath, editValue = None):
-		# date time for temp name
-		dT = cfg.utls.getTime()
-		# convert polygon to raster 
-		tRNxs = cfg.copyTmpROI + dT + "xs.tif"
-		tRxs = str(cfg.tmpDir + "//" + tRNxs)
+		# convert polygon to raster
+		tRxs = cfg.utls.createTempRasterPath('tif')
 		check = cfg.utls.vectorToRaster(cfg.emptyFN, str(inputVectorPath), cfg.emptyFN, tRxs, str(inputRasterPath), None, "GTiff", 1)
 		# open input with GDAL
 		rD = cfg.gdalSCP.Open(inputRasterPath, cfg.gdalSCP.GA_Update)
 		if rD is None:
-			return "No"
+			return 'No'
 		rD2 = cfg.gdalSCP.Open(tRxs, cfg.gdalSCP.GA_ReadOnly)
 		if rD2 is None:
-			return "No"
+			return 'No'
 		# pixel size and origin
 		rGT = rD.GetGeoTransform()
 		tLX = rGT[0]
@@ -222,15 +213,35 @@ class EditRaster:
 			return
 		# read raster
 		iRB = rD.GetRasterBand(1)
-		self.a1 =  iRB.ReadAsArray(self.pixelStartColumn, self.pixelStartRow, columnNum1, rowNum1)
-		iRB2 = rD2.GetRasterBand(1)
-		a2 =  iRB2.ReadAsArray(startColumn2, startRow2, columnNum1, rowNum1)
+		try:
+			o = iRB.GetOffset()
+			s = iRB.GetScale()
+			if o is None:
+				o = 0
+			if s is None:
+				s = 1
+		except:
+			o = 0
+			s = 1
+		self.a1 =  iRB.ReadAsArray(self.pixelStartColumn, self.pixelStartRow, columnNum1, rowNum1)*s+o
+		iRB2 = rD2.GetRasterBand(1)	
+		try:
+			o = iRB2.GetOffset()
+			s = iRB2.GetScale()
+			if o is None:
+				o = 0
+			if s is None:
+				s = 1
+		except:
+			o = 0
+			s = 1
+		a2 =  iRB2.ReadAsArray(startColumn2, startRow2, columnNum1, rowNum1)*s+o
 		# expression
 		if cfg.ui.use_expression_checkBox.isChecked() is True:
 			expression = " " + cfg.ui.expression_lineEdit.text() + " "
 			e = self.checkExpression(expression, editValue)
-			if e == "No":
-				return "No"
+			if e == 'No':
+				return 'No'
 			else:
 				dataArray = eval(e)
 		else:
@@ -274,18 +285,18 @@ class EditRaster:
 		except Exception as err:
 			cfg.ui.expression_lineEdit.setStyleSheet("color : red")
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-			return "No"
+			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+			return 'No'
 					
 	# undo edit
 	def undoEdit(self):
 		try:
-			b = cfg.utls.selectLayerbyName(self.rstrNm, "Yes")
+			b = cfg.utls.selectLayerbyName(self.rstrNm, 'Yes')
 			rSource = cfg.utls.layerSource(b)
 			# open input with GDAL
 			rD = cfg.gdalSCP.Open(rSource, cfg.gdalSCP.GA_Update)
 			if rD is None:
-				return "No"
+				return 'No'
 			self.writeArrayBlock(rD, 1, self.a1, self.pixelStartColumn, self.pixelStartRow)
 			rD = None
 			b.reload()
@@ -380,7 +391,7 @@ class EditRaster:
 			cfg.mx.msg22()
 			return
 		self.rstrNm = cfg.ui.edit_raster_name_combo.currentText()
-		b = cfg.utls.selectLayerbyName(self.rstrNm, "Yes")
+		b = cfg.utls.selectLayerbyName(self.rstrNm, 'Yes')
 		if b is not None:
 			rSource = cfg.utls.layerSource(b)
 			cfg.ui.undo_edit_Button.setEnabled(False)
@@ -394,8 +405,8 @@ class EditRaster:
 			# hide ROI
 			cfg.show_ROI_radioButton.setChecked(False)
 			cfg.SCPD.showHideROI()
-			self.setValueRaster(rSource, vector, rId, "No", None, toolbarValue)
-			if b != "No":
+			self.setValueRaster(rSource, vector, rId, 'No', None, toolbarValue)
+			if b != 'No':
 				b.reload()
 				b.triggerRepaint()
 				cfg.cnvs.refresh()

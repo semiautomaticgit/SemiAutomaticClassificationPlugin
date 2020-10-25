@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="34.133335"
+   height="34.133335"
+   id="svg2985"
+   version="1.1"
+   inkscape:version="0.92.1 r15371"
+   sodipodi:docname="semiautomaticclassificationplugin_split_raster.svg"
+   inkscape:export-filename="/home/luca/Scrivania/semiautomaticclassificationplugin_split_raster.png"
+   inkscape:export-xdpi="67"
+   inkscape:export-ydpi="67">
+  <defs
+     id="defs2987" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="5.598901"
+     inkscape:cx="-66.482746"
+     inkscape:cy="5.1490207"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     inkscape:grid-bbox="true"
+     inkscape:document-units="px"
+     showguides="false"
+     inkscape:window-width="1366"
+     inkscape:window-height="708"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid3765"
+       originx="0"
+       originy="0"
+       spacingx="1.0666667"
+       spacingy="1.0666667" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata2990">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer">
+    <rect
+       style="fill:#0055d4;fill-opacity:1;fill-rule:evenodd;stroke:#ffffff;stroke-width:2.91160679;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect2993"
+       width="21.316967"
+       height="17.882128"
+       x="42.85601"
+       y="58.501255"
+       rx="2.5406871"
+       ry="2.7055781"
+       transform="matrix(0.61163666,-0.7911388,-0.09130278,0.99582318,0,0)"
+       inkscape:export-xdpi="67"
+       inkscape:export-ydpi="67" />
+    <rect
+       transform="matrix(0.61163666,-0.7911388,0.00288174,0.99999585,0,0)"
+       ry="2.8917108"
+       rx="2.5406871"
+       y="32.026726"
+       x="18.956062"
+       height="19.112341"
+       width="21.316967"
+       id="rect3767"
+       style="fill:#00aa00;fill-opacity:1;fill-rule:evenodd;stroke:#ffffff;stroke-width:2.72273231;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <rect
+       style="fill:#ff0000;fill-opacity:1;fill-rule:evenodd;stroke:#ffffff;stroke-width:2.59333038;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect3769"
+       width="21.316967"
+       height="20.491337"
+       x="1.4567897"
+       y="10.378194"
+       rx="2.5406871"
+       ry="3.1003535"
+       transform="matrix(0.61163666,-0.7911388,0.08505246,0.99637647,0,0)" />
+  </g>
+</svg>

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
+'''
 /**************************************************************************************************************************
  SemiAutomaticClassificationPlugin
 
@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2018 by Luca Congedo
+		copyright		: (C) 2012-2021 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -30,11 +30,11 @@
  * 
 **************************************************************************************************************************/
 
-"""
+'''
 
 
 
-cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
+cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
 class AlgWeightTab:
 
@@ -44,9 +44,9 @@ class AlgWeightTab:
 	# reset algorithm table
 	def resetAlgorithmTable(self):
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " reset Algorithm Table")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " reset Algorithm Table")
 		for index in range(0, len(cfg.bandSetsList)):
-			self.tableEdited = "No"
+			self.tableEdited = 'No'
 			tW = eval("cfg.ui.alg_weight_tableWidget_" + str(index))
 			cfg.utls.clearTable(tW)
 			bandNameList = cfg.bandSetsList[index][3]
@@ -54,18 +54,18 @@ class AlgWeightTab:
 				c = tW.rowCount()
 				# add list items to table
 				tW.setRowCount(c + 1)
-				cfg.utls.addTableItem(tW, str(c + 1), c, 0, "No")
-				cfg.utls.addTableItem(tW, bd, c, 1, "No")
+				cfg.utls.addTableItem(tW, str(c + 1), c, 0, 'No')
+				cfg.utls.addTableItem(tW, bd, c, 1, 'No')
 				cfg.utls.addTableItem(tW, "1", c, 2)
-			self.tableEdited = "Yes"
+			self.tableEdited = 'Yes'
 			self.readAlgorithmTable()
 			
 	# load algorithm table
 	def loadAlgorithmTable(self, index):
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " load Algorithm Table")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " load Algorithm Table")
 		if cfg.bndSetNumber >= 0:
-			self.tableEdited = "No"
+			self.tableEdited = 'No'
 			tW = eval("cfg.ui.alg_weight_tableWidget_" + str(index))
 			cfg.utls.clearTable(tW)
 			bandNameList = cfg.bandSetsList[index][3]
@@ -73,10 +73,10 @@ class AlgWeightTab:
 				c = tW.rowCount()
 				# add list items to table
 				tW.setRowCount(c + 1)
-				cfg.utls.addTableItem(tW, str(c + 1), c, 0, "No")
-				cfg.utls.addTableItem(tW, bd, c, 1, "No")
+				cfg.utls.addTableItem(tW, str(c + 1), c, 0, 'No')
+				cfg.utls.addTableItem(tW, bd, c, 1, 'No')
 				cfg.utls.addTableItem(tW, "1", c, 2)
-			self.tableEdited = "Yes"
+			self.tableEdited = 'Yes'
 			self.readAlgorithmTable()
 
 	# read algorithm table
@@ -93,7 +93,7 @@ class AlgWeightTab:
 			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode())
 	
 	# add tab
-	def addBandSetWeigthTab(self, refresh = "Yes"):
+	def addBandSetWeigthTab(self, refresh = 'Yes'):
 		t = cfg.ui.alg_band_weight_tabWidget.count()
 		band_set_tab = cfg.QtWidgetsSCP.QWidget()
 		band_set_tab.setObjectName(cfg.bandSetName + str(t + 1))	
@@ -133,7 +133,7 @@ class AlgWeightTab:
 		tW.cellChanged.connect(cfg.algWT.editedWeightTable)
 		cfg.ui.alg_band_weight_tabWidget.addTab(band_set_tab, cfg.bandSetName + str(t + 1))
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " added band set weight tab " + str(t + 1))
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " added band set weight tab " + str(t + 1))
 		
 	# delete Band set Weigth tab	
 	def deleteBandSetWeigthTab(self, index):
@@ -141,12 +141,12 @@ class AlgWeightTab:
 		for i in range(0, index):
 			cfg.ui.alg_band_weight_tabWidget.setTabText(i, cfg.bandSetName + str(i + 1))
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " closed band set weigth " + str(index + 1))
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " closed band set weigth " + str(index + 1))
 		
 	# table edited
 	def editedWeightTable(self, row, column):
 		bandSetNumber = cfg.ui.alg_band_weight_tabWidget.currentIndex()
-		if self.tableEdited == "Yes":
+		if self.tableEdited == 'Yes':
 			tW = eval("cfg.ui.alg_weight_tableWidget_" + str(bandSetNumber))
 			t = tW.item(row, column).text()
 			try:
@@ -158,13 +158,13 @@ class AlgWeightTab:
 	def resetWeights(self):
 		# ask for confirm
 		a = cfg.utls.questionBox(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Reset weights"), cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Are you sure you want to reset weights?"))
-		if a == "Yes":
+		if a == 'Yes':
 			bandSetNumber = cfg.ui.alg_band_weight_tabWidget.currentIndex()
 			self.loadAlgorithmTable(bandSetNumber)
 		
 	# set weights
 	def setWeights(self):
-		self.tableEdited = "No"
+		self.tableEdited = 'No'
 		bandSetNumber = cfg.ui.alg_band_weight_tabWidget.currentIndex()
 		tW = eval("cfg.ui.alg_weight_tableWidget_" + str(bandSetNumber))
 		iR = []
@@ -179,5 +179,5 @@ class AlgWeightTab:
 			v = tW.rowCount()
 			for c in range(0, v):
 				cfg.utls.setTableItem(tW, c, 2, str(wv))
-		self.tableEdited = "Yes"
+		self.tableEdited = 'Yes'
 		self.readAlgorithmTable()

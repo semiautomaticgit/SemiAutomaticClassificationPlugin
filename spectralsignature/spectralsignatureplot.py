@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
+'''
 /**************************************************************************************************************************
  SemiAutomaticClassificationPlugin
 
@@ -9,7 +9,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2018 by Luca Congedo
+		copyright		: (C) 2012-2021 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -31,11 +31,11 @@
  * 
 **************************************************************************************************************************/
 
-"""
+'''
 
 
 
-cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
+cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
 class SpectralSignaturePlot:
 
@@ -46,7 +46,7 @@ class SpectralSignaturePlot:
 		self.mouseLeaveFigure = cfg.uisp.Sig_Widget.sigCanvas.mpl_connect('figure_leave_event', self.leave_event)
 		self.mouseMove = cfg.uisp.Sig_Widget.sigCanvas.mpl_connect('motion_notify_event', self.motion_event)
 		self.editing = 0
-		self.checkLimits = "No"
+		self.checkLimits = 'No'
 
 	def editValueRange(self):
 		self.editing = 1
@@ -85,7 +85,7 @@ class SpectralSignaturePlot:
 				if len(v) > 1:
 					if self.skipQuestion == 0:
 						a = cfg.utls.questionBox(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Edit value range"), cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Are you sure you want to edit the value range for several signatures?"))
-						if a == "Yes":
+						if a == 'Yes':
 							self.editing = 1
 							self.skipQuestion = 1
 							self.editLCSThresholds(v)
@@ -231,7 +231,7 @@ class SpectralSignaturePlot:
 	def addToSignatureList(self):
 		# ask for confirm
 		a = cfg.utls.questionBox(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Add to Signature list"), cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Are you sure you want to add highlighted signatures to the list?"))
-		if a == "Yes":
+		if a == 'Yes':
 			tW = cfg.uisp.signature_list_plot_tableWidget
 			vx = cfg.bandSetsList[cfg.bndSetNumber][2] * 2 + 6
 			iR = []
@@ -264,13 +264,13 @@ class SpectralSignaturePlot:
 				cfg.signList["MD_THRESHOLD_" + str(id)] = cfg.spectrPlotList["MD_THRESHOLD_" + str(id)]
 				cfg.signList["ML_THRESHOLD_" + str(id)] = cfg.spectrPlotList["ML_THRESHOLD_" + str(id)]
 				cfg.signList["SAM_THRESHOLD_" + str(id)] = cfg.spectrPlotList["SAM_THRESHOLD_" + str(id)]
-			cfg.SCPD.ROIListTable(cfg.shpLay, cfg.uidc.signature_list_tableWidget)
+			cfg.SCPD.ROIListTableTree(cfg.shpLay, cfg.uidc.signature_list_treeWidget)
 			
 	# Create signature list for plot
-	def signatureListPlotTable(self, table, skipPlot = "No"):
+	def signatureListPlotTable(self, table, skipPlot = 'No'):
 		# checklist
 		l = table
-		cfg.SigTabEdited = "No"
+		cfg.SigTabEdited = 'No'
 		l.setSortingEnabled(False)
 		l.blockSignals(True)
 		# column width
@@ -322,33 +322,33 @@ class SpectralSignaturePlot:
 			cfg.utls.insertTableColumn(l, v, cfg.tableMax + str(i), wid[v-6])
 			v = v +1
 		# signature ID column
-		cfg.utls.insertTableColumn(l, v, cfg.tableColString, 60, "Yes")
+		cfg.utls.insertTableColumn(l, v, cfg.tableColString, 60, 'Yes')
 		# add signature items
 		x = 0
 		try:
 			for k in list(cfg.signPlotIDs.values()):
 				cfg.utls.insertTableRow(l, x, 20)
-				cfg.utls.addTableItem(l, "checkbox", x, 0, "Yes", None, cfg.spectrPlotList["CHECKBOX_" + str(k)])
+				cfg.utls.addTableItem(l, "checkbox", x, 0, 'Yes', None, cfg.spectrPlotList["CHECKBOX_" + str(k)])
 				cfg.utls.addTableItem(l, int(cfg.spectrPlotList["MACROCLASSID_" + str(k)]), x, 1)
 				cfg.utls.addTableItem(l, str(cfg.spectrPlotList["MACROCLASSINFO_" + str(k)]), x, 2)
 				cfg.utls.addTableItem(l, int(cfg.spectrPlotList["CLASSID_" + str(k)]), x, 3)
 				cfg.utls.addTableItem(l, str(cfg.spectrPlotList["CLASSINFO_" + str(k)]), x, 4)
 				c = cfg.spectrPlotList["COLOR_" + str(k)]
-				cfg.utls.addTableItem(l, "", x, 5, "Yes", c)
+				cfg.utls.addTableItem(l, "", x, 5, 'Yes', c)
 				vb = 6
 				for b in range(0, cfg.bandSetsList[cfg.bndSetNumber][2]):
 					cfg.utls.addTableItem(l, str(cfg.spectrPlotList["LCS_MIN_" + str(k)][b]), x, vb)
 					vb = vb + 1
 					cfg.utls.addTableItem(l, str(cfg.spectrPlotList["LCS_MAX_" + str(k)][b]), x, vb)
 					vb = vb + 1
-				cfg.utls.addTableItem(l, str(cfg.signPlotIDs["ID_" + str(k)]), x, v, "No")
+				cfg.utls.addTableItem(l, str(cfg.signPlotIDs["ID_" + str(k)]), x, v, 'No')
 				x = x + 1
 		except Exception as err:
 			cfg.utls.clearTable(l)
 			cfg.mx.msgErr57("MC" +str(cfg.signList["MACROCLASSID_" + str(k)]) + ";C" + str(cfg.signList["CLASSID_" + str(k)]) + ";" + str(cfg.signList["CLASSINFO_" + str(k)]) )
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-			return "No"
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			return 'No'
 		l.show()
 		l.setColumnWidth(0, wid0)
 		try:
@@ -358,23 +358,23 @@ class SpectralSignaturePlot:
 		cfg.utls.sortTableColumn(l, vOrd,l.horizontalHeader().sortIndicatorOrder())
 		l.setSortingEnabled(True)
 		l.blockSignals(False)
-		cfg.SigTabEdited = "Yes"
+		cfg.SigTabEdited = 'Yes'
 		self.orderedTable(vOrd)
 		intersect = self.checkIntersections()
 		self.higlightRowsByID(intersect)
 		# Create plot
-		if skipPlot == "No":
+		if skipPlot == 'No':
 			self.signaturePlot()
-			self.checkLimits = "Yes"
+			self.checkLimits = 'Yes'
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " list created")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " list created")
 		
 	# highlight rows by ID
 	def higlightRowsByID(self, IDComb):
 		tW = cfg.uisp.signature_list_plot_tableWidget
 		c = tW.rowCount()
 		v = cfg.bandSetsList[cfg.bndSetNumber][2] * 2 + 6
-		cfg.SigTabEdited = "No"
+		cfg.SigTabEdited = 'No'
 		tW.blockSignals(True)
 		tW.setSortingEnabled(False)
 		for b in range(0, c):
@@ -399,7 +399,7 @@ class SpectralSignaturePlot:
 			tW.item(row1, 5).setText(text0)
 		tW.blockSignals(False)
 		tW.setSortingEnabled(True)
-		cfg.SigTabEdited = "Yes"
+		cfg.SigTabEdited = 'Yes'
 		
 	# check in thresholds are intersecting
 	def checkIntersections(self):
@@ -412,7 +412,7 @@ class SpectralSignaturePlot:
 			id1 = a[1]
 			minB = cfg.np.array(cfg.spectrPlotList["LCS_MIN_" + str(id1)])
 			maxB= cfg.np.array(cfg.spectrPlotList["LCS_MAX_" + str(id1)])
-			if cfg.macroclassCheck == "Yes":
+			if cfg.macroclassCheck == 'Yes':
 				class0 = cfg.spectrPlotList["MACROCLASSID_" + str(id0)]
 				class1 = cfg.spectrPlotList["MACROCLASSID_" + str(id1)]
 			else:
@@ -427,7 +427,7 @@ class SpectralSignaturePlot:
 				# in case of deleted signature
 				except Exception as err:
 					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 					try:
 						self.removeSignatureByID(id0)
 						self.signatureListPlotTable(cfg.uisp.signature_list_plot_tableWidget)
@@ -450,25 +450,25 @@ class SpectralSignaturePlot:
 	# range checkbox
 	def sigmaCheckbox(self):
 		if cfg.uisp.sigma_checkBox.isChecked() is True:
-			cfg.sigmaCheck = "Yes"
+			cfg.sigmaCheck = 'Yes'
 		else:
-			cfg.sigmaCheck = "No"
+			cfg.sigmaCheck = 'No'
 		# Create plot		
 		self.signaturePlot()
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " checkbox set: " + str(cfg.sigmaCheck))
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " checkbox set: " + str(cfg.sigmaCheck))
 		
 	# refresh plot
 	def refreshPlot(self):
 		# Create plot		
 		self.signaturePlot()
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "")
 			
 	# remove signature from list
 	def removeSignature(self):
 		# ask for confirm
 		a = cfg.utls.questionBox(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Delete signatures"), cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Are you sure you want to delete highlighted signatures?"))
-		if a == "Yes":
+		if a == 'Yes':
 			tW = cfg.uisp.signature_list_plot_tableWidget
 			vx = cfg.bandSetsList[cfg.bndSetNumber][2] * 2 + 6
 			r = []
@@ -481,8 +481,8 @@ class SpectralSignaturePlot:
 				except:
 					cfg.mx.msgWar26(str(cfg.bndSetNumber))
 					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " Error bands")
-					return "No"				
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " Error bands")
+					return 'No'				
 				self.removeSignatureByID(id)
 			self.signatureListPlotTable(cfg.uisp.signature_list_plot_tableWidget)
 			# logger
@@ -511,7 +511,7 @@ class SpectralSignaturePlot:
 		
 	# edited cell
 	def editedCell(self, row, column):
-		if cfg.SigTabEdited == "Yes":
+		if cfg.SigTabEdited == 'Yes':
 			tW = cfg.uisp.signature_list_plot_tableWidget
 			v = cfg.bandSetsList[cfg.bndSetNumber][2] * 2 + 6
 			try:
@@ -519,19 +519,19 @@ class SpectralSignaturePlot:
 			except:
 				cfg.mx.msgWar26(str(cfg.bndSetNumber))
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " Error bands")
-				return "No"
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " Error bands")
+				return 'No'
 			try:
 				if int(tW.columnCount() - 7)/2 != len(cfg.spectrPlotList["LCS_MIN_" + str(id)]):
 					cfg.mx.msgWar26(str(cfg.bndSetNumber))
 					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " Error bands")
-					return "No"
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " Error bands")
+					return 'No'
 			except:
 				cfg.mx.msgWar26(str(cfg.bndSetNumber))
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " Error bands")
-				return "No"
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " Error bands")
+				return 'No'
 			if column == 0:
 				cfg.spectrPlotList["CHECKBOX_" + str(id)] = tW.item(row, 0).checkState()
 			elif column == 5:
@@ -551,21 +551,21 @@ class SpectralSignaturePlot:
 						if column == vb:
 							if tr >= values[b * 2]:
 								val = str(values[b * 2])
-								cfg.SigTabEdited = "No"
+								cfg.SigTabEdited = 'No'
 								tW.blockSignals(True)
 								cfg.utls.setTableItem(tW, row, column, val)
 								tW.blockSignals(False)
-								cfg.SigTabEdited = "Yes"
+								cfg.SigTabEdited = 'Yes'
 							break
 						vb = vb + 1
 						if column == vb:
 							if tr <= values[b * 2]:
 								val = str(values[b * 2])
-								cfg.SigTabEdited = "No"
+								cfg.SigTabEdited = 'No'
 								tW.blockSignals(True)
 								cfg.utls.setTableItem(tW, row, column, val)
 								tW.blockSignals(False)
-								cfg.SigTabEdited = "Yes"
+								cfg.SigTabEdited = 'Yes'
 							break
 						vb = vb + 1
 				except:
@@ -579,11 +579,11 @@ class SpectralSignaturePlot:
 							val = str(cfg.spectrPlotList["LCS_MAX_" + str(id)][b])
 							break
 						vb = vb + 1
-					cfg.SigTabEdited = "No"
+					cfg.SigTabEdited = 'No'
 					tW.blockSignals(True)
 					cfg.utls.setTableItem(tW, row, column, val)
 					tW.blockSignals(False)
-					cfg.SigTabEdited = "Yes"
+					cfg.SigTabEdited = 'Yes'
 					self.readThresholdTable()
 					cfg.LCSignT.LCSignatureThresholdListTable()
 					cfg.spSigPlot.refreshPlot()
@@ -594,7 +594,7 @@ class SpectralSignaturePlot:
 			# Create plot		
 			self.signaturePlot()
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "edited cell" + str(row) + ";" + str(column))
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "edited cell" + str(row) + ";" + str(column))
 			
 	# read threshold table
 	def readThresholdTable(self):
@@ -623,15 +623,15 @@ class SpectralSignaturePlot:
 		
 	# Create signature plot
 	def signaturePlot(self):
-		check = "Yes"
+		check = 'Yes'
 		self.minVal = 10000000000
 		self.maxVal = -10000000000
 		try:
-			if self.firstPlot == "No":
+			if self.firstPlot == 'No':
 				xMin, xMax = cfg.uisp.Sig_Widget.sigCanvas.ax.get_xlim()
 				yMin, yMax = cfg.uisp.Sig_Widget.sigCanvas.ax.get_ylim()
 		except:
-			self.firstPlot = "No"
+			self.firstPlot = 'No'
 		# Clear plot
 		try:
 			for i in cfg.pF:
@@ -670,15 +670,15 @@ class SpectralSignaturePlot:
 					val = eval(str(v))
 				except Exception as err:
 					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 					try:
 						self.removeSignatureByID(b)
 						self.signatureListPlotTable(cfg.uisp.signature_list_plot_tableWidget)
 						cfg.LCSignT.LCSignatureThresholdListTable()
 					except:
 						pass
-					check = "No"
-				if check == "Yes":
+					check = 'No'
+				if check == 'Yes':
 					mVal.extend(val)
 					minA = cfg.spectrPlotList["LCS_MIN_" + str(b)]
 					mMS = eval(str(minA))
@@ -696,7 +696,7 @@ class SpectralSignaturePlot:
 					sdL = cfg.spectrPlotList["SD_" + str(b)]
 					# plot
 					p, = cfg.uisp.Sig_Widget.sigCanvas.ax.plot(wlg , m, c)
-					if cfg.sigmaCheck == "Yes":
+					if cfg.sigmaCheck == 'Yes':
 						# fill plot
 						cfg.pF.append(cfg.uisp.Sig_Widget.sigCanvas.ax.fill_between(wlg, mPS, mMS, color=c, alpha=0.2))
 					# add plot to legend
@@ -730,10 +730,10 @@ class SpectralSignaturePlot:
 			pass
 		# Draw the plot
 		cfg.uisp.Sig_Widget.sigCanvas.draw()
-		if self.checkLimits == "No":
+		if self.checkLimits == 'No':
 			self.fitPlotToAxes()
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " plot created")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " plot created")
 		
 	# calculate spectral distances
 	def calculateSpectralDistances(self):
@@ -771,11 +771,11 @@ class SpectralSignaturePlot:
 				angle = cfg.utls.spectralAngle(meanDict["ID_" + str(cB[0])], meanDict["ID_" + str(cB[1])], cfg.algBandWeigths)
 				self.signatureDistances(str(cfg.spectrPlotList["MACROCLASSID_" + str(cB[0])]), str(cfg.spectrPlotList["MACROCLASSINFO_" + str(cB[0])]), str(cfg.spectrPlotList["CLASSID_" + str(cB[0])]), str(cfg.spectrPlotList["CLASSINFO_" + str(cB[0])]), cfg.spectrPlotList["COLOR_" + str(cB[0])].toRgb().name(), cfg.spectrPlotList["MACROCLASSID_" + str(cB[1])], str(cfg.spectrPlotList["MACROCLASSINFO_" + str(cB[1])]), str(cfg.spectrPlotList["CLASSID_" + str(cB[1])]), str(cfg.spectrPlotList["CLASSINFO_" + str(cB[1])]), cfg.spectrPlotList["COLOR_" + str(cB[1])].toRgb().name(), JM, angle, dist, sim)
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " distances calculated")
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " distances calculated")
 			cfg.utls.selectSpectralPlotTabSettings(2)
 		except Exception as err:
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 		
 	# signature details
 	def signatureDetails(self, macroclassID, macroclassInfo, classID, classInfo, wavelengths, wavelength_unit, values, standardDeviation, color, ROISize = 0):
@@ -793,7 +793,7 @@ class SpectralSignaturePlot:
 		cfg.uisp.value_textBrowser.append("<br/>")
 		
 	# signature distances
-	def signatureDistances(self, macroclassID1, macroclassInfo1, classID1, classInfo1, color1, macroclassID2, macroclassInfo2, classID2, classInfo2, color2, jeffriesMatusitaDistance, spectralAngle, euclideanDistance, brayCurtisSimilarity, transformedDivergence = "No"):
+	def signatureDistances(self, macroclassID1, macroclassInfo1, classID1, classInfo1, color1, macroclassID2, macroclassInfo2, classID2, classInfo2, color2, jeffriesMatusitaDistance, spectralAngle, euclideanDistance, brayCurtisSimilarity, transformedDivergence = 'No'):
 		highlightColor = "red"
 		jMColor = "black"
 		try:
@@ -802,7 +802,7 @@ class SpectralSignaturePlot:
 		except:
 			pass
 		tDColor = "black"
-		if transformedDivergence != "No":
+		if transformedDivergence != 'No':
 			if float(transformedDivergence) < 1.5:
 				tDColor = highlightColor
 		sAColor = "black"
@@ -819,7 +819,7 @@ class SpectralSignaturePlot:
 		tbl = tbl + "<tr><th>" + cfg.spectralAngleNm + "</th><td><font color=" + sAColor + ">" + str(spectralAngle) + "</font></td></tr>" 
 		tbl = tbl + "<tr><th>" + cfg.euclideanDistNm + "</th><td><font color=" + mDColor + ">" + str(euclideanDistance) + "</font></td></tr>"
 		tbl = tbl + "<tr><th>" + cfg.brayCurtisSimNm + "</th><td><font color=" + bCColor + ">" + str(brayCurtisSimilarity) + "</font></td></tr>"
-		if transformedDivergence != "No":
+		if transformedDivergence != 'No':
 			tbl = tbl + "<tr><th>" + cfg.transformedDivergenceNm + "</th><td><font color=" + tDColor + ">" + str(transformedDivergence) + "</font></td></tr>"
 		tbl = tbl + "</table>"
 		cfg.uisp.distance_textBrowser.append(tbl)
@@ -842,7 +842,7 @@ class SpectralSignaturePlot:
 					cfg.uisp.signature_list_plot_tableWidget.item(x, 5).setBackground(c)
 		elif index.column() == 0:
 			for k in list(cfg.signPlotIDs.values()):
-				if cfg.allSignCheck2 == "Yes":
+				if cfg.allSignCheck2 == 'Yes':
 					v = 2
 				else:
 					v = 0
@@ -856,21 +856,21 @@ class SpectralSignaturePlot:
 		try:
 			cfg.uiUtls.addProgressBar()
 			# select all
-			if cfg.allSignCheck2 == "Yes":
+			if cfg.allSignCheck2 == 'Yes':
 				cfg.utls.allItemsSetState(cfg.uisp.signature_list_plot_tableWidget, 2)
 				# set check all plot
-				cfg.allSignCheck2 = "No"
+				cfg.allSignCheck2 = 'No'
 			# unselect all if previously selected all
-			elif cfg.allSignCheck2 == "No":
+			elif cfg.allSignCheck2 == 'No':
 				cfg.utls.allItemsSetState(cfg.uisp.signature_list_plot_tableWidget, 0)
 				# set check all plot
-				cfg.allSignCheck2 = "Yes"
+				cfg.allSignCheck2 = 'Yes'
 			cfg.uiUtls.removeProgressBar()
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " all signatures")
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " all signatures")
 		except Exception as err:
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 			cfg.uiUtls.removeProgressBar()
 			
 	# show signature plot
@@ -918,11 +918,11 @@ class SpectralSignaturePlot:
 		# connect to click
 		t = cfg.LCSPixel2
 		cfg.cnvs.setMapTool(t)
-		px = cfg.QtGuiSCP.QPixmap(":/pointer/icons/pointer/LCS_pointer.png")
+		px = cfg.QtGuiSCP.QPixmap(":/pointer/icons/pointer/LCS_pointer.svg")
 		c = cfg.QtGuiSCP.QCursor(px)
 		cfg.cnvs.setCursor(c)
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "pointer active: LCS pixel")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "pointer active: LCS pixel")
 		
 	# left click ROI pointer for pixel signature
 	def pointerLeftClick(self, point):
@@ -932,7 +932,7 @@ class SpectralSignaturePlot:
 			iR.append(i.row())
 		v = list(set(iR))
 		point = cfg.utls.checkPointImage(cfg.bandSetsList[cfg.bndSetNumber][8], point)
-		if cfg.pntCheck == "Yes":
+		if cfg.pntCheck == 'Yes':
 			sig = cfg.utls.calculatePixelSignature(point, cfg.bandSetsList[cfg.bndSetNumber][8], cfg.bndSetNumber, "Pixel")
 			if len(v) == 0:
 				count = tW.rowCount()
@@ -940,12 +940,12 @@ class SpectralSignaturePlot:
 			if len(v) > 1:
 				# ask for confirm
 				a = cfg.utls.questionBox(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Set thresholds"), cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Are you sure you want to set thresholds for several signatures?"))
-				if a == "Yes":
+				if a == 'Yes':
 					pass
 				else:
-					return "No"
+					return 'No'
 			cfg.uiUtls.addProgressBar()
-			self.tableEdited = "No"
+			self.tableEdited = 'No'
 			tW.blockSignals(True)
 			tW.setSortingEnabled(False)
 			progrStep = 0
@@ -998,7 +998,7 @@ class SpectralSignaturePlot:
 					vb = vb + 1
 			tW.blockSignals(False)
 			tW.setSortingEnabled(True)
-			self.tableEdited = "Yes"
+			self.tableEdited = 'Yes'
 			self.readThresholdTable()
 			cfg.LCSignT.LCSignatureThresholdListTable()
 			cfg.spSigPlot.refreshPlot()
@@ -1029,12 +1029,12 @@ class SpectralSignaturePlot:
 		if len(v) > 1:
 			# ask for confirm
 			a = cfg.utls.questionBox(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Set thresholds"), cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Are you sure you want to set thresholds for several signatures?"))
-			if a == "Yes":
+			if a == 'Yes':
 				pass
 			else:
-				return "No"
+				return 'No'
 		cfg.uiUtls.addProgressBar()
-		self.tableEdited = "No"
+		self.tableEdited = 'No'
 		tW.setSortingEnabled(False)
 		tW.blockSignals(True)
 		progrStep = 0
@@ -1060,26 +1060,26 @@ class SpectralSignaturePlot:
 				vb = vb + 1
 		tW.blockSignals(False)
 		tW.setSortingEnabled(True)
-		self.tableEdited = "Yes"
+		self.tableEdited = 'Yes'
 		self.readThresholdTable()
 		cfg.LCSignT.LCSignatureThresholdListTable()
 		cfg.spSigPlot.refreshPlot()
 		cfg.utls.selectRowsInTable(tW, v)
 		cfg.uiUtls.removeProgressBar()
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "set")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "set")
 
 	# undo threshold
 	def undoThreshold(self):
 		# ask for confirm
 		a = cfg.utls.questionBox(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Undo thresholds"), cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Are you sure you want to undo thresholds?"))
-		if a == "Yes":
+		if a == 'Yes':
 			pass
 		else:
-			return "No"
+			return 'No'
 		tW = cfg.uisp.signature_list_plot_tableWidget
 		cfg.uiUtls.addProgressBar()
-		self.tableEdited = "No"
+		self.tableEdited = 'No'
 		tW.blockSignals(True)
 		tW.setSortingEnabled(False)
 		progrStep = 20
@@ -1098,7 +1098,7 @@ class SpectralSignaturePlot:
 					vb = vb + 1
 		tW.blockSignals(False)
 		tW.setSortingEnabled(True)
-		self.tableEdited = "Yes"
+		self.tableEdited = 'Yes'
 		cfg.uisp.undo_threshold_Button.setEnabled(False)
 		cfg.undoIDList = {}
 		cfg.undoSpectrPlotList = {}
@@ -1107,7 +1107,7 @@ class SpectralSignaturePlot:
 		cfg.spSigPlot.refreshPlot()
 		cfg.uiUtls.removeProgressBar()
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "undo")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "undo")
 		
 	# set threshold from ROI
 	def ROIThreshold(self):
@@ -1123,12 +1123,12 @@ class SpectralSignaturePlot:
 			if len(v) > 1:
 				# ask for confirm
 				a = cfg.utls.questionBox(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Set thresholds"), cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Are you sure you want to set thresholds for several signatures?"))
-				if a == "Yes":
+				if a == 'Yes':
 					pass
 				else:
-					return "No"
+					return 'No'
 			cfg.uiUtls.addProgressBar()
-			self.tableEdited = "No"
+			self.tableEdited = 'No'
 			tW.blockSignals(True)
 			tW.setSortingEnabled(False)
 			progrStep = 0
@@ -1179,14 +1179,14 @@ class SpectralSignaturePlot:
 					vb = vb + 1
 			tW.blockSignals(False)
 			tW.setSortingEnabled(True)
-			self.tableEdited = "Yes"
+			self.tableEdited = 'Yes'
 			self.readThresholdTable()
 			cfg.LCSignT.LCSignatureThresholdListTable()
 			cfg.spSigPlot.refreshPlot()
 			cfg.utls.selectRowsInTable(tW, v)
 			cfg.uiUtls.removeProgressBar()
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "set")
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "set")
 
 	# set weights based on variance
 	def setAllWeightsVariance(self):
@@ -1201,12 +1201,12 @@ class SpectralSignaturePlot:
 		if len(v) > 1:
 			# ask for confirm
 			a = cfg.utls.questionBox(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Set thresholds"), cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Are you sure you want to set thresholds for several signatures?"))
-			if a == "Yes":
+			if a == 'Yes':
 				pass
 			else:
-				return "No"
+				return 'No'
 		cfg.uiUtls.addProgressBar()
-		self.tableEdited = "No"
+		self.tableEdited = 'No'
 		tW.blockSignals(True)
 		tW.setSortingEnabled(False)
 		progrStep = 0
@@ -1234,18 +1234,18 @@ class SpectralSignaturePlot:
 				vb = vb + 1
 		tW.blockSignals(False)
 		tW.setSortingEnabled(True)
-		self.tableEdited = "Yes"
+		self.tableEdited = 'Yes'
 		self.readThresholdTable()
 		cfg.LCSignT.LCSignatureThresholdListTable()
 		cfg.spSigPlot.refreshPlot()
 		cfg.utls.selectRowsInTable(tW, v)
 		cfg.uiUtls.removeProgressBar()		
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "set")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "set")
 			
 	# set plot legend max lenght
 	def setPlotLegendLenght(self):
 		cfg.sigPLRoundCharList = cfg.uisp.plot_text_spinBox.value()
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "plot legend max length value changed to: " + str(cfg.sigPLRoundCharList))
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "plot legend max length value changed to: " + str(cfg.sigPLRoundCharList))
 			

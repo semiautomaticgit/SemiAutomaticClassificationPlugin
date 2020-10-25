@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
+'''
 /**************************************************************************************************************************
  SemiAutomaticClassificationPlugin
 
@@ -8,7 +8,7 @@
 
 							 -------------------
 		begin				: 2012-12-29
-		copyright			: (C) 2012-2018 by Luca Congedo
+		copyright		: (C) 2012-2021 by Luca Congedo
 		email				: ing.congedoluca@gmail.com
 **************************************************************************************************************************/
  
@@ -30,10 +30,9 @@
  * 
 **************************************************************************************************************************/
 
-"""
+'''
 
-
-cfg = __import__(str(__name__).split(".")[0] + ".core.config", fromlist=[''])
+cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
 class Ui_Utils:
 
@@ -41,58 +40,111 @@ class Ui_Utils:
 		pass
 		
 ### Add a progress bar and a cancel button
-	def addProgressBar(self, message = "", action = "Executing"):
-		# remove if bar already there
+	def addProgressBar(self, message = '', action = ' Executing', mainMessage = None):
+		# remove if present
 		try:
-			self.removeProgressBar()
-			self.createProgressBar(message, action)
+			cfg.progressBar.setValue(0)
 		except:
-			self.createProgressBar()
-		
+			self.createProgressBar(mainMessage, message, action)
+				
 	# Create a progress bar and a cancel button
-	def createProgressBar(self, message = "", action = "Executing"):
-		self.widgetBar = cfg.iface.messageBar().createMessage(action, message)
+	def createProgressBar(self, mainMessage = None, message = '', action = ' Executing'):
+		sizePolicy = cfg.QtWidgetsSCP.QSizePolicy(cfg.QtWidgetsSCP.QSizePolicy.Expanding, cfg.QtWidgetsSCP.QSizePolicy.Preferred)
+		cfg.iconLabel = cfg.QtWidgetsSCP.QLabel()
+		cfg.iconLabel.setMinimumSize(cfg.QtCoreSCP.QSize(20, 20))
+		cfg.iconLabel.setMaximumSize(cfg.QtCoreSCP.QSize(50, 50))
+		cfg.iconLabel.setSizePolicy(sizePolicy)
+		cfg.iconLabel.setPixmap(cfg.QtGuiSCP.QPixmap(':/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin.svg'))
+		cfg.msgLabelMain = cfg.QtWidgetsSCP.QLabel()
+		sizePolicy = cfg.QtWidgetsSCP.QSizePolicy(cfg.QtWidgetsSCP.QSizePolicy.Expanding, cfg.QtWidgetsSCP.QSizePolicy.Preferred)
+		cfg.msgLabelMain.setMinimumSize(cfg.QtCoreSCP.QSize(50, 0))
+		cfg.msgLabelMain.setMaximumSize(cfg.QtCoreSCP.QSize(800, 30))
+		cfg.msgLabelMain.setSizePolicy(sizePolicy)
+		font = cfg.QtGuiSCP.QFont()
+		font.setBold(True)
+		cfg.msgLabelMain.setFont(font)
+		cfg.msgLabelMain.setText(cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Semi-Automatic Classification Plugin'))
+		spacerItem = cfg.QtWidgetsSCP.QSpacerItem(40, 20, cfg.QtWidgetsSCP.QSizePolicy.Expanding, cfg.QtWidgetsSCP.QSizePolicy.Minimum)
+		cfg.msgLabel = cfg.QtWidgetsSCP.QLabel()
+		cfg.msgLabel.setMinimumSize(cfg.QtCoreSCP.QSize(50, 0)) 
+		cfg.msgLabel.setMaximumSize(cfg.QtCoreSCP.QSize(600, 80)) 
+		cfg.msgLabel.setSizePolicy(sizePolicy)
+		cfg.msgLabel.setWordWrap(True)
 		cfg.progressBar = cfg.QtWidgetsSCP.QProgressBar()
 		cfg.progressBar.setMinimum(0)
 		cfg.progressBar.setMaximum(100)
-		cfg.progressBar.setProperty("value", 0)
+		cfg.progressBar.setProperty('value', 0)
 		cfg.progressBar.setTextVisible(True)
-		cfg.progressBar.setObjectName("progressBar")
-		self.cancelButton = cfg.QtWidgetsSCP.QPushButton()
-		self.cancelButton.setEnabled(True)
-		self.cancelButton.setObjectName("cancelButton")
-		self.cancelButton.setText("Cancel")       
-		self.widgetBar.layout().addWidget(cfg.progressBar)
-		self.widgetBar.layout().addWidget(self.cancelButton)
-		self.cancelButton.clicked.connect(self.cancelAction)
+		cfg.cancelButton = cfg.QtWidgetsSCP.QPushButton()
+		cfg.cancelButton.setEnabled(True)
+		cfg.cancelButton.setText(cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Cancel'))
+		cfg.qWidget = cfg.QtWidgetsSCP.QWidget()
+		horizontalLayout = cfg.QtWidgetsSCP.QHBoxLayout()
+		horizontalLayout2 = cfg.QtWidgetsSCP.QHBoxLayout()
+		verticalLayout = cfg.QtWidgetsSCP.QVBoxLayout(cfg.qWidget)
+		verticalLayout.addLayout(horizontalLayout)
+		verticalLayout.addLayout(horizontalLayout2)
+		horizontalLayout.addWidget(cfg.iconLabel)
+		horizontalLayout.addWidget(cfg.msgLabelMain)
+		horizontalLayout.addItem(spacerItem)
+		horizontalLayout2.addWidget(cfg.msgLabel)
+		horizontalLayout2.addWidget(cfg.progressBar)
+		horizontalLayout2.addWidget(cfg.cancelButton)
+		cfg.cancelButton.clicked.connect(self.cancelAction)
+		self.widgetBar = cfg.iface.messageBar().createMessage('', '')
+		cfg.iface.messageBar().findChildren(cfg.QtWidgetsSCP.QToolButton)[0].setHidden(True)
+		self.widgetBar.layout().addWidget(cfg.qWidget)
+		self.updateBar(0, message, mainMessage)
 		# set action to yes
-		cfg.actionCheck = "Yes"
+		cfg.actionCheck = 'Yes'
 		self.setInterface(False)
 		cfg.iface.messageBar().pushWidget(self.widgetBar, cfg.qgisCoreSCP.Qgis.Info)
 		
 	# cancel action
 	def cancelAction(self):
-		cfg.actionCheck = "No"
+		cfg.actionCheck = 'No'
+		cfg.uiUtls.updateBar(100, ' Canceling ...')
+		cfg.QtWidgetsSCP.qApp.processEvents()
+		# kill subprocesses
+		for p in range(0, len(cfg.subprocDictProc)):
+			try:
+				cfg.subprocDictProc['proc_'+ str(p)].kill()
+			except:
+				pass
+		# terminate multiprocessing
+		try:
+			cfg.pool.close()
+			cfg.pool.terminate()
+		except:
+			pass
 		self.removeProgressBar()
 		self.setInterface(True)
+		cfg.cnvs.setRenderFlag(True)
 			
 	# update bar value
-	def updateBar(self, value, message = "", action = "Executing"):
-		if cfg.actionCheck == "Yes":
-			self.addProgressBar(message, action)
+	def updateBar(self, value = None, message = '', mainMessage = None):
+		try:
+			if len(message) > 0:
+				cfg.msgLabel.setText(str(message))
 			cfg.progressBar.setValue(value)
+		except:
+			pass
+		try:
+			if mainMessage is not None:
+				cfg.msgLabelMain.setText(str(mainMessage))
+		except:
+			pass
 			
 	# remove progress bar and cancel button
 	def removeProgressBar(self):
 		try:
-			cfg.progressBar.close()
-			self.cancelButton.close()
 			cfg.iface.messageBar().popWidget(self.widgetBar)
-			cfg.actionCheck = "No"
-			self.setInterface(True)
 		except:
-			cfg.actionCheck = "No"
-			self.setInterface(True)
+			pass
+		cfg.progressBar = None
+		cfg.actionCheck = 'No'
+		self.setInterface(True)
+		cfg.iface.messageBar().findChildren(cfg.QtWidgetsSCP.QToolButton)[0].setHidden(False)
 		
 	# enable disable the interface to avoid errors
 	def setInterface(self, state):
