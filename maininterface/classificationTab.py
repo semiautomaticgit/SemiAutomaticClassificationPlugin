@@ -456,11 +456,11 @@ class ClassificationTab:
 				bSS = cfg.utls.selectLayerbyName(bS[i], 'Yes')
 				try:
 					bPath = cfg.utls.layerSource(bSS)
+					bL.append(bPath)
 				except Exception as err:
 					cfg.mx.msg4()
 					# logger
 					cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
-				bL.append(bPath)
 		else:
 			# if masked raster
 			if imageName == cfg.maskRasterNm:

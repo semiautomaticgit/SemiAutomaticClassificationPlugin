@@ -2,7 +2,7 @@
 name=Semi-Automatic Classification Plugin
 qgisMinimumVersion=3.00
 description=The Semi-Automatic Classification Plugin (SCP) allows for the supervised classification of remote sensing images, providing tools for the download, the preprocessing and postprocessing of images.
-version=7.0.0
+version=7.0.1
 about=Developed by Luca Congedo, the Semi-Automatic Classification Plugin (SCP) allows for the supervised classification of remote sensing images, providing tools for the download, the preprocessing and postprocessing of images. Search and download is available for ASTER, GOES, Landsat, MODIS, Sentinel-1, Sentinel-2, and Sentinel-3 images. Several algorithms are available for the land cover classification. This plugin requires the installation of GDAL, OGR, Numpy, SciPy, and Matplotlib. Some tools require also the installation of SNAP (ESA Sentinel Application Platform). For more information please visit https://fromgistors.blogspot.com .
 
 author=Luca Congedo
@@ -13,6 +13,10 @@ icon=semiautomaticclassificationplugin.png
 
 ; start of optional metadata
 changelog=
+
+	7.0.1
+	-fixed an issue in classification tab
+
 	7.0.0
 	New version with several improvements
 	
@@ -57,7 +61,7 @@ changelog=
 	- added the iteration of calculations over dates (format yyyy-mm-dd) of band sets entering in the first line forbsdates e.g. forbsdates[2020-01-01:2020-03-30] for iterating over a range or forbsdates[2020-02-01,2020-03-11,2020-04-21] for iterating selected dates, also list of ranges such as forbsdates[2010-01-01:2010-03-30, 2010-08-01:2010-08-31, 2010-10-01:2010-12-31]; it is possible to enter a string after ] to filter names of first band in band set
 	- added the iteration of bands in a band set or a range of band sets entering in the first line forbandsinbandset (e.g. forbandsinbandset[1] for iterating over bands in the first band set) and in the following expression the variable #BAND# to refer to the iterated band (e.g. where("#BAND#">1, 1, 2) @"#BAND#")
 	- added the possibility to use the output name of calculation as variable for following calculations
-	- added the possibility to add the calculation result to a band set using the %number in the output name such as @output%1 or to current band set with # such as @output%#
+	- added the possibility to add the calculation result to a band set using the number in the output name such as @output1 or to current band set with # such as @output#
 	- added the possibility to set the output path defining the output name with this structure @path@name, also with the variable #BANDSET# such as @#BANDSET#@name to save the calculation in the directory containing the first band of the current band set. It is recommended to avoid the use of characters # and @ in the raster name
 	- added the possibility to create temporary output defining the output path (i.e. temp) and output name with this structure @temp@name
 	- added the option to create virtual raster output (i.e. .vrt files) made of .tif files from parallel processing
