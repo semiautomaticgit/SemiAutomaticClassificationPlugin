@@ -2977,7 +2977,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="11774"/>
         <source>Add bands in a new Band set</source>
-        <translation>Ajouter les bandes à une nouveau jeu de bandes</translation>
+        <translation>Ajouter les bandes à un nouveau jeu de bandes</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="7068"/>
