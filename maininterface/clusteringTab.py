@@ -449,7 +449,7 @@ class ClusteringTab:
 			oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, previewSize, previewPoint, compress)
 			oC.append(tPMD2)
 			oCR = cfg.utls.createRasterFromReference(rD, 1, oC, cfg.NoDataVal, "GTiff", cfg.gdalSCP.GDT_Int32, previewSize, previewPoint, compress, "DEFLATE")
-			o = cfg.utls.processRasterOld(rD, bL, signatureList, None, cfg.utls.classification, algorithmName, oRL, oMR[0], oCR[0], previewSize, previewPoint, cfg.NoDataVal, 'No', cfg.multiAddFactorsVar, cfg.bandSetsList[bandSetNumber][6])
+			o = cfg.utls.processRasterOld(rD, bL, signatureList, None, cfg.utls.classificationOld, algorithmName, oRL, oMR[0], oCR[0], previewSize, previewPoint, cfg.NoDataVal, 'No', cfg.multiAddFactorsVar, cfg.bandSetsList[bandSetNumber][6])
 			if o == 'No':
 				return 'No', None, None
 			# last classification
