@@ -101,68 +101,66 @@ cfg.pyqtSignalSCP = pyqtSignal
 
 
 if PluginCheck == 'Yes':
-	#try:
-	from .core.messages import Messages as msgs
-	from .core.utils import Utils
-	from .core.signature_importer import Signature_Importer
-	from .maininterface.downloadproductpointer import DownloadProductPointer
-	from .maininterface.downloadproducts import DownloadProducts
-	from .spectralsignature.spectralsignatureplot import SpectralSignaturePlot
-	from .spectralsignature.scatter_plot import Scatter_Plot	
-	from .dock.manualroi import ManualROI
-	from .dock.regionroi import RegionROI
-	from .dock.scpdock import SCPDock
-	from .dock.classificationpreview import ClassificationPreview
-	from .maininterface.multipleroiTab import MultipleROITab
-	from .spectralsignature.usgs_spectral_lib import USGS_Spectral_Lib
-	from .maininterface.landsatTab import LandsatTab
-	from .maininterface.asterTab import ASTERTab
-	from .maininterface.modisTab import MODISTab
-	from .maininterface.sentinel1Tab import Sentinel1Tab
-	from .maininterface.sentinel2Tab import Sentinel2Tab
-	from .maininterface.sentinel3Tab import Sentinel3Tab
-	from .maininterface.GOESTab import GOESTab
-	from .maininterface.accuracy import Accuracy
-	from .maininterface.crossclassificationTab import CrossClassification
-	from .maininterface.bandcombination import BandCombination
-	from .maininterface.splitTab import SplitTab
-	from .maininterface.reprojectrasterbands import ReprojectRasterBands
-	from .maininterface.pcaTab import PcaTab
-	from .maininterface.clusteringTab import ClusteringTab
-	from .maininterface.classSignatureTab import ClassSignatureTab
-	from .maininterface.zonalStatRasterTab import ZonalStatRasterTab
-	from .maininterface.vectortorasterTab import VectorToRasterTab
-	from .maininterface.bandsetTab import BandsetTab
-	from .maininterface.algorithmWeightTab import AlgWeightTab
-	from .maininterface.signatureThresholdTab import SigThresholdTab
-	from .maininterface.LCSignatureThresholdTab import LCSigThresholdTab
-	from .maininterface.rgblistTab import RGBListTab
-	from .maininterface.bandsetlistTab import BandSetListTab
-	from .maininterface.LCSignaturePixel import LCSigPixel
-	from .maininterface.LCSignaturePixel2 import LCSigPixel2
-	from .maininterface.bandcalcTab import BandCalcTab
-	from .maininterface.batchTab import BatchTab
-	from .maininterface.clipmultiplerasters import ClipMultipleRasters
-	from .maininterface.stackrasterbands import StackRasterBands
-	from .maininterface.mosaicbandsets import MosaicBandSets
-	from .maininterface.cloudmasking import CloudMasking
-	from .maininterface.spectraldistancebandsets import SpectralDistanceBandsets
-	from .maininterface.randomForestTab import ClassRandomForestTab
-	from .maininterface.editraster import EditRaster
-	from .maininterface.sieveTab import SieveRaster
-	from .maininterface.erosionTab import ErosionRaster
-	from .maininterface.dilationTab import DilationRaster
-	from .maininterface.clipmultiplerasterspointer import ClipMultiplerastersPointer
-	from .maininterface.landcoverchange import LandCoverChange
-	from .maininterface.classreportTab import ClassReportTab
-	from .maininterface.classificationTab import ClassificationTab
-	from .maininterface.classtovectorTab import ClassToVectorTab
-	from .maininterface.reclassificationTab import ReclassificationTab
-	from .maininterface.settings import Settings
-	from .core.input import Input
-	from .ui.ui_utils import Ui_Utils
 	try:
-		pass
+		from .core.messages import Messages as msgs
+		from .core.utils import Utils
+		from .core.signature_importer import Signature_Importer
+		from .maininterface.downloadproductpointer import DownloadProductPointer
+		from .maininterface.downloadproducts import DownloadProducts
+		from .spectralsignature.spectralsignatureplot import SpectralSignaturePlot
+		from .spectralsignature.scatter_plot import Scatter_Plot	
+		from .dock.manualroi import ManualROI
+		from .dock.regionroi import RegionROI
+		from .dock.scpdock import SCPDock
+		from .dock.classificationpreview import ClassificationPreview
+		from .maininterface.multipleroiTab import MultipleROITab
+		from .spectralsignature.usgs_spectral_lib import USGS_Spectral_Lib
+		from .maininterface.landsatTab import LandsatTab
+		from .maininterface.asterTab import ASTERTab
+		from .maininterface.modisTab import MODISTab
+		from .maininterface.sentinel1Tab import Sentinel1Tab
+		from .maininterface.sentinel2Tab import Sentinel2Tab
+		from .maininterface.sentinel3Tab import Sentinel3Tab
+		from .maininterface.GOESTab import GOESTab
+		from .maininterface.accuracy import Accuracy
+		from .maininterface.crossclassificationTab import CrossClassification
+		from .maininterface.bandcombination import BandCombination
+		from .maininterface.splitTab import SplitTab
+		from .maininterface.reprojectrasterbands import ReprojectRasterBands
+		from .maininterface.pcaTab import PcaTab
+		from .maininterface.clusteringTab import ClusteringTab
+		from .maininterface.classSignatureTab import ClassSignatureTab
+		from .maininterface.zonalStatRasterTab import ZonalStatRasterTab
+		from .maininterface.vectortorasterTab import VectorToRasterTab
+		from .maininterface.bandsetTab import BandsetTab
+		from .maininterface.algorithmWeightTab import AlgWeightTab
+		from .maininterface.signatureThresholdTab import SigThresholdTab
+		from .maininterface.LCSignatureThresholdTab import LCSigThresholdTab
+		from .maininterface.rgblistTab import RGBListTab
+		from .maininterface.bandsetlistTab import BandSetListTab
+		from .maininterface.LCSignaturePixel import LCSigPixel
+		from .maininterface.LCSignaturePixel2 import LCSigPixel2
+		from .maininterface.bandcalcTab import BandCalcTab
+		from .maininterface.batchTab import BatchTab
+		from .maininterface.clipmultiplerasters import ClipMultipleRasters
+		from .maininterface.stackrasterbands import StackRasterBands
+		from .maininterface.mosaicbandsets import MosaicBandSets
+		from .maininterface.cloudmasking import CloudMasking
+		from .maininterface.spectraldistancebandsets import SpectralDistanceBandsets
+		from .maininterface.randomForestTab import ClassRandomForestTab
+		from .maininterface.editraster import EditRaster
+		from .maininterface.sieveTab import SieveRaster
+		from .maininterface.erosionTab import ErosionRaster
+		from .maininterface.dilationTab import DilationRaster
+		from .maininterface.clipmultiplerasterspointer import ClipMultiplerastersPointer
+		from .maininterface.landcoverchange import LandCoverChange
+		from .maininterface.classreportTab import ClassReportTab
+		from .maininterface.classificationTab import ClassificationTab
+		from .maininterface.classtovectorTab import ClassToVectorTab
+		from .maininterface.reclassificationTab import ReclassificationTab
+		from .maininterface.settings import Settings
+		from .core.input import Input
+		from .ui.ui_utils import Ui_Utils
 	except:
 		PluginCheck = 'No'
 		qgisUtils.iface.messageBar().pushMessage('Semi-Automatic Classification Plugin', QApplication.translate('semiautomaticclassificationplugin', 'Please, restart QGIS for executing the Semi-Automatic Classification Plugin'), level=qgisCore.Qgis.Info)

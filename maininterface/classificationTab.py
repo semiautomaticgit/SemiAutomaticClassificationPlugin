@@ -184,7 +184,9 @@ class ClassificationTab:
 						algorithmName = cfg.algName
 					if useMacroclass is None:
 						useMacroclass = cfg.macroclassCheck
-					classificationOptions = [useLcs, useLcsAlgorithm, LCSLeaveUnclassified, cfg.algBandWeigths]
+					classificationOptions = [useLcs, useLcsAlgorithm, LCSLeaveUnclassified, cfg.algBandWeigths, cfg.algThrshld]
+					# logger
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " classification set: " + str([algorithmName, img, sL, cfg.clssPth, useMacroclass, algRasterPath, 0, None, cfg.rasterCompression, bandSetNumber, classificationOptions]))
 					ok, cOut, mOut, opOut = self.runAlgorithm(algorithmName, img, sL, cfg.clssPth, useMacroclass, algRasterPath, 0, None, cfg.rasterCompression, bandSetNumber, classificationOptions)
 					if ok == 'Yes':
 						c = cfg.utls.addRasterLayer(cfg.clssPth)
@@ -376,7 +378,7 @@ class ClassificationTab:
 						leaveUnclassified = 'Yes'
 					else:
 						leaveUnclassified = None
-					classificationOptions = [useLcs, useLcsAlgorithm, leaveUnclassified, cfg.algBandWeigths]
+					classificationOptions = [useLcs, useLcsAlgorithm, leaveUnclassified, cfg.algBandWeigths, cfg.algThrshld]
 					# compression
 					if int(cfg.prvwSz) <= 2000:
 						compress = 'No'
@@ -385,7 +387,9 @@ class ClassificationTab:
 					if algorithmRaster == 'Yes':
 						tPMA = cfg.utls.createTempRasterPath('vrt')
 					else:
-						tPMA = None
+						tPMA = None		
+					# logger
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " classification set: " + str([cfg.algName, cfg.bandSetsList[bandSetNumber][8], sL, pP, cfg.macroclassCheck, tPMA, int(cfg.prvwSz), point, compress, bandSetNumber, classificationOptions]))
 					ok, cOut, mOut, opOut = self.runAlgorithm(cfg.algName, cfg.bandSetsList[bandSetNumber][8], sL, pP, cfg.macroclassCheck, tPMA, int(cfg.prvwSz), point, compress, bandSetNumber, classificationOptions)
 					if ok == 'Yes':
 						if algorithmRaster == 'No':
@@ -513,8 +517,10 @@ class ClassificationTab:
 			rD = None
 		else:
 			tPMD = cfg.utls.createTempVirtualRaster(bL, bandNumberList, 'Yes', 'Yes', 0, 'No', 'No')
-		# process calculation	
-		o = cfg.utls.multiProcessRaster(rasterPath = tPMD, signatureList = signatureList, functionBand = 'Yes', functionRaster = cfg.utls.classificationMultiprocess, algorithmName = algorithmName, nodataValue = cfg.NoDataVal, macroclassCheck = macroclassCheck,classificationOptions = classificationOptions, functionBandArgument = cfg.multiAddFactorsVar, functionVariable = cfg.bandSetsList[bandSetNumber][6], progressMessage = 'classification', virtualRaster = 'Yes', compress = compress, compressFormat = 'LZW')
+		# logger
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " multiprocess set: " + str([tPMD, signatureList, algorithmName, macroclassCheck, classificationOptions, cfg.bandSetsList[bandSetNumber][6]]))
+		# process calculation
+		o = cfg.utls.multiProcessRaster(rasterPath = tPMD, signatureList = signatureList, functionBand = 'Yes', functionRaster = cfg.utls.classificationMultiprocess, algorithmName = algorithmName, nodataValue = -999, macroclassCheck = macroclassCheck,classificationOptions = classificationOptions, functionBandArgument = cfg.multiAddFactorsVar, functionVariable = cfg.bandSetsList[bandSetNumber][6], progressMessage = 'classification', virtualRaster = 'Yes', compress = compress, compressFormat = 'LZW')
 		if o == 'No':
 			return 'No', None, None, None
 		# output rasters

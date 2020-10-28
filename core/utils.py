@@ -890,7 +890,7 @@ class Utils:
 		return oRL, outputRasterList
 		
 	# perform classification
-	def classificationMultiprocess(self, bandListNumber, signatureList, algorithmName, rasterArray, landCoverSignature, LCSClassAlgorithm,LCSLeaveUnclassified, algBandWeigths, outputGdalRasterList, outputAlgorithmRaster, outputClassificationRaster, nodataValue, macroclassCheck):
+	def classificationMultiprocess(self, bandListNumber, signatureList, algorithmName, rasterArray, landCoverSignature, LCSClassAlgorithm,LCSLeaveUnclassified, algBandWeigths, outputGdalRasterList, outputAlgorithmRaster, outputClassificationRaster, nodataValue, macroclassCheck, algThrshld):
 		sigArrayList = self.createArrayFromSignature(bandListNumber, signatureList)
 		# logger
 		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'sigArrayList ' + str(sigArrayList))
@@ -903,6 +903,7 @@ class Utils:
 		classArrayLCS = None
 		equalArray = None
 		cfg.unclassValue = None
+		cfg.algThrshld = algThrshld
 		n = 0
 		# max and min values
 		tr = self.thresholdList(signatureList)
@@ -1425,7 +1426,7 @@ class Utils:
 							algThrshld = float(tr[n])
 							if algThrshld > 100:
 								algThrshld = 100
-							c = self.algorithmMaximumLikelihood(rasterArrayx, s, covMatrList[n], cfg.algBandWeigths, algThrshld)
+							c = self.algorithmMaximumLikelihoodOld(rasterArrayx, s, covMatrList[n], cfg.algBandWeigths, algThrshld)
 							# logger
 							cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "algorithmMaximumLikelihood signature" + str(itCount))
 							if algThrshld > 0:
@@ -1634,7 +1635,7 @@ class Utils:
 					algThrshld = float(tr[n])
 					if algThrshld > 100:
 						algThrshld = 100
-					c = self.algorithmMaximumLikelihood(rasterArrayx, s, covMatrList[n], cfg.algBandWeigths, algThrshld)
+					c = self.algorithmMaximumLikelihoodOld(rasterArrayx, s, covMatrList[n], cfg.algBandWeigths, algThrshld)
 					# logger
 					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "algorithmMaximumLikelihood signature" + str(itCount))
 					if algThrshld > 0:
@@ -1820,7 +1821,7 @@ class Utils:
 		return chi
 		
 	# Maximum Likelihood algorithm
-	def algorithmMaximumLikelihood(self, rasterArray, signatureArray, covarianceMatrixZ, weightList = None, algThrshld = 0):
+	def algorithmMaximumLikelihoodOld(self, rasterArray, signatureArray, covarianceMatrixZ, weightList = None, algThrshld = 0):
 		try:
 			covarianceMatrix = cfg.np.copy(covarianceMatrixZ)
 			if weightList is not None:
@@ -1842,6 +1843,30 @@ class Utils:
 			# logger
 			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 			cfg.mx.msgErr28()
+			return 0
+			
+	# Maximum Likelihood algorithm
+	def algorithmMaximumLikelihood(self, rasterArray, signatureArray, covarianceMatrixZ, weightList = None, algThrshld = 0):
+		try:
+			covarianceMatrix = cfg.np.copy(covarianceMatrixZ)
+			if weightList is not None:
+				c = 0
+				for w in weightList:
+					rasterArray[:,:,c] *= w
+					signatureArray[c] *= w
+					c = c + 1
+			(sign, logdet) = cfg.np.linalg.slogdet(covarianceMatrix)
+			invC = cfg.np.linalg.inv(covarianceMatrix)
+			d = rasterArray - signatureArray
+			algArray = - logdet - (cfg.np.dot(d, invC) * d).sum(axis = 2)
+			if algThrshld > 0:
+				chi = self.chisquare(algThrshld)
+				threshold = - chi - logdet
+				algArray = cfg.np.where(algArray < threshold, cfg.maxLikeNoDataVal, algArray)
+			return algArray
+		except Exception as err:
+			# logger
+			cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 			return 0
 		
 	# spectral angle mapping algorithm [ arccos( sum(r_i * s_i) / ( sum(r_i**2) * sum(s_i**2) ) ) ]
@@ -4097,6 +4122,84 @@ class Utils:
 		else:
 			c = None
 		return c
+		
+	# calculate raster unique values
+	def rasterUniqueValuesOld(self, gdalBand, rasterArray, columnNumber, rowNumber, pixelStartColumn, pixelStartRow, outputGdalRasterList, functionBandArgumentNoData, functionVariable):
+		if cfg.actionCheck == "Yes":
+			val = cfg.np.unique(rasterArray)
+			# remove multiple nan
+			val = cfg.np.unique(val[~cfg.np.isnan(val)])
+			cfg.rasterBandUniqueVal = cfg.np.append(cfg.rasterBandUniqueVal, [val], axis =1)
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode())
+			return cfg.rasterBandUniqueVal
+			
+	# calculate raster unique values
+	def rasterUniqueValuesWithSumOld(self, gdalBand, rasterArray, columnNumber, rowNumber, pixelStartColumn, pixelStartRow, outputGdalRasterList, functionBandArgumentNoData, functionVariable):
+		if cfg.actionCheck == "Yes":
+			values, count = cfg.np.unique(rasterArray, return_counts=True)
+			val = zip(values, count)
+			uniqueVal = cfg.counterSCP(dict(val))
+			oldUniqueVal = cfg.counterSCP(cfg.rasterBandUniqueVal)
+			cfg.rasterBandUniqueVal = uniqueVal + oldUniqueVal
+			cfg.rasterBandUniqueVal.pop(functionBandArgumentNoData, None)
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode())
+			return cfg.rasterBandUniqueVal
+			
+	# multiple where band calculation 
+	def bandCalculationMultipleWhereOld(self, gdalBandList, rasterSCPArrayfunctionBand, columnNumber, rowNumber, pixelStartColumn, pixelStartRow, outputGdalRasterList, functionBandArgument, functionVariableList):
+		if cfg.actionCheck == "Yes":
+			for f in functionBandArgument:
+				# create function
+				b = 0
+				for i in functionVariableList:
+					f = f.replace(i[0], " rasterSCPArrayfunctionBand[::, ::," + str(b) + "] ")
+					f = f.replace(i[1], " rasterSCPArrayfunctionBand[::, ::," + str(b) + "] ")
+					b = b + 1
+				# replace numpy operators
+				f = cfg.utls.replaceNumpyOperators(f)
+				# perform operation
+				try:
+					o = o + eval(f)
+				# first iteration
+				except:
+					try:
+						o = eval(f)
+					except Exception as err:
+						cfg.mx.msgErr36()
+						# logger
+						cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+						return "No"
+			# create array if not
+			try:
+				if not isinstance(o, cfg.np.ndarray):
+					o = cfg.np.where(o == 0, cfg.NoDataVal, o)
+					a = cfg.np.zeros((rasterSCPArrayfunctionBand.shape[0], rasterSCPArrayfunctionBand.shape[1]), dtype=cfg.np.float32)
+					a.fill(o)
+					o = a
+			except Exception as err:
+				cfg.mx.msgErr36()
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				return "No"
+			values, count = cfg.np.unique(o, return_counts=True)
+			val = zip(values, count)
+			uniqueVal = cfg.counterSCP(dict(val))
+			oldUniqueVal = cfg.counterSCP(cfg.rasterBandUniqueVal)
+			cfg.rasterBandUniqueVal = uniqueVal + oldUniqueVal
+			oR = outputGdalRasterList[0]
+			# output raster
+			band = gdalBandList[0].GetBand()
+			try:
+				self.writeArrayBlock(oR, band, o, pixelStartColumn, pixelStartRow)
+			except Exception as err:
+				cfg.mx.msgErr36()
+				# logger
+				cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				return "No"
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode())
 			
 	# reclassify raster
 	def reclassifyRaster(self, gdalBandList, rasterSCPArrayfunctionBand, columnNumber, rowNumber, pixelStartColumn, pixelStartRow, outputArrayFile, functionBandArgument, functionVariableList, outputBandNumber):
@@ -4818,6 +4921,11 @@ class Utils:
 			cfg.labelSCP = label
 		except:
 			pass
+		try:
+			import scipy.stats.distributions as statdistr
+			cfg.statdistrSCP = statdistr
+		except:
+			pass
 		from osgeo import gdal
 		from osgeo import ogr
 		from osgeo import osr
@@ -5049,8 +5157,8 @@ class Utils:
 						else:
 							# logger
 							cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'outputSigRasterList ' + str(outputSigRasterList))
-							landCoverSignature, LCSClassAlgorithm, LCSLeaveUnclassified, algBandWeigths = classificationOptions
-							oo = functionRaster(len(gdalBandList), signatureList, algorithmName, c, landCoverSignature, LCSClassAlgorithm,LCSLeaveUnclassified, algBandWeigths, outputSigRasterList, outAlg, outClass, nodataValue, macroclassCheck)
+							landCoverSignature, LCSClassAlgorithm, LCSLeaveUnclassified, algBandWeigths, algThrshld = classificationOptions
+							oo = functionRaster(len(gdalBandList), signatureList, algorithmName, c, landCoverSignature, LCSClassAlgorithm,LCSLeaveUnclassified, algBandWeigths, outputSigRasterList, outAlg, outClass, nodataValue, macroclassCheck, algThrshld)
 							# logger
 							cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'oo ' + str(oo))
 							o = [outClasses, outAlgs, outSigDict]

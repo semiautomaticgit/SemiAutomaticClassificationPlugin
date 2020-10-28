@@ -4659,17 +4659,17 @@ ROI</source>
 <context>
     <name>semiautomaticclassificationplugin</name>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="1566"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="1564"/>
         <source>Please, restart QGIS for executing the Semi-Automatic Classification Plugin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="473"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="471"/>
         <source>Please restart QGIS for installing the Semi-Automatic Classification Plugin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/classificationTab.py" line="614"/>
+        <location filename="../maininterface/classificationTab.py" line="620"/>
         <source>Select a mask shapefile</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4679,7 +4679,7 @@ ROI</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/classificationTab.py" line="661"/>
+        <location filename="../maininterface/classificationTab.py" line="667"/>
         <source>Select a qml style</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5590,7 +5590,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="9432"/>
+        <location filename="../core/utils.py" line="9540"/>
         <source>SCP: completed process</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5610,37 +5610,37 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/crossclassificationTab.py" line="341"/>
+        <location filename="../maininterface/landcoverchange.py" line="320"/>
         <source>Classification</source>
         <translation type="unfinished">Classification</translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="316"/>
+        <location filename="../maininterface/accuracy.py" line="392"/>
         <source>ErrMatrixCode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/crossclassificationTab.py" line="358"/>
+        <location filename="../maininterface/landcoverchange.py" line="351"/>
         <source>Reference</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/landcoverchange.py" line="188"/>
+        <location filename="../maininterface/landcoverchange.py" line="334"/>
         <source>PixelSum</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/crossclassificationTab.py" line="373"/>
+        <location filename="../maininterface/landcoverchange.py" line="368"/>
         <source>Total</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="448"/>
+        <location filename="../maininterface/accuracy.py" line="530"/>
         <source>Overall accuracy [%] = </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="451"/>
+        <location filename="../maininterface/accuracy.py" line="533"/>
         <source>Kappa hat classification = </source>
         <translation type="unfinished"></translation>
     </message>
@@ -5795,12 +5795,12 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7411"/>
+        <location filename="../core/utils.py" line="7519"/>
         <source>Build overviews</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7411"/>
+        <location filename="../core/utils.py" line="7519"/>
         <source>Do you want to build the external overviews of bands?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5880,7 +5880,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/crossclassificationTab.py" line="341"/>
+        <location filename="../maininterface/landcoverchange.py" line="334"/>
         <source>CrossClassCode</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5935,22 +5935,17 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/landcoverchange.py" line="102"/>
+        <location filename="../maininterface/landcoverchange.py" line="104"/>
         <source>Save land cover change raster output</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/landcoverchange.py" line="188"/>
-        <source>ChangeCode</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../maininterface/landcoverchange.py" line="188"/>
+        <location filename="../maininterface/landcoverchange.py" line="334"/>
         <source>ReferenceClass</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/landcoverchange.py" line="188"/>
+        <location filename="../maininterface/landcoverchange.py" line="334"/>
         <source>NewClass</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6160,12 +6155,12 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="380"/>
+        <location filename="../maininterface/accuracy.py" line="456"/>
         <source>Wi</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="403"/>
+        <location filename="../maininterface/accuracy.py" line="479"/>
         <source>SE area</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6175,67 +6170,67 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="316"/>
+        <location filename="../maininterface/accuracy.py" line="392"/>
         <source>Classified</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="353"/>
+        <location filename="../maininterface/accuracy.py" line="429"/>
         <source>ERROR MATRIX (pixel count)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="397"/>
+        <location filename="../maininterface/accuracy.py" line="473"/>
         <source>Area</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="402"/>
+        <location filename="../maininterface/accuracy.py" line="478"/>
         <source>SE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="404"/>
+        <location filename="../maininterface/accuracy.py" line="480"/>
         <source>95% CI area</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="423"/>
+        <location filename="../maininterface/accuracy.py" line="505"/>
         <source>PA  [%]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="424"/>
+        <location filename="../maininterface/accuracy.py" line="506"/>
         <source>UA  [%]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="425"/>
+        <location filename="../maininterface/accuracy.py" line="507"/>
         <source>Kappa hat</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="460"/>
+        <location filename="../maininterface/accuracy.py" line="542"/>
         <source>PA = producer&apos;s accuracy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="462"/>
+        <location filename="../maininterface/accuracy.py" line="544"/>
         <source>UA = user&apos;s accuracy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="456"/>
+        <location filename="../maininterface/accuracy.py" line="538"/>
         <source>SE = standard error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="458"/>
+        <location filename="../maininterface/accuracy.py" line="540"/>
         <source>CI = confidence interval</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="376"/>
+        <location filename="../maininterface/accuracy.py" line="452"/>
         <source>AREA BASED ERROR MATRIX</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6380,7 +6375,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/classificationTab.py" line="206"/>
+        <location filename="../maininterface/classificationTab.py" line="208"/>
         <source>Conversion to vector. Please wait ...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6420,27 +6415,27 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="6391"/>
+        <location filename="../core/utils.py" line="6499"/>
         <source>Calculating signature</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7654"/>
+        <location filename="../core/utils.py" line="7762"/>
         <source>Writing file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="5532"/>
+        <location filename="../core/utils.py" line="5640"/>
         <source>Conversion to vector</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7372"/>
+        <location filename="../core/utils.py" line="7480"/>
         <source>Sieve</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7490"/>
+        <location filename="../core/utils.py" line="7598"/>
         <source>Building overviews</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6485,12 +6480,12 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="8887"/>
+        <location filename="../core/utils.py" line="8995"/>
         <source>Remove rows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="8887"/>
+        <location filename="../core/utils.py" line="8995"/>
         <source>Are you sure you want to remove highlighted rows from the table?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6500,22 +6495,22 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished">Traitement</translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="241"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="239"/>
         <source>Error. Check Python Numpy installation for the Semi-Automatic Classification Plugin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="258"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="256"/>
         <source>Error. Check Python Scipy installation for the Semi-Automatic Classification Plugin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="260"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="258"/>
         <source>Error. Check Python Matplotlib installation for the Semi-Automatic Classification Plugin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="2484"/>
+        <location filename="../core/utils.py" line="2509"/>
         <source>DOS1 calculation</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6557,6 +6552,11 @@ Do you want to add the required fields to this shapefile?</source>
     <message>
         <location filename="../maininterface/spectraldistancebandsets.py" line="82"/>
         <source>Save distance raster output</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../maininterface/landcoverchange.py" line="349"/>
+        <source>LAND COVER CHANGE MATRIX [</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
