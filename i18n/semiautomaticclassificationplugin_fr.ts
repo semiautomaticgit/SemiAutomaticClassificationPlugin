@@ -3868,7 +3868,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="14001"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If checked, the selected Algorithm is used for unclassified pixels of the Land Cover Signature Classification&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Si coché, l&apos;algorithme sélectionné est utilisé pour les pixels non-classifié de la classification d&apos;occupation des sols&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Si coché, l&apos;algorithme sélectionné est utilisé pour les pixels non-classifiés de la classification d&apos;occupation des sols&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="14004"/>
