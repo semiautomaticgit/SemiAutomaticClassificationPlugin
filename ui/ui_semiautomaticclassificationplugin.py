@@ -10603,7 +10603,7 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.menu_treeWidget.topLevelItem(8).child(1).setText(0, _translate("SemiAutomaticClassificationPlugin", "Interface"))
         self.menu_treeWidget.topLevelItem(8).child(2).setText(0, _translate("SemiAutomaticClassificationPlugin", "Processing setting"))
         self.menu_treeWidget.topLevelItem(9).setText(0, _translate("SemiAutomaticClassificationPlugin", "User manual"))
-        self.menu_treeWidget.topLevelItem(10).setText(0, _translate("SemiAutomaticClassificationPlugin", "Online help"))
+        self.menu_treeWidget.topLevelItem(10).setText(0, _translate("SemiAutomaticClassificationPlugin", "Help"))
         self.menu_treeWidget.topLevelItem(11).setText(0, _translate("SemiAutomaticClassificationPlugin", "About"))
         self.menu_treeWidget.topLevelItem(12).setText(0, _translate("SemiAutomaticClassificationPlugin", "Support the SCP"))
         self.menu_treeWidget.setSortingEnabled(__sortingEnabled)

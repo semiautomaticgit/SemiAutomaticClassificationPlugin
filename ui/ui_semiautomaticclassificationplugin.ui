@@ -22874,7 +22874,7 @@ alternate-background-color: rgb(205, 205, 205)</string>
      </item>
      <item>
       <property name="text">
-       <string>Online help</string>
+       <string>Help</string>
       </property>
       <property name="icon">
        <iconset resource="resources.qrc">

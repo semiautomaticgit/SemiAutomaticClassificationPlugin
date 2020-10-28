@@ -3769,11 +3769,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Manual del Usuario</translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="22877"/>
-        <source>Online help</source>
-        <translation type="unfinished">Ayuda en línea</translation>
-    </message>
-    <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="22901"/>
         <source>Support the SCP</source>
         <translation type="unfinished"></translation>
@@ -3944,7 +3939,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="22289"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="22877"/>
         <source>Help</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4889,17 +4884,17 @@ Do you want to add the required fields to this shapefile?</source>
         <translation>Eliminar archivos temporales</translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="292"/>
+        <location filename="../core/input.py" line="505"/>
         <source>Band set</source>
         <translation>Juego de bandas</translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="314"/>
+        <location filename="../core/input.py" line="505"/>
         <source>Preprocessing</source>
         <translation>Preprocesamiento</translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="358"/>
+        <location filename="../core/input.py" line="505"/>
         <source>Postprocessing</source>
         <translation>Postprocesamiento</translation>
     </message>
@@ -4924,12 +4919,12 @@ Do you want to add the required fields to this shapefile?</source>
         <translation>En Lotes</translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="388"/>
+        <location filename="../core/input.py" line="505"/>
         <source>Settings</source>
         <translation>Configuración</translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="400"/>
+        <location filename="../core/input.py" line="505"/>
         <source>User manual</source>
         <translation>Manual del Usuario</translation>
     </message>
@@ -5684,127 +5679,127 @@ Do you want to add the required fields to this shapefile?</source>
         <translation>¿Estás seguro que quieres deshacer los umbrales?</translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="306"/>
+        <location filename="../core/input.py" line="505"/>
         <source>Multiple ROI creation</source>
         <translation type="unfinished">Creación de ROI múltiples</translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="302"/>
+        <location filename="../core/input.py" line="505"/>
         <source>Import signatures</source>
         <translation type="unfinished">Importar firmas</translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="300"/>
+        <location filename="../core/input.py" line="505"/>
         <source>Export signatures</source>
         <translation type="unfinished">Exportar librerías</translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="296"/>
+        <location filename="../core/input.py" line="505"/>
         <source>Algorithm band weight</source>
         <translation type="unfinished">Algoritmo peso de banda</translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="310"/>
+        <location filename="../core/input.py" line="505"/>
         <source>Signature threshold</source>
         <translation type="unfinished">Umbral de firma</translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="304"/>
+        <location filename="../core/input.py" line="505"/>
         <source>LCS threshold</source>
         <translation type="unfinished">Umbral LCS</translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="320"/>
+        <location filename="../core/input.py" line="505"/>
         <source>Landsat</source>
         <translation type="unfinished">Landsat</translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="326"/>
+        <location filename="../core/input.py" line="505"/>
         <source>Sentinel-2</source>
         <translation type="unfinished">Sentinel-2</translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="316"/>
+        <location filename="../core/input.py" line="505"/>
         <source>ASTER</source>
         <translation type="unfinished">ASTER</translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="330"/>
+        <location filename="../core/input.py" line="505"/>
         <source>Clip multiple rasters</source>
         <translation type="unfinished">Recortar múltiples rásters</translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="338"/>
+        <location filename="../core/input.py" line="505"/>
         <source>Split raster bands</source>
         <translation type="unfinished">Separar bandas ráster</translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="352"/>
+        <location filename="../core/input.py" line="505"/>
         <source>PCA</source>
         <translation type="unfinished">PCA</translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="342"/>
+        <location filename="../core/input.py" line="505"/>
         <source>Vector to raster</source>
         <translation type="unfinished">Vectorial a ráster</translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="360"/>
+        <location filename="../core/input.py" line="505"/>
         <source>Accuracy</source>
         <translation type="unfinished">Precisión</translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="378"/>
+        <location filename="../core/input.py" line="505"/>
         <source>Land cover change</source>
         <translation type="unfinished">Cambio de cobertura del suelo</translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="366"/>
+        <location filename="../core/input.py" line="505"/>
         <source>Classification report</source>
         <translation type="unfinished">Reporte de la clasificación</translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="368"/>
+        <location filename="../core/input.py" line="505"/>
         <source>Classification to vector</source>
         <translation type="unfinished">Clasificación a vectorial</translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="380"/>
+        <location filename="../core/input.py" line="505"/>
         <source>Reclassification</source>
         <translation type="unfinished">Reclasificación</translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="376"/>
+        <location filename="../core/input.py" line="505"/>
         <source>Edit raster</source>
         <translation type="unfinished">Editar ráster</translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="370"/>
+        <location filename="../core/input.py" line="505"/>
         <source>Classification sieve</source>
         <translation type="unfinished">Filtrado de la Clasificación</translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="364"/>
+        <location filename="../core/input.py" line="505"/>
         <source>Classification erosion</source>
         <translation type="unfinished">Erosión de la clasificación</translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="362"/>
+        <location filename="../core/input.py" line="505"/>
         <source>Classification dilation</source>
         <translation type="unfinished">Dilatación de la Clasificación</translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="404"/>
+        <location filename="../core/input.py" line="505"/>
         <source>About</source>
         <translation type="unfinished">Acerca de</translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="392"/>
+        <location filename="../core/input.py" line="505"/>
         <source>Interface</source>
         <translation type="unfinished">Interfaz</translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="390"/>
+        <location filename="../core/input.py" line="505"/>
         <source>Debug</source>
         <translation type="unfinished">Depurar</translation>
     </message>
@@ -5884,7 +5879,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="374"/>
+        <location filename="../core/input.py" line="505"/>
         <source>Cross classification</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5894,12 +5889,12 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="322"/>
+        <location filename="../core/input.py" line="505"/>
         <source>MODIS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="340"/>
+        <location filename="../core/input.py" line="505"/>
         <source>Stack raster bands</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5919,7 +5914,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="312"/>
+        <location filename="../core/input.py" line="505"/>
         <source>Download products</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5999,7 +5994,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="328"/>
+        <location filename="../core/input.py" line="505"/>
         <source>Sentinel-3</source>
         <translation type="unfinished">Sentinel-3</translation>
     </message>
@@ -6074,7 +6069,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="334"/>
+        <location filename="../core/input.py" line="505"/>
         <source>Mosaic band sets</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6099,7 +6094,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="346"/>
+        <location filename="../core/input.py" line="505"/>
         <source>Band combination</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6109,7 +6104,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="344"/>
+        <location filename="../core/input.py" line="505"/>
         <source>Band processing</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6124,17 +6119,17 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="372"/>
+        <location filename="../core/input.py" line="505"/>
         <source>Class signature</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="294"/>
+        <location filename="../core/input.py" line="505"/>
         <source>Basic tools</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="332"/>
+        <location filename="../core/input.py" line="505"/>
         <source>Cloud masking</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6244,7 +6239,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="298"/>
+        <location filename="../core/input.py" line="505"/>
         <source>Band set list</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6279,7 +6274,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="324"/>
+        <location filename="../core/input.py" line="505"/>
         <source>Sentinel-1</source>
         <translation type="unfinished">Sentinel-1</translation>
     </message>
@@ -6289,7 +6284,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="382"/>
+        <location filename="../core/input.py" line="505"/>
         <source>Zonal stat raster</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6314,7 +6309,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="394"/>
+        <location filename="../core/input.py" line="505"/>
         <source>Processing setting</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6329,7 +6324,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="354"/>
+        <location filename="../core/input.py" line="505"/>
         <source>Random forest</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6359,7 +6354,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="336"/>
+        <location filename="../core/input.py" line="505"/>
         <source>Reproject raster bands</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6544,7 +6539,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="318"/>
+        <location filename="../core/input.py" line="505"/>
         <source>GOES</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6561,6 +6556,16 @@ Do you want to add the required fields to this shapefile?</source>
     <message>
         <location filename="../maininterface/landcoverchange.py" line="349"/>
         <source>LAND COVER CHANGE MATRIX [</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../core/input.py" line="505"/>
+        <source>Support the SCP</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../core/input.py" line="505"/>
+        <source>Help</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
