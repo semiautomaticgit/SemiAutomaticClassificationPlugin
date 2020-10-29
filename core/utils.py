@@ -2153,7 +2153,13 @@ class Utils:
 				# start and end pixels
 				pixelStartColumn = (int((point.x() - tLX) / pSX))
 				pixelStartRow = -(int((tLY - point.y()) / pSY))
-				bVal = float(cfg.utls.readArrayBlock(OrB, pixelStartColumn, pixelStartRow, 1, 1)) * cfg.bandSetsList[bandSetNumber][6][0][b] + cfg.bandSetsList[bandSetNumber][6][1][b]
+				try:
+					bVal = float(cfg.utls.readArrayBlock(OrB, pixelStartColumn, pixelStartRow, 1, 1)) * cfg.bandSetsList[bandSetNumber][6][0][b] + cfg.bandSetsList[bandSetNumber][6][1][b]
+				except Exception as err:
+					# logger
+					cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+					cfg.mx.msgErr4()
+					return 'No'
 				rStat = [bVal, bVal, bVal, 0]
 				cfg.tblOut["BAND_" + str(b + 1)] = rStat
 				cfg.tblOut["WAVELENGTH_" + str(b + 1)] = cfg.bandSetsList[bandSetNumber][4][b]
@@ -2179,7 +2185,13 @@ class Utils:
 				# start and end pixels
 				pixelStartColumn = (int((point.x() - tLX) / pSX))
 				pixelStartRow = -(int((tLY - point.y()) / pSY))
-				bVal = float(cfg.utls.readArrayBlock(OrB, pixelStartColumn, pixelStartRow, 1, 1))  * cfg.bandSetsList[bandSetNumber][6][0][b-1] + cfg.bandSetsList[bandSetNumber][6][1][b-1]
+				try:
+					bVal = float(cfg.utls.readArrayBlock(OrB, pixelStartColumn, pixelStartRow, 1, 1))  * cfg.bandSetsList[bandSetNumber][6][0][b-1] + cfg.bandSetsList[bandSetNumber][6][1][b-1]	
+				except Exception as err:
+					# logger
+					cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+					cfg.mx.msgErr4()
+					return 'No'
 				rStat = [bVal, bVal, bVal, 0]
 				cfg.tblOut["BAND_" + str(b)] = rStat
 				cfg.tblOut["WAVELENGTH_" + str(b)] = cfg.bandSetsList[bandSetNumber][4][b-1]
@@ -5946,24 +5958,28 @@ class Utils:
 			# start and end pixels
 			pixelStartColumn = (int((point.x() - tLX) / pSX))
 			pixelStartRow = -(int((tLY - point.y()) / pSY))
-			bVal = float(cfg.utls.readArrayBlock(OrB, pixelStartColumn, pixelStartRow, 1, 1))
-			if str(bVal) == "nan":
-				pass
-			elif NoDataValue is not None and bVal == float(NoDataValue):
-				pass
-			elif stratified is not None:
-				try:
-					if eval(stratifiedExpression.replace(cfg.variableName, "bVal")) is True:
-						points.append([XCoords[0], YCoords[0]])
-				except:
+			bVal = cfg.utls.readArrayBlock(OrB, pixelStartColumn, pixelStartRow, 1, 1)
+			try:
+				if str(bVal).lstrip('[').rstrip(']') == 'nan':
 					pass
-				if counter == pointNumber*100 and len(points) == 0:
-					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR : maximum number of iterations" )
-					cfg.mx.msgErr64()
-					return points
-			else:
-				points.append([XCoords[0], YCoords[0]])
+				elif NoDataValue is not None and float(bVal) == float(NoDataValue):
+						pass
+				elif stratified is not None:
+					try:
+						if eval(stratifiedExpression.replace(cfg.variableName, 'bVal')) is True:
+							points.append([XCoords[0], YCoords[0]])
+					except:
+						pass
+					if counter == pointNumber*100 and len(points) == 0:
+						# logger
+						cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR : maximum number of iterations" )
+						cfg.mx.msgErr64()
+						return points
+				else:
+					points.append([XCoords[0], YCoords[0]])
+			except Exception as err:
+				# logger
+				cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 		return points
 			
 	# count pixels in a raster lower than value

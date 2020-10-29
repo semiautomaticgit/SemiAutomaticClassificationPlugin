@@ -1059,7 +1059,11 @@ class SCPDock:
 				cfg.ROI_C_ID[i.text(5)]
 				v.append(i.text(5))
 			except:
-				pass
+				try:
+					cfg.signIDs['ID_' + i.text(5)]
+					v.append(i.text(5))
+				except:
+					pass
 		check = 'Yes'
 		if len(v) > 0:
 			progresStep = 100 / len(v)

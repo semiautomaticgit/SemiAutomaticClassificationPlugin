@@ -228,10 +228,13 @@ class ClipMultipleRasters:
 			elif uS == 1:
 				dT = cfg.utls.getTime()
 				# vector EPSG
-				if 'Polygon?crs=' in str(s) or 'memory?geometry=' in str(s):
+				if 'Polygon?crs=' in str(s) or 'memory?geometry=' in str(s) or '(memory)' in str(s):
 					# temp shapefile
 					tSHP = cfg.utls.createTempRasterPath('shp')
-					s = cfg.utls.saveMemoryLayerToShapefile(sL, tSHP)
+					try:
+						s = cfg.utls.saveMemoryLayerToShapefile(sL, tSHP)
+					except:
+						s = cfg.utls.saveMemoryLayerToShapefile(s, tSHP)
 					s = cfg.utls.layerSource(s)
 					vEPSG = cfg.utls.getEPSGVector(tSHP)
 				elif "QgsVectorLayer" in str(s):
@@ -251,6 +254,7 @@ class ClipMultipleRasters:
 					s = tLP
 					vEPSG = cfg.utls.getEPSGVector(s)
 				else:
+					cfg.mx.msgBox("", str(s))
 					vEPSG = cfg.utls.getEPSGVector(s)
 				# in case of reprojection
 				reprjShapefile = cfg.tmpDir + "/" + dT + cfg.utls.fileNameNoExt(s) + ".shp"
