@@ -2201,8 +2201,8 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="20336"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If checked, pixels equal to NoData value will be excluded from the output raster&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Si coché, les pixels de valeur NoDate seront exclus du raster de sortie&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If checked, pixels equal to this NoData value will be excluded from the output raster&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Si coché, les pixels égales à cette valeur de NoData seront exclus du raster de sortie&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="20417"/>
@@ -4247,8 +4247,8 @@ quick settings</source>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="19247"/>
-        <source>Use value as NoData</source>
-        <translation type="unfinished"></translation>
+        <source>Use this value as NoData</source>
+        <translation>Utiliser cette valeur comme NoData</translation>
     </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="20339"/>
