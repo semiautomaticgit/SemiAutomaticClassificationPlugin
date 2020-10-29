@@ -1247,7 +1247,7 @@ class Utils:
 		itCount = 0
 		itTot = len(sigArrayList)
 		progresStep = progresStep / len(sigArrayList)
-		if cfg.ui.LC_signature_checkBox.isChecked():
+		if cfg.ui.LC_signature_checkBox.isChecked() and cfg.LCSOld =='Yes':
 			# max and min values
 			tr = self.thresholdList(signatureList)
 			covMatrList = self.covarianceMatrixList(signatureList)

@@ -569,6 +569,7 @@ rasterBandCalcType = 'Float32'
 regExpressionListBC= 'SemiAutomaticClassificationPlugin/expressionListBC'
 expressionListBCbase = []
 expressionListBC = expressionListBCbase
+LCSOld = 'Yes'
 
 ''' Names '''
 algMinDist = 'Minimum Distance'

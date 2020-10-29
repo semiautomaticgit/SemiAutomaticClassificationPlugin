@@ -449,7 +449,9 @@ class ClusteringTab:
 			oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, previewSize, previewPoint, compress)
 			oC.append(tPMD2)
 			oCR = cfg.utls.createRasterFromReference(rD, 1, oC, cfg.NoDataVal, "GTiff", cfg.gdalSCP.GDT_Int32, previewSize, previewPoint, compress, "DEFLATE")
+			cfg.LCSOld = 'No'
 			o = cfg.utls.processRasterOld(rD, bL, signatureList, None, cfg.utls.classificationOld, algorithmName, oRL, oMR[0], oCR[0], previewSize, previewPoint, cfg.NoDataVal, 'No', cfg.multiAddFactorsVar, cfg.bandSetsList[bandSetNumber][6])
+			cfg.LCSOld = 'Yes'
 			if o == 'No':
 				return 'No', None, None
 			# last classification
@@ -882,7 +884,9 @@ class ClusteringTab:
 			oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, previewSize, previewPoint, compress)
 			oC.append(tPMD2)
 			oCR = cfg.utls.createRasterFromReference(rD, 1, oC, cfg.NoDataVal, "GTiff", cfg.gdalSCP.GDT_Int32, previewSize, previewPoint, compress, "DEFLATE")
+			cfg.LCSOld = 'No'
 			o = cfg.utls.processRasterOld(rD, bL, signatureList, None, cfg.utls.classificationOld, algorithmName, oRL, oMR[0], oCR[0], previewSize, previewPoint, cfg.NoDataVal, 'No', cfg.multiAddFactorsVar, cfg.bandSetsList[bandSetNumber][6])
+			cfg.LCSOld = 'Yes'
 			if o == 'No':
 				return 'No', None, None, None
 			# last classification
@@ -989,7 +993,7 @@ class ClusteringTab:
 				Xmax = int(round(max(tLX, lRX)))
 				Ymin = int(round(min(tLY, lRY)))
 				Ymax = int(round(max(tLY, lRY)))
-				points = cfg.utls.randomPoints(pointNumber, Xmin, Xmax, Ymin, Ymax, None, cfg.bandSetsList[bandSetNumber][8], NoDataValue)
+				points = cfg.utls.randomPoints(pointNumber, Xmin, Xmax, Ymin, Ymax, None, cfg.bandSetsList[bandSetNumber][8], NoDataValue, None, None, bandSetNumber)
 				return points
 			else:
 				cfg.mx.msgWar14()
