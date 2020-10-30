@@ -180,7 +180,7 @@ class ClusteringTab:
 							vL = []
 							for k in range(0, len(cfg.bandSetsList[bandSetNumber][4])):
 								vL.append(s[4][k*2])
-							k_or_sigs.append([vL, s[2], s[6]])	
+							k_or_sigs.append([vL, s[2], s[6]])
 				iterations = cfg.ui.kmeans_iter_spinBox.value()
 				maxStandardDeviation = cfg.ui.std_dev_doubleSpinBox.value()
 				if cfg.ui.kmean_threshold_checkBox.isChecked() is True:
@@ -259,15 +259,20 @@ class ClusteringTab:
 			if cfg.rasterCompression != 'No':
 				try:
 					cfg.utls.GDALCopyRaster(r, outputFile, "GTiff", cfg.rasterCompression, "DEFLATE -co PREDICTOR=2 -co ZLEVEL=1")
-					cfg.osSCP.remove(r)
 				except Exception as err:
 					cfg.shutilSCP.copy(r, outputFile)
-					cfg.osSCP.remove(r)
 					# logger
 					if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				try:
+					cfg.osSCP.remove(r)
+				except:
+					pass
 			else:
 				cfg.shutilSCP.copy(r, outputFile)
-				cfg.osSCP.remove(r)
+				try:
+					cfg.osSCP.remove(r)
+				except:
+					pass
 			# add raster to layers
 			l =cfg.utls.addRasterLayer(outputFile)
 			cfg.utls.rasterSymbol(l, sL, 'No')
@@ -446,9 +451,9 @@ class ClusteringTab:
 			tPMD = cfg.utls.createTempRasterPath('tif')
 			tPMD2 = cfg.utls.createTempRasterPath('tif')
 			oM.append(tPMD)
-			oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, previewSize, previewPoint, compress)
+			oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", 'Float32', previewSize, previewPoint)
 			oC.append(tPMD2)
-			oCR = cfg.utls.createRasterFromReference(rD, 1, oC, cfg.NoDataVal, "GTiff", cfg.gdalSCP.GDT_Int32, previewSize, previewPoint, compress, "DEFLATE")
+			oCR = cfg.utls.createRasterFromReference(rD, 1, oC, cfg.NoDataVal, "GTiff", 'Float32', previewSize, previewPoint)
 			cfg.LCSOld = 'No'
 			o = cfg.utls.processRasterOld(rD, bL, signatureList, None, cfg.utls.classificationOld, algorithmName, oRL, oMR[0], oCR[0], previewSize, previewPoint, cfg.NoDataVal, 'No', cfg.multiAddFactorsVar, cfg.bandSetsList[bandSetNumber][6])
 			cfg.LCSOld = 'Yes'
@@ -456,14 +461,6 @@ class ClusteringTab:
 				return 'No', None, None
 			# last classification
 			if iteration == -1:
-				# close GDAL rasters
-				for x in range(0, len(oRL)):
-					fList = oRL[x].GetFileList()
-					oRL[x] = None
-				for x in range(0, len(oMR)):
-					oMR[x] = None
-				for x in range(0, len(oCR)):
-					oCR[x] = None
 				# remove temp rasters
 				try:
 					for oT in opOut:
@@ -628,7 +625,7 @@ class ClusteringTab:
 					signatureList2.append(s)
 			# close GDAL rasters
 			for x in range(0, len(oRL)):
-				fList = oRL[x].GetFileList()
+				#fList = oRL[x].GetFileList()
 				oRL[x] = None
 			for x in range(0, len(oMR)):
 				oMR[x] = None
@@ -683,9 +680,8 @@ class ClusteringTab:
 					return 'No'
 		r, sigs0, sL0, distances0 = self.kmeansIteration(rD, bL, -1, k_or_sigs, iterations, thresh, NoDataValue, batch, bandSetNumber)
 		cfg.uiUtls.updateBar(80, cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", " Calculating classification. Please wait ..."))
-		for x in range(0, len(bL)):
-			bL[x] = None
-		rD = None
+		#for x in range(0, len(bL)):
+		#	bL[x] = None
 		cfg.uiUtls.updateBar(90)
 		if r == 'No':
 			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " Error")
@@ -695,15 +691,20 @@ class ClusteringTab:
 			if cfg.rasterCompression != 'No':
 				try:
 					cfg.utls.GDALCopyRaster(r, outputFile, "GTiff", cfg.rasterCompression, "DEFLATE -co PREDICTOR=2 -co ZLEVEL=1")
-					cfg.osSCP.remove(r)
 				except Exception as err:
 					cfg.shutilSCP.copy(r, outputFile)
-					cfg.osSCP.remove(r)
 					# logger
 					if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				try:
+					cfg.osSCP.remove(r)
+				except:
+					pass
 			else:
 				cfg.shutilSCP.copy(r, outputFile)
-				cfg.osSCP.remove(r)
+				try:
+					cfg.osSCP.remove(r)
+				except:
+					pass
 			# add raster to layers
 			l =cfg.utls.addRasterLayer(outputFile)
 			cfg.utls.rasterSymbol(l, sL, 'No')
@@ -881,9 +882,9 @@ class ClusteringTab:
 			tPMD = cfg.utls.createTempRasterPath('tif')
 			tPMD2 = cfg.utls.createTempRasterPath('tif')
 			oM.append(tPMD)
-			oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, previewSize, previewPoint, compress)
+			oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", 'Float32', previewSize, previewPoint)
 			oC.append(tPMD2)
-			oCR = cfg.utls.createRasterFromReference(rD, 1, oC, cfg.NoDataVal, "GTiff", cfg.gdalSCP.GDT_Int32, previewSize, previewPoint, compress, "DEFLATE")
+			oCR = cfg.utls.createRasterFromReference(rD, 1, oC, cfg.NoDataVal, "GTiff", 'Float32', previewSize, previewPoint)
 			cfg.LCSOld = 'No'
 			o = cfg.utls.processRasterOld(rD, bL, signatureList, None, cfg.utls.classificationOld, algorithmName, oRL, oMR[0], oCR[0], previewSize, previewPoint, cfg.NoDataVal, 'No', cfg.multiAddFactorsVar, cfg.bandSetsList[bandSetNumber][6])
 			cfg.LCSOld = 'Yes'
@@ -891,14 +892,6 @@ class ClusteringTab:
 				return 'No', None, None, None
 			# last classification
 			if iteration == -1:
-				# close GDAL rasters
-				for x in range(0, len(oRL)):
-					fList = oRL[x].GetFileList()
-					oRL[x] = None
-				for x in range(0, len(oMR)):
-					oMR[x] = None
-				for x in range(0, len(oCR)):
-					oCR[x] = None
 				# remove temp rasters
 				try:
 					for oT in opOut:
@@ -939,6 +932,15 @@ class ClusteringTab:
 				s.append("")
 				s.append(0)
 				signatureList2.append(s)
+			
+			# close GDAL rasters
+			for x in range(0, len(oRL)):
+				#fList = oRL[x].GetFileList()
+				oRL[x] = None
+			for x in range(0, len(oMR)):
+				oMR[x] = None
+			for x in range(0, len(oCR)):
+				oCR[x] = None
 			# check distance
 			distances = []
 			for i in range(0, k):
@@ -947,14 +949,6 @@ class ClusteringTab:
 				elif algorithmName == cfg.algSAM:
 					dist = cfg.utls.spectralAngle(signatures1[i][0], signatures2[i][0])
 				distances.append(dist)
-			# close GDAL rasters
-			for x in range(0, len(oRL)):
-				fList = oRL[x].GetFileList()
-				oRL[x] = None
-			for x in range(0, len(oMR)):
-				oMR[x] = None
-			for x in range(0, len(oCR)):
-				oCR[x] = None
 			# remove temp rasters
 			try:
 				for oT in opOut:
