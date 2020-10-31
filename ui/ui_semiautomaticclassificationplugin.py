@@ -8694,8 +8694,6 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.menu_treeWidget = QtWidgets.QTreeWidget(SemiAutomaticClassificationPlugin)
         self.menu_treeWidget.setMinimumSize(QtCore.QSize(220, 0))
         self.menu_treeWidget.setMaximumSize(QtCore.QSize(400, 16777215))
-        self.menu_treeWidget.setStyleSheet("background-color: rgb(226, 226, 226);\n"
-"alternate-background-color: rgb(205, 205, 205)")
         self.menu_treeWidget.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.menu_treeWidget.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.menu_treeWidget.setEditTriggers(QtWidgets.QAbstractItemView.CurrentChanged|QtWidgets.QAbstractItemView.DoubleClicked)

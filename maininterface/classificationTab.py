@@ -520,7 +520,7 @@ class ClassificationTab:
 		# logger
 		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " multiprocess set: " + str([tPMD, signatureList, algorithmName, macroclassCheck, classificationOptions, cfg.bandSetsList[bandSetNumber][6]]))
 		# process calculation
-		o = cfg.utls.multiProcessRaster(rasterPath = tPMD, signatureList = signatureList, functionBand = 'Yes', functionRaster = cfg.utls.classificationMultiprocess, algorithmName = algorithmName, nodataValue = -999, macroclassCheck = macroclassCheck,classificationOptions = classificationOptions, functionBandArgument = cfg.multiAddFactorsVar, functionVariable = cfg.bandSetsList[bandSetNumber][6], progressMessage = 'classification', virtualRaster = 'Yes', compress = compress, compressFormat = 'LZW')
+		o = cfg.utls.multiProcessRaster(rasterPath = tPMD, signatureList = signatureList, functionBand = 'Yes', functionRaster = cfg.utls.classificationMultiprocess, algorithmName = algorithmName, nodataValue = -999, macroclassCheck = macroclassCheck,classificationOptions = classificationOptions, functionBandArgument = cfg.multiAddFactorsVar, functionVariable = cfg.bandSetsList[bandSetNumber][6], progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Classification'), virtualRaster = 'Yes', compress = compress, compressFormat = 'LZW')
 		if o == 'No':
 			return 'No', None, None, None
 		# output rasters

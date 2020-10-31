@@ -22317,10 +22317,6 @@ p, li { white-space: pre-wrap; }
        <height>16777215</height>
       </size>
      </property>
-     <property name="styleSheet">
-      <string notr="true">background-color: rgb(226, 226, 226);
-alternate-background-color: rgb(205, 205, 205)</string>
-     </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
      </property>

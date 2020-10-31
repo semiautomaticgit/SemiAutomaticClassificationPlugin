@@ -1229,471 +1229,6 @@ class Utils:
 		rDC = None
 		rDA = None
 		
-	def classificationOld(self, gdalBandList, signatureList, algorithmName, rasterArray, columnNumber, rowNumber, pixelStartColumn, pixelStartRow, outputGdalRasterList, outputAlgorithmRaster, outputClassificationRaster, nodataValue, macroclassCheck, previewSize, pixelStartColumnPreview, pixelStartRowPreview, progressStart, progresStep, remainingBlocks, progressMessage):
-		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "start classification block")
-		sigArrayList = self.createArrayFromSignatureOld(gdalBandList, signatureList)
-		LCSminMaxL = cfg.utls.LCSminMaxList(signatureList)
-		bN = 0
-		minArray = None
-		maxArray = None
-		classArray = None
-		classArrayAlg = None
-		classArrayLCS = None
-		equalArray = None
-		cfg.unclassValue = None
-		n = 0
-		StartT = 0
-		itCount = 0
-		itTot = len(sigArrayList)
-		progresStep = progresStep / len(sigArrayList)
-		if cfg.ui.LC_signature_checkBox.isChecked() and cfg.LCSOld =='Yes':
-			# max and min values
-			tr = self.thresholdList(signatureList)
-			covMatrList = self.covarianceMatrixList(signatureList)
-			for s in sigArrayList:
-				if cfg.actionCheck == "Yes":
-					# progress bar
-					progress = progressStart + n * progresStep
-					EndT = cfg.timeSCP.time()
-					itCount = itCount + 1
-					if StartT != 0:
-						processT = EndT - StartT
-						cfg.remainingTime = (remainingBlocks * itTot  - itCount) * processT
-						cfg.uiUtls.updateBar(progress, progressMessage + self.timeToHMS(cfg.remainingTime) + " remaining")
-					elif cfg.remainingTime != 0:
-						#cfg.uiUtls.updateBar(progress, progressMessage + self.timeToHMS(cfg.remainingTime) + " remaining")
-						pass
-					else:
-						cfg.uiUtls.updateBar(progress)
-					StartT = cfg.timeSCP.time()
-					# algorithm
-					rasterArrayx = cfg.np.copy(rasterArray)
-					# threshold
-					multFactor = float(1)
-					# second classification
-					if cfg.ui.LCS_class_algorithm_checkBox.isChecked():
-						secondClassification = algorithmName
-					else:
-						secondClassification = "No"
-					if secondClassification == "No":
-						dataValue = -100
-						cfg.unclassValue = -1000
-					elif secondClassification == cfg.algMinDist:
-						dataValue = -100
-						cfg.unclassValue = -1000
-					elif secondClassification == cfg.algSAM:
-						dataValue = -100
-						cfg.unclassValue = -1000
-					elif secondClassification == cfg.algML:
-						dataValue = cfg.maxValDt
-						cfg.unclassValue = -1000
-					# calculate LCS array
-					LCSarray = self.algorithmLCS(rasterArrayx, s, LCSminMaxL[n][0], LCSminMaxL[n][1] , multFactor, cfg.algBandWeigths, dataValue, nodataValue)
-					if type(LCSarray) is not int:
-						oR = outputGdalRasterList[bN]
-						if previewSize > 0:
-							pixelStartColumn = int(pixelStartColumnPreview)
-							pixelStartRow = int(pixelStartRowPreview)
-						# binary classification
-						LCSarrayWrite = cfg.np.where(LCSarray==dataValue,1,0)
-						# algorithm raster
-						self.writeArrayBlock(oR, 1, LCSarrayWrite, pixelStartColumn, pixelStartRow, nodataValue)
-						LCSarrayWrite = None
-						# find equal array for overlapping classes
-						if equalArray is None:
-							equalArray = LCSarray
-						else:
-							equalArray = self.findEqualArray(LCSarray, equalArray, dataValue, nodataValue, cfg.unclassValue)
-							# logger
-							cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "findMinimumArray signature" + str(itCount))
-						if classArray is None:
-							classArray = nodataValue
-						if macroclassCheck == "Yes":
-							classArray = self.classifyClassesLCSSimple(LCSarray, equalArray, classArray, dataValue, cfg.unclassValue, nodataValue, signatureList[n][0])
-						else:
-							classArray = self.classifyClassesLCSSimple(LCSarray, equalArray, classArray, dataValue, cfg.unclassValue, nodataValue, signatureList[n][2])
-						# in case of same class overlapping
-						equalArray = cfg.np.where( (equalArray ==cfg.unclassValue) & (classArray !=cfg.unclassValue), dataValue, equalArray)
-						# refine class output
-						classArrayLCS = cfg.np.where(classArray == nodataValue, 0, classArray)
-						algArrayWrite = cfg.np.where(classArrayLCS == 0, 0, cfg.np.where(classArrayLCS == cfg.unclassValue, cfg.unclassValue, 1))
-						# algorithm raster
-						self.writeArrayBlock(outputAlgorithmRaster, 1, algArrayWrite, pixelStartColumn, pixelStartRow, nodataValue)
-						algArrayWrite = None
-						if secondClassification == "No":
-							# logger
-							cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "classifyClasses signature" + str(itCount))
-						elif secondClassification == cfg.algMinDist:
-							# algorithm
-							rasterArrayx = cfg.np.copy(rasterArray)
-							c = self.algorithmMinimumDistance(rasterArrayx, s, cfg.algBandWeigths)
-							# logger
-							cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "algorithmMinimumDistance signature" + str(itCount))
-							# threshold
-							algThrshld = float(tr[n])
-							if algThrshld > 0:
-								c = self.minimumDistanceThreshold(c, algThrshld, nodataValue)
-							if type(c) is not int:
-								oR = outputGdalRasterList[bN]
-								# algorithm raster
-								#self.writeArrayBlock(oR, 1, c, pixelStartColumn, pixelStartRow, nodataValue)
-								if minArray is None:
-									minArray = c
-								else:
-									minArray = self.findMinimumArray(c, minArray, nodataValue)
-									# logger
-									cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "findMinimumArray signature" + str(itCount))
-								# minimum raster
-								#self.writeArrayBlock(outputAlgorithmRaster, 1, minArray, pixelStartColumn, pixelStartRow, nodataValue)
-								# signature classification raster
-								if macroclassCheck == "Yes":
-									clA = self.classifyClasses(c, minArray, signatureList[n][0])
-								else:
-									clA = self.classifyClasses(c, minArray, signatureList[n][2])
-								# logger
-								cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "classifyClasses signature" + str(itCount))
-								# classification raster
-								if classArrayAlg is None:
-									classArrayAlg = clA
-								else:
-									e = cfg.np.ma.masked_equal(clA, 0)
-									classArrayAlg =  e.mask * classArrayAlg + clA
-									e = None
-								clA = None
-								classArrayAlg[classArrayAlg == cfg.unclassifiedVal] = 0
-								classArrayLCS = cfg.np.where(classArray == cfg.unclassValue, classArrayAlg, classArray)
-								if cfg.ui.LCS_leave_unclassified_checkBox.isChecked():
-									pass
-								else:
-									classArrayLCS = cfg.np.where(classArray == nodataValue, classArrayAlg, classArrayLCS)
-							else:
-								return "No"
-						elif secondClassification == cfg.algSAM:
-							# algorithm
-							rasterArrayx = cfg.np.copy(rasterArray)
-							c = self.algorithmSAM(rasterArrayx, s, cfg.algBandWeigths)
-							# logger
-							cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "algorithmSAM signature" + str(itCount))
-							# threshold
-							algThrshld = float(tr[n])
-							if algThrshld > 0:
-								if algThrshld > 90:
-									algThrshld = 90
-								c = self.minimumDistanceThreshold(c, algThrshld, nodataValue)
-							if type(c) is not int:
-								oR = outputGdalRasterList[bN]
-								if previewSize > 0:
-									pixelStartColumn = int(pixelStartColumnPreview)
-									pixelStartRow = int(pixelStartRowPreview)
-								# algorithm raster
-								#self.writeArrayBlock(oR, 1, c, pixelStartColumn, pixelStartRow, nodataValue)
-								if minArray is None:
-									minArray = c
-								else:
-									minArray = self.findMinimumArray(c, minArray, nodataValue)
-									# logger
-									cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "findMinimumArray signature" + str(itCount))
-								# minimum raster
-								#self.writeArrayBlock(outputAlgorithmRaster, 1, minArray, pixelStartColumn, pixelStartRow, nodataValue)
-								# signature classification raster
-								if macroclassCheck == "Yes":
-									clA = self.classifyClasses(c, minArray, signatureList[n][0])
-								else:
-									clA = self.classifyClasses(c, minArray, signatureList[n][2])
-								# logger
-								cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "classifyClasses signature" + str(itCount))
-								# classification raster
-								if classArrayAlg is None:
-									classArrayAlg = clA
-								else:
-									e = cfg.np.ma.masked_equal(clA, 0)
-									classArrayAlg =  e.mask * classArrayAlg + clA
-									e = None
-								clA = None
-								classArrayAlg[classArrayAlg == cfg.unclassifiedVal] = 0
-								classArrayLCS = cfg.np.where(classArray == cfg.unclassValue, classArrayAlg, classArray)
-								if cfg.ui.LCS_leave_unclassified_checkBox.isChecked():
-									pass
-								else:
-									classArrayLCS = cfg.np.where(classArray == nodataValue, classArrayAlg, classArrayLCS)
-							else:
-								return "No"									
-						elif secondClassification == cfg.algML:
-							# algorithm
-							rasterArrayx = cfg.np.copy(rasterArray)
-							# threshold
-							algThrshld = float(tr[n])
-							if algThrshld > 100:
-								algThrshld = 100
-							c = self.algorithmMaximumLikelihoodOld(rasterArrayx, s, covMatrList[n], cfg.algBandWeigths, algThrshld)
-							# logger
-							cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "algorithmMaximumLikelihood signature" + str(itCount))
-							if algThrshld > 0:
-								c = self.maximumLikelihoodThreshold(c, nodataValue)
-							if type(c) is not int:					
-								oR = outputGdalRasterList[bN]
-								if previewSize > 0:
-									pixelStartColumn = int(pixelStartColumnPreview)
-									pixelStartRow = int(pixelStartRowPreview)
-								# algorithm raster
-								#self.writeArrayBlock(oR, 1, c, pixelStartColumn, pixelStartRow, nodataValue)
-								if maxArray is None:
-									maxArray = c
-								else:
-									maxArray = self.findMaximumArray(c, maxArray, nodataValue)
-									# logger
-									cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "findMaximumArray signature" + str(itCount))
-								# maximum raster
-								#self.writeArrayBlock(outputAlgorithmRaster, 1, maxArray, pixelStartColumn, pixelStartRow, nodataValue)
-								# signature classification raster
-								if macroclassCheck == "Yes":
-									clA = self.classifyClasses(c, maxArray, signatureList[n][0])
-								else:
-									clA = self.classifyClasses(c, maxArray, signatureList[n][2])
-								# logger
-								cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "classifyClasses signature" + str(itCount))
-								# classification raster
-								if classArrayAlg is None:
-									classArrayAlg = clA
-								else:
-									e = cfg.np.ma.masked_equal(clA, 0)
-									classArrayAlg =  e.mask * classArrayAlg + clA
-									e = None
-								clA = None
-								classArrayAlg[classArrayAlg == cfg.unclassifiedVal] = 0
-								classArrayLCS = cfg.np.where(classArray == cfg.unclassValue, classArrayAlg, classArray)
-								if cfg.ui.LCS_leave_unclassified_checkBox.isChecked():
-									pass
-								else:
-									classArrayLCS = cfg.np.where(classArray == nodataValue, classArrayAlg, classArrayLCS)
-							else:
-								return "No"
-						classArrayWrite = cfg.np.where(classArrayLCS == nodataValue, 0, classArrayLCS)
-						# classification raster
-						self.writeArrayBlock(outputClassificationRaster, 1, classArrayWrite, pixelStartColumn, pixelStartRow, nodataValue)
-						bN = bN + 1
-						n = n + 1
-					else:
-						return "No"
-				else:
-					return "No"
-		elif algorithmName == cfg.algMinDist:
-			tr = self.thresholdList(signatureList)
-			for s in sigArrayList:
-				if cfg.actionCheck == "Yes":
-					# progress bar
-					progress = progressStart + n * progresStep
-					EndT = cfg.timeSCP.time()
-					itCount = itCount + 1
-					if StartT != 0:
-						processT = EndT - StartT
-						cfg.remainingTime = (remainingBlocks * itTot  - itCount) * processT
-						cfg.uiUtls.updateBar(progress, progressMessage + self.timeToHMS(cfg.remainingTime) + " remaining")
-					elif cfg.remainingTime != 0:
-						cfg.uiUtls.updateBar(progress, progressMessage + self.timeToHMS(cfg.remainingTime) + " remaining")
-					else:
-						cfg.uiUtls.updateBar(progress)
-					StartT = cfg.timeSCP.time()
-					# algorithm
-					rasterArrayx = cfg.np.copy(rasterArray)
-					c = self.algorithmMinimumDistance(rasterArrayx, s, cfg.algBandWeigths)
-					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "algorithmMinimumDistance signature" + str(itCount))
-					# threshold
-					algThrshld = float(tr[n])
-					if algThrshld > 0:
-						c = self.minimumDistanceThreshold(c, algThrshld, nodataValue)
-					if type(c) is not int:
-						oR = outputGdalRasterList[bN]
-						if previewSize > 0:
-							pixelStartColumn = int(pixelStartColumnPreview)
-							pixelStartRow = int(pixelStartRowPreview)
-						# algorithm raster
-						self.writeArrayBlock(oR, 1, c, pixelStartColumn, pixelStartRow, nodataValue)
-						if minArray is None:
-							minArray = c
-						else:
-							minArray = self.findMinimumArray(c, minArray, nodataValue)
-							# logger
-							cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "findMinimumArray signature" + str(itCount))
-						# minimum raster
-						self.writeArrayBlock(outputAlgorithmRaster, 1, minArray, pixelStartColumn, pixelStartRow, nodataValue)
-						# signature classification raster
-						if macroclassCheck == "Yes":
-							clA = self.classifyClasses(c, minArray, signatureList[n][0])
-						else:
-							clA = self.classifyClasses(c, minArray, signatureList[n][2])
-						# logger
-						cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "classifyClasses signature" + str(itCount))
-						# classification raster
-						if classArray is None:
-							classArray = clA
-						else:
-							e = cfg.np.ma.masked_equal(clA, 0)
-							classArray =  e.mask * classArray + clA
-							e = None
-						clA = None
-						classArray[classArray == cfg.unclassifiedVal] = 0
-						# classification raster
-						self.writeArrayBlock(outputClassificationRaster, 1, classArray, pixelStartColumn, pixelStartRow, nodataValue)
-						bN = bN + 1
-						n = n + 1
-					else:
-						return "No"
-				else:
-					return "No"
-		elif algorithmName == cfg.algSAM:
-			tr = self.thresholdList(signatureList)
-			for s in sigArrayList:
-				if cfg.actionCheck == "Yes":
-					# progress bar
-					progress = progressStart + n * progresStep
-					EndT = cfg.timeSCP.time()
-					itCount = itCount + 1
-					if StartT != 0:
-						processT = EndT - StartT
-						cfg.remainingTime = (remainingBlocks * itTot  - itCount) * processT
-						cfg.uiUtls.updateBar(progress, progressMessage + self.timeToHMS(cfg.remainingTime) + " remaining")
-					elif cfg.remainingTime != 0:
-						#cfg.uiUtls.updateBar(progress, progressMessage + self.timeToHMS(cfg.remainingTime) + " remaining")
-						pass
-					else:
-						cfg.uiUtls.updateBar(progress)
-					StartT = cfg.timeSCP.time()
-					# algorithm
-					rasterArrayx = cfg.np.copy(rasterArray)
-					c = self.algorithmSAM(rasterArrayx, s, cfg.algBandWeigths)
-					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "algorithmSAM signature" + str(itCount))
-					# threshold
-					algThrshld = float(tr[n])
-					if algThrshld > 0:
-						if algThrshld > 90:
-							algThrshld = 90
-						c = self.minimumDistanceThreshold(c, algThrshld, nodataValue)
-					if type(c) is not int:
-						oR = outputGdalRasterList[bN]
-						if previewSize > 0:
-							pixelStartColumn = int(pixelStartColumnPreview)
-							pixelStartRow = int(pixelStartRowPreview)
-						# algorithm raster
-						self.writeArrayBlock(oR, 1, c, pixelStartColumn, pixelStartRow, nodataValue)
-						if minArray is None:
-							minArray = c
-						else:
-							minArray = self.findMinimumArray(c, minArray, nodataValue)
-							# logger
-							cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "findMinimumArray signature" + str(itCount))
-						# minimum raster
-						self.writeArrayBlock(outputAlgorithmRaster, 1, minArray, pixelStartColumn, pixelStartRow, nodataValue)
-						# signature classification raster
-						if macroclassCheck == "Yes":
-							clA = self.classifyClasses(c, minArray, signatureList[n][0])
-						else:
-							clA = self.classifyClasses(c, minArray, signatureList[n][2])
-						# logger
-						cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "classifyClasses signature" + str(itCount))
-						# classification raster
-						if classArray is None:
-							classArray = clA
-						else:
-							e = cfg.np.ma.masked_equal(clA, 0)
-							classArray =  e.mask * classArray + clA
-							e = None
-						clA = None
-						classArray[classArray == cfg.unclassifiedVal] = 0
-						# classification raster
-						self.writeArrayBlock(outputClassificationRaster, 1, classArray, pixelStartColumn, pixelStartRow, nodataValue)
-						bN = bN + 1
-						n = n + 1
-					else:
-						return "No"
-				else:
-					return "No"
-		elif algorithmName == cfg.algML:
-			covMatrList = self.covarianceMatrixList(signatureList)
-			tr = self.thresholdList(signatureList)
-			for s in sigArrayList:
-				if cfg.actionCheck == "Yes":
-					# progress bar
-					progress = progressStart + n * progresStep
-					EndT = cfg.timeSCP.time()
-					itCount = itCount + 1
-					if StartT != 0:
-						processT = EndT - StartT
-						cfg.remainingTime = (remainingBlocks * itTot  - itCount) * processT
-						cfg.uiUtls.updateBar(progress, progressMessage + self.timeToHMS(cfg.remainingTime) + " remaining")
-					elif cfg.remainingTime != 0:
-						cfg.uiUtls.updateBar(progress, progressMessage + self.timeToHMS(cfg.remainingTime) + " remaining")
-					else:
-						cfg.uiUtls.updateBar(progress)
-					StartT = cfg.timeSCP.time()
-					# algorithm
-					rasterArrayx = cfg.np.copy(rasterArray)
-					# threshold
-					algThrshld = float(tr[n])
-					if algThrshld > 100:
-						algThrshld = 100
-					c = self.algorithmMaximumLikelihoodOld(rasterArrayx, s, covMatrList[n], cfg.algBandWeigths, algThrshld)
-					# logger
-					cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "algorithmMaximumLikelihood signature" + str(itCount))
-					if algThrshld > 0:
-						c = self.maximumLikelihoodThreshold(c, nodataValue)
-					if type(c) is not int:					
-						oR = outputGdalRasterList[bN]
-						if previewSize > 0:
-							pixelStartColumn = int(pixelStartColumnPreview)
-							pixelStartRow = int(pixelStartRowPreview)
-						# algorithm raster
-						self.writeArrayBlock(oR, 1, c, pixelStartColumn, pixelStartRow, nodataValue)
-						if maxArray is None:
-							maxArray = c
-						else:
-							maxArray = self.findMaximumArray(c, maxArray, nodataValue)
-							# logger
-							cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "findMaximumArray signature" + str(itCount))
-						# maximum raster
-						self.writeArrayBlock(outputAlgorithmRaster, 1, maxArray, pixelStartColumn, pixelStartRow, nodataValue)
-						# signature classification raster
-						if macroclassCheck == "Yes":
-							clA = self.classifyClasses(c, maxArray, signatureList[n][0])
-						else:
-							clA = self.classifyClasses(c, maxArray, signatureList[n][2])
-						# logger
-						cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "classifyClasses signature" + str(itCount))
-						# classification raster
-						if classArray is None:
-							classArray = clA
-						else:
-							e = cfg.np.ma.masked_equal(clA, 0)
-							classArray =  e.mask * classArray + clA
-							e = None
-						clA = None
-						classArray[classArray == cfg.unclassifiedVal] = 0
-						# classification raster
-						self.writeArrayBlock(outputClassificationRaster, 1, classArray, pixelStartColumn, pixelStartRow, nodataValue)
-						bN = bN + 1
-						n = n + 1
-					else:
-						return "No"
-				else:
-					return "No"
-		classArray = None
-		rasterArrayx = None
-		c = None
-		try:
-			minArray = None
-		except:
-			pass
-		try:
-			maxArray = None
-		except:
-			pass
-		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "end classification block")
-		return "Yes"
-		
 	# classify classes
 	def classifyClasses(self, algorithmArray, minimumArray, classID, nodataValue = -999):
 		if int(classID) == 0:
@@ -5036,11 +4571,13 @@ class Utils:
 							sLR = str(signatureList[s][0]) + '_' + str(signatureList[s][2])
 							sTR = cfg.tmpDir + '/' + cfg.sigRasterNm + '_' + sLR + '_' + dT + str(wrtProc) + '.tif'
 							try:
-								outSigDict[sLR] = outSigDict[sLR].extend(sTR)
-							except:
+								outSigDict[sLR].append(sTR)
+							except Exception as err:
 								outSigDict[sLR] = [sTR]
 							outputSigRasterList.append(sTR)
 							outputReferenceRasterList.append(sTR)
+						# logger
+						cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'outSigDict ' + str(outSigDict) )
 						outClass = cfg.tmpDir + '/' + 'c_' + dT + str(wrtProc) + '.tif'
 						outAlg = cfg.tmpDir + '/' + 'a_' + dT + str(wrtProc) + '.tif'
 						outputReferenceRasterList.append(outClass)
@@ -6042,94 +5579,7 @@ class Utils:
 			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode())
 			return cfg.rasterPixelCountPCA
 			
-	# count pixels in a raster
-	def rasterPixelCountKmeans(self, gdalBand, rasterArray, columnNumber, rowNumber, pixelStartColumn, pixelStartRow, outputGdalRasterList, functionBandArgumentNoData, functionVariable):
-		if cfg.actionCheck == 'Yes':
-			b = rasterArray[::, ::, rasterArray.shape[2] - 1].ravel()
-			for i in range(0, rasterArray.shape[2] - 1):
-				for c in functionVariable[0]:					
-					a = rasterArray[::, ::, i].ravel() * functionVariable[1][0][i] + functionVariable[1][1][i]
-					a = a[b == c[0]]
-					if functionBandArgumentNoData is not None:
-						a = a[a != functionBandArgumentNoData]
-					a = a[a != cfg.np.nan]
-					count = a.shape[0]
-					try:
-						cfg.rasterClustering["COUNT_BAND_" + str(i) + "_c_" + str(c[0])] = cfg.rasterClustering["COUNT_BAND_" + str(i) + "_c_" + str(c[0])] + count
-					except:
-						cfg.rasterClustering["COUNT_BAND_" + str(i) + "_c_" + str(c[0])] = count
-					sum = a.sum()
-					try:
-						cfg.rasterClustering["SUM_BAND_" + str(i) + "_c_" + str(c[0])] = cfg.rasterClustering["SUM_BAND_" + str(i) + "_c_" + str(c[0])] + sum
-					except:
-						cfg.rasterClustering["SUM_BAND_" + str(i) + "_c_" + str(c[0])] = sum
-			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode())
-			return cfg.rasterClustering	
 			
-	# count for standard deviation in a raster
-	def rasterStandardDeviationISODATA(self, gdalBand, rasterArray, columnNumber, rowNumber, pixelStartColumn, pixelStartRow, outputGdalRasterList, functionBandArgumentNoData, functionVariable):
-		if cfg.actionCheck == 'Yes':
-			b = rasterArray[::, ::, rasterArray.shape[2] - 2].ravel()
-			# variance
-			for i in range(0, rasterArray.shape[2] - 2):
-				for c in functionVariable[0]:			
-					x = rasterArray[::, ::, int(i)].ravel() * functionVariable[1][0][i] + functionVariable[1][1][i]
-					x = x[b == c[0]]
-					# find No data
-					NoDtX = cfg.np.where(cfg.np.isnan(x))
-					# delete No data
-					x = cfg.np.delete(x, NoDtX)
-					NoDtX = None
-					if functionBandArgumentNoData is not None:
-						x = x[x != functionBandArgumentNoData]
-					x = x[x != cfg.np.nan]					
-					a = x - cfg.rasterClustering["MEAN_BAND_" + str(i) + "_c_" + str(c[0])]
-					d = a * a
-					var = d.sum() / (cfg.rasterClustering["COUNT_BAND_" + str(i) + "_c_" + str(c[0])] - 1)
-					try:
-						cfg.rasterClustering["VAR_BAND_" + str(i) + "_c_" + str(c[0])] = cfg.rasterClustering["VAR_BAND_" + str(i)  + "_c_" + str(c[0])] + var
-					except:
-						cfg.rasterClustering["VAR_BAND_" + str(i) + "_c_" + str(c[0])] = var
-			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode())
-			return cfg.rasterClustering
-			
-	# count pixels in a raster
-	def rasterPixelCountISODATA(self, gdalBand, rasterArray, columnNumber, rowNumber, pixelStartColumn, pixelStartRow, outputGdalRasterList, functionBandArgumentNoData, functionVariable):
-		if cfg.actionCheck == 'Yes':
-			b = rasterArray[::, ::, rasterArray.shape[2] - 2].ravel()
-			for i in range(0, rasterArray.shape[2] - 2):
-				for c in functionVariable[0]:					
-					a = rasterArray[::, ::, i].ravel() * functionVariable[1][0][i] + functionVariable[1][1][i]
-					a = a[b == c[0]]
-					if functionBandArgumentNoData is not None:
-						a = a[a != functionBandArgumentNoData]
-					a = a[a != cfg.np.nan]
-					count = a.shape[0]
-					try:
-						cfg.rasterClustering["COUNT_BAND_" + str(i) + "_c_" + str(c[0])] = cfg.rasterClustering["COUNT_BAND_" + str(i) + "_c_" + str(c[0])] + count
-					except:
-						cfg.rasterClustering["COUNT_BAND_" + str(i) + "_c_" + str(c[0])] = count
-					sum = a.sum()
-					try:
-						cfg.rasterClustering["SUM_BAND_" + str(i) + "_c_" + str(c[0])] = cfg.rasterClustering["SUM_BAND_" + str(i) + "_c_" + str(c[0])] + sum
-					except:
-						cfg.rasterClustering["SUM_BAND_" + str(i) + "_c_" + str(c[0])] = sum
-			g = rasterArray[::, ::, rasterArray.shape[2] - 1].ravel()
-			for c in functionVariable[0]:		
-				d = g[b == c[0]]
-				if functionBandArgumentNoData is not None:
-					d = d[d != functionBandArgumentNoData]
-				d = d[d != cfg.np.nan]
-				sum = d.sum()
-				try:
-					cfg.rasterClustering["SUM_DIST_" + str(c[0])] = cfg.rasterClustering["SUM_DIST_" + str(c[0])] + sum
-				except:
-					cfg.rasterClustering["SUM_DIST_" + str(c[0])] = sum
-			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode())
-			return cfg.rasterClustering	
 			
 	# count pixels in a raster
 	def rasterPixelCountClassSignature(self, gdalBand, rasterArray, columnNumber, rowNumber, pixelStartColumn, pixelStartRow, outputGdalRasterList, functionBandArgumentNoData, functionVariable):
@@ -6223,28 +5673,81 @@ class Utils:
 			
 			
 	# calculate minimum and maximum values in a raster
-	def rasterMinimumMaximum(self, gdalBand, rasterArray, columnNumber, rowNumber, pixelStartColumn, pixelStartRow, outputGdalRasterList, functionBandArgumentNoData, functionVariable):
-		if cfg.actionCheck == 'Yes':
-			for i in range(0, rasterArray.shape[2]):			
-				a = rasterArray[::, ::, i].ravel() * functionVariable[0][i] + functionVariable[1][i]
-				if functionBandArgumentNoData is not None:
-					a = a[a != functionBandArgumentNoData]
-				a = a[a != cfg.np.nan]
-				amin = cfg.np.nanmin(a)
-				amax = cfg.np.nanmax(a)
-				try:
-					cfg.rasterClustering["MINIMUM_BAND_" + str(i)] = min(amin, cfg.rasterClustering["MINIMUM_BAND_" + str(i)])
-				except:
-					cfg.rasterClustering["MINIMUM_BAND_" + str(i)] = amin
-				sum = a.sum()
-				try:
-					cfg.rasterClustering["MAXIMUM_BAND_" + str(i)] = max(amax, cfg.rasterClustering["MAXIMUM_BAND_" + str(i)])
-				except:
-					cfg.rasterClustering["MAXIMUM_BAND_" + str(i)] = amax
+	def rasterMinimumMaximum(self, gdalBandList, rasterSCPArrayfunctionBand, columnNumber, rowNumber, pixelStartColumn, pixelStartRow, outputArrayFile, functionBandArgumentNoData, functionVariableList, outputBandNumber):
+		rasterDict = {}
+		for i in range(0, rasterSCPArrayfunctionBand.shape[2]):			
+			a = rasterSCPArrayfunctionBand[::, ::, i].ravel()
+			amin = cfg.np.nanmin(a)
+			amax = cfg.np.nanmax(a)
+			rasterDict['MINIMUM_BAND_' + str(i)] = amin
+			rasterDict['MAXIMUM_BAND_' + str(i)] = amax
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode())
-			return cfg.rasterClustering	
+			cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'rasterDict ' + str(rasterDict) )
+		return rasterDict	
 					
+	# count pixels in a raster
+	def rasterPixelCountKmeans(self, gdalBandList, rasterSCPArrayfunctionBand, columnNumber, rowNumber, pixelStartColumn, pixelStartRow, outputArrayFile, functionBandArgumentNoData, functionVariableList, outputBandNumber):
+		rasterDict = {}
+		b = rasterSCPArrayfunctionBand[::, ::, rasterSCPArrayfunctionBand.shape[2] - 1].ravel()
+		for i in range(0, rasterSCPArrayfunctionBand.shape[2] - 1):
+			for c in functionVariableList:					
+				a = rasterSCPArrayfunctionBand[::, ::, i].ravel()
+				a = a[b == c[0]]
+				a = a[a != cfg.np.nan]
+				count = a.shape[0]
+				rasterDict['COUNT_BAND_' + str(i) + '_c_' + str(c[0])] = count
+				sum = a.sum()
+				rasterDict['SUM_BAND_' + str(i) + '_c_' + str(c[0])] = sum	
+		# logger
+		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'rasterDict ' + str(rasterDict) )
+		return rasterDict
+			
+	# count for standard deviation in a raster
+	def rasterStandardDeviationISODATA(self, gdalBandList, rasterSCPArrayfunctionBand, columnNumber, rowNumber, pixelStartColumn, pixelStartRow, outputArrayFile, functionBandArgumentNoData, functionVariableList, outputBandNumber):
+		rasterDict = {}
+		b = rasterSCPArrayfunctionBand[::, ::, rasterSCPArrayfunctionBand.shape[2] - 2].ravel()
+		# variance
+		for i in range(0, rasterSCPArrayfunctionBand.shape[2] - 2):
+			for c in functionVariableList[0]:			
+				x = rasterSCPArrayfunctionBand[::, ::, int(i)].ravel()
+				x = x[b == c[0]]
+				# find No data
+				NoDtX = cfg.np.where(cfg.np.isnan(x))
+				# delete No data
+				x = cfg.np.delete(x, NoDtX)
+				NoDtX = None
+				x = x[x != cfg.np.nan]					
+				a = x - functionVariableList[1]['MEAN_BAND_' + str(i) + '_c_' + str(c[0])]
+				d = a * a
+				var = d.sum() / (functionVariableList[1]['COUNT_BAND_' + str(i) + '_c_' + str(c[0])] - 1)
+				rasterDict['VAR_BAND_' + str(i) + '_c_' + str(c[0])] = var
+		# logger
+		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'rasterDict ' + str(rasterDict) )
+		return rasterDict
+			
+	# count pixels in a raster
+	def rasterPixelCountISODATA(self, gdalBandList, rasterSCPArrayfunctionBand, columnNumber, rowNumber, pixelStartColumn, pixelStartRow, outputArrayFile, functionBandArgumentNoData, functionVariableList, outputBandNumber):
+		rasterDict = {}
+		b = rasterSCPArrayfunctionBand[::, ::, rasterSCPArrayfunctionBand.shape[2] - 2].ravel()
+		for i in range(0, rasterSCPArrayfunctionBand.shape[2] - 2):
+			for c in functionVariableList:					
+				a = rasterSCPArrayfunctionBand[::, ::, i].ravel()
+				a = a[b == c[0]]
+				a = a[a != cfg.np.nan]
+				count = a.shape[0]
+				rasterDict['COUNT_BAND_' + str(i) + '_c_' + str(c[0])] = count
+				sum = a.sum()
+				rasterDict['SUM_BAND_' + str(i) + '_c_' + str(c[0])] = sum
+		g = rasterSCPArrayfunctionBand[::, ::, rasterSCPArrayfunctionBand.shape[2] - 1].ravel()
+		for c in functionVariableList:		
+			d = g[b == c[0]]
+			d = d[d != cfg.np.nan]
+			sum = d.sum()
+			rasterDict['SUM_DIST_' + str(c[0])] = sum
+		# logger
+		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'rasterDict ' + str(rasterDict) )
+		return rasterDict
+			
 	# covariance in a raster
 	def rasterCovariance(self, gdalBand, rasterArray, columnNumber, rowNumber, pixelStartColumn, pixelStartRow, outputGdalRasterList, functionBandArgumentNoData, functionVariable):
 		if cfg.actionCheck == 'Yes':
