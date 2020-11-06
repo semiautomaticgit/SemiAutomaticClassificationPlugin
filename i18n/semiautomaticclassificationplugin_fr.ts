@@ -4666,17 +4666,17 @@ ROI</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/classificationTab.py" line="620"/>
+        <location filename="../maininterface/classificationTab.py" line="632"/>
         <source>Select a mask shapefile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/classificationTab.py" line="121"/>
+        <location filename="../maininterface/classificationTab.py" line="133"/>
         <source>Save classification output</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/classificationTab.py" line="667"/>
+        <location filename="../maininterface/classificationTab.py" line="679"/>
         <source>Select a qml style</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6372,7 +6372,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/classificationTab.py" line="208"/>
+        <location filename="../maininterface/classificationTab.py" line="220"/>
         <source>Conversion to vector. Please wait ...</source>
         <translation type="unfinished"></translation>
     </message>

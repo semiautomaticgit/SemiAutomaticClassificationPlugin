@@ -44,7 +44,19 @@ class ClassificationTab:
 
 	# set algorithm
 	def algorithmName(self):
-		cfg.algName = cfg.ui.algorithm_combo.currentText()
+		algName = cfg.ui.algorithm_combo.currentText()
+		#idAlg = cfg.ui.algorithm_combo.findText(cfg.algName)
+		idAlg = cfg.ui.algorithm_combo.currentIndex()
+		if idAlg == 0:
+			cfg.algName = cfg.algMinDist
+		elif idAlg == 1:
+			cfg.algName = cfg.algML
+		elif idAlg == 2:
+			cfg.algName = cfg.algSAM
+		else:
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'algorithm name: error ')
+			
 		if str(cfg.algName) == cfg.algML:
 			if cfg.algThrshld > 100:
 				cfg.mx.msg10()
