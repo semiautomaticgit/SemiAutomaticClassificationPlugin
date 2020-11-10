@@ -176,14 +176,16 @@ class ClassificationTab:
 						if cfg.bandSetsList[bandSetNumber][0] == 'Yes':
 							for x in range(0, len(cfg.bandSetsList[bandSetNumber][3])):
 								tCD = cfg.utls.createTempRasterPath('tif')
-								cfg.bndSetMaskList.append(tCD)
-								cfg.utls.clipRasterByShapefile(maskPath, cfg.bandSetsList[bandSetNumber][3][x], str(tCD), cfg.outTempRastFormat)
+								bCSS = cfg.utls.selectLayerbyName(cfg.bandSetsList[bandSetNumber][3][x], 'Yes')
+								bCPath = cfg.utls.layerSource(bCSS)
+								oc = cfg.utls.clipRasterByShapefile(maskPath, bCPath, str(tCD), cfg.outTempRastFormat)
+								cfg.bndSetMaskList.append(oc)
 						else:
 							# temp masked raster
 							cfg.maskRstSrc = cfg.utls.createTempRasterPath('tif')
 							b = cfg.utls.selectLayerbyName(cfg.bandSetsList[bandSetNumber][8])
 							ql = cfg.utls.layerSource(b)
-							cfg.utls.clipRasterByShapefile(maskPath, ql, str(cfg.maskRstSrc), cfg.outTempRastFormat)
+							cfg.maskRstSrc = cfg.utls.clipRasterByShapefile(maskPath, ql, str(cfg.maskRstSrc), cfg.outTempRastFormat)
 						img = cfg.maskRasterNm
 				### if not mask
 					cfg.uiUtls.updateBar(20)
@@ -462,21 +464,24 @@ class ClassificationTab:
 		if cfg.bandSetsList[bandSetNumber][0] == 'Yes':
 			# if masked bandset
 			if imageName == cfg.maskRasterNm:
-				bS = cfg.bndSetMaskList
+				bL = cfg.bndSetMaskList
+				bandNumberList = []
+				for i in range(0, len(bL)):
+					bandNumberList.append(1)
 			else:
 				bS = cfg.bandSetsList[bandSetNumber][3]
-			bL = []
-			bandNumberList = []
-			for i in range(0, len(bS)):
-				bandNumberList.append(1)
-				bSS = cfg.utls.selectLayerbyName(bS[i], 'Yes')
-				try:
-					bPath = cfg.utls.layerSource(bSS)
-					bL.append(bPath)
-				except Exception as err:
-					cfg.mx.msg4()
-					# logger
-					cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+				bL = []
+				bandNumberList = []
+				for i in range(0, len(bS)):
+					bandNumberList.append(1)
+					bSS = cfg.utls.selectLayerbyName(bS[i], 'Yes')
+					try:
+						bPath = cfg.utls.layerSource(bSS)
+						bL.append(bPath)
+					except Exception as err:
+						cfg.mx.msg4()
+						# logger
+						cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 		else:
 			# if masked raster
 			if imageName == cfg.maskRasterNm:

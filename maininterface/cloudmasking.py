@@ -167,7 +167,7 @@ class CloudMasking:
 						o = cfg.utls.processRasterOld(input, bL, None, 'No', cfg.utls.rasterDilation, None, oMR, None, None, 0, None, cfg.NoDataVal, 'No', struct, valueList, "buffer ")
 						cfg.uiUtls.updateBar(22)
 						# boundaries
-						o = cfg.utls.processRasterBoundaries(input, bL, None, 'No', cfg.utls.rasterDilationBoundaries, None, oMR, None, None, 0, None, cfg.NoDataVal, 'No', struct, valueList, "buffer ", 2)
+						o = cfg.utls.processRasterBoundariesOld(input, bL, None, 'No', cfg.utls.rasterDilationBoundaries, None, oMR, None, None, 0, None, cfg.NoDataVal, 'No', struct, valueList, "buffer ", 2)
 						cfg.uiUtls.updateBar(23)
 						# close GDAL rasters
 						for b in range(0, len(oMR)):

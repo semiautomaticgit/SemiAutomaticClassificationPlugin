@@ -116,7 +116,7 @@ class ErosionRaster:
 						oMR = cfg.utls.createRasterFromReference(rD, 1, [tPMD], cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0,  None, 'No', "DEFLATE21")
 						o = cfg.utls.processRasterOld(input, bL, None, 'No', cfg.utls.rasterErosion, None, oMR, None, None, 0, None, cfg.NoDataVal, 'No', struct, valueList, "erosion ")
 						# boundaries
-						o = cfg.utls.processRasterBoundaries(input, bL, None, 'No', cfg.utls.rasterErosionBoundaries, None, oMR, None, None, 0, None, cfg.NoDataVal, 'No', struct, valueList, "erosion ", 2)
+						o = cfg.utls.processRasterBoundariesOld(input, bL, None, 'No', cfg.utls.rasterErosionBoundaries, None, oMR, None, None, 0, None, cfg.NoDataVal, 'No', struct, valueList, "erosion ", 2)
 						# close GDAL rasters
 						for b in range(0, len(oMR)):
 							oMR[b] = None

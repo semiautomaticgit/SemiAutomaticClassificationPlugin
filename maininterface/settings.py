@@ -147,9 +147,9 @@ class Settings:
 	def downloadNewsCheckbox(self):
 		# log setting
 		if cfg.ui.download_news_checkBox.isChecked() is True:
-			cfg.utls.setQGISRegSetting(cfg.downNewsKey, 'Yes')
+			cfg.utls.setQGISRegSetting(cfg.downNewsKey, '2')
 		elif cfg.ui.download_news_checkBox.isChecked() is False:
-			cfg.utls.setQGISRegSetting(cfg.downNewsKey, 'No')
+			cfg.utls.setQGISRegSetting(cfg.downNewsKey, '0')
 		cfg.downNewsVal = self.getQGISRegSetting(cfg.downNewsKey, '2')
 				
 	# virtual  raster

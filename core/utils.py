@@ -3095,7 +3095,7 @@ class Utils:
 		return oRL
 		
 	# clip a raster using a shapefile
-	def clipRasterByShapefile(self,  shapefile, raster, outputRaster = None, outFormat = "GTiff"):
+	def clipRasterByShapefile(self, shapefile, raster, outputRaster = None, outFormat = "GTiff"):
 		# convert polygon to raster 
 		tRxs = cfg.utls.createTempRasterPath('tif')
 		burnValues = 1
@@ -3106,7 +3106,8 @@ class Utils:
 		else:
 			return 'No'
 		if check != 'No':
-			outList = cfg.utls.clipRasterByRaster(bbList, tRxs, outputRaster, outFormat, cfg.NoDataVal, progressMessage = None)
+			dirPath = cfg.osSCP.path.dirname(outputRaster)
+			outList = cfg.utls.clipRasterByRaster(bbList, tRxs, dirPath, outFormat, cfg.NoDataVal, progressMessage = None)
 			# logger
 			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'shapefile ' + str(shapefile) + 'raster ' + str(raster) + 'outputRaster ' + str(outList[0]))
 			return outList[0]
@@ -3172,7 +3173,7 @@ class Utils:
 			outList = []
 			for cc in range(0, len(oM)):
 				d = cfg.utls.fileName(rasterClippedList[cc])
-				e = outputRasterDir + d
+				e = outputRasterDir.rstrip('/') + '/' +d
 				outList.append(e)
 				if str(e).lower().endswith('.tif'):
 					pass
@@ -5295,7 +5296,120 @@ class Utils:
 			uVF = uV.GetNextFeature()
 			maxX = uVF.GetField(0)
 			return [outputVectorPath, minX, maxX], ''
-
+		
+	# process a raster with block size
+	def processRasterBoundariesOld(self, gdalRaster, gdalBandList, signatureList = None, functionBand = None, functionRaster = None, algorithmName = None, outputRasterList = None, outputAlgorithmRaster = None, outputClassificationRaster = None, previewSize = 0, previewPoint = None, nodataValue = None, macroclassCheck = "No", functionBandArgument = None, functionVariable = None, progressMessage = "", boundarySize = None):
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "start processRaster boundaries")
+		if algorithmName is None:
+			additionalLayer = 1
+		else:
+			additionalLayer = 5
+		blockSizeX = self.calculateBlockSize(len(gdalBandList) + additionalLayer)
+		blockSizeY = blockSizeX
+		# raster blocks
+		rX, rY, lX, lY, pX, pY  = self.rasterBlocks(gdalRaster, blockSizeX, blockSizeY, previewSize, previewPoint)
+		# set initial value for progress bar
+		progresStep = 60 / (len(lX) + len(lY))
+		progressStart = 20 - progresStep
+		if blockSizeX > rX:
+			blockSizeX = rX
+		if blockSizeY > rY:
+			blockSizeY = rY
+		cfg.remainingTime = 0
+		remainingBlocks = (len(lX) + len(lY) - 2)
+		totBlocks = remainingBlocks
+		if len(lX) > 1 or len(lY) > 1:
+			for y in lY:
+				if y != 0 and (y - boundarySize) <= rY:
+					if cfg.actionCheck == "Yes":
+						# set initial value for progress bar
+						progressStart = progressStart + progresStep
+						bSX = rX
+						bSY = boundarySize * 2  
+						array = cfg.np.zeros((bSX, bSY, len(gdalBandList)), dtype=cfg.np.float32)
+						for b in range(0, len(gdalBandList)):
+							ndv = cfg.NoDataVal
+							a = self.readArrayBlock(gdalBandList[b], 0, y - boundarySize, bSX, bSY)
+							try:
+								b0 = gdalBandList[b].GetRasterBand(1)
+								ndv2 = b0.GetNoDataValue()
+							except:
+								try:
+									ndv2 = gdalBandList[b].GetNoDataValue()
+								except:
+									ndv2 = None				
+							if a is not None:
+								array[::, ::, b] = a.reshape(bSX, bSY)
+							else:
+								# logger
+								cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "error reading array")
+								cfg.mx.msgErr46()
+								return "No"
+							a = None
+							array[::, ::, b][array[::, ::, b] == ndv] = cfg.np.nan
+							if ndv2 is not None:
+								array[::, ::, b][array[::, ::, b] == ndv2] = cfg.np.nan
+						c = array.reshape(bSY, bSX, len(gdalBandList))
+						array = None
+						if functionRaster is not None:
+							if functionBand == "No":
+								cfg.QtWidgetsSCP.qApp.processEvents()
+								o = functionRaster(gdalBandList, c, bSX, bSY, 0, y - boundarySize, outputRasterList, functionBandArgument, functionVariable)
+								if progressMessage != "No":
+									cfg.uiUtls.updateBar(progressStart, " (" + str(totBlocks - remainingBlocks) + "/" + str(totBlocks) + ") " + progressMessage)
+									remainingBlocks = (remainingBlocks - 1)
+								if o == "No":
+									return "No"	
+					else:
+						return "No"
+			for x in lX:
+				if x != 0 and (x - boundarySize) <= rX:
+					if cfg.actionCheck == "Yes":
+						# set initial value for progress bar
+						progressStart = progressStart + progresStep
+						bSX = boundarySize * 2 
+						bSY = rY 
+						array = cfg.np.zeros((bSX, bSY, len(gdalBandList)), dtype=cfg.np.float32)
+						for b in range(0, len(gdalBandList)):
+							ndv = cfg.NoDataVal
+							a = self.readArrayBlock(gdalBandList[b], x - boundarySize, 0, bSX, bSY)
+							try:
+								b0 = gdalBandList[b].GetRasterBand(1)
+								ndv2 = b0.GetNoDataValue()
+							except:
+								try:
+									ndv2 = gdalBandList[b].GetNoDataValue()
+								except:
+									ndv2 = None				
+							if a is not None:
+								array[::, ::, b] = a.reshape(bSX, bSY)
+							else:
+								# logger
+								cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "error reading array")
+								cfg.mx.msgErr46()
+								return "No"
+							a = None
+							array[::, ::, b][array[::, ::, b] == ndv] = cfg.np.nan
+							if ndv2 is not None:
+								array[::, ::, b][array[::, ::, b] == ndv2] = cfg.np.nan
+						c = array.reshape(bSY, bSX, len(gdalBandList))
+						array = None
+						if functionRaster is not None:
+							if functionBand == "No":
+								cfg.QtWidgetsSCP.qApp.processEvents()
+								o = functionRaster(gdalBandList, c, bSX, bSY, x - boundarySize, 0, outputRasterList, functionBandArgument, functionVariable)
+								if progressMessage != "No":
+									cfg.uiUtls.updateBar(progressStart, " (" + str(totBlocks - remainingBlocks) + "/" + str(totBlocks) + ") " + progressMessage)
+									remainingBlocks = (remainingBlocks - 1)
+								if o == "No":
+									return "No"	
+					else:
+						return "No"
+		# logger
+		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "end processRaster boundaries")
+		return "Yes"
+		
 	# process a raster with block size
 	def processRasterOld(self, gdalRaster, gdalBandList, signatureList = None, functionBand = None, functionRaster = None, algorithmName = None, outputRasterList = None, outputAlgorithmRaster = None, outputClassificationRaster = None, previewSize = 0, previewPoint = None, nodataValue = None, macroclassCheck = 'No', functionBandArgument = None, functionVariable = None, progressMessage = "", skipReplaceNoData = None):
 		# logger

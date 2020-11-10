@@ -432,7 +432,7 @@ ROIClrVal = ROIClrValDefault
 # registry key for ROI transparency setting
 regROITransp = 'SemiAutomaticClassificationPlugin/ROITransparency4'
 # registry key for download news
-downNewsKey = 'SemiAutomaticClassificationPlugin/downloadNewsStart'
+downNewsKey = 'SemiAutomaticClassificationPlugin/downloadNewsStart7'
 downNewsVal = '2'
 # registry key for download news
 vrtRstProjKey = 'SemiAutomaticClassificationPlugin/loadVirtualRasterStart'

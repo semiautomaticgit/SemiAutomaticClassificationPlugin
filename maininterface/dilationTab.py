@@ -118,7 +118,7 @@ class DilationRaster:
 						oMR = cfg.utls.createRasterFromReference(rD, 1, tempRasterList, cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0,  None, 'No', "DEFLATE21")
 						o = cfg.utls.processRasterOld(input, bL, None, 'No', cfg.utls.rasterDilation, None, oMR, None, None, 0, None, cfg.NoDataVal, 'No', struct, valueList, "dilation ")
 						# boundaries
-						o = cfg.utls.processRasterBoundaries(input, bL, None, 'No', cfg.utls.rasterDilationBoundaries, None, oMR, None, None, 0, None, cfg.NoDataVal, 'No', struct, valueList, "dilation ", 2)
+						o = cfg.utls.processRasterBoundariesOld(input, bL, None, 'No', cfg.utls.rasterDilationBoundaries, None, oMR, None, None, 0, None, cfg.NoDataVal, 'No', struct, valueList, "dilation ", 2)
 						# close GDAL rasters
 						for b in range(0, len(oMR)):
 							oMR[b] = None

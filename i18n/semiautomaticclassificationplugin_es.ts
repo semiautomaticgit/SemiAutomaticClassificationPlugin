@@ -4657,7 +4657,7 @@ ROI</source>
 <context>
     <name>semiautomaticclassificationplugin</name>
     <message>
-        <location filename="../maininterface/classificationTab.py" line="632"/>
+        <location filename="../maininterface/classificationTab.py" line="637"/>
         <source>Select a mask shapefile</source>
         <translation>Selecciona archivo shape de máscara</translation>
     </message>
@@ -4667,7 +4667,7 @@ ROI</source>
         <translation>Guardar los resultados de la clasificación</translation>
     </message>
     <message>
-        <location filename="../maininterface/classificationTab.py" line="679"/>
+        <location filename="../maininterface/classificationTab.py" line="684"/>
         <source>Select a qml style</source>
         <translation>Selecciona un estilo qml</translation>
     </message>
@@ -5379,12 +5379,12 @@ Do you want to add the required fields to this shapefile?</source>
         <translation>Guardar ráster</translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7038"/>
+        <location filename="../core/utils.py" line="7152"/>
         <source>Build overviews</source>
         <translation>Construir vistas generales</translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7038"/>
+        <location filename="../core/utils.py" line="7152"/>
         <source>Do you want to build the external overviews of bands?</source>
         <translation>¿Quieres construir vistas generales externas?</translation>
     </message>
@@ -5999,7 +5999,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished">Sentinel-3</translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="9059"/>
+        <location filename="../core/utils.py" line="9173"/>
         <source>SCP: completed process</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6374,7 +6374,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/classificationTab.py" line="220"/>
+        <location filename="../maininterface/classificationTab.py" line="222"/>
         <source>Conversion to vector. Please wait ...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6414,27 +6414,27 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="6018"/>
+        <location filename="../core/utils.py" line="6132"/>
         <source>Calculating signature</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7281"/>
+        <location filename="../core/utils.py" line="7395"/>
         <source>Writing file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="5189"/>
+        <location filename="../core/utils.py" line="5190"/>
         <source>Conversion to vector</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="6999"/>
+        <location filename="../core/utils.py" line="7113"/>
         <source>Sieve</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7117"/>
+        <location filename="../core/utils.py" line="7231"/>
         <source>Building overviews</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6479,12 +6479,12 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="8514"/>
+        <location filename="../core/utils.py" line="8628"/>
         <source>Remove rows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="8514"/>
+        <location filename="../core/utils.py" line="8628"/>
         <source>Are you sure you want to remove highlighted rows from the table?</source>
         <translation type="unfinished"></translation>
     </message>
