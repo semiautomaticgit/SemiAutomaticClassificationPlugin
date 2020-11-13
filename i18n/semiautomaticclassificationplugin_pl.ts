@@ -4832,7 +4832,7 @@ ROI</source>
         <translation>SCP zapisuje Plik zdarzeń</translation>
     </message>
     <message>
-        <location filename="../maininterface/downloadproducts.py" line="1787"/>
+        <location filename="../maininterface/batchTab.py" line="69"/>
         <source>Error</source>
         <translation>Błąd</translation>
     </message>
@@ -5147,7 +5147,7 @@ ROI</source>
         <translation>Eksportuj pobrane łącza</translation>
     </message>
     <message>
-        <location filename="../maininterface/downloadproducts.py" line="2700"/>
+        <location filename="../maininterface/downloadproducts.py" line="2687"/>
         <source>Searching ...</source>
         <translation>Wyszukiwanie...</translation>
     </message>
@@ -6314,7 +6314,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/randomForestTab.py" line="234"/>
+        <location filename="../maininterface/randomForestTab.py" line="238"/>
         <source>Save classification</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6444,7 +6444,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/randomForestTab.py" line="409"/>
+        <location filename="../maininterface/randomForestTab.py" line="412"/>
         <source>Random forest classification</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6474,7 +6474,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/downloadproducts.py" line="2750"/>
+        <location filename="../maininterface/downloadproducts.py" line="2737"/>
         <source>Downloading</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6489,7 +6489,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/downloadproducts.py" line="2795"/>
+        <location filename="../maininterface/downloadproducts.py" line="2782"/>
         <source>Processing</source>
         <translation type="unfinished">Obróbka obrazu</translation>
     </message>

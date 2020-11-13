@@ -5029,7 +5029,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation>Define un área de búsqueda</translation>
     </message>
     <message>
-        <location filename="../maininterface/downloadproducts.py" line="1787"/>
+        <location filename="../maininterface/batchTab.py" line="69"/>
         <source>Error</source>
         <translation>Error</translation>
     </message>
@@ -5429,7 +5429,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation>Guardar salida</translation>
     </message>
     <message>
-        <location filename="../maininterface/downloadproducts.py" line="2700"/>
+        <location filename="../maininterface/downloadproducts.py" line="2687"/>
         <source>Searching ...</source>
         <translation>Buscando ...</translation>
     </message>
@@ -6314,7 +6314,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/randomForestTab.py" line="234"/>
+        <location filename="../maininterface/randomForestTab.py" line="238"/>
         <source>Save classification</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6444,7 +6444,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/randomForestTab.py" line="409"/>
+        <location filename="../maininterface/randomForestTab.py" line="412"/>
         <source>Random forest classification</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6474,7 +6474,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/downloadproducts.py" line="2750"/>
+        <location filename="../maininterface/downloadproducts.py" line="2737"/>
         <source>Downloading</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6489,7 +6489,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/downloadproducts.py" line="2795"/>
+        <location filename="../maininterface/downloadproducts.py" line="2782"/>
         <source>Processing</source>
         <translation type="unfinished">Procesado</translation>
     </message>

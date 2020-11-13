@@ -61,17 +61,21 @@ class ClassRandomForestTab:
 			cfg.ui.class_checkBox_rf.blockSignals(True)
 			cfg.ui.class_checkBox_rf.setCheckState(0)
 			cfg.ui.class_checkBox_rf.blockSignals(False)
+			cfg.macroclassCheckRF = 'Yes'
 		else:
 			cfg.ui.class_checkBox_rf.blockSignals(True)
 			cfg.ui.class_checkBox_rf.setCheckState(2)
 			cfg.ui.class_checkBox_rf.blockSignals(False)
+			cfg.macroclassCheckRF = 'No'
 							
 	# set variable for class classification
 	def classCheckbox(self):
 		if cfg.ui.class_checkBox_rf.isChecked() is True:
 			cfg.ui.macroclass_checkBox_rf.setCheckState(0)
+			cfg.macroclassCheckRF = 'No'
 		else:
 			cfg.ui.macroclass_checkBox_rf.setCheckState(2)
+			cfg.macroclassCheckRF = 'Yes'
 			
 	# create XML graph
 	def createXMLRandomForest(self, vectorList):
@@ -82,7 +86,7 @@ class ClassRandomForestTab:
 			<sources/>
 			<parameters class="com.bc.ceres.binding.dom.XppDomElement">
 			  <file>$input</file>
-			  <formatName>GeoTIFF-BigTIFF</formatName>
+			  <formatName>GeoTIFF</formatName>
 			</parameters>
 		</node>
 		'''
@@ -199,7 +203,7 @@ class ClassRandomForestTab:
 				if path is not None:
 					shpName = cfg.utls.fileNameNoExt(path)
 					outList.append(path)
-					reclassList.append([b, int(mc[0])])
+					reclassList.append([b, int(val.text(1))])
 					nameSeq = nameSeq + shpName + ','
 					b = b + 1
 		return [outList, nameSeq.rstrip(','), reclassList]
@@ -375,7 +379,6 @@ class ClassRandomForestTab:
 				return 'No'
 		d = cfg.SNAPGPT + ' -q ' + str(cfg.threads) + ' -c ' + str(cfg.RAMValue) + 'M ' + ' -Dsnap.userdir="' + cfg.tmpDir + '" "' + xmlFile + '" -Pinput="' + inputRaster + '" -PtreeCount=' + str(treeCount) + ' -PnumTrainSamples=' + str(numTrainSamples) + ' -PclassifierName=' + str(classifierName) + ' -PloadClassifier=' + str(loadClassifier) + ' -PtrainingVectors=' + str(trainingVectors) + ' -PfeatureBands=' + str(featureBands) + ' -PevaluateClassifier=' + str(evaluateClassifier) + ' -PevaluateFeaturePowerSet=' + str(evaluateFeaturePowerSet) + ' -PminPowerSetSize=' + str(minPowerSetSize) + ' -PmaxPowerSetSize=' + str(maxPowerSetSize) + ' -Poutput="' + outputRaster + '"'
 		outTxt = cfg.tmpDir + '/auxdata/classifiers/RandomForest/' + classifierName + '.txt'
-	
 		if cfg.sysSCPNm != 'Windows':
 			d = cfg.shlexSCP.split(d)
 		tPMD = cfg.utls.createTempRasterPath('txt')

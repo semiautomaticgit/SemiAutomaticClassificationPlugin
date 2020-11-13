@@ -1304,28 +1304,35 @@ class BandsetTab:
 				cfg.cnvs.setRenderFlag(True)
 			
 	# perform band set tools
-	def bandSetTools(self, outputDirectory):
+	def bandSetTools(self, outputDirectory, batch = 'Yes'):
+		if batch == 'No':
+			cfg.uiUtls.addProgressBar()
 		if cfg.actionCheck == 'Yes':
 			if cfg.ui.band_calc_checkBox.isChecked() is True:
 				cfg.bCalc.rasterBandName()
-				cfg.bCalc.calculate(outputDirectory + "/" + cfg.calcRasterNm + ".tif")
+				cfg.bCalc.calculate(outputDirectory + '/' + cfg.calcRasterNm + '.tif', batch = 'Yes')
 		if cfg.actionCheck == 'Yes':
 			if cfg.ui.virtual_raster_bandset_checkBox.isChecked() is True:
 				try:
-					cfg.bst.virtualRasterBandSet(outputDirectory + "/" + cfg.utls.fileNameNoExt(cfg.bndSetLst[0])[:-1] + cfg.virtualRasterNm + ".vrt")
+					cfg.bst.virtualRasterBandSet(outputDirectory + '/' + cfg.utls.fileNameNoExt(cfg.bndSetLst[0])[:-1] + cfg.virtualRasterNm + '.vrt')
 				except Exception as err:
 					# logger
-					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 		if cfg.actionCheck == 'Yes':
 			if cfg.ui.stack_raster_bandset_checkBox.isChecked() is True:
 				try:
-					cfg.bst.stackBandSet(outputDirectory + "/" + cfg.utls.fileNameNoExt(cfg.bndSetLst[0])[:-1] + cfg.stackRasterNm + ".tif")
+					cfg.bst.stackBandSet(outputDirectory + '/' + cfg.utls.fileNameNoExt(cfg.bndSetLst[0])[:-1] + cfg.stackRasterNm + '.tif')
 				except Exception as err:
 					# logger
-					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 		if cfg.actionCheck == 'Yes':
 			if cfg.ui.overview_raster_bandset_checkBox.isChecked() is True:
-				cfg.utls.buildOverviewsBandSet()
+				cfg.utls.buildOverviewsBandSet(quiet = 'Yes')
+		if batch == 'No':
+			cfg.utls.finishSound()
+			cfg.utls.sendSMTPMessage(None, str(__name__))
+			cfg.cnvs.setRenderFlag(True)
+			cfg.uiUtls.removeProgressBar()
 							
 	# perform bands filter
 	def filterTable(self):

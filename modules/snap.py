@@ -62,6 +62,8 @@ class snap:
 	def findSNAPGPT(self):
 		if cfg.sysSCPNm == "Windows":
 			gpt = "C:/snap/bin/gpt.exe"
+			if not cfg.osSCP.path.isfile(gpt):
+				gpt = "C:/Program Files/snap/bin/gpt.exe"
 		else:
 			gpt = "/usr/local/snap/bin/gpt"
 		if cfg.osSCP.path.isfile(gpt):

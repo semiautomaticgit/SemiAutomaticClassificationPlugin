@@ -1771,31 +1771,18 @@ class DownloadProducts:
 		if UL1 != False and LR1 != False:
 			cfg.utls.getGDALForMac()
 			# georeference thumbnail
-			a = cfg.gdalPath + "gdal_translate -of VRT -a_ullr " + str(UL1.x()) + " " + str(UL1.y()) + " " + str(LR1.x()) + " " + str(LR1.y()) + ' -a_srs "+proj=utm +zone=' + str(zone) + ' +datum=WGS84 +units=m +no_defs" ' + inputImage + " " + outputVRT
+			a = cfg.gdalPath + 'gdal_translate -of VRT -a_ullr ' + str(UL1.x()) + ' ' + str(UL1.y()) + ' ' + str(LR1.x()) + ' ' + str(LR1.y()) + ' -a_srs "+proj=utm +zone=' + str(zone) + ' +datum=WGS84 +units=m +no_defs" ' + inputImage + ' ' + outputVRT
 			if cfg.sysSCPNm != 'Windows':
 				a = cfg.shlexSCP.split(a)
 			try:
-				sP = cfg.subprocessSCP.Popen(a, shell=False, stdout=cfg.subprocessSCP.PIPE, stderr=cfg.subprocessSCP.PIPE)
+				sP = cfg.subprocessSCP.Popen(a, shell=True)
 				sP.wait()
-				# get error
-				out, error = sP.communicate()
-				sP.stdout.close()
-				if len(error) > 0:
-					try:
-						cfg.mx.msgBarError(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Error"), error)
-					except:
-						pass
-					st = 'Yes'
-					# logger
-					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " GDAL error:: " + str(error) )
 			# in case of errors
 			except Exception as err:
 				# logger
 				cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
-				sP = cfg.subprocessSCP.Popen(a, shell=True)
-				sP.wait()
 			# logger
-			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " onfly georef" + str(inputImage))
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' onfly georef' + str(inputImage))
 		else:
 			cfg.mx.msgErr41()
 	
