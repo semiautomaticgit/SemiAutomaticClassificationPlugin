@@ -1298,7 +1298,7 @@ class BandsetTab:
 			i = cfg.utls.getExistingDirectory(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Select a directory"))
 			if len(i) > 0:
 				cfg.uiUtls.addProgressBar()
-				cfg.bst.bandSetTools(i)
+				cfg.bst.bandSetTools(i, batch = 'No')
 				cfg.uiUtls.removeProgressBar()
 				cfg.utls.finishSound()
 				cfg.cnvs.setRenderFlag(True)
