@@ -6111,8 +6111,7 @@ class Utils:
 				return pr
 			oList = cfg.utls.rasterToBands(tS, cfg.tmpDir, None, 'No', cfg.bandSetsList[cfg.bndSetNumber][6])
 			bandList = [oList[cfg.scatterBandX - 1], oList[cfg.scatterBandY - 1]]
-			bX = cfg.utls.clipRasterByRaster(oList, tRxs, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Calculating signature'), stats = 'Yes')
-		
+			bX = cfg.utls.clipRasterByRaster(bandList, tRxs, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Calculating signature'), stats = 'Yes')
 		# band X
 		rD = cfg.gdalSCP.Open(bX[0], cfg.gdalSCP.GA_ReadOnly)
 		iRB = rD.GetRasterBand(1)

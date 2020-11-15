@@ -254,7 +254,6 @@ class ClipMultipleRasters:
 					s = tLP
 					vEPSG = cfg.utls.getEPSGVector(s)
 				else:
-					cfg.mx.msgBox("", str(s))
 					vEPSG = cfg.utls.getEPSGVector(s)
 				# in case of reprojection
 				reprjShapefile = cfg.tmpDir + "/" + dT + cfg.utls.fileNameNoExt(s) + ".shp"

@@ -1671,8 +1671,11 @@ class SCPDock:
 						r = []
 						for i in tW.selectedItems():
 							id = i.text(5)
-							cfg.signList['COLOR_' + str(id)] = c
-							cfg.treeDockItm[str(id)].setBackground(4, c)
+							try:
+								cfg.treeDockItm[str(id)].setBackground(4, c)
+								cfg.signList['COLOR_' + str(id)] = c
+							except:
+								pass
 				else:
 					cfg.SCPD.zoomToROI(id)
 				break

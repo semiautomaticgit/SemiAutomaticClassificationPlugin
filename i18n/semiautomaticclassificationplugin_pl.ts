@@ -5102,12 +5102,12 @@ ROI</source>
         <translation>Zapisz raster</translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7152"/>
+        <location filename="../core/utils.py" line="7151"/>
         <source>Build overviews</source>
         <translation>Zbuduj podglądy</translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7152"/>
+        <location filename="../core/utils.py" line="7151"/>
         <source>Do you want to build the external overviews of bands?</source>
         <translation>Czy na pewno zbudować zewnętrzne podglądy na kanały?</translation>
     </message>
@@ -5247,24 +5247,24 @@ ROI</source>
         <translation>Czy na pewno wyczyścić progi?</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="2020"/>
+        <location filename="../dock/scpdock.py" line="2023"/>
         <source>It appears that the shapefile </source>
         <translation>Wygląda na to, że ten shapefile</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="2020"/>
+        <location filename="../dock/scpdock.py" line="2023"/>
         <source> is missing some fields that are required for the signature calculation. 
 Do you want to add the required fields to this shapefile?</source>
         <translation> nie posiada pól, które są potrzebne do wyznaczania sygnatur. 
 Chcesz dodać wymagane pola do tego shapefile?</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="2112"/>
+        <location filename="../dock/scpdock.py" line="2115"/>
         <source>Undo save ROI</source>
         <translation>Cofnij zapisywanie OT</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="2112"/>
+        <location filename="../dock/scpdock.py" line="2115"/>
         <source>Are you sure you want to delete the last saved ROI?</source>
         <translation>Czy na pewno usunąć ostatnio zapisany OT?</translation>
     </message>
@@ -5299,7 +5299,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation>Czy na pewno chcesz usunąć wybrane OT i sygnatury?</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1919"/>
+        <location filename="../dock/scpdock.py" line="1922"/>
         <source>Create SCP training input</source>
         <translation>Stwórz dane treningowe</translation>
     </message>
@@ -5904,7 +5904,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="2020"/>
+        <location filename="../dock/scpdock.py" line="2023"/>
         <source>Add required fields</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5999,7 +5999,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished">Sentinel-3</translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="9173"/>
+        <location filename="../core/utils.py" line="9172"/>
         <source>SCP: completed process</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6379,7 +6379,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1991"/>
+        <location filename="../dock/scpdock.py" line="1994"/>
         <source>Creating ROI</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6419,7 +6419,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7395"/>
+        <location filename="../core/utils.py" line="7394"/>
         <source>Writing file</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6429,12 +6429,12 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7113"/>
+        <location filename="../core/utils.py" line="7112"/>
         <source>Sieve</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7231"/>
+        <location filename="../core/utils.py" line="7230"/>
         <source>Building overviews</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6464,12 +6464,12 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1893"/>
+        <location filename="../dock/scpdock.py" line="1896"/>
         <source>Remove training input</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1893"/>
+        <location filename="../dock/scpdock.py" line="1896"/>
         <source>Are you sure you want to remove training input?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6479,12 +6479,12 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="8628"/>
+        <location filename="../core/utils.py" line="8627"/>
         <source>Remove rows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="8628"/>
+        <location filename="../core/utils.py" line="8627"/>
         <source>Are you sure you want to remove highlighted rows from the table?</source>
         <translation type="unfinished"></translation>
     </message>
