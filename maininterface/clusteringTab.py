@@ -1164,7 +1164,6 @@ class ClusteringTab:
 				elif algorithmName == cfg.algSAM:
 					dist = cfg.utls.spectralAngle(signatures1[i][0], signatures2[i][0])
 				distances.append(dist)
-			cfg.mx.msgBox("", str(outSigDict))
 			# remove temp rasters
 			try:
 				for oT in outputAlgs:

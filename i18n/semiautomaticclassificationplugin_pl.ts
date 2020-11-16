@@ -5117,7 +5117,7 @@ ROI</source>
         <translation>Nieznane</translation>
     </message>
     <message>
-        <location filename="../maininterface/clusteringTab.py" line="1234"/>
+        <location filename="../maininterface/clusteringTab.py" line="1233"/>
         <source>Class</source>
         <translation>Klasyf</translation>
     </message>
@@ -5974,12 +5974,12 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/clusteringTab.py" line="1234"/>
+        <location filename="../maininterface/clusteringTab.py" line="1233"/>
         <source>Signature</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/clusteringTab.py" line="1242"/>
+        <location filename="../maininterface/clusteringTab.py" line="1241"/>
         <source>C_ID_</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5989,7 +5989,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/clusteringTab.py" line="1232"/>
+        <location filename="../maininterface/clusteringTab.py" line="1231"/>
         <source>Clustering</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6114,7 +6114,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/clusteringTab.py" line="1234"/>
+        <location filename="../maininterface/clusteringTab.py" line="1233"/>
         <source>Distance</source>
         <translation type="unfinished"></translation>
     </message>
