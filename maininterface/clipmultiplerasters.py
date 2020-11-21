@@ -102,12 +102,12 @@ class ClipMultipleRasters:
 			if ckB == 'Yes':
 				rT = cfg.bandSetsList[bandSetNumber][3]
 				# logger
-				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " rasters to be clipped" + str(rT))
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' rasters to be clipped' + str(rT))
 				if len(rT) == 0:
 					cfg.mx.msgWar15()
 					return 'No'
 				if batch == 'No':
-					oD = cfg.utls.getExistingDirectory(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Select a directory where to save clipped rasters"))
+					oD = cfg.utls.getExistingDirectory(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Select a directory where to save clipped rasters'))
 				else:
 					oD = outputDirectory
 				if len(oD) == 0:
@@ -156,7 +156,7 @@ class ClipMultipleRasters:
 			if len(outputName) > 0:
 				outputName = str(outputName.encode('ascii','replace'))[2:-1]
 			else:
-				outputName = cfg.clipNm
+				outputName = ''
 			# no shapefile
 			if uS == 0:
 				UX = cfg.ui.UX_lineEdit.text()
@@ -211,12 +211,12 @@ class ClipMultipleRasters:
 			if uS == 0 and len(UX) > 0 and len(UY) > 0 and len(LX) > 0 and len(LY) > 0:
 				for l in rT:
 					lC = cfg.utls.selectLayerbyName(l, 'Yes')
-					if str(l).lower().endswith(".tif"):
+					if str(l).lower().endswith('.tif'):
 						pass
 					else:
-						l = l + ".tif"
+						l = l + '.tif'
 					cL = cfg.utls.layerSource(lC)
-					f = oD + "/" + outputName + "_"  + cfg.utls.fileName(l)
+					f = oD + '/' + outputName + '_'  + cfg.utls.fileName(l)
 					bbList = [cL]
 					bandNumberList = [1]		
 					vrtCheck = cfg.utls.createTempVirtualRaster(bbList, bandNumberList, 'Yes', 'Yes', 0, 'No', 'Yes', [float(UX), float(UY), float(LX), float(LY)])
@@ -237,15 +237,15 @@ class ClipMultipleRasters:
 						s = cfg.utls.saveMemoryLayerToShapefile(s, tSHP)
 					s = cfg.utls.layerSource(s)
 					vEPSG = cfg.utls.getEPSGVector(tSHP)
-				elif "QgsVectorLayer" in str(s):
+				elif 'QgsVectorLayer' in str(s):
 					# temporary layer
-					tLN = cfg.subsTmpROI + dT + ".shp"
-					tLP = cfg.tmpDir + "/" + dT + tLN
+					tLN = cfg.subsTmpROI + dT + '.shp'
+					tLP = cfg.tmpDir + '/' + dT + tLN
 					# get layer crs
 					crs = cfg.utls.getCrs(s)
 					# create a temp shapefile with a field
 					cfg.utls.createEmptyShapefileQGIS(crs, tLP)
-					mL = cfg.utls.addVectorLayer(tLP , tLN, "ogr")
+					mL = cfg.utls.addVectorLayer(tLP , tLN, 'ogr')
 					f = cfg.qgisCoreSCP.QgsFeature()
 					for f in s.getFeatures():
 						ID = f.id()
@@ -256,7 +256,7 @@ class ClipMultipleRasters:
 				else:
 					vEPSG = cfg.utls.getEPSGVector(s)
 				# in case of reprojection
-				reprjShapefile = cfg.tmpDir + "/" + dT + cfg.utls.fileNameNoExt(s) + ".shp"
+				reprjShapefile = cfg.tmpDir + '/' + dT + cfg.utls.fileNameNoExt(s) + '.shp'
 				# band list
 				bbList = []
 				for l in rT:
@@ -290,10 +290,9 @@ class ClipMultipleRasters:
 							cfg.cnvs.setRenderFlag(True)
 							cfg.uiUtls.removeProgressBar()
 					for v in values:
-						check = cfg.utls.vectorToRaster(cfg.emptyFN, vect, cfg.emptyFN, tRxs, cL, None, "GTiff", 1, vectorField + "=" + str(v))
+						check = cfg.utls.vectorToRaster(cfg.emptyFN, vect, cfg.emptyFN, tRxs, cL, None, 'GTiff', 1, vectorField + '=' + str(v))
 						if check != 'No':
-							e = oD + '/' + vectorField + '_' + str(v) + '_'
-							outList = cfg.utls.clipRasterByRaster(bbList, tRxs, e, 'GTiff', noDt)
+							outList = cfg.utls.clipRasterByRaster(bbList, tRxs, oD, 'GTiff', noDt, outputNameRoot = outputName + vectorField + '_' + str(v) + '_')
 							try:
 								cfg.osSCP.remove(tRxs)
 							except:
@@ -316,8 +315,7 @@ class ClipMultipleRasters:
 				else:
 					check = cfg.utls.vectorToRaster(cfg.emptyFN, vect, cfg.emptyFN, tRxs, cL, None, "GTiff", 1)
 					if check != 'No':
-						e = oD + '/' + outputName + '_' 
-						outList = cfg.utls.clipRasterByRaster(bbList, tRxs, e, 'GTiff', noDt)
+						outList = cfg.utls.clipRasterByRaster(bbList, tRxs, oD, 'GTiff', noDt, outputNameRoot = outputName + '_' )
 						try:
 							cfg.osSCP.remove(tRxs)
 						except:

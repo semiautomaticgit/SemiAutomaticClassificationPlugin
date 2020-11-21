@@ -2597,12 +2597,12 @@ p, li { white-space: pre-wrap; }
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>417</width>
-                    <height>165</height>
+                    <width>926</width>
+                    <height>379</height>
                    </rect>
                   </property>
                   <attribute name="label">
-                   <string>Import shapefile</string>
+                   <string>Import vector</string>
                   </attribute>
                   <layout class="QGridLayout" name="gridLayout_181">
                    <item row="0" column="1">
@@ -2639,7 +2639,7 @@ p, li { white-space: pre-wrap; }
                         <enum>QFrame::Sunken</enum>
                        </property>
                        <property name="text">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select a shapefile (*.shp)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select a vector (*.shp;*.gpkg)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                        </property>
                       </widget>
                      </item>
@@ -2654,7 +2654,7 @@ p, li { white-space: pre-wrap; }
                           </sizepolicy>
                          </property>
                          <property name="toolTip">
-                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select a reference shapefile&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;C ID field&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                          </property>
                         </widget>
                        </item>
@@ -2667,7 +2667,7 @@ p, li { white-space: pre-wrap; }
                           </sizepolicy>
                          </property>
                          <property name="toolTip">
-                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select a reference shapefile&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;MC ID field&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                          </property>
                         </widget>
                        </item>
@@ -2680,7 +2680,7 @@ p, li { white-space: pre-wrap; }
                           </sizepolicy>
                          </property>
                          <property name="toolTip">
-                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select a reference shapefile&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;MC Name field&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                          </property>
                         </widget>
                        </item>
@@ -2706,7 +2706,7 @@ p, li { white-space: pre-wrap; }
                           </sizepolicy>
                          </property>
                          <property name="toolTip">
-                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select a reference shapefile&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;C Name field&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                          </property>
                         </widget>
                        </item>
@@ -2722,7 +2722,7 @@ p, li { white-space: pre-wrap; }
                           <enum>QFrame::Sunken</enum>
                          </property>
                          <property name="text">
-                          <string> Shapefile fields</string>
+                          <string> Vector fields</string>
                          </property>
                          <property name="alignment">
                           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -2788,7 +2788,7 @@ p, li { white-space: pre-wrap; }
                        <item row="0" column="2">
                         <widget class="QLabel" name="label_2">
                          <property name="text">
-                          <string>  Import shapefile</string>
+                          <string>  Import vector</string>
                          </property>
                         </widget>
                        </item>
@@ -2821,7 +2821,7 @@ p, li { white-space: pre-wrap; }
                        <item row="0" column="3">
                         <widget class="QToolButton" name="import_shapefile_pushButton">
                          <property name="toolTip">
-                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Import shapefile&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Import vector&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                          </property>
                          <property name="styleSheet">
                           <string notr="true">margin: 0px;padding: 0px;</string>
@@ -5724,9 +5724,6 @@ min-height: 18px;
           <layout class="QGridLayout" name="gridLayout_6">
            <item row="0" column="0">
             <widget class="QTabWidget" name="tabWidget_preprocessing">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
              <property name="styleSheet">
               <string notr="true"/>
              </property>

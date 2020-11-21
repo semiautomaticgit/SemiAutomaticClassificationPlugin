@@ -182,7 +182,7 @@ class Signature_Importer:
 		
 	# open a shapefile
 	def openShapefileI(self):
-		shpFile = cfg.utls.getOpenFileName(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Select a shapefile"), "", "Shapefile (*.shp)")
+		shpFile = cfg.utls.getOpenFileName(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Select a shapefile'), '', 'Shapefile (*.shp);;GeoPackage (*.gpkg)')
 		if len(shpFile) > 0:
 			fields = cfg.utls.fieldsShapefile(shpFile)
 			cfg.ui.MC_ID_combo.clear()

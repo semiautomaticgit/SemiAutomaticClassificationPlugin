@@ -1763,9 +1763,9 @@ class DownloadProducts:
 		LR = cfg.qgisCoreSCP.QgsPointXY(float(max_lon), float(min_lat))
 		# WGS84 EPSG 4326
 		wgsCrs = cfg.qgisCoreSCP.QgsCoordinateReferenceSystem()
-		wgsCrs.createFromProj4("+proj=longlat +datum=WGS84 +no_defs")
+		wgsCrs.createFromProj4('+proj=longlat +datum=WGS84 +no_defs')
 		iCrs = cfg.qgisCoreSCP.QgsCoordinateReferenceSystem()
-		iCrs.createFromProj4("+proj=utm +zone="+ str(zone) + " +datum=WGS84 +units=m +no_defs")
+		iCrs.createFromProj4('+proj=utm +zone=' + str(zone) + ' +datum=WGS84 +units=m +no_defs')
 		UL1 = cfg.utls.projectPointCoordinates(UL, wgsCrs, iCrs)
 		LR1 = cfg.utls.projectPointCoordinates(LR, wgsCrs, iCrs)
 		if UL1 != False and LR1 != False:
@@ -1775,7 +1775,10 @@ class DownloadProducts:
 			if cfg.sysSCPNm != 'Windows':
 				a = cfg.shlexSCP.split(a)
 			try:
-				sP = cfg.subprocessSCP.Popen(a, shell=True)
+				if cfg.sysSCPNm == 'Windows':
+					sP = cfg.subprocessSCP.Popen(a, shell=True)
+				else:
+					sP = cfg.subprocessSCP.Popen(a, shell=False)
 				sP.wait()
 			# in case of errors
 			except Exception as err:

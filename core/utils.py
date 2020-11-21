@@ -1047,9 +1047,7 @@ class Utils:
 						algThrshld = float(tr[n])
 						if algThrshld > 100:
 							algThrshld = 100
-						c = cfg.utls.algorithmMaximumLikelihood(rasterArrayx, s, covMatrList[n], cfg.algBandWeigths, algThrshld)
-						if algThrshld > 0:
-							c = cfg.utls.maximumLikelihoodThreshold(c, nodataValue)
+						c = cfg.utls.algorithmMaximumLikelihood(rasterArrayx, s, covMatrList[n], cfg.algBandWeigths, algThrshld, nodataValue)
 						if type(c) is not int:
 							if maxArray is None:
 								maxArray = c
@@ -1181,9 +1179,7 @@ class Utils:
 				algThrshld = float(tr[n])
 				if algThrshld > 100:
 					algThrshld = 100
-				c = self.algorithmMaximumLikelihood(rasterArrayx, s, covMatrList[n], cfg.algBandWeigths, algThrshld)
-				if algThrshld > 0:
-					c = self.maximumLikelihoodThreshold(c, nodataValue)
+				c = self.algorithmMaximumLikelihood(rasterArrayx, s, covMatrList[n], cfg.algBandWeigths, algThrshld, nodataValue)
 				if type(c) is not int:
 					# open input with GDAL
 					oR = cfg.gdalSCP.Open(outputGdalRasterList[n], cfg.gdalSCP.GA_Update)
@@ -1257,9 +1253,7 @@ class Utils:
 		
 	# find maximum array
 	def findMaximumArray(self, firstArray, secondArray, nodataValue = -999):
-		f = cfg.np.where(firstArray == nodataValue, cfg.maxLikeNoDataVal, firstArray)
-		s = cfg.np.where(secondArray == nodataValue, cfg.maxLikeNoDataVal, secondArray)
-		m = cfg.np.maximum(f, s)
+		m = cfg.np.maximum(firstArray, secondArray)
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode())
 		return m
@@ -1350,15 +1344,14 @@ class Utils:
 		return c
 		
 	# calculate critical chi square and threshold
-	def chisquare(self, algThrshld):
-		p = 1 - (algThrshld / 100)
-		chi = cfg.statdistrSCP.chi2.isf(p, 4)
+	def chisquare(self, algThrshld, bands):
+		p = (algThrshld / 100)
+		chi = cfg.statdistrSCP.chi2.isf(p, bands)
 		return chi
 		
 	# Maximum Likelihood algorithm
-	def algorithmMaximumLikelihoodOld(self, rasterArray, signatureArray, covarianceMatrixZ, weightList = None, algThrshld = 0):
+	def algorithmMaximumLikelihoodOld(self, rasterArray, signatureArray, covarianceMatrix, weightList = None, algThrshld = 0):
 		try:
-			covarianceMatrix = cfg.np.copy(covarianceMatrixZ)
 			if weightList is not None:
 				c = 0
 				for w in weightList:
@@ -1370,7 +1363,7 @@ class Utils:
 			d = rasterArray - signatureArray
 			algArray = - logdet - (cfg.np.dot(d, invC) * d).sum(axis = 2)
 			if algThrshld > 0:
-				chi = self.chisquare(algThrshld)
+				chi = self.chisquare(algThrshld, covarianceMatrix.shape[0])
 				threshold = - chi - logdet
 				algArray = cfg.np.where(algArray < threshold, cfg.maxLikeNoDataVal, algArray)
 			return algArray
@@ -1381,9 +1374,8 @@ class Utils:
 			return 0
 			
 	# Maximum Likelihood algorithm
-	def algorithmMaximumLikelihood(self, rasterArray, signatureArray, covarianceMatrixZ, weightList = None, algThrshld = 0):
+	def algorithmMaximumLikelihood(self, rasterArray, signatureArray, covarianceMatrix, weightList = None, algThrshld = 0, nodataValue = 0):
 		try:
-			covarianceMatrix = cfg.np.copy(covarianceMatrixZ)
 			if weightList is not None:
 				c = 0
 				for w in weightList:
@@ -1394,10 +1386,12 @@ class Utils:
 			invC = cfg.np.linalg.inv(covarianceMatrix)
 			d = rasterArray - signatureArray
 			algArray = - logdet - (cfg.np.dot(d, invC) * d).sum(axis = 2)
+			cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' logdet: ' + str(logdet))
 			if algThrshld > 0:
-				chi = self.chisquare(algThrshld)
-				threshold = - chi - logdet
-				algArray = cfg.np.where(algArray < threshold, cfg.maxLikeNoDataVal, algArray)
+				chi = self.chisquare(algThrshld, covarianceMatrix.shape[0])
+				threshold = - 2 * chi - logdet
+				cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' threshold: ' + str(threshold) + ' algThrshld: ' + str(algThrshld))
+				algArray[algArray < threshold] = nodataValue
 			return algArray
 		except Exception as err:
 			# logger
@@ -3115,7 +3109,7 @@ class Utils:
 			return 'No'
 		
 	# clip raster with another raster
-	def clipRasterByRaster(self, rasterClippedList, rasterClipping, outputRasterDir = None, outFormat = "GTiff", nodataVal = None, progressMessage = 'Clip', stats = None, parallelWritingCheck = None):
+	def clipRasterByRaster(self, rasterClippedList, rasterClipping, outputRasterDir = None, outFormat = 'GTiff', nodataVal = None, progressMessage = 'Clip', stats = None, parallelWritingCheck = None, outputNameRoot = None):
 		tPMD = cfg.utls.createTempRasterPath('vrt')
 		bList = rasterClippedList.copy()
 		bList.append(rasterClipping)
@@ -3173,7 +3167,11 @@ class Utils:
 			outList = []
 			for cc in range(0, len(oM)):
 				d = cfg.utls.fileName(rasterClippedList[cc])
-				e = outputRasterDir.rstrip('/') + '/' +d
+				if outputNameRoot is None:
+					t = ''
+				else:
+					t = outputNameRoot
+				e = outputRasterDir.rstrip('/') + '/' + t + d
 				outList.append(e)
 				if str(e).lower().endswith('.tif'):
 					pass
@@ -5609,7 +5607,7 @@ class Utils:
 			# start and end pixels
 			pixelStartColumn = (int((point.x() - tLX) / pSX))
 			pixelStartRow = -(int((tLY - point.y()) / pSY))
-			bVal = cfg.utls.readArrayBlock(OrB, pixelStartColumn, pixelStartRow, 1, 1)
+			bVal = float(cfg.utls.readArrayBlock(OrB, pixelStartColumn, pixelStartRow, 1, 1))
 			try:
 				if str(bVal).lstrip('[').rstrip(']') == 'nan':
 					pass
@@ -8333,7 +8331,7 @@ class Utils:
 		fN = [lD.GetFieldDefn(i).GetName() for i in range(lD.GetFieldCount())]
 		s = None
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "shapefile field " + str(layerPath))
+		cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'shapefile field ' + str(layerPath))
 		return fN
 				
 	# get field attribute list
