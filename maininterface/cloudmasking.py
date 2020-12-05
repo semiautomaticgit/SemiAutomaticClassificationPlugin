@@ -51,11 +51,11 @@ class CloudMasking:
 		try:
 			# class value list
 			valueList = cfg.utls.textToValueList(cfg.ui.cloud_mask_classes_lineEdit.text())
-			cfg.ui.cloud_mask_classes_lineEdit.setStyleSheet("color : green")
+			cfg.ui.cloud_mask_classes_lineEdit.setStyleSheet('color : green')
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode())
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode())
 		except Exception as err:
-			cfg.ui.cloud_mask_classes_lineEdit.setStyleSheet("color : red")
+			cfg.ui.cloud_mask_classes_lineEdit.setStyleSheet('color : red')
 			valueList = []
 			# logger
 			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
@@ -82,7 +82,7 @@ class CloudMasking:
 				clss = cfg.utls.selectLayerbyName(clssfctnNm, 'Yes')
 				inputClassification = cfg.utls.layerSource(clss)
 			if batch == 'No':
-				o = cfg.utls.getExistingDirectory(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Select a directory"))
+				o = cfg.utls.getExistingDirectory(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Select a directory'))
 			else:
 				o = outputDirectory
 			if len(o) > 0:
@@ -139,7 +139,7 @@ class CloudMasking:
 					if nD is None:
 						nD = cfg.NoDataVal
 					tPMD = cfg.utls.createTempRasterPath('tif')
-					cfg.utls.GDALReprojectRaster(inputClassification, tPMD, "GTiff", None, "EPSG:" + str(rEPSG), "-ot Float32 -dstnodata " + str(nD))
+					cfg.utls.GDALReprojectRaster(inputClassification, tPMD, 'GTiff', None, 'EPSG:' + str(rEPSG), '-ot Float32 -dstnodata ' + str(nD))
 					if cfg.osSCP.path.isfile(tPMD):
 						inputClassification = tPMD
 					else:
@@ -152,37 +152,14 @@ class CloudMasking:
 				if cfg.ui.cloud_buffer_checkBox.isChecked() is True:
 					size =  cfg.ui.cloud_buffer_spinBox.value()
 					struct = cfg.utls.create3x3Window()
-					# open input with GDAL
-					rD = cfg.gdalSCP.Open(inputClassification, cfg.gdalSCP.GA_ReadOnly)
-					# band list
-					bL = cfg.utls.readAllBandsFromRaster(rD)
-					input = rD
+					input = inputClassification
+					ndM = cfg.utls.imageNoDataValue(input)
+					dType = cfg.utls.getRasterDataTypeName(input)
 					for s in range(0, size):
-						tPMD = cfg.utls.createTempRasterPath('tif')
-						tempRasterList = []
-						tempRasterList.append(tPMD) 
-						# create rasters
-						oMR = cfg.utls.createRasterFromReference(rD, 1, tempRasterList, cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0,  None, 'No', "DEFLATE21")
-						cfg.uiUtls.updateBar(21)
-						o = cfg.utls.processRasterOld(input, bL, None, 'No', cfg.utls.rasterDilation, None, oMR, None, None, 0, None, cfg.NoDataVal, 'No', struct, valueList, "buffer ")
-						cfg.uiUtls.updateBar(22)
-						# boundaries
-						o = cfg.utls.processRasterBoundariesOld(input, bL, None, 'No', cfg.utls.rasterDilationBoundaries, None, oMR, None, None, 0, None, cfg.NoDataVal, 'No', struct, valueList, "buffer ", 2)
-						cfg.uiUtls.updateBar(23)
-						# close GDAL rasters
-						for b in range(0, len(oMR)):
-							oMR[b] = None
-						for b in range(0, len(bL)):
-							bL[b] = None
-						rD = None
-						# open input with GDAL
-						rD = cfg.gdalSCP.Open(tPMD, cfg.gdalSCP.GA_ReadOnly)
-						# band list
-						bL = cfg.utls.readAllBandsFromRaster(rD)
-						input = rD
-					for b in range(0, len(bL)):
-						bL[b] = None
-					rD = None
+						tPMD = cfg.utls.createTempRasterPath('vrt')
+						# process calculation
+						oP = cfg.utls.multiProcessRaster(rasterPath = input, functionBand = 'No', functionRaster = cfg.utls.rasterDilation, outputRasterList = [tPMD], functionBandArgument = struct, functionVariable = valueList, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Dilation '), virtualRaster = 'Yes', compress = 'No', outputNoDataValue = ndM, dataType = dType, boundarySize = 3)
+						input = tPMD
 					if cfg.osSCP.path.isfile(tPMD):
 						inputClassification = tPMD
 					else:
@@ -199,59 +176,54 @@ class CloudMasking:
 				if len(outputName) > 0:
 					outputName = str(outputName.encode('ascii','replace'))[2:-1] + "_" 
 				cfg.uiUtls.updateBar(40)
-				# create virtual raster
-				for x in range(0, len(cfg.bndSetLst)):	
-					bList = []
-					bandNumberList = []
-					bList.append(inputClassification)
-					bandNumberList.append(1)			
+				# create functions
+				bList = []
+				bandNumberList = []
+				bList.append(inputClassification)
+				bandNumberList.append(1)	
+				outputList = []
+				argumentList = []
+				variableList = []
+				varList = []
+				varList.append('"im0"')
+				for x in range(1, len(cfg.bndSetLst) + 1):		
+					varList.append('"im' + str(x)+ '"')
+				for x in range(1, len(cfg.bndSetLst) + 1):			
 					if bndSetIf == 'Yes':
-						bList.append(cfg.bndSetLst[x])
+						bList.append(cfg.bndSetLst[x-1])
 						bandNumberList.append(1)
 					else:
 						bList.append(cfg.bndSetLst[x])
-						bandNumberList.append(x + 1)
-					tPMD2 = cfg.utls.createTempRasterPath('tif')
-					# create virtual raster					
-					vrtCheck = cfg.utls.createTempVirtualRaster(bList, bandNumberList, 'Yes', 'Yes', 0, 'No', 'Yes')
-					# open input with GDAL
-					rD = cfg.gdalSCP.Open(vrtCheck, cfg.gdalSCP.GA_ReadOnly)
-					# band list
-					bL = cfg.utls.readAllBandsFromRaster(rD)
-					# output rasters
-					oM = []
-					oM.append(tPMD2)
-					oMR = cfg.utls.createRasterFromReference(rD, 1, oM, nD, "GTiff", cfg.rasterDataType, 0, None, cfg.rasterCompression, "DEFLATE21")
-					# mask
-					check = cfg.utls.processRasterOld(rD, bL, None, 'No', cfg.utls.maskProcess, None, oMR, None, None, 0, None, nD, 'No', NoDataVal, valueList, "Mosaic band " + str(x + 1), 'Yes')
-					# close GDAL rasters
-					for b in range(0, len(oMR)):
-						oMR[b] = None
-					for b in range(0, len(bL)):
-						bL[b] = None
-					rD = None
-					rstrOut = o + "/" + outputName + cfg.utls.fileNameNoExt(cfg.bndSetLst[x]) + ".tif"
-					if cfg.osSCP.path.isfile(tPMD2):
-						cfg.cnvs.setRenderFlag(False)
-						if cfg.rasterCompression != 'No':
-							try:
-								cfg.utls.GDALCopyRaster(tPMD2, rstrOut, 'GTiff', cfg.rasterCompression, 'LZW')
-								cfg.osSCP.remove(tPMD2)
-							except Exception as err:
-								cfg.shutilSCP.copy(tPMD2, rstrOut)
-								cfg.osSCP.remove(tPMD2)
-								# logger
-								if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-						else:
-							cfg.shutilSCP.copy(tPMD2, rstrOut)
-							cfg.osSCP.remove(tPMD2)
+						bandNumberList.append(x)
+					rstrOut = o + '/' + outputName + cfg.utls.fileNameNoExt(cfg.bndSetLst[x-1]) + '.tif'
+					outputList.append(rstrOut)
+					# function
+					e = ''
+					end = ''
+					for c in valueList:
+						e = e + 'cfg.np.where("im0" == ' + str(c) + ', cfg.np.nan, '	
+						end = end + ')'
+					e = e + '"im' + str(x) + '"' + end
+					argumentList.append(e)
+					variableList.append(varList)
+				# create virtual raster					
+				vrtCheck = cfg.utls.createTempVirtualRaster(bList, bandNumberList, 'Yes', 'Yes', 0, 'No', 'Yes')
+				# open input with GDAL
+				rD = cfg.gdalSCP.Open(vrtCheck, cfg.gdalSCP.GA_ReadOnly)
+				# output rasters
+				cfg.utls.createRasterFromReference(rD, 1, outputList, cfg.NoDataVal, 'GTiff', cfg.rasterDataType, 0,  None, compress = 'Yes', compressFormat = 'LZW')
+				rD = None
+				# process
+				o = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.calculateRaster, outputRasterList = outputList, nodataValue = nD, functionBandArgument = argumentList, functionVariable = variableList, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Mask'), outputNoDataValue = nD, compress = cfg.rasterCompression, compressFormat = 'LZW', parallel = cfg.parallelRaster, skipSingleBand = 'Yes')
+				cfg.cnvs.setRenderFlag(False)
+				for rOut in outputList:
+					if cfg.osSCP.path.isfile(rOut):
 						# add raster to layers
-						cfg.utls.addRasterLayer(rstrOut)
+						cfg.utls.addRasterLayer(rOut)
 				cfg.cnvs.setRenderFlag(True)
 				cfg.uiUtls.updateBar(100)
 				if batch == 'No':
 					cfg.utls.finishSound()
 					cfg.utls.sendSMTPMessage(None, str(__name__))
 					cfg.uiUtls.removeProgressBar()
-							
 				

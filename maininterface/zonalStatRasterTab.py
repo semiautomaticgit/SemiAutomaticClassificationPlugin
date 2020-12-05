@@ -245,7 +245,7 @@ class ZonalStatRasterTab:
 				# create virtual raster
 				vrtCheck = cfg.utls.createTempVirtualRaster(bList, bListNum, 'Yes', 'Yes', 0, 'No', 'Yes')
 				# calculation statistic
-				o = cfg.utls.multiProcessNoBoundaries(rasterPath = vrtCheck, bandNumberList = bandNumberList, functionRaster = cfg.utls.noBoundariesCalculation, nodataValue = nD, functionBandArgument = functionList, functionVariable = variableList, progressMessage = 'raster statistics ')
+				o = cfg.utls.multiProcessNoBlocks(rasterPath = vrtCheck, bandNumberList = bandNumberList, functionRaster = cfg.utls.noBlocksCalculation, nodataValue = nD, functionBandArgument = functionList, functionVariable = variableList, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Raster statistics'))
 				cfg.uiUtls.updateBar(60)
 				# get values
 				for c in classes:
@@ -259,7 +259,10 @@ class ZonalStatRasterTab:
 							except:
 								pass
 							try:
-								value = float(o[ee])
+								if o[ee] is None:
+									value = cfg.NoDataVal
+								else:
+									value = float(o[ee])
 							except Exception as err:
 								# logger
 								cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))

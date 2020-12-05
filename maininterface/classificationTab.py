@@ -118,7 +118,8 @@ class ClassificationTab:
 		maskPath = cfg.ui.mask_lineEdit.text()
 		if len(maskPath) == 0:
 			maskC = None
-		self.runClassification(algorithmFilesCheck = algFilesCheck, reportCheck = report, vectorConversion = vector, useMacroclass = macroclass, useLcs = useLcs, useLcsAlgorithm = useLcsAlgorithm, LCSLeaveUnclassified = leaveUnclassified, maskCheckBox = maskC, maskPath = maskPath)
+		bndStN = cfg.algThrshld = cfg.ui.band_set_comb_spinBox_12.value() - 1
+		self.runClassification(bandSetNumber = bndStN, algorithmFilesCheck = algFilesCheck, reportCheck = report, vectorConversion = vector, useMacroclass = macroclass, useLcs = useLcs, useLcsAlgorithm = useLcsAlgorithm, LCSLeaveUnclassified = leaveUnclassified, maskCheckBox = maskC, maskPath = maskPath)
 		
 	# perform classification
 	def runClassification(self, batch = 'No', outputClassification = None, bandSetNumber = None, algorithmFilesCheck = None, reportCheck = None, vectorConversion = None, algorithmName = None, useMacroclass = None, useLcs = None, useLcsAlgorithm = None, LCSLeaveUnclassified = None, maskCheckBox = None, maskPath = None):
@@ -213,7 +214,7 @@ class ClassificationTab:
 						# logger
 						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), '<<< CLASSIFICATION PERFORMED: ' + str(cfg.clssPth))
 				### calculate report
-					if cfg.reportCheck == 'Yes':
+					if reportCheck == 'Yes':
 						reportOut = cfg.osSCP.path.dirname(cfg.clssPth) + '/' + nm + cfg.reportNm
 						cfg.classRep.calculateClassificationReport(cfg.clssPth, 0, 'Yes', reportOut)
 				### convert classification to vector
@@ -285,6 +286,36 @@ class ClassificationTab:
 				# logger
 				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 							
+	# apply symbology to classification vector	
+	def applyClassSymbologyVector(self, classificationVector, macroclassCheck, qmlFile, signatureList = None):
+		# qml symbology
+		if qmlFile == '':
+			if macroclassCheck == 'Yes':
+				signatureList = cfg.SCPD.createMCIDList()
+				if len(signatureList) == 0:
+					cfg.mx.msgWar19()
+			cfg.utls.vectorSymbol(classificationVector, signatureList, macroclassCheck)
+		else:
+			try:
+				self.applyQmlStyle(classificationRaster, qmlFile)
+			except Exception as err:
+				# logger
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+				
+	# Apply qml style to classifications and previews
+	def applyQmlStyle(self, classLayer, stylePath):
+		# read path from project istance
+		p = cfg.qgisCoreSCP.QgsProject.instance()
+		cfg.qmlFl = p.readEntry('SemiAutomaticClassificationPlugin', 'qmlfile', '')[0]
+		classLayer.loadNamedStyle(cfg.qmlFl) 
+		# refresh legend
+		if hasattr(classLayer, 'setCacheImage'):
+			classLayer.setCacheImage(None)
+		classLayer.triggerRepaint()
+		cfg.utls.refreshLayerSymbology(classLayer)
+		# logger
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'classification symbology applied with qml: ' + str(stylePath))
+			
 	# calculate signatures for checked ROIs
 	def getSignatureList(self, bandSetNumber = None, algorithmName = None):
 		if bandSetNumber is None:
@@ -648,14 +679,6 @@ class ClassificationTab:
 		cfg.utls.writeProjectVariable('maskFilePath', str(cfg.mskFlPath))	
 		cfg.utls.writeProjectVariable('maskFileState', str(cfg.mskFlState))	
 		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' checkbox set: ' + str(cfg.mskFlState))
-		
-	# set variable for report
-	def reportCheckbox(self):
-		if cfg.ui.report_checkBox.isChecked() is True:
-			cfg.reportCheck = 'Yes'
-		else:
-			cfg.reportCheck = 'No'
-		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' checkbox set: ' + str(cfg.reportCheck))
 		
 	# Reset qml style path
 	def resetQmlStyle(self):

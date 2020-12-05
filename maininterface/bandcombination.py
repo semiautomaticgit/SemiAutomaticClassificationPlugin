@@ -241,7 +241,7 @@ class BandCombination:
 			cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'cross raster output: ' + str(combRstPath))
 			cfg.uiUtls.updateBar(80)
 			# table output
-			tblOut = cfg.osSCP.path.dirname(combRstPath) + "/" + cfg.utls.fileNameNoExt(combRstPath) + ".csv"
+			tblOut = cfg.osSCP.path.dirname(combRstPath) + '/' + cfg.utls.fileNameNoExt(combRstPath) + '.csv'
 			try:
 				l = open(tblOut, 'w')
 			except Exception as err:
@@ -255,7 +255,7 @@ class BandCombination:
 					v = tuple(cmbntns[c])
 					if rasterBandUniqueVal[v][0] > 0:
 						area = str(rasterBandUniqueVal[v][0] * cRPX * cRPY)
-						cList = str(c) + '\t' + ','.join([str(l).rstrip('.0') for l in cmbntns[c]]) + '\t' + str(rasterBandUniqueVal[v][0]) + '\t' + area + str('\n')
+						cList = str(c) + '\t' + ','.join([str(l).replace('.0', '') for l in cmbntns[c]]) + '\t' + str(rasterBandUniqueVal[v][0]) + '\t' + area + str('\n')
 						l.write(cList)
 				except:
 					pass

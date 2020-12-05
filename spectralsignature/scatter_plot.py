@@ -852,9 +852,9 @@ class Scatter_Plot:
 					if tW.item(b, 0).checkState() == 2:
 						i = tW.item(b, 6).text()
 						if str(i) in list(cfg.ROI_SCP_UID.values()):
-							h = cfg.scatterPlotList["HISTOGRAM_" + str(i) + "_" + str([bX, bY])]
+							h = cfg.scatterPlotList['HISTOGRAM_' + str(i) + '_' + str([bX, bY])]
 						elif str(i) == cfg.sctrROIID:
-							h = cfg.sctrROIID_h["HISTOGRAM_" + str(i) + "_" + str([bX, bY])]
+							h = cfg.sctrROIID_h['HISTOGRAM_' + str(i) + '_' + str([bX, bY])]
 						else:
 							h = None
 						if h is not None:
@@ -866,12 +866,12 @@ class Scatter_Plot:
 			aX = cfg.scatterBandX - 1
 			aY = cfg.scatterBandY - 1
 			# virtual raster
-			tPMN = cfg.tmpVrtNm + ".vrt"
+			tPMN = cfg.tmpVrtNm + '.vrt'
 			# date time for temp name
 			dT = cfg.utls.getTime()
-			tPMD = cfg.tmpDir + "/" + dT + tPMN
+			tPMD = cfg.tmpDir + '/' + dT + tPMN
 			# calculation extent
-			if cfg.uiscp.extent_comboBox.currentText() == "same as display":
+			if cfg.uiscp.extent_comboBox.currentText() == 'same as display':
 				rectangle = cfg.cnvs.extent()
 			else:
 				imageName = cfg.bandSetsList[cfg.bndSetNumber][8]
@@ -882,31 +882,16 @@ class Scatter_Plot:
 				rectangle = i.extent()
 			# output raster
 			tPMD2 = cfg.utls.createTempRasterPath('tif')
-			oM = []
-			oM.append(tPMD2)
 			# clip by ROI
 			bList = cfg.utls.subsetImageByRectangle([rectangle.xMinimum(), rectangle.xMaximum(), rectangle.yMinimum(), rectangle.yMaximum()], cfg.bandSetsList[cfg.bndSetNumber][8], [aX, aY], cfg.bndSetNumber)
-
 			bandNumberList = [1, 1]
 			vrtCheck = cfg.utls.createTempVirtualRaster(bList, bandNumberList, 'Yes', 'Yes', 0, 'No', 'No')
-			# open input with GDAL
-			rD = cfg.gdalSCP.Open(vrtCheck, cfg.gdalSCP.GA_ReadOnly)
-			oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0, None, cfg.rasterCompression)
-			# band list
-			bL = cfg.utls.readAllBandsFromRaster(rD)
-			variableList = [["bandX", "a"], ["bandY", "b"]]
+			variableList = [['bandX', 'a'], ['bandY', 'b']]
 			if condition == 0:
 				conditions = cfg.utls.singleScatterPlotRasterCondition(rangeList)
-				o = cfg.utls.processRasterOld(rD, bL, None, 'No', cfg.utls.scatterRasterMultipleWhere, None, oMR, None, None, 0, None, cfg.NoDataVal, 'No', conditions, variableList, 'No')	
+				o = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.scatterRasterMultipleWhere, outputRasterList = [tPMD2], functionBandArgument = conditions, functionVariable = variableList, progressMessage = 'Threshold ', compress = cfg.rasterCompression, compressFormat = 'LZW')
 			else:
-				# calculation
-				o = cfg.utls.processRasterOld(rD, bL, None, 'No', cfg.utls.scatterRasterBandCalculation, None, oMR, None, None, 0, None, cfg.NoDataVal, 'No', condition, variableList, 'No')
-			# close GDAL rasters
-			for b in range(0, len(oMR)):
-				oMR[b] = None
-			for b in range(0, len(bL)):
-				bL[b] = None
-			rD = None
+				o = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.scatterRasterBandCalculation, outputRasterList = [tPMD2], functionBandArgument = condition, functionVariable = variableList, progressMessage = 'Threshold ', compress = cfg.rasterCompression, compressFormat = 'LZW')
 			if saveSignature is None:
 				# move previous preview to group
 				g = cfg.utls.groupIndex(cfg.grpNm)
@@ -916,26 +901,35 @@ class Scatter_Plot:
 				if preP is not None:
 					cfg.utls.moveLayer(preP, cfg.grpNm)
 				cfg.lastScattRaster = cfg.osSCP.path.basename(tPMD2)
-				r = cfg.utls.addRasterLayer(tPMD2)
-				cfg.utls.setRasterScatterSymbol(r, rasterSymbol)
-				cfg.utls.moveLayerTop(r)
-				cfg.utls.setGroupVisible(g, False)
-				cfg.utls.setGroupExpanded(g, False)
+				try:
+					r = cfg.utls.addRasterLayer(tPMD2)
+					cfg.utls.setRasterScatterSymbol(r, rasterSymbol)
+					cfg.utls.moveLayerTop(r)
+					cfg.utls.setGroupVisible(g, False)
+					cfg.utls.setGroupExpanded(g, False)
+				except Exception as err:
+					# logger
+					cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 			# logger
-			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "")
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), '')
 			return tPMD2
 		
 	# remove polygons
 	def removePolygons(self):
+		self.patches = []
+		self.polygons = []
 		try:
-			self.patches = []
-			self.polygons = []
 			for i in self.polP:
 				i.remove()
 			self.polP = []
+		except Exception as err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+		try:
 			self.line.remove()
-		except:
-			pass
+		except Exception as err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 		# Draw the plot
 		cfg.uiscp.Scatter_Widget_2.sigCanvas.draw()
 			

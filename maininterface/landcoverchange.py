@@ -316,7 +316,7 @@ class LandCoverChange:
 					cols = sorted(cfg.np.unique(col2).tolist())
 					rows = sorted(cfg.np.unique(row2).tolist())
 					crossClass = cfg.np.zeros((len(rows), len(cols)))
-					cList = 'V_' + cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Classification') + '\t'
+					cList = 'V_' + cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'ReferenceClass') + '\t'
 					try:
 						l = open(tblOut, 'w')
 					except Exception as err:
@@ -330,7 +330,7 @@ class LandCoverChange:
 						# logger
 						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 						return 'No'
-					t = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'CrossClassCode') + '	' + cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'ReferenceClass') + '	' + cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'NewClass') + '	' + cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'PixelSum') + '	' + cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Area [' + un + '^2]') + str('\n')
+					t = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'CrossClassCode') + '	' + cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'NewClass') + '	' + cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'ReferenceClass') + '	' + cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'PixelSum') + '	' + cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Area [' + un + '^2]') + str('\n')
 					l.write(t)
 					for c in cols:
 						cList = cList + str(c) + '\t'
@@ -347,7 +347,7 @@ class LandCoverChange:
 					l.write(str('\n'))
 					tStr = '\t' + '> ' + cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'LAND COVER CHANGE MATRIX [') + str(un) + '^2]' + '\n'
 					l.write(tStr)
-					tStr = '\t' + '> ' + cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Reference') + '\n'
+					tStr = '\t' + '> ' + cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'NewClass') + '\n'
 					l.write(tStr)
 					tStr = cList + cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Total') + '\n'
 					l.write(tStr)		

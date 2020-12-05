@@ -44,20 +44,6 @@ class SCPDock:
 		cfg.mrctrVrtc = []
 		self.clearCanvas()
 		
-	# Apply qml style to classifications and previews
-	def applyQmlStyle(self, classLayer, stylePath):
-		# read path from project istance
-		p = cfg.qgisCoreSCP.QgsProject.instance()
-		cfg.qmlFl = p.readEntry('SemiAutomaticClassificationPlugin', 'qmlfile', '')[0]
-		classLayer.loadNamedStyle(cfg.qmlFl) 
-		# refresh legend
-		if hasattr(classLayer, 'setCacheImage'):
-			classLayer.setCacheImage(None)
-		classLayer.triggerRepaint()
-		cfg.utls.refreshLayerSymbology(classLayer)
-		# logger
-		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'classification symbology applied with qml: ' + str(stylePath))
-			
 	# set preview transparency
 	def changePreviewTransparency(self, value):
 		try:
@@ -178,22 +164,6 @@ class SCPDock:
 			cfg.uiUtls.removeProgressBar()
 		tW.setSortingEnabled(True)
 		tW.blockSignals(False)
-
-	# apply symbology to classification vector	
-	def applyClassSymbologyVector(self, classificationVector, macroclassCheck, qmlFile, signatureList = None):
-		# qml symbology
-		if qmlFile == "":
-			if macroclassCheck == 'Yes':
-				signatureList = cfg.SCPD.createMCIDList()
-				if len(signatureList) == 0:
-					cfg.mx.msgWar19()
-			cfg.utls.vectorSymbol(classificationVector, signatureList, macroclassCheck)
-		else:
-			try:
-				self.applyQmlStyle(classificationRaster, qmlFile)
-			except Exception as err:
-				# logger
-				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
 				
 	# export signature list to file
 	def saveSignatureList(self, signatureFile):
@@ -574,7 +544,7 @@ class SCPDock:
 				cfg.signList['ROI_SIZE_' + str(b)] = str(child.find('ROI_SIZE').text).strip()
 				cfg.signIDs['ID_' + str(b)] = b
 				# get values
-				vls = str(child.find('VALUES').text).strip()
+				vls = str(child.find('VALUES').text).strip().replace('nan', '0')
 				x = eval(vls)
 				cfg.signList['VALUES_' + str(b)] = x	
 				try:
@@ -598,8 +568,8 @@ class SCPDock:
 					cfg.signList['MIN_VALUE_' + str(b)] = x
 					cfg.signList['MAX_VALUE_' + str(b)] = x			
 				cfg.signList['WAVELENGTH_' + str(b)] = eval(str(child.find('WAVELENGTH').text).strip())
-				cfg.signList['SD_' + str(b)] = eval(str(child.find('SD').text).strip())
-				cfg.signList['MEAN_VALUE_' + str(b)] = eval(str(child.find('MEAN_VALUE').text).strip())
+				cfg.signList['SD_' + str(b)] = eval(str(child.find('SD').text).strip().replace('nan', '0'))
+				cfg.signList['MEAN_VALUE_' + str(b)] = eval(str(child.find('MEAN_VALUE').text).strip().replace('nan', '0'))
 				try:
 					cfg.signList['CHECKBOX_' + str(b)] = eval(str(child.find('CHECKBOX').text).strip())
 				except:

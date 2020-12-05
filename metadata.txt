@@ -2,7 +2,7 @@
 name=Semi-Automatic Classification Plugin
 qgisMinimumVersion=3.00
 description=The Semi-Automatic Classification Plugin (SCP) allows for the supervised classification of remote sensing images, providing tools for the download, the preprocessing and postprocessing of images.
-version=7.1.1
+version=7.2.0
 about=Developed by Luca Congedo, the Semi-Automatic Classification Plugin (SCP) allows for the supervised classification of remote sensing images, providing tools for the download, the preprocessing and postprocessing of images. Search and download is available for ASTER, GOES, Landsat, MODIS, Sentinel-1, Sentinel-2, and Sentinel-3 images. Several algorithms are available for the land cover classification. This plugin requires the installation of GDAL, OGR, Numpy, SciPy, and Matplotlib. Some tools require also the installation of SNAP (ESA Sentinel Application Platform). For more information please visit https://fromgistors.blogspot.com .
 
 author=Luca Congedo
@@ -14,6 +14,20 @@ icon=semiautomaticclassificationplugin.png
 ; start of optional metadata
 changelog=
 
+	7.2.0
+	-converted to multiprocess the tool classification dilation
+	-converted to multiprocess the tool classification erosion
+	-converted to multiprocess the tool cloud mask
+	-converted to multiprocess the tool class signature
+	-converted to multiprocess the tool mosaic
+	-converted to multiprocess the tool PCA
+	-converted to multiprocess the tool scatter plot
+	-in Band calc improved the variable bandset{LIST_OF_BANDSETS}bNUMBER_OF_BANDSET e.g. sum(bandset{1,2,3}b1) for the sum of the first bands of the bandsets 1, 2, and 3, or similarly using ranges e.g. sum(bandset{1:3}b1)  or list of ranges e.g. sum(bandset{1:2, 3:4}b1)  
+	-fixed issue of tool zonal stat raster
+	-fixed issue of nan values in spectral plot
+	-fixed issue related to classification to vectory symbology
+	-fixed land cover change and cross classification reports
+	
 	7.1.1
 	-added splitter to several tabs of the main interface and plots
 	

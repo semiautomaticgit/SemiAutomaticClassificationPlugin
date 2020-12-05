@@ -4722,22 +4722,22 @@ ROI</source>
         <translation>Pomoc Online</translation>
     </message>
     <message>
-        <location filename="../maininterface/classificationTab.py" line="637"/>
+        <location filename="../maininterface/classificationTab.py" line="668"/>
         <source>Select a mask shapefile</source>
         <translation>Wybierz shapefile maski</translation>
     </message>
     <message>
-        <location filename="../maininterface/classificationTab.py" line="133"/>
+        <location filename="../maininterface/classificationTab.py" line="134"/>
         <source>Save classification output</source>
         <translation>Zapisz wyjście klasyfikacji</translation>
     </message>
     <message>
-        <location filename="../maininterface/classificationTab.py" line="684"/>
+        <location filename="../maininterface/classificationTab.py" line="707"/>
         <source>Select a qml style</source>
         <translation>Wybierz styl qml</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="260"/>
+        <location filename="../dock/scpdock.py" line="230"/>
         <source>Select a signature list file</source>
         <translation>Wybierz plik z listą sygnatur</translation>
     </message>
@@ -4747,12 +4747,12 @@ ROI</source>
         <translation>Wyczyść listę sygnatur</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="750"/>
+        <location filename="../dock/scpdock.py" line="720"/>
         <source>Select a library file</source>
         <translation>Wybierz bibliotekę pliku</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="783"/>
+        <location filename="../dock/scpdock.py" line="753"/>
         <source>Export the highlighted signatures to CSV library</source>
         <translation>Eksportuj wybrane sygnatury do biblioteki CSV</translation>
     </message>
@@ -4767,12 +4767,12 @@ ROI</source>
         <translation>Czy na pewno chcesz usunąć wybrane sygnatury?</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="882"/>
+        <location filename="../dock/scpdock.py" line="852"/>
         <source>Merge signatures</source>
         <translation>Połącz sygnatury</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="882"/>
+        <location filename="../dock/scpdock.py" line="852"/>
         <source>Merge highlighted signatures?</source>
         <translation>Połączyć wybrane sygnatury?</translation>
     </message>
@@ -5022,7 +5022,7 @@ ROI</source>
         <translation>Zapisz błąd macierzy wyjścia rastra</translation>
     </message>
     <message>
-        <location filename="../maininterface/landcoverchange.py" line="320"/>
+        <location filename="../maininterface/crossclassificationTab.py" line="358"/>
         <source>Classification</source>
         <translation>Klasyfikacja</translation>
     </message>
@@ -5032,7 +5032,7 @@ ROI</source>
         <translation>BłądKoduMacierzy</translation>
     </message>
     <message>
-        <location filename="../maininterface/landcoverchange.py" line="351"/>
+        <location filename="../maininterface/crossclassificationTab.py" line="341"/>
         <source>Reference</source>
         <translation>Odniesienie</translation>
     </message>
@@ -5112,12 +5112,12 @@ ROI</source>
         <translation>Zapisz raster</translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7150"/>
+        <location filename="../core/utils.py" line="6703"/>
         <source>Build overviews</source>
         <translation>Zbuduj podglądy</translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7150"/>
+        <location filename="../core/utils.py" line="6703"/>
         <source>Do you want to build the external overviews of bands?</source>
         <translation>Czy na pewno zbudować zewnętrzne podglądy na kanały?</translation>
     </message>
@@ -5177,7 +5177,7 @@ ROI</source>
         <translation>OdniesienieKlasyf</translation>
     </message>
     <message>
-        <location filename="../maininterface/landcoverchange.py" line="334"/>
+        <location filename="../maininterface/landcoverchange.py" line="351"/>
         <source>NewClass</source>
         <translation>NowaKlasyf</translation>
     </message>
@@ -5257,24 +5257,24 @@ ROI</source>
         <translation>Czy na pewno wyczyścić progi?</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="2023"/>
+        <location filename="../dock/scpdock.py" line="1993"/>
         <source>It appears that the shapefile </source>
         <translation>Wygląda na to, że ten shapefile</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="2023"/>
+        <location filename="../dock/scpdock.py" line="1993"/>
         <source> is missing some fields that are required for the signature calculation. 
 Do you want to add the required fields to this shapefile?</source>
         <translation> nie posiada pól, które są potrzebne do wyznaczania sygnatur. 
 Chcesz dodać wymagane pola do tego shapefile?</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="2115"/>
+        <location filename="../dock/scpdock.py" line="2085"/>
         <source>Undo save ROI</source>
         <translation>Cofnij zapisywanie OT</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="2115"/>
+        <location filename="../dock/scpdock.py" line="2085"/>
         <source>Are you sure you want to delete the last saved ROI?</source>
         <translation>Czy na pewno usunąć ostatnio zapisany OT?</translation>
     </message>
@@ -5284,32 +5284,32 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation>Wartości</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="274"/>
+        <location filename="../dock/scpdock.py" line="244"/>
         <source>Select a SCP training input</source>
         <translation>Wybierz dane treningowe</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="694"/>
+        <location filename="../dock/scpdock.py" line="664"/>
         <source>Export SCP training input</source>
         <translation>Eksportuj dane treningowe</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="850"/>
+        <location filename="../dock/scpdock.py" line="820"/>
         <source>Calculate signatures</source>
         <translation>Oblicz sygnatury</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="850"/>
+        <location filename="../dock/scpdock.py" line="820"/>
         <source>Calculate signatures for highlighted items?</source>
         <translation>Obliczyć sygnatury wybranych obiektów?</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1002"/>
+        <location filename="../dock/scpdock.py" line="972"/>
         <source>Are you sure you want to delete highlighted ROIs and signatures?</source>
         <translation>Czy na pewno chcesz usunąć wybrane OT i sygnatury?</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1922"/>
+        <location filename="../dock/scpdock.py" line="1892"/>
         <source>Create SCP training input</source>
         <translation>Stwórz dane treningowe</translation>
     </message>
@@ -5564,47 +5564,47 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation>Zapisz wynik</translation>
     </message>
     <message>
-        <location filename="../maininterface/pcaTab.py" line="189"/>
+        <location filename="../maininterface/pcaTab.py" line="252"/>
         <source>Principal Components Analysis</source>
         <translation>Analiza głównych składowych</translation>
     </message>
     <message>
-        <location filename="../maininterface/pcaTab.py" line="191"/>
+        <location filename="../maininterface/pcaTab.py" line="254"/>
         <source>Covariance matrix</source>
         <translation>Macierz kowariancji</translation>
     </message>
     <message>
-        <location filename="../maininterface/pcaTab.py" line="214"/>
+        <location filename="../maininterface/pcaTab.py" line="277"/>
         <source>Bands</source>
         <translation>Kanały</translation>
     </message>
     <message>
-        <location filename="../maininterface/pcaTab.py" line="203"/>
+        <location filename="../maininterface/pcaTab.py" line="266"/>
         <source>Correlation matrix</source>
         <translation>Macierz korelacji</translation>
     </message>
     <message>
-        <location filename="../maininterface/pcaTab.py" line="212"/>
+        <location filename="../maininterface/pcaTab.py" line="275"/>
         <source>Eigen vectors</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/pcaTab.py" line="216"/>
+        <location filename="../maininterface/pcaTab.py" line="279"/>
         <source>Vector_</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/pcaTab.py" line="224"/>
+        <location filename="../maininterface/pcaTab.py" line="287"/>
         <source>Eigen values</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/pcaTab.py" line="224"/>
+        <location filename="../maininterface/pcaTab.py" line="287"/>
         <source>Accounted variance</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/pcaTab.py" line="224"/>
+        <location filename="../maininterface/pcaTab.py" line="287"/>
         <source>Cumulative variance</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5744,7 +5744,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation>Rozdziel kanały rastra</translation>
     </message>
     <message>
-        <location filename="../core/input.py" line="505"/>
+        <location filename="../maininterface/pcaTab.py" line="219"/>
         <source>PCA</source>
         <translation>PCA</translation>
     </message>
@@ -5914,7 +5914,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="2023"/>
+        <location filename="../dock/scpdock.py" line="1993"/>
         <source>Add required fields</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6009,7 +6009,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished">Sentinel-3</translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="9171"/>
+        <location filename="../core/utils.py" line="8701"/>
         <source>SCP: completed process</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6384,12 +6384,12 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/classificationTab.py" line="222"/>
+        <location filename="../maininterface/classificationTab.py" line="223"/>
         <source>Conversion to vector. Please wait ...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1994"/>
+        <location filename="../dock/scpdock.py" line="1964"/>
         <source>Creating ROI</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6424,27 +6424,27 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="6131"/>
+        <location filename="../core/utils.py" line="5695"/>
         <source>Calculating signature</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7393"/>
+        <location filename="../core/utils.py" line="6946"/>
         <source>Writing file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="5189"/>
+        <location filename="../core/utils.py" line="5045"/>
         <source>Conversion to vector</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7111"/>
+        <location filename="../core/utils.py" line="6664"/>
         <source>Sieve</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7229"/>
+        <location filename="../core/utils.py" line="6782"/>
         <source>Building overviews</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6474,12 +6474,12 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1896"/>
+        <location filename="../dock/scpdock.py" line="1866"/>
         <source>Remove training input</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1896"/>
+        <location filename="../dock/scpdock.py" line="1866"/>
         <source>Are you sure you want to remove training input?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6489,12 +6489,12 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="8626"/>
+        <location filename="../core/utils.py" line="8156"/>
         <source>Remove rows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="8626"/>
+        <location filename="../core/utils.py" line="8156"/>
         <source>Are you sure you want to remove highlighted rows from the table?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6519,7 +6519,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="2050"/>
+        <location filename="../core/utils.py" line="2009"/>
         <source>DOS1 calculation</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6591,6 +6591,36 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
     <message>
         <location filename="../maininterface/clusteringTab.py" line="1049"/>
         <source>Classification iteration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../maininterface/dilationTab.py" line="116"/>
+        <source>Dilation </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../maininterface/erosionTab.py" line="116"/>
+        <source>Erosion </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../maininterface/cloudmasking.py" line="219"/>
+        <source>Mask</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../maininterface/mosaicbandsets.py" line="207"/>
+        <source>Mosaic </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../maininterface/pcaTab.py" line="160"/>
+        <source>Statistics</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../maininterface/zonalStatRasterTab.py" line="248"/>
+        <source>Raster statistics</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

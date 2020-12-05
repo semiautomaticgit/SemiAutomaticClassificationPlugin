@@ -79,13 +79,13 @@ class MosaicBandSets:
 			for v in bandSetList:
 				bSL.append(v-1)
 			if batch == 'No':
-				o = cfg.utls.getExistingDirectory(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Select a directory"))
+				o = cfg.utls.getExistingDirectory(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Select a directory'))
 			else:
 				o = outputDirectory
 			if len(o) > 0:
 				outputName = cfg.ui.mosaic_output_name_lineEdit.text()
 				if len(outputName) > 0:
-					outputName = str(outputName.encode('ascii','replace'))[2:-1] + "_" 
+					outputName = str(outputName.encode('ascii','replace'))[2:-1] + '_' 
 				bndSetSources = []
 				bndSetIf = []
 				if batch == 'No':
@@ -99,7 +99,7 @@ class MosaicBandSets:
 							cfg.uiUtls.removeProgressBar()
 						cfg.mx.msgWar28()
 						# logger
-						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " Warning")
+						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' Warning')
 						return 'No'
 					if cfg.bandSetsList[bandSetNumber][0] == 'Yes':
 						ckB = cfg.utls.checkBandSet(bandSetNumber)
@@ -114,7 +114,7 @@ class MosaicBandSets:
 							cfg.uiUtls.removeProgressBar()
 						cfg.mx.msgWar28()
 						# logger
-						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " Warning")
+						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' Warning')
 						return 'No'
 				cfg.uiUtls.updateBar(10)
 				rEPSG = cfg.utls.getEPSGRaster(bndSetSources[0][0])				
@@ -123,14 +123,13 @@ class MosaicBandSets:
 						cfg.uiUtls.removeProgressBar()
 					cfg.mx.msgWar28()
 					# logger
-					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " Warning")
-					return 'No'	
-				cfg.uiUtls.updateBar(20)
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' Warning')
+					return 'No'
 				# No data value
 				if cfg.ui.nodata_checkBox_9.isChecked() is True:
 					NoDataVal = cfg.ui.nodata_spinBox_10.value()
 				else:
-					NoDataVal = cfg.NoDataVal
+					NoDataVal = None
 				for bst in bndSetSources:
 					if len(bst) != len(bndSetSources[0]):
 						if batch == 'No':
@@ -146,9 +145,9 @@ class MosaicBandSets:
 							if cfg.bandSetsList[bstIndex][0] == 'Yes':
 								nD = cfg.utls.imageNoDataValue(bst[b])
 								if nD is None:
-									nD = NoDataVal
+									nD = cfg.NoDataVal
 								tPMD = cfg.utls.createTempRasterPath('tif')
-								cfg.utls.GDALReprojectRaster(bst[b], tPMD, "GTiff", None, "EPSG:" + str(rEPSG), "-ot Float32 -dstnodata " + str(nD))
+								cfg.utls.GDALReprojectRaster(bst[b], tPMD, 'GTiff', None, 'EPSG:' + str(rEPSG), '-ot Float32 -dstnodata ' + str(nD))
 								if cfg.osSCP.path.isfile(tPMD):
 									bndSetSources[bstIndex][b] = tPMD
 								else:
@@ -156,14 +155,14 @@ class MosaicBandSets:
 										cfg.uiUtls.removeProgressBar()
 									cfg.mx.msgErr60()
 									# logger
-									cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " Warning")
+									cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' Warning')
 									return 'No'
 							else:
 								nD = cfg.utls.imageNoDataValue(bst[b])
 								if nD is None:
-									nD = NoDataVal
+									nD = cfg.NoDataVal
 								tPMD = cfg.utls.createTempRasterPath('tif')
-								cfg.utls.GDALReprojectRaster(bst[b], tPMD, "GTiff", None, "EPSG:" + str(rEPSG), "-ot Float32 -dstnodata " + str(nD))
+								cfg.utls.GDALReprojectRaster(bst[b], tPMD, 'GTiff', None, 'EPSG:' + str(rEPSG), '-ot Float32 -dstnodata ' + str(nD))
 								if cfg.osSCP.path.isfile(tPMD):
 									for bb in range(0, len(bst)):
 										bndSetSources[bstIndex][bb] = tPMD
@@ -173,12 +172,15 @@ class MosaicBandSets:
 										cfg.uiUtls.removeProgressBar()
 									cfg.mx.msgErr60()
 									# logger
-									cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " Warning")
+									cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' Warning')
 									return 'No'
-				cfg.uiUtls.updateBar(40)
+				cfg.uiUtls.updateBar(20)	
 				for y in range(0, len(bndSetSources[0])):
 					bList = []
 					bandNumberList = []
+					variableList = []
+					e = ''
+					end = ''
 					for x in range(0, len(bndSetSources)):
 						bstIndex = bndSetSources.index(bndSetSources[x])
 						if bndSetIf[bstIndex] == 'Yes':
@@ -187,50 +189,25 @@ class MosaicBandSets:
 						else:
 							bList.append(bndSetSources[x][y])
 							bandNumberList.append(y + 1)
+						# function
+						e = e + 'cfg.np.where(~cfg.np.isnan(' + '"im' + str(x) + '"), '	+ '"im' + str(x) + '", '
+						end = end + ')'
+						variableList.append(['"im' + str(x) + '"', '"im' + str(x) + '"'])	
+					e = e +  'cfg.np.nan' + end
+					dType = cfg.utls.getRasterDataTypeName(bndSetSources[0][y])
 					nD = cfg.utls.imageNoDataValue(bndSetSources[0][y])
 					if nD is None:
-						nD = NoDataVal
-					tPMD2 = cfg.utls.createTempRasterPath('tif')
+						nD = cfg.NoDataVal
+					rstrOut = o + '/' + outputName + cfg.utls.fileNameNoExt(bndSetSources[0][y]) + '.tif'
 					# create virtual raster					
-					vrtCheck = cfg.utls.createTempVirtualRaster(bList, bandNumberList, 'Yes', NoDataVal, 0, 'No', 'No')
-					# open input with GDAL
-					rD = cfg.gdalSCP.Open(vrtCheck, cfg.gdalSCP.GA_ReadOnly)
-					# band list
-					bL = cfg.utls.readAllBandsFromRaster(rD)
-					# output rasters
-					oM = []
-					oM.append(tPMD2)
-					oMR = cfg.utls.createRasterFromReference(rD, 1, oM, nD, "GTiff", cfg.rasterDataType, 0, None, cfg.rasterCompression, "DEFLATE21")
-					# mosaic
-					check = cfg.utls.processRasterOld(rD, bL, None, 'No', cfg.utls.mosaicProcess, None, oMR, None, None, 0, None, nD, 'No', NoDataVal, None, "Mosaic band " + str(y + 1), 'Yes')
-					# close GDAL rasters
-					for b in range(0, len(oMR)):
-						oMR[b] = None
-					for b in range(0, len(bL)):
-						bL[b] = None
-					rD = None
-					rstrOut = o + "/" + outputName + cfg.utls.fileNameNoExt(bndSetSources[0][y]) + ".tif"
-					if cfg.osSCP.path.isfile(tPMD2):
-						cfg.cnvs.setRenderFlag(False)
-						if cfg.rasterCompression != 'No':
-							try:
-								cfg.utls.GDALCopyRaster(tPMD2, rstrOut, "GTiff", cfg.rasterCompression, "DEFLATE -co PREDICTOR=2 -co ZLEVEL=1")
-								cfg.osSCP.remove(tPMD2)
-							except Exception as err:
-								cfg.shutilSCP.copy(tPMD2, rstrOut)
-								cfg.osSCP.remove(tPMD2)
-								# logger
-								if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-						else:
-							cfg.shutilSCP.copy(tPMD2, rstrOut)
-							cfg.osSCP.remove(tPMD2)
-						# add raster to layers
+					vrtCheck = cfg.utls.createTempVirtualRaster(bList, bandNumberList, 'Yes', nD, 0, 'No', 'No')
+					# process calculation
+					o = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.bandCalculation, outputRasterList = [rstrOut], nodataValue = NoDataVal,  functionBandArgument = e, functionVariable = variableList, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Mosaic ') + str(y+1), compress = cfg.rasterCompression, compressFormat = 'LZW', outputNoDataValue = nD, dataType = dType)
+					if cfg.osSCP.path.isfile(rstrOut):
 						cfg.utls.addRasterLayer(rstrOut)
-				cfg.cnvs.setRenderFlag(True)
 				cfg.uiUtls.updateBar(100)
 				if batch == 'No':
 					cfg.utls.finishSound()
 					cfg.utls.sendSMTPMessage(None, str(__name__))
 					cfg.uiUtls.removeProgressBar()
-							
 				

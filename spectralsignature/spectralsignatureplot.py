@@ -123,32 +123,32 @@ class SpectralSignaturePlot:
 			wlgPressList = []
 			id = tW.item(row, vx).text()
 			# find wavelength
-			w = cfg.spectrPlotList["WAVELENGTH_" + str(id)]
+			w = cfg.spectrPlotList['WAVELENGTH_' + str(id)]
 			wlg = eval(str(w))
 			wlgA = cfg.np.array(wlg)
 			wlgB = wlgA - float(self.press[0])
 			wlgIndex = cfg.np.argmin(cfg.np.absolute(wlgB))
 			# values
-			v = cfg.spectrPlotList["VALUES_" + str(id)]
-			val = eval(str(v))
+			v = cfg.spectrPlotList['VALUES_' + str(id)]
+			val = eval(str(v).replace('nan', '0'))
 			if float(self.press[1]) >= val[wlgIndex * 2]:
-				max = cfg.spectrPlotList["LCS_MAX_" + str(id)]
+				max = cfg.spectrPlotList['LCS_MAX_' + str(id)]
 				lcs_max = eval(str(max))
 				if float(self.release[1]) < val[wlgIndex * 2]:
 					lcs_max[wlgIndex] = val[wlgIndex * 2]
 				else:
 					lcs_max[wlgIndex] = float(self.release[1])
-				cfg.spectrPlotList["LCS_MAX_" + str(id)] = lcs_max
-				cfg.signList["LCS_MAX_" + str(id)] = lcs_max
+				cfg.spectrPlotList['LCS_MAX_' + str(id)] = lcs_max
+				cfg.signList['LCS_MAX_' + str(id)] = lcs_max
 			else:
-				min = cfg.spectrPlotList["LCS_MIN_" + str(id)]
+				min = cfg.spectrPlotList['LCS_MIN_' + str(id)]
 				lcs_min = eval(str(min))
 				if float(self.release[1]) > val[wlgIndex * 2]:
 					lcs_min[wlgIndex] = val[wlgIndex * 2]
 				else:
 					lcs_min[wlgIndex] = float(self.release[1])
-				cfg.spectrPlotList["LCS_MIN_" + str(id)] = lcs_min
-				cfg.signList["LCS_MIN_" + str(id)] = lcs_min
+				cfg.spectrPlotList['LCS_MIN_' + str(id)] = lcs_min
+				cfg.signList['LCS_MIN_' + str(id)] = lcs_min
 			self.signatureListPlotTable(cfg.uisp.signature_list_plot_tableWidget)
 			cfg.LCSignT.LCSignatureThresholdListTable()
 			cfg.utls.selectRowsInTable(tW, rows)
@@ -646,8 +646,8 @@ class SpectralSignaturePlot:
 		cfg.uisp.Sig_Widget.sigCanvas.ax.grid('on')
 		cfg.uisp.Sig_Widget.sigCanvas.draw()
 		# Set labels
-		cfg.uisp.Sig_Widget.sigCanvas.ax.set_xlabel(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Wavelength [" + str(cfg.ui.unit_combo.currentText()) + "]"))
-		cfg.uisp.Sig_Widget.sigCanvas.ax.set_ylabel(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Values"))
+		cfg.uisp.Sig_Widget.sigCanvas.ax.set_xlabel(cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Wavelength [' + str(cfg.ui.unit_combo.currentText()) + ']'))
+		cfg.uisp.Sig_Widget.sigCanvas.ax.set_ylabel(cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Values'))
 		# Add plots and legend
 		pL = []
 		pLN = []
@@ -656,21 +656,21 @@ class SpectralSignaturePlot:
 		# clear signature values
 		cfg.uisp.value_textBrowser.clear()
 		for b in sorted(cfg.signPlotIDs.values()):
-			if cfg.spectrPlotList["CHECKBOX_" + str(b)] == 2:
+			if cfg.spectrPlotList['CHECKBOX_' + str(b)] == 2:
 				#IDList.append(b)
-				c = cfg.spectrPlotList["COLOR_" + str(b)].toRgb().name()
+				c = cfg.spectrPlotList['COLOR_' + str(b)].toRgb().name()
 				# name
-				nm = str(cfg.spectrPlotList["MACROCLASSID_" + str(b)]) + "#" + str(cfg.spectrPlotList["MACROCLASSINFO_" + str(b)]) + " " + str(cfg.spectrPlotList["CLASSID_" + str(b)]) + "#" + str(cfg.spectrPlotList["CLASSINFO_" + str(b)])
+				nm = str(cfg.spectrPlotList['MACROCLASSID_' + str(b)]) + '#' + str(cfg.spectrPlotList['MACROCLASSINFO_' + str(b)]) + ' ' + str(cfg.spectrPlotList['CLASSID_' + str(b)]) + '#' + str(cfg.spectrPlotList['CLASSINFO_' + str(b)])
 				# wavelength
-				w = cfg.spectrPlotList["WAVELENGTH_" + str(b)]
+				w = cfg.spectrPlotList['WAVELENGTH_' + str(b)]
 				wlg = eval(str(w))
 				# values
-				v = cfg.spectrPlotList["VALUES_" + str(b)]
+				v = cfg.spectrPlotList['VALUES_' + str(b)]
 				try:
-					val = eval(str(v))
+					val = eval(str(v).replace('nan', '0'))
 				except Exception as err:
 					# logger
-					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 					try:
 						self.removeSignatureByID(b)
 						self.signatureListPlotTable(cfg.uisp.signature_list_plot_tableWidget)
@@ -680,10 +680,10 @@ class SpectralSignaturePlot:
 					check = 'No'
 				if check == 'Yes':
 					mVal.extend(val)
-					minA = cfg.spectrPlotList["LCS_MIN_" + str(b)]
-					mMS = eval(str(minA))
-					maxA = cfg.spectrPlotList["LCS_MAX_" + str(b)]
-					mPS = eval(str(maxA))
+					minA = cfg.spectrPlotList['LCS_MIN_' + str(b)]
+					mMS = eval(str(minA).replace('nan', '0'))
+					maxA = cfg.spectrPlotList['LCS_MAX_' + str(b)]
+					mPS = eval(str(maxA).replace('nan', '0'))
 					vMin = min(mMS)
 					vMax = max(mPS)
 					if vMin < self.minVal:
@@ -691,9 +691,9 @@ class SpectralSignaturePlot:
 					if vMax > self.maxVal:
 						self.maxVal = vMax
 					# unit
-					unit = cfg.spectrPlotList["UNIT_" + str(b)]
-					m = cfg.spectrPlotList["MEAN_VALUE_" + str(b)]
-					sdL = cfg.spectrPlotList["SD_" + str(b)]
+					unit = cfg.spectrPlotList['UNIT_' + str(b)]
+					m = cfg.spectrPlotList['MEAN_VALUE_' + str(b)]
+					sdL = cfg.spectrPlotList['SD_' + str(b)]
 					# plot
 					p, = cfg.uisp.Sig_Widget.sigCanvas.ax.plot(wlg , m, c)
 					if cfg.sigmaCheck == 'Yes':
@@ -703,7 +703,7 @@ class SpectralSignaturePlot:
 					pL.append(p)
 					pLN.append(nm[:cfg.sigPLRoundCharList])
 					# signature values
-					self.signatureDetails(str(cfg.spectrPlotList["MACROCLASSID_" + str(b)]), str(cfg.spectrPlotList["MACROCLASSINFO_" + str(b)]), str(cfg.spectrPlotList["CLASSID_" + str(b)]), str(cfg.spectrPlotList["CLASSINFO_" + str(b)]), wlg, unit, m, sdL, c, str(cfg.spectrPlotList["ROI_SIZE_" + str(b)]))
+					self.signatureDetails(str(cfg.spectrPlotList['MACROCLASSID_' + str(b)]), str(cfg.spectrPlotList['MACROCLASSINFO_' + str(b)]), str(cfg.spectrPlotList['CLASSID_' + str(b)]), str(cfg.spectrPlotList['CLASSINFO_' + str(b)]), wlg, unit, m, sdL, c, str(cfg.spectrPlotList['ROI_SIZE_' + str(b)]))
 		if cfg.uisp.band_lines_checkBox.isChecked():
 			for wl in wlg:
 				wlD = cfg.uisp.Sig_Widget.sigCanvas.ax.axvline(wl, color='black', linestyle='dashed')

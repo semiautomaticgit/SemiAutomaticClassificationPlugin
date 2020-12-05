@@ -70,14 +70,14 @@ class ErosionRaster:
 		valueList = self.checkValueList()
 		if len(valueList) > 0:
 			if batch == 'No':
-				outputRaster = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Save output"), "", "*.tif", "tif")
+				outputRaster = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Save output'), '', '*.tif', 'tif')
 			else:
 				outputRaster = rasterOutput
 			if outputRaster is not False:
-				if outputRaster.lower().endswith(".tif"):
+				if outputRaster.lower().endswith('.tif'):
 					pass
 				else:
-					outputRaster = outputRaster + ".tif"
+					outputRaster = outputRaster + '.tif'
 				if batch == 'No':
 					cfg.uiUtls.addProgressBar()
 					cfg.cnvs.setRenderFlag(False)
@@ -93,13 +93,7 @@ class ErosionRaster:
 							rSource = rasterInput
 						else:
 							return 'No'
-					cfg.uiUtls.updateBar(40)
-					# open input with GDAL
-					rD = cfg.gdalSCP.Open(rSource, cfg.gdalSCP.GA_ReadOnly)
-					# band list
-					bL = cfg.utls.readAllBandsFromRaster(rD)
-					input = rD
-					if rD is None:
+					if rSource is None:
 						cfg.mx.msg4()
 						# logger
 						cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " None raster")
@@ -107,40 +101,26 @@ class ErosionRaster:
 							cfg.uiUtls.removeProgressBar()
 							cfg.cnvs.setRenderFlag(True)
 						return 'No'
+					cfg.uiUtls.updateBar(10)
+					input = rSource
+					nd = cfg.utls.imageNoDataValue(input)
+					dType = cfg.utls.getRasterDataTypeName(input)
 					size =  cfg.ui.erosion_threshold_spinBox.value()
 					connect = cfg.ui.erosion_connection_combo.currentText()
 					struct = cfg.utls.create3x3Window(connect)
+					tempRasterList = []
 					for s in range(0, size):
-						tPMD = cfg.utls.createTempRasterPath('tif')
-						# create rasters
-						oMR = cfg.utls.createRasterFromReference(rD, 1, [tPMD], cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0,  None, 'No', "DEFLATE21")
-						o = cfg.utls.processRasterOld(input, bL, None, 'No', cfg.utls.rasterErosion, None, oMR, None, None, 0, None, cfg.NoDataVal, 'No', struct, valueList, "erosion ")
-						# boundaries
-						o = cfg.utls.processRasterBoundariesOld(input, bL, None, 'No', cfg.utls.rasterErosionBoundaries, None, oMR, None, None, 0, None, cfg.NoDataVal, 'No', struct, valueList, "erosion ", 2)
-						# close GDAL rasters
-						for b in range(0, len(oMR)):
-							oMR[b] = None
-						for b in range(0, len(bL)):
-							bL[b] = None
-						rD = None
-						# open input with GDAL
-						rD = cfg.gdalSCP.Open(tPMD, cfg.gdalSCP.GA_ReadOnly)
-						# band list
-						bL = cfg.utls.readAllBandsFromRaster(rD)
-						input = rD
-					for b in range(0, len(bL)):
-						bL[b] = None
-					rD = None
+						tPMD = cfg.utls.createTempRasterPath('vrt')
+						tempRasterList.append(tPMD)
+						# process calculation
+						o = cfg.utls.multiProcessRaster(rasterPath = input, functionBand = 'No', functionRaster = cfg.utls.rasterErosion, outputRasterList = [tPMD], functionBandArgument = struct, functionVariable = valueList, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Erosion '), virtualRaster = 'Yes', compress = 'No', outputNoDataValue = nd, dataType = dType, boundarySize = 3)
+						input = tPMD
 					# copy raster
-					if cfg.rasterCompression != 'No':
-						try:
-							cfg.utls.GDALCopyRaster(tPMD, outputRaster, "GTiff", cfg.rasterCompression, "DEFLATE -co PREDICTOR=2 -co ZLEVEL=1")
-						except Exception as err:
-							cfg.shutilSCP.copy(tPMD, outputRaster)
-							# logger
-							if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-					else:
-						cfg.shutilSCP.copy(tPMD, outputRaster)
+					try:
+						cfg.utls.GDALCopyRaster(tPMD, outputRaster, 'GTiff', cfg.rasterCompression, 'LZW')
+					except Exception as err:
+						# logger
+						if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 					if cfg.osSCP.path.isfile(outputRaster):
 						oR =cfg.utls.addRasterLayer(outputRaster)
 					if r != 'No':
