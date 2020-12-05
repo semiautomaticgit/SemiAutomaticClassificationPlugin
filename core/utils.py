@@ -143,7 +143,7 @@ class Utils:
 		r = cfg.QNetworkRequestSCP(cfg.QtCoreSCP.QUrl(url))
 		r.setRawHeader(hKey, hValue)		
 		qnamI = cfg.qgisCoreSCP.QgsNetworkAccessManager.instance()
-		if redirect is not 'No':
+		if redirect != 'No':
 			cfg.replyR = qnamI.get(r)
 			cfg.replyR.finished.connect(self.replyRedirect)
 			# loop
@@ -4042,7 +4042,7 @@ class Utils:
 			for b in range(1, len(cfg.bandSetsList[bandSetNumber][3])+1):
 				bandList = bandList + '"' + cfg.variableBandsetName + '#b' + str(b) + '", '
 			# if percentile
-			perc = cfg.reSCP.findall('percentile\(#?(.*?)#?\)',expression.replace(' ', ''))
+			perc = cfg.reSCP.findall(r'percentile\(#?(.*?)#?\)',expression.replace(' ', ''))
 			for percX in perc:
 				if '"' + cfg.variableBandsetName + '#b*"' in percX:
 					percXS = percX.split(',')
@@ -4054,7 +4054,7 @@ class Utils:
 			expression = expression.replace('"' + cfg.variableBandsetName + '#b*"', bandList)
 		# variable bandset*b1
 		elif '"' + cfg.variableBandsetName + '*b' in expression:
-			bandNums = cfg.reSCP.findall(cfg.variableBandsetName + '\*b#?(.*?)#?"', expression)
+			bandNums = cfg.reSCP.findall(cfg.variableBandsetName + r'\*b#?(.*?)#?"', expression)
 			for parts in bandNums:
 				try:
 					numB = int(parts)
@@ -4069,7 +4069,7 @@ class Utils:
 					except:
 						pass
 				# if percentile
-				perc = cfg.reSCP.findall('percentile\(#?(.*?)#?\)',expression)
+				perc = cfg.reSCP.findall(r'percentile\(#?(.*?)#?\)',expression)
 				for percX in perc:
 					if '"' + cfg.variableBandsetName + '*b' in percX:
 						percXS = percX.split(',')
@@ -4143,7 +4143,7 @@ class Utils:
 					except:
 						pass
 				# if percentile
-				perc = cfg.reSCP.findall('percentile\((.*?)\)',expression)
+				perc = cfg.reSCP.findall(r'percentile\((.*?)\)',expression)
 				for percX in perc:
 					if '"' + cfg.variableBandsetName + '{' + parts in percX:
 						percXS = percX.split('",')
@@ -4161,7 +4161,7 @@ class Utils:
 					for b in range(1, len(cfg.bandSetsList[c][3])+1):
 						bandList = bandList + '"' + cfg.variableBandsetName + str(c + 1) + 'b' + str(b) + '", '
 					# if percentile
-					perc = cfg.reSCP.findall('percentile\(#?(.*?)#?\)',expression)
+					perc = cfg.reSCP.findall(r'percentile\(#?(.*?)#?\)',expression)
 					for percX in perc:
 						if '"' + cfg.variableBandsetName in percX and 'b*"' in percX:
 							percXS = percX.split(',')
@@ -4173,7 +4173,7 @@ class Utils:
 					expression = expression.replace('"' + cfg.variableBandsetName + str(c + 1) + 'b*"', bandList)
 		if "nodata" in expression:
 			# find all non-greedy expression
-			g = cfg.reSCP.findall('nodata\(\"#?(.*?)#?\"\)',expression)
+			g = cfg.reSCP.findall('nodata\\(\"#?(.*?)#?\"\\)',expression)
 		else:
 			return expression
 		for l in g:

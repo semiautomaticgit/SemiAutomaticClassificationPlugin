@@ -480,7 +480,7 @@ class BandCalcTab:
 		tW = cfg.ui.band_calc_function_tableWidget
 		nm = tW.item(index.row(), 0).text()
 		text = self.replaceFunctionNames(nm)
-		if text is not 'No':
+		if text != 'No':
 			cursor.insertText(' ' + text)
 		
 	# replace function names
@@ -1666,4 +1666,3 @@ class BandCalcTab:
 	def buttonEqual(self):
 		cfg.bCalc.insertButton(' == ')		
 		
-	
