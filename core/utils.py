@@ -2393,7 +2393,7 @@ class Utils:
 					offs = gBand2.GetOffset()
 					scl = gBand2.GetScale()
 					noData = gBand2.GetNoDataValue()
-					if noData is None or str(noData) == "nan":
+					if noData is None or str(noData) == 'nan':
 						noData = cfg.NoDataVal
 					gt = gdalRaster2.GetGeoTransform()
 					pX =  abs(gt[1])
@@ -2450,11 +2450,11 @@ class Utils:
 					# set metadata xml
 					xml = '''
 					<SimpleSource>
-					  <SourceFilename relativeToVRT="%i">%s</SourceFilename>
+					  <SourceFilename relativeToVRT='%i'>%s</SourceFilename>
 					  <SourceBand>%i</SourceBand>
-					  <SourceProperties RasterXSize="%i" RasterYSize="%i" DataType=%s BlockXSize="%i" BlockYSize="%i" />
-					  <SrcRect xOff="%i" yOff="%i" xSize="%i" ySize="%i" />
-					  <DstRect xOff="%i" yOff="%i" xSize="%i" ySize="%i" />
+					  <SourceProperties RasterXSize='%i' RasterYSize='%i' DataType=%s BlockXSize='%i' BlockYSize='%i' />
+					  <SrcRect xOff='%i' yOff='%i' xSize='%i' ySize='%i' />
+					  <DstRect xOff='%i' yOff='%i' xSize='%i' ySize='%i' />
 					  <NODATA>%i</NODATA>
 					</SimpleSource>
 					'''
@@ -2541,7 +2541,7 @@ class Utils:
 						x_block = bsize[0]
 						y_block = bsize[1]
 						# check path
-						source_path = b.replace("//", "/")
+						source_path = b.replace('//', '/')
 						try:
 							source_path = source_path
 						except:
@@ -2549,19 +2549,19 @@ class Utils:
 						# set metadata xml
 						xml = '''
 						<SimpleSource>
-						  <SourceFilename relativeToVRT="%i">%s</SourceFilename>
+						  <SourceFilename relativeToVRT='%i'>%s</SourceFilename>
 						  <SourceBand>%i</SourceBand>
-						  <SourceProperties RasterXSize="%i" RasterYSize="%i" DataType=%s BlockXSize="%i" BlockYSize="%i" />
-						  <SrcRect xOff="%i" yOff="%i" xSize="%i" ySize="%i" />
-						  <DstRect xOff="%i" yOff="%i" xSize="%i" ySize="%i" />
+						  <SourceProperties RasterXSize='%i' RasterYSize='%i' DataType=%s BlockXSize='%i' BlockYSize='%i' />
+						  <SrcRect xOff='%i' yOff='%i' xSize='%i' ySize='%i' />
+						  <DstRect xOff='%i' yOff='%i' xSize='%i' ySize='%i' />
 						  <NODATA>%i</NODATA>
 						</SimpleSource>
 						'''
 						if aster == 'No':
-							source = xml % (relativeToVRT, source_path, bandNumber, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, "Float32", x_block, y_block, xoffX, xoffY, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, offX, offY, rX2, rY2, noData)
+							source = xml % (relativeToVRT, source_path, bandNumber, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, 'Float32', x_block, y_block, xoffX, xoffY, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, offX, offY, rX2, rY2, noData)
 						else:
-							source = xml % (relativeToVRT, source_path, bandNumber, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, "Float32", x_block, y_block, xoffX, xoffY, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, xoffX, xoffY, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, noData)
-						band.SetMetadataItem("SimpleSource", source, "new_vrt_sources")
+							source = xml % (relativeToVRT, source_path, bandNumber, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, 'Float32', x_block, y_block, xoffX, xoffY, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, xoffX, xoffY, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, noData)
+						band.SetMetadataItem('SimpleSource', source, 'new_vrt_sources')
 						if NoDataVal == 'Yes':
 							band.SetNoDataValue(noData)	
 						elif NoDataVal != 'No':
@@ -2579,7 +2579,7 @@ class Utils:
 				gdalRaster2 = None
 		vRast = None
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "virtual raster: " + str(output))
+		cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'virtual raster: ' + str(output))
 		return str(output)
 		
 	# simplified virtual raster creation for mosaic
@@ -3583,7 +3583,10 @@ class Utils:
 		# logger
 		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'f ' + str(f))
 		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'rasterSCPArrayfunctionBand shape' + str(rasterSCPArrayfunctionBand.shape))
-		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'rasterSCPArrayfunctionBand ' + str(rasterSCPArrayfunctionBand))
+		try:
+			cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'rasterSCPArrayfunctionBand ' + str(rasterSCPArrayfunctionBand[0, 0, 0]))
+		except:
+			pass
 		# perform operation
 		o = eval(f)
 		# output raster
@@ -4449,8 +4452,11 @@ class Utils:
 							a2 = None
 						else:
 							a = cfg.utls.readArrayBlock(gdalBandList[b], x, y, bSX, bSY)
-						# logger
-						cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'a ' + str(a) )
+						try:
+							# logger
+							cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'a ' + str(a[0,0]) )
+						except:
+							pass
 						# logger
 						cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'read band' + str(b) )
 						try:
@@ -4512,7 +4518,10 @@ class Utils:
 							# logger
 						#	cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'functionBand ' + str(functionBand))
 					# logger
-					cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'array )' + str(array))
+					try:
+						cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'array ' + str(array[0,0,0]))
+					except:
+						pass
 					c = array.reshape(bSY, bSX, len(gdalBandList))
 					# logger
 					cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'c ' + str(c[0,0,0]))
@@ -4667,6 +4676,7 @@ class Utils:
 		# progress queue
 		pMQ = manager.Queue()
 		ranges = []
+		pR = []
 		# temporary raster output
 		tmpRastList = []
 		cfg.subprocRes = {}
@@ -4788,8 +4798,14 @@ class Utils:
 						sections= ranges
 						if parallel == cfg.parallelArray:
 							pOut = ''
-							fArg = functionBandArgument[p]
-							fVar = functionVariable[p]
+							try:
+								fArg = functionBandArgument[p]
+							except:
+								fArg = None
+							try:
+								fVar = functionVariable[p]
+							except:
+								fVar = None
 							otpLst = outputRasterList
 						# cfg.parallelRaster
 						else:
@@ -5370,34 +5386,42 @@ class Utils:
 			bool(cfg.rasterClassSignature)
 		except:
 			cfg.rasterClassSignature = {}
-		b = rasterSCPArrayfunctionBand[::, ::, 0].ravel()
-		i = functionBandArgument
+		preClassSignature = functionVariableList
 		# logger
 		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'functionBandArgument ' + str(functionBandArgument))
-		for c in functionVariableList:
-			a = rasterSCPArrayfunctionBand[::, ::, i+1].ravel()
-			a = a[b == c]
-			a = a[~cfg.np.isnan(a)]
-			count = a.shape[0]
-			try:
-				cfg.rasterClassSignature['COUNT_BAND_' + str(i) + '_c_' + str(c)] = cfg.rasterClassSignature['COUNT_BAND_' + str(i) + '_c_' + str(c)] + count
-			except:
-				cfg.rasterClassSignature['COUNT_BAND_' + str(i) + '_c_' + str(c)] = count
-			amin = cfg.np.nanmin(a)
-			amax = cfg.np.nanmax(a)
-			try:
-				cfg.rasterClassSignature['MINIMUM_BAND_' + str(i) + '_c_' + str(c)] = min(amin, cfg.rasterClassSignature['MINIMUM_BAND_' + str(i) + '_c_' + str(c)])
-			except:
-				cfg.rasterClassSignature['MINIMUM_BAND_' + str(i) + '_c_' + str(c)] = amin
-			try:
-				cfg.rasterClassSignature['MAXIMUM_BAND_' + str(i) + '_c_' + str(c)] = max(amax, cfg.rasterClassSignature['MAXIMUM_BAND_' + str(i) + '_c_' + str(c)])
-			except:
-				cfg.rasterClassSignature['MAXIMUM_BAND_' + str(i) + '_c_' + str(c)] = amax
-			sum = a.sum()
-			try:
-				cfg.rasterClassSignature['SUM_BAND_' + str(i) + '_c_' + str(c)] = cfg.rasterClassSignature['SUM_BAND_' + str(i) + '_c_' + str(c)] + sum
-			except:
-				cfg.rasterClassSignature['SUM_BAND_' + str(i) + '_c_' + str(c)] = sum	
+		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'functionVariableList ' + str(functionVariableList))
+		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'rasterSCPArrayfunctionBand shape ' + str(rasterSCPArrayfunctionBand.shape))
+		b = rasterSCPArrayfunctionBand[::, ::, 0].ravel()
+		for i in functionBandArgument[0]:
+			# logger
+			cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'i ' + str(i))
+			for c in functionBandArgument[1]:
+				# logger
+				cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'c ' + str(c))
+				a = rasterSCPArrayfunctionBand[::, ::, i+1].ravel()
+				a = a[b == c]
+				a = a[~cfg.np.isnan(a)]
+				count = a.shape[0]
+				if count > 0:
+					try:
+						cfg.rasterClassSignature['COUNT_BAND_' + str(i) + '_c_' + str(c)] = cfg.rasterClassSignature['COUNT_BAND_' + str(i) + '_c_' + str(c)] + count
+					except:
+						cfg.rasterClassSignature['COUNT_BAND_' + str(i) + '_c_' + str(c)] = count
+					amin = cfg.np.nanmin(a)
+					amax = cfg.np.nanmax(a)
+					try:
+						cfg.rasterClassSignature['MINIMUM_BAND_' + str(i) + '_c_' + str(c)] = min(amin, cfg.rasterClassSignature['MINIMUM_BAND_' + str(i) + '_c_' + str(c)])
+					except:
+						cfg.rasterClassSignature['MINIMUM_BAND_' + str(i) + '_c_' + str(c)] = amin
+					try:
+						cfg.rasterClassSignature['MAXIMUM_BAND_' + str(i) + '_c_' + str(c)] = max(amax, cfg.rasterClassSignature['MAXIMUM_BAND_' + str(i) + '_c_' + str(c)])
+					except:
+						cfg.rasterClassSignature['MAXIMUM_BAND_' + str(i) + '_c_' + str(c)] = amax
+					sum = a.sum()
+					try:
+						cfg.rasterClassSignature['SUM_BAND_' + str(i) + '_c_' + str(c)] = cfg.rasterClassSignature['SUM_BAND_' + str(i) + '_c_' + str(c)] + sum
+					except:
+						cfg.rasterClassSignature['SUM_BAND_' + str(i) + '_c_' + str(c)] = sum	
 		# logger
 		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'cfg.rasterClassSignature ' + str(cfg.rasterClassSignature))
 		return cfg.rasterClassSignature
@@ -5410,31 +5434,33 @@ class Utils:
 			cfg.rasterClassSignature = {}
 		cl = rasterArray[::, ::, 0].ravel()
 		i = functionBandArgument
-		preClassSignature = functionVariableList[1]
+		preClassSignature = functionVariableList
 		# logger
 		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'functionBandArgument ' + str(functionBandArgument))
 		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'preClassSignature ' + str(preClassSignature))
-		# covariance
-		for c in functionVariableList[0]:
-			xx = rasterArray[::, ::, int(i[0]+1)].ravel()
-			xx = xx[cl == c]
-			yy = rasterArray[::, ::, int(i[1]+1)].ravel()
-			yy = yy[cl == c]
-			x = xx[~cfg.np.isnan(xx)&~cfg.np.isnan(yy)]
-			y = yy[~cfg.np.isnan(xx)&~cfg.np.isnan(yy)]
-			xx = None
-			yy = None
-			a = x - preClassSignature['MEAN_BAND_' + str(i[0]) + '_c_' + str(c)]
-			b = y - preClassSignature['MEAN_BAND_' + str(i[1]) + '_c_' + str(c)]
-			d = a * b
-			cov = d.sum() / (preClassSignature['COUNT_BAND_' + str(i[0]) + '_c_' + str(c)] - 1)
-			try:
-				cfg.rasterClassSignature['COV_BAND_' + str(i[0]) + '-' + str(i[1]) + '_c_' + str(c)] = cfg.rasterClassSignature['COV_BAND_' + str(i[0]) + '-' + str(i[1]) + '_c_' + str(c)] + cov
-			except:
-				cfg.rasterClassSignature['COV_BAND_' + str(i[0]) + '-' + str(i[1]) + '_c_' + str(c)] = cov	
+		for i in functionBandArgument[0]:
+			# logger
+			cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'i ' + str(i))
+			for c in functionBandArgument[1]:
+				xx = rasterArray[::, ::, int(i[0]+1)].ravel()
+				xx = xx[cl == c]
+				yy = rasterArray[::, ::, int(i[1]+1)].ravel()
+				yy = yy[cl == c]
+				x = xx[~cfg.np.isnan(xx)&~cfg.np.isnan(yy)]
+				y = yy[~cfg.np.isnan(xx)&~cfg.np.isnan(yy)]
+				xx = None
+				yy = None
+				a = x - preClassSignature['MEAN_BAND_' + str(i[0]) + '_c_' + str(c)]
+				b = y - preClassSignature['MEAN_BAND_' + str(i[1]) + '_c_' + str(c)]
+				d = a * b
+				cov = d.sum() / (preClassSignature['COUNT_BAND_' + str(i[0]) + '_c_' + str(c)] - 1)
+				try:
+					cfg.rasterClassSignature['COV_BAND_' + str(i[0]) + '-' + str(i[1]) + '_c_' + str(c)] = cfg.rasterClassSignature['COV_BAND_' + str(i[0]) + '-' + str(i[1]) + '_c_' + str(c)] + cov
+				except:
+					cfg.rasterClassSignature['COV_BAND_' + str(i[0]) + '-' + str(i[1]) + '_c_' + str(c)] = cov	
 		# variance
-		for f in functionBandArgument:
-			for c in functionVariableList[0]:			
+		for f in functionBandArgument[2]:
+			for c in functionBandArgument[1]:		
 				x = rasterArray[::, ::, int(f+1)].ravel()
 				x = x[cl == c]
 				x = x[~cfg.np.isnan(x)]					
@@ -5452,14 +5478,18 @@ class Utils:
 	# calculate minimum and maximum values in a raster
 	def rasterMinimumMaximum(self, gdalBandList, rasterSCPArrayfunctionBand, columnNumber, rowNumber, pixelStartColumn, pixelStartRow, outputArrayFile, functionBandArgumentNoData, functionVariableList, outputBandNumber):
 		rasterDict = {}
-		for i in range(0, rasterSCPArrayfunctionBand.shape[2]):			
-			a = rasterSCPArrayfunctionBand[::, ::, i].ravel()
-			amin = cfg.np.nanmin(a)
-			amax = cfg.np.nanmax(a)
-			rasterDict['MINIMUM_BAND_' + str(i)] = amin
-			rasterDict['MAXIMUM_BAND_' + str(i)] = amax
-			# logger
-			cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'rasterDict ' + str(rasterDict) )
+		for i in range(0, rasterSCPArrayfunctionBand.shape[2]):
+			try:
+				a = rasterSCPArrayfunctionBand[::, ::, i].ravel()
+				amin = cfg.np.nanmin(a)
+				amax = cfg.np.nanmax(a)
+				rasterDict['MINIMUM_BAND_' + str(i)] = amin
+				rasterDict['MAXIMUM_BAND_' + str(i)] = amax
+				# logger
+				cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'rasterDict ' + str(rasterDict) )
+			except Exception as err:
+				# logger
+				cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 		return rasterDict	
 					
 	# count pixels in a raster

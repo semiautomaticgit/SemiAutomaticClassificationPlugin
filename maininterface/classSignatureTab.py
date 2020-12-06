@@ -142,47 +142,96 @@ class ClassSignatureTab:
 					for ar in cfg.parallelArrayDict[x]:
 						values = cfg.np.append(values, ar[0, ::])
 				except:
+					if batch == 'No':
+						cfg.utls.finishSound()
+						cfg.utls.sendSMTPMessage(None, str(__name__))
+						cfg.uiUtls.removeProgressBar()
 					return 'No'
 			rasterBandUniqueVal = cfg.np.unique(values).tolist()
-			classes = sorted(rasterBandUniqueVal)
+			classes = []
+			for c in sorted(rasterBandUniqueVal):
+				classes.append(int(c))
 			cfg.uiUtls.updateBar(30)
-			varList = []
-			argumentList = []
-			for bN in range(0, len(bList) - 1):
-				varList.append(classes)
-				argumentList.append(bN)
+			argumentList = [list(range(0, len(bList) - 1)), classes]
 			# create virtual raster
 			vrtCheck = cfg.utls.createTempVirtualRaster(bList, bandNumberList, 'Yes', 'Yes', 0, 'No', 'Yes')
 			cfg.parallelArrayDict = {}
-			# process
-			o = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.rasterPixelCountClassSignature, nodataValue = nD,  functionBandArgument = argumentList, functionVariable = varList, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Statistics'), outputNoDataValue = nD, compress = cfg.rasterCompression, compressFormat = 'LZW', parallel = cfg.parallelArray, skipSingleBand = 'Yes')
 			cfg.rasterClassSignature = {}
+			# process
+			o = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.rasterPixelCountClassSignature, nodataValue = nD, functionBandArgument = argumentList, functionVariable = cfg.rasterClassSignature, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Statistics'), outputNoDataValue = nD, compress = cfg.rasterCompression, compressFormat = 'LZW')
+			# find values
 			for x in sorted(cfg.parallelArrayDict):
 				try:
 					for ar in cfg.parallelArrayDict[x]:
 						for arX in ar:
-							cfg.rasterClassSignature[arX] = ar[arX]
-				except:
+							for i in range(0, len(bList) - 1):
+								for c in classes:
+									if 'COUNT_BAND_' + str(i) + '_c_' + str(c) == arX:
+										try:
+											cfg.rasterClassSignature['COUNT_BAND_' + str(i) + '_c_' + str(c)] = cfg.rasterClassSignature['COUNT_BAND_' + str(i) + '_c_' + str(c)] + ar[arX]
+										except:
+											cfg.rasterClassSignature['COUNT_BAND_' + str(i) + '_c_' + str(c)] = ar[arX]
+									elif 'SUM_BAND_' + str(i) + '_c_' + str(c) == arX:
+										try:
+											cfg.rasterClassSignature['SUM_BAND_' + str(i) + '_c_' + str(c)] = cfg.rasterClassSignature['SUM_BAND_' + str(i) + '_c_' + str(c)] + ar[arX]
+										except:
+											cfg.rasterClassSignature['SUM_BAND_' + str(i) + '_c_' + str(c)] = ar[arX]
+									elif 'MINIMUM_BAND_' + str(i) + '_c_' + str(c) == arX:
+										try:
+											cfg.rasterClassSignature['MINIMUM_BAND_' + str(i) + '_c_' + str(c)] = min(ar[arX], cfg.rasterClassSignature['MINIMUM_BAND_' + str(i) + '_c_' + str(c)])
+										except:
+											cfg.rasterClassSignature['MINIMUM_BAND_' + str(i) + '_c_' + str(c)] = ar[arX]
+									elif 'MAXIMUM_BAND_' + str(i) + '_c_' + str(c) == arX:
+										try:
+											cfg.rasterClassSignature['MAXIMUM_BAND_' + str(i) + '_c_' + str(c)] = max(ar[arX], cfg.rasterClassSignature['MAXIMUM_BAND_' + str(i) + '_c_' + str(c)])
+										except:
+											cfg.rasterClassSignature['MAXIMUM_BAND_' + str(i) + '_c_' + str(c)] = ar[arX]
+				except Exception as err:
+					# logger
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					if batch == 'No':
+						cfg.utls.finishSound()
+						cfg.utls.sendSMTPMessage(None, str(__name__))
+						cfg.uiUtls.removeProgressBar()
 					return 'No'
 			# calculate band mean
 			for c in classes:
 				for b in range(0, len(bList) - 1):	
 					cfg.rasterClassSignature['MEAN_BAND_' + str(b) + '_c_' + str(c)] = cfg.rasterClassSignature['SUM_BAND_' + str(b) + '_c_' + str(c)] / cfg.rasterClassSignature['COUNT_BAND_' + str(b) + '_c_' + str(c)]
 			comb = cfg.itertoolsSCP.combinations(list(range(0, len(bList) - 1)), 2)
-			argumentList = []
 			varList = []
 			for i in comb:	
-				argumentList.append([i[0], i[1]])
-				varList.append([classes, cfg.rasterClassSignature])
+				varList.append([i[0], i[1]])
+			argumentList = [varList, classes, list(range(0, len(bList) - 1))]
 			cfg.parallelArrayDict = {}
 			# process
-			o = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.rasterStandardDeviationClassSignature, nodataValue = nD,  functionBandArgument = argumentList, functionVariable = varList, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Statistics'), outputNoDataValue = nD, compress = cfg.rasterCompression, compressFormat = 'LZW', parallel = cfg.parallelArray, skipSingleBand = 'Yes')
+			o = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.rasterStandardDeviationClassSignature, nodataValue = nD, functionBandArgument = argumentList, functionVariable = cfg.rasterClassSignature, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Statistics'), outputNoDataValue = nD, compress = cfg.rasterCompression, compressFormat = 'LZW')
+			# find values
 			for x in sorted(cfg.parallelArrayDict):
 				try:
 					for ar in cfg.parallelArrayDict[x]:
 						for arX in ar:
-							cfg.rasterClassSignature[arX] = ar[arX]
-				except:
+							for i in varList:
+								for c in classes:
+									if 'COV_BAND_' + str(i[0]) + '-' + str(i[1]) + '_c_' + str(c) == arX:
+										try:
+											cfg.rasterClassSignature['COV_BAND_' + str(i[0]) + '-' + str(i[1]) + '_c_' + str(c)] = cfg.rasterClassSignature['COV_BAND_' + str(i[0]) + '-' + str(i[1]) + '_c_' + str(c)] + ar[arX]
+										except:
+											cfg.rasterClassSignature['COV_BAND_' + str(i[0]) + '-' + str(i[1]) + '_c_' + str(c)] = ar[arX]
+							for f in range(0, len(bList) - 1):
+								for c in classes:
+									if 'VAR_BAND_' + str(f) + '_c_' + str(c) == arX:
+										try:
+											cfg.rasterClassSignature['VAR_BAND_' + str(f) + '_c_' + str(c)] = cfg.rasterClassSignature['VAR_BAND_' + str(f) + '_c_' + str(c)] + ar[arX]
+										except:
+											cfg.rasterClassSignature['VAR_BAND_' + str(f) + '_c_' + str(c)] = ar[arX]
+				except Exception as err:
+					# logger
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					if batch == 'No':
+						cfg.utls.finishSound()
+						cfg.utls.sendSMTPMessage(None, str(__name__))
+						cfg.uiUtls.removeProgressBar()
 					return 'No'
 			cfg.uiUtls.updateBar(70)
 			comb = cfg.itertoolsSCP.combinations(list(range(0, len(bList) - 1)), 2)
@@ -196,12 +245,12 @@ class ClassSignatureTab:
 					try:
 						cfg.tblOut['ROI_SIZE'] = cfg.rasterClassSignature['COUNT_BAND_' + str(0) + '_c_' + str(c)]
 						for b in range(0, len(bList) - 1):
-							min = cfg.rasterClassSignature['MINIMUM_BAND_' + str(b) + '_c_' + str(c)]
-							max = cfg.rasterClassSignature['MAXIMUM_BAND_' + str(b) + '_c_' + str(c)]
-							mean = cfg.rasterClassSignature['MEAN_BAND_' + str(b) + '_c_' + str(c)]
+							smin = cfg.rasterClassSignature['MINIMUM_BAND_' + str(b) + '_c_' + str(c)]
+							smax = cfg.rasterClassSignature['MAXIMUM_BAND_' + str(b) + '_c_' + str(c)]
+							smean = cfg.rasterClassSignature['MEAN_BAND_' + str(b) + '_c_' + str(c)]
 							sd = cfg.np.sqrt(cfg.rasterClassSignature['VAR_BAND_' + str(b) + '_c_' + str(c)])
-							signature = [min, max, mean, sd]
-							s2.append(mean)
+							signature = [smin, smax, smean, sd]
+							s2.append(smean)
 							cfg.tblOut['WAVELENGTH_' + str(b + 1)] = cfg.bandSetsList[cfg.bndSetNumber][4][b]
 							covMat[b, b] = cfg.rasterClassSignature['VAR_BAND_' + str(b) + '_c_' + str(c)]
 							cfg.tblOut['BAND_' + str(b + 1)] = signature

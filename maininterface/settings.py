@@ -257,11 +257,12 @@ class Settings:
 	def testDependencies(self):
 		testGDAL = self.testGDAL()
 		testGDALSubprocess = self.testGDALSubprocess()
+		testMultiprocess = self.testMultiprocess()
 		testNumpy = self.testNumpy()
 		testScipy = self.testScipy()
 		testMatplotlib = self.testMatplotlib()
 		testInternet = self.testInternetConnection()
-		message = '-GDAL: ' + testGDAL + '\n' + '-GDAL subprocess: ' + testGDALSubprocess + '\n' + '-NumPy: ' + testNumpy + '\n' + '-SciPy: ' + testScipy + '\n' + '-Matplotlib: ' + testMatplotlib + '\n' + '-Internet connection: ' + testInternet + '\n'
+		message = '-GDAL: ' + testGDAL + '\n' + '-GDAL subprocess: ' + testGDALSubprocess + '\n' +  '-Python multiprocess: ' + testMultiprocess + '\n' + '-NumPy: ' + testNumpy + '\n' + '-SciPy: ' + testScipy + '\n' + '-Matplotlib: ' + testMatplotlib + '\n' + '-Internet connection: ' + testInternet + '\n'
 		cfg.mx.msgTest(message)
 	
 	# test GDAL
@@ -282,6 +283,32 @@ class Settings:
 			if d is None:
 				test = 'Fail (missing drivers)'
 		# logger		
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' test: ' + str(test))
+		return test
+		
+	# test multiprocess
+	def testMultiprocess(self):
+		test = 'Success'
+		r = cfg.plgnDir + cfg.debugRasterPath
+		if cfg.osSCP.path.isfile(r) is False:
+			test = 'Unable to test'
+			return test
+		try:
+			cfg.uiUtls.addProgressBar()
+			tPMD = cfg.utls.createTempRasterPath('vrt')
+			oM = cfg.utls.createTempRasterPath('tif')
+			# open input with GDAL
+			rD = cfg.gdalSCP.Open(r, cfg.gdalSCP.GA_ReadOnly)
+			# output rasters
+			cfg.utls.createRasterFromReference(rD, 1, [oM], cfg.NoDataVal, 'GTiff', cfg.rasterDataType, 0,  None)
+			rD = None
+			o = cfg.utls.multiProcessRaster(rasterPath = r, functionBand = 'No', functionRaster = cfg.utls.calculateRaster, outputRasterList = [oM], functionBandArgument = ['raster * 2'], functionVariable = [['raster']], progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Test'), parallel = cfg.parallelRaster)
+			cfg.uiUtls.removeProgressBar()
+		except Exception as err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+			test = 'Fail'
+		# logger
 		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' test: ' + str(test))
 		return test
 		

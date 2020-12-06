@@ -159,12 +159,17 @@ class ClusteringTab:
 			else:
 				r = cfg.utls.selectLayerbyName(imageName, 'Yes')
 				iR = cfg.utls.layerSource(r)
-				bL = [iR]
-				tPMD = iR
-				bandNumberList = []
+				# create virtual raster of bands
+				bndNumberList = []
+				bL = []
 				iBC = cfg.utls.getNumberBandRaster(iR)
 				for i in range(1, iBC+1):
-					bandNumberList.append(i)
+					bndNumberList.append(i)
+					tVRT = cfg.utls.createTempRasterPath('vrt')
+					bL.append(tVRT)
+					cfg.utls.createVirtualRaster(inputRasterList = [iR], output = tVRT, bandNumberList = [i], quiet = 'Yes')
+				tPMD = cfg.utls.createTempRasterPath('vrt')
+				cfg.utls.createVirtualRaster(inputRasterList = bL, output = tPMD, quiet = 'Yes')
 			if len(bL) > 0:
 				k_or_sigs = cfg.ui.kmeans_classes_spinBox.value()				
 				if cfg.ui.kmean_siglist_radioButton.isChecked() is True:					
@@ -964,9 +969,12 @@ class ClusteringTab:
 					for p in range(0, k):
 						sig = []
 						signature = []
-						for b in range(0, len(bL)):				
-							vMin = cfg.rasterClustering["MINIMUM_BAND_" + str(b)]
-							vMax = cfg.rasterClustering["MAXIMUM_BAND_" + str(b)]
+						for b in range(0, len(bL)):		
+							try:
+								vMin = cfg.rasterClustering["MINIMUM_BAND_" + str(b)]
+								vMax = cfg.rasterClustering["MAXIMUM_BAND_" + str(b)]
+							except:
+								return 'No', None, None, None
 							d = (vMax - vMin) / k						
 							sig.append(vMin - (d/2) + (d * kN))
 							signature.append(vMin - (d/2) + (d * kN))
