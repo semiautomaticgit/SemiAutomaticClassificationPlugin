@@ -73,13 +73,6 @@ class SCPDock:
 		except:
 			pass
 			
-	def setMaskCheckbox(self):	
-		cfg.ui.mask_checkBox.blockSignals(True)
-		cfg.ui.mask_checkBox.setCheckState(int(cfg.mskFlState))
-		cfg.ui.mask_checkBox.blockSignals(False)
-		# logger
-		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "mask checkbox")
-		
 	# left click pointer for classification preview
 	def pointerClickPreview(self, point):
 		# check if other processes are active

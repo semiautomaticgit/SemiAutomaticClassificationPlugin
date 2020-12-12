@@ -700,6 +700,13 @@ class ClassificationTab:
 		# logger
 		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'reset mask')
 		
+	def setMaskCheckbox(self):	
+		cfg.ui.mask_checkBox.blockSignals(True)
+		cfg.ui.mask_checkBox.setCheckState(int(cfg.mskFlState))
+		cfg.ui.mask_checkBox.blockSignals(False)
+		# logger
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "mask checkbox")
+		
 	# Select qml style for classifications and previews
 	def selectQmlStyle(self):
 		cfg.qmlFl = cfg.utls.getOpenFileName(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Select a qml style'), '', 'Style (*.qml)')

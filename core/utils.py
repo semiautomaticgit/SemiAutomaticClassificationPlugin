@@ -8762,7 +8762,7 @@ class Utils:
 		cfg.mskFlPath = cfg.utls.readProjectVariable('maskFilePath', str(cfg.mskFlPath))
 		cfg.mskFlState = cfg.utls.readProjectVariable('maskFileState', str(cfg.mskFlState))
 		cfg.ui.mask_lineEdit.setText(str(cfg.mskFlPath))
-		cfg.SCPD.setMaskCheckbox()
+		cfg.classTab.setMaskCheckbox()
 		# band set
 		bandSetsList = cfg.utls.readProjectVariable('bandSetsList', '[]')
 		bndSetNumber = cfg.utls.readProjectVariable('bndSetNumber', str(cfg.bndSetNumber))		

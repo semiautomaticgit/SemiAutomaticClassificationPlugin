@@ -4677,52 +4677,52 @@ ROI</source>
         <translation>Guardar los resultados de la clasificación</translation>
     </message>
     <message>
-        <location filename="../maininterface/classificationTab.py" line="707"/>
+        <location filename="../maininterface/classificationTab.py" line="714"/>
         <source>Select a qml style</source>
         <translation>Selecciona un estilo qml</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="230"/>
+        <location filename="../dock/scpdock.py" line="223"/>
         <source>Select a signature list file</source>
         <translation>Selecciona un archivo de lista de firma</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="244"/>
+        <location filename="../dock/scpdock.py" line="237"/>
         <source>Select a SCP training input</source>
         <translation>Selecciona una Entrada de Entrenamiento SCP</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="664"/>
+        <location filename="../dock/scpdock.py" line="657"/>
         <source>Export SCP training input</source>
         <translation>Exportar Entrada de Entrenamiento SCP</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="720"/>
+        <location filename="../dock/scpdock.py" line="713"/>
         <source>Select a library file</source>
         <translation>Selecciona un archivo de librería</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="753"/>
+        <location filename="../dock/scpdock.py" line="746"/>
         <source>Export the highlighted signatures to CSV library</source>
         <translation>Exportar las firmas seleccionadas a librería CSV</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="820"/>
+        <location filename="../dock/scpdock.py" line="813"/>
         <source>Calculate signatures</source>
         <translation>Calcular firmas</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="820"/>
+        <location filename="../dock/scpdock.py" line="813"/>
         <source>Calculate signatures for highlighted items?</source>
         <translation>¿Calcular firmas para los elementos seleccionados?</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="852"/>
+        <location filename="../dock/scpdock.py" line="845"/>
         <source>Merge signatures</source>
         <translation>Combinar firmas</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="852"/>
+        <location filename="../dock/scpdock.py" line="845"/>
         <source>Merge highlighted signatures?</source>
         <translation>¿Combinar firmas seleccionadas?</translation>
     </message>
@@ -4732,34 +4732,34 @@ ROI</source>
         <translation>Eliminar firmas</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="972"/>
+        <location filename="../dock/scpdock.py" line="965"/>
         <source>Are you sure you want to delete highlighted ROIs and signatures?</source>
         <translation>¿Estás seguro que quieres eliminar los ROIs y las firmas seleccionadas?</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1892"/>
+        <location filename="../dock/scpdock.py" line="1885"/>
         <source>Create SCP training input</source>
         <translation>Crear Entrenamiento de Entrada SCP</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1993"/>
+        <location filename="../dock/scpdock.py" line="1986"/>
         <source>It appears that the shapefile </source>
         <translation>Parece que el archivo shape</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1993"/>
+        <location filename="../dock/scpdock.py" line="1986"/>
         <source> is missing some fields that are required for the signature calculation. 
 Do you want to add the required fields to this shapefile?</source>
         <translation>no se encuentran algunos campos que son requeridos para el cálculo de firmas.
 ¿Deseas agregar los campos requeridos a este archivo shape?</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="2085"/>
+        <location filename="../dock/scpdock.py" line="2078"/>
         <source>Undo save ROI</source>
         <translation>Deshacer guardar ROI</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="2085"/>
+        <location filename="../dock/scpdock.py" line="2078"/>
         <source>Are you sure you want to delete the last saved ROI?</source>
         <translation>¿Estás seguro que quieres eliminar el último ROI guardado?</translation>
     </message>
@@ -5914,7 +5914,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1993"/>
+        <location filename="../dock/scpdock.py" line="1986"/>
         <source>Add required fields</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6389,7 +6389,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1964"/>
+        <location filename="../dock/scpdock.py" line="1957"/>
         <source>Creating ROI</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6474,12 +6474,12 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1866"/>
+        <location filename="../dock/scpdock.py" line="1859"/>
         <source>Remove training input</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1866"/>
+        <location filename="../dock/scpdock.py" line="1859"/>
         <source>Are you sure you want to remove training input?</source>
         <translation type="unfinished"></translation>
     </message>

@@ -4732,12 +4732,12 @@ ROI</source>
         <translation>Zapisz wyjście klasyfikacji</translation>
     </message>
     <message>
-        <location filename="../maininterface/classificationTab.py" line="707"/>
+        <location filename="../maininterface/classificationTab.py" line="714"/>
         <source>Select a qml style</source>
         <translation>Wybierz styl qml</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="230"/>
+        <location filename="../dock/scpdock.py" line="223"/>
         <source>Select a signature list file</source>
         <translation>Wybierz plik z listą sygnatur</translation>
     </message>
@@ -4747,12 +4747,12 @@ ROI</source>
         <translation>Wyczyść listę sygnatur</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="720"/>
+        <location filename="../dock/scpdock.py" line="713"/>
         <source>Select a library file</source>
         <translation>Wybierz bibliotekę pliku</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="753"/>
+        <location filename="../dock/scpdock.py" line="746"/>
         <source>Export the highlighted signatures to CSV library</source>
         <translation>Eksportuj wybrane sygnatury do biblioteki CSV</translation>
     </message>
@@ -4767,12 +4767,12 @@ ROI</source>
         <translation>Czy na pewno chcesz usunąć wybrane sygnatury?</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="852"/>
+        <location filename="../dock/scpdock.py" line="845"/>
         <source>Merge signatures</source>
         <translation>Połącz sygnatury</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="852"/>
+        <location filename="../dock/scpdock.py" line="845"/>
         <source>Merge highlighted signatures?</source>
         <translation>Połączyć wybrane sygnatury?</translation>
     </message>
@@ -5257,24 +5257,24 @@ ROI</source>
         <translation>Czy na pewno wyczyścić progi?</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1993"/>
+        <location filename="../dock/scpdock.py" line="1986"/>
         <source>It appears that the shapefile </source>
         <translation>Wygląda na to, że ten shapefile</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1993"/>
+        <location filename="../dock/scpdock.py" line="1986"/>
         <source> is missing some fields that are required for the signature calculation. 
 Do you want to add the required fields to this shapefile?</source>
         <translation> nie posiada pól, które są potrzebne do wyznaczania sygnatur. 
 Chcesz dodać wymagane pola do tego shapefile?</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="2085"/>
+        <location filename="../dock/scpdock.py" line="2078"/>
         <source>Undo save ROI</source>
         <translation>Cofnij zapisywanie OT</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="2085"/>
+        <location filename="../dock/scpdock.py" line="2078"/>
         <source>Are you sure you want to delete the last saved ROI?</source>
         <translation>Czy na pewno usunąć ostatnio zapisany OT?</translation>
     </message>
@@ -5284,32 +5284,32 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation>Wartości</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="244"/>
+        <location filename="../dock/scpdock.py" line="237"/>
         <source>Select a SCP training input</source>
         <translation>Wybierz dane treningowe</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="664"/>
+        <location filename="../dock/scpdock.py" line="657"/>
         <source>Export SCP training input</source>
         <translation>Eksportuj dane treningowe</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="820"/>
+        <location filename="../dock/scpdock.py" line="813"/>
         <source>Calculate signatures</source>
         <translation>Oblicz sygnatury</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="820"/>
+        <location filename="../dock/scpdock.py" line="813"/>
         <source>Calculate signatures for highlighted items?</source>
         <translation>Obliczyć sygnatury wybranych obiektów?</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="972"/>
+        <location filename="../dock/scpdock.py" line="965"/>
         <source>Are you sure you want to delete highlighted ROIs and signatures?</source>
         <translation>Czy na pewno chcesz usunąć wybrane OT i sygnatury?</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1892"/>
+        <location filename="../dock/scpdock.py" line="1885"/>
         <source>Create SCP training input</source>
         <translation>Stwórz dane treningowe</translation>
     </message>
@@ -5914,7 +5914,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1993"/>
+        <location filename="../dock/scpdock.py" line="1986"/>
         <source>Add required fields</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6389,7 +6389,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1964"/>
+        <location filename="../dock/scpdock.py" line="1957"/>
         <source>Creating ROI</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6474,12 +6474,12 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1866"/>
+        <location filename="../dock/scpdock.py" line="1859"/>
         <source>Remove training input</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1866"/>
+        <location filename="../dock/scpdock.py" line="1859"/>
         <source>Are you sure you want to remove training input?</source>
         <translation type="unfinished"></translation>
     </message>
