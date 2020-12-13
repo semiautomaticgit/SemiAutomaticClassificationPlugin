@@ -150,7 +150,13 @@ class ClusteringTab:
 						if cfg.osSCP.path.isfile(i):
 							bandNumberList.append(1)
 							bL.append(i)
-					tPMD = cfg.utls.createTempVirtualRaster(bL, bandNumberList, 'Yes', 'Yes', 0, 'No', 'No')
+					try:
+						tPMD = cfg.utls.createTempVirtualRaster(bL, bandNumberList, 'Yes', 'Yes', 0, 'No', 'No')
+					except:
+						cfg.mx.msgErr6()
+						# logger
+						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "Error no band set")	
+						return None
 				else:
 					cfg.mx.msgErr6()
 					# logger
