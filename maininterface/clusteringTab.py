@@ -659,6 +659,7 @@ class ClusteringTab:
 			# penultimate iteration
 			if iteration == -2:
 				signatures2 = []
+				signaturesTemp = []
 				signatureList2 = []
 				count = 1
 				for c in classes2:
@@ -668,21 +669,23 @@ class ClusteringTab:
 						signature.append(v)
 						s2.append(v)
 						signature.append(0)
-					signatures2.append([s2, count, c[1]])
-					s = []
-					s.append(count)
-					s.append(str(count))
-					s.append(count)
-					s.append(str(count))
-					s.append(signature)
-					s.append(cfg.bandSetsList[bandSetNumber][4])
-					s.append(c[1])
-					s.append('No')
-					s.append('')
-					s.append('')
-					s.append(0)
-					signatureList2.append(s)
-					count = count + 1
+					if s2 not in signaturesTemp:
+						signaturesTemp.append(s2)
+						signatures2.append([s2, count, c[1]])
+						s = []
+						s.append(count)
+						s.append(str(count))
+						s.append(count)
+						s.append(str(count))
+						s.append(signature)
+						s.append(cfg.bandSetsList[bandSetNumber][4])
+						s.append(c[1])
+						s.append('No')
+						s.append('')
+						s.append('')
+						s.append(0)
+						signatureList2.append(s)
+						count = count + 1
 			else:
 				# average distance
 				AD = avDistance / sumNi
