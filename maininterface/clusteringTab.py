@@ -1065,7 +1065,7 @@ class ClusteringTab:
 			except Exception as err:
 				# logger
 				cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
-				return 'No', None, None
+				return 'No', None, None, None
 			# last classification
 			if iteration == -1:
 				# remove temp rasters
@@ -1143,8 +1143,12 @@ class ClusteringTab:
 				for b in range(0, len(bL)):
 					try:
 						v = cfg.rasterClustering['SUM_BAND_' + str(b) + '_c_' + str(c[0])] / cfg.rasterClustering['COUNT_BAND_' + str(b) + '_c_' + str(c[0])]
-						signature.append(v)
-						s2.append(v)
+						if cfg.np.isnan(v):
+							signature.append(0)
+							s2.append(0)
+						else:
+							signature.append(v)
+							s2.append(v)
 						signature.append(0)
 					except Exception as err:
 						# logger
