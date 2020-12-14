@@ -91,7 +91,7 @@ class BandsetTab:
 	def setSatelliteWavelength(self, satelliteName = None, bandList = None, bandSetNumber = None):
 		if satelliteName is None:
 			satelliteName = cfg.ui.wavelength_sat_combo.currentText()
-		if bandSetNumber == None:
+		if bandSetNumber is None:
 			bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
 		tW = eval('cfg.ui.tableWidget__' + cfg.bndSetTabList[bandSetNumber])
 		c = tW.rowCount()
@@ -245,7 +245,7 @@ class BandsetTab:
 		
 	# add file to band set
 	def addFileToBandSet(self, batch = 'No', fileListString = None, wavelengthString = None, multiplicativeFactorString = None, additiveFactorString = None, date = None, bandSetNumber = None):		
-		if bandSetNumber == None:
+		if bandSetNumber is None:
 			bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
 		tW = eval('cfg.ui.tableWidget__' + cfg.bndSetTabList[bandSetNumber])
 		satellite = None
@@ -367,7 +367,7 @@ class BandsetTab:
 	# add band to band set
 	def addBandToSet(self):	
 		bandSetNumber = None
-		if bandSetNumber == None:
+		if bandSetNumber is None:
 			bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
 		tW = eval('cfg.ui.tableWidget__' + cfg.bndSetTabList[bandSetNumber])
 		c = tW.rowCount()
@@ -412,7 +412,7 @@ class BandsetTab:
 	# add band to band set
 	def addBandToBandSet(self, bandName, bandSetNumber = None, wavelength = None):	
 		if len(cfg.bndSetLst) > 0:
-			if bandSetNumber == None:
+			if bandSetNumber is None:
 				bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
 		if cfg.bandSetsList[bandSetNumber][0] == 'Yes':
 			tW = eval("cfg.ui.tableWidget__" + cfg.bndSetTabList[bandSetNumber])
@@ -475,7 +475,7 @@ class BandsetTab:
 		else:
 			a = 'Yes'
 		if a == 'Yes':	
-			if bandSetNumber == None:
+			if bandSetNumber is None:
 				bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
 			tW = eval("cfg.ui.tableWidget__" + cfg.bndSetTabList[bandSetNumber])
 			cfg.BandTabEdited = 'No'
@@ -527,7 +527,7 @@ class BandsetTab:
 	# band set edited
 	def editedBandSet(self, row, column):
 		bandSetNumber = None
-		if bandSetNumber == None:
+		if bandSetNumber is None:
 			bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
 		tW = eval("cfg.ui.tableWidget__" + cfg.bndSetTabList[bandSetNumber])
 		if cfg.BandTabEdited == 'Yes' and column == 1:
@@ -861,7 +861,7 @@ class BandsetTab:
 	# export band set
 	def exportBandSetFile(self, bandSetFile, bandSetNumber = None):
 			try:
-				if bandSetNumber == None:
+				if bandSetNumber is None:
 					bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
 				tW = eval('cfg.ui.tableWidget__' + cfg.bndSetTabList[bandSetNumber])
 				# check if bandset is empty
@@ -944,7 +944,7 @@ class BandsetTab:
 					imNm[n] = str(child.find('image_name').text.strip())
 				except:
 					imNm[n] = ''
-			if bandSetNumber == None:
+			if bandSetNumber is None:
 				bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
 			tW = eval('cfg.ui.tableWidget__' + cfg.bndSetTabList[bandSetNumber])
 			cfg.BandTabEdited = 'No'
@@ -975,7 +975,7 @@ class BandsetTab:
 			
 	# set band set
 	def setBandSet(self, bandNameList, bandSetNumber = None, date = None):
-		if bandSetNumber == None:
+		if bandSetNumber is None:
 			bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
 		if date is None:
 			date = ''
@@ -1007,7 +1007,7 @@ class BandsetTab:
 	# move down selected band
 	def moveDownBand(self):
 		bandSetNumber = None
-		if bandSetNumber == None:
+		if bandSetNumber is None:
 			bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
 		tW = eval("cfg.ui.tableWidget__" + cfg.bndSetTabList[bandSetNumber])
 		c = tW.rowCount()
@@ -1045,7 +1045,7 @@ class BandsetTab:
 	# sort band name
 	def sortBandName(self):
 		bandSetNumber = None
-		if bandSetNumber == None:
+		if bandSetNumber is None:
 			bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
 		tW = eval("cfg.ui.tableWidget__" + cfg.bndSetTabList[bandSetNumber])
 		c = tW.rowCount()
@@ -1094,7 +1094,7 @@ class BandsetTab:
 	# move up selected band
 	def moveUpBand(self):
 		bandSetNumber = None
-		if bandSetNumber == None:
+		if bandSetNumber is None:
 			bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
 		tW = eval("cfg.ui.tableWidget__" + cfg.bndSetTabList[bandSetNumber])
 		c = tW.rowCount()
@@ -1148,7 +1148,7 @@ class BandsetTab:
 		
 	# Set raster to single band names for wavelength definition
 	def rasterToBandName(self, rasterName, bandset = 'No', bandSetNumber = None):		
-		if bandSetNumber == None:
+		if bandSetNumber is None:
 			bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
 		tW = eval('cfg.ui.tableWidget__' + cfg.bndSetTabList[bandSetNumber])
 		r = cfg.utls.selectLayerbyName(rasterName, 'Yes')
@@ -1179,7 +1179,7 @@ class BandsetTab:
 	# remove selected band
 	def removeBand(self):
 		bandSetNumber = None
-		if bandSetNumber == None:
+		if bandSetNumber is None:
 			bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
 		tW = eval('cfg.ui.tableWidget__' + cfg.bndSetTabList[bandSetNumber])
 		c = tW.rowCount()
@@ -1236,7 +1236,7 @@ class BandsetTab:
 		
 	# create virtual raster
 	def virtualRasterBandSet(self, outFile = None, bandSetNumber = None):		
-		if bandSetNumber == None:
+		if bandSetNumber is None:
 			bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
 		if cfg.bandSetsList[bandSetNumber][0] == 'Yes':
 			ck = cfg.utls.checkBandSet(bandSetNumber)
@@ -1258,7 +1258,7 @@ class BandsetTab:
 				cfg.mx.msgErr33()
 			
 	def stackBandSet(self, outFile = None, bandSetNumber = None):		
-		if bandSetNumber == None:
+		if bandSetNumber is None:
 			bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
 		if cfg.bandSetsList[bandSetNumber][0] == 'Yes':
 			ck = cfg.utls.checkBandSet(bandSetNumber)

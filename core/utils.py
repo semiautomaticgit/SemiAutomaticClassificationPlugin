@@ -3166,7 +3166,7 @@ class Utils:
 	
 	# find band set number used for vegetation index calculation
 	def findBandNumber(self, bandSetNumber = None):
-		if bandSetNumber == None:
+		if bandSetNumber is None:
 			bandSetNumber = cfg.bndSetNumber
 		cfg.REDBand = None
 		cfg.NIRBand = None
@@ -5260,28 +5260,34 @@ class Utils:
 			# start and end pixels
 			pixelStartColumn = (int((point.x() - tLX) / pSX))
 			pixelStartRow = -(int((tLY - point.y()) / pSY))
-			bVal = float(cfg.utls.readArrayBlock(OrB, pixelStartColumn, pixelStartRow, 1, 1))
+			bVal = None
 			try:
-				if str(bVal).lstrip('[').rstrip(']') == 'nan':
-					pass
-				elif NoDataValue is not None and float(bVal) == float(NoDataValue):
-						pass
-				elif stratified is not None:
-					try:
-						if eval(stratifiedExpression.replace(cfg.variableName, 'bVal')) is True:
-							points.append([XCoords[0], YCoords[0]])
-					except:
-						pass
-					if counter == pointNumber*100 and len(points) == 0:
-						# logger
-						cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR : maximum number of iterations" )
-						cfg.mx.msgErr64()
-						return points
-				else:
-					points.append([XCoords[0], YCoords[0]])
+				bVal = float(cfg.utls.readArrayBlock(OrB, pixelStartColumn, pixelStartRow, 1, 1))
 			except Exception as err:
 				# logger
 				cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+			if bVal is not None:
+				try:
+					if str(bVal).lstrip('[').rstrip(']') == 'nan':
+						pass
+					elif NoDataValue is not None and float(bVal) == float(NoDataValue):
+							pass
+					elif stratified is not None:
+						try:
+							if eval(stratifiedExpression.replace(cfg.variableName, 'bVal')) is True:
+								points.append([XCoords[0], YCoords[0]])
+						except:
+							pass
+						if counter == pointNumber*100 and len(points) == 0:
+							# logger
+							cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR : maximum number of iterations" )
+							cfg.mx.msgErr64()
+							return points
+					else:
+						points.append([XCoords[0], YCoords[0]])
+				except Exception as err:
+					# logger
+					cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 		return points
 			
 	# count pixels in a raster lower than value
@@ -6698,7 +6704,7 @@ class Utils:
 	
 	# build band overviews
 	def buildOverviewsBandSet(self, directory = 'Yes', quiet = 'No', bandSetNumber = None):
-		if bandSetNumber == None:
+		if bandSetNumber is None:
 			bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
 		tW = eval('cfg.ui.tableWidget__' + cfg.bndSetTabList[bandSetNumber])
 		c = tW.rowCount()

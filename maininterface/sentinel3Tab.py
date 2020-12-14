@@ -351,7 +351,7 @@ class Sentinel3Tab:
 					cfg.bst.setBandSet(bandSetNameList, bandSetNumber, date)
 					cfg.bandSetsList[bandSetNumber][0] = 'Yes'
 					cfg.bst.setSatelliteWavelength(cfg.satSentinel3, bandSetList, bandSetNumber)				
-					if bandSetNumber == None:
+					if bandSetNumber is None:
 						bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
 					tW = eval('cfg.ui.tableWidget__' + cfg.bndSetTabList[bandSetNumber])
 					tW.clearSelection()

@@ -288,7 +288,7 @@ class GOESTab:
 					cfg.bst.setBandSet(bandSetNameList, bandSetNumber, dt)
 					cfg.bandSetsList[bandSetNumber][0] = 'Yes'
 					cfg.bst.setSatelliteWavelength(cfg.satGOES, bandSetList, bandSetNumber)				
-					if bandSetNumber == None:
+					if bandSetNumber is None:
 						bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
 					tW = eval('cfg.ui.tableWidget__' + cfg.bndSetTabList[bandSetNumber])
 					tW.clearSelection()

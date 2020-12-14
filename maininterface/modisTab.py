@@ -166,7 +166,7 @@ class MODISTab:
 					cfg.bst.setSatelliteWavelength(cfg.satMODIS, None, bandSetNumber)
 				else:
 					cfg.bst.setSatelliteWavelength(cfg.satMODIS2, None, bandSetNumber)	
-				if bandSetNumber == None:
+				if bandSetNumber is None:
 					bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
 				tW = eval('cfg.ui.tableWidget__' + cfg.bndSetTabList[bandSetNumber])
 				tW.clearSelection()
