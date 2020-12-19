@@ -305,6 +305,7 @@ class Settings:
 			o = cfg.utls.multiProcessRaster(rasterPath = r, functionBand = 'No', functionRaster = cfg.utls.calculateRaster, outputRasterList = [oM], functionBandArgument = ['raster * 2'], functionVariable = [['raster']], progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Test'), parallel = cfg.parallelRaster)
 			cfg.uiUtls.removeProgressBar()
 		except Exception as err:
+			cfg.uiUtls.removeProgressBar()
 			# logger
 			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 			test = 'Fail'

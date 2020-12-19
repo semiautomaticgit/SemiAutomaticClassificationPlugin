@@ -4666,7 +4666,7 @@ ROI</source>
 <context>
     <name>semiautomaticclassificationplugin</name>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="1564"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="1569"/>
         <source>Please, restart QGIS for executing the Semi-Automatic Classification Plugin</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4736,7 +4736,7 @@ ROI</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../spectralsignature/spectralsignatureplot.py" line="470"/>
+        <location filename="../spectralsignature/spectralsignatureplot.py" line="473"/>
         <source>Delete signatures</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5597,17 +5597,17 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="8737"/>
+        <location filename="../core/utils.py" line="8768"/>
         <source>SCP: completed process</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../spectralsignature/spectralsignatureplot.py" line="1203"/>
+        <location filename="../spectralsignature/spectralsignatureplot.py" line="1211"/>
         <source>Set thresholds</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../spectralsignature/spectralsignatureplot.py" line="1203"/>
+        <location filename="../spectralsignature/spectralsignatureplot.py" line="1211"/>
         <source>Are you sure you want to set thresholds for several signatures?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5802,12 +5802,12 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="6739"/>
+        <location filename="../core/utils.py" line="6760"/>
         <source>Build overviews</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="6739"/>
+        <location filename="../core/utils.py" line="6760"/>
         <source>Do you want to build the external overviews of bands?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6107,57 +6107,57 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../spectralsignature/scatter_plot.py" line="489"/>
+        <location filename="../spectralsignature/scatter_plot.py" line="497"/>
         <source>Delete scatter plot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../spectralsignature/scatter_plot.py" line="489"/>
+        <location filename="../spectralsignature/scatter_plot.py" line="497"/>
         <source>Are you sure you want to delete highlighted scatter plots?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../spectralsignature/spectralsignatureplot.py" line="206"/>
+        <location filename="../spectralsignature/spectralsignatureplot.py" line="209"/>
         <source>Save plot to file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../spectralsignature/spectralsignatureplot.py" line="87"/>
+        <location filename="../spectralsignature/spectralsignatureplot.py" line="90"/>
         <source>Edit value range</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../spectralsignature/spectralsignatureplot.py" line="87"/>
+        <location filename="../spectralsignature/spectralsignatureplot.py" line="90"/>
         <source>Are you sure you want to edit the value range for several signatures?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../spectralsignature/spectralsignatureplot.py" line="233"/>
+        <location filename="../spectralsignature/spectralsignatureplot.py" line="236"/>
         <source>Add to Signature list</source>
         <translation>Ajouter à la liste des signatures</translation>
     </message>
     <message>
-        <location filename="../spectralsignature/spectralsignatureplot.py" line="233"/>
+        <location filename="../spectralsignature/spectralsignatureplot.py" line="236"/>
         <source>Are you sure you want to add highlighted signatures to the list?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../spectralsignature/spectralsignatureplot.py" line="470"/>
+        <location filename="../spectralsignature/spectralsignatureplot.py" line="473"/>
         <source>Are you sure you want to delete highlighted signatures?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../spectralsignature/spectralsignatureplot.py" line="650"/>
+        <location filename="../spectralsignature/spectralsignatureplot.py" line="658"/>
         <source>Values</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../spectralsignature/spectralsignatureplot.py" line="1075"/>
+        <location filename="../spectralsignature/spectralsignatureplot.py" line="1083"/>
         <source>Undo thresholds</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../spectralsignature/spectralsignatureplot.py" line="1075"/>
+        <location filename="../spectralsignature/spectralsignatureplot.py" line="1083"/>
         <source>Are you sure you want to undo thresholds?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6422,27 +6422,27 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="5731"/>
+        <location filename="../core/utils.py" line="5752"/>
         <source>Calculating signature</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="6982"/>
+        <location filename="../core/utils.py" line="7003"/>
         <source>Writing file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="5061"/>
+        <location filename="../core/utils.py" line="5070"/>
         <source>Conversion to vector</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="6700"/>
+        <location filename="../core/utils.py" line="6721"/>
         <source>Sieve</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="6818"/>
+        <location filename="../core/utils.py" line="6839"/>
         <source>Building overviews</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6487,12 +6487,12 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="8192"/>
+        <location filename="../core/utils.py" line="8223"/>
         <source>Remove rows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="8192"/>
+        <location filename="../core/utils.py" line="8223"/>
         <source>Are you sure you want to remove highlighted rows from the table?</source>
         <translation type="unfinished"></translation>
     </message>

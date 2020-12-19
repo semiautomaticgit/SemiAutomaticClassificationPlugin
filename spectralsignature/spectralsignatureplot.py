@@ -40,11 +40,14 @@ cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 class SpectralSignaturePlot:
 
 	def __init__(self):
-		self.mouseScroll = cfg.uisp.Sig_Widget.sigCanvas.mpl_connect('scroll_event', self.scroll_event)
-		self.mousePress = cfg.uisp.Sig_Widget.sigCanvas.mpl_connect('button_press_event', self.press_event)
-		self.mouseRelease = cfg.uisp.Sig_Widget.sigCanvas.mpl_connect('button_release_event', self.release_event)
-		self.mouseLeaveFigure = cfg.uisp.Sig_Widget.sigCanvas.mpl_connect('figure_leave_event', self.leave_event)
-		self.mouseMove = cfg.uisp.Sig_Widget.sigCanvas.mpl_connect('motion_notify_event', self.motion_event)
+		try:
+			self.mouseScroll = cfg.uisp.Sig_Widget.sigCanvas.mpl_connect('scroll_event', self.scroll_event)
+			self.mousePress = cfg.uisp.Sig_Widget.sigCanvas.mpl_connect('button_press_event', self.press_event)
+			self.mouseRelease = cfg.uisp.Sig_Widget.sigCanvas.mpl_connect('button_release_event', self.release_event)
+			self.mouseLeaveFigure = cfg.uisp.Sig_Widget.sigCanvas.mpl_connect('figure_leave_event', self.leave_event)
+			self.mouseMove = cfg.uisp.Sig_Widget.sigCanvas.mpl_connect('motion_notify_event', self.motion_event)
+		except:
+			return None
 		self.editing = 0
 		self.checkLimits = 'No'
 
@@ -639,7 +642,12 @@ class SpectralSignaturePlot:
 			cfg.pF = []
 		except:
 			pass
-		lines = len(cfg.uisp.Sig_Widget.sigCanvas.ax.lines)
+		try:
+			lines = len(cfg.uisp.Sig_Widget.sigCanvas.ax.lines)
+		except Exception as err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			return None
 		if lines > 0:
 			for i in reversed(list(range(0, lines))):
 				cfg.uisp.Sig_Widget.sigCanvas.ax.lines.pop(i)

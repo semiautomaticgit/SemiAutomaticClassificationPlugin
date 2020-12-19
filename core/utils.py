@@ -2225,16 +2225,18 @@ class Utils:
 	def createTempRasterList(self, rasterNumber):
 		oM = []
 		dT = cfg.utls.getTime()
+		r = cfg.randomSCP.randint(0,1000)
 		for t in range(0, rasterNumber):
 			# date time for temp name
-			tPMD = cfg.osSCP.path.join(cfg.tmpDir, dT + str(t) + '_temp.tif')
+			tPMD = cfg.osSCP.path.join(cfg.tmpDir, dT + str(r) + str(t) + '_temp.tif')
 			oM.append(tPMD)
 		return oM
 		
 	# create temporary raster path
 	def createTempRasterPath(self, extension, name = '_temp'):
+		r = cfg.randomSCP.randint(0,1000)
 		dT = cfg.utls.getTime()
-		tPMD = cfg.osSCP.path.join(cfg.tmpDir, dT + name + '.' + extension)
+		tPMD = cfg.osSCP.path.join(cfg.tmpDir, dT + str(r) + name + '.' + extension)
 		return tPMD
 		
 	# create temporary raster path
@@ -2244,10 +2246,11 @@ class Utils:
 		
 	# create temporary virtual raster
 	def createTempVirtualRaster(self, inputRasterList, bandNumberList = 'No', quiet = 'No', NoDataVal = 'No', relativeToVRT = 0, projection = 'No', intersection = 'Yes', boxCoordList = None, xyResList = None, aster = 'No'):
+		r = cfg.randomSCP.randint(0,1000)
 		# date time for temp name
 		dT = cfg.utls.getTime()
 		tPMN1 = cfg.tmpVrtNm + '.vrt'
-		tPMD1 = cfg.tmpDir + '/' + dT + tPMN1
+		tPMD1 = cfg.tmpDir + '/' + dT + str(r) + tPMN1
 		# create virtual raster
 		output = cfg.utls.createVirtualRaster(inputRasterList, tPMD1, bandNumberList, quiet, NoDataVal, relativeToVRT, projection, intersection, boxCoordList, xyResList, aster)
 		return output
@@ -4128,6 +4131,7 @@ class Utils:
 		cfg.inspectSCP = inspect
 		cfg.datetimeSCP = datetime
 		cfg.np = np
+		cfg.randomSCP = random
 		cfg.gdalSCP = gdal
 		cfg.ogrSCP = ogr
 		cfg.osrSCP = osr
@@ -4310,6 +4314,7 @@ class Utils:
 		cfg.inspectSCP = inspect
 		cfg.datetimeSCP = datetime
 		cfg.np = np
+		cfg.randomSCP = random
 		cfg.gdalSCP = gdal
 		cfg.ogrSCP = ogr
 		cfg.osrSCP = osr
@@ -4952,6 +4957,7 @@ class Utils:
 		import inspect
 		import time
 		import datetime
+		import random
 		from osgeo import gdal
 		from osgeo import ogr
 		from osgeo import osr
@@ -4959,6 +4965,7 @@ class Utils:
 		cfg.sysSCP = sys
 		cfg.inspectSCP = inspect
 		cfg.datetimeSCP = datetime
+		cfg.randomSCP = random
 		cfg.gdalSCP = gdal
 		cfg.ogrSCP = ogr
 		cfg.osrSCP = osr
@@ -5009,6 +5016,7 @@ class Utils:
 		tmpRastList = []
 		subprocRes = []
 		# calculate raster ranges
+		nn = 0
 		for y in lY:
 			bSY = blockSizeY
 			if y + bSY > rY:
@@ -5017,16 +5025,17 @@ class Utils:
 				bSX = blockSizeX 
 				if x + bSX > rX:
 					bSX = rX - x
-				tPMD = cfg.utls.createTempRasterPath('vrt')
+				tPMD = cfg.utls.createTempRasterPath('vrt', name = str(nn))
 				tmpRastList.append(tPMD)
 				cfg.utls.createVirtualRaster2(inputRasterList = [rasterPath], output = tPMD, NoDataValue = 'Yes', extentList = [x, y, bSX, bSY])
+				nn = nn + 1
 		# multiple parallel processes
 		results = []
 		field = 'DN'
 		for p in range(0, len(tmpRastList)):
 			if cfg.actionCheck == 'Yes':
 				vRasterPath = tmpRastList[p]
-				tVect = cfg.utls.createTempRasterPath('gpkg')
+				tVect = cfg.utls.createTempRasterPath('gpkg', name = str(p))
 				wrtP = [p, cfg.tmpDir]
 				c = cfg.pool.apply_async(cfg.utls.rasterToVectorMulti, args=(vRasterPath, tVect, field, wrtP))
 				results.append([c, p])
@@ -5080,6 +5089,7 @@ class Utils:
 		import inspect
 		import time
 		import datetime
+		import random
 		import numpy as np
 		from osgeo import gdal
 		from osgeo import ogr
@@ -5088,6 +5098,7 @@ class Utils:
 		cfg.sysSCP = sys
 		cfg.inspectSCP = inspect
 		cfg.datetimeSCP = datetime
+		cfg.randomSCP = random
 		cfg.np = np
 		cfg.gdalSCP = gdal
 		cfg.ogrSCP = ogr
@@ -5106,6 +5117,8 @@ class Utils:
 		cfg.logFile = cfg.tmpDir + '/log_' + wrtProc
 		# logger
 		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " process: " + str(wrtProc))
+		# logger
+		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " rasterPath: " + str(rasterPath))
 		# open input with GDAL
 		try:
 			rD = cfg.gdalSCP.Open(rasterPath, cfg.gdalSCP.GA_ReadOnly)
@@ -5118,6 +5131,8 @@ class Utils:
 			return '', 'No'
 		# create a shapefile
 		d = cfg.ogrSCP.GetDriverByName('GPKG')
+		# logger
+		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " outputVectorPath: " + str(outputVectorPath))
 		dS = d.CreateDataSource(outputVectorPath)
 		if dS is None:
 			# close rasters
@@ -5127,8 +5142,14 @@ class Utils:
 		else:
 			# shapefile
 			sR = cfg.osrSCP.SpatialReference()
+			# logger
+			cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " sR: " + str(sR))
 			sR.ImportFromWkt(rD.GetProjectionRef())
+			# logger
+			cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " sR: " + str(sR))
 			rL = dS.CreateLayer(cfg.utls.fileName(rasterPath), sR, cfg.ogrSCP.wkbMultiPolygon)
+			# logger
+			cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " rL: " + str(rL))
 			if fieldName == 'No':
 				fN = str(cfg.fldID_class)
 			else:
@@ -6979,7 +7000,6 @@ class Utils:
 		import inspect
 		import time
 		import datetime
-		import numpy as np
 		from osgeo import gdal
 		from osgeo import ogr
 		from osgeo import osr
@@ -6987,7 +7007,6 @@ class Utils:
 		cfg.sysSCP = sys
 		cfg.inspectSCP = inspect
 		cfg.datetimeSCP = datetime
-		cfg.np = np
 		cfg.gdalSCP = gdal
 		cfg.ogrSCP = ogr
 		cfg.osrSCP = osr
@@ -7007,7 +7026,7 @@ class Utils:
 			pass
 		cfg.logFile = cfg.tmpDir + '/log_' + 'gdal'
 		# logger
-		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " process: " + str(wrtProc))
+		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' process: ' + str(wrtProc))
 		try:
 			progressG = (lambda perc, m, d: progressQueue.put([perc * 100, m], False))
 			to = gdal.TranslateOptions(gdal.ParseCommandLine(optionString), callback = progressG)
@@ -7120,7 +7139,7 @@ class Utils:
 				nD = cfg.utls.imageNoDataValue(bandList[b])
 				if nD is None:
 					nD = cfg.NoDataVal
-				tPMD = cfg.utls.createTempRasterPath('tif')
+				tPMD = cfg.utls.createTempRasterPath('tif', name = str(b))
 				cfg.utls.GDALReprojectRaster(bandList[b], tPMD, 'GTiff', None, 'EPSG:' + str(rEPSG), '-ot Float32 -dstnodata ' + str(nD))
 				if cfg.osSCP.path.isfile(tPMD):
 					bandList[b] = tPMD
@@ -7463,8 +7482,8 @@ class Utils:
 	# merge dissolve layer to new layer
 	def mergeDissolveLayer(self, inputLayer, targetLayer, column, xListCoordinates):
 		# open virtual layer
-		input = cfg.ogrSCP.Open(inputLayer)
-		iL0 = input.GetLayer()
+		inputM = cfg.ogrSCP.Open(inputLayer)
+		iL0 = inputM.GetLayer()
 		iNm0 = iL0.GetName()
 		iSR = iL0.GetSpatialRef()
 		iLDefn = iL0.GetLayerDefn()
@@ -7481,7 +7500,9 @@ class Utils:
 		oLDefn = oL.GetLayerDefn()
 		# get unique values
 		sql = 'SELECT DISTINCT "' + column +'" FROM "' + iNm0 + '"'
-		uniqueValues = input.ExecuteSQL(sql, dialect = 'SQLITE')
+		# logger
+		cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'sql ' + sql)
+		uniqueValues = inputM.ExecuteSQL(sql, dialect = 'SQLITE')
 		uniqueValues
 		values = []
 		idList = []
@@ -7491,8 +7512,11 @@ class Utils:
 		# for each value
 		for v in values:
 			uVFL = None
-			sql = 'SELECT ST_COLLECT(DISTINCT geom), GROUP_CONCAT(DISTINCT id) FROM (SELECT fid as id, geom FROM "' + iNm0 + '" WHERE ' + column + ' = ' + str(v) + ') INNER JOIN (SELECT DISTINCT id FROM "rtree_' + iNm0 + '_geom" WHERE minx IN (' + sqlList + ') OR maxx IN (' + sqlList + ') ) USING (id)'
-			uV = input.ExecuteSQL(sql, dialect = "SQLITE")
+			# to be replaced by cascaded ST_UNION when performance issues are solved, see https://groups.google.com/g/spatialite-users/c/FTO_cmLCfpE/
+			sql = 'SELECT ST_unaryunion(ST_COLLECT(geom)), GROUP_CONCAT(DISTINCT id) FROM (SELECT fid as id, geom FROM "' + iNm0 + '" WHERE ' + column + ' = ' + str(v) + ') INNER JOIN (SELECT DISTINCT id FROM "rtree_' + iNm0 + '_geom" WHERE minx IN (' + sqlList + ') OR maxx IN (' + sqlList + ') ) USING (id)'
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'sql ' + sql)
+			uV = inputM.ExecuteSQL(sql, dialect = 'SQLITE')
 			if uV is not None:
 				uVF = uV.GetNextFeature()
 				uVFL = uVF.GetField(0)
@@ -7503,19 +7527,20 @@ class Utils:
 					# logger
 					cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' count geometries ' + str(cUG))
 					if cUG > 1:
-						# union cascaded
-						geometry = geometryRef.UnionCascaded()
-						uGC = geometry.GetGeometryCount()
 						oL.StartTransaction()
-						for j in range(0, uGC):
-							jg = geometry.GetGeometryRef(int(j))
+						for j in range(0, cUG):
+							jg = geometryRef.GetGeometryRef(int(j))
 							oF = cfg.ogrSCP.Feature(oLDefn)
-							oF.SetGeometry(jg)
+							oFO = oF.SetGeometry(jg)
+							# logger
+							cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' oFO ' + str(oFO))
 							oF.SetField(column, v)
-							oL.CreateFeature(oF)
+							oLO = oL.CreateFeature(oF)
+							# logger
+							cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' oLO ' + str(oLO))
 						oL.CommitTransaction()
 						# logger
-						cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' added union geometries ')	
+						cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' added union cascade geometries ')	
 					else:
 						oL.StartTransaction()
 						oF = cfg.ogrSCP.Feature(oLDefn)
@@ -7541,7 +7566,12 @@ class Utils:
 				oL.CreateFeature(oF)
 			iF = iL0.GetNextFeature()
 		oL.CommitTransaction()
-		input.Destroy()
+		inputM.Destroy()
+		iL0 = None
+		inputM = None
+		oS.Destroy()
+		oL = None
+		oS = None
 		# logger
 		cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'merged: ' + str(targetLayer))
 		return targetLayer
@@ -7583,6 +7613,7 @@ class Utils:
 		oL.CommitTransaction()
 		input.Destroy()
 		oS.Destroy()
+		oS = None
 		# logger
 		cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'merged: ' + str(targetLayer))
 		return targetLayer

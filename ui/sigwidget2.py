@@ -36,36 +36,48 @@
 from PyQt5 import QtGui, QtWidgets
 from PyQt5.QtWidgets import QWidget
 # Import FigureCanvas
-import matplotlib
 try:
-	matplotlib.use("Qt5Agg")
+	import matplotlib
 except:
 	pass
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigCanvas
-# Import Figure
-from matplotlib.figure import Figure
+try:
+	matplotlib.use('Qt5Agg')
+except:
+	pass
+try:
+	from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigCanvas
+	# Import Figure
+	from matplotlib.figure import Figure
+except:
+	FigCanvas = QWidget
 
 class SigCanvas(FigCanvas):
 	def __init__(self):
-		# Figure
-		self.figure = Figure()
-		# Add subplot for plot and legend
-		self.ax = self.figure.add_axes([0.1, 0.15, 0.8, 0.8])
-		# Canvas initialization
-		FigCanvas.__init__(self, self.figure)
+		try:
+			# Figure
+			self.figure = Figure()
+			# Add subplot for plot and legend
+			self.ax = self.figure.add_axes([0.1, 0.15, 0.8, 0.8])
+			# Canvas initialization
+			FigCanvas.__init__(self, self.figure)
+		except:
+			return None
 		# Set empty ticks
 		self.ax.set_xticks([])
 		self.ax.set_yticks([])
 
 class SigWidget2(QWidget):
 	def __init__(self, parent = None):
-		# Widget initialization
-		QWidget.__init__(self, parent)
-		# Widget canvas
-		self.sigCanvas = SigCanvas()
-		# Create grid layout
-		self.gridLayout = QtWidgets.QGridLayout()
-		# Add widget to grid
-		self.gridLayout.addWidget(self.sigCanvas)
+		try:
+			# Widget initialization
+			QWidget.__init__(self, parent)
+			# Widget canvas
+			self.sigCanvas = SigCanvas()
+			# Create grid layout
+			self.gridLayout = QtWidgets.QGridLayout()
+			# Add widget to grid
+			self.gridLayout.addWidget(self.sigCanvas)
+		except:
+			return None
 		# Set layout
 		self.setLayout(self.gridLayout)

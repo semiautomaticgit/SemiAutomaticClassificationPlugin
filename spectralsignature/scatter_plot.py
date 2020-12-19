@@ -40,11 +40,14 @@ cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 class Scatter_Plot:
 
 	def __init__(self):
-		self.mouseScroll = cfg.uiscp.Scatter_Widget_2.sigCanvas.mpl_connect('scroll_event', self.scroll_event)
-		self.mousePress = cfg.uiscp.Scatter_Widget_2.sigCanvas.mpl_connect('button_press_event', self.press_event)
-		self.mouseRelease = cfg.uiscp.Scatter_Widget_2.sigCanvas.mpl_connect('button_release_event', self.release_event)
-		self.mouseLeaveFigure = cfg.uiscp.Scatter_Widget_2.sigCanvas.mpl_connect('figure_leave_event', self.leave_event)
-		self.mouseMove = cfg.uiscp.Scatter_Widget_2.sigCanvas.mpl_connect('motion_notify_event', self.motion_event)
+		try:
+			self.mouseScroll = cfg.uiscp.Scatter_Widget_2.sigCanvas.mpl_connect('scroll_event', self.scroll_event)
+			self.mousePress = cfg.uiscp.Scatter_Widget_2.sigCanvas.mpl_connect('button_press_event', self.press_event)
+			self.mouseRelease = cfg.uiscp.Scatter_Widget_2.sigCanvas.mpl_connect('button_release_event', self.release_event)
+			self.mouseLeaveFigure = cfg.uiscp.Scatter_Widget_2.sigCanvas.mpl_connect('figure_leave_event', self.leave_event)
+			self.mouseMove = cfg.uiscp.Scatter_Widget_2.sigCanvas.mpl_connect('motion_notify_event', self.motion_event)
+		except:
+			return None
 		self.editing = 0
 		self.xMin = None
 		self.xMax = None
@@ -385,11 +388,16 @@ class Scatter_Plot:
 		
 	# Create scatter plot
 	def scatterPlot(self, colorMap = 'No'):
-		cfg.uiUtls.addProgressBar()
 		tW = cfg.uiscp.scatter_list_plot_tableWidget
 		# Clear plot
-		cfg.uiscp.Scatter_Widget_2.sigCanvas.ax.clear()
-		cfg.uiscp.Scatter_Widget_2.sigCanvas.draw()
+		try:
+			cfg.uiscp.Scatter_Widget_2.sigCanvas.ax.clear()
+			cfg.uiscp.Scatter_Widget_2.sigCanvas.draw()
+		except Exception as err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			return None
+		cfg.uiUtls.addProgressBar()
 		bX = cfg.scatterBandX
 		bY = cfg.scatterBandY
 		# Set labels

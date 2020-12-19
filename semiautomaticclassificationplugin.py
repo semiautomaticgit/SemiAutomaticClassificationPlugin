@@ -663,6 +663,11 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.main_tabWidget.currentChanged.connect(cfg.ipt.mainTabChanged)
 			# hide tabs
 			cfg.ui.SCP_tabs.setStyleSheet('QTabBar::tab {padding: 0px; max-height: 0px;}')
+			cfg.ui.widget.setMinimumSize(cfg.QtCoreSCP.QSize(50, 0))
+			cfg.ui.widget.setMaximumSize(cfg.QtCoreSCP.QSize(400, 16777215))
+			# set window size
+			cfg.dlg.resize(cfg.dlg.size().width(), 900)
+			cfg.ui.splitter.setSizes([150, cfg.ui.splitter.size().height()])
 			cfg.ui.menu_treeWidget.itemSelectionChanged.connect(cfg.ipt.menuIndex)
 			cfg.ui.f_filter_lineEdit.textChanged.connect(cfg.ipt.filterTree)
 			''' Multiple ROI tab '''

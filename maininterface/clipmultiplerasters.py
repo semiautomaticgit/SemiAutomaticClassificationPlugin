@@ -143,6 +143,9 @@ class ClipMultipleRasters:
 						return 'No'
 				else:
 					uS = 0
+			else:
+				cfg.mx.msgWar15()
+				return 'No'
 		else:
 			cfg.mx.msgWar15()
 			return 'No'
