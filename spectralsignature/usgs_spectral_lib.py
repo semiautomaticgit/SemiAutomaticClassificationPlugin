@@ -89,6 +89,8 @@ class USGS_Spectral_Lib:
 			usgsList = cfg.usgs_C5p
 		elif ch == cfg.usgs_C6:
 			usgsList = cfg.usgs_C6p
+		elif ch == cfg.usgs_C7:
+			usgsList = cfg.usgs_C7p
 		else:
 			cfg.ui.usgs_library_comboBox.clear()
 			return 1
