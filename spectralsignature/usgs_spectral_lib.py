@@ -40,35 +40,37 @@ cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 class USGS_Spectral_Lib:
 
 	def __init__(self):
-		pass
+		self.library = None
 			
 	# add library list to combo
 	def addLibrariesToCombo(self):
 		cfg.ui.usgs_library_comboBox.blockSignals(True)
 		cfg.ui.usgs_library_comboBox.clear()
-		cfg.ui.usgs_library_comboBox.addItem("")
+		cfg.ui.usgs_library_comboBox.addItem('')
 		for i in self.usgsLibNm:
 			cfg.ui.usgs_library_comboBox.addItem(i)
 		cfg.ui.usgs_library_comboBox.blockSignals(False)
 		# logger
-		cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "add libraries")
+		cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'add libraries')
 				
 	# add signature to list
 	def addSignatureToList(self):
 		if self.library is not None:
 			if len(self.library) > 0:
-				r = self.downloadLibrary(self.library)
-				if r is not None:
-					cfg.sigImport.USGSLibrary(r)
+				cfg.uiUtls.addProgressBar()
+				libraryR, libraryW, libraryS = cfg.usgsLib.downloadLibrary(self.library)
+				if libraryR is not None:
+					cfg.sigImport.USGSLibrary(libraryR, libraryW, libraryS)
 					# logger
-					cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "signature added: " + str(r))
+					cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'signature added: ' + str(self.library))
+				cfg.uiUtls.removeProgressBar()
 				
 	# add chapter list to combo
 	def addSpectralLibraryToCombo(self, libraryDB):
 		for i in cfg.usgs_lib_list:
 			cfg.ui.usgs_chapter_comboBox.addItem(i)
 		# logger
-		cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "chapters added")
+		cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'chapters added')
 		
 	# selection of chapter
 	def chapterChanged(self):
@@ -96,47 +98,118 @@ class USGS_Spectral_Lib:
 			self.usgsLibNm.append(c[0])
 			self.usgsLib.append([c[1], c[2]])
 		self.addLibrariesToCombo()
-		cfg.ui.USGS_library_textBrowser.setHtml("")
+		cfg.ui.USGS_library_textBrowser.setHtml('')
 		# logger
-		cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "chapter: " + str(ch))
+		cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'chapter: ' + str(ch))
 		
 	# download signature file
 	def downloadLibrary(self, link):
 		# date time for temp name
 		dT = cfg.utls.getTime()
 		try:
-			check = cfg.utls.downloadFile(link, cfg.tmpDir + "/" + dT + ".asc", "query")
+			check = cfg.utls.downloadFile(link, cfg.tmpDir + '/' + dT + '.zip', 'query')
 			# logger
-			cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "library downloaded: " + str(link))
+			cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'library downloaded: ' + str(link))
 			if check == 'Yes':
-				return cfg.tmpDir + "/" + dT + ".asc"
+				libraryR, libraryW, libraryS = cfg.usgsLib.unzipLibrary(cfg.tmpDir + '/' + dT + '.zip')
+				return libraryR, libraryW, libraryS
 			else:
 				raise ValueError('No')
 		except Exception as err:
 			# logger
-			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 			cfg.mx.msgErr21()
+			return None, None, None
+		
+	# unzip file
+	def unzipLibrary(self, path):
+		# unzip to temp dir
+		try:
+			ref = []
+			wl = []
+			sD = []
+			with cfg.zipfileSCP.ZipFile(path) as zOpen:
+				for flName in zOpen.namelist():
+					if flName.endswith('.txt'):
+						if 'REF' in flName and 'errorbars' not in flName:
+							zipF = zOpen.open(flName)
+							# temp files
+							tS = cfg.utls.createTempRasterPath('txt')
+							try:
+								zipO = open(tS, 'wb')
+								with zipF, zipO:
+									cfg.shutilSCP.copyfileobj(zipF, zipO)
+								zipO.close()
+								f = open(tS)
+								file = f.readlines()
+								sD1 = []
+								for b in range(1, len(file)):
+									val = float(file[b])
+									if val < 0:
+										val = 0
+									ref.append(val)
+									sD1.append(0)
+							except Exception as err:
+								# logger
+								cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+						elif 'Wavelengths' in flName:
+							zipF = zOpen.open(flName)
+							# temp files
+							tS = cfg.utls.createTempRasterPath('txt')
+							try:
+								zipO = open(tS, 'wb')
+								with zipF, zipO:
+									cfg.shutilSCP.copyfileobj(zipF, zipO)
+								zipO.close()
+								f = open(tS)
+								file = f.readlines()
+								for b in range(1, len(file)):
+									wl.append(float(file[b]))
+							except Exception as err:
+								# logger
+								cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+						elif 'errorbars' in flName:
+							zipF = zOpen.open(flName)
+							# temp files
+							tS = cfg.utls.createTempRasterPath('txt')
+							try:
+								zipO = open(tS, 'wb')
+								with zipF, zipO:
+									cfg.shutilSCP.copyfileobj(zipF, zipO)
+								zipO.close()
+								f = open(tS)
+								file = f.readlines()
+								for b in range(1, len(file)):
+									sD.append(float(file[b]))
+							except Exception as err:
+								# logger
+								cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+			if len(sD) == 0:
+				sD = sD1
+			return ref, wl, sD
+		except Exception as err:
+			return None, None, None
 		
 	# download signature description and display
 	def getSignatureDescription(self, link):
 		# date time for temp name
 		dT = cfg.utls.getTime()
 		try:
-			check = cfg.utls.downloadFile(link, cfg.tmpDir + "/" + dT + ".html", "query")
+			check = cfg.utls.downloadFile(link, cfg.tmpDir + '/' + dT + '.html', 'query')
 			# logger
-			cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "library downloaded: " + str(link))
+			cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'library downloaded: ' + str(link))
 			if check == 'Yes':
-				f =  open(cfg.tmpDir + "/" + dT + ".html", 'r')
+				f =  open(cfg.tmpDir + '/' + dT + '.html', 'r', errors='ignore')
 				dHtml = f.read()
 				cfg.ui.USGS_library_textBrowser.setHtml(dHtml)
 			else:
 				raise ValueError('No')
 		except Exception as err:
 			# logger
-			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 			cfg.mx.msgErr21()
 		# logger
-		cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "library description: " + str(link))
+		cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'library description: ' + str(link))
 		
 	# selection of library
 	def libraryChanged(self):

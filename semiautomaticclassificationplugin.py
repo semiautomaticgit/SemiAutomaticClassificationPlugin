@@ -441,7 +441,10 @@ class SemiAutomaticClassificationPlugin:
 		cfg.rasterDataType = cfg.utls.readRegistryKeys(cfg.regRasterDataType, cfg.rasterDataType)
 		cfg.expressionListBC = cfg.utls.readRegistryKeys(cfg.regExpressionListBC, cfg.expressionListBC)
 		cfg.soundVal = cfg.utls.readRegistryKeys(cfg.regSound, cfg.soundVal)
-		
+		cfg.windowSizeW = cfg.utls.readRegistryKeys(cfg.regWindowSizeW, cfg.windowSizeW)
+		cfg.windowSizeH = cfg.utls.readRegistryKeys(cfg.regWindowSizeH, cfg.windowSizeH)
+		cfg.splitterSizeS = cfg.utls.readRegistryKeys(cfg.regSplitterSizeS, cfg.splitterSizeS)
+
 	def initGui(self):
 		if PluginCheck == 'Yes':
 			try:
@@ -538,12 +541,13 @@ class SemiAutomaticClassificationPlugin:
 			cfg.utls.setColumnWidthList(cfg.ui.download_images_tableWidget, [[0, 100], [1, 400]])
 			# USGS spectral lbrary
 			cfg.usgsLib.addSpectralLibraryToCombo(cfg.usgs_lib_list)
-			cfg.usgs_C1p = cfg.plgnDir + '/spectralsignature/usgs_spectral_library/minerals.csv'
-			cfg.usgs_C2p = cfg.plgnDir + '/spectralsignature/usgs_spectral_library/mixtures.csv'
-			cfg.usgs_C3p = cfg.plgnDir + '/spectralsignature/usgs_spectral_library/coatings.csv'
-			cfg.usgs_C4p = cfg.plgnDir + '/spectralsignature/usgs_spectral_library/volatiles.csv'
-			cfg.usgs_C5p = cfg.plgnDir + '/spectralsignature/usgs_spectral_library/man-made.csv'
-			cfg.usgs_C6p = cfg.plgnDir + '/spectralsignature/usgs_spectral_library/plants_veg_microorg.csv'
+			cfg.usgs_C1p = cfg.plgnDir + '/' + cfg.usgs_C1p
+			cfg.usgs_C2p = cfg.plgnDir + '/' + cfg.usgs_C2p
+			cfg.usgs_C3p = cfg.plgnDir + '/' + cfg.usgs_C3p
+			cfg.usgs_C4p = cfg.plgnDir + '/' + cfg.usgs_C4p
+			cfg.usgs_C5p = cfg.plgnDir + '/' + cfg.usgs_C5p
+			cfg.usgs_C6p = cfg.plgnDir + '/' + cfg.usgs_C6p
+			cfg.usgs_C7p = cfg.plgnDir + '/' + cfg.usgs_C7p
 			# band calc expression
 			cfg.bCalc.createExpressionList(cfg.expressionListBC)
 			cfg.batchT.addFunctionsToTable(cfg.functionNames)
@@ -663,11 +667,12 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.main_tabWidget.currentChanged.connect(cfg.ipt.mainTabChanged)
 			# hide tabs
 			cfg.ui.SCP_tabs.setStyleSheet('QTabBar::tab {padding: 0px; max-height: 0px;}')
+			# set window size
+			cfg.dlg.resize(int(cfg.windowSizeW), int(cfg.windowSizeH))
 			cfg.ui.widget.setMinimumSize(cfg.QtCoreSCP.QSize(50, 0))
 			cfg.ui.widget.setMaximumSize(cfg.QtCoreSCP.QSize(400, 16777215))
-			# set window size
-			cfg.dlg.resize(cfg.dlg.size().width(), 900)
-			cfg.ui.splitter.setSizes([150, cfg.ui.splitter.size().height()])
+			cfg.ui.splitter.setSizes(eval(cfg.splitterSizeS))
+			cfg.ui.splitter.splitterMoved.connect(cfg.ipt.movedSplitter)
 			cfg.ui.menu_treeWidget.itemSelectionChanged.connect(cfg.ipt.menuIndex)
 			cfg.ui.f_filter_lineEdit.textChanged.connect(cfg.ipt.filterTree)
 			''' Multiple ROI tab '''
@@ -1554,6 +1559,12 @@ class SemiAutomaticClassificationPlugin:
 		
 	# remove plugin menu and icon	
 	def unload(self):
+		# save window size
+		try:
+			cfg.utls.setQGISRegSetting(cfg.regWindowSizeW, cfg.dlg.size().width())
+			cfg.utls.setQGISRegSetting(cfg.regWindowSizeH, cfg.dlg.size().height())
+		except:
+			pass
 		try:
 			qgisUtils.iface.removeDockWidget(cfg.dockclassdlg)
 			del cfg.toolBar2

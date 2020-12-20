@@ -570,6 +570,13 @@ regExpressionListBC= 'SemiAutomaticClassificationPlugin/expressionListBC'
 expressionListBCbase = []
 expressionListBC = expressionListBCbase
 LCSOld = 'Yes'
+# window size
+regWindowSizeW = 'SemiAutomaticClassificationPlugin/windowSizeW'
+windowSizeW = '700'
+regWindowSizeH = 'SemiAutomaticClassificationPlugin/windowSizeH'
+windowSizeH = '500'
+regSplitterSizeS = 'SemiAutomaticClassificationPlugin/splitterSizeS'
+splitterSizeS = '[100, 100]'
 
 ''' Names '''
 algMinDist = 'Minimum Distance'
@@ -733,18 +740,20 @@ rasterComboEdited = 'Yes'
 tempDirName = 'semiautomaticclassification'
 # USGS spectral library
 usgs_C1 = 'Chapter 1: Minerals'
-usgs_C2 = 'Chapter 2: Mixtures'
+usgs_C2 = 'Chapter 2: Soils and Mixtures'
 usgs_C3 = 'Chapter 3: Coatings'
-usgs_C4 = 'Chapter 4: Volatiles'
-usgs_C5 = 'Chapter 5: Man-Made'
-usgs_C6 = 'Chapter 6: Plants, Vegetation Communities, Mixtures with Vegetation, and Microorganisms'
-usgs_lib_list = ['', usgs_C1,usgs_C2,usgs_C3,usgs_C4,usgs_C5,usgs_C6]
-usgs_C1p = None
-usgs_C2p = None
-usgs_C3p = None
-usgs_C4p = None
-usgs_C5p = None
-usgs_C6p = None
+usgs_C4 = 'Chapter 4: Liquids'
+usgs_C5 = 'Chapter 5: Organics'
+usgs_C6 = 'Chapter 6: Artificial'
+usgs_C7 = 'Chapter 7: Vegetation and Mixtures'
+usgs_lib_list = ['', usgs_C1,usgs_C2,usgs_C3,usgs_C4,usgs_C5,usgs_C6,usgs_C7]
+usgs_C1p = '/spectralsignature/usgs_spectral_library/minerals.csv'
+usgs_C2p = '/spectralsignature/usgs_spectral_library/soils.csv'
+usgs_C3p = '/spectralsignature/usgs_spectral_library/coatings.csv'
+usgs_C4p = '/spectralsignature/usgs_spectral_library/liquids.csv'
+usgs_C5p = '/spectralsignature/usgs_spectral_library/organics.csv'
+usgs_C6p = '/spectralsignature/usgs_spectral_library/artificial.csv'
+usgs_C7p = '/spectralsignature/usgs_spectral_library/vegetation.csv'
 
 ''' Batch '''
 workingDirNm = '!working_dir!'

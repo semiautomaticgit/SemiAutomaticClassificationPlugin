@@ -522,6 +522,9 @@ class Input:
 	def topTree(self):
 		pass
 		
+	def movedSplitter(self, index, pos):
+		cfg.utls.setQGISRegSetting(cfg.regSplitterSizeS, str(cfg.ui.splitter.sizes()))
+		
 	# filter tree	
 	def filterTree(self):
 		try:

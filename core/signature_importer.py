@@ -38,46 +38,33 @@ class Signature_Importer:
 	def __init__(self):
 		pass
 		
-	# import USGS spectral library (http://speclab.cr.usgs.gov/spectral-lib.html)
-	def USGSLibrary(self, libraryPath):
-		if cfg.osSCP.path.isfile(libraryPath):
-			f = open(libraryPath)
-			file = f.readlines()
-			if "USGS" in file[0]:
-				wl = []
-				ref = []
-				sD = []
-				for b in range(16, len(file)):
-					r = " ".join(file[b].split())
-					v = r.split()
-					wl.append(float(v[0]))
-					ref.append(float(v[1]))
-					sD.append(float(v[2]))
-				wavelength = cfg.np.array(wl)
-				a = list(cfg.bandSetsList[cfg.bndSetNumber][4])
-				s = sorted(a, key=float)
-				b = 0
-				cfg.tblOut = {}
-				for w in s:
-					i = (cfg.np.abs(wavelength - w)).argmin()
-					waveL = wl[i]
-					reflectance = ref[i]
-					standardDeviation = sD[i]
-					val = []
-					val.append(reflectance-standardDeviation)
-					val.append(reflectance+standardDeviation)
-					val.append(reflectance)
-					val.append(standardDeviation)
-					cfg.tblOut["BAND_{0}".format(b+1)] = val
-					cfg.tblOut["WAVELENGTH_{0}".format(b + 1)] = w
-					b = b + 1
-				self.addLibraryToSignatureList()
-				# logger
-				cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " spectral library imported" + str(file[0]))
-			else:
-				cfg.mx.msgErr17()
-				# logger
-				cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " spectral library " + str(file[0]))
+	# import USGS spectral library (https://www.usgs.gov/labs/spec-lab/capabilities/spectral-library)
+	def USGSLibrary(self, libraryReflectance, libraryWavelength, librarySD):
+		ref = libraryReflectance
+		wl = libraryWavelength
+		sD = librarySD
+		wavelength = cfg.np.array(wl)
+		a = list(cfg.bandSetsList[cfg.bndSetNumber][4])
+		s = sorted(a, key=float)
+		if len(s) > 0:
+			b = 0
+			cfg.tblOut = {}
+			for w in s:
+				i = (cfg.np.abs(wavelength - w)).argmin()
+				waveL = wl[i]
+				reflectance = ref[i]
+				standardDeviation = sD[i]
+				val = []
+				val.append(reflectance-standardDeviation)
+				val.append(reflectance+standardDeviation)
+				val.append(reflectance)
+				val.append(standardDeviation)
+				cfg.tblOut['BAND_{0}'.format(b+1)] = val
+				cfg.tblOut['WAVELENGTH_{0}'.format(b + 1)] = w
+				b = b + 1
+			self.addLibraryToSignatureList()
+			# logger
+			cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' spectral library imported')
 					
 	# import ASTER spectral library (http://speclib.jpl.nasa.gov/search-1)
 	def ASTERLibrary(self, libraryPath):
@@ -108,16 +95,16 @@ class Signature_Importer:
 					val.append(reflectance+standardDeviation)
 					val.append(reflectance)
 					val.append(standardDeviation)
-					cfg.tblOut["BAND_{0}".format(b+1)] = val
-					cfg.tblOut["WAVELENGTH_{0}".format(b + 1)] = w
+					cfg.tblOut['BAND_{0}'.format(b+1)] = val
+					cfg.tblOut['WAVELENGTH_{0}'.format(b + 1)] = w
 					b = b + 1
 				self.addLibraryToSignatureList()
 				# logger
-				cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " spectral library imported" + str(file[0]))
+				cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' spectral library imported' + str(file[0]))
 			else:
 				cfg.mx.msgErr17()
 				# logger
-				cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " spectral library " + str(file[0]))
+				cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' spectral library ' + str(file[0]))
 		
 	# import generic CSV spectral library (first line: wavelength, reflectance, standardDeviation, waveLengthUnit)
 	def CSVLibrary(self, libraryPath):
@@ -128,9 +115,9 @@ class Signature_Importer:
 			ref = []
 			sD = []
 			for b in range(1, len(file)):
-				v = file[b].split(";")
+				v = file[b].split(';')
 				if len(v) == 1:
-					v = file[b].split(",")
+					v = file[b].split(',')
 				# check if wavelength is not in micrometers
 				vL = float(v[0])
 				if v[3] != cfg.noUnit:
@@ -159,8 +146,8 @@ class Signature_Importer:
 				val.append(reflectance+standardDeviation)
 				val.append(reflectance)
 				val.append(standardDeviation)
-				cfg.tblOut["BAND_{0}".format(b+1)] = val
-				cfg.tblOut["WAVELENGTH_{0}".format(b + 1)] = w
+				cfg.tblOut['BAND_{0}'.format(b+1)] = val
+				cfg.tblOut['WAVELENGTH_{0}'.format(b + 1)] = w
 				b = b + 1
 			unit = v[3].strip()
 			if str(unit) == cfg.noUnit or str(unit) == cfg.unitMicro or str(unit) == cfg.wlNano:
@@ -168,7 +155,7 @@ class Signature_Importer:
 			else:
 				self.addLibraryToSignatureList()
 			# logger
-			cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " spectral library imported " + str(libraryPath))
+			cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' spectral library imported ' + str(libraryPath))
 
 	# add library values to signature list
 	def addLibraryToSignatureList(self, unit = None):
@@ -176,7 +163,7 @@ class Signature_Importer:
 		macroclassInfo = cfg.ROIMacroClassInfo
 		classID = cfg.ROIID
 		classInfo = cfg.ROIInfo
-		cfg.tblOut["ROI_SIZE"] = 0
+		cfg.tblOut['ROI_SIZE'] = 0
 		cfg.utls.ROIStatisticsToSignature('No', macroclassID, macroclassInfo, classID, classInfo, cfg.bndSetNumber, unit)
 		cfg.SCPD.ROIListTableTree(cfg.shpLay, cfg.uidc.signature_list_treeWidget)
 		
