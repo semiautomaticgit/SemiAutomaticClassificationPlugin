@@ -1929,7 +1929,9 @@ class SCPDock:
 			cfg.mx.msg4()
 
 	# Save last ROI to shapefile 
-	def saveROItoShapefile(self, progressbar = 'Yes'):
+	def saveROItoShapefile(self, progressbar = 'Yes', bandSetNumber = None):
+		if bandSetNumber is None:
+			bandSetNumber = cfg.bndSetNumber
 		l = cfg.shpLay
 		if l is None:
 			cfg.mx.msg3()
@@ -1949,7 +1951,7 @@ class SCPDock:
 		# check if no ROI created
 		elif cfg.lstROI is None:
 			cfg.mx.msg6()
-		elif len(cfg.bandSetsList[cfg.bndSetNumber][3])==0:
+		elif len(cfg.bandSetsList[bandSetNumber][3])==0:
 			cfg.mx.msgErr2(SMTP = 'No')
 		else:
 			if progressbar == 'Yes':
@@ -2031,9 +2033,9 @@ class SCPDock:
 			if cfg.uidc.signature_checkBox.isChecked() is True:
 				if progressbar == 'Yes':
 					cfg.uiUtls.updateBar(50)
-					cfg.utls.calculateSignature(cfg.shpLay, cfg.bandSetsList[cfg.bndSetNumber][8], [self.ROILastID], cfg.ROIMacroID, cfg.ROIMacroClassInfo, cfg.ROIID, cfg.ROIInfo, 50, 40, 'No', 'No', UID)
+					cfg.utls.calculateSignature(cfg.shpLay, cfg.bandSetsList[bandSetNumber][8], [self.ROILastID], cfg.ROIMacroID, cfg.ROIMacroClassInfo, cfg.ROIID, cfg.ROIInfo, 50, 40, 'No', 'No', UID, bandSetNumber = bandSetNumber)
 				else:
-					cfg.utls.calculateSignature(cfg.shpLay, cfg.bandSetsList[cfg.bndSetNumber][8], [self.ROILastID], cfg.ROIMacroID, cfg.ROIMacroClassInfo, cfg.ROIID, cfg.ROIInfo, None, None, 'No', 'No', UID)
+					cfg.utls.calculateSignature(cfg.shpLay, cfg.bandSetsList[bandSetNumber][8], [self.ROILastID], cfg.ROIMacroID, cfg.ROIMacroClassInfo, cfg.ROIID, cfg.ROIInfo, None, None, 'No', 'No', UID, bandSetNumber = bandSetNumber)
 				if progressbar == 'Yes':
 					cfg.uiUtls.updateBar(90)
 			else:
@@ -2265,7 +2267,9 @@ class SCPDock:
 			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 						
 	# create a ROI
-	def createROI(self, point, progressbar = 'Yes'):
+	def createROI(self, point, progressbar = 'Yes', bandSetNumber = None):
+		if bandSetNumber is None:
+			bandSetNumber = cfg.bndSetNumber
 		if (float(cfg.maxROIWdth) % 2 == 0):
 			cfg.maxROIWdth = float(cfg.maxROIWdth) + 1
 		if cfg.scipyCheck == 'No':
@@ -2274,9 +2278,9 @@ class SCPDock:
 			else:
 				cfg.mx.msgWar2Linux()
 			cfg.pntROI = None
-		elif cfg.utls.selectLayerbyName(cfg.bandSetsList[cfg.bndSetNumber][8], 'Yes') is None:
+		elif cfg.utls.selectLayerbyName(cfg.bandSetsList[bandSetNumber][8], 'Yes') is None:
 			# if band set then pass
-			if cfg.bandSetsList[cfg.bndSetNumber][0] == 'Yes':
+			if cfg.bandSetsList[bandSetNumber][0] == 'Yes':
 				pass
 			else:
 				cfg.mx.msg4()
@@ -2304,13 +2308,13 @@ class SCPDock:
 			pCrs = cfg.utls.getQGISCrs()
 			cfg.parallelArrayDict = {}
 			# band set
-			if cfg.bandSetsList[cfg.bndSetNumber][0] == 'Yes':
+			if cfg.bandSetsList[bandSetNumber][0] == 'Yes':
 				try:
-					imageName = cfg.bandSetsList[cfg.bndSetNumber][3][0]
+					imageName = cfg.bandSetsList[bandSetNumber][3][0]
 				except Exception as err:
 					# logger
 					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
-					cfg.mx.msgWar25(cfg.bndSetNumber + 1)
+					cfg.mx.msgWar25(bandSetNumber + 1)
 					if progressbar == 'Yes':
 						cfg.uiUtls.removeProgressBar()
 					return 'No'
@@ -2322,22 +2326,22 @@ class SCPDock:
 				functionList = []
 				if cfg.rpdROICheck == '0':
 					# subset
-					for b in range(0, len(cfg.bandSetsList[cfg.bndSetNumber][3])):
-						oL = cfg.utls.subsetImage(cfg.bandSetsList[cfg.bndSetNumber][3][b], point.x(), point.y(), float(cfg.maxROIWdth), float(cfg.maxROIWdth), virtual ='Yes')
+					for b in range(0, len(cfg.bandSetsList[bandSetNumber][3])):
+						oL = cfg.utls.subsetImage(cfg.bandSetsList[bandSetNumber][3][b], point.x(), point.y(), float(cfg.maxROIWdth), float(cfg.maxROIWdth), virtual ='Yes')
 						bList.append(oL)
 						bandNumberList.append(1)
 						functionList.append(b)
 				# rapid ROI
 				else:
 					b = int(cfg.ROIband) - 1
-					oL = cfg.utls.subsetImage(cfg.bandSetsList[cfg.bndSetNumber][3][b], point.x(), point.y(), float(cfg.maxROIWdth), float(cfg.maxROIWdth), virtual ='Yes')
+					oL = cfg.utls.subsetImage(cfg.bandSetsList[bandSetNumber][3][b], point.x(), point.y(), float(cfg.maxROIWdth), float(cfg.maxROIWdth), virtual ='Yes')
 					bList.append(oL)
 					bandNumberList.append(1)
 					functionList.append(0)
 			# multiband image
 			else:
 				# image CRS
-				bN0 = cfg.utls.selectLayerbyName(cfg.bandSetsList[cfg.bndSetNumber][8], 'Yes')
+				bN0 = cfg.utls.selectLayerbyName(cfg.bandSetsList[bandSetNumber][8], 'Yes')
 				iCrs = cfg.utls.getCrs(bN0)
 				tRR = cfg.utls.createTempRasterPath('tif')
 				bList = []
@@ -2345,16 +2349,16 @@ class SCPDock:
 				functionList = []
 				if cfg.rpdROICheck == '0':
 					# subset image
-					oL = cfg.utls.subsetImage(cfg.bandSetsList[cfg.bndSetNumber][8], point.x(), point.y(), int(cfg.maxROIWdth), int(cfg.maxROIWdth), tRR, cfg.outTempRastFormat, 'Yes')
-					bList = cfg.utls.rasterToBands(tRR, cfg.tmpDir, None, 'No', cfg.bandSetsList[cfg.bndSetNumber][6])
+					oL = cfg.utls.subsetImage(cfg.bandSetsList[bandSetNumber][8], point.x(), point.y(), int(cfg.maxROIWdth), int(cfg.maxROIWdth), tRR, cfg.outTempRastFormat, 'Yes')
+					bList = cfg.utls.rasterToBands(tRR, cfg.tmpDir, None, 'No', cfg.bandSetsList[bandSetNumber][6])
 					for b in range(0, len(bList)):
 						bandNumberList.append(1)
 						functionList.append(b)
 				# rapid ROI
 				else:
 					# subset image
-					oL = cfg.utls.subsetImage(cfg.bandSetsList[cfg.bndSetNumber][8], point.x(), point.y(), int(cfg.maxROIWdth), int(cfg.maxROIWdth), tRR)
-					bList = cfg.utls.rasterToBands(tRR, cfg.tmpDir, None, 'No', cfg.bandSetsList[cfg.bndSetNumber][6])
+					oL = cfg.utls.subsetImage(cfg.bandSetsList[bandSetNumber][8], point.x(), point.y(), int(cfg.maxROIWdth), int(cfg.maxROIWdth), tRR)
+					bList = cfg.utls.rasterToBands(tRR, cfg.tmpDir, None, 'No', cfg.bandSetsList[bandSetNumber][6])
 					b = int(cfg.ROIband) - 1
 					bList = [bList[b]]
 					bandNumberList.append(1)
@@ -2512,7 +2516,7 @@ class SCPDock:
 					self.vx.setIconSize(12)
 					self.ROIVrtc.append(self.vx)
 					if cfg.uidc.auto_calculate_ROI_signature_radioButton.isChecked():
-						self.tempROISpectralSignature()
+						self.tempROISpectralSignature(bandSetNumber)
 					if progressbar == 'Yes':
 						cfg.uiUtls.updateBar(100)
 					cfg.uidc.button_Save_ROI.setEnabled(True)
@@ -2536,10 +2540,12 @@ class SCPDock:
 				return 'No'
 
 	# calculate temporary ROI spectral signature
-	def tempROISpectralSignature(self):
+	def tempROISpectralSignature(self, bandSetNumber = None):
+		if bandSetNumber is None:
+			bandSetNumber = cfg.bndSetNumber
 		idList = []
 		for f in cfg.lstROI .getFeatures():
 			idList.append(f.id())
-		cfg.utls.calculateSignature(cfg.lstROI, cfg.bandSetsList[cfg.bndSetNumber][8], idList, 0, cfg.tmpROINm, 0, cfg.ROITime.strftime('%H-%M-%S'), 0, 50, 'Yes', 'Yes')
+		cfg.utls.calculateSignature(cfg.lstROI, cfg.bandSetsList[bandSetNumber][8], idList, 0, cfg.tmpROINm, 0, cfg.ROITime.strftime('%H-%M-%S'), 0, 50, 'Yes', 'Yes', bandSetNumber = bandSetNumber)
 		cfg.spSigPlot.signatureListPlotTable(cfg.uisp.signature_list_plot_tableWidget)
 		

@@ -95,30 +95,30 @@ class MultipleROITab:
 		
 	# create random point
 	def createRandomPoint(self):
-		if cfg.bandSetsList[cfg.bndSetNumber][0] == 'Yes':
-			imageName = cfg.bandSetsList[cfg.bndSetNumber][3][0]
-		else:
-			try:
-				imageName = cfg.bandSetsList[cfg.bndSetNumber][8]
-			except:
-				cfg.mx.msg4()
-				return 'No'
+		bandSet = cfg.ui.band_set_comb_spinBox_10.value()
+		bandSetNumber = bandSet - 1
+		try:
+			if cfg.bandSetsList[bandSetNumber][0] == 'Yes':
+				imageName = cfg.bandSetsList[bandSetNumber][3][0]
+			else:
+				imageName = cfg.bandSetsList[bandSetNumber][8]
+		except:
+			cfg.mx.msg4()
+			return 'No'
 		img = cfg.utls.selectLayerbyName(imageName, 'Yes')
 		crs = cfg.utls.getCrs(img)
+		self.pCoordinates = crs
 		geographicFlag = crs.isGeographic()
 		if geographicFlag is False:
 			minDistance = None
 			points = None
 			stratified = None
 			stratifiedExpression = None
-			bandSetNumber = None
 			if cfg.ui.stratified_point_checkBox.isChecked() is True:
 				check = cfg.multiROI.textChanged()
 				if check == 'Yes':
 					stratified = 'Yes'
 					stratifiedExpression = cfg.ui.stratified_lineEdit.text()
-					bandSet = cfg.ui.band_set_comb_spinBox_10.value()
-					bandSetNumber = bandSet - 1
 				else:
 					cfg.mx.msgErr64()
 					return 'No'
@@ -130,7 +130,6 @@ class MultipleROITab:
 			Ymax = int(round(max(tLY, lRY)))
 			pointNumber = int(cfg.ui.point_number_spinBox.value())
 			cfg.uiUtls.updateBar(10)
-
 			if cfg.ui.point_distance_checkBox.isChecked() is True:
 				minDistance = int(cfg.ui.point_distance_spinBox.value())
 			if cfg.ui.point_grid_checkBox.isChecked() is True:
@@ -179,6 +178,8 @@ class MultipleROITab:
 		
 	# create ROI
 	def createROIfromPoint(self):
+		bandSet = cfg.ui.band_set_comb_spinBox_10.value()
+		bandSetNumber = bandSet - 1
 		tW = cfg.ui.point_tableWidget
 		c = tW.rowCount()
 		if c > 0:
@@ -198,11 +199,11 @@ class MultipleROITab:
 						Y = tW.item(i,1).text()
 					except Exception as err:
 						# logger
-						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 						cfg.mx.msg6()
 					try:
 						p = cfg.qgisCoreSCP.QgsPointXY(float(X), float(Y))
-						cfg.utls.checkPointImage(cfg.bandSetsList[cfg.bndSetNumber][8], p)
+						cfg.utls.checkPointImage(cfg.bandSetsList[bandSetNumber][8], p, bandSetNumber = bandSetNumber, pointCoordinates = self.pCoordinates)
 						if cfg.pntCheck == 'Yes':
 							cfg.pntROI = cfg.lstPnt
 							# create ROI
@@ -220,7 +221,7 @@ class MultipleROITab:
 								cfg.ROIband = v
 								cfg.rpdROICheck = "2"
 							cfg.origPoint = cfg.pntROI
-							cfg.SCPD.createROI(cfg.pntROI, 'No')
+							cfg.SCPD.createROI(cfg.pntROI, 'No', bandSetNumber = bandSetNumber)
 							# save ROI
 							v = int(tW.item(i, 2).text())
 							cfg.ROIMacroID = v
@@ -228,7 +229,7 @@ class MultipleROITab:
 							v = int(tW.item(i, 4).text())
 							cfg.ROIID = v
 							cfg.ROIInfo = tW.item(i, 5).text()
-							cfg.SCPD.saveROItoShapefile('No')
+							cfg.SCPD.saveROItoShapefile('No', bandSetNumber = bandSetNumber)
 							# disable undo save ROI
 							cfg.uidc.undo_save_Button.setEnabled(False)
 					except Exception as err:
@@ -255,35 +256,35 @@ class MultipleROITab:
 			except:
 				pass
 			# logger
-			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ROI created")
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ROI created')
 
 	# export point list to file
 	def exportPointList(self):
-		pointListFile = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Save the point list to file"), "", "*.csv", "csv")
+		pointListFile = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Save the point list to file'), '', '*.csv', 'csv')
 		try:
-			if pointListFile.lower().endswith(".csv"):
+			if pointListFile.lower().endswith('.csv'):
 				pass
 			else:
-				pointListFile = pointListFile + ".csv"
+				pointListFile = pointListFile + '.csv'
 			f = open(pointListFile, 'w')
-			sep = "\t"
-			f.write("X\tY\tMC_ID\tMC_Info\tC_ID\tC_Info\tMin\tMax\tDist\tRapid_ROI_band\n")
+			sep = '\t'
+			f.write('X\tY\tMC_ID\tMC_Info\tC_ID\tC_Info\tMin\tMax\tDist\tRapid_ROI_band\n')
 			f.close()
 			tW = cfg.ui.point_tableWidget
 			c = tW.rowCount()
 			for i in range(0, c):
 				f = open(pointListFile, 'a')
-				sep = "\t"
+				sep = '\t'
 				X = tW.item(i,0).text()
 				Y = tW.item(i,1).text()
 				MID = tW.item(i,2).text()
 				MInf = tW.item(i,3).text()
 				CID = tW.item(i,4).text()
 				CInf = tW.item(i,5).text()
-				MinSize = ""
-				MaxWidth = ""
-				RangRad = ""
-				RBand = ""
+				MinSize = ''
+				MaxWidth = ''
+				RangRad = ''
+				RBand = ''
 				try:
 					MinSize = tW.item(i,6).text()
 					MaxWidth = tW.item(i,7).text()
@@ -292,28 +293,30 @@ class MultipleROITab:
 				except:
 					pass
 				else:
-					Inf = ""
-				txt = X + sep + Y + sep + MID + sep + MInf + sep + CID + sep + CInf + sep + MinSize + sep + MaxWidth + sep + RangRad + sep + RBand+ "\n"
+					Inf = ''
+				txt = X + sep + Y + sep + MID + sep + MInf + sep + CID + sep + CInf + sep + MinSize + sep + MaxWidth + sep + RangRad + sep + RBand+ '\n'
 				f.write(txt)
 				f.close()
 			# logger
-			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " point list exported")
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' point list exported')
 		except Exception as err:
 			# logger
-			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 		
 	# import points from file
 	def importPoints(self):
-		pointFile = cfg.utls.getOpenFileName(None , "Select a point list file", "", "CSV (*.csv);; Point shapefile .shp (*.shp)")
-		if pointFile.lower().endswith(".csv"):
+		bandSet = cfg.ui.band_set_comb_spinBox_10.value()
+		bandSetNumber = bandSet - 1
+		pointFile = cfg.utls.getOpenFileName(None , 'Select a point list file', '', 'CSV (*.csv);; Point shapefile .shp (*.shp)')
+		if pointFile.lower().endswith('.csv'):
 			try:
 				f = open(pointFile)
 				if cfg.osSCP.path.isfile(pointFile):
 					file = f.readlines()
-					if "\t" in file[0]:
-						sep = "\t"
+					if '\t' in file[0]:
+						sep = '\t'
 					else:
-						sep = ";"
+						sep = ';'
 					tW = cfg.ui.point_tableWidget
 					for b in range(1, len(file)):
 						# point list
@@ -321,7 +324,7 @@ class MultipleROITab:
 						MinSize = cfg.minROISz
 						MaxWidth = cfg.maxROIWdth
 						RangRad = cfg.rngRad
-						RBand = ""
+						RBand = ''
 						try:
 							MinSize = p[6]
 							MaxWidth = p[7]
@@ -344,20 +347,20 @@ class MultipleROITab:
 						cfg.utls.addTableItem(tW, RangRad, c, 8)
 						cfg.utls.addTableItem(tW, RBand, c, 9)
 						# logger
-						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " points imported")
+						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' points imported')
 			except Exception as err:
 				cfg.mx.msgErr19()
 				# logger
-				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-		elif pointFile.lower().endswith(".shp"):
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+		elif pointFile.lower().endswith('.shp'):
 			try:
 				lPRS = cfg.utls.getEPSGVector(pointFile)
 				# band set
-				if cfg.bandSetsList[cfg.bndSetNumber][0] == 'Yes':
+				if cfg.bandSetsList[bandSetNumber][0] == 'Yes':
 					try:
-						imageName = cfg.bandSetsList[cfg.bndSetNumber][3][0]
+						imageName = cfg.bandSetsList[bandSetNumber][3][0]
 					except:
-						cfg.mx.msgWar25(str(cfg.bndSetNumber + 1))
+						cfg.mx.msgWar25(str(bandSetNumber + 1))
 						return 'No'
 					# image CRS
 					bN0 = cfg.utls.selectLayerbyName(imageName, 'Yes')
@@ -366,16 +369,17 @@ class MultipleROITab:
 					# image CRS
 					bN0 = cfg.utls.selectLayerbyName(imageName, 'Yes')
 					iCrs = cfg.utls.getCrs(bN0)
+				self.pCoordinates = iCrs
 				rPSys = cfg.osrSCP.SpatialReference(wkt=iCrs.toWkt())
 				rPSys.AutoIdentifyEPSG()
 				rPRS = rPSys.GetAuthorityCode(None)
 				if str(lPRS) != str(rPRS):
 					# date time for temp name
 					dT = cfg.utls.getTime()
-					reprjShapefile = cfg.tmpDir + "/" + dT + cfg.utls.fileName(pointFile)
-					cfg.utls.repojectShapefile(pointFile, int(lPRS), reprjShapefile, int(rPRS), "wkbPoint")
+					reprjShapefile = cfg.tmpDir + '/' + dT + cfg.utls.fileName(pointFile)
+					cfg.utls.repojectShapefile(pointFile, int(lPRS), reprjShapefile, int(rPRS), 'wkbPoint')
 					pointFile = reprjShapefile
-				d = cfg.ogrSCP.GetDriverByName("ESRI Shapefile")
+				d = cfg.ogrSCP.GetDriverByName('ESRI Shapefile')
 				dr = d.Open(pointFile, 0)
 				iL = dr.GetLayer()
 				iF = iL.GetNextFeature()
@@ -390,7 +394,7 @@ class MultipleROITab:
 			except Exception as err:
 				cfg.mx.msgErr19()
 				# logger
-				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 				
 	def removePointFromTable(self):
 		cfg.utls.removeRowsFromTable(cfg.ui.point_tableWidget)
@@ -399,12 +403,12 @@ class MultipleROITab:
 	def signatureCheckbox2(self):
 		p = cfg.qgisCoreSCP.QgsProject.instance()
 		if cfg.ui.signature_checkBox2.isChecked() is True:
-			p.writeEntry("SemiAutomaticClassificationPlugin", "calculateSignature", 'Yes')
-			cfg.sigClcCheck = "2"
+			p.writeEntry('SemiAutomaticClassificationPlugin', 'calculateSignature', 'Yes')
+			cfg.sigClcCheck = '2'
 			cfg.uidc.signature_checkBox.setCheckState(2)
 		else:
-			p.writeEntry("SemiAutomaticClassificationPlugin", "calculateSignature", 'No')
-			cfg.sigClcCheck = "0"
+			p.writeEntry('SemiAutomaticClassificationPlugin', 'calculateSignature', 'No')
+			cfg.sigClcCheck = '0'
 			cfg.uidc.signature_checkBox.setCheckState(0)
-		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " checkbox set: " + str(cfg.sigClcCheck))
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' checkbox set: ' + str(cfg.sigClcCheck))
 	

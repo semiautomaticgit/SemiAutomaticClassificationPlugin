@@ -1514,7 +1514,9 @@ class Utils:
 ##################################
 		
 	# calculate ROI signature (one signature for ROIs that have the same macroclass ID and class ID)
-	def calculateSignature(self, lyr, rasterName, featureIDList, macroclassID, macroclassInfo, classID, classInfo, progress = None, progresStep = None, plot = 'No', tempROI = 'No', SCP_UID = None):
+	def calculateSignature(self, lyr, rasterName, featureIDList, macroclassID, macroclassInfo, classID, classInfo, progress = None, progresStep = None, plot = 'No', tempROI = 'No', SCP_UID = None, bandSetNumber = None):
+		if bandSetNumber is None:
+			bandSetNumber = cfg.bndSetNumber
 		if progress is not None:
 			cfg.uiUtls.updateBar(progress + int((1 / 4) * progresStep))
 		# disable map canvas render for speed
@@ -1539,8 +1541,8 @@ class Utils:
 		ROIArray = []
 		ROIsize = None
 		# band set
-		if cfg.bandSetsList[cfg.bndSetNumber][0] == 'Yes':
-			cfg.utls.checkBandSet(cfg.bndSetNumber)
+		if cfg.bandSetsList[bandSetNumber][0] == 'Yes':
+			cfg.utls.checkBandSet(bandSetNumber)
 			check = cfg.utls.vectorToRaster(cfg.emptyFN, tLP, cfg.emptyFN, tRxs, cfg.bndSetLst[0], None, 'GTiff', 1)
 			if check == 'No':
 				return 'No'
@@ -1563,7 +1565,7 @@ class Utils:
 				# enable map canvas render
 				cfg.cnvs.setRenderFlag(True)
 				return pr
-			oList = cfg.utls.rasterToBands(tS, cfg.tmpDir, None, 'No', cfg.bandSetsList[cfg.bndSetNumber][6])
+			oList = cfg.utls.rasterToBands(tS, cfg.tmpDir, None, 'No', cfg.bandSetsList[bandSetNumber][6])
 			outList = cfg.utls.clipRasterByRaster(oList, tRxs, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Calculating signature'), stats = 'Yes')
 		# calculate signatures
 		b = 0
@@ -1580,7 +1582,7 @@ class Utils:
 			rStat = eval(rStatStr)
 			ROIArray.append(ar)
 			cfg.tblOut['BAND_' + str(b+1)] = rStat
-			cfg.tblOut['WAVELENGTH_' + str(b + 1)] = cfg.bandSetsList[cfg.bndSetNumber][4][b]
+			cfg.tblOut['WAVELENGTH_' + str(b + 1)] = cfg.bandSetsList[bandSetNumber][4][b]
 			b = b + 1
 		if progress is not None:
 			cfg.uiUtls.updateBar(progress + int((3 / 4) * progresStep))
@@ -1604,7 +1606,7 @@ class Utils:
 		cfg.tblOut['ROI_SIZE'] = min(ROIsizes)
 		# if not temporary ROI min max
 		if tempROI != 'MinMax':
-			cfg.utls.ROIStatisticsToSignature(covMat, macroclassID, macroclassInfo, classID, classInfo, cfg.bndSetNumber, cfg.bandSetsList[cfg.bndSetNumber][5], plot, tempROI, SCP_UID)
+			cfg.utls.ROIStatisticsToSignature(covMat, macroclassID, macroclassInfo, classID, classInfo, bandSetNumber, cfg.bandSetsList[bandSetNumber][5], plot, tempROI, SCP_UID)
 		# enable map canvas render
 		cfg.cnvs.setRenderFlag(True)
 		if progress is not None:
@@ -2112,7 +2114,7 @@ class Utils:
 		return ck
 
 	# check if the clicked point is inside the image
-	def checkPointImage(self, imageName, point, quiet = 'No', bandSetNumber = None):
+	def checkPointImage(self, imageName, point, quiet = 'No', bandSetNumber = None, pointCoordinates = None):
 		if bandSetNumber is None:
 			bandSetNumber = cfg.bndSetNumber
 		# band set
@@ -2126,11 +2128,18 @@ class Utils:
 			bN0 = cfg.utls.selectLayerbyName(imageName, 'Yes')
 			iCrs = self.getCrs(bN0)
 			if iCrs is None:
-				iCrs = cfg.utls.getQGISCrs()
-				pCrs = iCrs
+				if pointCoordinates is not None:
+					iCrs = pointCoordinates
+					pCrs = iCrs
+				else:
+					iCrs = cfg.utls.getQGISCrs()
+					pCrs = iCrs
 			else:
-				# projection of input point from project's crs to raster's crs
-				pCrs = cfg.utls.getQGISCrs()
+				if pointCoordinates is not None:
+					pCrs = pointCoordinates
+				else:
+					# projection of input point from project's crs to raster's crs
+					pCrs = cfg.utls.getQGISCrs()
 				if pCrs != iCrs:
 					try:
 						point = cfg.utls.projectPointCoordinates(point, pCrs, iCrs)
@@ -2183,8 +2192,11 @@ class Utils:
 				if iCrs is None:
 					iCrs = None
 				else:
-					# projection of input point from project's crs to raster's crs
-					pCrs = cfg.utls.getQGISCrs()
+					if pointCoordinates is not None:
+						pCrs = pointCoordinates
+					else:
+						# projection of input point from project's crs to raster's crs
+						pCrs = cfg.utls.getQGISCrs()
 					if pCrs != iCrs:
 						try:
 							point = cfg.utls.projectPointCoordinates(point, pCrs, iCrs)
