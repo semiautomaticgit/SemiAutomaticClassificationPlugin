@@ -6432,9 +6432,9 @@ class Utils:
 		except:
 			pass
 		if cfg.osSCP.path.isfile(tPMD2):
-			if cfg.sysSCPNm == "Darwin":
+			if cfg.sysSCPNm == 'Darwin':
 				sP = cfg.subprocessSCP.call(('open', tPMD2))
-			elif cfg.sysSCPNm == "Windows":
+			elif cfg.sysSCPNm == 'Windows':
 				cfg.osSCP.startfile(tPMD2)
 			else:
 				sP = cfg.subprocessSCP.call(('xdg-open', tPMD2))
@@ -6677,14 +6677,19 @@ class Utils:
 		return number
 		
 	# raster sieve with GDAL
-	def rasterSieve(self, inputRaster, outputRaster, pixelThreshold, connect = 4, outFormat = "GTiff", quiet = 'No'):
-		if cfg.sysSCPNm == "Windows":
-			gD = "gdal_sieve.bat"
+	def rasterSieve(self, inputRaster, outputRaster, pixelThreshold, connect = 4, outFormat = 'GTiff', quiet = 'No'):
+		if cfg.sysSCPNm == 'Windows':
+			gD = 'gdal_sieve.bat'
 		else:
-			gD = "gdal_sieve.py"
+			gD = 'gdal_sieve.py'
 		st = 'No'
 		cfg.utls.getGDALForMac()
-		a = cfg.gdalPath + gD + " -st " + str(pixelThreshold) + " -" + str(connect) + " " + inputRaster + " -of "+ outFormat + " " + outputRaster
+		# copy input to temp to prevent path issue
+		dT = cfg.utls.getTime()
+		tempRaster = cfg.osSCP.path.join(cfg.tmpDir, dT + cfg.osSCP.path.splitext(inputRaster)[1])
+		cfg.shutilSCP.copy(inputRaster, tempRaster)
+		tempOut = cfg.utls.createTempRasterPath('tif')
+		a = cfg.gdalPath + gD + ' -st ' + str(pixelThreshold) + ' -' + str(connect) + ' ' + tempRaster + ' -of '+ outFormat + ' ' + tempOut
 		if cfg.sysSCPNm != 'Windows':
 			a = cfg.shlexSCP.split(a)
 		tPMD = cfg.utls.createTempRasterPath('txt')
@@ -6731,6 +6736,18 @@ class Utils:
 			# logger
 			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 			return 'No'
+		# copy output
+		try:
+			cfg.shutilSCP.move(tempOut, outputRaster)
+		except Exception as err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+			return 'No'
+		# remove temp layers
+		try:
+			cfg.osSCP.remove(tempRaster)
+		except:
+			pass
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "sieve: " + str(outputRaster))
 		return st
@@ -6885,19 +6902,20 @@ class Utils:
 
 	# Try to get GDAL for Mac
 	def getGDALForMac(self):
-		if cfg.sysSCPNm == "Darwin":
+		if cfg.sysSCPNm == 'Darwin':
 			v = cfg.utls.getGDALVersion()
 			cfg.gdalPath = '/Library/Frameworks/GDAL.framework/Versions/' + v[0] + '.' + v[1] + '/Programs/'
-			if cfg.osSCP.path.isfile(cfg.gdalPath + "'"):
-				pass
+			if cfg.osSCP.path.isfile(cfg.gdalPath + 'gdal_translate'):
+				# logger
+				cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' getGDALForMac: ' + str(cfg.gdalPath))
 			else:
 				cfg.gdalPath = ''
-			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " getGDALForMac: " + str(cfg.gdalPath))
-			
+				# logger
+				cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' getGDALForMac: ERROR')
+				
 	# Get GDAL version
 	def getGDALVersion(self):
-		v = cfg.gdalSCP.VersionInfo("RELEASE_NAME").split('.')
+		v = cfg.gdalSCP.VersionInfo('RELEASE_NAME').split('.')
 		return v
 		
 	# Get raster data type name

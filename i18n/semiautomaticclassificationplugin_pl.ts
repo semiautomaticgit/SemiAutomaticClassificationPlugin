@@ -5112,12 +5112,12 @@ ROI</source>
         <translation>Zapisz raster</translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="6772"/>
+        <location filename="../core/utils.py" line="6789"/>
         <source>Build overviews</source>
         <translation>Zbuduj podglądy</translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="6772"/>
+        <location filename="../core/utils.py" line="6789"/>
         <source>Do you want to build the external overviews of bands?</source>
         <translation>Czy na pewno zbudować zewnętrzne podglądy na kanały?</translation>
     </message>
@@ -6009,7 +6009,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished">Sentinel-3</translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="8780"/>
+        <location filename="../core/utils.py" line="8798"/>
         <source>SCP: completed process</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6429,7 +6429,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7015"/>
+        <location filename="../core/utils.py" line="7033"/>
         <source>Writing file</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6439,12 +6439,12 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="6733"/>
+        <location filename="../core/utils.py" line="6738"/>
         <source>Sieve</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="6851"/>
+        <location filename="../core/utils.py" line="6868"/>
         <source>Building overviews</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6489,12 +6489,12 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="8235"/>
+        <location filename="../core/utils.py" line="8253"/>
         <source>Remove rows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="8235"/>
+        <location filename="../core/utils.py" line="8253"/>
         <source>Are you sure you want to remove highlighted rows from the table?</source>
         <translation type="unfinished"></translation>
     </message>

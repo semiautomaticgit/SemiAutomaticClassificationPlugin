@@ -48,14 +48,14 @@ class SieveRaster:
 	# sieve classification
 	def sieveClassification(self, batch = 'No', rasterInput = None, rasterOutput = None):
 		if batch == 'No':
-			outputRaster = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Save output"), "", "*.tif", "tif")
+			outputRaster = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Save output'), '', '*.tif', 'tif')
 		else:
 			outputRaster = rasterOutput
 		if outputRaster is not False:
-			if outputRaster.lower().endswith(".tif"):
+			if outputRaster.lower().endswith('.tif'):
 				pass
 			else:
-				outputRaster = outputRaster + ".tif"
+				outputRaster = outputRaster + '.tif'
 			if batch == 'No':
 				cfg.uiUtls.addProgressBar()
 				raster = cfg.ui.sieve_raster_name_combo.currentText()
@@ -91,7 +91,7 @@ class SieveRaster:
 				cfg.utls.refreshClassificationLayer()
 				cfg.mx.msgErr9()
 				# logger
-				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "Error raster not found")
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'Error raster not found')
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode())
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode())
 			
