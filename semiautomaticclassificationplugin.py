@@ -390,6 +390,14 @@ class SemiAutomaticClassificationPlugin:
 			# multiprocess Windows
 			if cfg.sysSCPNm == 'Windows':
 				mp.set_executable(os.path.join(sys.exec_prefix, 'pythonw.exe'))
+			# Mac
+			elif cfg.sysSCPNm == 'Darwin':
+				dPref = os.environ['PATH'].split(':')
+				for flPref in dPref:
+					flPrefPy = os.path.join(flPref, 'python3')
+					if os.path.isfile(flPrefPy):
+						mp.set_executable(flPrefPy)
+						break
 			# GDAL config
 			try:
 				cfg.gdalSCP.SetConfigOption('GDAL_NUM_THREADS', str(cfg.threads))

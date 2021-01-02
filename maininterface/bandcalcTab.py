@@ -481,7 +481,7 @@ class BandCalcTab:
 		nm = tW.item(index.row(), 0).text()
 		text = self.replaceFunctionNames(nm)
 		if text != 'No':
-			cursor.insertText(' ' + text)
+			cursor.insertHtml(' ' + text)
 		
 	# replace function names
 	def replaceFunctionNames(self, name):
