@@ -394,10 +394,12 @@ class SemiAutomaticClassificationPlugin:
 			elif cfg.sysSCPNm == 'Darwin':
 				dPref = os.environ['PATH'].split(':')
 				for flPref in dPref:
-					flPrefPy = os.path.join(flPref, 'python3')
-					if os.path.isfile(flPrefPy):
-						mp.set_executable(flPrefPy)
-						break
+					if 'library' in flPref.lower():
+						flPrefPy = os.path.join(flPref, 'python3')
+						if os.path.isfile(flPrefPy):
+							mp.set_executable(flPrefPy)
+							cfg.sysSCPInfo = cfg.sysSCPInfo + ' - python path =' + flPrefPy
+							break
 			# GDAL config
 			try:
 				cfg.gdalSCP.SetConfigOption('GDAL_NUM_THREADS', str(cfg.threads))
