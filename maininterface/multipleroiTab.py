@@ -150,7 +150,7 @@ class MultipleROITab:
 								else:
 									points.append(newpoints[0])
 			elif stratified is not None:
-				tSplit = stratifiedExpression.split(";")
+				tSplit = stratifiedExpression.split(';')
 				for b in tSplit:
 					newpoints = cfg.utls.randomPoints(pointNumber, Xmin, Xmax, Ymin, Ymax, minDistance, imageName, None, stratified, b, bandSetNumber)				
 					if points is None:
@@ -202,6 +202,16 @@ class MultipleROITab:
 						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 						cfg.mx.msg6()
 					try:
+						if cfg.bandSetsList[bandSetNumber][0] == 'Yes':
+							imageName = cfg.bandSetsList[bandSetNumber][3][0]
+						else:
+							imageName = cfg.bandSetsList[bandSetNumber][8]
+						img = cfg.utls.selectLayerbyName(imageName, 'Yes')
+						crs = cfg.utls.getCrs(img)
+						self.pCoordinates = crs
+					except:
+						cfg.mx.msg4()
+					try:
 						p = cfg.qgisCoreSCP.QgsPointXY(float(X), float(Y))
 						cfg.utls.checkPointImage(cfg.bandSetsList[bandSetNumber][8], p, bandSetNumber = bandSetNumber, pointCoordinates = self.pCoordinates)
 						if cfg.pntCheck == 'Yes':
@@ -219,7 +229,7 @@ class MultipleROITab:
 							if len(tW.item(i,9).text()) > 0:
 								v = int(tW.item(i,9).text())
 								cfg.ROIband = v
-								cfg.rpdROICheck = "2"
+								cfg.rpdROICheck = '2'
 							cfg.origPoint = cfg.pntROI
 							cfg.SCPD.createROI(cfg.pntROI, 'No', bandSetNumber = bandSetNumber)
 							# save ROI

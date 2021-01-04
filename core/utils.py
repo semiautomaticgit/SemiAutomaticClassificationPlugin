@@ -2598,7 +2598,7 @@ class Utils:
 		return str(output)
 		
 	# simplified virtual raster creation for mosaic
-	def createVirtualRaster2(self, inputRasterList, output, bandNumberList = None, NoDataValue = 'No', relativeToVRT = 0, intersection = 'No', extentList = None):
+	def createVirtualRaster2(self, inputRasterList, output, bandNumberList = None, NoDataValue = 'No', relativeToVRT = 0, intersection = 'No', extentList = None, dataType = None):
 		lefts = []
 		rights = []
 		tops = []
@@ -2636,7 +2636,15 @@ class Utils:
 		# set raster projection from reference intersection
 		vRast.SetGeoTransform((iLeft, pXSize, 0, iTop, 0, -pYSize))
 		vRast.SetProjection(rP)
-		vRast.AddBand(cfg.gdalSCP.GDT_Float32)
+		if dataType is not None:
+			try:
+				format = eval('cfg.gdalSCP.GDT_' + dataType)
+			except:
+				format = cfg.gdalSCP.GDT_Float32
+		else:
+			dataType = 'Float32'
+			format = cfg.gdalSCP.GDT_Float32
+		vRast.AddBand(format)
 		band = vRast.GetRasterBand(1)
 		bsize = band.GetBlockSize()
 		x_block = bsize[0]
@@ -2682,7 +2690,7 @@ class Utils:
 				rY1 = rY2
 			try:
 				# check path
-				source_path = inputRasterList[b].replace("//", "/")
+				source_path = inputRasterList[b].replace('//', '/')
 				# set metadata xml
 				xml = '''
 				<SimpleSource>
@@ -2694,8 +2702,8 @@ class Utils:
 				  <NODATA>%i</NODATA>
 				</SimpleSource>
 				'''
-				source = xml % (relativeToVRT, source_path, bandNumber, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, "Float32", x_block, y_block, xoffX, xoffY, rX1, rY1, offX, offY, rX2, rY2, noData)
-				band.SetMetadataItem("SimpleSource", source, "new_vrt_sources")
+				source = xml % (relativeToVRT, source_path, bandNumber, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, dataType, x_block, y_block, xoffX, xoffY, rX1, rY1, offX, offY, rX2, rY2, noData)
+				band.SetMetadataItem('SimpleSource', source, 'new_vrt_sources')
 				if NoDataValue == 'Yes':
 					band.SetNoDataValue(noData)	
 				elif NoDataValue != 'No':
@@ -2712,7 +2720,7 @@ class Utils:
 		band = None
 		vRast = None
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "virtual raster: " + str(output))
+		cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'virtual raster: ' + str(output))
 		return str(output)
 		
 	# simplified virtual raster creation
@@ -2786,7 +2794,6 @@ class Utils:
 			xoffY = 0
 			gBand2 = None
 			vRast.AddBand(cfg.gdalSCP.GDT_Float32)
-
 			try:
 				band = vRast.GetRasterBand(x + 1)
 				bsize = band.GetBlockSize()
@@ -4916,17 +4923,17 @@ class Utils:
 					oTR = dirPath + '/' + cfg.utls.fileName(tR)
 					cfg.tmpList.append(oTR)
 					cfg.shutilSCP.move(tR, oTR)
-				cfg.utls.createVirtualRaster2(inputRasterList = cfg.tmpList, output = outputRasterList[0], NoDataValue = 'Yes')
+				cfg.utls.createVirtualRaster2(inputRasterList = cfg.tmpList, output = outputRasterList[0], NoDataValue = 'Yes', dataType = dataType)
 			else:
 				vrtFile = cfg.utls.createTempRasterPath('vrt')	
 				try:
-					cfg.utls.createVirtualRaster2(inputRasterList = tmpRastList, output = vrtFile, NoDataValue = 'Yes')
+					cfg.utls.createVirtualRaster2(inputRasterList = tmpRastList, output = vrtFile, NoDataValue = 'Yes', dataType = dataType)
 					gcopy = cfg.utls.GDALCopyRaster(vrtFile, outputRasterList[0], 'GTiff', compress, compressFormat, additionalParams = '-ot ' + str(dataType) + parScaleOffset)
 					# logger
 					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'gcopy ' + gcopy)
 				except:
 					try:
-						cfg.utls.createVirtualRaster2(inputRasterList = tmpRastList, output = vrtFile, NoDataValue = 'Yes')
+						cfg.utls.createVirtualRaster2(inputRasterList = tmpRastList, output = vrtFile, NoDataValue = 'Yes', dataType = dataType)
 						gcopy = cfg.utls.GDALCopyRaster(vrtFile, outputRasterList[0], 'GTiff', compress, compressFormat, additionalParams = '-ot ' + str(dataType) + parScaleOffset)
 						# logger
 						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'gcopy ' + gcopy)
@@ -5222,7 +5229,7 @@ class Utils:
 			try:
 				format = eval('cfg.gdalSCP.GDT_' + dataType)
 			except:
-				pass
+				format = cfg.gdalSCP.GDT_Float32
 			if dataType == 'Float64':
 				oType = cfg.np.float64
 			elif dataType == 'Float32':
@@ -5237,6 +5244,11 @@ class Utils:
 				oType = cfg.np.uint16
 			elif dataType == 'Byte':
 				oType = cfg.np.byte
+			else:
+				oType = cfg.np.float32
+		else:
+			format = cfg.gdalSCP.GDT_Float32
+			oType = cfg.np.float32
 		oR = tD.Create(rasterPath, bSX, bSY, 1, format, options = option)
 		# logger
 		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'oR write ' + str(rasterPath))
@@ -5256,8 +5268,8 @@ class Utils:
 			# it seems a GDAL issue that if scale is float the datatype is converted to Float32
 			if scale is not None or offset is not None:
 				dataArray = cfg.np.subtract(dataArray/scale, offset/scale)
-				bO.SetScale(scale)
-				bO.SetOffset(offset)
+				#bO.SetScale(scale)
+				#bO.SetOffset(offset)
 		except Exception as err:
 			# logger
 			cfg.utls.logToFile(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
@@ -7822,7 +7834,7 @@ class Utils:
 			f = layer.getFeatures(fR)
 			f = next(f)
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "get feature " + str(ID) + " from shapefile: " + str(layer.name()))
+			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'get feature ' + str(ID) + ' from shapefile: ' + str(layer.name()))
 			return f
 		except Exception as err:
 			# logger
@@ -7832,7 +7844,7 @@ class Utils:
 	# Get a feature box by feature ID
 	def getFeatureRectangleBoxbyID(self, layer, ID):
 		try:
-			d = cfg.ogrSCP.GetDriverByName("ESRI Shapefile")
+			d = cfg.ogrSCP.GetDriverByName('ESRI Shapefile')
 			ql = cfg.utls.layerSource(layer)
 			dr = d.Open(ql, 1)
 			l = dr.GetLayer()
@@ -7850,7 +7862,7 @@ class Utils:
 			l = None
 			dr = None
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "roi bounding box: center " + str(r.center()) + " width: " + str(r.width())+ " height: " + str(r.height()))
+			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'roi bounding box: center ' + str(r.center()) + ' width: ' + str(r.width())+ ' height: ' + str(r.height()))
 			return centerX, centerY, width, heigth
 		except Exception as err:
 			# logger
@@ -7864,7 +7876,7 @@ class Utils:
 		res2 = layer.dataProvider().createSpatialIndex()
 		layer.updateExtents()
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "feauture deleted: " + str(layer) + " " + str(feautureIds) )
+		cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'feauture deleted: ' + str(layer) + ' ' + str(feautureIds) )
 
 	# Edit a feauture in a shapefile by its Id
 	def editFeatureShapefile(self, layer, feautureId, fieldName, value):
@@ -7875,7 +7887,7 @@ class Utils:
 		res2 = layer.dataProvider().createSpatialIndex()
 		layer.updateExtents()
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "feauture edited: " + str(layer) + " " + str(feautureId) )
+		cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'feauture edited: ' + str(layer) + ' ' + str(feautureId) )
 		
 ### Copy feature by ID to layer
 	def copyFeatureToLayer(self, sourceLayer, ID, targetLayer):
@@ -7888,7 +7900,7 @@ class Utils:
 		if f.hasGeometry() is not True:
 			cfg.mx.msg6()
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "feature geometry is none")			
+			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'feature geometry is none')			
 		else:	
 			# copy polygon to shapefile
 			targetLayer.startEditing()
@@ -7897,7 +7909,7 @@ class Utils:
 			targetLayer.dataProvider().createSpatialIndex()
 			targetLayer.updateExtents()
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "feature copied")
+			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'feature copied')
 				
 	# merge polygons
 	def mergePolygons(self, targetLayer, idList, attributeList):
@@ -7928,7 +7940,7 @@ class Utils:
 		provider = targetLayer.dataProvider()
 		fields = provider.fields()
 		pCrs = cfg.utls.getCrs(targetLayer)
-		mL = cfg.qgisCoreSCP.QgsVectorLayer("MultiPolygon?crs=" + str(pCrs.toWkt()), "memoryLayer", "memory")
+		mL = cfg.qgisCoreSCP.QgsVectorLayer('MultiPolygon?crs=' + str(pCrs.toWkt()), 'memoryLayer', 'memory')
 		mL.setCrs(pCrs)
 		pr = mL.dataProvider()
 		for fld in fields:
@@ -7950,7 +7962,6 @@ class Utils:
 		mL.dataProvider().createSpatialIndex()
 		mL.updateExtents()
 		return mL
-		
 
 ### Delete a field from a shapefile by its name
 	def deleteFieldShapefile(self, layerPath, fieldName):
@@ -7968,7 +7979,7 @@ class Utils:
 		try:
 			fID = layer.fields().lookupField(fieldName)
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "ID: " + str(fID) + " for layer: " + str(layer.name()))
+			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'ID: ' + str(fID) + ' for layer: ' + str(layer.name()))
 			return fID
 		except Exception as err:
 			# logger
