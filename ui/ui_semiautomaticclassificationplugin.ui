@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>1185</width>
-    <height>586</height>
+    <height>591</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -3099,8 +3099,8 @@ QTabBar::tab:selected { font: bold; color: green; }</string>
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>909</width>
-                     <height>392</height>
+                     <width>357</width>
+                     <height>448</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -3345,8 +3345,8 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>923</width>
-                     <height>377</height>
+                     <width>417</width>
+                     <height>165</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -12779,7 +12779,7 @@ distance</string>
                      <x>0</x>
                      <y>0</y>
                      <width>923</width>
-                     <height>408</height>
+                     <height>413</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -15803,7 +15803,7 @@ p, li { white-space: pre-wrap; }
                      <x>0</x>
                      <y>0</y>
                      <width>923</width>
-                     <height>408</height>
+                     <height>413</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -21911,7 +21911,7 @@ offset</string>
                <attribute name="title">
                 <string>Processing</string>
                </attribute>
-               <layout class="QGridLayout" name="gridLayout_238">
+               <layout class="QGridLayout" name="gridLayout_195">
                 <item row="0" column="0">
                  <layout class="QGridLayout" name="gridLayout_3">
                   <item row="0" column="0">
@@ -22309,24 +22309,8 @@ offset</string>
                 </item>
                 <item row="4" column="0">
                  <layout class="QGridLayout" name="gridLayout_107">
-                  <item row="0" column="0">
-                   <widget class="QLabel" name="label_211">
-                    <property name="styleSheet">
-                     <string notr="true">background-color : #656565; color : white</string>
-                    </property>
-                    <property name="frameShape">
-                     <enum>QFrame::Panel</enum>
-                    </property>
-                    <property name="frameShadow">
-                     <enum>QFrame::Sunken</enum>
-                    </property>
-                    <property name="text">
-                     <string>External programs</string>
-                    </property>
-                   </widget>
-                  </item>
                   <item row="1" column="0">
-                   <layout class="QHBoxLayout" name="horizontalLayout_47">
+                   <layout class="QVBoxLayout" name="verticalLayout_6">
                     <item>
                      <widget class="QLabel" name="SNAP_label">
                       <property name="sizePolicy">
@@ -22347,13 +22331,67 @@ offset</string>
                      </widget>
                     </item>
                     <item>
+                     <widget class="QLabel" name="label_276">
+                      <property name="frameShadow">
+                       <enum>QFrame::Sunken</enum>
+                      </property>
+                      <property name="text">
+                       <string>Python executable path</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLabel" name="label_275">
+                      <property name="frameShadow">
+                       <enum>QFrame::Sunken</enum>
+                      </property>
+                      <property name="text">
+                       <string>GDAL installation directory</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="1" column="1">
+                   <layout class="QVBoxLayout" name="verticalLayout_7">
+                    <item>
                      <widget class="QLineEdit" name="SNAP_GPT_lineEdit">
                       <property name="toolTip">
                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Path to the GPT executable (e.g. C:\Program Files\snap\bin\gpt.exe)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                       </property>
                      </widget>
                     </item>
+                    <item>
+                     <widget class="QLineEdit" name="python_path_lineEdit">
+                      <property name="toolTip">
+                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Path to the Python executable (e.g. /usr/local/bin/python3)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="gdal_path_lineEdit">
+                      <property name="toolTip">
+                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Path to the GDAL directory containing tools such as gdal_translate and gdalwarp (e.g. /usr/bin)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                      </property>
+                     </widget>
+                    </item>
                    </layout>
+                  </item>
+                  <item row="0" column="0" colspan="2">
+                   <widget class="QLabel" name="label_211">
+                    <property name="styleSheet">
+                     <string notr="true">background-color : #656565; color : white</string>
+                    </property>
+                    <property name="frameShape">
+                     <enum>QFrame::Panel</enum>
+                    </property>
+                    <property name="frameShadow">
+                     <enum>QFrame::Sunken</enum>
+                    </property>
+                    <property name="text">
+                     <string>External programs</string>
+                    </property>
+                   </widget>
                   </item>
                  </layout>
                 </item>
@@ -22364,8 +22402,8 @@ offset</string>
                   </property>
                   <property name="sizeHint" stdset="0">
                    <size>
-                    <width>20</width>
-                    <height>40</height>
+                    <width>17</width>
+                    <height>17</height>
                    </size>
                   </property>
                  </spacer>

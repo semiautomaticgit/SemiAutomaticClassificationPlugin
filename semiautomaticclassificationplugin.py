@@ -228,6 +228,7 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ctypesSCP = ctypes
 			cfg.shlexSCP = shlex
 			cfg.counterSCP = Counter
+			cfg.multiPSCP = mp
 			cfg.poolSCP = Pool
 			cfg.MultiManagerSCP = Manager
 		except:
@@ -371,6 +372,8 @@ class SemiAutomaticClassificationPlugin:
 			# locale name
 			lclNm = cfg.QSettingsSCP().value('locale/userLocale')[0:2]
 			self.registryKeys()
+			if len(cfg.PythonPathSettings) > 0:
+				mp.set_executable(cfg.PythonPathSettings)
 			# temporary directory
 			tmpDir = cfg.utls.getTempDirectory()
 			cfg.ui.temp_directory_label.setText(tmpDir)
@@ -390,12 +393,17 @@ class SemiAutomaticClassificationPlugin:
 			# multiprocess Windows
 			if cfg.sysSCPNm == 'Windows':
 				mp.set_executable(os.path.join(sys.exec_prefix, 'pythonw.exe'))
-			# Mac
+			# Mac OS
 			elif cfg.sysSCPNm == 'Darwin':
 				dPref = os.environ['PATH'].split(':')
 				for flPref in dPref:
+					flPrefPy = os.path.join(flPref, 'python3')
+					# first test
+					if os.path.isfile(flPrefPy):
+						mp.set_executable(flPrefPy)
+						cfg.sysSCPInfo = cfg.sysSCPInfo + ' - python path =' + flPrefPy
+					# second test
 					if 'library' in flPref.lower():
-						flPrefPy = os.path.join(flPref, 'python3')
 						if os.path.isfile(flPrefPy):
 							mp.set_executable(flPrefPy)
 							cfg.sysSCPInfo = cfg.sysSCPInfo + ' - python path =' + flPrefPy
@@ -424,6 +432,8 @@ class SemiAutomaticClassificationPlugin:
 		cfg.parallelWritingCheck = cfg.utls.readRegistryKeys(cfg.regparallelWritingCheck, str(cfg.parallelWritingCheck))
 		cfg.RAMValue = int(cfg.utls.readRegistryKeys(cfg.regRAMValue, str(cfg.RAMValue)))
 		cfg.threads = int(cfg.utls.readRegistryKeys(cfg.regThreadsValue, str(cfg.threads)))
+		cfg.gdalPath = cfg.utls.readRegistryKeys(cfg.regGDALPathSettings, str(cfg.gdalPath))
+		cfg.PythonPathSettings = cfg.utls.readRegistryKeys(cfg.regPythonPathSettings, str(cfg.PythonPathSettings))
 		cfg.tmpDir = cfg.utls.readRegistryKeys(cfg.regTmpDir, cfg.tmpDir)
 		cfg.fldID_class = cfg.utls.readRegistryKeys(cfg.regIDFieldName, cfg.fldID_class)
 		cfg.fldMacroID_class = cfg.utls.readRegistryKeys(cfg.regMacroIDFieldName, cfg.fldMacroID_class)
@@ -1375,6 +1385,10 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.RAM_spinBox.valueChanged.connect(cfg.sets.RAMSettingChange)
 			# connect to thread spinbox
 			cfg.ui.CPU_spinBox.valueChanged.connect(cfg.sets.threadSettingChange)
+			# connect the Python path line
+			cfg.ui.python_path_lineEdit.textChanged.connect(cfg.sets.PythonPathSettingChange)
+			# connect the GDAL path line
+			cfg.ui.gdal_path_lineEdit.textChanged.connect(cfg.sets.GDALPathSettingChange)
 			# connect to change color button
 			cfg.ui.change_color_Button.clicked.connect(cfg.sets.changeROIColor)
 			# connect to change color button
@@ -1497,6 +1511,9 @@ class SemiAutomaticClassificationPlugin:
 		cfg.ui.MCInfo_field_name_lineEdit.setText(cfg.fldROIMC_info)
 		cfg.ui.variable_name_lineEdit.setText(cfg.variableName)
 		cfg.ui.group_name_lineEdit.setText(cfg.grpNm)
+		# gdal path
+		cfg.ui.gdal_path_lineEdit.setText(cfg.gdalPath)
+		cfg.ui.python_path_lineEdit.setText(cfg.PythonPathSettings)
 		# set signature calculation checkbox state
 		try:
 			cfg.uidc.rapid_ROI_checkBox.setCheckState(int(cfg.rpdROICheck))

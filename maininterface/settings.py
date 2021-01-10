@@ -251,18 +251,18 @@ class Settings:
 		cfg.ui.transparency_Label.setText(cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Transparency ') + str(cfg.ROITrnspVal) + '%')
 		cfg.ui.transparency_Slider.setValue(cfg.ROITrnspValDefault)
 		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'roi color reset')
-
 	
 	# test required dependencies
 	def testDependencies(self):
-		testGDAL = self.testGDAL()
-		testGDALSubprocess = self.testGDALSubprocess()
-		testMultiprocess = self.testMultiprocess()
 		testNumpy = self.testNumpy()
 		testScipy = self.testScipy()
 		testMatplotlib = self.testMatplotlib()
+		testGDAL = self.testGDAL()
+		testGDALSubprocess = self.testGDALSubprocess()
+		testMultiprocess = self.testMultiprocess()
+		testGDALMultiprocess = self.testGDALMultiprocess()
 		testInternet = self.testInternetConnection()
-		message = '-GDAL: ' + testGDAL + '\n' + '-GDAL subprocess: ' + testGDALSubprocess + '\n' +  '-Python multiprocess: ' + testMultiprocess + '\n' + '-NumPy: ' + testNumpy + '\n' + '-SciPy: ' + testScipy + '\n' + '-Matplotlib: ' + testMatplotlib + '\n' + '-Internet connection: ' + testInternet + '\n'
+		message = '-GDAL: ' + testGDAL + '\n' + '-GDAL subprocess: ' + testGDALSubprocess + '\n' +  '-Python multiprocess: ' + testMultiprocess + '\n' + '-GDAL multiprocess: ' + testGDALMultiprocess + '\n' + '-NumPy: ' + testNumpy + '\n' + '-SciPy: ' + testScipy + '\n' + '-Matplotlib: ' + testMatplotlib + '\n' + '-Internet connection: ' + testInternet
 		cfg.mx.msgTest(message)
 	
 	# test GDAL
@@ -293,22 +293,50 @@ class Settings:
 		if cfg.osSCP.path.isfile(r) is False:
 			test = 'Unable to test'
 			return test
-		try:
+		# Mac OS
+		if cfg.sysSCPNm == 'Darwin':
 			cfg.uiUtls.addProgressBar()
-			tPMD = cfg.utls.createTempRasterPath('vrt')
-			oM = cfg.utls.createTempRasterPath('tif')
-			# open input with GDAL
-			rD = cfg.gdalSCP.Open(r, cfg.gdalSCP.GA_ReadOnly)
-			# output rasters
-			cfg.utls.createRasterFromReference(rD, 1, [oM], cfg.NoDataVal, 'GTiff', cfg.rasterDataType, 0,  None)
-			rD = None
-			o = cfg.utls.multiProcessRaster(rasterPath = r, functionBand = 'No', functionRaster = cfg.utls.calculateRaster, outputRasterList = [oM], functionBandArgument = ['raster * 2'], functionVariable = [['raster']], progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Test'), parallel = cfg.parallelRaster)
-			cfg.uiUtls.removeProgressBar()
-		except Exception as err:
-			cfg.uiUtls.removeProgressBar()
+			dPref = os.environ['PATH'].split(':')
 			# logger
-			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
-			test = 'Fail'
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' environ path: ' + str(dPref))
+			for flPref in dPref:
+				flPrefPy = os.path.join(flPref, 'python3')
+				if os.path.isfile(flPrefPy):
+					# logger
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' python path: ' + str(flPrefPy))
+					mp.set_executable(flPrefPy)
+					try:
+						tPMD = cfg.utls.createTempRasterPath('vrt')
+						oM = cfg.utls.createTempRasterPath('tif')
+						# open input with GDAL
+						rD = cfg.gdalSCP.Open(r, cfg.gdalSCP.GA_ReadOnly)
+						# output rasters
+						cfg.utls.createRasterFromReference(rD, 1, [oM], cfg.NoDataVal, 'GTiff', cfg.rasterDataType, 0,  None)
+						rD = None
+						o = cfg.utls.multiProcessRaster(rasterPath = r, functionBand = 'No', functionRaster = cfg.utls.calculateRaster, outputRasterList = [oM], functionBandArgument = ['raster * 2'], functionVariable = [['raster']], progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Test'), parallel = cfg.parallelRaster)
+						break
+					except Exception as err:
+						# logger
+						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+						test = 'Fail'
+			cfg.uiUtls.removeProgressBar()
+		else:
+			try:
+				cfg.uiUtls.addProgressBar()
+				tPMD = cfg.utls.createTempRasterPath('vrt')
+				oM = cfg.utls.createTempRasterPath('tif')
+				# open input with GDAL
+				rD = cfg.gdalSCP.Open(r, cfg.gdalSCP.GA_ReadOnly)
+				# output rasters
+				cfg.utls.createRasterFromReference(rD, 1, [oM], cfg.NoDataVal, 'GTiff', cfg.rasterDataType, 0,  None)
+				rD = None
+				o = cfg.utls.multiProcessRaster(rasterPath = r, functionBand = 'No', functionRaster = cfg.utls.calculateRaster, outputRasterList = [oM], functionBandArgument = ['raster * 2'], functionVariable = [['raster']], progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Test'), parallel = cfg.parallelRaster)
+				cfg.uiUtls.removeProgressBar()
+			except Exception as err:
+				cfg.uiUtls.removeProgressBar()
+				# logger
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+				test = 'Fail'
 		# logger
 		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' test: ' + str(test))
 		return test
@@ -333,6 +361,18 @@ class Settings:
 			# logger
 			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 			test = 'Fail'
+		# logger
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' test: ' + str(test))
+		return test
+		
+	# test GDAL multiprocess
+	def testGDALMultiprocess(self):
+		dT = cfg.utls.getTime()
+		test = 'Success'
+		r = cfg.plgnDir + cfg.debugRasterPath
+		if cfg.osSCP.path.isfile(r) is False:
+			test = 'Unable to test'
+			return test
 		try:
 			cfg.utls.GDALCopyRaster(str(r), cfg.tmpDir + '/' + dT + 'test.tif', 'GTiff', cfg.rasterCompression, 'DEFLATE -co PREDICTOR=2 -co ZLEVEL=1')
 		except Exception as err:
@@ -463,3 +503,24 @@ class Settings:
 		cfg.SMTPCheck = self.getQGISRegSetting(cfg.regSMTPCheck, '2')
 		# logger
 		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'sound: ' + str(cfg.SMTPCheck))
+		
+	# GDAL setting
+	def GDALPathSettingChange(self):
+		if len(cfg.ui.gdal_path_lineEdit.text()) == 0:
+			cfg.gdalPath = ''
+		else:
+			cfg.gdalPath = cfg.ui.gdal_path_lineEdit.text().rstrip('/') + '/'
+		cfg.utls.setQGISRegSetting(cfg.regGDALPathSettings, cfg.gdalPath)
+		# logger
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'gdal path changed to: ' + str(cfg.gdalPath))
+		
+	# Python setting
+	def PythonPathSettingChange(self):
+		cfg.PythonPathSettings = cfg.ui.python_path_lineEdit.text()
+		cfg.utls.setQGISRegSetting(cfg.regPythonPathSettings, cfg.PythonPathSettings)
+		if len(cfg.PythonPathSettings) == 0:
+			cfg.PythonPathSettings = str(cfg.sysSCP.executable)
+		cfg.multiPSCP.set_executable(cfg.PythonPathSettings)
+		# logger
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'python path changed to: ' + str(cfg.PythonPathSettings))
+		

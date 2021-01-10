@@ -42,8 +42,8 @@ class snap:
 	# load service
 	def loading(self):
 		# registry
-		cfg.regSNAPGPT= "SemiAutomaticClassificationPlugin/SNAPGPT"
-		cfg.SNAPGPT = ""
+		cfg.regSNAPGPT= 'SemiAutomaticClassificationPlugin/SNAPGPT'
+		cfg.SNAPGPT = ''
 		cfg.SNAPGPT = cfg.utls.readRegistryKeys(cfg.regSNAPGPT, cfg.SNAPGPT)
 		# set gpt
 		cfg.ui.SNAP_GPT_lineEdit.setText(cfg.SNAPGPT)
@@ -53,19 +53,19 @@ class snap:
 	def rememberSNAPGPT(self):
 		cfg.SNAPGPT = cfg.ui.SNAP_GPT_lineEdit.text()
 		if cfg.osSCP.path.isfile(cfg.SNAPGPT):
-			cfg.ui.SNAP_GPT_lineEdit.setStyleSheet("color : black")
+			cfg.ui.SNAP_GPT_lineEdit.setStyleSheet('color : black')
 		else:
-			cfg.ui.SNAP_GPT_lineEdit.setStyleSheet("color : red")
+			cfg.ui.SNAP_GPT_lineEdit.setStyleSheet('color : red')
 		cfg.utls.setQGISRegSetting(cfg.regSNAPGPT, cfg.SNAPGPT)
 		
 	# root
 	def findSNAPGPT(self):
-		if cfg.sysSCPNm == "Windows":
-			gpt = "C:/snap/bin/gpt.exe"
+		if cfg.sysSCPNm == 'Windows':
+			gpt = 'C:/snap/bin/gpt.exe'
 			if not cfg.osSCP.path.isfile(gpt):
-				gpt = "C:/Program Files/snap/bin/gpt.exe"
+				gpt = 'C:/Program Files/snap/bin/gpt.exe'
 		else:
-			gpt = "/usr/local/snap/bin/gpt"
+			gpt = '/usr/local/snap/bin/gpt'
 		if cfg.osSCP.path.isfile(gpt):
 			cfg.SNAPGPT = gpt
 			cfg.ui.SNAP_GPT_lineEdit.setText(cfg.SNAPGPT)

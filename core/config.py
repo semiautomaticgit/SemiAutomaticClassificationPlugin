@@ -84,8 +84,6 @@ acc = None
 # system platform
 sys64bit = None
 sysNm = None
-# GDAL path
-gdalPath = ''
 # signature importer
 sigImport = None
 QGISVer = None
@@ -454,6 +452,12 @@ RAMValue = 512
 # registry key for CPU threads value setting
 regThreadsValue = 'SemiAutomaticClassificationPlugin/threadsValue'
 threads = 1
+# gdal path setting
+regGDALPathSettings = 'SemiAutomaticClassificationPlugin/GDALPathSettings'
+gdalPath = ''
+# python path setting
+regPythonPathSettings = 'SemiAutomaticClassificationPlugin/PythonPathSettings'
+PythonPathSettings = ''
 # smtp server
 regSMTPCheck = 'SemiAutomaticClassificationPlugin/SMTPCheckStart'
 SMTPCheck = '2'

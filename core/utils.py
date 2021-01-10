@@ -6928,7 +6928,7 @@ class Utils:
 			pass
 		try:
 			rD = cfg.gdalSCP.Open(inputRaster, cfg.gdalSCP.GA_ReadOnly)
-			rD.BuildOverviews("NEAREST", [8,16,32,64])
+			rD.BuildOverviews('NEAREST', [8,16,32,64])
 			rD = None
 			return inputRaster, ''
 		# in case of errors
@@ -6939,15 +6939,26 @@ class Utils:
 	# Try to get GDAL for Mac
 	def getGDALForMac(self):
 		if cfg.sysSCPNm == 'Darwin':
-			v = cfg.utls.getGDALVersion()
-			cfg.gdalPath = '/Library/Frameworks/GDAL.framework/Versions/' + v[0] + '.' + v[1] + '/Programs/'
-			if cfg.osSCP.path.isfile(cfg.gdalPath + 'gdal_translate'):
-				# logger
-				cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' getGDALForMac: ' + str(cfg.gdalPath))
+			gdalLine = cfg.gdalPath
+			if len(gdalLine) > 0:
+				cfg.gdalPath = gdalLine.rstrip('/') + '/'
+				if cfg.osSCP.path.isfile(cfg.gdalPath + 'gdal_translate'):
+					# logger
+					cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' getGDALForMac: ' + str(cfg.gdalPath))
+				else:
+					cfg.gdalPath = ''
+					# logger
+					cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' getGDALForMac: ERROR')
 			else:
-				cfg.gdalPath = ''
-				# logger
-				cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' getGDALForMac: ERROR')
+				v = cfg.utls.getGDALVersion()
+				cfg.gdalPath = '/Library/Frameworks/GDAL.framework/Versions/' + v[0] + '.' + v[1] + '/Programs/'
+				if cfg.osSCP.path.isfile(cfg.gdalPath + 'gdal_translate'):
+					# logger
+					cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' getGDALForMac: ' + str(cfg.gdalPath))
+				else:
+					cfg.gdalPath = ''
+					# logger
+					cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' getGDALForMac: ERROR')
 				
 	# Get GDAL version
 	def getGDALVersion(self):
