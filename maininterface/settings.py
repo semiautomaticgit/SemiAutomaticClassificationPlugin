@@ -282,10 +282,44 @@ class Settings:
 			d = cfg.ogrSCP.GetDriverByName('ESRI Shapefile')
 			if d is None:
 				test = 'Fail (missing drivers)'
+		try:
+			from osgeo import gdal
+			gdal.Translate
+		except Exception as err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+			test = 'Fail'
 		# logger		
 		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' test: ' + str(test))
 		return test
 		
+	# test multiprocess
+	def multiprocessRunTest(self):
+		# pool
+		cfg.pool = cfg.poolSCP(processes=1)
+		p = 0
+		wrtP = [p]
+		results = []
+		c = cfg.pool.apply_async(self.importTest, args=(wrtP))
+		results.append([c, p])
+		for r in results:
+				res = r[0].get()
+				# logger
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' multiprocess res: ' + str(res))
+		cfg.pool.close()
+		cfg.pool.terminate()
+		return res
+	
+	# test multiprocess import
+	def importTest(self, raster):
+		try:
+			from osgeo import gdal
+			gdal.Translate
+			import numpy as np
+			return 'Yes'
+		except Exception as err:
+			return str(err)
+			
 	# test multiprocess
 	def testMultiprocess(self):
 		test = 'Success'
@@ -296,15 +330,23 @@ class Settings:
 		# Mac OS
 		if cfg.sysSCPNm == 'Darwin':
 			cfg.uiUtls.addProgressBar()
-			dPref = cfg.osSCP.environ['PATH'].split(':')
-			# logger
-			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' environ path: ' + str(dPref))
+			if len(cfg.ui.python_path_lineEdit.text()) > 0:
+				dPref = [cfg.ui.python_path_lineEdit.text()].rstrip('python3')
+				# logger
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' python environ path preset: ' + str(dPref))
+			else:
+				dPref = cfg.osSCP.environ['PATH'].split(':')
+				# logger
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' python environ path: ' + str(dPref))
 			for flPref in dPref:
 				flPrefPy = cfg.osSCP.path.join(flPref, 'python3')
 				if cfg.osSCP.path.isfile(flPrefPy):
 					# logger
 					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' python path: ' + str(flPrefPy))
 					cfg.multiPSCP.set_executable(flPrefPy)
+					res = self.multiprocessRunTest()
+					if res != 'Yes':
+						test = 'Fail'
 					try:
 						tPMD = cfg.utls.createTempRasterPath('vrt')
 						oM = cfg.utls.createTempRasterPath('tif')
@@ -314,15 +356,31 @@ class Settings:
 						cfg.utls.createRasterFromReference(rD, 1, [oM], cfg.NoDataVal, 'GTiff', cfg.rasterDataType, 0,  None)
 						rD = None
 						o = cfg.utls.multiProcessRaster(rasterPath = r, functionBand = 'No', functionRaster = cfg.utls.calculateRaster, outputRasterList = [oM], functionBandArgument = ['raster * 2'], functionVariable = [['raster']], progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Test'), parallel = cfg.parallelRaster)
+						# logger
+						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' o : ' + str(o))
+						test = 'Success'
 						break
 					except Exception as err:
 						# logger
 						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 						test = 'Fail'
+				else:
+					# logger
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' python path not found: ' + str(flPrefPy))
 			cfg.uiUtls.removeProgressBar()
 		else:
 			try:
+				if len(cfg.ui.python_path_lineEdit.text()) > 0:
+					dPref = cfg.ui.python_path_lineEdit.text()
+					# logger
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' python environ path preset: ' + str(dPref))
+					if not cfg.osSCP.path.isfile(dPref):
+						test = 'Fail'
+						return test
 				cfg.uiUtls.addProgressBar()
+				res = self.multiprocessRunTest()
+				if res != 'Yes':
+					test = 'Fail'
 				tPMD = cfg.utls.createTempRasterPath('vrt')
 				oM = cfg.utls.createTempRasterPath('tif')
 				# open input with GDAL
@@ -364,7 +422,7 @@ class Settings:
 		# logger
 		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' test: ' + str(test))
 		return test
-		
+			
 	# test GDAL multiprocess
 	def testGDALMultiprocess(self):
 		dT = cfg.utls.getTime()

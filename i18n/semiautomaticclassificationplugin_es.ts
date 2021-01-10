@@ -6644,7 +6644,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/settings.py" line="333"/>
+        <location filename="../maininterface/settings.py" line="391"/>
         <source>Test</source>
         <translation type="unfinished"></translation>
     </message>
