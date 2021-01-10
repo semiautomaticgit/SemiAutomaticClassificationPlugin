@@ -304,7 +304,7 @@ class Settings:
 				if cfg.osSCP.path.isfile(flPrefPy):
 					# logger
 					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' python path: ' + str(flPrefPy))
-					mp.set_executable(flPrefPy)
+					cfg.multiPSCP.set_executable(flPrefPy)
 					try:
 						tPMD = cfg.utls.createTempRasterPath('vrt')
 						oM = cfg.utls.createTempRasterPath('tif')
