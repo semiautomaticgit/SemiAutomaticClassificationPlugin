@@ -296,12 +296,12 @@ class Settings:
 		# Mac OS
 		if cfg.sysSCPNm == 'Darwin':
 			cfg.uiUtls.addProgressBar()
-			dPref = os.environ['PATH'].split(':')
+			dPref = cfg.osSCP.environ['PATH'].split(':')
 			# logger
 			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' environ path: ' + str(dPref))
 			for flPref in dPref:
-				flPrefPy = os.path.join(flPref, 'python3')
-				if os.path.isfile(flPrefPy):
+				flPrefPy = cfg.osSCP.path.join(flPref, 'python3')
+				if cfg.osSCP.path.isfile(flPrefPy):
 					# logger
 					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' python path: ' + str(flPrefPy))
 					mp.set_executable(flPrefPy)
