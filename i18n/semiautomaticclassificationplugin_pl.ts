@@ -6554,7 +6554,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/landsatTab.py" line="435"/>
+        <location filename="../maininterface/landsatTab.py" line="436"/>
         <source>Pansharpening</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6644,7 +6644,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/settings.py" line="391"/>
+        <location filename="../maininterface/settings.py" line="386"/>
         <source>Test</source>
         <translation type="unfinished"></translation>
     </message>

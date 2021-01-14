@@ -301,57 +301,58 @@ class LandsatTab:
 						else:
 							bandSetList.append(1)
 						bandSetNameList.append(oNm)
-		# conversion
-		inputList = []
-		functionList = []
-		variableList = []
-		outputRasterList = []
-		for inP in convInputList:
-			inputList.append(inP[0])
-			functionList.append(inP[1])	
-			outputRasterList.append(inP[2])	
-			variableList.append(['"raster"'])
-		try:
-			tPMDN = cfg.utls.createTempVirtualRaster(inputList, 'No', 'Yes', 'Yes', 0, 'No', 'No')
-		except Exception as err:
-			# logger
-			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
-			if batch == 'No':
-				cfg.uiUtls.removeProgressBar()
-				cfg.cnvs.setRenderFlag(True)
-			cfg.mx.msgErr37()
-			return 'No'
 		# No data value
 		if cfg.ui.nodata_checkBox_2.isChecked() is True:
 			NoData = cfg.ui.nodata_spinBox_3.value()
 		else:
 			NoData = cfg.NoDataVal
-		# DOS 1
-		if cfg.ui.DOS1_checkBox.isChecked() is True:
-			LDNmList = cfg.utls.findDNmin(tPMDN, NoData)
-			argumentList = []
-			for dnM in range(0, len(LDNmList)):
-				e = functionList[dnM].replace('LDNm', str(LDNmList[dnM]))
-				argumentList.append(e)
-		else:
-			argumentList = functionList
-		oM = cfg.utls.createTempRasterList(len(inputList))
-		# open input with GDAL
-		rD = cfg.gdalSCP.Open(tPMDN, cfg.gdalSCP.GA_ReadOnly)
-		# output rasters
-		cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, 'GTiff', cfg.rasterDataType, 0,  None, compress = cfg.rasterCompression, compressFormat = 'LZW')
-		rD = None
-		o = cfg.utls.multiProcessRaster(rasterPath = tPMDN, functionBand = 'No', functionRaster = cfg.utls.calculateRaster, outputRasterList = oM, nodataValue = NoData, functionBandArgument = argumentList, functionVariable = variableList, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Conversion'), parallel = cfg.parallelRaster)
-		if cfg.actionCheck == 'Yes':
-			for t in range(0, len(outputRasterList)):
-				cfg.shutilSCP.move(oM[t], outputRasterList[t])
-			# load raster bands
-			for outR in outputRasterList:
-				if cfg.osSCP.path.isfile(outR):
-					cfg.utls.addRasterLayer(outR)
-				else:
-					cfg.mx.msgErr38(outR)
-					cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'WARNING: unable to load raster' + str(outR))
+		if len(convInputList) > 0:
+			# conversion
+			inputList = []
+			functionList = []
+			variableList = []
+			outputRasterList = []
+			for inP in convInputList:
+				inputList.append(inP[0])
+				functionList.append(inP[1])	
+				outputRasterList.append(inP[2])	
+				variableList.append(['"raster"'])
+			try:
+				tPMDN = cfg.utls.createTempVirtualRaster(inputList, 'No', 'Yes', 'Yes', 0, 'No', 'No')
+			except Exception as err:
+				# logger
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+				if batch == 'No':
+					cfg.uiUtls.removeProgressBar()
+					cfg.cnvs.setRenderFlag(True)
+				cfg.mx.msgErr37()
+				return 'No'
+			# DOS 1
+			if cfg.ui.DOS1_checkBox.isChecked() is True:
+				LDNmList = cfg.utls.findDNmin(tPMDN, NoData)
+				argumentList = []
+				for dnM in range(0, len(LDNmList)):
+					e = functionList[dnM].replace('LDNm', str(LDNmList[dnM]))
+					argumentList.append(e)
+			else:
+				argumentList = functionList
+			oM = cfg.utls.createTempRasterList(len(inputList))
+			# open input with GDAL
+			rD = cfg.gdalSCP.Open(tPMDN, cfg.gdalSCP.GA_ReadOnly)
+			# output rasters
+			cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, 'GTiff', cfg.rasterDataType, 0,  None, compress = cfg.rasterCompression, compressFormat = 'LZW')
+			rD = None
+			o = cfg.utls.multiProcessRaster(rasterPath = tPMDN, functionBand = 'No', functionRaster = cfg.utls.calculateRaster, outputRasterList = oM, nodataValue = NoData, functionBandArgument = argumentList, functionVariable = variableList, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Conversion'), parallel = cfg.parallelRaster)
+			if cfg.actionCheck == 'Yes':
+				for t in range(0, len(outputRasterList)):
+					cfg.shutilSCP.move(oM[t], outputRasterList[t])
+				# load raster bands
+				for outR in outputRasterList:
+					if cfg.osSCP.path.isfile(outR):
+						cfg.utls.addRasterLayer(outR)
+					else:
+						cfg.mx.msgErr38(outR)
+						cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'WARNING: unable to load raster' + str(outR))
 		# temperature
 		if len(temperatureList) > 0:
 			inputList = []
@@ -826,9 +827,15 @@ class LandsatTab:
 									if 'QCALMIN_' + str(key.replace('_', '').replace('VCID', '')) in r.split():
 										dRad['QCALMIN_' + str(key)] = str(r.split()[2])
 									if 'GAIN_' + str(key) in r.split() or 'GAIN_' + str(key).replace('BAND_', 'BAND') in r.split():
-										dRadMB['RADIANCE_MULT_' + str(key)] = str(r.split()[2])
+										try:
+											dRadMB['RADIANCE_MULT_' + str(key)] = str(float(r.split()[2]))
+										except:
+											pass
 									if 'BIAS_' + str(key) in r.split() or ('BIAS_' + str(key)).replace('BAND_', 'BAND') in r.split():
-										dRadAB['RADIANCE_ADD_' + str(key)] = str(r.split()[2])
+										try:
+											dRadAB['RADIANCE_ADD_' + str(key)] = str(float(r.split()[2]))
+										except:
+											pass
 								except Exception as err:
 									# logger
 									cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))	

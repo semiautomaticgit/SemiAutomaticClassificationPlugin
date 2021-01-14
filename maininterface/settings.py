@@ -303,9 +303,9 @@ class Settings:
 		c = cfg.pool.apply_async(self.importTest, args=(wrtP))
 		results.append([c, p])
 		for r in results:
-				res = r[0].get()
-				# logger
-				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' multiprocess res: ' + str(res))
+			res = r[0].get()
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' multiprocess res: ' + str(res))
 		cfg.pool.close()
 		cfg.pool.terminate()
 		return res
@@ -329,20 +329,15 @@ class Settings:
 			return test
 		# Mac OS
 		if cfg.sysSCPNm == 'Darwin':
-			cfg.uiUtls.addProgressBar()
+			dPaths = cfg.osSCP.environ['PATH'].split(':')
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' python environ path: ' + str(dPaths))
 			if len(cfg.ui.python_path_lineEdit.text()) > 0:
-				dPref = [cfg.ui.python_path_lineEdit.text()].rstrip('python3')
+				flPrefPy = cfg.ui.python_path_lineEdit.text()
 				# logger
-				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' python environ path preset: ' + str(dPref))
-			else:
-				dPref = cfg.osSCP.environ['PATH'].split(':')
-				# logger
-				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' python environ path: ' + str(dPref))
-			for flPref in dPref:
-				flPrefPy = cfg.osSCP.path.join(flPref, 'python3')
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' python environ path preset: ' + str(flPrefPy))
 				if cfg.osSCP.path.isfile(flPrefPy):
-					# logger
-					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' python path: ' + str(flPrefPy))
+					cfg.uiUtls.addProgressBar()
 					cfg.multiPSCP.set_executable(flPrefPy)
 					res = self.multiprocessRunTest()
 					if res != 'Yes':
@@ -359,7 +354,6 @@ class Settings:
 						# logger
 						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' o : ' + str(o))
 						test = 'Success'
-						break
 					except Exception as err:
 						# logger
 						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
@@ -367,6 +361,7 @@ class Settings:
 				else:
 					# logger
 					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' python path not found: ' + str(flPrefPy))
+					test = 'Fail'
 			cfg.uiUtls.removeProgressBar()
 		else:
 			try:
