@@ -50,15 +50,15 @@ class MosaicBandSets:
 		try:
 			# class value list
 			text = cfg.ui.mosaic_band_sets_lineEdit.text()
-			list = text.split(",")
+			list = text.split(',')
 			valueList = []
 			for v in list:
 				valueList.append(int(v))
-			cfg.ui.mosaic_band_sets_lineEdit.setStyleSheet("color : green")
+			cfg.ui.mosaic_band_sets_lineEdit.setStyleSheet('color : green')
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode())
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode())
 		except Exception as err:
-			cfg.ui.mosaic_band_sets_lineEdit.setStyleSheet("color : red")
+			cfg.ui.mosaic_band_sets_lineEdit.setStyleSheet('color : red')
 			valueList = []
 			# logger
 			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
@@ -136,7 +136,7 @@ class MosaicBandSets:
 							cfg.uiUtls.removeProgressBar()
 						cfg.mx.msgWar28()
 						# logger
-						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " Warning")
+						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' Warning')
 						return 'No'
 					bstIndex = bndSetSources.index(bst)
 					for b in range(0, len(bst)):						
@@ -202,7 +202,7 @@ class MosaicBandSets:
 					# create virtual raster					
 					vrtCheck = cfg.utls.createTempVirtualRaster(bList, bandNumberList, 'Yes', nD, 0, 'No', 'No')
 					# process calculation
-					o = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.bandCalculation, outputRasterList = [rstrOut], nodataValue = NoDataVal,  functionBandArgument = e, functionVariable = variableList, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Mosaic ') + str(y+1), compress = cfg.rasterCompression, compressFormat = 'LZW', outputNoDataValue = nD, dataType = dType)
+					oW = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.bandCalculation, outputRasterList = [rstrOut], nodataValue = NoDataVal,  functionBandArgument = e, functionVariable = variableList, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Mosaic ') + str(y+1), compress = cfg.rasterCompression, compressFormat = 'LZW', outputNoDataValue = nD, dataType = dType)
 					if cfg.osSCP.path.isfile(rstrOut):
 						cfg.utls.addRasterLayer(rstrOut)
 				cfg.uiUtls.updateBar(100)

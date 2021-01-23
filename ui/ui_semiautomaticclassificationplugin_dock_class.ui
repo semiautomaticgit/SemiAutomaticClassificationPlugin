@@ -6,20 +6,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>346</width>
-    <height>494</height>
+    <width>397</width>
+    <height>496</height>
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+   <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
   <property name="minimumSize">
    <size>
-    <width>346</width>
-    <height>494</height>
+    <width>397</width>
+    <height>496</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -29,6 +29,12 @@
    <layout class="QGridLayout" name="gridLayout_2">
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget_dock">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="styleSheet">
        <string notr="true">QTabBar::tab {padding-bottom: 2px; padding-top: 2px;margin-bottom: 0px; margin-top: 0px; padding-left: 1ex;padding-right: 0.8ex;}</string>
       </property>
@@ -56,47 +62,6 @@
         <string>Home</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_14">
-        <item row="1" column="1">
-         <layout class="QGridLayout" name="gridLayout_12">
-          <item row="1" column="0">
-           <widget class="QTextBrowser" name="main_textBrowser">
-            <property name="html">
-             <string notr="true">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'DejaVu Sans'; font-size:9pt;&quot;&gt;&lt;br /&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="openExternalLinks">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_35">
-            <property name="font">
-             <font>
-              <weight>75</weight>
-              <italic>false</italic>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">background-color : #656565; color : white; font: bold;</string>
-            </property>
-            <property name="frameShape">
-             <enum>QFrame::Panel</enum>
-            </property>
-            <property name="frameShadow">
-             <enum>QFrame::Sunken</enum>
-            </property>
-            <property name="text">
-             <string> News</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
         <item row="0" column="1">
          <layout class="QGridLayout" name="gridLayout_11">
           <item row="1" column="0">
@@ -278,6 +243,47 @@ p, li { white-space: pre-wrap; }
           </item>
          </layout>
         </item>
+        <item row="1" column="1">
+         <layout class="QGridLayout" name="gridLayout_12">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_35">
+            <property name="font">
+             <font>
+              <weight>75</weight>
+              <italic>false</italic>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color : #656565; color : white; font: bold;</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::Panel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Sunken</enum>
+            </property>
+            <property name="text">
+             <string> News</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QTextBrowser" name="main_textBrowser">
+            <property name="html">
+             <string notr="true">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'DejaVu Sans'; font-size:9pt;&quot;&gt;&lt;br /&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="openExternalLinks">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
         <item row="2" column="1">
          <layout class="QVBoxLayout" name="verticalLayout">
           <item>
@@ -392,139 +398,20 @@ padding: 2px;</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_6">
         <item row="0" column="0">
-         <layout class="QGridLayout" name="gridLayout_19">
-          <item row="0" column="1">
-           <widget class="QToolButton" name="button_new_input">
-            <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span &gt;Create a new training input&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">margin: 0px;padding: 0px;</string>
-            </property>
-            <property name="icon">
-             <iconset resource="resources.qrc">
-              <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_new_file.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_new_file.svg</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>22</width>
-              <height>22</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QToolButton" name="trainingFile_toolButton">
-            <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span &gt;Open a training input&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">margin: 0px;padding: 0px;</string>
-            </property>
-            <property name="icon">
-             <iconset resource="resources.qrc">
-              <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_open_file.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_open_file.svg</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>22</width>
-              <height>22</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QLineEdit" name="trainingFile_lineEdit">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Input file path&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="placeholderText">
-             <string>Training input</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="3">
-           <widget class="QToolButton" name="button_reset_input">
-            <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Remove training input&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">margin: 0px;padding: 0px;</string>
-            </property>
-            <property name="icon">
-             <iconset resource="resources.qrc">
-              <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_reset.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_reset.svg</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>22</width>
-              <height>22</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_48">
-          <property name="font">
-           <font>
-            <weight>75</weight>
-            <italic>false</italic>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">background-color : #656565; color : white; font: bold;</string>
-          </property>
-          <property name="frameShape">
-           <enum>QFrame::Panel</enum>
-          </property>
-          <property name="frameShadow">
-           <enum>QFrame::Sunken</enum>
-          </property>
-          <property name="text">
-           <string> ROI &amp; Signature list</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <layout class="QGridLayout" name="gridLayout">
-          <item row="1" column="0">
-           <layout class="QVBoxLayout" name="verticalLayout_4">
-            <item>
-             <spacer name="verticalSpacer">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>20</width>
-                <height>40</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
-             <widget class="QToolButton" name="merge_signature_toolButton">
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <item>
+           <layout class="QGridLayout" name="gridLayout_19">
+            <item row="0" column="1">
+             <widget class="QToolButton" name="button_new_input">
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Merge highlighted spectral signatures obtaining the average signature&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span &gt;Create a new training input&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="styleSheet">
                <string notr="true">margin: 0px;padding: 0px;</string>
               </property>
-              <property name="text">
-               <string/>
-              </property>
               <property name="icon">
                <iconset resource="resources.qrc">
-                <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_merge_sign_tool.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_merge_sign_tool.svg</iconset>
+                <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_new_file.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_new_file.svg</iconset>
               </property>
               <property name="iconSize">
                <size>
@@ -534,20 +421,30 @@ padding: 2px;</string>
               </property>
              </widget>
             </item>
-            <item>
-             <widget class="QToolButton" name="calculate_signature_toolButton">
+            <item row="0" column="2">
+             <widget class="QLineEdit" name="trainingFile_lineEdit">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Calculate signatures for highlighted items&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Input file path&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="placeholderText">
+               <string>Training input</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QToolButton" name="trainingFile_toolButton">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span &gt;Open a training input&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="styleSheet">
                <string notr="true">margin: 0px;padding: 0px;</string>
               </property>
-              <property name="text">
-               <string/>
-              </property>
               <property name="icon">
                <iconset resource="resources.qrc">
-                <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_add_sign_tool.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_add_sign_tool.svg</iconset>
+                <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_open_file.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_open_file.svg</iconset>
               </property>
               <property name="iconSize">
                <size>
@@ -557,139 +454,17 @@ padding: 2px;</string>
               </property>
              </widget>
             </item>
-            <item>
-             <widget class="QToolButton" name="delete_Signature_Button">
+            <item row="0" column="3">
+             <widget class="QToolButton" name="button_reset_input">
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Delete highlighted items&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Remove training input&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="styleSheet">
                <string notr="true">margin: 0px;padding: 0px;</string>
               </property>
-              <property name="text">
-               <string>...</string>
-              </property>
               <property name="icon">
                <iconset resource="resources.qrc">
-                <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_delete_signature.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_delete_signature.svg</iconset>
-              </property>
-              <property name="iconSize">
-               <size>
-                <width>22</width>
-                <height>22</height>
-               </size>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="verticalSpacer_3">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>20</width>
-                <height>40</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
-             <widget class="QToolButton" name="signature_spectral_plot_toolButton">
-              <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Add highlighted signatures to spectral signature plot&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">margin: 0px;padding: 0px;</string>
-              </property>
-              <property name="text">
-               <string>Plot</string>
-              </property>
-              <property name="icon">
-               <iconset resource="resources.qrc">
-                <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_sign_tool.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_sign_tool.svg</iconset>
-              </property>
-              <property name="iconSize">
-               <size>
-                <width>22</width>
-                <height>22</height>
-               </size>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QToolButton" name="scatterPlot_toolButton">
-              <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add highlighted items to scatter plot&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">margin: 0px;padding: 0px;</string>
-              </property>
-              <property name="text">
-               <string>...</string>
-              </property>
-              <property name="icon">
-               <iconset resource="resources.qrc">
-                <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_scatter_tool.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_scatter_tool.svg</iconset>
-              </property>
-              <property name="iconSize">
-               <size>
-                <width>22</width>
-                <height>22</height>
-               </size>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="verticalSpacer_7">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>20</width>
-                <height>40</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
-             <widget class="QToolButton" name="import_library_toolButton">
-              <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Import spectral signatures &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">margin: 0px;padding: 0px;</string>
-              </property>
-              <property name="text">
-               <string>Import library</string>
-              </property>
-              <property name="icon">
-               <iconset resource="resources.qrc">
-                <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_import_spectral_library.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_import_spectral_library.svg</iconset>
-              </property>
-              <property name="iconSize">
-               <size>
-                <width>22</width>
-                <height>22</height>
-               </size>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QToolButton" name="export_signature_list_toolButton">
-              <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Export highlighted spectral signatures&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
-</string>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">margin: 0px;padding: 0px;</string>
-              </property>
-              <property name="text">
-               <string>Import library</string>
-              </property>
-              <property name="icon">
-               <iconset resource="resources.qrc">
-                <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_export_spectral_library.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_export_spectral_library.svg</iconset>
+                <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_reset.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_reset.svg</iconset>
               </property>
               <property name="iconSize">
                <size>
@@ -701,342 +476,496 @@ padding: 2px;</string>
             </item>
            </layout>
           </item>
-          <item row="0" column="0" colspan="2">
-           <widget class="QLineEdit" name="ROI_filter_lineEdit">
-            <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Filter&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="placeholderText">
-             <string>Filter</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QTreeWidget" name="signature_list_treeWidget">
-            <property name="editTriggers">
-             <set>QAbstractItemView::AnyKeyPressed|QAbstractItemView::SelectedClicked</set>
-            </property>
-            <property name="alternatingRowColors">
-             <bool>true</bool>
-            </property>
-            <property name="selectionMode">
-             <enum>QAbstractItemView::MultiSelection</enum>
-            </property>
-            <property name="indentation">
-             <number>5</number>
-            </property>
-            <property name="sortingEnabled">
-             <bool>true</bool>
-            </property>
-            <property name="expandsOnDoubleClick">
-             <bool>false</bool>
-            </property>
-            <column>
-             <property name="text">
-              <string>MC ID</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>C ID</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>Name</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>Type</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>Color</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>SCPID</string>
-             </property>
-            </column>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item row="3" column="0">
-         <layout class="QGridLayout" name="gridLayout_27">
-          <property name="verticalSpacing">
-           <number>4</number>
-          </property>
-          <item row="1" column="3">
-           <widget class="QLabel" name="label_41">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>C Name</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1" colspan="2">
-           <widget class="QSpinBox" name="ROI_Macroclass_ID_spin">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>100</width>
-              <height>16777215</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The macroclass ID of the ROI signature&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-            </property>
-            <property name="minimum">
-             <number>0</number>
-            </property>
-            <property name="maximum">
-             <number>9999</number>
-            </property>
-            <property name="value">
-             <number>1</number>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_42">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>89</width>
-              <height>16777215</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>C ID</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="3">
-           <widget class="QLabel" name="label_45">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>MC Name</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_44">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>90</width>
-              <height>16777215</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>MC ID</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1" colspan="2">
-           <widget class="QSpinBox" name="ROI_ID_spin">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>100</width>
-              <height>16777215</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The class ID of the ROI signature&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-            </property>
-            <property name="minimum">
-             <number>0</number>
-            </property>
-            <property name="maximum">
-             <number>9999</number>
-            </property>
-            <property name="value">
-             <number>1</number>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="4">
-           <widget class="QLineEdit" name="ROI_Class_line">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The class name of the ROI signature&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="text">
-             <string>C 1</string>
-            </property>
-            <property name="maxLength">
-             <number>80</number>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="4">
-           <widget class="QLineEdit" name="ROI_Macroclass_line">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The macroclass name of the ROI signature&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="text">
-             <string>MC 1</string>
-            </property>
-            <property name="maxLength">
-             <number>80</number>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item row="4" column="0">
-         <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
-           <widget class="QToolButton" name="undo_save_Button">
-            <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Undo ROI save&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <widget class="QLabel" name="label_48">
+            <property name="font">
+             <font>
+              <weight>75</weight>
+              <italic>false</italic>
+              <bold>true</bold>
+             </font>
             </property>
             <property name="styleSheet">
-             <string notr="true">margin: 0px;padding: 0px;</string>
+             <string notr="true">background-color : #656565; color : white; font: bold;</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::Panel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Sunken</enum>
             </property>
             <property name="text">
-             <string>Import library</string>
+             <string> ROI &amp; Signature list</string>
             </property>
-            <property name="icon">
-             <iconset resource="resources.qrc">
-              <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_undo_save_roi.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_undo_save_roi.svg</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>22</width>
-              <height>22</height>
-             </size>
+            <property name="alignment">
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
             </property>
            </widget>
           </item>
           <item>
-           <spacer name="horizontalSpacer">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
+           <layout class="QGridLayout" name="gridLayout">
+            <item row="1" column="0">
+             <layout class="QVBoxLayout" name="verticalLayout_4">
+              <item>
+               <spacer name="verticalSpacer">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QToolButton" name="merge_signature_toolButton">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Merge highlighted spectral signatures obtaining the average signature&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">margin: 0px;padding: 0px;</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_merge_sign_tool.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_merge_sign_tool.svg</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>22</width>
+                  <height>22</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QToolButton" name="calculate_signature_toolButton">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Calculate signatures for highlighted items&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">margin: 0px;padding: 0px;</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_add_sign_tool.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_add_sign_tool.svg</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>22</width>
+                  <height>22</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QToolButton" name="delete_Signature_Button">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Delete highlighted items&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">margin: 0px;padding: 0px;</string>
+                </property>
+                <property name="text">
+                 <string>...</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_delete_signature.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_delete_signature.svg</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>22</width>
+                  <height>22</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="verticalSpacer_3">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QToolButton" name="signature_spectral_plot_toolButton">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Add highlighted signatures to spectral signature plot&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">margin: 0px;padding: 0px;</string>
+                </property>
+                <property name="text">
+                 <string>Plot</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_sign_tool.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_sign_tool.svg</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>22</width>
+                  <height>22</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QToolButton" name="scatterPlot_toolButton">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add highlighted items to scatter plot&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">margin: 0px;padding: 0px;</string>
+                </property>
+                <property name="text">
+                 <string>...</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_scatter_tool.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_scatter_tool.svg</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>22</width>
+                  <height>22</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="verticalSpacer_7">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QToolButton" name="import_library_toolButton">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Import spectral signatures &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">margin: 0px;padding: 0px;</string>
+                </property>
+                <property name="text">
+                 <string>Import library</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_import_spectral_library.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_import_spectral_library.svg</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>22</width>
+                  <height>22</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QToolButton" name="export_signature_list_toolButton">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Export highlighted spectral signatures&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
+</string>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">margin: 0px;padding: 0px;</string>
+                </property>
+                <property name="text">
+                 <string>Import library</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_export_spectral_library.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_export_spectral_library.svg</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>22</width>
+                  <height>22</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item row="0" column="0" colspan="2">
+             <widget class="QLineEdit" name="ROI_filter_lineEdit">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Filter&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="placeholderText">
+               <string>Filter</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
           <item>
-           <widget class="QCheckBox" name="save_input_checkBox">
-            <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Automatically save training input when a ROI is saved in it&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <layout class="QGridLayout" name="gridLayout_27">
+            <property name="verticalSpacing">
+             <number>4</number>
             </property>
-            <property name="text">
-             <string>Autosave</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
+            <item row="1" column="3">
+             <widget class="QLabel" name="label_41">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>C Name</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1" colspan="2">
+             <widget class="QSpinBox" name="ROI_Macroclass_ID_spin">
+              <property name="maximumSize">
+               <size>
+                <width>100</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The macroclass ID of the ROI signature&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+              <property name="minimum">
+               <number>0</number>
+              </property>
+              <property name="maximum">
+               <number>9999</number>
+              </property>
+              <property name="value">
+               <number>1</number>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_42">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>89</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>C ID</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="3">
+             <widget class="QLabel" name="label_45">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>MC Name</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_44">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>90</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>MC ID</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1" colspan="2">
+             <widget class="QSpinBox" name="ROI_ID_spin">
+              <property name="maximumSize">
+               <size>
+                <width>100</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The class ID of the ROI signature&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+              <property name="minimum">
+               <number>0</number>
+              </property>
+              <property name="maximum">
+               <number>9999</number>
+              </property>
+              <property name="value">
+               <number>1</number>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="4">
+             <widget class="QLineEdit" name="ROI_Class_line">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The class name of the ROI signature&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="text">
+               <string>C 1</string>
+              </property>
+              <property name="maxLength">
+               <number>80</number>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="4">
+             <widget class="QLineEdit" name="ROI_Macroclass_line">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The macroclass name of the ROI signature&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="text">
+               <string>MC 1</string>
+              </property>
+              <property name="maxLength">
+               <number>80</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
           <item>
-           <widget class="QCheckBox" name="signature_checkBox">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add ROI spectral signature to signature list&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="text">
-             <string>Signature</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QToolButton" name="button_Save_ROI">
-            <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Save temporary ROI to training input&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">margin: 0px;padding: 0px;</string>
-            </property>
-            <property name="text">
-             <string>Import library</string>
-            </property>
-            <property name="icon">
-             <iconset resource="resources.qrc">
-              <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_save_roi.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_save_roi.svg</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>22</width>
-              <height>22</height>
-             </size>
-            </property>
-           </widget>
+           <layout class="QHBoxLayout" name="horizontalLayout">
+            <item>
+             <widget class="QToolButton" name="undo_save_Button">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Undo ROI save&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">margin: 0px;padding: 0px;</string>
+              </property>
+              <property name="text">
+               <string>Import library</string>
+              </property>
+              <property name="icon">
+               <iconset resource="resources.qrc">
+                <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_undo_save_roi.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_undo_save_roi.svg</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>22</width>
+                <height>22</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="save_input_checkBox">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Automatically save training input when a ROI is saved in it&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="text">
+               <string>Autosave</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="signature_checkBox">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add ROI spectral signature to signature list&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="text">
+               <string>Signature</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QToolButton" name="button_Save_ROI">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Save temporary ROI to training input&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">margin: 0px;padding: 0px;</string>
+              </property>
+              <property name="text">
+               <string>Import library</string>
+              </property>
+              <property name="icon">
+               <iconset resource="resources.qrc">
+                <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_save_roi.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_save_roi.svg</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>22</width>
+                <height>22</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </item>
        </layout>
-       <zorder></zorder>
-       <zorder>label_48</zorder>
-       <zorder></zorder>
-       <zorder></zorder>
-       <zorder></zorder>
       </widget>
       <widget class="QWidget" name="tab_12">
        <attribute name="icon">
@@ -1047,8 +976,79 @@ padding: 2px;</string>
         <string> ROI options</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_15">
+        <item row="1" column="0">
+         <spacer name="verticalSpacer_4">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>360</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
         <item row="0" column="0">
          <layout class="QGridLayout" name="gridLayout_4">
+          <item row="0" column="0">
+           <layout class="QHBoxLayout" name="horizontalLayout_8">
+            <item>
+             <widget class="QCheckBox" name="display_cursor_checkBox">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Display a vegetation index value with the cursor&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="text">
+               <string>Display</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="vegetation_index_comboBox">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select a vegetation index&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <item>
+               <property name="text">
+                <string>NDVI</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>EVI</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Custom</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="custom_index_lineEdit">
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>300</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Custom expression (e.g. bandset#b4 / bandset#b3 )&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
           <item row="1" column="0">
            <layout class="QGridLayout" name="gridLayout_5">
             <item row="0" column="0">
@@ -1091,52 +1091,6 @@ padding: 2px;</string>
             </item>
            </layout>
           </item>
-          <item row="0" column="0">
-           <layout class="QHBoxLayout" name="horizontalLayout_8">
-            <item>
-             <widget class="QCheckBox" name="display_cursor_checkBox">
-              <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Display a vegetation index value with the cursor&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-              <property name="text">
-               <string>Display</string>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QComboBox" name="vegetation_index_comboBox">
-              <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select a vegetation index&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-              <item>
-               <property name="text">
-                <string>NDVI</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>EVI</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Custom</string>
-               </property>
-              </item>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="custom_index_lineEdit">
-              <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Custom expression (e.g. bandset#b4 / bandset#b3 )&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
           <item row="2" column="0">
            <layout class="QGridLayout" name="gridLayout_3">
             <item row="0" column="1">
@@ -1168,19 +1122,6 @@ padding: 2px;</string>
            </layout>
           </item>
          </layout>
-        </item>
-        <item row="1" column="0">
-         <spacer name="verticalSpacer_4">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>360</height>
-           </size>
-          </property>
-         </spacer>
         </item>
        </layout>
       </widget>

@@ -147,10 +147,10 @@ class SCPDock:
 				cfg.SCPD.allItemsSetState(0)
 			for id, val in cfg.treeDockItm.items():
 				id = cfg.treeDockItm[str(id)].text(5)
-				cfg.signList["CHECKBOX_" + str(id)] = cfg.treeDockItm[str(id)].checkState(0)
+				cfg.signList['CHECKBOX_' + str(id)] = cfg.treeDockItm[str(id)].checkState(0)
 			cfg.uiUtls.removeProgressBar()
 			# logger
-			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " all signatures")
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' all signatures')
 		except Exception as err:
 			# logger
 			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
@@ -161,58 +161,58 @@ class SCPDock:
 	# export signature list to file
 	def saveSignatureList(self, signatureFile):
 		try:
-			root = cfg.ETSCP.Element("signaturelist")
+			root = cfg.ETSCP.Element('signaturelist')
 			MCID_LIST = cfg.SCPD.exportMCIDList()
-			root.set("MCID_LIST", str(MCID_LIST))
+			root.set('MCID_LIST', str(MCID_LIST))
 			for k in list(cfg.signIDs.values()):
-				sigItem = cfg.ETSCP.SubElement(root, "signature")
-				sigItem.set("ID", str(cfg.signIDs["ID_" + str(k)]))
-				mcIDField = cfg.ETSCP.SubElement(sigItem, "MACROCLASSID")
-				mcIDField.text = str(cfg.signList["MACROCLASSID_" + str(k)])
-				mcInfoField = cfg.ETSCP.SubElement(sigItem, "MACROCLASSINFO")
-				mcInfoField.text = str(cfg.signList["MACROCLASSINFO_" + str(k)])
-				cIDField = cfg.ETSCP.SubElement(sigItem, "CLASSID")
-				cIDField.text = str(cfg.signList["CLASSID_" + str(k)])
-				cInfoField = cfg.ETSCP.SubElement(sigItem, "CLASSINFO")
-				cInfoField.text = str(cfg.signList["CLASSINFO_" + str(k)])
-				wvLngField = cfg.ETSCP.SubElement(sigItem, "VALUES")
-				wvLngField.text = str(cfg.signList["VALUES_" + str(k)])
-				lcsMinField = cfg.ETSCP.SubElement(sigItem, "LCS_MIN")
-				lcsMinField.text = str(cfg.signList["LCS_MIN_" + str(k)])
-				lcsMaxField = cfg.ETSCP.SubElement(sigItem, "LCS_MAX")
-				lcsMaxField.text = str(cfg.signList["LCS_MAX_" + str(k)])
-				wvLngField = cfg.ETSCP.SubElement(sigItem, "WAVELENGTH")
-				wvLngField.text = str(cfg.signList["WAVELENGTH_" + str(k)])
-				meanValField = cfg.ETSCP.SubElement(sigItem, "MEAN_VALUE")
-				meanValField.text = str(cfg.signList["MEAN_VALUE_" + str(k)])
-				checkboxField = cfg.ETSCP.SubElement(sigItem, "CHECKBOX")
-				checkboxField.text = str(cfg.signList["CHECKBOX_" + str(k)])
-				SDField = cfg.ETSCP.SubElement(sigItem, "SD")
-				SDField.text = str(cfg.signList["SD_" + str(k)])
-				unitField = cfg.ETSCP.SubElement(sigItem, "WAVELENGTH_UNIT")
-				unitField.text = str(cfg.signList["UNIT_" + str(k)])
-				colorField = cfg.ETSCP.SubElement(sigItem, "COLOR")
-				colorField.text = str(cfg.signList["COLOR_" + str(k)].toRgb().name())
-				covMatrField = cfg.ETSCP.SubElement(sigItem, "COVARIANCE_MATRIX")
-				covMatrField.text = str(cfg.utls.covarianceMatrixToList(cfg.signList["COVMATRIX_" + str(k)]))
-				roiSizeField = cfg.ETSCP.SubElement(sigItem, "ROI_SIZE")
-				roiSizeField.text = str(cfg.signList["ROI_SIZE_" + str(k)])
-				maxValField = cfg.ETSCP.SubElement(sigItem, "MAX_VALUE")
-				maxValField.text = str(cfg.signList["MAX_VALUE_" + str(k)])
-				minValField = cfg.ETSCP.SubElement(sigItem, "MIN_VALUE")
-				minValField.text = str(cfg.signList["MIN_VALUE_" + str(k)])
-				sigThrField = cfg.ETSCP.SubElement(sigItem, "SIGNATURE_THRESHOLD_MD")
-				sigThrField.text = str(cfg.signList["MD_THRESHOLD_" + str(k)])
-				sigThrField = cfg.ETSCP.SubElement(sigItem, "SIGNATURE_THRESHOLD_ML")
-				sigThrField.text = str(cfg.signList["ML_THRESHOLD_" + str(k)])
-				sigThrField = cfg.ETSCP.SubElement(sigItem, "SIGNATURE_THRESHOLD_SAM")
-				sigThrField.text = str(cfg.signList["SAM_THRESHOLD_" + str(k)])
+				sigItem = cfg.ETSCP.SubElement(root, 'signature')
+				sigItem.set('ID', str(cfg.signIDs['ID_' + str(k)]))
+				mcIDField = cfg.ETSCP.SubElement(sigItem, 'MACROCLASSID')
+				mcIDField.text = str(cfg.signList['MACROCLASSID_' + str(k)])
+				mcInfoField = cfg.ETSCP.SubElement(sigItem, 'MACROCLASSINFO')
+				mcInfoField.text = str(cfg.signList['MACROCLASSINFO_' + str(k)])
+				cIDField = cfg.ETSCP.SubElement(sigItem, 'CLASSID')
+				cIDField.text = str(cfg.signList['CLASSID_' + str(k)])
+				cInfoField = cfg.ETSCP.SubElement(sigItem, 'CLASSINFO')
+				cInfoField.text = str(cfg.signList['CLASSINFO_' + str(k)])
+				wvLngField = cfg.ETSCP.SubElement(sigItem, 'VALUES')
+				wvLngField.text = str(cfg.signList['VALUES_' + str(k)])
+				lcsMinField = cfg.ETSCP.SubElement(sigItem, 'LCS_MIN')
+				lcsMinField.text = str(cfg.signList['LCS_MIN_' + str(k)])
+				lcsMaxField = cfg.ETSCP.SubElement(sigItem, 'LCS_MAX')
+				lcsMaxField.text = str(cfg.signList['LCS_MAX_' + str(k)])
+				wvLngField = cfg.ETSCP.SubElement(sigItem, 'WAVELENGTH')
+				wvLngField.text = str(cfg.signList['WAVELENGTH_' + str(k)])
+				meanValField = cfg.ETSCP.SubElement(sigItem, 'MEAN_VALUE')
+				meanValField.text = str(cfg.signList['MEAN_VALUE_' + str(k)])
+				checkboxField = cfg.ETSCP.SubElement(sigItem, 'CHECKBOX')
+				checkboxField.text = str(cfg.signList['CHECKBOX_' + str(k)])
+				SDField = cfg.ETSCP.SubElement(sigItem, 'SD')
+				SDField.text = str(cfg.signList['SD_' + str(k)])
+				unitField = cfg.ETSCP.SubElement(sigItem, 'WAVELENGTH_UNIT')
+				unitField.text = str(cfg.signList['UNIT_' + str(k)])
+				colorField = cfg.ETSCP.SubElement(sigItem, 'COLOR')
+				colorField.text = str(cfg.signList['COLOR_' + str(k)].toRgb().name())
+				covMatrField = cfg.ETSCP.SubElement(sigItem, 'COVARIANCE_MATRIX')
+				covMatrField.text = str(cfg.utls.covarianceMatrixToList(cfg.signList['COVMATRIX_' + str(k)]))
+				roiSizeField = cfg.ETSCP.SubElement(sigItem, 'ROI_SIZE')
+				roiSizeField.text = str(cfg.signList['ROI_SIZE_' + str(k)])
+				maxValField = cfg.ETSCP.SubElement(sigItem, 'MAX_VALUE')
+				maxValField.text = str(cfg.signList['MAX_VALUE_' + str(k)])
+				minValField = cfg.ETSCP.SubElement(sigItem, 'MIN_VALUE')
+				minValField.text = str(cfg.signList['MIN_VALUE_' + str(k)])
+				sigThrField = cfg.ETSCP.SubElement(sigItem, 'SIGNATURE_THRESHOLD_MD')
+				sigThrField.text = str(cfg.signList['MD_THRESHOLD_' + str(k)])
+				sigThrField = cfg.ETSCP.SubElement(sigItem, 'SIGNATURE_THRESHOLD_ML')
+				sigThrField.text = str(cfg.signList['ML_THRESHOLD_' + str(k)])
+				sigThrField = cfg.ETSCP.SubElement(sigItem, 'SIGNATURE_THRESHOLD_SAM')
+				sigThrField.text = str(cfg.signList['SAM_THRESHOLD_' + str(k)])
 			o = open(signatureFile, 'w')
 			f = cfg.minidomSCP.parseString(cfg.ETSCP.tostring(root)).toprettyxml()
 			o.write(f)
 			o.close()
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " signatures saved in: " + str(signatureFile))
+			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' signatures saved in: ' + str(signatureFile))
 		except Exception as err:
 			cfg.mx.msgErr15()
 			# logger
@@ -220,21 +220,21 @@ class SCPDock:
 		
 	def openSignatureList(self, path = None):
 		if path is None:
-			signFilePath = cfg.utls.getOpenFileName(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Select a signature list file"), "", "Signature list file .slf (*.slf)")
+			signFilePath = cfg.utls.getOpenFileName(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Select a signature list file'), '', 'Signature list file .slf (*.slf)')
 		else:
 			signFilePath = path
 		if len(signFilePath) > 0:
-			if cfg.absolutePath == "false":
+			if cfg.absolutePath == 'false':
 				signFile = cfg.utls.qgisAbsolutePathToRelativePath(signFilePath, cfg.projPath)
 			else:
 				signFile = signFilePath
 			self.openSignatureListFile(signFilePath)
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " signatures opened: " + str(signFilePath))
+			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' signatures opened: ' + str(signFilePath))
 					
 	# open training file
 	def openTrainingFile(self):
-		scpPath = cfg.utls.getOpenFileName(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Select a SCP training input"), "", "SCP file (*.scp)")
+		scpPath = cfg.utls.getOpenFileName(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Select a SCP training input'), '', 'SCP file (*.scp)')
 		if len(scpPath) > 0:
 			cfg.SCPD.openInput(scpPath)
 			
@@ -271,7 +271,7 @@ class SCPDock:
 		# shapefile
 		name = cfg.utls.fileNameNoExt(shapeFilePath)
 		dT = cfg.utls.getTime()
-		cfg.inptDir = cfg.tmpDir + "/" + name + dT
+		cfg.inptDir = cfg.tmpDir + '/' + name + dT
 		oDir = cfg.utls.makeDirectory(cfg.inptDir)
 		# unzip to temp dir
 		try:
@@ -279,10 +279,10 @@ class SCPDock:
 				for flName in zOpen.namelist():
 					zipF = zOpen.open(flName)
 					fileName = cfg.utls.fileName(flName)
-					if fileName.endswith(".shp"):
+					if fileName.endswith('.shp'):
 						nm = fileName
 					try:
-						zipO = open(cfg.inptDir + "/" + fileName, "wb")
+						zipO = open(cfg.inptDir + '/' + fileName, 'wb')
 						with zipF, zipO:
 							cfg.shutilSCP.copyfileobj(zipF, zipO)
 						zipO.close()
@@ -297,11 +297,11 @@ class SCPDock:
 		except:
 			pass
 		try:
-			tSS = cfg.utls.addVectorLayer(cfg.inptDir + "/" + nm)
+			tSS = cfg.utls.addVectorLayer(cfg.inptDir + '/' + nm)
 		except:
 			cfg.mx.msgErr59()
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "Error training input")
+			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'Error training input')
 			return 'No'
 		check = cfg.SCPD.checkFields(tSS)
 		vEPSG = cfg.utls.getEPSGVectorQGIS(tSS)
@@ -335,7 +335,7 @@ class SCPDock:
 			provider = tSS.dataProvider()
 			fields = provider.fields()
 			pCrs = cfg.utls.getCrs(tSS)
-			mL = cfg.qgisCoreSCP.QgsVectorLayer("MultiPolygon?crs=" + str(pCrs.toWkt()), name, "memory")
+			mL = cfg.qgisCoreSCP.QgsVectorLayer('MultiPolygon?crs=' + str(pCrs.toWkt()), name, 'memory')
 			mL.setCrs(pCrs)
 			pr = mL.dataProvider()
 			for fld in fields:
@@ -782,7 +782,6 @@ class SCPDock:
 							cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 					l.close()
 
-		
 	# zoom to preview
 	def zoomToPreview(self):
 		preP = cfg.utls.selectLayerbyName(cfg.lastPrev)
@@ -790,9 +789,7 @@ class SCPDock:
 			cfg.utls.setMapExtentFromLayer(preP)
 			preP.triggerRepaint()
 			cfg.cnvs.refresh()
-			
-			
-		
+					
 ##################################
 	''' Table functions '''
 ##################################
@@ -802,11 +799,22 @@ class SCPDock:
 		tW = cfg.uidc.signature_list_treeWidget
 		v = []
 		for i in tW.selectedItems():
-			try:
-				cfg.ROI_C_ID[i.text(5)]
-				v.append(i.text(5))
-			except:
-				pass
+			# classes
+			if len(i.text(1)) > 0:
+				try:
+					cfg.ROI_C_ID[i.text(5)]
+					v.append(i.text(5))
+				except:
+					pass
+			# macroclasses
+			else:
+				count = i.childCount()
+				for roi in range(0, count):
+					try:
+						cfg.ROI_C_ID[i.child(roi).text(5)]
+						v.append(i.child(roi).text(5))
+					except:
+						pass
 		if len(v) == 0:
 			return 0
 		# ask for confirm
@@ -835,11 +843,22 @@ class SCPDock:
 		tW = cfg.uidc.signature_list_treeWidget
 		v = []
 		for i in tW.selectedItems():
-			try:
-				cfg.ROI_C_ID[i.text(5)]
-				v.append(i.text(5))
-			except:
-				pass
+			# classes
+			if len(i.text(1)) > 0:
+				try:
+					cfg.ROI_C_ID[i.text(5)]
+					v.append(i.text(5))
+				except:
+					pass
+			# macroclasses
+			else:
+				count = i.childCount()
+				for roi in range(0, count):
+					try:
+						cfg.ROI_C_ID[i.child(roi).text(5)]
+						v.append(i.child(roi).text(5))
+					except:
+						pass
 		if len(set(v)) > 1:
 			# ask for confirm
 			a = cfg.utls.questionBox(cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Merge signatures'), cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Merge highlighted signatures?'))
@@ -966,13 +985,23 @@ class SCPDock:
 			if a == 'Yes':
 				ids = []
 				for i in tW.selectedItems():
+					# classes
 					if i.text(5) in list(cfg.signIDs.values()):
 						cfg.SCPD.deleteSignatureByID(i.text(5))
-						del cfg.treeDockItm[i.text(5)]
 					if i.text(5) in list(cfg.ROI_SCP_UID.values()):
 						rId = cfg.utls.getIDByAttributes(cfg.shpLay, cfg.fldSCP_UID, str(i.text(5)))
 						for rI in rId:
 							ids.append(rI)
+					# macroclasses
+					if i.text(5) in cfg.treeDockMCItm:
+						c = cfg.treeDockMCItm[i.text(5)]
+						for x in range(0, c.childCount()):
+							if c.child(x).text(5) in list(cfg.signIDs.values()):
+								cfg.SCPD.deleteSignatureByID(c.child(x).text(5))
+							if c.child(x).text(5) in list(cfg.ROI_SCP_UID.values()):
+								rId = cfg.utls.getIDByAttributes(cfg.shpLay, cfg.fldSCP_UID, str(c.child(x).text(5)))
+								for rI in rId:
+									ids.append(rI)
 				if cfg.shpLay is not None:
 					cfg.utls.deleteFeatureShapefile(cfg.shpLay, ids)
 				cfg.SCPD.ROIListTableTree(cfg.shpLay, cfg.uidc.signature_list_treeWidget)
@@ -1014,19 +1043,34 @@ class SCPDock:
 			pass
 		
 	# add signatures to spectral plot
-	def addSignatureToSpectralPlot(self):
+	def addSignatureToSpectralPlot(self, tabIndex = 0):
 		tW = cfg.uidc.signature_list_treeWidget
 		v = []
 		for i in tW.selectedItems():
-			try:
-				cfg.ROI_C_ID[i.text(5)]
-				v.append(i.text(5))
-			except:
+			# classes
+			if len(i.text(1)) > 0:
 				try:
-					cfg.signIDs['ID_' + i.text(5)]
+					cfg.ROI_C_ID[i.text(5)]
 					v.append(i.text(5))
 				except:
-					pass
+					try:
+						cfg.signIDs['ID_' + i.text(5)]
+						v.append(i.text(5))
+					except:
+						pass
+			# macroclasses
+			else:
+				count = i.childCount()
+				for roi in range(0, count):
+					try:
+						cfg.ROI_C_ID[i.child(roi).text(5)]
+						v.append(i.child(roi).text(5))
+					except:
+						try:
+							cfg.signIDs['ID_' + i.child(roi).text(5)]
+							v.append(i.child(roi).text(5))
+						except:
+							pass
 		check = 'Yes'
 		if len(v) > 0:
 			progresStep = 100 / len(v)
@@ -1047,19 +1091,32 @@ class SCPDock:
 				cfg.SCPD.ROIListTableTree(cfg.shpLay, cfg.uidc.signature_list_treeWidget)
 			cfg.spSigPlot.signatureListPlotTable(cfg.uisp.signature_list_plot_tableWidget)
 			cfg.utls.spectralPlotTab()
+			cfg.utls.selectSpectralPlotTabSettings(tabIndex)
 		else:
 			cfg.utls.spectralPlotTab()
+			cfg.utls.selectSpectralPlotTabSettings(tabIndex)
 			
 	# add ROI to scatter plot
 	def addROIToScatterPlot(self):
 		tW = cfg.uidc.signature_list_treeWidget
 		v = []
 		for i in tW.selectedItems():
-			try:
-				cfg.ROI_C_ID[i.text(5)]
-				v.append(i.text(5))
-			except:
-				pass
+			# classes
+			if len(i.text(1)) > 0:
+				try:
+					cfg.ROI_C_ID[i.text(5)]
+					v.append(i.text(5))
+				except:
+					pass
+			# macroclasses
+			else:
+				count = i.childCount()
+				for roi in range(0, count):
+					try:
+						cfg.ROI_C_ID[i.child(roi).text(5)]
+						v.append(i.child(roi).text(5))
+					except:
+						pass
 		if len(v) > 0:
 			progresStep = 100 / len(v)
 			progress = 0
@@ -1078,28 +1135,33 @@ class SCPDock:
 
 	# signature list to plot list
 	def sigListToPlot(self, id):
-		cfg.signPlotIDs['ID_' + str(id)] = id
-		cfg.spectrPlotList['MACROCLASSID_' + str(id)] = cfg.signList['MACROCLASSID_' + str(id)]
-		cfg.spectrPlotList['MACROCLASSINFO_' + str(id)] = cfg.signList['MACROCLASSINFO_' + str(id)]
-		cfg.spectrPlotList['CLASSID_' + str(id)] = cfg.signList['CLASSID_' + str(id)]
-		cfg.spectrPlotList['CLASSINFO_' + str(id)] = cfg.signList['CLASSINFO_' + str(id)]
-		cfg.spectrPlotList['VALUES_' + str(id)] = cfg.signList['VALUES_' + str(id)]
-		cfg.spectrPlotList['ROI_SIZE_' + str(id)] = cfg.signList['ROI_SIZE_' + str(id)]
-		cfg.spectrPlotList['MIN_VALUE_' + str(id)] = cfg.signList['MIN_VALUE_' + str(id)]
-		cfg.spectrPlotList['MAX_VALUE_' + str(id)] = cfg.signList['MAX_VALUE_' + str(id)]
-		cfg.spectrPlotList['LCS_MIN_' + str(id)] = cfg.signList['LCS_MIN_' + str(id)]
-		cfg.spectrPlotList['LCS_MAX_' + str(id)] = cfg.signList['LCS_MAX_' + str(id)]
-		cfg.spectrPlotList['WAVELENGTH_' + str(id)] = cfg.signList['WAVELENGTH_' + str(id)]
-		cfg.spectrPlotList['MEAN_VALUE_' + str(id)] = cfg.signList['MEAN_VALUE_' + str(id)]
-		cfg.spectrPlotList['SD_' + str(id)] = cfg.signList['SD_' + str(id)]
-		cfg.spectrPlotList['COLOR_' + str(id)] = cfg.signList['COLOR_' + str(id)]
-		cfg.spectrPlotList['CHECKBOX_' + str(id)] = 2
-		cfg.spectrPlotList['UNIT_' + str(id)] = cfg.signList['UNIT_' + str(id)] 
-		cfg.spectrPlotList['COVMATRIX_' + str(id)] = cfg.signList['COVMATRIX_' + str(id)]
-		cfg.spectrPlotList['MD_THRESHOLD_' + str(id)] = cfg.signList['MD_THRESHOLD_' + str(id)]
-		cfg.spectrPlotList['ML_THRESHOLD_' + str(id)] = cfg.signList['ML_THRESHOLD_' + str(id)]
-		cfg.spectrPlotList['SAM_THRESHOLD_' + str(id)] = cfg.signList['SAM_THRESHOLD_' + str(id)]
-
+		try:
+			cfg.signPlotIDs['ID_' + str(id)] = id
+			cfg.spectrPlotList['MACROCLASSID_' + str(id)] = cfg.signList['MACROCLASSID_' + str(id)]
+			cfg.spectrPlotList['MACROCLASSINFO_' + str(id)] = cfg.signList['MACROCLASSINFO_' + str(id)]
+			cfg.spectrPlotList['CLASSID_' + str(id)] = cfg.signList['CLASSID_' + str(id)]
+			cfg.spectrPlotList['CLASSINFO_' + str(id)] = cfg.signList['CLASSINFO_' + str(id)]
+			cfg.spectrPlotList['VALUES_' + str(id)] = cfg.signList['VALUES_' + str(id)]
+			cfg.spectrPlotList['ROI_SIZE_' + str(id)] = cfg.signList['ROI_SIZE_' + str(id)]
+			cfg.spectrPlotList['MIN_VALUE_' + str(id)] = cfg.signList['MIN_VALUE_' + str(id)]
+			cfg.spectrPlotList['MAX_VALUE_' + str(id)] = cfg.signList['MAX_VALUE_' + str(id)]
+			cfg.spectrPlotList['LCS_MIN_' + str(id)] = cfg.signList['LCS_MIN_' + str(id)]
+			cfg.spectrPlotList['LCS_MAX_' + str(id)] = cfg.signList['LCS_MAX_' + str(id)]
+			cfg.spectrPlotList['WAVELENGTH_' + str(id)] = cfg.signList['WAVELENGTH_' + str(id)]
+			cfg.spectrPlotList['MEAN_VALUE_' + str(id)] = cfg.signList['MEAN_VALUE_' + str(id)]
+			cfg.spectrPlotList['SD_' + str(id)] = cfg.signList['SD_' + str(id)]
+			cfg.spectrPlotList['COLOR_' + str(id)] = cfg.signList['COLOR_' + str(id)]
+			cfg.spectrPlotList['CHECKBOX_' + str(id)] = 2
+			cfg.spectrPlotList['UNIT_' + str(id)] = cfg.signList['UNIT_' + str(id)] 
+			cfg.spectrPlotList['COVMATRIX_' + str(id)] = cfg.signList['COVMATRIX_' + str(id)]
+			cfg.spectrPlotList['MD_THRESHOLD_' + str(id)] = cfg.signList['MD_THRESHOLD_' + str(id)]
+			cfg.spectrPlotList['ML_THRESHOLD_' + str(id)] = cfg.signList['ML_THRESHOLD_' + str(id)]
+			cfg.spectrPlotList['SAM_THRESHOLD_' + str(id)] = cfg.signList['SAM_THRESHOLD_' + str(id)]
+		except Exception as err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+			cfg.mx.msg3()
+			
 	# get all ROI attributes
 	def getROIAttributes(self, layer):
 		l = layer
@@ -1177,15 +1239,144 @@ class SCPDock:
 		if color is not None:
 			cfg.treeDockItm[str(k)].setBackground(4, color)
 			
+	# clear tree
+	def clearTree(self, tree = None):
+		if tree is None:	
+			order = 0
+			sorter = cfg.QtSCP.AscendingOrder
+		else:
+			order = tree.header().sortIndicatorOrder()
+			sorter = tree.header().sortIndicatorSection()
+			tree.deleteLater()
+		cfg.uidc.signature_list_treeWidget = cfg.QtWidgetsSCP.QTreeWidget(cfg.uidc.tab_2)
+		cfg.uidc.signature_list_treeWidget.setEditTriggers(cfg.QtWidgetsSCP.QAbstractItemView.AnyKeyPressed|cfg.QtWidgetsSCP.QAbstractItemView.SelectedClicked)
+		cfg.uidc.signature_list_treeWidget.setAlternatingRowColors(True)
+		cfg.uidc.signature_list_treeWidget.setSelectionMode(cfg.QtWidgetsSCP.QAbstractItemView.MultiSelection)
+		cfg.uidc.signature_list_treeWidget.setIndentation(5)
+		cfg.uidc.signature_list_treeWidget.setExpandsOnDoubleClick(False)
+		cfg.uidc.signature_list_treeWidget.setObjectName('signature_list_treeWidget')
+		cfg.uidc.gridLayout.addWidget(cfg.uidc.signature_list_treeWidget, 1, 1, 1, 1)
+		cfg.uidc.signature_list_treeWidget.setSortingEnabled(True)
+		cfg.uidc.signature_list_treeWidget.headerItem().setText(0, cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'MC ID'))
+		cfg.uidc.signature_list_treeWidget.headerItem().setText(1, cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'C ID'))
+		cfg.uidc.signature_list_treeWidget.headerItem().setText(2, cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Name'))
+		cfg.uidc.signature_list_treeWidget.headerItem().setText(3, cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Type'))
+		cfg.uidc.signature_list_treeWidget.headerItem().setText(4, cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Color'))
+		cfg.uidc.signature_list_treeWidget.headerItem().setText(5, cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'SCPID'))
+		# tree list
+		cfg.uidc.signature_list_treeWidget.header().hideSection(5)
+		cfg.uidc.signature_list_treeWidget.header().setSortIndicator(sorter, order)
+		cfg.utls.setTreeColumnWidthList(cfg.uidc.signature_list_treeWidget, [[0, 60], [1, 30], [2, 100], [3, 40], [4, 30]])
+		# connect to edited cell
+		cfg.uidc.signature_list_treeWidget.itemChanged.connect(cfg.SCPD.editedCellTree)
+		# connect to signature list double click
+		cfg.uidc.signature_list_treeWidget.itemDoubleClicked.connect(cfg.SCPD.signatureListDoubleClickTree)
+		#  context menu
+		cfg.uidc.signature_list_treeWidget.setContextMenuPolicy(cfg.QtCoreSCP.Qt.CustomContextMenu)
+		cfg.uidc.signature_list_treeWidget.customContextMenuRequested.connect(cfg.SCPD.contextMenu)
+		return cfg.uidc.signature_list_treeWidget
+		
+	# menu
+	def contextMenu(self, event):
+		#index = cfg.uidc.signature_list_treeWidget.indexAt(event)
+		#cfg.itemMenu = cfg.uidc.signature_list_treeWidget.itemAt(event)
+		#cfg.uidc.signature_list_treeWidget.setCurrentItem(cfg.itemMenu)
+		m = cfg.QtWidgetsSCP.QMenu()
+		zoomToMenu = cfg.ipt.addMenuItem(m, cfg.SCPD.zoomToMenu, 'semiautomaticclassificationplugin_zoom_to_ROI.svg', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Zoom to highlighted items'))
+		selectAllMenu = cfg.ipt.addMenuItem(m, cfg.SCPD.selectAllMenu, 'semiautomaticclassificationplugin_batch_check.svg', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Check/uncheck all'))
+		clearSelectionMenu = cfg.ipt.addMenuItem(m, cfg.SCPD.clearSelectionMenu, 'semiautomaticclassificationplugin_select_all.svg', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Clear selection'))
+		collapseMenu = cfg.ipt.addMenuItem(m, cfg.SCPD.collapseMenu, 'semiautomaticclassificationplugin_docks.svg', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Collapse/expand all'))
+		m.addSeparator()
+		mergeSignaturesMenu = cfg.ipt.addMenuItem(m, cfg.SCPD.mergeSelectedSignatures, 'semiautomaticclassificationplugin_merge_sign_tool.svg', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Merge highlighted items'))
+		calculateSignaturesMenu = cfg.ipt.addMenuItem(m, cfg.SCPD.calculateSignatures, 'semiautomaticclassificationplugin_add_sign_tool.svg', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Calculate signatures for highlighted items'))
+		deleteSignaturesMenu = cfg.ipt.addMenuItem(m, cfg.SCPD.removeSelectedSignatures, 'semiautomaticclassificationplugin_delete_signature.svg', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Delete highlighted items'))
+		changeMacroclassMenu = cfg.ipt.addMenuItem(m, cfg.SCPD.changeMacroclassMenu, 'semiautomaticclassificationplugin_enter.svg', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Change MC ID for highlighted items'))
+		m.addSeparator()
+		addSignaturesPlotMenu = cfg.ipt.addMenuItem(m, cfg.SCPD.addSignatureToSpectralPlot, 'semiautomaticclassificationplugin_sign_tool.svg', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Add highlighted items to spectral plot'))
+		addScatterPlotMenu = cfg.ipt.addMenuItem(m, cfg.SCPD.addROIToScatterPlot, 'semiautomaticclassificationplugin_scatter_tool.svg', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Add highlighted items to scatter plot'))
+		propertiesMenu = cfg.ipt.addMenuItem(m, cfg.SCPD.propertiesMenu, 'semiautomaticclassificationplugin_accuracy_tool.svg', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Properties'))
+		m.exec_(cfg.uidc.signature_list_treeWidget.mapToGlobal(event))
+		
+	# properties menu
+	def propertiesMenu(self):
+		cfg.SCPD.addSignatureToSpectralPlot(1)
+		
+	# collaps menu
+	def collapseMenu(self):
+		try:
+			if cfg.collapseDock == True:
+				cfg.uidc.signature_list_treeWidget.collapseAll()
+				cfg.collapseDock = False
+			else:
+				cfg.uidc.signature_list_treeWidget.expandAll()
+				cfg.collapseDock = True
+		except:
+			cfg.uidc.signature_list_treeWidget.collapseAll()
+			cfg.collapseDock = False
+			
+	# change macroclass menu
+	def changeMacroclassMenu(self):
+		if len(cfg.uidc.signature_list_treeWidget.selectedItems()) > 0:
+			mc = cfg.ROIMacroID
+			# ask for confirm
+			a = cfg.utls.questionBox(cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Change Macroclass ID'), cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Change the Macroclass ID for highlighted items to ') + str(mc) + ' ?')
+			if a == 'Yes':
+				for i in cfg.uidc.signature_list_treeWidget.selectedItems():
+					# classes
+					if len(i.text(1)) > 0:
+						id = i.text(5)
+						cfg.signList['MACROCLASSID_' + str(id)] = mc
+						if id in list(cfg.ROI_SCP_UID.values()):
+							cfg.ROI_MC_ID[id] = mc
+							rId = cfg.utls.getIDByAttributes(cfg.shpLay, cfg.fldSCP_UID, str(id))
+							for rI in rId:
+								cfg.utls.editFeatureShapefile(cfg.shpLay, rI, cfg.fldMacroID_class, mc)
+					# macroclasses
+					else:
+						count = i.childCount()
+						for roi in reversed(range(0, count)):
+							idC = i.child(roi).text(5)
+							cfg.signList['MACROCLASSID_' + str(idC)] = mc
+							if idC in list(cfg.ROI_SCP_UID.values()):
+								cfg.ROI_MC_ID[idC] = mc
+								rId = cfg.utls.getIDByAttributes(cfg.shpLay, cfg.fldSCP_UID, str(idC))
+								for rI in rId:
+									cfg.utls.editFeatureShapefile(cfg.shpLay, rI, cfg.fldMacroID_class, mc)
+				cfg.SCPD.ROIListTableTree(cfg.shpLay, cfg.uidc.signature_list_treeWidget)
+
+	# clear selection menu
+	def clearSelectionMenu(self):
+		cfg.uidc.signature_list_treeWidget.clearSelection()
+		
+	# zoom to menu
+	def zoomToMenu(self):
+		id = []
+		for i in cfg.uidc.signature_list_treeWidget.selectedItems():
+			# classes
+			if len(i.text(1)) > 0:
+				id.append(i.text(5))
+			# macroclasses
+			else:
+				count = i.childCount()
+				for roi in range(0, count):
+					id.append(i.child(roi).text(5))
+		cfg.SCPD.zoomToROI(id)
+		
+	# select all menu
+	def selectAllMenu(self):
+		try:
+			c = cfg.treeDockMCItm[next(iter(cfg.treeDockMCItm))]
+			cfg.SCPD.selectAllSignatures(not cfg.signList['CHECKBOX_' + str(c.child(0).text(5))])
+		except:
+			pass
+		
 	# Create ROI list
 	def ROIListTableTree(self, layer, tree, checkstate=0):
+		l = self.clearTree(tree)
 		# get ROIs
 		cfg.SCPD.getROIAttributes(layer)
-		# checklist
-		l = tree
 		l.blockSignals(True)
 		l.setSortingEnabled(False)
-		l.clear()
 		try:
 			# macroclasses
 			for k in cfg.MCID_List:
@@ -1244,6 +1435,9 @@ class SCPDock:
 		cfg.SCPD.exportMCIDList()
 		cfg.LCSignT.LCSignatureThresholdListTable()
 		cfg.signT.signatureThresholdListTable()
+		# info completer
+		cfg.SCPD.roiInfoCompleter()
+		cfg.SCPD.roiMacroclassInfoCompleter()
 		
 	# filter tree	
 	def filterTree(self):
@@ -1640,7 +1834,7 @@ class SCPDock:
 							except:
 								pass
 				else:
-					cfg.SCPD.zoomToROI(id)
+					cfg.SCPD.zoomToROI([id])
 				break
 		for id, val in cfg.treeDockMCItm.items():
 			if val == item:
@@ -1660,6 +1854,8 @@ class SCPDock:
 		tW = cfg.uidc.signature_list_treeWidget
 		tW.setSortingEnabled(False)
 		tW.blockSignals(True)
+		move = 'No'
+		# items
 		for id, val in cfg.treeDockItm.items():
 			if val == item:
 				if column == 0:
@@ -1678,20 +1874,7 @@ class SCPDock:
 								rId = cfg.utls.getIDByAttributes(cfg.shpLay, cfg.fldSCP_UID, str(id))
 								for rI in rId:
 									cfg.utls.editFeatureShapefile(cfg.shpLay, rI, cfg.fldMacroID_class, v)
-							for k in cfg.MCID_List:
-								if int(k[0]) == oldV:
-									kk = k
-								if int(k[0]) == v:
-									create = 'No'
-									break
-								else:
-									create = 'Yes'
-							if create == 'Yes':
-								cfg.SCPD.addTreeItem(tW, [v, kk[1]], color = cfg.QtGuiSCP.QColor(kk[2]))
-							# create new item
-							cfg.SCPD.addChildTreeItem(tW, [int(cfg.signList['MACROCLASSID_' + str(id)]), str(cfg.signList['MACROCLASSINFO_' + str(id)]), int(cfg.signList['CLASSID_' + str(id)]), str(cfg.signList['CLASSINFO_' + str(id)]), item.text(3), id], checkboxState = cfg.signList['CHECKBOX_' + str(id)], color = cfg.signList['COLOR_' + str(id)])
-							parent = item.parent()
-							parent.removeChild(item)
+							move = 'Yes'
 						except:
 							item.setData(column, 0, oldV)
 				elif column == 1:
@@ -1723,7 +1906,7 @@ class SCPDock:
 					item.setData(column, 0, '')
 					tW.clearSelection()
 				break
-		move = 'No'
+		# macroclasses
 		for id, val in cfg.treeDockMCItm.items():
 			if val == item:
 				if column == 0:
@@ -1737,10 +1920,7 @@ class SCPDock:
 								v = 0
 								item.setData(column, v)
 								cfg.mx.msg17()
-							for k in cfg.MCID_List:
-								if int(k[0]) == v:
-									move = 'Yes'
-									break
+							move = 'Yes'
 							for roi in reversed(range(0, count)):
 								cld = item.child(roi)
 								idC = cld.text(5)
@@ -1750,16 +1930,6 @@ class SCPDock:
 									rId = cfg.utls.getIDByAttributes(cfg.shpLay, cfg.fldSCP_UID, str(idC))
 									for rI in rId:
 										cfg.utls.editFeatureShapefile(cfg.shpLay, rI, cfg.fldMacroID_class, v)
-								if move == 'Yes':
-									# create new item
-									cfg.SCPD.addChildTreeItem(tW, [int(cfg.signList['MACROCLASSID_' + str(idC)]), str(cfg.signList['MACROCLASSINFO_' + str(idC)]), int(cfg.signList['CLASSID_' + str(idC)]), str(cfg.signList['CLASSINFO_' + str(idC)]), item.text(3), idC], checkboxState = cfg.signList['CHECKBOX_' + str(idC)], color = cfg.signList['COLOR_' + str(idC)])
-									item.removeChild(cld)
-									del cfg.treeDockItm[idC]
-								else:
-									cld.setData(column, 0, v)
-							if move == 'Yes':
-								tW.takeTopLevelItem(tW.indexOfTopLevelItem(item))
-								del cfg.treeDockMCItm[id]
 						except:
 							item.setData(column, 0, int(oldV))
 				elif column == 2:
@@ -1775,13 +1945,17 @@ class SCPDock:
 					item.setData(column, 0, '')
 					tW.clearSelection()
 				break
-		# info completer
-		cfg.SCPD.roiInfoCompleter()
-		cfg.SCPD.roiMacroclassInfoCompleter()
 		tW.setSortingEnabled(True)
 		tW.blockSignals(False)
-		cfg.LCSignT.LCSignatureThresholdListTable()
-		cfg.signT.signatureThresholdListTable()
+		if move == 'Yes':
+			cfg.SCPD.ROIListTableTree(cfg.shpLay, cfg.uidc.signature_list_treeWidget)
+		else:
+			cfg.LCSignT.LCSignatureThresholdListTable()
+			cfg.signT.signatureThresholdListTable()
+			cfg.SCPD.exportMCIDList()
+			# info completer
+			cfg.SCPD.roiInfoCompleter()
+			cfg.SCPD.roiMacroclassInfoCompleter()
 		# logger
 		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'edited cell' + str(column))
 			
@@ -1799,33 +1973,44 @@ class SCPDock:
 		delete = []
 		tW = cfg.uidc.signature_list_treeWidget
 		for id, val in cfg.treeDockMCItm.items():
-			count = val.childCount()
-			if count > 0:
-				mID = val.text(0)
-				mC = val.text(2)
-				c = val.background(4).color() 
-				s = []
-				s.append(mID)
-				s.append(mC)
-				s.append(c.toRgb().name())
-				sL.append(s)
-			else:
+			try:
+				count = val.childCount()
+				if count > 0:
+					mID = val.text(0)
+					mC = val.text(2)
+					c = val.background(4).color() 
+					s = []
+					s.append(mID)
+					s.append(mC)
+					s.append(c.toRgb().name())
+					sL.append(s)
+				else:
+					delete.append([id, val])
+			except:
 				delete.append([id, val])
 		for id, val in delete:
-			tW.takeTopLevelItem(tW.indexOfTopLevelItem(val))
-			del cfg.treeDockMCItm[id]
+			try:
+				tW.takeTopLevelItem(tW.indexOfTopLevelItem(val))
+			except:
+				pass
+			try:
+				del cfg.treeDockMCItm[id]
+			except:
+				pass
 		cfg.MCID_List = sL
 		return sL
 
 	# zoom to clicked ROI 
-	def zoomToROI(self, id):
+	def zoomToROI(self, idList):
 		l = cfg.shpLay
+		rId = []
 		if l is not None:
-			if id in list(cfg.ROI_SCP_UID.values()):
-				rId = cfg.utls.getIDByAttributes(l, cfg.fldSCP_UID, str(id))
-				cfg.utls.zoomToSelected(l, rId)
-				cfg.utls.setLayerVisible(l, True)
-				cfg.utls.moveLayerTop(l)
+			for id in idList:
+				if id in list(cfg.ROI_SCP_UID.values()):
+					rId.append(cfg.utls.getIDByAttributes(l, cfg.fldSCP_UID, str(id)))
+			cfg.utls.zoomToSelected(l, rId)
+			cfg.utls.setLayerVisible(l, True)
+			cfg.utls.moveLayerTop(l)
 
 	# Activate signature calculation
 	def signatureCheckbox(self):
@@ -2049,7 +2234,7 @@ class SCPDock:
 			# increase C_ID
 			v = cfg.uidc.ROI_ID_spin.value()
 			cfg.uidc.ROI_ID_spin.setValue(v+1)
-			if cfg.saveInputCheck == 'Yes':
+			if cfg.saveInputCheck == '2':
 				cfg.SCPD.saveMemToSHP(cfg.shpLay)
 				cfg.utls.zipDirectoryInFile(cfg.scpFlPath, cfg.inptDir)
 			if progressbar == 'Yes':

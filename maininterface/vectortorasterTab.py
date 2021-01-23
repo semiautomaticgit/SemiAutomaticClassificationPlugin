@@ -62,7 +62,7 @@ class VectorToRasterTab:
 			if len(fd) == 0 and cfg.ui.field_checkBox.isChecked():
 				cfg.utls.refreshVectorLayer()
 				return
-			rstrOut = cfg.utls.getSaveFileName(None, cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Save raster output"), "", "*.tif", "tif")
+			rstrOut = cfg.utls.getSaveFileName(None, cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Save raster output'), '', '*.tif', 'tif')
 		else:
 			vectorSource = vectorPath
 			referenceRasterPath = rasterPath
@@ -70,10 +70,10 @@ class VectorToRasterTab:
 			rstrOut = rasterOutput
 			fd = fieldName
 		if rstrOut is not False:
-			if rstrOut.lower().endswith(".tif"):
+			if rstrOut.lower().endswith('.tif'):
 				pass
 			else:
-				rstrOut = rstrOut + ".tif"
+				rstrOut = rstrOut + '.tif'
 			if batch == 'No':
 				cfg.uiUtls.addProgressBar()
 				# disable map canvas render for speed
@@ -92,9 +92,13 @@ class VectorToRasterTab:
 			if cfg.ui.conversion_type_combo.currentText() == cfg.centerOfPixels:
 				conversionType = None
 			else:
-				conversionType = "ALL_TOUCHED"
+				conversionType = 'ALL_TOUCHED'
+			if cfg.ui.extent_checkBox_2.isChecked():
+				extentR = 'Yes'
+			else:
+				extentR = None
 			# convert vector layer to raster		
-			check = cfg.utls.vectorToRaster(fd, vectorSource, referenceRasterName, rstrOut, referenceRasterPath, conversionType, "GTiff", burnValues)
+			check = cfg.utls.vectorToRaster(fd, vectorSource, referenceRasterName, rstrOut, referenceRasterPath, conversionType, 'GTiff', burnValues, extent = extentR)
 			cfg.uiUtls.updateBar(100)
 			# add raster to layers
 			if cfg.osSCP.path.isfile(rstrOut):
@@ -109,7 +113,7 @@ class VectorToRasterTab:
 				cfg.utls.sendSMTPMessage(None, str(__name__))
 				cfg.uiUtls.removeProgressBar()
 			# logger
-			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "finished")
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'finished')
 		
 	# reload vector list
 	def reloadVectorList(self):

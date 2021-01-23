@@ -3190,6 +3190,14 @@ class BatchTab:
 					cfg.ui.field_checkBox.setCheckState(0)
 				else:
 					return 'No', pName
+			# extent same as reference (1 checked or 0 unchecked)
+			elif pName == 'extent_same_as_reference':
+				if pSplit[1].replace(' ', '') == '1':
+					cfg.ui.extent_checkBox_2.setCheckState(2)
+				elif pSplit[1].replace(' ', '') == '0':
+					cfg.ui.extent_checkBox_2.setCheckState(0)
+				else:
+					return 'No', pName
 			# constant value (int value)
 			elif pName == 'constant_value':
 				try:

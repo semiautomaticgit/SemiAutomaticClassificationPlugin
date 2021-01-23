@@ -56,7 +56,6 @@ class ClassificationTab:
 		else:
 			# logger
 			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'algorithm name: error ')
-			
 		if str(cfg.algName) == cfg.algML:
 			if cfg.algThrshld > 100:
 				cfg.mx.msg10()
@@ -118,7 +117,7 @@ class ClassificationTab:
 		maskPath = cfg.ui.mask_lineEdit.text()
 		if len(maskPath) == 0:
 			maskC = None
-		bndStN = cfg.algThrshld = cfg.ui.band_set_comb_spinBox_12.value() - 1
+		bndStN = cfg.ui.band_set_comb_spinBox_12.value() - 1
 		self.runClassification(bandSetNumber = bndStN, algorithmFilesCheck = algFilesCheck, reportCheck = report, vectorConversion = vector, useMacroclass = macroclass, useLcs = useLcs, useLcsAlgorithm = useLcsAlgorithm, LCSLeaveUnclassified = leaveUnclassified, maskCheckBox = maskC, maskPath = maskPath)
 		
 	# perform classification
@@ -201,7 +200,7 @@ class ClassificationTab:
 						useMacroclass = cfg.macroclassCheck
 					classificationOptions = [useLcs, useLcsAlgorithm, LCSLeaveUnclassified, cfg.algBandWeigths, cfg.algThrshld]
 					# logger
-					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " classification set: " + str([algorithmName, img, sL, cfg.clssPth, useMacroclass, algRasterPath, 0, None, cfg.rasterCompression, bandSetNumber, classificationOptions]))
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' classification set: ' + str([algorithmName, img, sL, cfg.clssPth, useMacroclass, algRasterPath, 0, None, cfg.rasterCompression, bandSetNumber, classificationOptions]))
 					ok, cOut, mOut, opOut = self.runAlgorithm(algorithmName, img, sL, cfg.clssPth, useMacroclass, algRasterPath, 0, None, cfg.rasterCompression, bandSetNumber, classificationOptions)
 					if ok == 'Yes':
 						c = cfg.utls.addRasterLayer(cfg.clssPth)
@@ -434,7 +433,7 @@ class ClassificationTab:
 					else:
 						tPMA = None		
 					# logger
-					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " classification set: " + str([cfg.algName, cfg.bandSetsList[bandSetNumber][8], sL, pP, cfg.macroclassCheck, tPMA, int(cfg.prvwSz), point, compress, bandSetNumber, classificationOptions]))
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' classification set: ' + str([cfg.algName, cfg.bandSetsList[bandSetNumber][8], sL, pP, cfg.macroclassCheck, tPMA, int(cfg.prvwSz), point, compress, bandSetNumber, classificationOptions]))
 					ok, cOut, mOut, opOut = self.runAlgorithm(cfg.algName, cfg.bandSetsList[bandSetNumber][8], sL, pP, cfg.macroclassCheck, tPMA, int(cfg.prvwSz), point, compress, bandSetNumber, classificationOptions)
 					if ok == 'Yes':
 						if algorithmRaster == 'No':
@@ -566,7 +565,7 @@ class ClassificationTab:
 		else:
 			tPMD = cfg.utls.createTempVirtualRaster(bL, bandNumberList, 'Yes', 'Yes', 0, 'No', 'No')
 		# logger
-		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " multiprocess set: " + str([tPMD, signatureList, algorithmName, macroclassCheck, classificationOptions, cfg.bandSetsList[bandSetNumber][6]]))
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' multiprocess set: ' + str([tPMD, signatureList, algorithmName, macroclassCheck, classificationOptions, cfg.bandSetsList[bandSetNumber][6]]))
 		# process calculation
 		o = cfg.utls.multiProcessRaster(rasterPath = tPMD, signatureList = signatureList, functionBand = 'Yes', functionRaster = cfg.utls.classificationMultiprocess, algorithmName = algorithmName, nodataValue = -999, macroclassCheck = macroclassCheck,classificationOptions = classificationOptions, functionBandArgument = cfg.multiAddFactorsVar, functionVariable = cfg.bandSetsList[bandSetNumber][6], progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Classification'), virtualRaster = 'Yes', compress = compress, compressFormat = 'LZW')
 		if o == 'No':

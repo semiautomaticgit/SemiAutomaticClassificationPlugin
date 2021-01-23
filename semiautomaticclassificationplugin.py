@@ -507,10 +507,6 @@ class SemiAutomaticClassificationPlugin:
 			# set plugin version
 			cfg.ui.plugin_version_label.setText(semiautomaticclassVersion())
 			cfg.uidc.plugin_version_label2.setText('SCP ' + semiautomaticclassVersion())
-			# tree list
-			cfg.uidc.signature_list_treeWidget.header().hideSection(5)
-			cfg.uidc.signature_list_treeWidget.header().setSortIndicator(0, cfg.QtSCP.AscendingOrder)
-			cfg.utls.setTreeColumnWidthList(cfg.uidc.signature_list_treeWidget, [[0, 60], [1, 30], [2, 100], [3, 40], [4, 30]])
 			# row height
 			cfg.ui.download_images_tableWidget.verticalHeader().setDefaultSectionSize(16)
 			cfg.ui.tableWidget_band_calc.verticalHeader().setDefaultSectionSize(16)
@@ -844,12 +840,8 @@ class SemiAutomaticClassificationPlugin:
 			cfg.uidc.import_library_toolButton.clicked.connect(cfg.utls.importSignaturesTab)
 			# add to spectral signature plot
 			cfg.uidc.signature_spectral_plot_toolButton.clicked.connect(cfg.SCPD.addSignatureToSpectralPlot)
-			# connect to edited cell
-			cfg.uidc.signature_list_treeWidget.itemChanged.connect(cfg.SCPD.editedCellTree)
 			# connect to filter
 			cfg.uidc.ROI_filter_lineEdit.textChanged.connect(cfg.SCPD.filterTree)
-			# connect to signature list double click
-			cfg.uidc.signature_list_treeWidget.itemDoubleClicked.connect(cfg.SCPD.signatureListDoubleClickTree)
 			# connect to delete signature
 			cfg.uidc.delete_Signature_Button.clicked.connect(cfg.SCPD.removeSelectedSignatures)
 			# connect to merge signatures
@@ -1464,7 +1456,7 @@ class SemiAutomaticClassificationPlugin:
 		cfg.utls.clearTable(cfg.ui.LCS_tableWidget)
 		cfg.treeDockItm = {}
 		cfg.treeDockMCItm = {}
-		cfg.uidc.signature_list_treeWidget.clear()
+		cfg.SCPD.clearTree()
 		cfg.scaPlT.scatterPlotListTable(cfg.uiscp.scatter_list_plot_tableWidget)
 		cfg.spSigPlot.refreshPlot()
 		cfg.LCSignT.LCSignatureThresholdListTable()
@@ -1570,9 +1562,6 @@ class SemiAutomaticClassificationPlugin:
 		self.resetSCP()
 		# load product download table
 		cfg.downProd.openDownloadTable()
-		# ROI completer
-		cfg.SCPD.roiInfoCompleter()
-		cfg.SCPD.roiMacroclassInfoCompleter()
 		cfg.bCalc.rasterBandName()
 		cfg.SCPD.openInput()
 		cfg.bstLT.BandSetListTable()

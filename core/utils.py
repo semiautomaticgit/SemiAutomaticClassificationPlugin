@@ -1543,17 +1543,17 @@ class Utils:
 		# band set
 		if cfg.bandSetsList[bandSetNumber][0] == 'Yes':
 			cfg.utls.checkBandSet(bandSetNumber)
-			check = cfg.utls.vectorToRaster(cfg.emptyFN, tLP, cfg.emptyFN, tRxs, cfg.bndSetLst[0], None, 'GTiff', 1)
+			check = cfg.utls.vectorToRaster(None, tLP, None, tRxs, cfg.bndSetLst[0], None, 'GTiff', 1)
 			if check == 'No':
 				return 'No'
 			outList = cfg.utls.clipRasterByRaster(cfg.bndSetLst, tRxs, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Calculating signature'), stats = 'Yes')
 		else:
 			rS = cfg.utls.selectLayerbyName(rasterName, 'Yes')
-			check = cfg.utls.vectorToRaster(cfg.emptyFN, tLP, cfg.emptyFN, tRxs, rS.source(), None, 'GTiff', 1)
+			check = cfg.utls.vectorToRaster(None, tLP, None, tRxs, rS.source(), None, 'GTiff', 1)
 			if check == 'No':
 				return 'No'
 			# calculate ROI center, height and width
-			rCX, rCY, rW, rH = cfg.utls.getShapefileRectangleBox(mL)
+			rCX, rCY, rW, rH = cfg.utls.getShapefileRectangleBox(tLP)
 			# subset 
 			tLX, tLY, pS = cfg.utls.imageInformation(rasterName)
 			tS = cfg.utls.createTempRasterPath('tif')
@@ -1588,8 +1588,8 @@ class Utils:
 			cfg.uiUtls.updateBar(progress + int((3 / 4) * progresStep))
 		# if not temporary ROI min max
 		if tempROI != 'MinMax':
-			covMat = cfg.utls.calculateCovMatrix(ROIArray)
 			try:
+				covMat = cfg.utls.calculateCovMatrix(ROIArray)
 				if covMat == 'No':
 					cfg.mx.msgWar12(macroclassID, classID)
 			except Exception as err:
@@ -1603,7 +1603,10 @@ class Utils:
 			cfg.osSCP.remove(tRxs)
 		except:
 			pass
-		cfg.tblOut['ROI_SIZE'] = min(ROIsizes)
+		try:
+			cfg.tblOut['ROI_SIZE'] = min(ROIsizes)
+		except:
+			pass
 		# if not temporary ROI min max
 		if tempROI != 'MinMax':
 			cfg.utls.ROIStatisticsToSignature(covMat, macroclassID, macroclassInfo, classID, classInfo, bandSetNumber, cfg.bandSetsList[bandSetNumber][5], plot, tempROI, SCP_UID)
@@ -1712,117 +1715,122 @@ class Utils:
 		max = []
 		vMin = []
 		vMax = []
-		ROISize = cfg.tblOut["ROI_SIZE"]
-		for b in range(1, iB + 1):
-			stats = cfg.tblOut["BAND_" + str(b)]
-			w = cfg.tblOut["WAVELENGTH_" + str(b)]
-			wvl.append(w)
-			vMin.append(stats[0])
-			vMax.append(stats[1])
-			# values for mean and standard deviation
-			vM = stats[2]
-			vS = stats[3]
-			val.append(vM)
-			valM.append(vM)
-			val.append(vS)
-			#min.append(vM - vS)
-			#max.append(vM + vS)
-			min = vMin
-			max = vMax
-			c, cc = cfg.utls.randomColor()
-		if plot == 'No':
-			if SCP_UID is None:
-				i = cfg.utls.signatureID()
-			else:
-				i = SCP_UID
-			cfg.signList["CHECKBOX_" + str(i)] = cfg.QtSCP.Checked
-			cfg.signList["MACROCLASSID_" + str(i)] = macroclassID
-			cfg.signList["MACROCLASSINFO_" + str(i)] = macroclassInfo
-			cfg.signList["CLASSID_" + str(i)] = classID
-			cfg.signList["CLASSINFO_" + str(i)] = classInfo
-			cfg.signList["WAVELENGTH_" + str(i)] = wvl
-			cfg.signList["VALUES_" + str(i)] = val
-			cfg.signList["MIN_VALUE_" + str(i)] = vMin
-			cfg.signList["MAX_VALUE_" + str(i)] = vMax
-			cfg.signList["ROI_SIZE_" + str(i)] = ROISize
-			cfg.signList["LCS_MIN_" + str(i)] = min
-			cfg.signList["LCS_MAX_" + str(i)] = max
-			cfg.signList["COVMATRIX_" + str(i)] = covarianceMatrix
-			cfg.signList["MD_THRESHOLD_" + str(i)] = cfg.algThrshld
-			cfg.signList["ML_THRESHOLD_" + str(i)] = cfg.algThrshld
-			cfg.signList["SAM_THRESHOLD_" + str(i)] = cfg.algThrshld
-			# counter
-			n = 0
-			m = []
-			sdL = []
-			for wi in wvl:
-				m.append(val[n * 2])
-				sdL.append(val[n * 2 +1])
-				n = n + 1
-			cfg.signList["MEAN_VALUE_" + str(i)] = m
-			cfg.signList["SD_" + str(i)] = sdL
-			if unit is None:
-				unit = cfg.bandSetsList[bandSetNumber][5]
-			cfg.signList["UNIT_" + str(i)] = unit
-			cfg.signList["COLOR_" + str(i)] = c
-			#cfg.signList["COMPL_COLOR_" + str(i)] = cc
-			cfg.signIDs["ID_" + str(i)] = i
-		# calculation for plot
-		elif plot == 'Yes':
-			if SCP_UID is None:
-				i = cfg.utls.signatureID()
-			else:
-				i = SCP_UID
-			cfg.spectrPlotList["CHECKBOX_" + str(i)] = cfg.QtSCP.Checked
-			cfg.spectrPlotList["MACROCLASSID_" + str(i)] = macroclassID
-			cfg.spectrPlotList["MACROCLASSINFO_" + str(i)] = macroclassInfo
-			cfg.spectrPlotList["CLASSID_" + str(i)] = classID
-			cfg.spectrPlotList["CLASSINFO_" + str(i)] = classInfo
-			cfg.spectrPlotList["WAVELENGTH_" + str(i)] = wvl
-			cfg.spectrPlotList["VALUES_" + str(i)] = val
-			cfg.spectrPlotList["LCS_MIN_" + str(i)] = vMin
-			cfg.spectrPlotList["LCS_MAX_" + str(i)] = vMax
-			cfg.spectrPlotList["MIN_VALUE_" + str(i)] = vMin
-			cfg.spectrPlotList["MAX_VALUE_" + str(i)] = vMax
-			cfg.spectrPlotList["ROI_SIZE_" + str(i)] = ROISize
-			cfg.spectrPlotList["COVMATRIX_" + str(i)] = covarianceMatrix
-			cfg.spectrPlotList["MD_THRESHOLD_" + str(i)] = cfg.algThrshld
-			cfg.spectrPlotList["ML_THRESHOLD_" + str(i)] = cfg.algThrshld
-			cfg.spectrPlotList["SAM_THRESHOLD_" + str(i)] = cfg.algThrshld
-			# counter
-			n = 0
-			m = []
-			sdL = []
-			for wi in wvl:
-				m.append(val[n * 2])
-				sdL.append(val[n * 2 +1])
-				n = n + 1
-			cfg.spectrPlotList["MEAN_VALUE_" + str(i)] = m
-			cfg.spectrPlotList["SD_" + str(i)] = sdL
-			if unit is None:
-				unit = cfg.bandSetsList[bandSetNumber][5]
-			cfg.spectrPlotList["UNIT_" + str(i)] = unit
-			cfg.spectrPlotList["COLOR_" + str(i)] = c
-			#cfg.spectrPlotList["COMPL_COLOR_" + str(i)] = cc
-			cfg.signPlotIDs["ID_" + str(i)] = i
-			if tempROI == 'Yes':
-				try:
-					cfg.tmpROIColor = cfg.spectrPlotList["COLOR_" + str(cfg.tmpROIID)]
-					if cfg.spectrPlotList["MACROCLASSINFO_" + str(cfg.tmpROIID)] == cfg.tmpROINm:
-						cfg.spSigPlot.removeSignatureByID(cfg.tmpROIID)
-						cfg.tmpROIID = i 
-						cfg.spectrPlotList["COLOR_" + str(i)] = cfg.tmpROIColor
-					else:
+		try:
+			ROISize = cfg.tblOut['ROI_SIZE']
+			for b in range(1, iB + 1):
+				stats = cfg.tblOut['BAND_' + str(b)]
+				w = cfg.tblOut['WAVELENGTH_' + str(b)]
+				wvl.append(w)
+				vMin.append(stats[0])
+				vMax.append(stats[1])
+				# values for mean and standard deviation
+				vM = stats[2]
+				vS = stats[3]
+				val.append(vM)
+				valM.append(vM)
+				val.append(vS)
+				#min.append(vM - vS)
+				#max.append(vM + vS)
+				min = vMin
+				max = vMax
+				c, cc = cfg.utls.randomColor()
+			if plot == 'No':
+				if SCP_UID is None:
+					i = cfg.utls.signatureID()
+				else:
+					i = SCP_UID
+				cfg.signList['CHECKBOX_' + str(i)] = cfg.QtSCP.Checked
+				cfg.signList['MACROCLASSID_' + str(i)] = macroclassID
+				cfg.signList['MACROCLASSINFO_' + str(i)] = macroclassInfo
+				cfg.signList['CLASSID_' + str(i)] = classID
+				cfg.signList['CLASSINFO_' + str(i)] = classInfo
+				cfg.signList['WAVELENGTH_' + str(i)] = wvl
+				cfg.signList['VALUES_' + str(i)] = val
+				cfg.signList['MIN_VALUE_' + str(i)] = vMin
+				cfg.signList['MAX_VALUE_' + str(i)] = vMax
+				cfg.signList['ROI_SIZE_' + str(i)] = ROISize
+				cfg.signList['LCS_MIN_' + str(i)] = min
+				cfg.signList['LCS_MAX_' + str(i)] = max
+				cfg.signList['COVMATRIX_' + str(i)] = covarianceMatrix
+				cfg.signList['MD_THRESHOLD_' + str(i)] = cfg.algThrshld
+				cfg.signList['ML_THRESHOLD_' + str(i)] = cfg.algThrshld
+				cfg.signList['SAM_THRESHOLD_' + str(i)] = cfg.algThrshld
+				# counter
+				n = 0
+				m = []
+				sdL = []
+				for wi in wvl:
+					m.append(val[n * 2])
+					sdL.append(val[n * 2 +1])
+					n = n + 1
+				cfg.signList['MEAN_VALUE_' + str(i)] = m
+				cfg.signList['SD_' + str(i)] = sdL
+				if unit is None:
+					unit = cfg.bandSetsList[bandSetNumber][5]
+				cfg.signList['UNIT_' + str(i)] = unit
+				cfg.signList['COLOR_' + str(i)] = c
+				#cfg.signList['COMPL_COLOR_' + str(i)] = cc
+				cfg.signIDs['ID_' + str(i)] = i
+			# calculation for plot
+			elif plot == 'Yes':
+				if SCP_UID is None:
+					i = cfg.utls.signatureID()
+				else:
+					i = SCP_UID
+				cfg.spectrPlotList['CHECKBOX_' + str(i)] = cfg.QtSCP.Checked
+				cfg.spectrPlotList['MACROCLASSID_' + str(i)] = macroclassID
+				cfg.spectrPlotList['MACROCLASSINFO_' + str(i)] = macroclassInfo
+				cfg.spectrPlotList['CLASSID_' + str(i)] = classID
+				cfg.spectrPlotList['CLASSINFO_' + str(i)] = classInfo
+				cfg.spectrPlotList['WAVELENGTH_' + str(i)] = wvl
+				cfg.spectrPlotList['VALUES_' + str(i)] = val
+				cfg.spectrPlotList['LCS_MIN_' + str(i)] = vMin
+				cfg.spectrPlotList['LCS_MAX_' + str(i)] = vMax
+				cfg.spectrPlotList['MIN_VALUE_' + str(i)] = vMin
+				cfg.spectrPlotList['MAX_VALUE_' + str(i)] = vMax
+				cfg.spectrPlotList['ROI_SIZE_' + str(i)] = ROISize
+				cfg.spectrPlotList['COVMATRIX_' + str(i)] = covarianceMatrix
+				cfg.spectrPlotList['MD_THRESHOLD_' + str(i)] = cfg.algThrshld
+				cfg.spectrPlotList['ML_THRESHOLD_' + str(i)] = cfg.algThrshld
+				cfg.spectrPlotList['SAM_THRESHOLD_' + str(i)] = cfg.algThrshld
+				# counter
+				n = 0
+				m = []
+				sdL = []
+				for wi in wvl:
+					m.append(val[n * 2])
+					sdL.append(val[n * 2 +1])
+					n = n + 1
+				cfg.spectrPlotList['MEAN_VALUE_' + str(i)] = m
+				cfg.spectrPlotList['SD_' + str(i)] = sdL
+				if unit is None:
+					unit = cfg.bandSetsList[bandSetNumber][5]
+				cfg.spectrPlotList['UNIT_' + str(i)] = unit
+				cfg.spectrPlotList['COLOR_' + str(i)] = c
+				#cfg.spectrPlotList['COMPL_COLOR_' + str(i)] = cc
+				cfg.signPlotIDs['ID_' + str(i)] = i
+				if tempROI == 'Yes':
+					try:
+						cfg.tmpROIColor = cfg.spectrPlotList['COLOR_' + str(cfg.tmpROIID)]
+						if cfg.spectrPlotList['MACROCLASSINFO_' + str(cfg.tmpROIID)] == cfg.tmpROINm:
+							cfg.spSigPlot.removeSignatureByID(cfg.tmpROIID)
+							cfg.tmpROIID = i 
+							cfg.spectrPlotList['COLOR_' + str(i)] = cfg.tmpROIColor
+						else:
+							cfg.tmpROIID = i
+							cfg.spectrPlotList['COLOR_' + str(i)] = cfg.QtGuiSCP.QColor(cfg.ROIClrVal)
+					except:
 						cfg.tmpROIID = i
-						cfg.spectrPlotList["COLOR_" + str(i)] = cfg.QtGuiSCP.QColor(cfg.ROIClrVal)
-				except:
-					cfg.tmpROIID = i
-					cfg.spectrPlotList["COLOR_" + str(i)] = cfg.QtGuiSCP.QColor(cfg.ROIClrVal)
-				#cfg.spSigPlot.signatureListPlotTable(cfg.uisp.signature_list_plot_tableWidget)
+						cfg.spectrPlotList['COLOR_' + str(i)] = cfg.QtGuiSCP.QColor(cfg.ROIClrVal)
+					#cfg.spSigPlot.signatureListPlotTable(cfg.uisp.signature_list_plot_tableWidget)
+				# logger
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' values to shape concluded, plot: ' + str(plot))
+			elif plot == 'Pixel':
+				return valM
+		except Exception as err:
 			# logger
-			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " values to shape concluded, plot: " + str(plot))
-		elif plot == "Pixel":
-			return valM
+			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+			return []
 			
 	# import a shapefile
 	def importShapefile(self):
@@ -5764,7 +5772,7 @@ class Utils:
 			if check == 'No':
 				return 'No'
 			# calculate ROI center, height and width
-			rCX, rCY, rW, rH = cfg.utls.getShapefileRectangleBox(mL)
+			rCX, rCY, rW, rH = cfg.utls.getShapefileRectangleBox(tLP)
 			# subset 
 			tLX, tLY, pS = cfg.utls.imageInformation(cfg.bandSetsList[bandSetNumber][8])
 			tS = cfg.utls.createTempRasterPath('tif')
@@ -6626,11 +6634,12 @@ class Utils:
 		layer.saveNamedStyle(stylePath)
 		
 	# Zoom to selected feature of layer
-	def zoomToSelected(self, layer, featureID):
+	def zoomToSelected(self, layer, featureIDList):
 		layer.removeSelection()
-		layer.select(featureID)
+		for featureID in featureIDList:
+			layer.select(featureID)
 		cfg.cnvs.zoomToSelected(layer)
-		layer.deselect(featureID)
+		layer.removeSelection()
 		
 	# Zoom to band set
 	def zoomToBandset(self):
@@ -7465,7 +7474,7 @@ class Utils:
 				gL.SetAttributeFilter(filter)
 				# create a shapefile
 				d = cfg.ogrSCP.GetDriverByName('ESRI Shapefile')
-				gLCopy = cfg.tmpDir + "/" + "copy" + dT + cfg.utls.fileNameNoExt(layerPath) + ".shp"
+				gLCopy = cfg.tmpDir + '/' + 'copy' + dT + cfg.utls.fileNameNoExt(layerPath) + '.shp'
 				dS = d.CreateDataSource(gLCopy)
 				ou = dS.CopyLayer(gL,dS.GetName())
 				minX, maxX, minY, maxY = ou.GetExtent()
@@ -7483,7 +7492,7 @@ class Utils:
 				oR = tD.Create(tPMD2, rC, rR, 1, cfg.gdalSCP.GDT_Int16)
 			if oR is None:
 				# logger
-				cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: raster size")
+				cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: raster size')
 				cfg.mx.msgErr65()
 				return 'No'
 			try:
@@ -7510,24 +7519,24 @@ class Utils:
 			# convert reference layer to raster
 			if ALL_TOUCHED is None:
 				if burnValues is None:
-					oC = cfg.gdalSCP.RasterizeLayer(oR2, [1], gL, options = ["ATTRIBUTE=" + str(fieldName)])
+					oC = cfg.gdalSCP.RasterizeLayer(oR2, [1], gL, options = ['ATTRIBUTE=' + str(fieldName)])
 				else:
 					oC = cfg.gdalSCP.RasterizeLayer(oR2, [1], gL, burn_values=[burnValues])
 			else:
 				if burnValues is None:
-					oC = cfg.gdalSCP.RasterizeLayer(oR2, [1], gL, options = ["ATTRIBUTE=" + str(fieldName), "ALL_TOUCHED=TRUE"])
+					oC = cfg.gdalSCP.RasterizeLayer(oR2, [1], gL, options = ['ATTRIBUTE=' + str(fieldName), 'ALL_TOUCHED=TRUE'])
 				else:
-					oC = cfg.gdalSCP.RasterizeLayer(oR2, [1], gL, burn_values=[burnValues], options = ["ALL_TOUCHED=TRUE"])
+					oC = cfg.gdalSCP.RasterizeLayer(oR2, [1], gL, burn_values=[burnValues], options = ['ALL_TOUCHED=TRUE'])
 			# close rasters
 			oR2 = None
 			rD = None
 			l.Destroy()
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "vector to raster check: " + str(oC))
+			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'vector to raster check: ' + str(oC))
 			return outputRaster
 		else:
 			cfg.mx.msg9()
-			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "Error None lPRS: " + str(lPRS) + "rPRS: " + str(rPRS))
+			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'Error None lPRS: ' + str(lPRS) + 'rPRS: ' + str(rPRS))
 			return 'No'
 
 	# merge dissolve two layers to new layer
@@ -7793,11 +7802,9 @@ class Utils:
 		dS = None
 
 	# Get extent of a shapefile
-	def getShapefileRectangleBox(self, layer):
+	def getShapefileRectangleBox(self, layerPath):
 		try:
-			d = cfg.ogrSCP.GetDriverByName("ESRI Shapefile")
-			ql = cfg.utls.layerSource(layer)
-			dr = d.Open(ql, 1)
+			dr = cfg.ogrSCP.Open(layerPath, 1)
 			l = dr.GetLayer()
 			e = l.GetExtent()
 			minX = e[0]
@@ -7809,7 +7816,6 @@ class Utils:
 			width = maxX - minX
 			heigth = maxY - minY
 			l = None
-			dr = None
 			return centerX, centerY, width, heigth
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "roi bounding box: center " + str(r.center()) + " width: " + str(r.width())+ " height: " + str(r.height()))
