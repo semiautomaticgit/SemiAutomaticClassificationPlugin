@@ -120,43 +120,61 @@ class SCPDock:
 				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "REDO Preview")
 		
 	# set all items to state 0 or 2
-	def allItemsSetState(self, value):
-		tW = cfg.uidc.signature_list_treeWidget
-		tW.blockSignals(True)
-		for id, val in cfg.treeDockItm.items():
-			if cfg.actionCheck == 'Yes':
-				cfg.treeDockItm[str(id)].setCheckState(0, value)
-			else:
-				# logger
-				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " cancelled")
-				tW.blockSignals(False)
-		tW.blockSignals(False)
-				
-	# select all signatures
-	def selectAllSignatures(self, check):
+	def allItemsSetState(self, value, selected = None):
 		tW = cfg.uidc.signature_list_treeWidget
 		tW.setSortingEnabled(False)
 		tW.blockSignals(True)
+		if selected is None:
+			for id, val in cfg.treeDockItm.items():
+				if cfg.actionCheck == 'Yes':
+					cfg.treeDockItm[str(id)].setCheckState(0, value)
+					cfg.signList['CHECKBOX_' + str(id)] = cfg.treeDockItm[str(id)].checkState(0)
+				else:
+					# logger
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' cancelled')
+					break
+		else:
+			for i in tW.selectedItems():
+				if cfg.actionCheck == 'Yes':
+					# classes
+					if len(i.text(1)) > 0:
+						try:
+							i.setCheckState(0, value)
+							cfg.signList['CHECKBOX_' + str(i.text(5))] = cfg.treeDockItm[str(i.text(5))].checkState(0)
+						except:
+							pass
+					# macroclasses
+					else:
+						count = i.childCount()
+						for roi in range(0, count):
+							try:
+								i.child(roi).setCheckState(0, value)
+								cfg.signList['CHECKBOX_' + str(i.child(roi).text(5))] = cfg.treeDockItm[str(i.child(roi).text(5))].checkState(0)
+							except:
+								pass
+				else:
+					# logger
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' cancelled')
+					break
+		tW.setSortingEnabled(True)
+		tW.blockSignals(False)
+				
+	# select all signatures
+	def selectAllSignatures(self, check = None, selected = None):
+		cfg.uiUtls.addProgressBar()
 		try:
-			cfg.uiUtls.addProgressBar()
 			# select all
 			if check is True:
-				cfg.SCPD.allItemsSetState(2)
+				cfg.SCPD.allItemsSetState(2, selected)
 			# unselect all
 			else:
-				cfg.SCPD.allItemsSetState(0)
-			for id, val in cfg.treeDockItm.items():
-				id = cfg.treeDockItm[str(id)].text(5)
-				cfg.signList['CHECKBOX_' + str(id)] = cfg.treeDockItm[str(id)].checkState(0)
-			cfg.uiUtls.removeProgressBar()
+				cfg.SCPD.allItemsSetState(0, selected)
 			# logger
 			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' all signatures')
 		except Exception as err:
 			# logger
 			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-			cfg.uiUtls.removeProgressBar()
-		tW.setSortingEnabled(True)
-		tW.blockSignals(False)
+		cfg.uiUtls.removeProgressBar()
 				
 	# export signature list to file
 	def saveSignatureList(self, signatureFile):
@@ -1276,25 +1294,43 @@ class SCPDock:
 		cfg.uidc.signature_list_treeWidget.customContextMenuRequested.connect(cfg.SCPD.contextMenu)
 		return cfg.uidc.signature_list_treeWidget
 		
+	# add item to menu
+	def addMenuItem(self, menu, function, iconName, name, tooltip = ''):
+		try:
+			action = cfg.QtWidgetsSCP.QAction(cfg.QtGuiSCP.QIcon(':/plugins/semiautomaticclassificationplugin/icons/' + iconName), name, cfg.iface.mainWindow())
+		except:
+			action = cfg.QtWidgetsSCP.QAction(name, cfg.iface.mainWindow())
+		action.setObjectName('action')
+		action.setToolTip(tooltip)
+		action.triggered.connect(function)
+		menu.addAction(action)
+		return action
+		
 	# menu
 	def contextMenu(self, event):
 		#index = cfg.uidc.signature_list_treeWidget.indexAt(event)
 		#cfg.itemMenu = cfg.uidc.signature_list_treeWidget.itemAt(event)
 		#cfg.uidc.signature_list_treeWidget.setCurrentItem(cfg.itemMenu)
 		m = cfg.QtWidgetsSCP.QMenu()
-		zoomToMenu = cfg.ipt.addMenuItem(m, cfg.SCPD.zoomToMenu, 'semiautomaticclassificationplugin_zoom_to_ROI.svg', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Zoom to highlighted items'))
-		selectAllMenu = cfg.ipt.addMenuItem(m, cfg.SCPD.selectAllMenu, 'semiautomaticclassificationplugin_batch_check.svg', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Check/uncheck all'))
-		clearSelectionMenu = cfg.ipt.addMenuItem(m, cfg.SCPD.clearSelectionMenu, 'semiautomaticclassificationplugin_select_all.svg', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Clear selection'))
-		collapseMenu = cfg.ipt.addMenuItem(m, cfg.SCPD.collapseMenu, 'semiautomaticclassificationplugin_docks.svg', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Collapse/expand all'))
+		m.setToolTipsVisible(True)
+		zoomToMenu = cfg.SCPD.addMenuItem(m, cfg.SCPD.zoomToMenu, 'semiautomaticclassificationplugin_zoom_to_ROI.svg', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Zoom to'), cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Zoom to highlighted items'))
+		selectAllMenu = cfg.SCPD.addMenuItem(m, cfg.SCPD.selectAllMenu, 'semiautomaticclassificationplugin_batch_check.svg', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Check/uncheck'), cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Check/uncheck highlighted items'))
+		clearSelectionMenu = cfg.SCPD.addMenuItem(m, cfg.SCPD.clearSelectionMenu, 'semiautomaticclassificationplugin_select_all.svg', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Clear selection'), cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Clear selection of highlighted items'))
+		collapseMenu = cfg.SCPD.addMenuItem(m, cfg.SCPD.collapseMenu, 'semiautomaticclassificationplugin_docks.svg', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Collapse/expand all'), cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Collapse/expand all macroclasses'))
 		m.addSeparator()
-		mergeSignaturesMenu = cfg.ipt.addMenuItem(m, cfg.SCPD.mergeSelectedSignatures, 'semiautomaticclassificationplugin_merge_sign_tool.svg', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Merge highlighted items'))
-		calculateSignaturesMenu = cfg.ipt.addMenuItem(m, cfg.SCPD.calculateSignatures, 'semiautomaticclassificationplugin_add_sign_tool.svg', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Calculate signatures for highlighted items'))
-		deleteSignaturesMenu = cfg.ipt.addMenuItem(m, cfg.SCPD.removeSelectedSignatures, 'semiautomaticclassificationplugin_delete_signature.svg', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Delete highlighted items'))
-		changeMacroclassMenu = cfg.ipt.addMenuItem(m, cfg.SCPD.changeMacroclassMenu, 'semiautomaticclassificationplugin_enter.svg', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Change MC ID for highlighted items'))
+		changeMacroclassMenu = cfg.SCPD.addMenuItem(m, cfg.SCPD.changeMacroclassMenu, 'semiautomaticclassificationplugin_enter.svg', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Change MC ID'), cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Change MC ID for highlighted items'))
+		changeColorMenu = cfg.SCPD.addMenuItem(m, cfg.SCPD.changeColorMenu, 'semiautomaticclassificationplugin_enter.svg', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Change color'), cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Change color for highlighted items'))
 		m.addSeparator()
-		addSignaturesPlotMenu = cfg.ipt.addMenuItem(m, cfg.SCPD.addSignatureToSpectralPlot, 'semiautomaticclassificationplugin_sign_tool.svg', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Add highlighted items to spectral plot'))
-		addScatterPlotMenu = cfg.ipt.addMenuItem(m, cfg.SCPD.addROIToScatterPlot, 'semiautomaticclassificationplugin_scatter_tool.svg', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Add highlighted items to scatter plot'))
-		propertiesMenu = cfg.ipt.addMenuItem(m, cfg.SCPD.propertiesMenu, 'semiautomaticclassificationplugin_accuracy_tool.svg', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Properties'))
+		mergeSignaturesMenu = cfg.SCPD.addMenuItem(m, cfg.SCPD.mergeSelectedSignatures, 'semiautomaticclassificationplugin_merge_sign_tool.svg', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Merge items'), cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Merge highlighted items'))
+		calculateSignaturesMenu = cfg.SCPD.addMenuItem(m, cfg.SCPD.calculateSignatures, 'semiautomaticclassificationplugin_add_sign_tool.svg', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Calculate signatures'), cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Calculate signatures for highlighted items'))
+		deleteSignaturesMenu = cfg.SCPD.addMenuItem(m, cfg.SCPD.removeSelectedSignatures, 'semiautomaticclassificationplugin_delete_signature.svg', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Delete items'), cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Delete highlighted items'))
+		m.addSeparator()
+		addSignaturesPlotMenu = cfg.SCPD.addMenuItem(m, cfg.SCPD.addSignatureToSpectralPlot, 'semiautomaticclassificationplugin_sign_tool.svg', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Add to spectral plot'), cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Add highlighted items to spectral plot'))
+		addScatterPlotMenu = cfg.SCPD.addMenuItem(m, cfg.SCPD.addROIToScatterPlot, 'semiautomaticclassificationplugin_scatter_tool.svg', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Add to scatter plot'), cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Add highlighted items to scatter plot'))
+		propertiesMenu = cfg.SCPD.addMenuItem(m, cfg.SCPD.propertiesMenu, 'semiautomaticclassificationplugin_accuracy_tool.svg', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Properties'), cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Properties for highlighted items'))
+		m.addSeparator()
+		importMenu = cfg.SCPD.addMenuItem(m, cfg.utls.importSignaturesTab, 'semiautomaticclassificationplugin_import_spectral_library.svg', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Import'), cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Import spectral signatures'))
+		exportMenu = cfg.SCPD.addMenuItem(m, cfg.utls.exportSignaturesTab, 'semiautomaticclassificationplugin_export_spectral_library.svg', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Export'), cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Export highlighted items'))
 		m.exec_(cfg.uidc.signature_list_treeWidget.mapToGlobal(event))
 		
 	# properties menu
@@ -1344,6 +1380,25 @@ class SCPDock:
 									cfg.utls.editFeatureShapefile(cfg.shpLay, rI, cfg.fldMacroID_class, mc)
 				cfg.SCPD.ROIListTableTree(cfg.shpLay, cfg.uidc.signature_list_treeWidget)
 
+	# change color menu
+	def changeColorMenu(self):
+		if len(cfg.uidc.signature_list_treeWidget.selectedItems()) > 0:
+			c = cfg.utls.selectColor()
+			if c is not None:
+				r = []
+				for i in cfg.uidc.signature_list_treeWidget.selectedItems():
+					id = i.text(5)
+					try:
+						cfg.treeDockItm[str(id)].setBackground(4, c)
+						cfg.signList['COLOR_' + str(id)] = c
+					except:
+						pass
+					try:
+						cfg.treeDockMCItm[str(id)].setBackground(4, c)
+						cfg.SCPD.roiMacroclassInfoCompleter()
+					except:
+						pass
+
 	# clear selection menu
 	def clearSelectionMenu(self):
 		cfg.uidc.signature_list_treeWidget.clearSelection()
@@ -1364,9 +1419,25 @@ class SCPDock:
 		
 	# select all menu
 	def selectAllMenu(self):
+		for i in cfg.uidc.signature_list_treeWidget.selectedItems():
+			# classes
+			if len(i.text(1)) > 0:
+				try:
+					v = cfg.signList['CHECKBOX_' + str(i.text(5))]
+					break
+				except:
+					pass
+			# macroclasses
+			else:
+				count = i.childCount()
+				for roi in range(0, count):
+					try:
+						v = cfg.signList['CHECKBOX_' + str(i.child(roi).text(5))]
+						break
+					except:
+						pass
 		try:
-			c = cfg.treeDockMCItm[next(iter(cfg.treeDockMCItm))]
-			cfg.SCPD.selectAllSignatures(not cfg.signList['CHECKBOX_' + str(c.child(0).text(5))])
+			cfg.SCPD.selectAllSignatures(check = not v, selected = True)
 		except:
 			pass
 		
@@ -1820,9 +1891,9 @@ class SCPDock:
 		tW = cfg.uidc.signature_list_treeWidget
 		for id, val in cfg.treeDockItm.items():
 			if val == item:
-				if column == 0:
-					self.selectAllSignatures(not item.checkState(0))
-				elif column == 4:
+				#if column == 0:
+				#	self.selectAllSignatures(not item.checkState(0))
+				if column == 4:
 					c = cfg.utls.selectColor()
 					if c is not None:
 						r = []
@@ -2106,7 +2177,7 @@ class SCPDock:
 				except Exception as err:
 					# logger
 					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
-					cfg.ipt.refreshRasterLayer()
+					cfg.SCPD.refreshRasterLayer()
 					cfg.mx.msg4()
 		except Exception as err:
 			# logger
