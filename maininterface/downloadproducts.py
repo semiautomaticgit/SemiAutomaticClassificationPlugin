@@ -1251,8 +1251,17 @@ class DownloadProducts:
 				url = topUrl + '/search?q=(' + imgQuery + 'platformname:Sentinel-2)%20AND%20cloudcoverpercentage:[0%20TO%20' + str(maxCloudCover) + ']%20AND%20beginPosition:[' + str(dateFrom) + 'T00:00:00.000Z%20TO%20' + str(dateTo) + 'T23:59:59.999Z]%20AND%20footprint:%22Intersects(POLYGON((' + cfg.ui.UX_lineEdit_3.text() + '%20' + cfg.ui.UY_lineEdit_3.text() + ',' + cfg.ui.UX_lineEdit_3.text() + '%20' + cfg.ui.LY_lineEdit_3.text() + ',' + cfg.ui.LX_lineEdit_3.text() + '%20' + cfg.ui.LY_lineEdit_3.text() + ',' + cfg.ui.LX_lineEdit_3.text() + '%20' + cfg.ui.UY_lineEdit_3.text() + ',' + cfg.ui.UX_lineEdit_3.text() + '%20' + cfg.ui.UY_lineEdit_3.text() + ')))%22' + '&rows=' + str(maxResultNum) + '&start=' + str(startR)
 			response = cfg.utls.passwordConnectPython(user, password, url, topLevelUrl)
 			if response == 'No':
-				cfg.uiUtls.removeProgressBar()
-				return 'No'
+				# second try
+				topLevelUrl = 'https://scihub.copernicus.eu/dhus'
+				topUrl =topLevelUrl
+				if NoRect == 'Yes':
+					url = topUrl + '/search?q=(' + imgQuery + 'platformname:Sentinel-2)%20AND%20cloudcoverpercentage:[0%20TO%20' + str(maxCloudCover) + ']%20AND%20beginPosition:[' + str(dateFrom) + 'T00:00:00.000Z%20TO%20' + str(dateTo) + 'T23:59:59.999Z]' + '&rows=' + str(maxResultNum) + '&start=' + str(startR)
+				else:
+					url = topUrl + '/search?q=(' + imgQuery + 'platformname:Sentinel-2)%20AND%20cloudcoverpercentage:[0%20TO%20' + str(maxCloudCover) + ']%20AND%20beginPosition:[' + str(dateFrom) + 'T00:00:00.000Z%20TO%20' + str(dateTo) + 'T23:59:59.999Z]%20AND%20footprint:%22Intersects(POLYGON((' + cfg.ui.UX_lineEdit_3.text() + '%20' + cfg.ui.UY_lineEdit_3.text() + ',' + cfg.ui.UX_lineEdit_3.text() + '%20' + cfg.ui.LY_lineEdit_3.text() + ',' + cfg.ui.LX_lineEdit_3.text() + '%20' + cfg.ui.LY_lineEdit_3.text() + ',' + cfg.ui.LX_lineEdit_3.text() + '%20' + cfg.ui.UY_lineEdit_3.text() + ',' + cfg.ui.UX_lineEdit_3.text() + '%20' + cfg.ui.UY_lineEdit_3.text() + ')))%22' + '&rows=' + str(maxResultNum) + '&start=' + str(startR)
+				response = cfg.utls.passwordConnectPython(user, password, url, topLevelUrl)
+				if response == 'No':
+					cfg.uiUtls.removeProgressBar()
+					return 'No'
 			#info = response.info()
 			try:
 				xml = response.read()
@@ -1313,35 +1322,35 @@ class DownloadProducts:
 						attr = xd.getAttribute('name')
 						if attr == 'cloudcoverpercentage':
 							cloudcoverpercentage = xd.firstChild.data
-					if productType == 'S2MSI2Ap' or productType == 'S2MSI2A':
-						url2 = topUrl + "/odata/v1/Products('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('MTD_MSIL2A.xml')/$value"
-					else:
-						url2 = topUrl + "/odata/v1/Products('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('MTD_MSIL1C.xml')/$value"
 					if cfg.actionCheck == 'Yes':
-						response2 = cfg.utls.passwordConnectPython(user, password, url2, topLevelUrl, None, None, 'No')
-						xml2T = None
-						try:
-							xml2 = response2.read()
-						except:
-							xml2 = response2
-						if len(xml2) == 0 or 'Navigation failed' in str(xml2) or 'Internal Server Error' in str(xml2):
-							# old xml version
-							#url2 = topUrl + "/odata/v1/Products('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('" + imgName.replace('_PRD_MSIL1C_', '_MTD_SAFL1C_') + ".xml')/$value"
-							#response2 = cfg.utls.passwordConnectPython(user, password, url2, topLevelUrl)
-							# download Sentinel data using the service https://storage.googleapis.com/gcp-public-data-sentinel-2
-							if productType == "S2MSI2Ap" or productType == "S2MSI2A":
-								url2 = 'https://storage.googleapis.com/gcp-public-data-sentinel-2/tiles/' + imgName[39:41] + '/'+  imgName[41]  + '/'+ imgName[42:44] + '/' +imgName + '.SAFE/MTD_MSIL2A.xml'
+						# download Sentinel data using the service https://storage.googleapis.com/gcp-public-data-sentinel-2
+						if productType == 'S2MSI2Ap' or productType == 'S2MSI2A':
+							url2 = 'https://storage.googleapis.com/gcp-public-data-sentinel-2/L2/tiles/' + imgName[39:41] + '/'+  imgName[41]  + '/'+ imgName[42:44] + '/' +imgName + '.SAFE/MTD_MSIL2A.xml'
+						else:
+							url2 = 'https://storage.googleapis.com/gcp-public-data-sentinel-2/tiles/' + imgName[39:41] + '/'+  imgName[41]  + '/'+ imgName[42:44] + '/' +imgName + '.SAFE/MTD_MSIL1C.xml'
+						xml2T = cfg.utls.createTempRasterPath('xml')
+						check = cfg.utls.downloadFile(url2, xml2T)
+						if check == 'Yes':
+							pass
+						else:
+							xml2T = None
+							if productType == 'S2MSI2Ap' or productType == 'S2MSI2A':
+								url2 = topUrl + "/odata/v1/Products('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('MTD_MSIL2A.xml')/$value"
 							else:
-								url2 = 'https://storage.googleapis.com/gcp-public-data-sentinel-2/tiles/' + imgName[39:41] + '/'+  imgName[41]  + '/'+ imgName[42:44] + '/' +imgName + '.SAFE/MTD_MSIL1C.xml'
-							xml2T = cfg.utls.createTempRasterPath('xml')
-							check = cfg.utls.downloadFile(url2, xml2T)
-							if check == 'Yes':
+								url2 = topUrl + "/odata/v1/Products('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('MTD_MSIL1C.xml')/$value"
+							response2 = cfg.utls.passwordConnectPython(user, password, url2, topLevelUrl, None, None, 'No')
+							try:
+								xml2 = response2.read()
+							except:
+								xml2 = response2
+							if len(xml2) == 0 or 'Navigation failed' in str(xml2) or 'Internal Server Error' in str(xml2):
+								# old xml version
+								#url2 = topUrl + "/odata/v1/Products('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('" + imgName.replace('_PRD_MSIL1C_', '_MTD_SAFL1C_') + ".xml')/$value"
+								#response2 = cfg.utls.passwordConnectPython(user, password, url2, topLevelUrl)
 								pass
-							else:
-								xml2T = None
-						if response2 == 'No':
-							cfg.uiUtls.removeProgressBar()
-							return 'No'
+							if response2 == 'No':
+								cfg.uiUtls.removeProgressBar()
+								return 'No'
 						# logger
 						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' xml downloaded' )
 						try:
@@ -1481,9 +1490,9 @@ class DownloadProducts:
 					acquisitionDate = str(tW.item(i, 2).text())
 					imgID = str(tW.item(i, 12).text())
 					imgName2 = str(tW.item(i, 1).text())
-					if imgName2[0:4] == "L1C_":
+					if imgName2[0:4] == 'L1C_':
 						imgJp2 = imgName2 + '_p.jp2'
-					elif imgName2[0:4] == "L2A_":
+					elif imgName2[0:4] == 'L2A_':
 						imgJp2 = imgName2 + '_p.jp2'
 					else:
 						imgJp2 = imgName2[0:-7] + '_p.jp2'
@@ -1491,20 +1500,20 @@ class DownloadProducts:
 						pass
 					else:
 						outFiles = []
-						if imgName2[0:4] == "L1C_":
-							outDirList.append(outputDirectory + "//" + imgName2 + "_" + acquisitionDate[0:10])
-						elif imgName2[0:4] == "L2A_":
-							outDirList.append(outputDirectory + "//" + imgName2 + "_" + acquisitionDate[0:10])
+						if imgName2[0:4] == 'L1C_':
+							outDirList.append(outputDirectory + '//' + imgName2 + '_' + acquisitionDate[0:10])
+						elif imgName2[0:4] == 'L2A_':
+							outDirList.append(outputDirectory + '//' + imgName2 + '_' + acquisitionDate[0:10])
 						else:
-							outDirList.append(outputDirectory + "//" + imgName2[0:-7] + "_" + acquisitionDate[0:10])
+							outDirList.append(outputDirectory + '//' + imgName2[0:-7] + '_' + acquisitionDate[0:10])
 						progress = progress + progressStep
 						if exporter == 'No':
-							if imgName2[0:4] == "L1C_":
-								oDir = cfg.utls.makeDirectory(outputDirectory + "//" + imgName2 + "_" + acquisitionDate[0:10])
-							elif imgName2[0:4] == "L2A_":
-								oDir = cfg.utls.makeDirectory(outputDirectory + "//" + imgName2 + "_" + acquisitionDate[0:10])
+							if imgName2[0:4] == 'L1C_':
+								oDir = cfg.utls.makeDirectory(outputDirectory + '//' + imgName2 + '_' + acquisitionDate[0:10])
+							elif imgName2[0:4] == 'L2A_':
+								oDir = cfg.utls.makeDirectory(outputDirectory + '//' + imgName2 + '_' + acquisitionDate[0:10])
 							else:
-								oDir = cfg.utls.makeDirectory(outputDirectory + "//" + imgName2[0:-7] + "_" + acquisitionDate[0:10])
+								oDir = cfg.utls.makeDirectory(outputDirectory + '//' + imgName2[0:-7] + '_' + acquisitionDate[0:10])
 							if oDir is None:
 								cfg.mx.msgErr58()
 								cfg.uiUtls.removeProgressBar()
@@ -1515,7 +1524,7 @@ class DownloadProducts:
 						urlL2 = []
 						urlL3 = []
 						#download metadata
-						if imgName2[0:4] == "L1C_":
+						if imgName2[0:4] == 'L1C_':
 							# new version
 							urlL1.append(topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('MTD_MSIL1C.xml')/$value")
 							outFile1 = outputDirectory + "//" + imgName2 + "_" + acquisitionDate[0:10] + "//" + 'MTD_MSIL1C.xml'
@@ -1528,37 +1537,37 @@ class DownloadProducts:
 							urlL1.append('https://storage.googleapis.com/gcp-public-data-sentinel-2/tiles/' + imgName[39:41] + '/'+  imgName[41]  + '/'+ imgName[42:44] + '/' +imgName + '.SAFE/MTD_MSIL1C.xml')
 							urlL2.append('https://storage.googleapis.com/gcp-public-data-sentinel-2/tiles/' + imgName[39:41] + '/'+  imgName[41]  + '/'+ imgName[42:44] + '/' +imgName + '.SAFE/GRANULE/' + imgName2 + '/MTD_TL.xml')
 							urlL3.append('https://storage.googleapis.com/gcp-public-data-sentinel-2/tiles/' + imgName[39:41] + '/'+  imgName[41]  + '/'+ imgName[42:44] + '/' +imgName + '.SAFE/GRANULE/' + imgName2 + '/QI_DATA/MSK_CLOUDS_B00.gml')
-						elif imgName2[0:4] == "L2A_":
+						elif imgName2[0:4] == 'L2A_':
 							# new version
 							urlL1.append(topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('MTD_MSIL2A.xml')/$value")
-							outFile1 = outputDirectory + "//" + imgName2 + "_" + acquisitionDate[0:10] + "//" + 'MTD_MSIL2A.xml'
+							outFile1 = outputDirectory + '//' + imgName2 + '_' + acquisitionDate[0:10] + '//' + 'MTD_MSIL2A.xml'
 							urlL2.append(topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('MTD_TL.xml')/$value")
-							outFile2 = outputDirectory + "//" + imgName2 + "_" + acquisitionDate[0:10] + "//" + 'MTD_TL.xml'
+							outFile2 = outputDirectory + '//' + imgName2 + '_' + acquisitionDate[0:10] + '//' + 'MTD_TL.xml'
 							# download QI
 							urlL3.append(topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('QI_DATA')/Nodes('MSK_CLOUDS_B00.gml')/$value")
-							outFile3 = outputDirectory + "//" + imgName2 + "_" + acquisitionDate[0:10] + "//" + 'MSK_CLOUDS_B00.gml'
+							outFile3 = outputDirectory + '//' + imgName2 + '_' + acquisitionDate[0:10] + '//' + 'MSK_CLOUDS_B00.gml'
 							# download Sentinel data using the service https://storage.googleapis.com/gcp-public-data-sentinel-2
-							urlL1.append('https://storage.googleapis.com/gcp-public-data-sentinel-2/tiles/' + imgName[39:41] + '/'+  imgName[41]  + '/'+ imgName[42:44] + '/' +imgName + '.SAFE/MTD_MSIL2A.xml')
-							urlL2.append('https://storage.googleapis.com/gcp-public-data-sentinel-2/tiles/' + imgName[39:41] + '/'+  imgName[41]  + '/'+ imgName[42:44] + '/' +imgName + '.SAFE/GRANULE/' + imgName2 + '/MTD_TL.xml')
-							urlL3.append('https://storage.googleapis.com/gcp-public-data-sentinel-2/tiles/' + imgName[39:41] + '/'+  imgName[41]  + '/'+ imgName[42:44] + '/' +imgName + '.SAFE/GRANULE/' + imgName2 + '/QI_DATA/MSK_CLOUDS_B00.gml')
+							urlL1.append('https://storage.googleapis.com/gcp-public-data-sentinel-2/L2/tiles/' + imgName[39:41] + '/'+  imgName[41]  + '/'+ imgName[42:44] + '/' +imgName + '.SAFE/MTD_MSIL2A.xml')
+							urlL2.append('https://storage.googleapis.com/gcp-public-data-sentinel-2/L2/tiles/' + imgName[39:41] + '/'+  imgName[41]  + '/'+ imgName[42:44] + '/' +imgName + '.SAFE/GRANULE/' + imgName2 + '/MTD_TL.xml')
+							urlL3.append('https://storage.googleapis.com/gcp-public-data-sentinel-2/L2/tiles/' + imgName[39:41] + '/'+  imgName[41]  + '/'+ imgName[42:44] + '/' +imgName + '.SAFE/GRANULE/' + imgName2 + '/QI_DATA/MSK_CLOUDS_B00.gml')
 						else:
 							# old version
 							urlL1.append(topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('" + imgName.replace('_PRD_MSIL1C_', '_MTD_SAFL1C_') + ".xml')/$value")
-							outFile1 = outputDirectory + "//" + imgName2[0:-7] + "_" + acquisitionDate[0:10] + "//" + imgName.replace('_PRD_MSIL1C_', '_MTD_SAFL1C_') + '.xml'
+							outFile1 = outputDirectory + '//' + imgName2[0:-7] + '_' + acquisitionDate[0:10] + '//' + imgName.replace('_PRD_MSIL1C_', '_MTD_SAFL1C_') + '.xml'
 							urlL2.append(topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('" + imgName2[0:-7].replace('_MSI_L1C_', '_MTD_L1C_') + ".xml')/$value")
-							outFile2 = outputDirectory + "//" + imgName2[0:-7] + "_" + acquisitionDate[0:10] + "//" + imgName2[0:-7].replace('_MSI_L1C_', '_MTD_L1C_')  + '.xml'		
+							outFile2 = outputDirectory + '//' + imgName2[0:-7] + '_' + acquisitionDate[0:10] + '//' + imgName2[0:-7].replace('_MSI_L1C_', '_MTD_L1C_')  + '.xml'		
 							# download QI
 							urlL3.append(topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('QI_DATA')/Nodes('" + imgName2[0:-7].replace('_MSI_L1C_TL_', '_MSK_CLOUDS_')  + "_B00_MSIL1C.gml')/$value")
-							outFile3 = outputDirectory + "//" + imgName2[0:-7] + "_" + acquisitionDate[0:10] + "//" + imgName2[0:-7].replace('_MSI_L1C_TL_', '_MSK_CLOUDS_') + '_B00_MSIL1C.gml'
+							outFile3 = outputDirectory + '//' + imgName2[0:-7] + '_' + acquisitionDate[0:10] + '//' + imgName2[0:-7].replace('_MSI_L1C_TL_', '_MSK_CLOUDS_') + '_B00_MSIL1C.gml'
 							# download Sentinel data using the service https://storage.googleapis.com/gcp-public-data-sentinel-2
 							urlL1.append('https://storage.googleapis.com/gcp-public-data-sentinel-2/tiles/' + imgName[39:41] + '/'+  imgName[41]  + '/'+ imgName[42:44] + '/' +imgName + '.SAFE/' + imgName.replace('_PRD_MSIL1C_', '_MTD_SAFL1C_') + '.xml')
 							urlL2.append('https://storage.googleapis.com/gcp-public-data-sentinel-2/tiles/' + imgName[39:41] + '/'+  imgName[41]  + '/'+ imgName[42:44] + '/' +imgName + '.SAFE/' + imgName2 + '/GRANULE/' + imgName2[0:-7].replace('_MSI_L1C_', '_MTD_L1C_') + '.xml')
 							urlL3.append('https://storage.googleapis.com/gcp-public-data-sentinel-2/tiles/' + imgName[39:41] + '/'+  imgName[41]  + '/'+ imgName[42:44] + '/' +imgName + '.SAFE/' + imgName2 + '/GRANULE/QI_DATA/' + + imgName2[0:-7].replace('_MSI_L1C_TL_', '_MSK_CLOUDS_')  + '_B00_MSIL1C.gml')
 						tempFile1 = cfg.utls.createTempRasterPath('xml')
-						check = self.downloadFileSentinel2(urlL1[0], tempFile1, progress)
+						check = cfg.utls.downloadFile(urlL1[1], tempFile1, None, progress)
 						if cfg.ui.ancillary_data_checkBox.isChecked():
 							if exporter == 'No':
-								if check != 'Yes':
+								if check == 'Yes':
 									cfg.utls.downloadFile(urlL1[1], outFile1, None, progress)
 									cfg.utls.downloadFile(urlL2[1], outFile2, None, progress)
 									cfg.utls.downloadFile(urlL3[1], outFile3, None, progress)
@@ -1567,7 +1576,7 @@ class DownloadProducts:
 									self.downloadFileSentinel2(urlL2[0], outFile2, progress)
 									self.downloadFileSentinel2(urlL3[0], outFile3, progress)
 							else:
-								if check != 'Yes':
+								if check == 'Yes':
 									links.append(urlL1[1])
 									links.append(urlL2[1])
 									links.append(urlL3[1])
@@ -1576,8 +1585,6 @@ class DownloadProducts:
 									links.append(urlL2[0])
 									links.append(urlL3[0])
 						# download bands
-						tempFile1 = cfg.utls.createTempRasterPath('xml')
-						check = self.downloadFileSentinel2(urlL1[0], tempFile1, progress)
 						self.checkImageBands(cfg.ui.checkBoxs_band_1, '01', imgID, imgName, imgName2, acquisitionDate,outputDirectory, exporter, progress, outFiles, links, check)
 						self.checkImageBands(cfg.ui.checkBoxs_band_2, '02', imgID, imgName, imgName2, acquisitionDate, outputDirectory, exporter, progress, outFiles, links, check)
 						self.checkImageBands(cfg.ui.checkBoxs_band_3, '03', imgID, imgName, imgName2, acquisitionDate, outputDirectory, exporter, progress, outFiles, links, check)
@@ -1687,17 +1694,17 @@ class DownloadProducts:
 				elif imgName2[0:4] == 'L2A_':
 					if bandNumber in ['02', '03', '04', '08']:
 						urlL.append(topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('IMG_DATA')/Nodes('R10m')/Nodes('" + imgName2.split("_")[1] + "_" + imgName.split("_")[2] + '_B' + bandNumber + "_10m.jp2')/$value")
-						urlL.append('https://storage.googleapis.com/gcp-public-data-sentinel-2/tiles/' + imgName[39:41] + '/'+  imgName[41]  + '/'+ imgName[42:44] + '/' +imgName + '.SAFE' + '/GRANULE/' + imgName2 + '/IMG_DATA/R10m/' + imgName2.split("_")[1] + "_" + imgName.split("_")[2] + '_B' + bandNumber + '_10m.jp2')
+						urlL.append('https://storage.googleapis.com/gcp-public-data-sentinel-2/L2/tiles/' + imgName[39:41] + '/'+  imgName[41]  + '/'+ imgName[42:44] + '/' +imgName + '.SAFE' + '/GRANULE/' + imgName2 + '/IMG_DATA/R10m/' + imgName2.split("_")[1] + "_" + imgName.split("_")[2] + '_B' + bandNumber + '_10m.jp2')
 						outFile = cfg.tmpDir + '//' + imgName2.split('_')[1] + '_' + imgName.split('_')[2] + '_B' + bandNumber + '.jp2'
 						outCopyFile = outputDirectory + '//' + imgName2 + '_' + acquisitionDate[0:10] + '//' + imgName2[4:] + '_B' + bandNumber
 					elif bandNumber in ['05', '06', '07', '11', '12', '8A']:
 						urlL.append(topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('IMG_DATA')/Nodes('R20m')/Nodes('" + imgName2.split("_")[1] + "_" + imgName.split("_")[2] + '_B' + bandNumber + "_20m.jp2')/$value")
-						urlL.append('https://storage.googleapis.com/gcp-public-data-sentinel-2/tiles/' + imgName[39:41] + '/'+  imgName[41]  + '/'+ imgName[42:44] + '/' +imgName + '.SAFE' + '/GRANULE/' + imgName2 + '/IMG_DATA/R20m/' + imgName2.split("_")[1] + "_" + imgName.split("_")[2] + '_B' + bandNumber + '_20m.jp2')
+						urlL.append('https://storage.googleapis.com/gcp-public-data-sentinel-2/L2/tiles/' + imgName[39:41] + '/'+  imgName[41]  + '/'+ imgName[42:44] + '/' +imgName + '.SAFE' + '/GRANULE/' + imgName2 + '/IMG_DATA/R20m/' + imgName2.split("_")[1] + "_" + imgName.split("_")[2] + '_B' + bandNumber + '_20m.jp2')
 						outFile = cfg.tmpDir + '//' + imgName2.split('_')[1] + '_' + imgName.split('_')[2] + '_B' + bandNumber + '.jp2'
 						outCopyFile = outputDirectory + '//' + imgName2 + '_' + acquisitionDate[0:10] + '//' + imgName2[4:] + '_B' + bandNumber
 					elif bandNumber in ['01', '09']:
 						urlL.append(topUrl + "('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('IMG_DATA')/Nodes('R60m')/Nodes('" + imgName2.split("_")[1] + "_" + imgName.split("_")[2] + '_B' + bandNumber + "_60m.jp2')/$value")
-						urlL.append('https://storage.googleapis.com/gcp-public-data-sentinel-2/tiles/' + imgName[39:41] + '/'+  imgName[41]  + '/'+ imgName[42:44] + '/' +imgName + '.SAFE' + '/GRANULE/' + imgName2 + '/IMG_DATA/R60m/' + imgName2.split("_")[1] + "_" + imgName.split("_")[2] + '_B' + bandNumber + '_60m.jp2')
+						urlL.append('https://storage.googleapis.com/gcp-public-data-sentinel-2/L2/tiles/' + imgName[39:41] + '/'+  imgName[41]  + '/'+ imgName[42:44] + '/' +imgName + '.SAFE' + '/GRANULE/' + imgName2 + '/IMG_DATA/R60m/' + imgName2.split("_")[1] + "_" + imgName.split("_")[2] + '_B' + bandNumber + '_60m.jp2')
 						outFile = cfg.tmpDir + '//' + imgName2.split('_')[1] + '_' + imgName.split('_')[2] + '_B' + bandNumber + '.jp2'
 						outCopyFile = outputDirectory + '//' + imgName2 + '_' + acquisitionDate[0:10] + '//' + imgName2[4:] + '_B' + bandNumber
 					else:
@@ -1708,7 +1715,7 @@ class DownloadProducts:
 					outFile = cfg.tmpDir + '//' + imgName2[0:-7] + '_B' + bandNumber + '.jp2'
 					outCopyFile = outputDirectory + '//' + imgName2[0:-7]  + '_' + acquisitionDate[0:10] + '//' + imgName2[0:-7] + '_B' + bandNumber
 				if exporter == 'No':
-					if checkDownload != 'Yes':
+					if checkDownload == 'Yes':
 						check = cfg.utls.downloadFile(urlL[1], outFile, None, progress)
 					else:
 						check = self.downloadFileSentinel2(urlL[0], outFile, progress)
@@ -1717,7 +1724,7 @@ class DownloadProducts:
 					else:
 						cfg.mx.msgWar23(imgName2[0:-7] + '_B' + bandNumber + '.jp2')
 				else:
-					if checkDownload != 'Yes':
+					if checkDownload == 'Yes':
 						linksList.append(urlL[1])
 					else:
 						linksList.append(urlL[0])
@@ -2169,8 +2176,8 @@ class DownloadProducts:
 		listImgID = []
 		QdateFrom = cfg.ui.dateEdit_from.date()
 		QdateTo = cfg.ui.dateEdit_to.date()
-		dateFrom = QdateFrom.toPyDate().strftime("%Y-%m-%d") 
-		dateTo = QdateTo.toPyDate().strftime("%Y-%m-%d") 
+		dateFrom = QdateFrom.toPyDate().strftime('%Y-%m-%d') 
+		dateTo = QdateTo.toPyDate().strftime('%Y-%m-%d') 
 		maxCloudCover = int(cfg.ui.cloud_cover_spinBox.value())
 		resultNum = int(cfg.ui.result_number_spinBox_2.value())
 		sat = cfg.ui.landsat_satellite_combo.currentText()
@@ -2179,9 +2186,9 @@ class DownloadProducts:
 		imageFindList = []
 		if len(cfg.ui.imageID_lineEdit.text()) > 0:
 			imgIDLine = cfg.ui.imageID_lineEdit.text()
-			imgIDLineSplit = str(imgIDLine).replace(" ", "").split(";")
+			imgIDLineSplit = str(imgIDLine).replace(' ', '').split(';')
 			if len(imgIDLineSplit) == 1:
-				imgIDLineSplit = str(imgIDLine).replace(" ", "").split(",")
+				imgIDLineSplit = str(imgIDLine).replace(' ', '').split(',')
 			for m in imgIDLineSplit:
 				imageFindList.append(m.lower())
 		try:
@@ -2208,37 +2215,37 @@ class DownloadProducts:
 			page = 0
 			for entry in entries:
 				page = page + 1
-				cfg.uiUtls.updateBar(30 + int(page * 70 / pages), cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Searching ..."))
-				gId = entry.getElementsByTagName("ProducerGranuleId")[0]
+				cfg.uiUtls.updateBar(30 + int(page * 70 / pages), cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Searching ...'))
+				gId = entry.getElementsByTagName('ProducerGranuleId')[0]
 				imgID = gId.firstChild.data
 				if imgID not in imgIDList:
 					imgIDList.append(imgID)
 					imgDispID = imgID
-					cc = entry.getElementsByTagName("QAPercentCloudCover")[0]
+					cc = entry.getElementsByTagName('QAPercentCloudCover')[0]
 					cloudCover = cc.firstChild.data
-					on = entry.getElementsByTagName("OnlineResources")
-					urls = on[0].getElementsByTagName("URL")
-					imgPreview = ""
+					on = entry.getElementsByTagName('OnlineResources')
+					urls = on[0].getElementsByTagName('URL')
+					imgPreview = ''
 					for ur in urls:
 						url = ur.firstChild.data
-						if ".jpg" in url:
+						if '.jpg' in url:
 							imgPreview = url
 							break
-					dt = entry.getElementsByTagName("SingleDateTime")[0]
+					dt = entry.getElementsByTagName('SingleDateTime')[0]
 					imgDate = dt.firstChild.data
 					imgDate = cfg.datetimeSCP.datetime.strptime(imgDate[0:19], '%Y-%m-%dT%H:%M:%S').strftime('%Y-%m-%d %H:%M:%S')
-					PointLatitude = entry.getElementsByTagName("PointLatitude")
+					PointLatitude = entry.getElementsByTagName('PointLatitude')
 					lat = []
 					for latit in PointLatitude:
 						lat.append(float(latit.firstChild.data))
-					PointLongitude = entry.getElementsByTagName("PointLongitude")
+					PointLongitude = entry.getElementsByTagName('PointLongitude')
 					lon = []
 					for longi in PointLongitude:
 						lon.append(float(longi.firstChild.data))
-					DayNightFlag = entry.getElementsByTagName("DayNightFlag")[0]
+					DayNightFlag = entry.getElementsByTagName('DayNightFlag')[0]
 					dayNight = DayNightFlag.firstChild.data
-					listImgID.append([imgID, imgDate, cloudCover, imgDispID, dayNight, lon, lat, imgPreview.replace("http:", "https:")])
-			cfg.uiUtls.updateBar(100, cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Searching ..."))
+					listImgID.append([imgID, imgDate, cloudCover, imgDispID, dayNight, lon, lat, imgPreview.replace('http:', 'https:')])
+			cfg.uiUtls.updateBar(100, cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Searching ...'))
 			c = tW.rowCount()
 			for imID in listImgID:
 				if len(imageFindList) > 0:
@@ -2268,7 +2275,7 @@ class DownloadProducts:
 					cfg.utls.addTableItem(tW, float(min_lon), c, 7)
 					cfg.utls.addTableItem(tW, float(max_lat), c, 8)
 					cfg.utls.addTableItem(tW,float(max_lon), c, 9)
-					cfg.utls.addTableItem(tW,"EOSDIS Earthdata", c, 10)
+					cfg.utls.addTableItem(tW,'EOSDIS Earthdata', c, 10)
 					cfg.utls.addTableItem(tW, imID[7], c, 11)
 					cfg.utls.addTableItem(tW, NASAcollection, c, 12)
 					cfg.utls.addTableItem(tW, imID[0], c, 13)
@@ -2276,7 +2283,7 @@ class DownloadProducts:
 			cfg.uiUtls.removeProgressBar()
 			self.clearCanvasPoly()
 			# logger
-			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ASTER images")
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ASTER images')
 			c = tW.rowCount()
 			if c == 0:
 				cfg.mx.msg21()
@@ -2284,7 +2291,7 @@ class DownloadProducts:
 			cfg.mx.msgErr39()
 			cfg.uiUtls.removeProgressBar()
 			# logger
-			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 	
 	# user
 	def rememberUserEarthdata(self):

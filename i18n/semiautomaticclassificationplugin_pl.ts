@@ -5167,7 +5167,7 @@ ROI</source>
         <translation>Eksportuj pobrane łącza</translation>
     </message>
     <message>
-        <location filename="../maininterface/downloadproducts.py" line="2690"/>
+        <location filename="../maininterface/downloadproducts.py" line="2697"/>
         <source>Searching ...</source>
         <translation>Wyszukiwanie...</translation>
     </message>
@@ -6494,7 +6494,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/downloadproducts.py" line="2740"/>
+        <location filename="../maininterface/downloadproducts.py" line="2747"/>
         <source>Downloading</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6509,7 +6509,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/downloadproducts.py" line="2785"/>
+        <location filename="../maininterface/downloadproducts.py" line="2792"/>
         <source>Processing</source>
         <translation type="unfinished">Obróbka obrazu</translation>
     </message>
