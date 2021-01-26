@@ -531,6 +531,7 @@ class SemiAutomaticClassificationPlugin:
 				cfg.uisp.signature_list_plot_tableWidget.horizontalHeader().setSectionResizeMode(4, cfg.QtWidgetsSCP.QHeaderView.Stretch)
 			except:
 				pass
+			cfg.SCPD.clearTree()
 			# passwords
 			cfg.ui.smtp_password_lineEdit.setEchoMode(cfg.QtWidgetsSCP.QLineEdit.Password)
 			cfg.ui.password_usgs_lineEdit.setEchoMode(cfg.QtWidgetsSCP.QLineEdit.Password)

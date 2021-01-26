@@ -81,11 +81,13 @@ class Sentinel1Tab:
 			cfg.cnvs.setRenderFlag(False)
 		if xmlGPT is None:
 			xml = cfg.ui.S1_label_96.text()
+			xmlVVVH = xml
 			if str(xml) == '':
 				xml = cfg.plgnDir + '/modules/snap/S1_process.xml' 
 				xmlVVVH = cfg.plgnDir + '/modules/snap/S1_process_VVVH.xml' 
 		else:
 			xml = xmlGPT
+			xmlVVVH = xmlGPT
 		cfg.uiUtls.updateBar(5)	
 		inp = inputFile
 		out = outputDirectory
@@ -203,7 +205,9 @@ class Sentinel1Tab:
 		if polarization == 'VVVH':
 			outputRasterVV = outputDirectory + '/grd' + date.split('T')[0] + '_s' + orbit[0] + '_' + satelliteN + 'o' + relativeOrbit + '_' + satelliteN + 's' + sliceNumber + '_' + 'VV' + '.tif'
 			outputRasterVH = outputDirectory + '/grd' + date.split('T')[0] + '_s' + orbit[0] + '_' + satelliteN + 'o' + relativeOrbit + '_' + satelliteN + 's' + sliceNumber + '_' + 'VH' + '.tif'
-			d = cfg.SNAPGPT + ' -q ' + str(cfg.threads) + ' -c ' + str(cfg.RAMValue) + 'M ' + xmlFile + ' -Pinput=' + inputRaster + ' -PoutputVH=' + tVsnap + ' -PoutputVV=' + tVsnap2
+			d = '"' + cfg.SNAPGPT + '" -q ' + str(cfg.threads) + ' -c ' + str(cfg.RAMValue) + 'M "' + xmlFile + '" -Pinput="' + inputRaster + '" -PoutputVH="' + tVsnap + '" -PoutputVV="' + tVsnap2 + '"'
+            # logger
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' S1 d: ' + d)
 			if cfg.sysSCPNm != 'Windows':
 				d = cfg.shlexSCP.split(d)
 			tPMD = cfg.utls.createTempRasterPath('txt')
@@ -258,7 +262,9 @@ class Sentinel1Tab:
 			return outputRasterVH, outputRasterVV, date.split('T')[0]
 		else:
 			outputRaster = outputDirectory + '/grd' + date.split('T')[0] + '_s' + orbit[0] + '_' + satelliteN + 'o' + relativeOrbit + '_' + satelliteN + 's' + sliceNumber + '_' + polarization + '.tif'
-			d = cfg.SNAPGPT + ' -q ' + str(cfg.threads) + ' -c ' + str(cfg.RAMValue) + 'M ' + xmlFile + ' -Pinput=' + inputRaster + ' -Poutput=' + tVsnap + ' -Ppolarization=' + polarization	
+			d = '"' + cfg.SNAPGPT + '" -q ' + str(cfg.threads) + ' -c ' + str(cfg.RAMValue) + 'M "' + xmlFile + '" -Pinput="' + inputRaster + '" -Poutput="' + tVsnap + '" -Ppolarization=' + polarization
+            # logger
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' S1 d: ' + d)
 			if cfg.sysSCPNm != 'Windows':
 				d = cfg.shlexSCP.split(d)
 			tPMD = cfg.utls.createTempRasterPath('txt')

@@ -4752,7 +4752,7 @@ ROI</source>
         <translation>Wybierz plik z listą sygnatur</translation>
     </message>
     <message>
-        <location filename="../maininterface/downloadproducts.py" line="745"/>
+        <location filename="../maininterface/downloadproducts.py" line="746"/>
         <source>Reset signature list</source>
         <translation>Wyczyść listę sygnatur</translation>
     </message>
@@ -5167,12 +5167,12 @@ ROI</source>
         <translation>Eksportuj pobrane łącza</translation>
     </message>
     <message>
-        <location filename="../maininterface/downloadproducts.py" line="2697"/>
+        <location filename="../maininterface/downloadproducts.py" line="2751"/>
         <source>Searching ...</source>
         <translation>Wyszukiwanie...</translation>
     </message>
     <message>
-        <location filename="../maininterface/downloadproducts.py" line="745"/>
+        <location filename="../maininterface/downloadproducts.py" line="746"/>
         <source>Are you sure you want to clear the table?</source>
         <translation>Czy na pewno oczyścić tabelę?</translation>
     </message>
@@ -5919,7 +5919,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="1596"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="1597"/>
         <source>Please, restart QGIS for executing the Semi-Automatic Classification Plugin</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6464,12 +6464,12 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/randomForestTab.py" line="412"/>
+        <location filename="../maininterface/randomForestTab.py" line="413"/>
         <source>Random forest classification</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/sentinel1Tab.py" line="296"/>
+        <location filename="../maininterface/sentinel1Tab.py" line="302"/>
         <source>S1 proc</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6494,7 +6494,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/downloadproducts.py" line="2747"/>
+        <location filename="../maininterface/downloadproducts.py" line="2801"/>
         <source>Downloading</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6509,7 +6509,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/downloadproducts.py" line="2792"/>
+        <location filename="../maininterface/downloadproducts.py" line="2846"/>
         <source>Processing</source>
         <translation type="unfinished">Obróbka obrazu</translation>
     </message>

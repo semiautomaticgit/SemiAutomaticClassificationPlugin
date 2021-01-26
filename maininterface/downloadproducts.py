@@ -712,11 +712,12 @@ class DownloadProducts:
 					d = d + '.txt'
 				linksS = self.downloadSentinelImages(cfg.tmpDir, 'Yes')
 				linksS3 = self.downloadSentinel3Images(cfg.tmpDir, 'Yes')
+				linksS1 = self.downloadSentinel1Images(cfg.tmpDir, 'Yes')
 				linksL = self.downloadLandsatImages(cfg.tmpDir, 'Yes')
 				linksA = self.downloadASTERImages(cfg.tmpDir, 'Yes')
 				linksM = self.downloadMODISImages(cfg.tmpDir, 'Yes')
 				linksG = self.downloadGOESImages(cfg.tmpDir, 'Yes')
-				links =  linksS + linksS3 + linksL + linksA + linksM + linksG
+				links =  linksS + linksS3 + linksS1 + linksL + linksA + linksM + linksG
 				if links == 'No':
 					pass
 				else:
@@ -807,10 +808,16 @@ class DownloadProducts:
 			url = topUrl + '/search?q=' + imgQuery + '%20AND%20beginPosition:[' + str(dateFrom) + 'T00:00:00.000Z%20TO%20' + str(dateTo) + 'T23:59:59.999Z]%20AND%20footprint:%22Intersects(POLYGON((' + cfg.ui.UX_lineEdit_3.text() + '%20' + cfg.ui.UY_lineEdit_3.text() + ',' + cfg.ui.UX_lineEdit_3.text() + '%20' + cfg.ui.LY_lineEdit_3.text() + ',' + cfg.ui.LX_lineEdit_3.text() + '%20' + cfg.ui.LY_lineEdit_3.text() + ',' + cfg.ui.LX_lineEdit_3.text() + '%20' + cfg.ui.UY_lineEdit_3.text() + ',' + cfg.ui.UX_lineEdit_3.text() + '%20' + cfg.ui.UY_lineEdit_3.text() + ')))%22' + '&rows=' + str(maxResultNum) + '&start=' + str(startR)
 			#url = topUrl + '/search?q=' + imgQuery + '%20AND%20cloudcoverpercentage:[0%20TO%20' + str(maxCloudCover) + ']%20AND%20beginPosition:[' + str(dateFrom) + 'T00:00:00.000Z%20TO%20' + str(dateTo) + 'T23:59:59.999Z]%20AND%20footprint:%22Intersects(POLYGON((' + cfg.ui.UX_lineEdit_3.text() + "%20" + cfg.ui.UY_lineEdit_3.text() + "," + cfg.ui.UX_lineEdit_3.text() + "%20" + cfg.ui.LY_lineEdit_3.text() + "," + cfg.ui.LX_lineEdit_3.text() + "%20" + cfg.ui.LY_lineEdit_3.text() + "," + cfg.ui.LX_lineEdit_3.text() + "%20" + cfg.ui.UY_lineEdit_3.text() + "," + cfg.ui.UX_lineEdit_3.text() + "%20" + cfg.ui.UY_lineEdit_3.text() + ')))%22' + '&rows=' + str(maxResultNum) + '&start=' + str(startR)
 			cloudcoverpercentage = 0
-			response = cfg.utls.passwordConnectPython(user, password, url, topLevelUrl)
+			response = cfg.utls.passwordConnectPython(user, password, url, topLevelUrl, quiet = 'Yes')
 			if response == 'No':
-				cfg.uiUtls.removeProgressBar()
-				return 'No'
+				# second try
+				topLevelUrl = 'https://scihub.copernicus.eu/dhus'
+				url = url.replace(topUrl, topLevelUrl)
+				topUrl =topLevelUrl
+				response = cfg.utls.passwordConnectPython(user, password, url, topLevelUrl)
+				if response == 'No':
+					cfg.uiUtls.removeProgressBar()
+					return 'No'
 			#info = response.info()
 			xml = response.read()
 			tW.setSortingEnabled(False)
@@ -939,15 +946,25 @@ class DownloadProducts:
 		# check url
 		topLevelUrl = cfg.ui.sentinel_service_lineEdit.text()
 		topUrl =topLevelUrl
-		check = cfg.utls.passwordConnectPython(user, password, imageJPG, topLevelUrl, imOut, progress)
+		check = cfg.utls.passwordConnectPython(user, password, imageJPG, topLevelUrl, imOut, progress, quiet = 'Yes')
 		if check == 'Yes':
 			if preview == 'Yes':
 				self.previewInLabel(imOut)
 				return imOut
 			self.onflyGeorefImage(cfg.tmpDir + '//' + imgID, cfg.tmpDir + '//' + imgID + '.vrt', min_lon, max_lon, min_lat, max_lat)
 		else:
-			cfg.mx.msgErr40()			
-					
+			# second try
+			topLevelUrl = 'https://scihub.copernicus.eu/dhus'
+			imageJPG = imageJPG.replace(topUrl, topLevelUrl)
+			check = cfg.utls.passwordConnectPython(user, password, imageJPG, topLevelUrl, imOut, progress)
+			if check == 'Yes':
+				if preview == 'Yes':
+					self.previewInLabel(imOut)
+					return imOut
+				self.onflyGeorefImage(cfg.tmpDir + '//' + imgID, cfg.tmpDir + '//' + imgID + '.vrt', min_lon, max_lon, min_lat, max_lat)
+			else:
+				cfg.mx.msgErr40()
+
 	# download images
 	def downloadSentinel3Images(self, outputDirectory, exporter = 'No'):
 		cfg.uiUtls.addProgressBar(mainMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Downloading'), message = '')
@@ -960,12 +977,6 @@ class DownloadProducts:
 		progress = 0
 		# disable map canvas render for speed
 		cfg.cnvs.setRenderFlag(False)
-		user = cfg.ui.user_scihub_lineEdit.text()
-		password =cfg.ui.password_scihub_lineEdit.text()
-		# check url
-		topLevelUrl = cfg.ui.sentinel_service_lineEdit.text()
-		topUrl =topLevelUrl + '/odata/v1/Products'
-		topUrl2 =topLevelUrl
 		for i in range(0, c):
 			sat = str(tW.item(i, 0).text())
 			if cfg.actionCheck == 'Yes':
@@ -1029,7 +1040,7 @@ class DownloadProducts:
 				cfg.uiUtls.updateBar(mainMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Processing') + ' [' + str(i) + '/' + str(n) + '] ' + cfg.osSCP.path.basename(d), message = '')
 				if cfg.actionCheck == 'Yes':
 					cfg.sentinel3T.populateTable(d, 'Yes')
-					o = d + "_con"
+					o = d + '_con'
 					oDir = cfg.utls.makeDirectory(o)
 					if oDir is None:
 						cfg.mx.msgErr58()
@@ -1098,13 +1109,22 @@ class DownloadProducts:
 		topLevelUrl = cfg.ui.sentinel_service_lineEdit.text()
 		topUrl =topLevelUrl
 		# logger
-		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " " + topLevelUrl)
-		check = cfg.utls.passwordConnectPython(user, password, url, topLevelUrl, output, progress)
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), url)
+		check = cfg.utls.passwordConnectPython(user, password, url, topLevelUrl, output, progress, quiet = 'Yes')
 		if check == 'Yes':
 			return output
 		else:
-			cfg.mx.msgErr40()
-			return 'No'
+			# second try
+			topLevelUrl = 'https://scihub.copernicus.eu/dhus'
+			url = url.replace(topUrl, topLevelUrl)
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), url)
+			check = cfg.utls.passwordConnectPython(user, password, url, topLevelUrl, output, progress)
+			if check == 'Yes':
+				return output
+			else:
+				cfg.mx.msgErr40()
+				return 'No'
 			
 ### Sentinel-2
 
@@ -1141,13 +1161,22 @@ class DownloadProducts:
 		topLevelUrl = cfg.ui.sentinel_service_lineEdit.text()
 		topUrl =topLevelUrl
 		# logger
-		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ' + topLevelUrl)
-		check = cfg.utls.passwordConnectPython(user, password, url, topLevelUrl, output, progress)
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), url)
+		check = cfg.utls.passwordConnectPython(user, password, url, topLevelUrl, output, progress, quiet = 'Yes')
 		if check == 'Yes':
 			return 'Yes'
 		else:
-			cfg.mx.msgErr40()
-			return 'No'
+			# second try
+			topLevelUrl = 'https://scihub.copernicus.eu/dhus'
+			url = url.replace(topUrl, topLevelUrl)
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ' + url)
+			check = cfg.utls.passwordConnectPython(user, password, url, topLevelUrl, output, progress)
+			if check == 'Yes':
+				return output
+			else:
+				cfg.mx.msgErr40()
+				return 'No'
 
 	# display granule preview	
 	def displayGranulesSentinel2(self, row, progress, preview = 'No'):
@@ -1249,15 +1278,12 @@ class DownloadProducts:
 				url = topUrl + '/search?q=(' + imgQuery + 'platformname:Sentinel-2)%20AND%20cloudcoverpercentage:[0%20TO%20' + str(maxCloudCover) + ']%20AND%20beginPosition:[' + str(dateFrom) + 'T00:00:00.000Z%20TO%20' + str(dateTo) + 'T23:59:59.999Z]' + '&rows=' + str(maxResultNum) + '&start=' + str(startR)
 			else:
 				url = topUrl + '/search?q=(' + imgQuery + 'platformname:Sentinel-2)%20AND%20cloudcoverpercentage:[0%20TO%20' + str(maxCloudCover) + ']%20AND%20beginPosition:[' + str(dateFrom) + 'T00:00:00.000Z%20TO%20' + str(dateTo) + 'T23:59:59.999Z]%20AND%20footprint:%22Intersects(POLYGON((' + cfg.ui.UX_lineEdit_3.text() + '%20' + cfg.ui.UY_lineEdit_3.text() + ',' + cfg.ui.UX_lineEdit_3.text() + '%20' + cfg.ui.LY_lineEdit_3.text() + ',' + cfg.ui.LX_lineEdit_3.text() + '%20' + cfg.ui.LY_lineEdit_3.text() + ',' + cfg.ui.LX_lineEdit_3.text() + '%20' + cfg.ui.UY_lineEdit_3.text() + ',' + cfg.ui.UX_lineEdit_3.text() + '%20' + cfg.ui.UY_lineEdit_3.text() + ')))%22' + '&rows=' + str(maxResultNum) + '&start=' + str(startR)
-			response = cfg.utls.passwordConnectPython(user, password, url, topLevelUrl)
+			response = cfg.utls.passwordConnectPython(user, password, url, topLevelUrl, quiet = 'Yes')
 			if response == 'No':
 				# second try
 				topLevelUrl = 'https://scihub.copernicus.eu/dhus'
+				url = url.replace(topUrl, topLevelUrl)
 				topUrl =topLevelUrl
-				if NoRect == 'Yes':
-					url = topUrl + '/search?q=(' + imgQuery + 'platformname:Sentinel-2)%20AND%20cloudcoverpercentage:[0%20TO%20' + str(maxCloudCover) + ']%20AND%20beginPosition:[' + str(dateFrom) + 'T00:00:00.000Z%20TO%20' + str(dateTo) + 'T23:59:59.999Z]' + '&rows=' + str(maxResultNum) + '&start=' + str(startR)
-				else:
-					url = topUrl + '/search?q=(' + imgQuery + 'platformname:Sentinel-2)%20AND%20cloudcoverpercentage:[0%20TO%20' + str(maxCloudCover) + ']%20AND%20beginPosition:[' + str(dateFrom) + 'T00:00:00.000Z%20TO%20' + str(dateTo) + 'T23:59:59.999Z]%20AND%20footprint:%22Intersects(POLYGON((' + cfg.ui.UX_lineEdit_3.text() + '%20' + cfg.ui.UY_lineEdit_3.text() + ',' + cfg.ui.UX_lineEdit_3.text() + '%20' + cfg.ui.LY_lineEdit_3.text() + ',' + cfg.ui.LX_lineEdit_3.text() + '%20' + cfg.ui.LY_lineEdit_3.text() + ',' + cfg.ui.LX_lineEdit_3.text() + '%20' + cfg.ui.UY_lineEdit_3.text() + ',' + cfg.ui.UX_lineEdit_3.text() + '%20' + cfg.ui.UY_lineEdit_3.text() + ')))%22' + '&rows=' + str(maxResultNum) + '&start=' + str(startR)
 				response = cfg.utls.passwordConnectPython(user, password, url, topLevelUrl)
 				if response == 'No':
 					cfg.uiUtls.removeProgressBar()
@@ -1338,7 +1364,7 @@ class DownloadProducts:
 								url2 = topUrl + "/odata/v1/Products('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('MTD_MSIL2A.xml')/$value"
 							else:
 								url2 = topUrl + "/odata/v1/Products('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('MTD_MSIL1C.xml')/$value"
-							response2 = cfg.utls.passwordConnectPython(user, password, url2, topLevelUrl, None, None, 'No')
+							response2 = cfg.utls.passwordConnectPython(user, password, url2, topLevelUrl, None, None, quiet = 'No')
 							try:
 								xml2 = response2.read()
 							except:
@@ -1734,20 +1760,30 @@ class DownloadProducts:
 	
 	# download image preview
 	def downloadThumbnailSentinel2(self, imgID, min_lat, min_lon, max_lat, max_lon, imageJPG, progress = None, preview = 'No'):
-		imOut = cfg.tmpDir + "//" + imgID
+		imOut = cfg.tmpDir + '//' + imgID
 		user = cfg.ui.user_scihub_lineEdit.text()
 		password =cfg.ui.password_scihub_lineEdit.text()
 		# check url
 		topLevelUrl = cfg.ui.sentinel_service_lineEdit.text()
-		topUrl =topLevelUrl
-		check = cfg.utls.passwordConnectPython(user, password, imageJPG, topLevelUrl, imOut, progress)
+		topUrl = topLevelUrl
+		check = cfg.utls.passwordConnectPython(user, password, imageJPG, topLevelUrl, imOut, progress, quiet = 'Yes')
 		if check == 'Yes':
 			if preview == 'Yes':
 				self.previewInLabel(imOut)
 				return imOut
-			self.onflyGeorefImage(cfg.tmpDir + "//" + imgID, cfg.tmpDir + "//" + imgID + ".vrt", min_lon, max_lon, min_lat, max_lat)
+			self.onflyGeorefImage(cfg.tmpDir + '//' + imgID, cfg.tmpDir + '//' + imgID + '.vrt', min_lon, max_lon, min_lat, max_lat)
 		else:
-			cfg.mx.msgErr40()
+			# second try
+			topLevelUrl = 'https://scihub.copernicus.eu/dhus'
+			imageJPG = imageJPG.replace(topUrl, topLevelUrl)
+			check = cfg.utls.passwordConnectPython(user, password, imageJPG, topLevelUrl, imOut, progress)
+			if check == 'Yes':
+				if preview == 'Yes':
+					self.previewInLabel(imOut)
+					return imOut
+				self.onflyGeorefImage(cfg.tmpDir + '//' + imgID, cfg.tmpDir + '//' + imgID + '.vrt', min_lon, max_lon, min_lat, max_lat)
+			else:
+				cfg.mx.msgErr40()
 			
 	# georef image on the fly based on UL and LR
 	def onflyGeorefImage(self, inputImage, outputVRT, min_lon, max_lon, min_lat, max_lat):
@@ -1833,12 +1869,12 @@ class DownloadProducts:
 				NoRect = 'Yes'
 			else:
 				# logger
-				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 				cfg.mx.msg23()
 				return 'No'
 		cfg.uiUtls.addProgressBar()
 		tW = cfg.ui.download_images_tableWidget
-		cfg.uiUtls.updateBar(30, cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Searching ..."))
+		cfg.uiUtls.updateBar(30, cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Searching ...'))
 		cfg.QtWidgetsSCP.qApp.processEvents()
 		user = cfg.ui.user_scihub_lineEdit.text()
 		password =cfg.ui.password_scihub_lineEdit.text()
@@ -1850,17 +1886,22 @@ class DownloadProducts:
 		maxResultNum = resultNum
 		if maxResultNum > 100:
 			maxResultNum = 100
-		
 		imgQuery = '(%20(platformname:Sentinel-1%20AND%20producttype:GRD))'
 		for startR in range(0, resultNum, maxResultNum):
 			if NoRect == 'Yes':
 				url = topUrl + '/search?q=' + imgQuery + '%20AND%20beginPosition:[' + str(dateFrom) + 'T00:00:00.000Z%20TO%20' + str(dateTo) + 'T23:59:59.999Z]' + '&rows=' + str(maxResultNum) + '&start=' + str(startR)
 			else:
-				url = topUrl + '/search?q=' + imgQuery + '%20AND%20beginPosition:[' + str(dateFrom) + 'T00:00:00.000Z%20TO%20' + str(dateTo) + 'T23:59:59.999Z]%20AND%20footprint:%22Intersects(POLYGON((' + cfg.ui.UX_lineEdit_3.text() + "%20" + cfg.ui.UY_lineEdit_3.text() + "," + cfg.ui.UX_lineEdit_3.text() + "%20" + cfg.ui.LY_lineEdit_3.text() + "," + cfg.ui.LX_lineEdit_3.text() + "%20" + cfg.ui.LY_lineEdit_3.text() + "," + cfg.ui.LX_lineEdit_3.text() + "%20" + cfg.ui.UY_lineEdit_3.text() + "," + cfg.ui.UX_lineEdit_3.text() + "%20" + cfg.ui.UY_lineEdit_3.text() + ')))%22' + '&rows=' + str(maxResultNum) + '&start=' + str(startR)
-			response = cfg.utls.passwordConnectPython(user, password, url, topLevelUrl)
+				url = topUrl + '/search?q=' + imgQuery + '%20AND%20beginPosition:[' + str(dateFrom) + 'T00:00:00.000Z%20TO%20' + str(dateTo) + 'T23:59:59.999Z]%20AND%20footprint:%22Intersects(POLYGON((' + cfg.ui.UX_lineEdit_3.text() + '%20' + cfg.ui.UY_lineEdit_3.text() + ',' + cfg.ui.UX_lineEdit_3.text() + '%20' + cfg.ui.LY_lineEdit_3.text() + ',' + cfg.ui.LX_lineEdit_3.text() + '%20' + cfg.ui.LY_lineEdit_3.text() + ',' + cfg.ui.LX_lineEdit_3.text() + '%20' + cfg.ui.UY_lineEdit_3.text() + ',' + cfg.ui.UX_lineEdit_3.text() + '%20' + cfg.ui.UY_lineEdit_3.text() + ')))%22' + '&rows=' + str(maxResultNum) + '&start=' + str(startR)
+			response = cfg.utls.passwordConnectPython(user, password, url, topLevelUrl, quiet = 'Yes')
 			if response == 'No':
-				cfg.uiUtls.removeProgressBar()
-				return 'No'
+				# second try
+				topLevelUrl = 'https://scihub.copernicus.eu/dhus'
+				url = url.replace(topUrl, topLevelUrl)
+				topUrl =topLevelUrl
+				response = cfg.utls.passwordConnectPython(user, password, url, topLevelUrl)
+				if response == 'No':
+					cfg.uiUtls.removeProgressBar()
+					return 'No'
 			#info = response.info()
 			xml = response.read()
 			tW.setSortingEnabled(False)
@@ -1868,41 +1909,41 @@ class DownloadProducts:
 				doc = cfg.minidomSCP.parseString(xml)
 			except Exception as err:
 				# logger
-				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
-				if "HTTP Status 500" in xml:
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+				if 'HTTP Status 500' in xml:
 					cfg.mx.msgWar24()
 				else:
 					cfg.mx.msgErr40()
 				cfg.uiUtls.removeProgressBar()
 				return 'No'
-			entries = doc.getElementsByTagName("entry")
+			entries = doc.getElementsByTagName('entry')
 			e = 0
 			for entry in entries:
 				if cfg.actionCheck == 'Yes':
-					productType = "S1GRD"
+					productType = 'S1GRD'
 					e = e + 1
-					cfg.uiUtls.updateBar(30 + e * int(70/len(entries)), cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Searching ..."))
-					imgNameTag = entry.getElementsByTagName("title")[0]
+					cfg.uiUtls.updateBar(30 + e * int(70/len(entries)), cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Searching ...'))
+					imgNameTag = entry.getElementsByTagName('title')[0]
 					imgName = imgNameTag.firstChild.data
-					imgIDTag = entry.getElementsByTagName("id")[0]
+					imgIDTag = entry.getElementsByTagName('id')[0]
 					imgID = imgIDTag.firstChild.data
-					summary = entry.getElementsByTagName("summary")[0]
+					summary = entry.getElementsByTagName('summary')[0]
 					infos = summary.firstChild.data.split(',')
 					for info in infos:
 						infoIt = info.strip().split(' ')
-						if infoIt[0] == "Date:":
+						if infoIt[0] == 'Date:':
 							acqDateI = infoIt[1]
-						# if infoIt[0] == "Satellite:":
-							# print "Satellite " + infoIt[1]
-						if infoIt[0] == "Size:":
-							size = infoIt[1] + " " + infoIt[2]
-					strings = entry.getElementsByTagName("str")
+						# if infoIt[0] == 'Satellite:':
+							# print 'Satellite ' + infoIt[1]
+						if infoIt[0] == 'Size:':
+							size = infoIt[1] + ' ' + infoIt[2]
+					strings = entry.getElementsByTagName('str')
 					for x in strings:
-						attr = x.getAttribute("name")
-						if attr == "producttype":
+						attr = x.getAttribute('name')
+						if attr == 'producttype':
 							productType = x.firstChild.data
-						if attr == "footprint":
-							footprintCoord = x.firstChild.data.replace('MULTIPOLYGON (((', "").replace('POLYGON ((', "").replace(')))', "").replace('))', "").split(',')
+						if attr == 'footprint':
+							footprintCoord = x.firstChild.data.replace('MULTIPOLYGON (((', '').replace('POLYGON ((', '').replace(')))', '').replace('))', '').split(',')
 							xList = []
 							yList = []
 							for coords in footprintCoord:
@@ -1915,32 +1956,32 @@ class DownloadProducts:
 							max_lat = max(yList)
 					url2 = topUrl + "/odata/v1/Products('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('manifest.safe')/$value"
 					if cfg.actionCheck == 'Yes':
-						response2 = cfg.utls.passwordConnectPython(user, password, url2, topLevelUrl, None, None, 'No')
+						response2 = cfg.utls.passwordConnectPython(user, password, url2, topLevelUrl, None, None, quiet = 'No')
 						try:
 							xml2 = response2.read()
 						except:
 							xml2 = response2
 						# logger
-						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " xml downloaded" )
+						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' xml downloaded' )
 					if cfg.actionCheck == 'Yes':
 						try:						
 							for filter in imageFindList:
 								if filter in imgName.lower():
 									doc2 = cfg.minidomSCP.parseString(xml2)
-									entries2 = doc2.getElementsByTagName("s1:pass")
+									entries2 = doc2.getElementsByTagName('s1:pass')
 									for entry2 in entries2:
 										orbit = entry2.firstChild.data
-									entries2 = doc2.getElementsByTagName("safe:relativeOrbitNumber")
+									entries2 = doc2.getElementsByTagName('safe:relativeOrbitNumber')
 									for entry2 in entries2:
 										relativeOrbit = entry2.firstChild.data
 									try:
-										entries3 = doc2.getElementsByTagName("s1sarl1:sliceNumber")
+										entries3 = doc2.getElementsByTagName('s1sarl1:sliceNumber')
 										for entry3 in entries3:
 											sliceNumber = entry3.firstChild.data
 									except:
-										sliceNumber = ""
+										sliceNumber = ''
 									try:
-										entries4 = doc2.getElementsByTagName("safe:number")
+										entries4 = doc2.getElementsByTagName('safe:number')
 										for entry4 in entries4:
 											satelliteN = entry4.firstChild.data
 									except:
@@ -1954,8 +1995,8 @@ class DownloadProducts:
 									cfg.utls.addTableItem(tW, imgName, c, 1)
 									cfg.utls.addTableItem(tW, acqDateI, c, 2)
 									cfg.utls.addTableItem(tW, orbit, c, 3)
-									cfg.utls.addTableItem(tW, satelliteN + "o" + relativeOrbit, c, 4)
-									cfg.utls.addTableItem(tW, satelliteN + "s" + sliceNumber, c, 5)
+									cfg.utls.addTableItem(tW, satelliteN + 'o' + relativeOrbit, c, 4)
+									cfg.utls.addTableItem(tW, satelliteN + 's' + sliceNumber, c, 5)
 									cfg.utls.addTableItem(tW, float(min_lat), c, 6)
 									cfg.utls.addTableItem(tW, float(min_lon), c, 7)
 									cfg.utls.addTableItem(tW, float(max_lat), c, 8)
@@ -1976,15 +2017,15 @@ class DownloadProducts:
 									cfg.utls.addTableItem(tW, sat, c, 0, 'Yes', co)
 									cfg.utls.addTableItem(tW, imgName, c, 1, 'Yes', co)
 									cfg.utls.addTableItem(tW, acqDateI, c, 2, 'Yes', co)
-									cfg.utls.addTableItem(tW, "", c, 3, 'Yes', co)
-									cfg.utls.addTableItem(tW, "", c, 4, 'Yes', co)
-									cfg.utls.addTableItem(tW, "", c, 5, 'Yes', co)
+									cfg.utls.addTableItem(tW, '', c, 3, 'Yes', co)
+									cfg.utls.addTableItem(tW, '', c, 4, 'Yes', co)
+									cfg.utls.addTableItem(tW, '', c, 5, 'Yes', co)
 									cfg.utls.addTableItem(tW, float(min_lat), c, 6, 'Yes', co)
 									cfg.utls.addTableItem(tW, float(min_lon), c, 7, 'Yes', co)
 									cfg.utls.addTableItem(tW, float(max_lat), c, 8, 'Yes', co)
 									cfg.utls.addTableItem(tW, float(max_lon), c, 9, 'Yes', co)
 									cfg.utls.addTableItem(tW, size, c, 10, 'Yes', co)
-									cfg.utls.addTableItem(tW, "", c, 11, 'Yes', co)
+									cfg.utls.addTableItem(tW, '', c, 11, 'Yes', co)
 									cfg.utls.addTableItem(tW, imgID, c, 12, 'Yes', co)
 									cfg.utls.addTableItem(tW, imgName, c, 13, 'Yes', co)
 									# logger
@@ -2005,11 +2046,11 @@ class DownloadProducts:
 		imgID = imgNm + '_p.jpg'
 		url = str(tW.item(i, 11).text())
 		# image preview
-		imOut = cfg.tmpDir + "//" + imgID
+		imOut = cfg.tmpDir + '//' + imgID
 		if preview == 'Yes' and cfg.osSCP.path.isfile(imOut):
 			self.previewInLabel(imOut)
 			return imOut
-		if cfg.osSCP.path.isfile(imOut  + ".vrt"):
+		if cfg.osSCP.path.isfile(imOut  + '.vrt'):
 			l = cfg.utls.selectLayerbyName(imgID)
 			if l is not None:		
 				cfg.utls.setLayerVisible(l, True)
@@ -2036,14 +2077,24 @@ class DownloadProducts:
 		# check url
 		topLevelUrl = cfg.ui.sentinel_service_lineEdit.text()
 		topUrl =topLevelUrl
-		check = cfg.utls.passwordConnectPython(user, password, imageJPG, topLevelUrl, imOut, progress)
+		check = cfg.utls.passwordConnectPython(user, password, imageJPG, topLevelUrl, imOut, progress, quiet = 'Yes')
 		if check == 'Yes':
 			if preview == 'Yes':
 				self.previewInLabel(imOut)
 				return imOut
 			self.onflyGeorefImage(cfg.tmpDir + '//' + imgID, cfg.tmpDir + '//' + imgID + '.vrt', min_lon, max_lon, min_lat, max_lat)
 		else:
-			cfg.mx.msgErr40()
+			# second try
+			topLevelUrl = 'https://scihub.copernicus.eu/dhus'
+			imageJPG = imageJPG.replace(topUrl, topLevelUrl)
+			check = cfg.utls.passwordConnectPython(user, password, imageJPG, topLevelUrl, imOut, progress)
+			if check == 'Yes':
+				if preview == 'Yes':
+					self.previewInLabel(imOut)
+					return imOut
+				self.onflyGeorefImage(cfg.tmpDir + '//' + imgID, cfg.tmpDir + '//' + imgID + '.vrt', min_lon, max_lon, min_lat, max_lat)
+			else:
+				cfg.mx.msgErr40()
 	
 	# download images
 	def downloadSentinel1Images(self, outputDirectory, exporter = 'No'):
@@ -2057,12 +2108,6 @@ class DownloadProducts:
 		progress = 0
 		# disable map canvas render for speed
 		cfg.cnvs.setRenderFlag(False)
-		user = cfg.ui.user_scihub_lineEdit.text()
-		password =cfg.ui.password_scihub_lineEdit.text()
-		# check url
-		topLevelUrl = cfg.ui.sentinel_service_lineEdit.text()
-		topUrl =topLevelUrl + '/odata/v1/Products'
-		topUrl2 =topLevelUrl
 		outFiles = []
 		for i in range(0, c):
 			sat = str(tW.item(i, 0).text())
@@ -2146,7 +2191,7 @@ class DownloadProducts:
 					outFilesList.append([outFile, outCopyFile, outputDirectory])
 				except Exception as err:
 					# logger
-					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 			else:
 				linksList.append(urlL)
 		else:
@@ -2161,13 +2206,22 @@ class DownloadProducts:
 		topLevelUrl = cfg.ui.sentinel_service_lineEdit.text()
 		topUrl =topLevelUrl
 		# logger
-		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " " + topLevelUrl)
-		check = cfg.utls.passwordConnectPython(user, password, url, topLevelUrl, output, progress)
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ' + url)
+		check = cfg.utls.passwordConnectPython(user, password, url, topLevelUrl, output, progress, quiet = 'Yes')
 		if check == 'Yes':
 			return output
 		else:
-			cfg.mx.msgErr40()
-			return 'No'
+			# second try
+			topLevelUrl = 'https://scihub.copernicus.eu/dhus'
+			url = url.replace(topUrl, topLevelUrl)
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ' + url)
+			check = cfg.utls.passwordConnectPython(user, password, url, topLevelUrl, output, progress)
+			if check == 'Yes':
+				return output
+			else:
+				cfg.mx.msgErr40()
+				return 'No'
 			
 ### ASTER
 
@@ -2803,7 +2857,6 @@ class DownloadProducts:
 			cfg.cnvs.setRenderFlag(True)
 			cfg.utls.finishSound()
 			
-			
 	# download image
 	def downloadMODISImagesFromNASA(self, imageID, collection, imageDisplayID, outputDirectory, progress, exporter = 'No', date = None):
 		# The MODIS data products are retrieved from the online Data Pool, courtesy of the NASA Land Processes Distributed Active Archive Center (LP DAAC), USGS/Earth Resources Observation and Science (EROS) Center, Sioux Falls, South Dakota, https://lpdaac.usgs.gov/data_access/data_pool'
@@ -2829,13 +2882,13 @@ class DownloadProducts:
 			user = cfg.ui.user_usgs_lineEdit_2.text()
 			password =cfg.ui.password_usgs_lineEdit_2.text()
 			try:
-				imgID = imageDisplayID + ".hdf"
-				check = cfg.utls.passwordConnectPython(user, password, url, 'urs.earthdata.nasa.gov', cfg.tmpDir + "//" + imgID, progress)
+				imgID = imageDisplayID + '.hdf'
+				check = cfg.utls.passwordConnectPython(user, password, url, 'urs.earthdata.nasa.gov', cfg.tmpDir + '//' + imgID, progress)
 				if str(check) == 'Cancel action':
 					return check
-				if cfg.osSCP.path.getsize(cfg.tmpDir + "//" + imgID) > 10000:
-					cfg.shutilSCP.copy(cfg.tmpDir + "//" + imgID, outputDirectory + "//" + imgID)
-					cfg.osSCP.remove(cfg.tmpDir + "//" + imgID)
+				if cfg.osSCP.path.getsize(cfg.tmpDir + '//' + imgID) > 10000:
+					cfg.shutilSCP.copy(cfg.tmpDir + '//' + imgID, outputDirectory + '//' + imgID)
+					cfg.osSCP.remove(cfg.tmpDir + '//' + imgID)
 				else:
 					cfg.mx.msgErr55(imgID)
 					return 'No'
