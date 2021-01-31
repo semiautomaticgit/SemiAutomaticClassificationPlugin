@@ -1139,6 +1139,7 @@ class BandCalcTab:
 			name.append('"' + tW.item(x, 1).text() + '"')
 			nameList.append(['"' + tW.item(x, 0).text() + '"', '"' + tW.item(x, 1).text() + '"'])
 		ex = []
+		outNameList = []
 		if expression is None:
 			checkO = 'No'
 		else:
@@ -1419,7 +1420,6 @@ class BandCalcTab:
 							except:
 								pass
 				e = h
-			outNameList = []
 			for nf in e:
 				nm = None
 				nPath = None

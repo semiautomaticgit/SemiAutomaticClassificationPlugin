@@ -259,10 +259,11 @@ class Settings:
 		testMatplotlib = self.testMatplotlib()
 		testGDAL = self.testGDAL()
 		testGDALSubprocess = self.testGDALSubprocess()
+		testSNAPSubprocess = self.testSNAPSubprocess()
 		testMultiprocess = self.testMultiprocess()
 		testGDALMultiprocess = self.testGDALMultiprocess()
 		testInternet = self.testInternetConnection()
-		message = '-GDAL: ' + testGDAL + '\n' + '-GDAL subprocess: ' + testGDALSubprocess + '\n' +  '-Python multiprocess: ' + testMultiprocess + '\n' + '-GDAL multiprocess: ' + testGDALMultiprocess + '\n' + '-NumPy: ' + testNumpy + '\n' + '-SciPy: ' + testScipy + '\n' + '-Matplotlib: ' + testMatplotlib + '\n' + '-Internet connection: ' + testInternet
+		message = '-GDAL: ' + testGDAL + '\n' + '-GDAL subprocess: ' + testGDALSubprocess + '\n' + '-SNAP subprocess: ' + testSNAPSubprocess + '\n' +  '-Python multiprocess: ' + testMultiprocess + '\n' + '-GDAL multiprocess: ' + testGDALMultiprocess + '\n' + '-NumPy: ' + testNumpy + '\n' + '-SciPy: ' + testScipy + '\n' + '-Matplotlib: ' + testMatplotlib + '\n' + '-Internet connection: ' + testInternet
 		cfg.mx.msgTest(message)
 	
 	# test GDAL
@@ -414,6 +415,34 @@ class Settings:
 			# logger
 			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 			test = 'Fail'
+		# logger
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' test: ' + str(test))
+		return test
+		
+	# test SNAP subprocess
+	def testSNAPSubprocess(self):
+		dT = cfg.utls.getTime()
+		test = 'Success'
+		try:
+			a = '"' + cfg.SNAPGPT + '"'
+			if cfg.sysSCPNm != 'Windows':
+				b = cfg.shlexSCP.split(a)
+			sP = cfg.subprocessSCP.Popen(b, shell=False)
+			sP.wait()
+		except Exception as err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+			try:
+				sP = cfg.subprocessSCP.Popen(a, shell=True)
+				v = sP.wait()	
+				# logger
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' subprocess: ' + str(v))
+				if v != 0:
+					test = 'Fail'
+			except Exception as err:
+				# logger
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+				test = 'Fail'
 		# logger
 		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' test: ' + str(test))
 		return test

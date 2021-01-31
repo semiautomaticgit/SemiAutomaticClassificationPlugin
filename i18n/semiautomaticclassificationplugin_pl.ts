@@ -6634,7 +6634,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/settings.py" line="386"/>
+        <location filename="../maininterface/settings.py" line="387"/>
         <source>Test</source>
         <translation type="unfinished"></translation>
     </message>

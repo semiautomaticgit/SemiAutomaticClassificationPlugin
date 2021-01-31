@@ -288,13 +288,13 @@ class ReclassificationTab:
 					val = float(val)
 				except:
 					cfg.ReclassTabEdited = 'No'
-					cfg.utls.setTableItem(tW, row, column, "0")
+					cfg.utls.setTableItem(tW, row, column, '0')
 					cfg.ReclassTabEdited = 'Yes'
 			elif column == 0:	
-				c = val.replace(cfg.variableName, "rasterSCPArrayfunctionBand")
+				c = val.replace(cfg.variableName, 'rasterSCPArrayfunctionBand')
 				rasterSCPArrayfunctionBand = cfg.np.arange(9).reshape(3, 3)
 				try:
-					eval("cfg.np.where(" + c + ", 1, rasterSCPArrayfunctionBand)")
+					eval('cfg.np.where(' + c + ', 1, rasterSCPArrayfunctionBand)')
 				except:
 					cfg.ReclassTabEdited = 'No'
 					cfg.utls.setTableItem(tW, row, column, "0")
