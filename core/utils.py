@@ -3671,16 +3671,19 @@ class Utils:
 		# raster array
 		o = rasterSCPArrayfunctionBand.flatten()
 		a = rasterSCPArrayfunctionBand.ravel()
+		# logger
+		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'reclassifyRaster ' )
 		for i in functionBandArgument:
 			# create condition
 			try:
 				o[a==int(i[0])] = int(i[1])
 			except Exception as err:
 				try:
-					#exp = 'cfg.np.where(' + i[0].replace(cfg.variableName, 'rasterSCPArrayfunctionBand') + ', int(i[1]), o)'
-					exp = 'o[' + i[0].replace(cfg.variableName, 'a') + '] = int(i[1])'
+					exp = 'o[' + i[0].replace(functionVariableList, 'a') + '] = int(i[1])'
 					exec(exp)
 				except Exception as err:
+					# logger
+					cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'error ' + str(err) )
 					return 'No'
 		return o.reshape(rasterSCPArrayfunctionBand.shape[0], rasterSCPArrayfunctionBand.shape[1])
 			
@@ -4130,7 +4133,8 @@ class Utils:
 		f = functionBandArgument
 		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'f  ' + str(f) )
 		# replace numpy operators
-		f = cfg.utls.replaceNumpyOperators(f)		# logger
+		f = cfg.utls.replaceNumpyOperators(f)
+		# logger
 		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'f  ' + str(f) )
 		# perform operation
 		o = eval(f)

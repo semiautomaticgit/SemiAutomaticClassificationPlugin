@@ -304,7 +304,7 @@ class ClassRandomForestTab:
 				cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'Error: unable to load raster' + str(rstrOut))
 				return 'No'
 			# reclassification
-			o = cfg.utls.multiProcessRaster(rasterPath = iL[0], functionBand = 'No', functionRaster = cfg.utls.reclassifyRaster, outputRasterList = [rstrOut], nodataValue = cfg.NoDataVal,  functionBandArgument = reclassList, progressMessage = 'reclassify ', compress = cfg.rasterCompression, compressFormat = 'DEFLATE -co PREDICTOR=2 -co ZLEVEL=1', dataType = 'UInt16')
+			o = cfg.utls.multiProcessRaster(rasterPath = iL[0], functionBand = 'No', functionRaster = cfg.utls.reclassifyRaster, outputRasterList = [rstrOut], nodataValue = cfg.NoDataVal,  functionBandArgument = reclassList, functionVariable = cfg.variableName, progressMessage = 'reclassify ', compress = cfg.rasterCompression, compressFormat = 'DEFLATE -co PREDICTOR=2 -co ZLEVEL=1', dataType = 'UInt16')
 			# copy confidence raster
 			if cfg.rasterCompression != 'No':
 				try:

@@ -3099,8 +3099,8 @@ QTabBar::tab:selected { font: bold; color: green; }</string>
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>909</width>
-                     <height>392</height>
+                     <width>357</width>
+                     <height>448</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -3346,7 +3346,7 @@ p, li { white-space: pre-wrap; }
                      <x>0</x>
                      <y>0</y>
                      <width>417</width>
-                     <height>169</height>
+                     <height>165</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -13004,7 +13004,7 @@ distance</string>
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>90</width>
+                     <width>98</width>
                      <height>90</height>
                     </rect>
                    </property>
@@ -13068,8 +13068,8 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>535</width>
-                     <height>213</height>
+                     <width>459</width>
+                     <height>196</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -13303,7 +13303,7 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>90</width>
+                     <width>98</width>
                      <height>90</height>
                     </rect>
                    </property>
@@ -13361,7 +13361,7 @@ p, li { white-space: pre-wrap; }
                      <x>0</x>
                      <y>0</y>
                      <width>764</width>
-                     <height>407</height>
+                     <height>390</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -13998,7 +13998,7 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>90</width>
+                     <width>98</width>
                      <height>90</height>
                     </rect>
                    </property>
@@ -15074,7 +15074,7 @@ p, li { white-space: pre-wrap; }
                      <x>0</x>
                      <y>0</y>
                      <width>634</width>
-                     <height>346</height>
+                     <height>327</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -15736,7 +15736,7 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>90</width>
+                     <width>98</width>
                      <height>90</height>
                     </rect>
                    </property>
@@ -16177,7 +16177,7 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>90</width>
+                     <width>98</width>
                      <height>90</height>
                     </rect>
                    </property>
@@ -16238,8 +16238,8 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>374</width>
-                     <height>214</height>
+                     <width>923</width>
+                     <height>413</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -16525,7 +16525,7 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>90</width>
+                     <width>98</width>
                      <height>90</height>
                     </rect>
                    </property>
@@ -16582,8 +16582,8 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>433</width>
-                     <height>186</height>
+                     <width>923</width>
+                     <height>413</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -16831,7 +16831,7 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>90</width>
+                     <width>98</width>
                      <height>90</height>
                     </rect>
                    </property>
@@ -16885,8 +16885,8 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>445</width>
-                     <height>250</height>
+                     <width>923</width>
+                     <height>413</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -17230,7 +17230,7 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>90</width>
+                     <width>98</width>
                      <height>90</height>
                     </rect>
                    </property>
@@ -17294,8 +17294,8 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>376</width>
-                     <height>215</height>
+                     <width>923</width>
+                     <height>413</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -17575,7 +17575,7 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>90</width>
+                     <width>98</width>
                      <height>90</height>
                     </rect>
                    </property>
@@ -18181,8 +18181,67 @@ p, li { white-space: pre-wrap; }
                       </property>
                      </spacer>
                     </item>
-                    <item row="3" column="0">
+                    <item row="6" column="0">
                      <spacer name="verticalSpacer_37">
+                      <property name="orientation">
+                       <enum>Qt::Vertical</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>20</width>
+                        <height>40</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item row="4" column="0">
+                     <widget class="QToolButton" name="import_reclass_toolButton">
+                      <property name="toolTip">
+                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Import reclassification table from text file&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">margin: 0px;padding: 0px</string>
+                      </property>
+                      <property name="text">
+                       <string>Plot</string>
+                      </property>
+                      <property name="icon">
+                       <iconset resource="resources.qrc">
+                        <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_import.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_import.svg</iconset>
+                      </property>
+                      <property name="iconSize">
+                       <size>
+                        <width>22</width>
+                        <height>22</height>
+                       </size>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="5" column="0">
+                     <widget class="QToolButton" name="export_reclass_toolButton">
+                      <property name="toolTip">
+                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Export reclassification table to text file&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">margin: 0px;padding: 0px</string>
+                      </property>
+                      <property name="text">
+                       <string>Plot</string>
+                      </property>
+                      <property name="icon">
+                       <iconset resource="resources.qrc">
+                        <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_export.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_export.svg</iconset>
+                      </property>
+                      <property name="iconSize">
+                       <size>
+                        <width>22</width>
+                        <height>22</height>
+                       </size>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="3" column="0">
+                     <spacer name="verticalSpacer_24">
                       <property name="orientation">
                        <enum>Qt::Vertical</enum>
                       </property>

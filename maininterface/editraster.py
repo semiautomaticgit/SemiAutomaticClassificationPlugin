@@ -160,7 +160,7 @@ class EditRaster:
 	def performEdit(self, inputRasterPath, inputVectorPath, editValue = None):
 		# convert polygon to raster
 		tRxs = cfg.utls.createTempRasterPath('tif')
-		check = cfg.utls.vectorToRaster(cfg.emptyFN, str(inputVectorPath), cfg.emptyFN, tRxs, str(inputRasterPath), None, "GTiff", 1)
+		check = cfg.utls.vectorToRaster(cfg.emptyFN, str(inputVectorPath), cfg.emptyFN, tRxs, str(inputRasterPath), None, 'GTiff', 1)
 		# open input with GDAL
 		rD = cfg.gdalSCP.Open(inputRasterPath, cfg.gdalSCP.GA_Update)
 		if rD is None:
@@ -238,7 +238,7 @@ class EditRaster:
 		a2 =  iRB2.ReadAsArray(startColumn2, startRow2, columnNum1, rowNum1)*s+o
 		# expression
 		if cfg.ui.use_expression_checkBox.isChecked() is True:
-			expression = " " + cfg.ui.expression_lineEdit.text() + " "
+			expression = ' ' + cfg.ui.expression_lineEdit.text() + ' '
 			e = self.checkExpression(expression, editValue)
 			if e == 'No':
 				return 'No'
@@ -259,31 +259,31 @@ class EditRaster:
 		
 	# text changed
 	def textChanged(self):
-		expression = " " + cfg.ui.expression_lineEdit.text() + " "
+		expression = ' ' + cfg.ui.expression_lineEdit.text() + ' '
 		self.checkExpression(expression, 0)
 		
 	# check the expression and return it
 	def checkExpression(self, expression, editValue):
 		expr = expression
-		expr = expr.replace(cfg.variableName, "self.a1")
+		expr = expr.replace(cfg.variableName, 'self.a1')
 		# replace numpy operators
 		expr = cfg.utls.replaceNumpyOperators(expr)
 		# value from vector
 		expr = expr.replace(cfg.vectorVariableName, str(editValue))
-		e = "cfg.np.where(a2 >0 ," + expr + ", self.a1)"
+		e = 'cfg.np.where(a2 >0 ,' + expr + ', self.a1)'
 		# test
 		ar1 = cfg.np.arange(9).reshape(3, 3)
 		eCopy = e
-		eCopy = eCopy.replace("self.a1", "ar1")
-		eCopy = eCopy.replace("a2", "ar1")
+		eCopy = eCopy.replace('self.a1', 'ar1')
+		eCopy = eCopy.replace('a2', 'ar1')
 		try:
 			o = eval(eCopy)
-			cfg.ui.expression_lineEdit.setStyleSheet("color : green")
+			cfg.ui.expression_lineEdit.setStyleSheet('color : green')
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode())
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode())
 			return e
 		except Exception as err:
-			cfg.ui.expression_lineEdit.setStyleSheet("color : red")
+			cfg.ui.expression_lineEdit.setStyleSheet('color : red')
 			# logger
 			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 			return 'No'
@@ -305,7 +305,7 @@ class EditRaster:
 			cfg.ui.undo_edit_Button.setEnabled(False)
 			cfg.undoEditRasterToolbar_toolButton.setEnabled(False)
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode())
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode())
 		except:
 			pass
 		
@@ -316,7 +316,7 @@ class EditRaster:
 		b.FlushCache()
 		b = None
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode())
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode())
 		
 	# checkbox changed
 	def checkboxVectorFieldChanged(self):

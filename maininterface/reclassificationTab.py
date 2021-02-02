@@ -67,28 +67,28 @@ class ReclassificationTab:
 			else:
 				return 'No'
 			list = []
-			values = valueString.split(",")
+			values = valueString.split(',')
 			for v in values:
-				val = v.split("_")
+				val = v.split('_')
 				list.append([val[0], val[1]])
 			c = 1
 		if c > 0:
 			if batch == 'No':
-				out = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Save raster output"), "", "*.tif", "tif")
+				out = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Save raster output'), '', '*.tif', 'tif')
 			else:
 				out = rasterOutput
 			if out is not False:
-				if out.lower().endswith(".tif"):
+				if out.lower().endswith('.tif'):
 					pass
 				else:
-					out = out + ".tif"
+					out = out + '.tif'
 				if batch == 'No':
 					cfg.uiUtls.addProgressBar()
 					# disable map canvas render for speed
 					cfg.cnvs.setRenderFlag(False)
 				cfg.uiUtls.updateBar(10)
 				reclassList = self.createReclassificationStringFromList(list)
-				o = cfg.utls.multiProcessRaster(rasterPath = classificationPath, functionBand = 'No', functionRaster = cfg.utls.reclassifyRaster, outputRasterList = [out], nodataValue = cfg.NoDataVal,  functionBandArgument = reclassList, progressMessage = 'reclassify ', compress = cfg.rasterCompression, compressFormat = 'DEFLATE -co PREDICTOR=2 -co ZLEVEL=1')
+				o = cfg.utls.multiProcessRaster(rasterPath = classificationPath, functionBand = 'No', functionRaster = cfg.utls.reclassifyRaster, outputRasterList = [out], nodataValue = cfg.NoDataVal,  functionBandArgument = reclassList, functionVariable = cfg.variableName, progressMessage = 'reclassify ', compress = cfg.rasterCompression, compressFormat = 'DEFLATE -co PREDICTOR=2 -co ZLEVEL=1')
 				if cfg.osSCP.path.isfile(out):
 					r =cfg.utls.addRasterLayer(out)
 				else:
@@ -114,7 +114,7 @@ class ReclassificationTab:
 					cfg.uiUtls.removeProgressBar()
 					# enable map canvas render
 					cfg.cnvs.setRenderFlag(True)
-				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " reclassification ended")
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' reclassification ended')
 
 	def calculateUniqueValues(self):
 		self.clssfctnNm = cfg.ui.reclassification_name_combo.currentText()
@@ -132,7 +132,7 @@ class ReclassificationTab:
 			ck = 'Yes'
 		except Exception as err:
 			# logger
-			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 			ck = 'No'
 		if ck == 'No':
 			cfg.mx.msg4()
@@ -161,7 +161,7 @@ class ReclassificationTab:
 			self.addValuesToTable(uniq)
 			cfg.uiUtls.updateBar(100)
 			cfg.uiUtls.removeProgressBar()
-			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " values calculated")
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' values calculated')
 			
 	def incrementalNewValues(self):
 		self.clssfctnNm = cfg.ui.reclassification_name_combo.currentText()
@@ -179,7 +179,7 @@ class ReclassificationTab:
 			ck = 'Yes'
 		except Exception as err:
 			# logger
-			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 			ck = 'No'
 		if ck == 'No':
 			cfg.mx.msg4()
@@ -272,8 +272,8 @@ class ReclassificationTab:
 		# add item to table
 		c = tW.rowCount()
 		tW.setRowCount(c + 1)
-		cfg.utls.addTableItem(tW, "0", c, 0)
-		cfg.utls.addTableItem(tW, "0", c, 1)
+		cfg.utls.addTableItem(tW, '0', c, 0)
+		cfg.utls.addTableItem(tW, '0', c, 1)
 		cfg.ReclassTabEdited = 'Yes'
 
 	def removePointFromTable(self):
@@ -297,8 +297,79 @@ class ReclassificationTab:
 					eval('cfg.np.where(' + c + ', 1, rasterSCPArrayfunctionBand)')
 				except:
 					cfg.ReclassTabEdited = 'No'
-					cfg.utls.setTableItem(tW, row, column, "0")
+					cfg.utls.setTableItem(tW, row, column, '0')
 					cfg.ReclassTabEdited = 'Yes'
 					cfg.mx.msgWar16()
 			# logger
-			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "edited cell" + str(row) + ";" + str(column))
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'edited cell' + str(row) + ';' + str(column))
+			
+	# import reclass from file
+	def importReclass(self):
+		file = cfg.utls.getOpenFileName(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Select a reclassification file'), '', 'CSV (*.csv)')
+		if len(file) > 0:
+			self.importReclassFile(file)
+			
+	# import reclass
+	def importReclassFile(self, file):
+		try:
+			f = open(file)
+			if cfg.osSCP.path.isfile(file):
+				file = f.readlines()
+				if '\t' in file[0]:
+					sep = '\t'
+				else:
+					sep = ','
+				tW = cfg.ui.reclass_values_tableWidget
+				for b in range(0, len(file)):
+					# rule list
+					p = file[b].strip().split(sep)
+					oldV = 0
+					newV = 0
+					try:
+						oldV = p[0]
+						newV = p[1]
+					except:
+						pass
+					# add item to table
+					c = tW.rowCount()
+					# add list items to table
+					tW.setRowCount(c + 1)
+					cfg.utls.addTableItem(tW, oldV, c, 0)
+					cfg.utls.addTableItem(tW, newV, c, 1)
+					# logger
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' rules imported')
+		except Exception as err:
+			cfg.mx.msgErr19()
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+			
+	# export reclass list to file
+	def exportReclass(self):
+		listFile = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Save the reclassification list to file'), '', '*.csv', 'csv')
+		try:
+			if listFile.lower().endswith('.csv'):
+				pass
+			else:
+				listFile = listFile + '.csv'
+			tW = cfg.ui.reclass_values_tableWidget
+			c = tW.rowCount()
+			f = open(listFile, 'w')
+			txt = ''
+			for i in range(0, c):
+				sep = ','
+				X = tW.item(i,0).text()
+				Y = tW.item(i,1).text()
+				try:
+					oldV = tW.item(i,0).text()
+					newV = tW.item(i,1).text()
+				except:
+					pass
+				txt = txt + oldV + sep + newV + '\n'
+			f.write(txt)
+			f.close()
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' point list exported')
+		except Exception as err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+			

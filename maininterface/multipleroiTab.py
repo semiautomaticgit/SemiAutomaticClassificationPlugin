@@ -302,8 +302,6 @@ class MultipleROITab:
 					RBand = tW.item(i,9).text()
 				except:
 					pass
-				else:
-					Inf = ''
 				txt = X + sep + Y + sep + MID + sep + MInf + sep + CID + sep + CInf + sep + MinSize + sep + MaxWidth + sep + RangRad + sep + RBand+ '\n'
 				f.write(txt)
 				f.close()

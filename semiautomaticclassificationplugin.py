@@ -1215,6 +1215,10 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.add_value_pushButton.clicked.connect(cfg.reclassification.addRowToTable)
 			# connect to remove point
 			cfg.ui.remove_row_pushButton.clicked.connect(cfg.reclassification.removePointFromTable)
+			# connect to import band set button
+			cfg.ui.import_reclass_toolButton.clicked.connect(cfg.reclassification.importReclass)
+			# connect to export band set button
+			cfg.ui.export_reclass_toolButton.clicked.connect(cfg.reclassification.exportReclass)
 			# connect to edited cell
 			cfg.ui.reclass_values_tableWidget.cellChanged.connect(cfg.reclassification.editedCell)
 			''' Edit Raster tab'''
