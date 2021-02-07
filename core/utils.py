@@ -2098,7 +2098,7 @@ class Utils:
 			else:
 				ck = 'No'
 				# logger
-				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " raster is not loaded: " + str(cfg.bandSetsList[bandSetNumber][3][x]))
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' raster is not loaded: ' + str(cfg.bandSetsList[bandSetNumber][3][x]))
 				return ck
 		return ck
 		
@@ -2256,12 +2256,12 @@ class Utils:
 	def createTempRasterPath(self, extension, name = '_temp'):
 		r = cfg.randomSCP.randint(0,1000)
 		dT = cfg.utls.getTime()
-		tPMD = cfg.osSCP.path.join(cfg.tmpDir, dT + str(r) + name + '.' + extension)
+		tPMD = cfg.tmpDir + '/' + dT + str(r) + name + '.' + extension
 		return tPMD
 		
 	# create temporary raster path
 	def createTempRasterPathBatch(self, name, extension):
-		tPMD = cfg.osSCP.path.join(cfg.tmpDir, name + '.' + extension)
+		tPMD = cfg.tmpDir + '/' + name + '.' + extension
 		return tPMD
 		
 	# create temporary virtual raster
@@ -6744,7 +6744,13 @@ class Utils:
 		tPMD = cfg.utls.createTempRasterPath('txt')
 		stF = open(tPMD, 'a')
 		sPL = len(cfg.subprocDictProc)
-		cfg.subprocDictProc['proc_'+ str(sPL)] = cfg.subprocessSCP.Popen(a, shell=False, stdout=stF, stderr=cfg.subprocessSCP.PIPE)
+		if cfg.sysSCPNm == 'Windows':
+			startupinfo = cfg.subprocessSCP.STARTUPINFO()
+			startupinfo.dwFlags = cfg.subprocessSCP.STARTF_USESHOWWINDOW
+			startupinfo.wShowWindow = cfg.subprocessSCP.SW_HIDE
+			cfg.subprocDictProc['proc_'+ str(sPL)] = cfg.subprocessSCP.Popen(a, shell=False, startupinfo = startupinfo, stdout=stF, stderr=cfg.subprocessSCP.PIPE)
+		else:
+			cfg.subprocDictProc['proc_'+ str(sPL)] = cfg.subprocessSCP.Popen(a, shell=False, stdout=stF, stderr=cfg.subprocessSCP.PIPE)
 		while True:
 			line = ''
 			with open(tPMD, 'r') as rStF:
@@ -7176,7 +7182,13 @@ class Utils:
 		tPMD = cfg.utls.createTempRasterPath('txt')
 		stF = open(tPMD, 'a')
 		sPL = len(cfg.subprocDictProc)
-		cfg.subprocDictProc['proc_'+ str(sPL)] = cfg.subprocessSCP.Popen(d, shell=False, stdout=stF, stderr=cfg.subprocessSCP.PIPE)
+		if cfg.sysSCPNm == 'Windows':
+			startupinfo = cfg.subprocessSCP.STARTUPINFO()
+			startupinfo.dwFlags = cfg.subprocessSCP.STARTF_USESHOWWINDOW
+			startupinfo.wShowWindow = cfg.subprocessSCP.SW_HIDE
+			cfg.subprocDictProc['proc_'+ str(sPL)] = cfg.subprocessSCP.Popen(d, shell=False,startupinfo = startupinfo, stdout=stF, stderr=cfg.subprocessSCP.PIPE)
+		else:
+			cfg.subprocDictProc['proc_'+ str(sPL)] = cfg.subprocessSCP.Popen(d, shell=False, stdout=stF, stderr=cfg.subprocessSCP.PIPE)
 		while True:
 			line = ''
 			with open(tPMD, 'r') as rStF:

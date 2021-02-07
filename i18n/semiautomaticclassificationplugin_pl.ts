@@ -3,27 +3,27 @@
 <context>
     <name>DockClass</name>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="814"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="820"/>
         <source>MC ID</source>
         <translation>MC ID</translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="782"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="788"/>
         <source>C ID</source>
         <translation>C ID</translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="636"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="642"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="613"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="619"/>
         <source>Plot</source>
         <translation>Wykres</translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="950"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="956"/>
         <source>Import library</source>
         <translation>Importuj bibliotekę</translation>
     </message>
@@ -48,17 +48,17 @@
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Podręcznik użytkownika&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="430"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="436"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Input file path&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ścieżka do pliku danych&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="440"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="446"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span &gt;Open a training input&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span &gt;Otwórz plik z danymi treningowymi&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="407"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="413"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span &gt;Create a new training input&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span &gt;Twórz plik z danymi treningowymi&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
@@ -68,164 +68,164 @@
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span &gt;Zestaw kanałów&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="630"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="636"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add highlighted items to scatter plot&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Dodaj zaznaczone obiekty do wykresu punktowego&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="666"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="672"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Import spectral signatures &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Importuj sygnatury spektralne&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="689"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="695"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Export highlighted spectral signatures&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
 </source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Eksportuj wybrane sygnatury spektralne&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
 </translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="571"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="577"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Delete highlighted items&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Usuń zaznaczone obiekty&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="548"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="554"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Calculate signatures for highlighted items&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Oblicz sygnatury dla wybranych obiektów&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="525"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="531"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Merge highlighted spectral signatures obtaining the average signature&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Scal wybrane sygnatury, uzyskując sygnaturę uśrednioną&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="607"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="613"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Add highlighted signatures to spectral signature plot&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Dodaj wybrane sygnatury do wykresu spektralnego sygnatur&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="999"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="998"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Display a vegetation index value with the cursor&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wyświetlaj pod kursorem indeks roślinności &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1002"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1001"/>
         <source>Display</source>
         <translation>Wyświetl</translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1012"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1011"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select a vegetation index&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wybierz indeks roślinności&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1016"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1015"/>
         <source>NDVI</source>
         <translation>NDVI</translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1021"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1020"/>
         <source>EVI</source>
         <translation>EVI</translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1026"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1025"/>
         <source>Custom</source>
         <translation>Użytkownika</translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1046"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1033"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Custom expression (e.g. bandset#b4 / bandset#b3 )&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wyrażenie użytkownika (np. bandset#b4 / bandset#b3 )&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="846"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="852"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The class name of the ROI signature&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Nazwa kategorii sygnatury OT&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="849"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="855"/>
         <source>C 1</source>
         <translation>C 1</translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="751"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="757"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The macroclass ID of the ROI signature&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Identyfikator makroklas sygnatury OT&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="859"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="865"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The macroclass name of the ROI signature&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Nazwa makroklasy sygnatury OT&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="862"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="868"/>
         <source>MC 1</source>
         <translation>MC 1</translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="827"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="833"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The class ID of the ROI signature&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Kategoria identyfikatora sygnatury OT&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="876"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="882"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Undo ROI save&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Cofnij zapis OT&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="931"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="937"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add ROI spectral signature to signature list&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Dodaj charakterystykę spektralną OT do listy sygnatur&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="944"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="950"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Save temporary ROI to training input&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1099"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1086"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Automatically refresh the temporary ROI, as the parameters change&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Automatyczne odświeżanie tymczasowego OT przy zmianie parametrów&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1076"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1063"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Band number&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Numer kanału&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1063"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1050"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Calculate temporary ROI only on one band&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Oblicz tymczasowy OT tylko dla jednego kanału&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1112"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1099"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Automatically calculate signature plot of temporary ROI&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Automatycznie licz wykres sygnatur tymczasowego OT&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="915"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="921"/>
         <source>Autosave</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1066"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1053"/>
         <source>Rapid ROI b.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="934"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="940"/>
         <source>Signature</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="912"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="918"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Automatically save training input when a ROI is saved in it&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1115"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1102"/>
         <source>Auto-plot</source>
         <translation type="unfinished"></translation>
     </message>
@@ -270,7 +270,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="433"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="439"/>
         <source>Training input</source>
         <translation type="unfinished"></translation>
     </message>
@@ -285,7 +285,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="26"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="20"/>
         <source>SCP &amp;Dock</source>
         <translation type="unfinished"></translation>
     </message>
@@ -295,42 +295,42 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1102"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1089"/>
         <source>A&amp;uto-refresh ROI</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="976"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="988"/>
         <source> ROI options</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="715"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="721"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Filter&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="718"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="724"/>
         <source>Filter</source>
         <translation type="unfinished">Filtruj</translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="460"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="466"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Remove training input&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="498"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="504"/>
         <source> ROI &amp; Signature list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="738"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="744"/>
         <source>C Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="795"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="801"/>
         <source>MC Name</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4762,7 +4762,7 @@ ROI</source>
         <translation>Wybierz plik z listą sygnatur</translation>
     </message>
     <message>
-        <location filename="../maininterface/downloadproducts.py" line="746"/>
+        <location filename="../maininterface/downloadproducts.py" line="747"/>
         <source>Reset signature list</source>
         <translation>Wyczyść listę sygnatur</translation>
     </message>
@@ -5132,12 +5132,12 @@ ROI</source>
         <translation>Zapisz raster</translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="6838"/>
+        <location filename="../core/utils.py" line="6844"/>
         <source>Build overviews</source>
         <translation>Zbuduj podglądy</translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="6838"/>
+        <location filename="../core/utils.py" line="6844"/>
         <source>Do you want to build the external overviews of bands?</source>
         <translation>Czy na pewno zbudować zewnętrzne podglądy na kanały?</translation>
     </message>
@@ -5177,12 +5177,12 @@ ROI</source>
         <translation>Eksportuj pobrane łącza</translation>
     </message>
     <message>
-        <location filename="../maininterface/downloadproducts.py" line="2751"/>
+        <location filename="../maininterface/downloadproducts.py" line="2746"/>
         <source>Searching ...</source>
         <translation>Wyszukiwanie...</translation>
     </message>
     <message>
-        <location filename="../maininterface/downloadproducts.py" line="746"/>
+        <location filename="../maininterface/downloadproducts.py" line="747"/>
         <source>Are you sure you want to clear the table?</source>
         <translation>Czy na pewno oczyścić tabelę?</translation>
     </message>
@@ -6029,7 +6029,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished">Sentinel-3</translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="8855"/>
+        <location filename="../core/utils.py" line="8867"/>
         <source>SCP: completed process</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6344,7 +6344,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/randomForestTab.py" line="238"/>
+        <location filename="../maininterface/randomForestTab.py" line="239"/>
         <source>Save classification</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6449,7 +6449,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7094"/>
+        <location filename="../core/utils.py" line="7100"/>
         <source>Writing file</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6459,28 +6459,23 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="6787"/>
+        <location filename="../core/utils.py" line="6793"/>
         <source>Sieve</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="6917"/>
+        <location filename="../core/utils.py" line="6923"/>
         <source>Building overviews</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/GOESTab.py" line="209"/>
+        <location filename="../maininterface/GOESTab.py" line="215"/>
         <source>Reprojecting</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/randomForestTab.py" line="413"/>
+        <location filename="../maininterface/randomForestTab.py" line="452"/>
         <source>Random forest classification</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../maininterface/sentinel1Tab.py" line="302"/>
-        <source>S1 proc</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -6504,22 +6499,22 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/downloadproducts.py" line="2801"/>
+        <location filename="../maininterface/downloadproducts.py" line="2796"/>
         <source>Downloading</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="8310"/>
+        <location filename="../core/utils.py" line="8322"/>
         <source>Remove rows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="8310"/>
+        <location filename="../core/utils.py" line="8322"/>
         <source>Are you sure you want to remove highlighted rows from the table?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/downloadproducts.py" line="2846"/>
+        <location filename="../maininterface/downloadproducts.py" line="2841"/>
         <source>Processing</source>
         <translation type="unfinished">Obróbka obrazu</translation>
     </message>
@@ -6831,6 +6826,11 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
     <message>
         <location filename="../maininterface/reclassificationTab.py" line="348"/>
         <source>Save the reclassification list to file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../maininterface/reclassificationTab.py" line="91"/>
+        <source>Reclassify</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

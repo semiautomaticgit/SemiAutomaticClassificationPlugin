@@ -2,7 +2,7 @@
 name=Semi-Automatic Classification Plugin
 qgisMinimumVersion=3.00
 description=The Semi-Automatic Classification Plugin (SCP) allows for the supervised classification of remote sensing images, providing tools for the download, the preprocessing and postprocessing of images.
-version=7.5.6
+version=7.5.7
 about=Developed by Luca Congedo, the Semi-Automatic Classification Plugin (SCP) allows for the supervised classification of remote sensing images, providing tools for the download, the preprocessing and postprocessing of images. Search and download is available for ASTER, GOES, Landsat, MODIS, Sentinel-1, Sentinel-2, and Sentinel-3 images. Several algorithms are available for the land cover classification. This plugin requires the installation of GDAL, OGR, Numpy, SciPy, and Matplotlib. Some tools require also the installation of SNAP (ESA Sentinel Application Platform). For more information please visit https://fromgistors.blogspot.com .
 
 author=Luca Congedo
@@ -14,6 +14,9 @@ icon=semiautomaticclassificationplugin.png
 ; start of optional metadata
 changelog=
 
+	7.5.7
+	-fixed subprocess issues in Windows for random forest, Sentinel-1 preprocessing, and other processes
+	
 	7.5.6
 	-in tab Reclassification added buttons for importing and exporting reclassification table
 	-fixed issue with custom variable name in reclass multiprocess

@@ -423,18 +423,29 @@ class Settings:
 	def testSNAPSubprocess(self):
 		dT = cfg.utls.getTime()
 		test = 'Success'
+		# logger
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' SNAPGPT: ' + str(cfg.SNAPGPT))
 		try:
 			a = '"' + cfg.SNAPGPT + '"'
+			b = a
 			if cfg.sysSCPNm != 'Windows':
 				b = cfg.shlexSCP.split(a)
-			sP = cfg.subprocessSCP.Popen(b, shell=False)
-			sP.wait()
+			if cfg.sysSCPNm == 'Windows':
+				startupinfo = cfg.subprocessSCP.STARTUPINFO()
+				startupinfo.dwFlags = cfg.subprocessSCP.STARTF_USESHOWWINDOW
+				startupinfo.wShowWindow = cfg.subprocessSCP.SW_HIDE
+				sP = cfg.subprocessSCP.Popen(b, shell=False, startupinfo = startupinfo)
+			else:
+				sP = cfg.subprocessSCP.Popen(b, shell=False)
+			v = sP.wait()
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' subprocess: ' + str(v))
 		except Exception as err:
 			# logger
 			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 			try:
 				sP = cfg.subprocessSCP.Popen(a, shell=True)
-				v = sP.wait()	
+				v = sP.wait()
 				# logger
 				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' subprocess: ' + str(v))
 				if v != 0:

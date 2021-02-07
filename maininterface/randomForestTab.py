@@ -230,16 +230,14 @@ class ClassRandomForestTab:
 					return 'No'
 		if cfg.bandSetsList[bandSetNumber][0] == 'Yes':
 			ckB = cfg.utls.checkBandSet(bandSetNumber)
-			if ckB == 'Yes':
-				if outputFile is None:
-					rstrOut = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Save classification'), '', '*.tif', 'tif')
-					if rstrOut is False:
-						return 'No'
-				else:
-					rstrOut = outputFile
+			if ckB != 'Yes':
+				return 'No'
+		if outputFile is None:
+			rstrOut = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Save classification'), '', '*.tif', 'tif')
+			if rstrOut is False:
+				return 'No'
 		else:
-			cfg.mx.msgWar15()
-			return 'No'
+			rstrOut = outputFile
 		# disable map canvas render for speed
 		if batch == 'No':
 			cfg.cnvs.setRenderFlag(False)
@@ -250,18 +248,25 @@ class ClassRandomForestTab:
 				macroclass = cfg.macroclassCheckRF
 			bandList = []
 			featBandList = ''
-			for b in range(0, len(cfg.bandSetsList[bandSetNumber][3])):
-				referenceRasterName = cfg.bandSetsList[bandSetNumber][3][b]
-				r = cfg.utls.selectLayerbyName(referenceRasterName, 'Yes')
-				referenceRasterPath = cfg.utls.layerSource(r)
-				bandList.append(referenceRasterPath)
-				featBandList = featBandList + 'band_' + str(b+1) + ','
+			if cfg.bandSetsList[bandSetNumber][0] == 'Yes':
+				for b in range(0, len(cfg.bandSetsList[bandSetNumber][3])):
+					referenceRasterName = cfg.bandSetsList[bandSetNumber][3][b]
+					r = cfg.utls.selectLayerbyName(referenceRasterName, 'Yes')
+					referenceRasterPath = cfg.utls.layerSource(r)
+					bandList.append(referenceRasterPath)
+					featBandList = featBandList + 'band_' + str(b+1) + ','
+				tR = cfg.utls.createTempRasterPath('tif')
+				st = cfg.utls.mergeRasterBands(bandList, tR, compress = 'No')
+			else:
+				for b in range(0, len(cfg.bandSetsList[bandSetNumber][3])):
+					featBandList = featBandList + 'band_' + str(b+1) + ','
+				imageName = cfg.bandSetsList[bandSetNumber][8]
+				img = cfg.utls.selectLayerbyName(imageName, 'Yes')
+				tR = cfg.utls.layerSource(img)
 			featBandList = featBandList.rstrip(',')
 			# export training to vector
 			vectorList, trainingVect, reclassList = self.createShapefileFromTraining(macroclass)
 			xmlFile = self.createXMLRandomForest(vectorList)
-			tR = cfg.utls.createTempRasterPath('tif')
-			st = cfg.utls.mergeRasterBands(bandList, tR, compress = 'No')
 			if numberTrainingSamples is None:
 				numberTrainingSamples = str(int(cfg.ui.number_training_samples_SpinBox.value()))
 			if treeCount is None:
@@ -284,10 +289,15 @@ class ClassRandomForestTab:
 			# process raster
 			cfg.uiUtls.updateBar(0, cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Random forest classification'))
 			tempOut = cfg.utls.createTempRasterPath('tif')
-			outTxt = self.processGPTRandomForest(xmlFile, tR, tempOut, treeCount, numberTrainingSamples,trainingVect, featBandList, evalClassifier, evalFeaturePowerSet, minPowerSize, maxPowerSize, classPath)
+			outTxt = self.processGPTRandomForest(xmlFile, tR, tempOut, treeCount, numberTrainingSamples, trainingVect, featBandList, evalClassifier, evalFeaturePowerSet, minPowerSize, maxPowerSize, classPath)
 			if outTxt == 'No':	
 				# logger
 				if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' error: cancel')
+				if batch == 'No':
+					cfg.utls.finishSound()
+					cfg.utls.sendSMTPMessage(None, str(__name__))
+					cfg.cnvs.setRenderFlag(True)
+					cfg.uiUtls.removeProgressBar()
 				return 'No'
 			cfg.uiUtls.updateBar(90)
 			# split bands
@@ -298,13 +308,23 @@ class ClassRandomForestTab:
 					cfg.mx.msgErr38(rstrOut)
 					# logger
 					if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+					if batch == 'No':
+						cfg.utls.finishSound()
+						cfg.utls.sendSMTPMessage(None, str(__name__))
+						cfg.cnvs.setRenderFlag(True)
+						cfg.uiUtls.removeProgressBar()
 					return 'No'
 			else:
 				cfg.mx.msgErr38(rstrOut)
 				cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'Error: unable to load raster' + str(rstrOut))
+				if batch == 'No':
+					cfg.utls.finishSound()
+					cfg.utls.sendSMTPMessage(None, str(__name__))
+					cfg.cnvs.setRenderFlag(True)
+					cfg.uiUtls.removeProgressBar()
 				return 'No'
 			# reclassification
-			o = cfg.utls.multiProcessRaster(rasterPath = iL[0], functionBand = 'No', functionRaster = cfg.utls.reclassifyRaster, outputRasterList = [rstrOut], nodataValue = cfg.NoDataVal,  functionBandArgument = reclassList, functionVariable = cfg.variableName, progressMessage = 'reclassify ', compress = cfg.rasterCompression, compressFormat = 'DEFLATE -co PREDICTOR=2 -co ZLEVEL=1', dataType = 'UInt16')
+			o = cfg.utls.multiProcessRaster(rasterPath = iL[0], functionBand = 'No', functionRaster = cfg.utls.reclassifyRaster, outputRasterList = [rstrOut], nodataValue = cfg.NoDataVal,  functionBandArgument = reclassList, functionVariable = cfg.variableName, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Reclassify'), compress = cfg.rasterCompression, compressFormat = 'DEFLATE -co PREDICTOR=2 -co ZLEVEL=1', dataType = 'UInt16')
 			# copy confidence raster
 			if cfg.rasterCompression != 'No':
 				try:
@@ -378,14 +398,23 @@ class ClassRandomForestTab:
 			except:
 				return 'No'
 		d = '"' + cfg.SNAPGPT + '" -q ' + str(cfg.threads) + ' -c ' + str(cfg.RAMValue) + 'M ' + ' -Dsnap.userdir="' + cfg.tmpDir + '" "' + xmlFile + '" -Pinput="' + inputRaster + '" -PtreeCount=' + str(treeCount) + ' -PnumTrainSamples=' + str(numTrainSamples) + ' -PclassifierName="' + str(classifierName) + '" -PloadClassifier=' + str(loadClassifier) + ' -PtrainingVectors="' + str(trainingVectors) + '" -PfeatureBands=' + str(featureBands) + ' -PevaluateClassifier=' + str(evaluateClassifier) + ' -PevaluateFeaturePowerSet=' + str(evaluateFeaturePowerSet) + ' -PminPowerSetSize=' + str(minPowerSetSize) + ' -PmaxPowerSetSize=' + str(maxPowerSetSize) + ' -Poutput="' + outputRaster + '"'
-		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' RF d: ' + d)
 		outTxt = cfg.tmpDir + '/auxdata/classifiers/RandomForest/' + classifierName + '.txt'
 		if cfg.sysSCPNm != 'Windows':
 			d = cfg.shlexSCP.split(d)
+		# logger
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' RF d: ' + d)
 		tPMD = cfg.utls.createTempRasterPath('txt')
 		stF = open(tPMD, 'a')
 		sPL = len(cfg.subprocDictProc)
-		cfg.subprocDictProc['proc_'+ str(sPL)] = cfg.subprocessSCP.Popen(d, shell=False, stdout=stF, stderr=cfg.subprocessSCP.PIPE)
+		# issue on Windows
+		if cfg.sysSCPNm == 'Windows':
+			startupinfo = cfg.subprocessSCP.STARTUPINFO()
+			startupinfo.dwFlags = cfg.subprocessSCP.STARTF_USESHOWWINDOW
+			startupinfo.wShowWindow = cfg.subprocessSCP.SW_HIDE
+			cfg.subprocDictProc['proc_'+ str(sPL)] = cfg.subprocessSCP.Popen(d, shell=False, startupinfo = startupinfo, stdout=stF)
+		else:
+			cfg.subprocDictProc['proc_'+ str(sPL)] = cfg.subprocessSCP.Popen(d, shell=False, stdout=stF)
+		progress = 0
 		while True:
 			line = ''
 			with open(tPMD, 'r') as rStF:
@@ -405,7 +434,13 @@ class ClassRandomForestTab:
 						dots = ''
 					cfg.uiUtls.updateBar(progress, cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Random forest classification') + dots)
 				except:
-					pass
+					try:
+						dots = dots + '.'
+						if len(dots) > 3:
+							dots = ''
+					except:
+						dots = ''
+					cfg.uiUtls.updateBar(progress, cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Random forest classification') + dots)
 			cfg.QtWidgetsSCP.qApp.processEvents()
 			if cfg.actionCheck != 'Yes':	
 				# logger
@@ -415,9 +450,11 @@ class ClassRandomForestTab:
 		stF.close()
 		# get error
 		out, err = cfg.subprocDictProc['proc_'+ str(sPL)].communicate()
-		if len(err) > 0:
-			# logger
-			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' error: ' + str(err))
+		if err is not None:
+			if len(err) > 0:
+				# logger
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' error: ' + str(err))
+				outTxt = 'No'
 		# logger
 		cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' classification: ' + str(outputRaster))
 		return outTxt

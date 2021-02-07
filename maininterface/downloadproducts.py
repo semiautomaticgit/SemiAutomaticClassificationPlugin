@@ -540,6 +540,7 @@ class DownloadProducts:
 				self.downloadMODISImages(d)
 				self.downloadGOESImages(d)
 				cfg.utls.sendSMTPMessage(None, str(__name__))
+				cfg.utls.finishSound()
 		
 	# download Landsat data
 	def downloadLandsatImages(self, outputDirectory, exporter = 'No'):
@@ -669,7 +670,6 @@ class DownloadProducts:
 						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 			cfg.uiUtls.removeProgressBar()
 			cfg.cnvs.setRenderFlag(True)
-			cfg.utls.finishSound()
 			
 	# download image preview
 	def downloadLandsatImagesFromUSGS(self, imageID, collection, row, outputDirectory, progress, exporter = 'No'):
@@ -723,8 +723,9 @@ class DownloadProducts:
 				else:
 					l = open(d, 'w')
 					for t in links:
-						l.write(t + "\n")
+						l.write(t + '\n')
 					l.close()
+					cfg.utls.finishSound()
 					cfg.uiUtls.removeProgressBar()
 				
 	# check all bands
@@ -1050,8 +1051,6 @@ class DownloadProducts:
 					cfg.sentinel3T.sentinel3(d, o, 'Yes')
 		cfg.uiUtls.removeProgressBar()
 		cfg.cnvs.setRenderFlag(True)
-		if exporter == 'No':
-			cfg.utls.finishSound()
 		return links
 					
 	# check band download
@@ -1651,8 +1650,6 @@ class DownloadProducts:
 					cfg.sentinel2T.sentinel2(d, o, 'Yes')
 		cfg.uiUtls.removeProgressBar()
 		cfg.cnvs.setRenderFlag(True)
-		if exporter == 'No':
-			cfg.utls.finishSound()
 		return links
 
 	# check all bands
@@ -1819,7 +1816,10 @@ class DownloadProducts:
 				a = cfg.shlexSCP.split(a)
 			try:
 				if cfg.sysSCPNm == 'Windows':
-					sP = cfg.subprocessSCP.Popen(a, shell=True)
+					startupinfo = cfg.subprocessSCP.STARTUPINFO()
+					startupinfo.dwFlags = cfg.subprocessSCP.STARTF_USESHOWWINDOW
+					startupinfo.wShowWindow = cfg.subprocessSCP.SW_HIDE
+					sP = cfg.subprocessSCP.Popen(a, shell=False, startupinfo = startupinfo)
 				else:
 					sP = cfg.subprocessSCP.Popen(a, shell=False)
 				sP.wait()
@@ -2164,8 +2164,6 @@ class DownloadProducts:
 					cfg.sentinel1T.sentinel1(d, o, 'Yes')
 		cfg.uiUtls.removeProgressBar()
 		cfg.cnvs.setRenderFlag(True)
-		if exporter == 'No':
-			cfg.utls.finishSound()
 		return links
 		
 	# check band download
@@ -2427,7 +2425,6 @@ class DownloadProducts:
 						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 			cfg.uiUtls.removeProgressBar()
 			cfg.cnvs.setRenderFlag(True)
-			cfg.utls.finishSound()
 			
 	# download image
 	def downloadASTERImagesFromNASA(self, imageID, collection, imageDisplayID, outputDirectory, progress, exporter = 'No', date = None):
@@ -2615,8 +2612,6 @@ class DownloadProducts:
 					cfg.goesT.GOES(d, o, 'Yes')
 		cfg.uiUtls.removeProgressBar()
 		cfg.cnvs.setRenderFlag(True)
-		if exporter == 'No':
-			cfg.utls.finishSound()
 		return links
 					
 	# check band download
@@ -2855,7 +2850,6 @@ class DownloadProducts:
 						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 			cfg.uiUtls.removeProgressBar()
 			cfg.cnvs.setRenderFlag(True)
-			cfg.utls.finishSound()
 			
 	# download image
 	def downloadMODISImagesFromNASA(self, imageID, collection, imageDisplayID, outputDirectory, progress, exporter = 'No', date = None):

@@ -189,7 +189,13 @@ class GOESTab:
 				d = a + ' ' + b + ' ' + g
 				if cfg.sysSCPNm != 'Windows':
 					d = cfg.shlexSCP.split(d)
-				cfg.subprocDictProc['proc_'+ str(p)] = cfg.subprocessSCP.Popen(d, shell=False)
+				if cfg.sysSCPNm == 'Windows':
+					startupinfo = cfg.subprocessSCP.STARTUPINFO()
+					startupinfo.dwFlags = cfg.subprocessSCP.STARTF_USESHOWWINDOW
+					startupinfo.wShowWindow = cfg.subprocessSCP.SW_HIDE
+					cfg.subprocDictProc['proc_'+ str(p)] = cfg.subprocessSCP.Popen(d, shell=False, startupinfo = startupinfo)
+				else:
+					cfg.subprocDictProc['proc_'+ str(p)] = cfg.subprocessSCP.Popen(d, shell=False)
 			while True:
 				polls = []
 				for p in range(sez[s], sez[s+1]):

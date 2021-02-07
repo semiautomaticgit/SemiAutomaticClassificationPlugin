@@ -774,7 +774,7 @@
         <item row="0" column="0">
          <widget class="QTabWidget" name="SCP_tabs">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -16238,8 +16238,8 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>923</width>
-                     <height>413</height>
+                     <width>385</width>
+                     <height>193</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -16582,8 +16582,8 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>923</width>
-                     <height>413</height>
+                     <width>444</width>
+                     <height>167</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -16885,8 +16885,8 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>923</width>
-                     <height>413</height>
+                     <width>456</width>
+                     <height>229</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -17294,8 +17294,8 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>923</width>
-                     <height>413</height>
+                     <width>387</width>
+                     <height>196</height>
                     </rect>
                    </property>
                    <attribute name="label">

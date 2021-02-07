@@ -101,7 +101,7 @@ class Sentinel1Tab:
 		# SNAP conversion
 		if cfg.actionCheck == 'Yes':
 			if cfg.ui.VH_checkBox_S1.isChecked() is True and cfg.ui.VV_checkBox_S1.isChecked() is True:
-				cfg.uiUtls.updateBar(30, cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'S1 proc') + ' ' + inputFile)
+				cfg.uiUtls.updateBar(30, cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Conversion') + ' ' + inputFile)
 				tVH, tVV, date = self.processGPT(inp, out, xmlVVVH, 'VVVH')
 				outputRasterList.append(tVH)
 				bandSetList.append(1)
@@ -110,13 +110,13 @@ class Sentinel1Tab:
 				bandSetNameList.append(cfg.utls.fileNameNoExt(tVH))
 				bandSetNameList.append(cfg.utls.fileNameNoExt(tVV))
 			elif cfg.ui.VH_checkBox_S1.isChecked() is True:
-				cfg.uiUtls.updateBar(0, cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'S1 proc') + ' ' + inputFile)
+				cfg.uiUtls.updateBar(0, cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Conversion') + ' ' + inputFile)
 				tVH, date = self.processGPT(inp, out, xml, 'VH')
 				outputRasterList.append(tVH)
 				bandSetList.append(1)
 				bandSetNameList.append(cfg.utls.fileNameNoExt(tVH))
 			elif cfg.ui.VV_checkBox_S1.isChecked() is True:
-				cfg.uiUtls.updateBar(50, cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'S1 proc') + ' ' + inputFile)
+				cfg.uiUtls.updateBar(50, cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Conversion') + ' ' + inputFile)
 				tVV, date = self.processGPT(inp, out, xml, 'VV')
 				outputRasterList.append(tVV)
 				bandSetList.append(2)
@@ -213,7 +213,15 @@ class Sentinel1Tab:
 			tPMD = cfg.utls.createTempRasterPath('txt')
 			stF = open(tPMD, 'a')
 			sPL = len(cfg.subprocDictProc)
-			cfg.subprocDictProc['proc_'+ str(sPL)] = cfg.subprocessSCP.Popen(d, shell=False, stdout=stF, stderr=cfg.subprocessSCP.PIPE)
+			# issue on Windows
+			if cfg.sysSCPNm == 'Windows':
+				startupinfo = cfg.subprocessSCP.STARTUPINFO()
+				startupinfo.dwFlags = cfg.subprocessSCP.STARTF_USESHOWWINDOW
+				startupinfo.wShowWindow = cfg.subprocessSCP.SW_HIDE
+				cfg.subprocDictProc['proc_'+ str(sPL)] = cfg.subprocessSCP.Popen(d, shell=False, startupinfo = startupinfo, stdout=stF)
+			else:
+				cfg.subprocDictProc['proc_'+ str(sPL)] = cfg.subprocessSCP.Popen(d, shell=False, stdout=stF)
+			progress = 0
 			while True:
 				line = ''
 				with open(tPMD, 'r') as rStF:
@@ -231,9 +239,15 @@ class Sentinel1Tab:
 								dots = ''
 						except:
 							dots = ''
-						cfg.uiUtls.updateBar(progress, cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'S1 proc') + inputRaster + dots)
+						cfg.uiUtls.updateBar(progress, cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Conversion') + inputRaster + dots)
 					except:
-						pass
+						try:
+							dots = dots + '.'
+							if len(dots) > 3:
+								dots = ''
+						except:
+							dots = ''
+						cfg.uiUtls.updateBar(progress, cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Conversion') + dots)
 				cfg.QtWidgetsSCP.qApp.processEvents()
 				if cfg.actionCheck != 'Yes':	
 					# logger
@@ -270,7 +284,15 @@ class Sentinel1Tab:
 			tPMD = cfg.utls.createTempRasterPath('txt')
 			stF = open(tPMD, 'a')
 			sPL = len(cfg.subprocDictProc)
-			cfg.subprocDictProc['proc_'+ str(sPL)] = cfg.subprocessSCP.Popen(d, shell=False, stdout=stF, stderr=cfg.subprocessSCP.PIPE)
+			# issue on Windows
+			if cfg.sysSCPNm == 'Windows':
+				startupinfo = cfg.subprocessSCP.STARTUPINFO()
+				startupinfo.dwFlags = cfg.subprocessSCP.STARTF_USESHOWWINDOW
+				startupinfo.wShowWindow = cfg.subprocessSCP.SW_HIDE
+				cfg.subprocDictProc['proc_'+ str(sPL)] = cfg.subprocessSCP.Popen(d, shell=False, startupinfo = startupinfo, stdout=stF)
+			else:
+				cfg.subprocDictProc['proc_'+ str(sPL)] = cfg.subprocessSCP.Popen(d, shell=False, stdout=stF)
+			progress = 0
 			while True:
 				line = ''
 				with open(tPMD, 'r') as rStF:
@@ -288,9 +310,15 @@ class Sentinel1Tab:
 								dots = ''
 						except:
 							dots = ''
-						cfg.uiUtls.updateBar(progress, cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'S1 proc') + inputRaster + dots)
+						cfg.uiUtls.updateBar(progress, cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Conversion') + inputRaster + dots)
 					except:
-						pass
+						try:
+							dots = dots + '.'
+							if len(dots) > 3:
+								dots = ''
+						except:
+							dots = ''
+						cfg.uiUtls.updateBar(progress, cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Conversion') + dots)
 				cfg.QtWidgetsSCP.qApp.processEvents()
 				if cfg.actionCheck != 'Yes':	
 					# logger
