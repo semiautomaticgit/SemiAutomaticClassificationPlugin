@@ -131,6 +131,9 @@ class Messages:
 	def msg26(self):
 		self.msgBar(cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Information') + ' [26]', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Please select at least one tool. Band set definition does not require Run'))
 		
+	def msg27(self):
+		self.msgBar(cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Information') + ' [27]', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Signatures exported'))
+		
 	''' Errors '''
 		
 	def msgErr2(self, SMTP = None):

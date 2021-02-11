@@ -113,8 +113,8 @@ class Accuracy:
 					ql = cfg.utls.layerSource(l)
 					if 'Polygon?crs=' in str(ql) or 'memory?geometry=' in str(ql):
 						# temp shapefile
-						tSHP = cfg.utls.createTempRasterPath('shp')
-						l = cfg.utls.saveMemoryLayerToShapefile(l, tSHP)
+						tSHP = cfg.utls.createTempRasterPath('gpkg')
+						l = cfg.utls.saveMemoryLayerToShapefile(l, tSHP, format = 'GPKG')
 						vEPSG = cfg.utls.getEPSGVector(tSHP)
 					else:
 						ql = cfg.utls.layerSource(l)

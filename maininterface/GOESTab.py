@@ -193,7 +193,7 @@ class GOESTab:
 					startupinfo = cfg.subprocessSCP.STARTUPINFO()
 					startupinfo.dwFlags = cfg.subprocessSCP.STARTF_USESHOWWINDOW
 					startupinfo.wShowWindow = cfg.subprocessSCP.SW_HIDE
-					cfg.subprocDictProc['proc_'+ str(p)] = cfg.subprocessSCP.Popen(d, shell=False, startupinfo = startupinfo)
+					cfg.subprocDictProc['proc_'+ str(p)] = cfg.subprocessSCP.Popen(d, shell=False, startupinfo = startupinfo, stdin = cfg.subprocessSCP.DEVNULL)
 				else:
 					cfg.subprocDictProc['proc_'+ str(p)] = cfg.subprocessSCP.Popen(d, shell=False)
 			while True:

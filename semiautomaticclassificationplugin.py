@@ -1495,9 +1495,9 @@ class SemiAutomaticClassificationPlugin:
 		# range radius
 		cfg.Range_radius_spin.setValue(float(cfg.rngRad))
 		# ROI ID field
-		cfg.uidc.ROI_ID_spin.setValue(float(cfg.ROIID))
+		cfg.uidc.ROI_ID_spin.setValue(int(cfg.ROIID))
 		# ROI macro ID field
-		cfg.uidc.ROI_Macroclass_ID_spin.setValue(float(cfg.ROIMacroID))
+		cfg.uidc.ROI_Macroclass_ID_spin.setValue(int(cfg.ROIMacroID))
 		# preview size
 		cfg.preview_size_spinBox.setValue(float(cfg.prvwSz))
 		# set ID field name line

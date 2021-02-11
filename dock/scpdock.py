@@ -297,7 +297,7 @@ class SCPDock:
 				for flName in zOpen.namelist():
 					zipF = zOpen.open(flName)
 					fileName = cfg.utls.fileName(flName)
-					if fileName.endswith('.shp'):
+					if fileName.endswith('.gpkg') or fileName.endswith('.shp') :
 						nm = fileName
 					try:
 						zipO = open(cfg.inptDir + '/' + fileName, 'wb')
@@ -314,6 +314,14 @@ class SCPDock:
 			cfg.utls.removeLayer(name)
 		except:
 			pass
+		# convert to geopackage
+		if nm.endswith('.shp'):
+			try:
+				nm2 = nm[:-3] + 'gpkg'
+				v = cfg.utls.mergeAllLayers([cfg.inptDir + '/' + nm], cfg.inptDir + '/' + nm2)
+				nm = nm2
+			except:
+				pass
 		try:
 			tSS = cfg.utls.addVectorLayer(cfg.inptDir + '/' + nm)
 		except:
@@ -322,32 +330,33 @@ class SCPDock:
 			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'Error training input')
 			return 'No'
 		check = cfg.SCPD.checkFields(tSS)
-		vEPSG = cfg.utls.getEPSGVectorQGIS(tSS)
+		vCrs = cfg.utls.getCrsGDAL(cfg.inptDir + '/' + nm)
+		vEPSG = cfg.osrSCP.SpatialReference()
+		vEPSG.ImportFromWkt(vCrs)
 		try:
 			if cfg.bandSetsList[cfg.bndSetNumber][0] == 'Yes':
 				b = cfg.utls.selectLayerbyName(cfg.bandSetsList[cfg.bndSetNumber][3][0])
 				ql = cfg.utls.layerSource(b)
-				rEPSG = cfg.utls.getEPSGRaster(ql)
+				rCrs = cfg.utls.getCrsGDAL(ql)
+				rEPSG = cfg.osrSCP.SpatialReference()
+				rEPSG.ImportFromWkt(rCrs)
 			else:
 				b = cfg.utls.selectLayerbyName(cfg.bandSetsList[cfg.bndSetNumber][8])
 				ql = cfg.utls.layerSource(b)
-				rEPSG = cfg.utls.getEPSGRaster(ql)
+				rCrs = cfg.utls.getCrsGDAL(ql)
+				rEPSG = cfg.osrSCP.SpatialReference()
+				rEPSG.ImportFromWkt(rCrs)
 		except Exception as err:
 			# logger
 			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
-			try:
-				if cfg.bandSetsList[cfg.bndSetNumber][0] == 'Yes':
-					xR = cfg.utls.selectLayerbyName(cfg.bandSetsList[cfg.bndSetNumber][3][0], 'Yes')
-				else:
-					xR = cfg.utls.selectLayerbyName(cfg.bandSetsList[cfg.bndSetNumber][8], 'Yes')
-				rEPSG = cfg.utls.getEPSGVectorQGIS(xR)
-			except Exception as err:
-				# logger
-				cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
-				rEPSG = None
-				#return 'No'
-		if str(vEPSG) != str(rEPSG):
-			cfg.mx.msgWar22()
+			rEPSG = None
+			#return 'No'
+		try:
+			if vEPSG.IsSame(rEPSG) != 1:
+				cfg.mx.msgWar22()
+		except Exception as err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 		if check == 'Yes':
 			# create memory layer
 			provider = tSS.dataProvider()
@@ -399,8 +408,8 @@ class SCPDock:
 			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'Error training input')
 			return 'No'
 		oDir = cfg.utls.makeDirectory(cfg.inptDir)
-		shpF = cfg.inptDir + '/' + cfg.trnLay + '.shp'
-		l = cfg.utls.saveMemoryLayerToShapefile(memoryLayer, shpF, cfg.trnLay)
+		shpF = cfg.inptDir + '/' + cfg.trnLay + '.gpkg'
+		l = cfg.utls.saveMemoryLayerToShapefile(memoryLayer, shpF, cfg.trnLay, format = 'GPKG')
 		if l == 'No':
 			cfg.SCPD.openInput()
 			return 'No'
@@ -487,12 +496,12 @@ class SCPDock:
 		dT = cfg.utls.getTime()
 		unzipDir = cfg.tmpDir + '/' + name + dT
 		oDir = cfg.utls.makeDirectory(unzipDir)
-		shpF = unzipDir + '/' + name + '.shp'
-		sigFile = unzipDir + '/' + name + '.slf'
 		# unzip to temp dir
 		try:
 			with cfg.zipfileSCP.ZipFile(signatureFile) as zOpen:
 				for flName in zOpen.namelist():
+					if flName.endswith('.gpkg') or flName.endswith('.shp') :
+						nm = cfg.utls.fileNameNoExt(flName)
 					zipF = zOpen.open(flName)
 					fileName = cfg.utls.fileName(flName)
 					zipO = open(unzipDir + '/' + fileName, 'wb')
@@ -500,31 +509,54 @@ class SCPDock:
 						cfg.shutilSCP.copyfileobj(zipF, zipO)
 		except:
 			return 'No'
-		tSS = cfg.utls.addVectorLayer(shpF, name , 'ogr')
+		shpF = unzipDir + '/' + nm + '.gpkg'
+		if not cfg.osSCP.path.isfile(shpF):
+			shpF = unzipDir + '/' + nm + '.shp'
+		sigFile = unzipDir + '/' + nm + '.slf'
+		sL = cfg.utls.createTempRasterPath('gpkg')
+		s = cfg.utls.saveMemoryLayerToShapefile(cfg.shpLay, sL, format = 'GPKG')
+		tVect = cfg.utls.createTempRasterPath('gpkg')
+		inputLayersList = [sL, shpF]
+		v = cfg.utls.mergeAllLayers(inputLayersList, tVect)
+		l = cfg.shpLay
+		try:
+			tSS = cfg.utls.addVectorLayer(tVect)
+		except:
+			cfg.mx.msgErr59()
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'Error training input')
+			return 'No'
+		# try to remove SCP input
+		try:
+			cfg.utls.removeLayer(cfg.trnLay)
+		except:
+			pass
+		provider = tSS.dataProvider()
+		fields = provider.fields()
 		pCrs = cfg.utls.getCrs(tSS)
-		tCrs = cfg.utls.getCrs(cfg.shpLay)
+		mL = cfg.qgisCoreSCP.QgsVectorLayer('MultiPolygon?crs=' + str(pCrs.toWkt()), cfg.trnLay , 'memory')
+		mL.setCrs(pCrs)
+		pr = mL.dataProvider()
+		for fld in fields:
+			pr.addAttributes([fld])
+		mL.updateFields()
+		fldSCP_UID = cfg.utls.fieldID(tSS, cfg.fldSCP_UID)
 		f = cfg.qgisCoreSCP.QgsFeature()
-		cfg.shpLay.startEditing()
+		mL.startEditing()
+		UIDList = []
 		for f in tSS.getFeatures():
-			SCP_UID  = str(f[cfg.fldSCP_UID])
-			if SCP_UID not in cfg.ROI_SCP_UID:
-				# if same coordinates
-				if pCrs == tCrs:
-					cfg.shpLay.addFeature(f)
-				else:
-					# transform coordinates
-					aF = f.geometry()
-					trs = cfg.qgisCoreSCP.QgsCoordinateTransform(pCrs, tCrs)
-					aF.transform(trs)
-					oF = cfg.qgisCoreSCP.QgsFeature()
-					oF.setGeometry(aF)
-					at = f.attributes()
-					oF.setAttributes(at)
-					cfg.shpLay.addFeature(oF)
-		cfg.shpLay.commitChanges()
-		cfg.shpLay.dataProvider().createSpatialIndex()
-		cfg.shpLay.updateExtents()
+			UID = f.attributes()[fldSCP_UID]
+			if UID not in UIDList:
+				mL.addFeature(f)
+				UIDList.append(UID)
+		mL.commitChanges()
+		mL.dataProvider().createSpatialIndex()
+		mL.updateExtents()
+		cfg.utls.ROISymbol(mL)
+		cfg.shpLay = mL
+		cfg.utls.addLayerToMap(cfg.shpLay)
 		cfg.SCPD.openSignatureListFile(sigFile, addToSignature)
+		cfg.SCPD.ROIListTableTree(cfg.shpLay, cfg.uidc.signature_list_treeWidget)
 		
 	# open signature file
 	def openSignatureListFile(self, signatureFile, addToSignature = 'No'):
@@ -535,8 +567,18 @@ class SCPDock:
 				cfg.signList = {}
 				cfg.signIDs = {}
 			try:
-				MCID_LIST = root.get("MCID_LIST")
-				cfg.MCID_List = eval(MCID_LIST)
+				MCID_LIST = root.get('MCID_LIST')
+				MC_List = eval(MCID_LIST)
+				newList = []
+				idList = []
+				for k in cfg.MCID_List:
+					idList.append(k[0])
+					newList.append(k)
+				for k in MC_List:
+					if k[0] not in idList:
+						idList.append(k[0])
+						newList.append(k)
+				cfg.MCID_List = newList
 			except Exception as err:
 				# logger
 				cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
@@ -620,8 +662,8 @@ class SCPDock:
 	def exportSignatureFile(self):
 		sL = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Export SCP training input'), '', '*.scp', 'scp')
 		if sL is not False:
-			# create shapefile
-			crs = cfg.utls.getCrs(cfg.shpLay)
+			# create vector
+			crs = cfg.shpLay.crs()
 			f = cfg.qgisCoreSCP.QgsFields()
 			# add Class ID, macroclass ID and Info fields
 			f.append(cfg.qgisCoreSCP.QgsField(cfg.fldMacroID_class, cfg.QVariantSCP.Int))
@@ -629,27 +671,40 @@ class SCPDock:
 			f.append(cfg.qgisCoreSCP.QgsField(cfg.fldID_class, cfg.QVariantSCP.Int))
 			f.append(cfg.qgisCoreSCP.QgsField(cfg.fldROI_info, cfg.QVariantSCP.String))
 			f.append(cfg.qgisCoreSCP.QgsField(cfg.fldSCP_UID, cfg.QVariantSCP.String))
-			# shapefile
+			# vector
 			name = cfg.utls.fileNameNoExt(sL)
 			dT = cfg.utls.getTime()
 			unzipDir = cfg.tmpDir + '/' + name + dT
-			shpF = unzipDir + '/' + name + '.shp'
+			shpF = unzipDir + '/' + name + '.gpkg'
 			sigFile = unzipDir + '/' + name + '.slf'
 			oDir = cfg.utls.makeDirectory(unzipDir)
-			cfg.qgisCoreSCP.QgsVectorFileWriter(str(shpF), 'CP1250', f, cfg.qgisCoreSCP.QgsWkbTypes.MultiPolygon , crs, 'ESRI Shapefile')
+			cfg.qgisCoreSCP.QgsVectorFileWriter(str(shpF), 'CP1250', f, cfg.qgisCoreSCP.QgsWkbTypes.MultiPolygon , crs, 'GPKG')
 			tSS = cfg.utls.addVectorLayer(shpF, name + dT, 'ogr')
 			signIDorig = cfg.signIDs.copy()
 			cfg.signIDs = {}
 			tW = cfg.uidc.signature_list_treeWidget
 			v = []
 			for i in tW.selectedItems():
-				try:
-					id = i.text(5)
-					cfg.ROI_C_ID[id]
-					cfg.signIDs['ID_' + str(id)] = id
-					v.append(id)
-				except:
-					pass
+				# classes
+				if len(i.text(1)) > 0:
+					try:
+						id = i.text(5)
+						cfg.ROI_C_ID[id]
+						cfg.signIDs['ID_' + str(id)] = id
+						v.append(id)
+					except:
+						pass
+				# macroclasses
+				else:
+					count = i.childCount()
+					for roi in range(0, count):
+						try:
+							id = i.child(roi).text(5)
+							cfg.ROI_C_ID[id]
+							cfg.signIDs['ID_' + str(id)] = id
+							v.append(id)
+						except:
+							pass
 			if len(v) == 0:
 				for id, val in cfg.treeDockItm.items():
 					cfg.signIDs['ID_' + str(id)] = id
@@ -669,49 +724,65 @@ class SCPDock:
 			cfg.utls.zipDirectoryInFile(sL, unzipDir)
 			# logger
 			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' signatures exported in: ' + str(sL))
+			cfg.mx.msg27()
 			
 	# export signature to shapefile
 	def exportSignatureShapefile(self):
-		sL = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Export SCP training input'), '', '*.shp', 'shp')
+		sL = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Export SCP training input'), '', 'SHP file (*.shp);;GPKG file (*.gpkg)', None)
 		if sL is not False:
-			# create shapefile
 			crs = cfg.utls.getCrs(cfg.shpLay)
-			f = cfg.qgisCoreSCP.QgsFields()
-			# add Class ID, macroclass ID and Info fields
-			f.append(cfg.qgisCoreSCP.QgsField(cfg.fldMacroID_class, cfg.QVariantSCP.Int))
-			f.append(cfg.qgisCoreSCP.QgsField(cfg.fldROIMC_info, cfg.QVariantSCP.String))
-			f.append(cfg.qgisCoreSCP.QgsField(cfg.fldID_class, cfg.QVariantSCP.Int))
-			f.append(cfg.qgisCoreSCP.QgsField(cfg.fldROI_info, cfg.QVariantSCP.String))
-			f.append(cfg.qgisCoreSCP.QgsField(cfg.fldSCP_UID, cfg.QVariantSCP.String))
-			# shapefile
-			name = cfg.utls.fileNameNoExt(sL)
-			dT = cfg.utls.getTime()
-			shpF = sL
-			cfg.qgisCoreSCP.QgsVectorFileWriter(str(shpF), 'CP1250', f, cfg.qgisCoreSCP.QgsWkbTypes.MultiPolygon , crs, 'ESRI Shapefile')
-			tSS = cfg.utls.addVectorLayer(shpF, name + dT, 'ogr')
+			if str(sL).endswith('.shp'):	
+				format = 'ESRI Shapefile'
+			elif str(sL).endswith('.gpkg'):
+				format = 'GPKG'
+			else:
+				sL = sL + '.gpkg'
+				format = 'GPKG'
+			# filter IDs
 			tW = cfg.uidc.signature_list_treeWidget
-			v = []
-			for i in tW.selectedItems():
+			v = cfg.SCPD.getHighlightedIDs('Yes')
+			s = cfg.utls.saveMemoryLayerToShapefile(cfg.shpLay, sL, format = format, IDList = v, listFieldName = cfg.fldSCP_UID)
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' signatures exported in: ' + str(sL))
+			cfg.mx.msg27()
+			
+	# get highlighted IDs
+	def getHighlightedIDs(self, selectAll = None, signatures = None):
+		# filter IDs
+		tW = cfg.uidc.signature_list_treeWidget
+		v = []
+		for i in tW.selectedItems():
+			# classes
+			if len(i.text(1)) > 0:
 				try:
 					cfg.ROI_C_ID[i.text(5)]
 					v.append(i.text(5))
 				except:
-					pass
-			if len(v) == 0:
-				for id, val in cfg.treeDockItm.items():
-					v.append(id)
-			f = cfg.qgisCoreSCP.QgsFeature()
-			tSS.startEditing()
-			for f in cfg.shpLay.getFeatures():
-				SCP_UID  = str(f[cfg.fldSCP_UID])
-				if SCP_UID in v:
-					tSS.addFeature(f)
-			tSS.commitChanges()
-			tSS.dataProvider().createSpatialIndex()
-			tSS.updateExtents()
-			# logger
-			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' signatures exported in: ' + str(sL))
-			
+					if signatures == 'Yes':
+						try:
+							cfg.signIDs['ID_' + i.text(5)]
+							v.append(i.text(5))
+						except:
+							pass
+			# macroclasses
+			else:
+				count = i.childCount()
+				for roi in range(0, count):
+					try:
+						cfg.ROI_C_ID[i.child(roi).text(5)]
+						v.append(i.child(roi).text(5))
+					except:
+						if signatures == 'Yes':
+							try:
+								cfg.signIDs['ID_' + i.child(roi).text(5)]
+								v.append(i.child(roi).text(5))
+							except:
+								pass
+		if len(v) == 0 and selectAll == 'Yes':
+			for id, val in cfg.treeDockItm.items():
+				v.append(id)
+		return v
+							
 	# save signature to file
 	def saveSignatureListToFile(self):
 		try:
@@ -726,7 +797,7 @@ class SCPDock:
 	# open signature file
 	def openLibraryFile(self, libraryFile):
 		try:
-			if cfg.bandSetsList[cfg.bndSetNumber][5] != cfg.noUnit:
+			if cfg.bandSetsList[cfg.bndSetNumber][5] == cfg.noUnit:
 				cfg.mx.msgWar8()
 			libFile = cfg.utls.getOpenFileName(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Select a library file'), '', 'SCP file (*.scp);;USGS library (*.asc);;ASTER library (*.txt);;CSV (*.csv)')
 			if len(libFile) > 0:
@@ -743,6 +814,7 @@ class SCPDock:
 				# logger
 				cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' spectral library ' + str(libFile))
 		except Exception as err:
+			cfg.uiUtls.removeProgressBar()
 			cfg.mx.msgWar8()
 			# logger
 			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
@@ -750,16 +822,7 @@ class SCPDock:
 	# export signatures to CSV library
 	def exportToCSVLibrary(self):
 		tW = cfg.uidc.signature_list_treeWidget
-		v = []
-		for i in tW.selectedItems():
-			try:
-				cfg.ROI_C_ID[i.text(5)]
-				v.append(i.text(5))
-			except:
-				pass
-		if len(v) == 0:
-			for id, val in cfg.treeDockItm.items():
-				v.append(id)
+		v = cfg.SCPD.getHighlightedIDs('Yes')
 		if len(v) > 0:
 			d = cfg.utls.getExistingDirectory(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Export the highlighted signatures to CSV library'))
 			if len(d) > 0:
@@ -799,6 +862,7 @@ class SCPDock:
 							# logger
 							cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 					l.close()
+				cfg.mx.msg27()
 
 	# zoom to preview
 	def zoomToPreview(self):
@@ -815,24 +879,7 @@ class SCPDock:
 	# calculate signatures
 	def calculateSignatures(self):
 		tW = cfg.uidc.signature_list_treeWidget
-		v = []
-		for i in tW.selectedItems():
-			# classes
-			if len(i.text(1)) > 0:
-				try:
-					cfg.ROI_C_ID[i.text(5)]
-					v.append(i.text(5))
-				except:
-					pass
-			# macroclasses
-			else:
-				count = i.childCount()
-				for roi in range(0, count):
-					try:
-						cfg.ROI_C_ID[i.child(roi).text(5)]
-						v.append(i.child(roi).text(5))
-					except:
-						pass
+		v = cfg.SCPD.getHighlightedIDs('No')
 		if len(v) == 0:
 			return 0
 		# ask for confirm
@@ -859,24 +906,7 @@ class SCPDock:
 	# merge highlighted signatures
 	def mergeSelectedSignatures(self):
 		tW = cfg.uidc.signature_list_treeWidget
-		v = []
-		for i in tW.selectedItems():
-			# classes
-			if len(i.text(1)) > 0:
-				try:
-					cfg.ROI_C_ID[i.text(5)]
-					v.append(i.text(5))
-				except:
-					pass
-			# macroclasses
-			else:
-				count = i.childCount()
-				for roi in range(0, count):
-					try:
-						cfg.ROI_C_ID[i.child(roi).text(5)]
-						v.append(i.child(roi).text(5))
-					except:
-						pass
+		v = cfg.SCPD.getHighlightedIDs('No')
 		if len(set(v)) > 1:
 			# ask for confirm
 			a = cfg.utls.questionBox(cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Merge signatures'), cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Merge highlighted signatures?'))
@@ -1063,32 +1093,7 @@ class SCPDock:
 	# add signatures to spectral plot
 	def addSignatureToSpectralPlot(self, tabIndex = 0):
 		tW = cfg.uidc.signature_list_treeWidget
-		v = []
-		for i in tW.selectedItems():
-			# classes
-			if len(i.text(1)) > 0:
-				try:
-					cfg.ROI_C_ID[i.text(5)]
-					v.append(i.text(5))
-				except:
-					try:
-						cfg.signIDs['ID_' + i.text(5)]
-						v.append(i.text(5))
-					except:
-						pass
-			# macroclasses
-			else:
-				count = i.childCount()
-				for roi in range(0, count):
-					try:
-						cfg.ROI_C_ID[i.child(roi).text(5)]
-						v.append(i.child(roi).text(5))
-					except:
-						try:
-							cfg.signIDs['ID_' + i.child(roi).text(5)]
-							v.append(i.child(roi).text(5))
-						except:
-							pass
+		v = cfg.SCPD.getHighlightedIDs('No', 'Yes')
 		check = 'Yes'
 		if len(v) > 0:
 			progresStep = 100 / len(v)
@@ -1117,24 +1122,7 @@ class SCPDock:
 	# add ROI to scatter plot
 	def addROIToScatterPlot(self):
 		tW = cfg.uidc.signature_list_treeWidget
-		v = []
-		for i in tW.selectedItems():
-			# classes
-			if len(i.text(1)) > 0:
-				try:
-					cfg.ROI_C_ID[i.text(5)]
-					v.append(i.text(5))
-				except:
-					pass
-			# macroclasses
-			else:
-				count = i.childCount()
-				for roi in range(0, count):
-					try:
-						cfg.ROI_C_ID[i.child(roi).text(5)]
-						v.append(i.child(roi).text(5))
-					except:
-						pass
+		v = cfg.SCPD.getHighlightedIDs('No')
 		if len(v) > 0:
 			progresStep = 100 / len(v)
 			progress = 0
@@ -1405,16 +1393,7 @@ class SCPDock:
 		
 	# zoom to menu
 	def zoomToMenu(self):
-		id = []
-		for i in cfg.uidc.signature_list_treeWidget.selectedItems():
-			# classes
-			if len(i.text(1)) > 0:
-				id.append(i.text(5))
-			# macroclasses
-			else:
-				count = i.childCount()
-				for roi in range(0, count):
-					id.append(i.child(roi).text(5))
+		id = cfg.SCPD.getHighlightedIDs('No', 'No')
 		cfg.SCPD.zoomToROI(id)
 		
 	# select all menu
@@ -2146,26 +2125,23 @@ class SCPDock:
 						iB = len(cfg.bandSetsList[cfg.bndSetNumber][3])
 						# crs of loaded raster
 						b = cfg.utls.selectLayerbyName(cfg.bandSetsList[cfg.bndSetNumber][3][0], 'Yes')
-						crs = cfg.utls.getCrs(b)
+						filePath = cfg.utls.layerSource(b)
+						crs = cfg.utls.getCrsGDAL(filePath)
 					else:
 						# crs of loaded raster
 						b = cfg.utls.selectLayerbyName(cfg.bandSetsList[cfg.bndSetNumber][8])
-						crs = cfg.utls.getCrs(b)
+						filePath = cfg.utls.layerSource(b)
+						crs = cfg.utls.getCrsGDAL(filePath)
 						iB = b.bandCount()
-					f = cfg.qgisCoreSCP.QgsFields()
-					# add Class ID, macroclass ID and Info fields
-					f.append(cfg.qgisCoreSCP.QgsField(cfg.fldMacroID_class, cfg.QVariantSCP.Int))
-					f.append(cfg.qgisCoreSCP.QgsField(cfg.fldROIMC_info, cfg.QVariantSCP.String))
-					f.append(cfg.qgisCoreSCP.QgsField(cfg.fldID_class, cfg.QVariantSCP.Int))
-					f.append(cfg.qgisCoreSCP.QgsField(cfg.fldROI_info, cfg.QVariantSCP.String))
-					f.append(cfg.qgisCoreSCP.QgsField(cfg.fldSCP_UID, cfg.QVariantSCP.String))
 					# shapefile
 					name = cfg.utls.fileNameNoExt(sL)
 					dT = cfg.utls.getTime()
 					unzipDir = cfg.tmpDir + '/' + name + dT
-					shpF = unzipDir + '/' + name + '.shp'
+					#shpF = unzipDir + '/' + name + '.shp'
+					shpF = unzipDir + '/' + name + '.gpkg'
 					oDir = cfg.utls.makeDirectory(unzipDir)
-					cfg.qgisCoreSCP.QgsVectorFileWriter(str(shpF), 'CP1250', f, cfg.qgisCoreSCP.QgsWkbTypes.MultiPolygon , crs, 'ESRI Shapefile')
+					#cfg.utls.createSCPShapefile(crs, shpF)
+					cfg.utls.createSCPVector(crs, shpF)
 					sigFile = unzipDir + '/' + name + '.slf'
 					cfg.SCPD.saveSignatureList(sigFile)
 					# create zip file
@@ -2556,7 +2532,7 @@ class SCPDock:
 			# disable map canvas render for speed
 			cfg.cnvs.setRenderFlag(False)
 			# temp files
-			tS = cfg.utls.createTempRasterPath('shp')
+			tS = cfg.utls.createTempRasterPath('gpkg')
 			# temp name
 			dT = cfg.utls.getTime()
 			tN = cfg.subsTmpROI + dT
@@ -2576,7 +2552,8 @@ class SCPDock:
 					return 'No'
 				# image CRS
 				bN0 = cfg.utls.selectLayerbyName(imageName, 'Yes')
-				iCrs = cfg.utls.getCrs(bN0)
+				filePath = cfg.utls.layerSource(bN0)
+				iCrs = cfg.utls.getCrsGDAL(filePath)
 				bList = []
 				bandNumberList = []
 				functionList = []
@@ -2598,7 +2575,8 @@ class SCPDock:
 			else:
 				# image CRS
 				bN0 = cfg.utls.selectLayerbyName(cfg.bandSetsList[bandSetNumber][8], 'Yes')
-				iCrs = cfg.utls.getCrs(bN0)
+				filePath = cfg.utls.layerSource(bN0)
+				iCrs = cfg.utls.getCrsGDAL(filePath)
 				tRR = cfg.utls.createTempRasterPath('tif')
 				bList = []
 				bandNumberList = []
@@ -2629,6 +2607,8 @@ class SCPDock:
 			except Exception as err:
 				# logger
 				cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+				if progressbar == 'Yes':
+					cfg.uiUtls.removeProgressBar()
 				return 'No'
 			# pixel size and origin
 			rGT = rD.GetGeoTransform()
@@ -2683,7 +2663,7 @@ class SCPDock:
 				check = 'No'
 			if cfg.np.count_nonzero(r) > 0 and r[sPY, sPX] == 1 and check == 'Yes':
 				# output ROI
-				d = cfg.ogrSCP.GetDriverByName('ESRI Shapefile')
+				d = cfg.ogrSCP.GetDriverByName('GPKG')
 				# use ogr
 				dS = d.CreateDataSource(tS)
 				# shapefile
@@ -2740,8 +2720,9 @@ class SCPDock:
 					q = cfg.utls.getFeaturebyID(tSS, idf)
 					# get geometry
 					g = q.geometry()
-					mL = cfg.qgisCoreSCP.QgsVectorLayer('MultiPolygon?crs=' + str(iCrs.toWkt()), tN, 'memory')
-					mL.setCrs(iCrs) 
+					mL = cfg.qgisCoreSCP.QgsVectorLayer('MultiPolygon?crs=' + str(iCrs), tN, 'memory')
+					iCrsQ = cfg.qgisCoreSCP.QgsCoordinateReferenceSystem.fromWkt(iCrs)
+					mL.setCrs(iCrsQ) 
 					pr = mL.dataProvider()
 					# create temp ROI
 					mL.startEditing()		

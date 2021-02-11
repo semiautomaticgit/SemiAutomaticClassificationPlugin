@@ -112,8 +112,8 @@ class ZonalStatRasterTab:
 					# vector EPSG
 					if 'Polygon?crs=' in str(cfg.utls.layerSource(l))  or 'memory?geometry=' in str(cfg.utls.layerSource(l)):
 						# temp shapefile
-						tSHP = cfg.utls.createTempRasterPath('shp')
-						l = cfg.utls.saveMemoryLayerToShapefile(l, tSHP)
+						tSHP = cfg.utls.createTempRasterPath('gpkg')
+						l = cfg.utls.saveMemoryLayerToShapefile(l, tSHP, format = 'GPKG')
 						vEPSG = cfg.utls.getEPSGVector(tSHP)
 					else:
 						ql = cfg.utls.layerSource(l)

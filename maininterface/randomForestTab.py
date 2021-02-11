@@ -402,7 +402,7 @@ class ClassRandomForestTab:
 		if cfg.sysSCPNm != 'Windows':
 			d = cfg.shlexSCP.split(d)
 		# logger
-		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' RF d: ' + d)
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' RF d: ' + str(d))
 		tPMD = cfg.utls.createTempRasterPath('txt')
 		stF = open(tPMD, 'a')
 		sPL = len(cfg.subprocDictProc)
@@ -411,7 +411,7 @@ class ClassRandomForestTab:
 			startupinfo = cfg.subprocessSCP.STARTUPINFO()
 			startupinfo.dwFlags = cfg.subprocessSCP.STARTF_USESHOWWINDOW
 			startupinfo.wShowWindow = cfg.subprocessSCP.SW_HIDE
-			cfg.subprocDictProc['proc_'+ str(sPL)] = cfg.subprocessSCP.Popen(d, shell=False, startupinfo = startupinfo, stdout=stF)
+			cfg.subprocDictProc['proc_'+ str(sPL)] = cfg.subprocessSCP.Popen(d, shell=False, startupinfo = startupinfo, stdout=stF, stdin = cfg.subprocessSCP.DEVNULL)
 		else:
 			cfg.subprocDictProc['proc_'+ str(sPL)] = cfg.subprocessSCP.Popen(d, shell=False, stdout=stF)
 		progress = 0

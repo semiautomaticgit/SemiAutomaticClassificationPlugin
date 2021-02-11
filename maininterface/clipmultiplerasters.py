@@ -233,11 +233,11 @@ class ClipMultipleRasters:
 				# vector EPSG
 				if 'Polygon?crs=' in str(s) or 'memory?geometry=' in str(s) or '(memory)' in str(s):
 					# temp shapefile
-					tSHP = cfg.utls.createTempRasterPath('shp')
+					tSHP = cfg.utls.createTempRasterPath('gpkg')
 					try:
-						s = cfg.utls.saveMemoryLayerToShapefile(sL, tSHP)
+						s = cfg.utls.saveMemoryLayerToShapefile(sL, tSHP, format = 'GPKG')
 					except:
-						s = cfg.utls.saveMemoryLayerToShapefile(s, tSHP)
+						s = cfg.utls.saveMemoryLayerToShapefile(s, tSHP, format = 'GPKG')
 					s = cfg.utls.layerSource(s)
 					vEPSG = cfg.utls.getEPSGVector(tSHP)
 				elif 'QgsVectorLayer' in str(s):
@@ -245,9 +245,9 @@ class ClipMultipleRasters:
 					tLN = cfg.subsTmpROI + dT + '.shp'
 					tLP = cfg.tmpDir + '/' + dT + tLN
 					# get layer crs
-					crs = cfg.utls.getCrs(s)
+					crs = cfg.utls.getCrsGDAL(s)
 					# create a temp shapefile with a field
-					cfg.utls.createEmptyShapefileQGIS(crs, tLP)
+					cfg.utls.createEmptyShapefile(crs, tLP)
 					mL = cfg.utls.addVectorLayer(tLP , tLN, 'ogr')
 					f = cfg.qgisCoreSCP.QgsFeature()
 					for f in s.getFeatures():

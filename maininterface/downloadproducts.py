@@ -1819,7 +1819,7 @@ class DownloadProducts:
 					startupinfo = cfg.subprocessSCP.STARTUPINFO()
 					startupinfo.dwFlags = cfg.subprocessSCP.STARTF_USESHOWWINDOW
 					startupinfo.wShowWindow = cfg.subprocessSCP.SW_HIDE
-					sP = cfg.subprocessSCP.Popen(a, shell=False, startupinfo = startupinfo)
+					sP = cfg.subprocessSCP.Popen(a, shell=False, startupinfo = startupinfo, stdin = cfg.subprocessSCP.DEVNULL)
 				else:
 					sP = cfg.subprocessSCP.Popen(a, shell=False)
 				sP.wait()

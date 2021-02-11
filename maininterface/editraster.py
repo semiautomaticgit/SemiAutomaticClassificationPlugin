@@ -109,9 +109,9 @@ class EditRaster:
 		# using ROI polygon
 		if cfg.ui.edit_val_use_ROI_radioButton.isChecked() or toolbarValue is not None:
 			# temporary layer
-			tLP = cfg.utls.createTempRasterPath('shp')
+			tLP = cfg.utls.createTempRasterPath('gpkg')
 			# create a temp shapefile with a field
-			cfg.utls.createEmptyShapefileQGIS(crs, tLP)
+			cfg.utls.createEmptyShapefile(crs, tLP, format = 'GPKG')
 			vector = cfg.utls.addVectorLayer(tLP, cfg.utls.fileName(tLP), "ogr")
 			for pI in qgisVectorFeatureList:
 				cfg.utls.copyFeatureToLayer(inputVectorQGIS, pI, vector)
@@ -132,10 +132,10 @@ class EditRaster:
 				progress = progress + progressStep
 				cfg.uiUtls.updateBar(progress)
 				# temporary layer
-				tLP = cfg.utls.createTempRasterPath('tif')
+				tLP = cfg.utls.createTempRasterPath('gpkg')
 				# create a temp shapefile with a field
-				cfg.utls.createEmptyShapefileQGIS(crs, tLP)
-				vector = cfg.utls.addVectorLayer(tLP, cfg.utls.fileName(tLP), "ogr")
+				cfg.utls.createEmptyShapefile(crs, tLP, format = 'GPKG')
+				vector = cfg.utls.addVectorLayer(tLP, cfg.utls.fileName(tLP), 'ogr')
 				cfg.utls.copyFeatureToLayer(inputVectorQGIS, pI, vector)
 				if cfg.ui.use_constant_val_checkBox.isChecked() is True:
 					value = cfg.ui.value_spinBox.value()

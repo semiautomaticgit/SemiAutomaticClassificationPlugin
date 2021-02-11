@@ -81,8 +81,8 @@ class VectorToRasterTab:
 			# vector EPSG
 			if 'Polygon?crs=' in str(vectorSource) or 'memory?geometry=' in str(vectorSource):
 				# temp shapefile
-				tSHP = cfg.utls.createTempRasterPath('shp')
-				l = cfg.utls.saveMemoryLayerToShapefile(l, tSHP)
+				tSHP = cfg.utls.createTempRasterPath('gpkg')
+				l = cfg.utls.saveMemoryLayerToShapefile(l, tSHP, format = 'GPKG')
 				vectorSource = tSHP
 			if cfg.ui.field_checkBox.isChecked():
 				burnValues = None

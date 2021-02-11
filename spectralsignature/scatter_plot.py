@@ -744,11 +744,14 @@ class Scatter_Plot:
 	# conver polygon to raster
 	def polygonToRaster(self, polygon, xMin, xMax, yMin, yMax, dX, dY):
 		# temporary layer
-		tLP = cfg.utls.createTempRasterPath('shp')
+		tLP = cfg.utls.createTempRasterPath('gpkg')
 		# get layer crs
-		crs = cfg.qgisCoreSCP.QgsCoordinateReferenceSystem("EPSG:4326")
+		#crs = cfg.qgisCoreSCP.QgsCoordinateReferenceSystem('EPSG:4326')
+		srs = cfg.osrSCP.SpatialReference()
+		srs.ImportFromEPSG(4326)
+		crs = srs.ExportToWkt()
 		# create a temp shapefile with a field
-		cfg.utls.createEmptyShapefileQGIS(crs, tLP)
+		cfg.utls.createEmptyShapefile(crs, tLP, format = 'GPKG')
 		tSS = cfg.utls.addVectorLayer(tLP)
 		pointF = cfg.QtCoreSCP.QPointF()
 		polF = cfg.QtGuiSCP.QPolygonF()
@@ -772,7 +775,7 @@ class Scatter_Plot:
 			tSS.updateExtents()
 		a = self.rasterizePolygon(tLP, xMin, xMax, yMin, yMax, dX, dY)
 		# logger
-		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), '')
 		return a
 			
 	# rasterize polygon
@@ -783,7 +786,7 @@ class Scatter_Plot:
 		tLP = cfg.utls.createTempRasterPath('tif')
 		rC = abs(int(round((xMax - xMin) / dX)))
 		rR = abs(int(round((yMax - yMin) / dY)))
-		tD = cfg.gdalSCP.GetDriverByName("GTiff")
+		tD = cfg.gdalSCP.GetDriverByName('GTiff')
 		oR = tD.Create(tLP, rC, rR, 1, cfg.gdalSCP.GDT_Int32)
 		try:
 			oRB = oR.GetRasterBand(1)
@@ -798,7 +801,7 @@ class Scatter_Plot:
 		oRB.WriteArray(m, 0, 0)
 		oRB.FlushCache()
 		# convert reference layer to raster
-		oC = cfg.gdalSCP.RasterizeLayer(oR, [1], gL, options = ["ATTRIBUTE=" + str("DN"), "ALL_TOUCHED=TRUE"])
+		oC = cfg.gdalSCP.RasterizeLayer(oR, [1], gL, options = ['ATTRIBUTE=' + str('DN'), 'ALL_TOUCHED=TRUE'])
 		try:
 			o = oRB.GetOffset()
 			s = oRB.GetScale()
@@ -815,7 +818,7 @@ class Scatter_Plot:
 		# close rasters
 		oR = None
 		# logger
-		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), '')
 		return a
 
 	# create grid
@@ -839,7 +842,7 @@ class Scatter_Plot:
 			rangeX = [xMin + rXmin * dX, xMin + (1 + rXmax) * dX]
 			ranges.append([rangeX, rangeY])
 		# logger
-		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), '')
 		return ranges
 		
 	# calculate polygon intersection
@@ -943,17 +946,17 @@ class Scatter_Plot:
 			
 	# save plot to file
 	def savePlot(self):
-		imgOut = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Save plot to file"), "", "JPG file (*.jpg);;PNG file (*.png);;PDF file (*.pdf)", None)
+		imgOut = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Save plot to file'), '', 'JPG file (*.jpg);;PNG file (*.png);;PDF file (*.pdf)', None)
 		if len(imgOut) > 0:
-			if str(imgOut).endswith(".png"):
-				cfg.uiscp.Scatter_Widget_2.sigCanvas.figure.savefig(imgOut, format="png", dpi=300)
-			elif str(imgOut).endswith(".pdf"):
-				cfg.uiscp.Scatter_Widget_2.sigCanvas.figure.savefig(imgOut, format="pdf", dpi=300)
-			elif str(imgOut).endswith(".jpg"):
-				cfg.uiscp.Scatter_Widget_2.sigCanvas.figure.savefig(imgOut, format="jpg", dpi=300, quality=90)
+			if str(imgOut).endswith('.png'):
+				cfg.uiscp.Scatter_Widget_2.sigCanvas.figure.savefig(imgOut, format='png', dpi=300)
+			elif str(imgOut).endswith('.pdf'):
+				cfg.uiscp.Scatter_Widget_2.sigCanvas.figure.savefig(imgOut, format='pdf', dpi=300)
+			elif str(imgOut).endswith('.jpg'):
+				cfg.uiscp.Scatter_Widget_2.sigCanvas.figure.savefig(imgOut, format='jpg', dpi=300, quality=90)
 			else:
-				imgOut = imgOut + ".jpg"
-				cfg.uiscp.Scatter_Widget_2.sigCanvas.figure.savefig(imgOut, format="jpg", dpi=300, quality=90)
+				imgOut = imgOut + '.jpg'
+				cfg.uiscp.Scatter_Widget_2.sigCanvas.figure.savefig(imgOut, format='jpg', dpi=300, quality=90)
 			
 	# fit plot to axes
 	def fitPlotToAxes(self, preserveLast = 'No'):

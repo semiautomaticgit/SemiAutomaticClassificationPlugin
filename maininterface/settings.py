@@ -430,19 +430,23 @@ class Settings:
 			b = a
 			if cfg.sysSCPNm != 'Windows':
 				b = cfg.shlexSCP.split(a)
-			if cfg.sysSCPNm == 'Windows':
+			if cfg.sysSCPNm == 'Windows' or cfg.sysSCPNm == 'Darwin':
 				startupinfo = cfg.subprocessSCP.STARTUPINFO()
 				startupinfo.dwFlags = cfg.subprocessSCP.STARTF_USESHOWWINDOW
 				startupinfo.wShowWindow = cfg.subprocessSCP.SW_HIDE
-				sP = cfg.subprocessSCP.Popen(b, shell=False, startupinfo = startupinfo)
+				sP = cfg.subprocessSCP.Popen(b, shell=False, startupinfo = startupinfo, stdin = cfg.subprocessSCP.DEVNULL)
 			else:
 				sP = cfg.subprocessSCP.Popen(b, shell=False)
 			v = sP.wait()
 			# logger
 			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' subprocess: ' + str(v))
+			if v != 0:
+				# trigger exception
+				v = exception
 		except Exception as err:
 			# logger
 			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+			# attempt shell = true
 			try:
 				sP = cfg.subprocessSCP.Popen(a, shell=True)
 				v = sP.wait()

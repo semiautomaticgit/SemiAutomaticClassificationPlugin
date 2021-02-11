@@ -1523,11 +1523,11 @@ class Utils:
 		cfg.cnvs.setRenderFlag(False)
 		# temporary layer
 		tSD = cfg.utls.createTempRasterPath('tif')
-		tLP = cfg.utls.createTempRasterPath('shp')
+		tLP = cfg.utls.createTempRasterPath('gpkg')
 		# get layer crs
 		crs = cfg.utls.getCrs(lyr)
 		# create a temp shapefile with a field
-		cfg.utls.createEmptyShapefileQGIS(crs, tLP)
+		cfg.utls.createEmptyShapefile(crs, tLP, format = 'GPKG')
 		mL = cfg.utls.addVectorLayer(tLP)
 		rD = None
 		for x in featureIDList:
@@ -1842,7 +1842,7 @@ class Utils:
 			cfg.uiUtls.addProgressBar()
 			cfg.uiUtls.updateBar(10)
 			shpName = cfg.utls.fileName(shpFile)
-			tSS = cfg.utls.addVectorLayer(shpFile, shpName, "ogr")
+			tSS = cfg.utls.addVectorLayer(shpFile, shpName, 'ogr')
 			# create memory layer
 			provider = tSS.dataProvider()
 			fields = provider.fields()
@@ -2035,7 +2035,6 @@ class Utils:
 			newSum = 0
 			for i in sorted(rasterBandUniqueVal):
 				DNm = i
-				break
 				newSum = newSum + rasterBandUniqueVal[i]
 				if newSum >= pT1pc:
 					DNm = i
@@ -2049,7 +2048,7 @@ class Utils:
 	def uniqueToOrderedList(self, uniqueList):
 		list = []
 		for i in uniqueList:
-			v = i.split("-")
+			v = i.split('-')
 			list.append([int(v[0]), int(v[1])])
 		sortedList = sorted(list, key=lambda list: (list[0], list[1]))
 		return sortedList
@@ -2305,14 +2304,11 @@ class Utils:
 				return 'Yes'
 			# check projections
 			try:
-				rPSys =cfg.osrSCP.SpatialReference(wkt=rP)
-				rPSys.AutoIdentifyEPSG()
-				rPRS = rPSys.GetAuthorityCode(None)
-				if rPRS is not None:
-					epsgList.append(int(rPRS))	
+				if rP is not None:
+					epsgList.append(str(rP)	)
 				else:
 					# logger
-					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'rPRS is None ' + str(rP))
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'rP is None ' + str(rP))
 			except Exception as err:
 				# logger
 				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))	
@@ -3571,30 +3567,34 @@ class Utils:
 		
 	# Split raster into single bands, and return a list of images
 	def rasterToBands(self, rasterPath, outputFolder, outputName = None, progressBar = 'No', multiAddList = None, virtual = 'No'):
-		dT = self.getTime()
-		iBC = cfg.utls.getNumberBandRaster(rasterPath)
-		iL = []
-		if outputName is None:
-			name = cfg.splitBndNm + dT
-		else:
-			name = outputName
-		progresStep = int(100 / iBC)
-		i = 1
-		for x in range(1, iBC+1):
-			if cfg.actionCheck == 'Yes':
-				xB = outputFolder + '/' + name + '_B' + str(x) + '.tif'
-				if multiAddList is not None:
-					self.getRasterBandByBandNumber(rasterPath, x, xB, 'No', None, [multiAddList[0][x - 1], multiAddList[1][x - 1]])
-				else:
-					self.getRasterBandByBandNumber(rasterPath, x, xB, virtual, None)
-				iL.append(xB)
-				if progressBar == 'Yes':
-					cfg.uiUtls.updateBar(progresStep * i)
-					i = i + 1
-		# logger
-		cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'raster: ' + str(rasterPath) + ' split to bands')
-		return iL
-		
+		try:
+			dT = self.getTime()
+			iBC = cfg.utls.getNumberBandRaster(rasterPath)
+			iL = []
+			if outputName is None:
+				name = cfg.splitBndNm + dT
+			else:
+				name = outputName
+			progresStep = int(100 / iBC)
+			i = 1
+			for x in range(1, iBC+1):
+				if cfg.actionCheck == 'Yes':
+					xB = outputFolder + '/' + name + '_B' + str(x) + '.tif'
+					if multiAddList is not None:
+						self.getRasterBandByBandNumber(rasterPath, x, xB, 'No', None, [multiAddList[0][x - 1], multiAddList[1][x - 1]])
+					else:
+						self.getRasterBandByBandNumber(rasterPath, x, xB, virtual, None)
+					iL.append(xB)
+					if progressBar == 'Yes':
+						cfg.uiUtls.updateBar(progresStep * i)
+						i = i + 1
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'raster: ' + str(rasterPath) + ' split to bands')
+			return iL
+		except Exception as err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+			return 'No' 
 		
 ##################################
 	''' Multiprocess functions '''
@@ -5733,14 +5733,16 @@ class Utils:
 		if cfg.bandSetsList[bandSetNumber][0] == 'Yes':
 			# crs of loaded raster
 			b = cfg.utls.selectLayerbyName(cfg.bandSetsList[bandSetNumber][3][0], 'Yes')
-			crs = cfg.utls.getCrs(b)
+			filePath = cfg.utls.layerSource(b)
+			crs = cfg.utls.getCrsGDAL(filePath)
 		else:
 			# crs of loaded raster
 			b = cfg.utls.selectLayerbyName(cfg.bandSetsList[bandSetNumber][8])
-			crs = cfg.utls.getCrs(b)
-		tLP = cfg.utls.createTempRasterPath('shp')
+			filePath = cfg.utls.layerSource(b)
+			crs = cfg.utls.getCrsGDAL(filePath)
+		tLP = cfg.utls.createTempRasterPath('gpkg')
 		# create a temp shapefile with a field
-		cfg.utls.createEmptyShapefileQGIS(crs, tLP)
+		cfg.utls.createEmptyShapefile(crs, tLP, format = 'GPKG')
 		mL = cfg.utls.addVectorLayer(tLP)
 		try:
 			if tempROI == 'No':
@@ -6120,61 +6122,6 @@ class Utils:
 		cfg.proxyUser = cfg.utls.readRegistryKeys('proxy/proxyUser', '')
 		cfg.proxyPassword = cfg.utls.readRegistryKeys('proxy/proxyPassword', '')
 		
-	# save features to shapefile
-	def featuresToShapefile(self, idList):
-		# create shapefile
-		crs = cfg.utls.getCrs(cfg.shpLay)
-		f = cfg.qgisCoreSCP.QgsFields()
-		# add Class ID, macroclass ID and Info fields
-		f.append(cfg.qgisCoreSCP.QgsField(cfg.fldMacroID_class, cfg.QVariantSCP.Int))
-		f.append(cfg.qgisCoreSCP.QgsField(cfg.fldROIMC_info, cfg.QVariantSCP.String))
-		f.append(cfg.qgisCoreSCP.QgsField(cfg.fldID_class, cfg.QVariantSCP.Int))
-		f.append(cfg.qgisCoreSCP.QgsField(cfg.fldROI_info, cfg.QVariantSCP.String))
-		f.append(cfg.qgisCoreSCP.QgsField(cfg.fldSCP_UID, cfg.QVariantSCP.String))
-		# shapefile
-		shpF = cfg.utls.createTempRasterPath('shp')
-		cfg.qgisCoreSCP.QgsVectorFileWriter(shpF, 'CP1250', f, cfg.qgisCoreSCP.QgsWkbTypes.MultiPolygon , crs, 'ESRI Shapefile')
-		tSS = cfg.utls.addVectorLayer(shpF)
-		f = cfg.qgisCoreSCP.QgsFeature()
-		tSS.startEditing()
-		count = 0
-		for f in cfg.shpLay.getFeatures():
-			SCP_UID  = str(f[cfg.fldSCP_UID])
-			if SCP_UID in idList:
-				tSS.addFeature(f)
-				count = count + 1
-		if count == 0:
-			tSS.commitChanges()
-			cfg.utls.removeLayerByLayer(tSS)
-			return None
-		tSS.commitChanges()
-		tSS.dataProvider().createSpatialIndex()
-		tSS.updateExtents()
-		cfg.utls.removeLayerByLayer(tSS)
-		# logger
-		cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' vector exported ')
-		return shpF
-		
-	# save memory layer to shapefile
-	def saveMemoryLayerToShapefile(self, memoryLayer, output, name = None):
-		shpF = output
-		# create shapefile
-		dp = memoryLayer.dataProvider()
-		fds = dp.fields()
-		cfg.qgisCoreSCP.QgsVectorFileWriter(str(shpF), 'CP1250', fds, cfg.qgisCoreSCP.QgsWkbTypes.MultiPolygon , memoryLayer.crs(), 'ESRI Shapefile')
-		if name is None:
-			name = cfg.utls.fileName(shpF)
-		tSS = cfg.utls.addVectorLayer(shpF, name, 'ogr')
-		tSS.updateFields()
-		f = cfg.qgisCoreSCP.QgsFeature()
-		tSS.startEditing()
-		for f in memoryLayer.getFeatures():
-			tSS.addFeature(f)
-		tSS.commitChanges()
-		tSS.dataProvider().createSpatialIndex()
-		tSS.updateExtents()
-		return tSS
-
 	# read registry keys
 	def readRegistryKeys(self, key, value):
 		rK = cfg.QSettingsSCP()
@@ -6185,29 +6132,7 @@ class Utils:
 	def setQGISRegSetting(self, key, value):
 		q = cfg.QSettingsSCP()
 		q.setValue(key, value)
-		
-	# create a polygon shapefile with QGIS
-	def createEmptyShapefileQGIS(self, crs, outputVector):
-		fields = cfg.qgisCoreSCP.QgsFields()
-		# add field
-		fN = cfg.emptyFN
-		fields.append(cfg.qgisCoreSCP.QgsField(fN, cfg.QVariantSCP.Int))	
-		cfg.qgisCoreSCP.QgsVectorFileWriter(str(outputVector), 'CP1250', fields, cfg.qgisCoreSCP.QgsWkbTypes.MultiPolygon, crs, 'ESRI Shapefile')
 
-	# Raster no data value
-	def imageNoDataValue(self, rasterPath):
-		rD = cfg.gdalSCP.Open(rasterPath, cfg.gdalSCP.GA_ReadOnly)
-		gBand = rD.GetRasterBand(1) 
-		nd = gBand.GetNoDataValue()
-		gBand = None
-		rD = None
-		return nd
-		
-	# Raster no data value
-	def imageNoDataValueQGIS(self, qgisRaster):
-		nd = qgisRaster.dataProvider().srcNoDataValue(1)
-		return nd
-		
 	# Raster top left origin and pixel size
 	def imageInformation(self, imageName):
 		try:
@@ -6667,7 +6592,7 @@ class Utils:
 		if name is None:
 			name = cfg.utls.fileNameNoExt(path)
 		if format is None:
-			format = "ogr"
+			format = 'ogr'
 		l = cfg.qgisCoreSCP.QgsVectorLayer(path, name, format)
 		return l
 		
@@ -6714,6 +6639,67 @@ class Utils:
 		s = layer.source().split("|layername=")[0]
 		return s
 		
+	# save memory layer to shapefile
+	def saveMemoryLayerToShapefile(self, memoryLayer, output, name = None, format = 'ESRI Shapefile', IDList = None, listFieldName = None):
+		shpF = output
+		# create shapefile
+		dp = memoryLayer.dataProvider()
+		fds = dp.fields()
+		cfg.qgisCoreSCP.QgsVectorFileWriter(str(shpF), 'CP1250', fds, cfg.qgisCoreSCP.QgsWkbTypes.MultiPolygon , memoryLayer.crs(), format)
+		if name is None:
+			name = cfg.utls.fileName(shpF)
+		tSS = cfg.utls.addVectorLayer(shpF, name, 'ogr')
+		tSS.updateFields()
+		f = cfg.qgisCoreSCP.QgsFeature()
+		tSS.startEditing()
+		if IDList is None:
+			for f in memoryLayer.getFeatures():
+				tSS.addFeature(f)
+		else:
+			for f in memoryLayer.getFeatures():
+				UID  = str(f[listFieldName])
+				if UID in IDList:
+					tSS.addFeature(f)
+		tSS.commitChanges()
+		tSS.dataProvider().createSpatialIndex()
+		tSS.updateExtents()
+		return tSS
+		
+	# save features to shapefile
+	def featuresToShapefile(self, idList):
+		# create shapefile
+		crs = cfg.utls.getCrs(cfg.shpLay)
+		f = cfg.qgisCoreSCP.QgsFields()
+		# add Class ID, macroclass ID and Info fields
+		f.append(cfg.qgisCoreSCP.QgsField(cfg.fldMacroID_class, cfg.QVariantSCP.Int))
+		f.append(cfg.qgisCoreSCP.QgsField(cfg.fldROIMC_info, cfg.QVariantSCP.String))
+		f.append(cfg.qgisCoreSCP.QgsField(cfg.fldID_class, cfg.QVariantSCP.Int))
+		f.append(cfg.qgisCoreSCP.QgsField(cfg.fldROI_info, cfg.QVariantSCP.String))
+		f.append(cfg.qgisCoreSCP.QgsField(cfg.fldSCP_UID, cfg.QVariantSCP.String))
+		# shapefile
+		shpF = cfg.utls.createTempRasterPath('shp')
+		cfg.qgisCoreSCP.QgsVectorFileWriter(shpF, 'CP1250', f, cfg.qgisCoreSCP.QgsWkbTypes.MultiPolygon , crs, 'ESRI Shapefile')
+		tSS = cfg.utls.addVectorLayer(shpF)
+		f = cfg.qgisCoreSCP.QgsFeature()
+		tSS.startEditing()
+		count = 0
+		for f in cfg.shpLay.getFeatures():
+			SCP_UID  = str(f[cfg.fldSCP_UID])
+			if SCP_UID in idList:
+				tSS.addFeature(f)
+				count = count + 1
+		if count == 0:
+			tSS.commitChanges()
+			cfg.utls.removeLayerByLayer(tSS)
+			return None
+		tSS.commitChanges()
+		tSS.dataProvider().createSpatialIndex()
+		tSS.updateExtents()
+		cfg.utls.removeLayerByLayer(tSS)
+		# logger
+		cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' vector exported ')
+		return shpF
+		
 ##################################
 	''' raster GDAL functions '''
 ##################################
@@ -6724,6 +6710,34 @@ class Utils:
 		number = rD.RasterCount
 		rD = None
 		return number
+		
+	# Raster no data value
+	def imageNoDataValue(self, rasterPath):
+		rD = cfg.gdalSCP.Open(rasterPath, cfg.gdalSCP.GA_ReadOnly)
+		gBand = rD.GetRasterBand(1) 
+		nd = gBand.GetNoDataValue()
+		gBand = None
+		rD = None
+		return nd
+			
+	# Get CRS of a layer
+	def getCrsGDAL(self, layerPath):
+		l = cfg.ogrSCP.Open(layerPath)
+		if l is None:
+			l = cfg.gdalSCP.Open(layerPath, cfg.gdalSCP.GA_ReadOnly)
+			if l is None:
+				crs = None
+			else:
+				# check projections
+				crs = l.GetProjection()
+		else:
+			gL = l.GetLayer()
+			# check projection
+			lP = gL.GetSpatialRef()
+			crs = lP.ExportToWkt()
+		# logger
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' lyr ' + str(layerPath) + ' crs: ' + str(crs))
+		return crs
 		
 	# raster sieve with GDAL
 	def rasterSieve(self, inputRaster, outputRaster, pixelThreshold, connect = 4, outFormat = 'GTiff', quiet = 'No'):
@@ -6748,7 +6762,7 @@ class Utils:
 			startupinfo = cfg.subprocessSCP.STARTUPINFO()
 			startupinfo.dwFlags = cfg.subprocessSCP.STARTF_USESHOWWINDOW
 			startupinfo.wShowWindow = cfg.subprocessSCP.SW_HIDE
-			cfg.subprocDictProc['proc_'+ str(sPL)] = cfg.subprocessSCP.Popen(a, shell=False, startupinfo = startupinfo, stdout=stF, stderr=cfg.subprocessSCP.PIPE)
+			cfg.subprocDictProc['proc_'+ str(sPL)] = cfg.subprocessSCP.Popen(a, shell=False, startupinfo = startupinfo, stdout=stF, stderr=cfg.subprocessSCP.PIPE, stdin = cfg.subprocessSCP.DEVNULL)
 		else:
 			cfg.subprocDictProc['proc_'+ str(sPL)] = cfg.subprocessSCP.Popen(a, shell=False, stdout=stF, stderr=cfg.subprocessSCP.PIPE)
 		while True:
@@ -7186,7 +7200,7 @@ class Utils:
 			startupinfo = cfg.subprocessSCP.STARTUPINFO()
 			startupinfo.dwFlags = cfg.subprocessSCP.STARTF_USESHOWWINDOW
 			startupinfo.wShowWindow = cfg.subprocessSCP.SW_HIDE
-			cfg.subprocDictProc['proc_'+ str(sPL)] = cfg.subprocessSCP.Popen(d, shell=False,startupinfo = startupinfo, stdout=stF, stderr=cfg.subprocessSCP.PIPE)
+			cfg.subprocDictProc['proc_'+ str(sPL)] = cfg.subprocessSCP.Popen(d, shell=False,startupinfo = startupinfo, stdout=stF, stderr=cfg.subprocessSCP.PIPE, stdin = cfg.subprocessSCP.DEVNULL)
 		else:
 			cfg.subprocDictProc['proc_'+ str(sPL)] = cfg.subprocessSCP.Popen(d, shell=False, stdout=stF, stderr=cfg.subprocessSCP.PIPE)
 		while True:
@@ -7370,7 +7384,7 @@ class Utils:
 		pCrs = cfg.utls.getCrs(layer)
 		try:
 			id = pCrs.authid()
-			id = int(id.replace("EPSG:", ""))
+			id = int(id.replace('EPSG:', ''))
 		except:
 			return None
 		return id
@@ -7389,8 +7403,8 @@ class Utils:
 		if rPRS is None:
 			mL = self.addRasterLayer(layerPath)
 			lPRStr = mL.crs().authid()
-			lPRStr = lPRStr.split(":")
-			if lPRStr[0] == "EPSG":
+			lPRStr = lPRStr.split(':')
+			if lPRStr[0] == 'EPSG':
 				rPRS = lPRStr[1]
 			cfg.utls.removeLayerByLayer(mL)
 		try:
@@ -7456,28 +7470,21 @@ class Utils:
 			cfg.mx.msgErr34()
 			return 'No'
 		# check projection
-		lPRS = cfg.utls.getEPSGVector(layerPath)
-		rPSys =cfg.osrSCP.SpatialReference(wkt=rP)
-		rPSys.AutoIdentifyEPSG()
-		try:
-			rPRS = int(rPSys.GetAuthorityCode(None))
-		except:
-			rPRS = None
-		# try with QGIS
-		if rPRS is None:
-			mL = self.addRasterLayer(rS)
-			lPRStr = mL.crs().authid()
-			lPRStr = lPRStr.split(':')
-			if lPRStr[0] == 'EPSG':
-				rPRS = int(lPRStr[1])
-			cfg.utls.removeLayerByLayer(mL)		
+		vCrs = cfg.utls.getCrsGDAL(layerPath)
+		lPRS = cfg.osrSCP.SpatialReference()
+		lPRS.ImportFromWkt(vCrs)
+		rPRS = cfg.osrSCP.SpatialReference()
+		rPRS.ImportFromWkt(rP)
+		# logger
+		cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' rP: ' + str(rP))
+		cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' vCrs: ' + str(vCrs))
 		if lPRS is not None:
 			# date time for temp name
 			dT = cfg.utls.getTime()
-			if lPRS != rPRS:
+			if lPRS.IsSame(rPRS) != 1:
 				reprjShapefile = cfg.tmpDir + '/' + dT + cfg.utls.fileName(layerPath)
 				try:
-					cfg.utls.repojectShapefile(layerPath, int(lPRS), reprjShapefile, int(rPRS))
+					cfg.utls.repojectShapefile(layerPath, lPRS, reprjShapefile, rPRS)
 				except Exception as err:
 					# logger
 					cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
@@ -7489,8 +7496,8 @@ class Utils:
 			if filter is not None:
 				gL.SetAttributeFilter(filter)
 				# create a shapefile
-				d = cfg.ogrSCP.GetDriverByName('ESRI Shapefile')
-				gLCopy = cfg.tmpDir + '/' + 'copy' + dT + cfg.utls.fileNameNoExt(layerPath) + '.shp'
+				d = cfg.ogrSCP.GetDriverByName('GPKG')
+				gLCopy = cfg.tmpDir + '/' + 'copy' + dT + cfg.utls.fileNameNoExt(layerPath) + '.gpkg'
 				dS = d.CreateDataSource(gLCopy)
 				ou = dS.CopyLayer(gL,dS.GetName())
 				minX, maxX, minY, maxY = ou.GetExtent()
@@ -7721,7 +7728,7 @@ class Utils:
 		return targetLayer
 		
 	# merge layers to new layer
-	def mergeLayersToNewLayer(self, inputList, targetLayer, column, dissolveOutputOption):
+	def mergeLayersToNewLayer(self, inputList, targetLayer, column = None, dissolveOutputOption = None):
 		# input layers
 		inputLayersList = []
 		# x coordinates of polygons on borders
@@ -7800,12 +7807,14 @@ class Utils:
 			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 		
 	# create a polygon shapefile with OGR
-	def createEmptyShapefile(self, crsWkt, outputVector):
+	def createEmptyShapefile(self, crsWkt, outputVector, format = 'ESRI Shapefile'):
 		try:
 			crsWkt = str(crsWkt.toWkt())
 		except:
 			pass
-		d = cfg.ogrSCP.GetDriverByName('ESRI Shapefile')
+		# logger
+		cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'crsWkt: ' + str(crsWkt))
+		d = cfg.ogrSCP.GetDriverByName(format)
 		dS = d.CreateDataSource(outputVector)
 		# shapefile
 		sR = cfg.osrSCP.SpatialReference()
@@ -7816,7 +7825,69 @@ class Utils:
 		rL.CreateField(fd)
 		rL = None
 		dS = None
-
+		# logger
+		cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'outputVector: ' + str(outputVector))
+		
+	# create a polygon shapefile with OGR
+	def createSCPShapefile(self, crsWkt, outputVector):
+		try:
+			crsWkt = str(crsWkt.toWkt())
+		except:
+			pass
+		# logger
+		cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'crsWkt: ' + str(crsWkt))
+		d = cfg.ogrSCP.GetDriverByName('ESRI Shapefile')
+		dS = d.CreateDataSource(outputVector)
+		# shapefile
+		sR = cfg.osrSCP.SpatialReference()
+		sR.ImportFromWkt(crsWkt)
+		nm = cfg.utls.fileNameNoExt(outputVector)
+		rL = dS.CreateLayer(nm, sR, cfg.ogrSCP.wkbMultiPolygon)
+		fd1 = cfg.ogrSCP.FieldDefn(cfg.fldMacroID_class, cfg.ogrSCP.OFTInteger)
+		rL.CreateField(fd1)
+		fd2 = cfg.ogrSCP.FieldDefn(cfg.fldROIMC_info, cfg.ogrSCP.OFTString)
+		rL.CreateField(fd2)
+		fd3 = cfg.ogrSCP.FieldDefn(cfg.fldID_class, cfg.ogrSCP.OFTInteger)
+		rL.CreateField(fd3)
+		fd4 = cfg.ogrSCP.FieldDefn(cfg.fldROI_info, cfg.ogrSCP.OFTString)
+		rL.CreateField(fd4)
+		fd5 = cfg.ogrSCP.FieldDefn(cfg.fldSCP_UID, cfg.ogrSCP.OFTString)
+		rL.CreateField(fd5)
+		rL = None
+		dS = None
+		# logger
+		cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'outputVector: ' + str(outputVector))
+		
+	# create a polygon gpkg with OGR
+	def createSCPVector(self, crsWkt, outputVector):
+		try:
+			crsWkt = str(crsWkt.toWkt())
+		except:
+			pass
+		# logger
+		cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'crsWkt: ' + str(crsWkt))
+		d = cfg.ogrSCP.GetDriverByName('GPKG')
+		dS = d.CreateDataSource(outputVector)
+		# shapefile
+		sR = cfg.osrSCP.SpatialReference()
+		sR.ImportFromWkt(crsWkt)
+		nm = cfg.utls.fileNameNoExt(outputVector)
+		rL = dS.CreateLayer(nm, sR, cfg.ogrSCP.wkbMultiPolygon)
+		fd1 = cfg.ogrSCP.FieldDefn(cfg.fldMacroID_class, cfg.ogrSCP.OFTInteger)
+		rL.CreateField(fd1)
+		fd2 = cfg.ogrSCP.FieldDefn(cfg.fldROIMC_info, cfg.ogrSCP.OFTString)
+		rL.CreateField(fd2)
+		fd3 = cfg.ogrSCP.FieldDefn(cfg.fldID_class, cfg.ogrSCP.OFTInteger)
+		rL.CreateField(fd3)
+		fd4 = cfg.ogrSCP.FieldDefn(cfg.fldROI_info, cfg.ogrSCP.OFTString)
+		rL.CreateField(fd4)
+		fd5 = cfg.ogrSCP.FieldDefn(cfg.fldSCP_UID, cfg.ogrSCP.OFTString)
+		rL.CreateField(fd5)
+		rL = None
+		dS = None
+		# logger
+		cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'outputVector: ' + str(outputVector))
+		
 	# Get extent of a shapefile
 	def getShapefileRectangleBox(self, layerPath):
 		try:
@@ -8044,9 +8115,16 @@ class Utils:
 	def repojectShapefile(self, inputShapefilePath, inputEPSG, outputShapefilePath, outputEPSG, type = 'wkbMultiPolygon'):
 		# spatial reference
 		iSR = cfg.osrSCP.SpatialReference()
-		iSR.ImportFromEPSG(inputEPSG)
+		# EPSG or projection
+		try:
+			iSR.ImportFromEPSG(inputEPSG)
+		except:
+			iSR = inputEPSG
 		oSR = cfg.osrSCP.SpatialReference()
-		oSR.ImportFromEPSG(outputEPSG)
+		try:
+			oSR.ImportFromEPSG(outputEPSG)
+		except:
+			oSR = outputEPSG
 		# required by GDAL 3 coordinate order
 		try:
 			iSR.SetAxisMappingStrategy(cfg.osrSCP.OAMS_TRADITIONAL_GIS_ORDER)

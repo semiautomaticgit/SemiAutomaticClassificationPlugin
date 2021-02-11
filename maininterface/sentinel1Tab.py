@@ -218,7 +218,7 @@ class Sentinel1Tab:
 				startupinfo = cfg.subprocessSCP.STARTUPINFO()
 				startupinfo.dwFlags = cfg.subprocessSCP.STARTF_USESHOWWINDOW
 				startupinfo.wShowWindow = cfg.subprocessSCP.SW_HIDE
-				cfg.subprocDictProc['proc_'+ str(sPL)] = cfg.subprocessSCP.Popen(d, shell=False, startupinfo = startupinfo, stdout=stF)
+				cfg.subprocDictProc['proc_'+ str(sPL)] = cfg.subprocessSCP.Popen(d, shell=False, startupinfo = startupinfo, stdout=stF, stdin = cfg.subprocessSCP.DEVNULL)
 			else:
 				cfg.subprocDictProc['proc_'+ str(sPL)] = cfg.subprocessSCP.Popen(d, shell=False, stdout=stF)
 			progress = 0
@@ -289,7 +289,7 @@ class Sentinel1Tab:
 				startupinfo = cfg.subprocessSCP.STARTUPINFO()
 				startupinfo.dwFlags = cfg.subprocessSCP.STARTF_USESHOWWINDOW
 				startupinfo.wShowWindow = cfg.subprocessSCP.SW_HIDE
-				cfg.subprocDictProc['proc_'+ str(sPL)] = cfg.subprocessSCP.Popen(d, shell=False, startupinfo = startupinfo, stdout=stF)
+				cfg.subprocDictProc['proc_'+ str(sPL)] = cfg.subprocessSCP.Popen(d, shell=False, startupinfo = startupinfo, stdout=stF, stdin = cfg.subprocessSCP.DEVNULL)
 			else:
 				cfg.subprocDictProc['proc_'+ str(sPL)] = cfg.subprocessSCP.Popen(d, shell=False, stdout=stF)
 			progress = 0
