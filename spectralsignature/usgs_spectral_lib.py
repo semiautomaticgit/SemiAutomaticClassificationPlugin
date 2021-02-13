@@ -60,9 +60,16 @@ class USGS_Spectral_Lib:
 				cfg.uiUtls.addProgressBar()
 				libraryR, libraryW, libraryS = cfg.usgsLib.downloadLibrary(self.library)
 				if libraryR is not None:
+					try:
+						oldROIInfo = cfg.ROIInfo
+						cfg.ROIInfo = str(cfg.ui.usgs_library_comboBox.currentText())
+					except:
+						pass
 					cfg.sigImport.USGSLibrary(libraryR, libraryW, libraryS)
 					# logger
 					cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'signature added: ' + str(self.library))
+					cfg.ROIInfo = oldROIInfo
+					cfg.mx.msg28()
 				cfg.uiUtls.removeProgressBar()
 				
 	# add chapter list to combo

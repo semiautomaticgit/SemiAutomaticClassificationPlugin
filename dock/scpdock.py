@@ -254,6 +254,8 @@ class SCPDock:
 	def openTrainingFile(self):
 		scpPath = cfg.utls.getOpenFileName(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Select a SCP training input'), '', 'SCP file (*.scp)')
 		if len(scpPath) > 0:
+			cfg.signList = {}
+			cfg.signIDs = {}
 			cfg.SCPD.openInput(scpPath)
 			
 	# open input
@@ -799,20 +801,23 @@ class SCPDock:
 		try:
 			if cfg.bandSetsList[cfg.bndSetNumber][5] == cfg.noUnit:
 				cfg.mx.msgWar8()
-			libFile = cfg.utls.getOpenFileName(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Select a library file'), '', 'SCP file (*.scp);;USGS library (*.asc);;ASTER library (*.txt);;CSV (*.csv)')
-			if len(libFile) > 0:
-				cfg.uiUtls.addProgressBar()
-				if libFile.lower().endswith('.asc'):
-					cfg.sigImport.USGSLibrary(libFile)
-				elif libFile.lower().endswith('.txt'):
-					cfg.sigImport.ASTERLibrary(libFile)
-				elif libFile.lower().endswith('.csv'):
-					cfg.sigImport.CSVLibrary(libFile)
-				elif libFile.lower().endswith('.scp'):
-					self.importSLCSignatureList(libFile, 'Yes')
-				cfg.uiUtls.removeProgressBar()
-				# logger
-				cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' spectral library ' + str(libFile))
+			libFileList = cfg.utls.getOpenFileNames(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Select a library file'), '', 'SCP file (*.scp);;USGS library (*.zip);;ASTER library (*.txt);;CSV (*.csv)')
+			if len(libFileList) > 0:
+				for libFile in libFileList:
+					cfg.uiUtls.addProgressBar()
+					if libFile.lower().endswith('.zip'):
+						libraryR, libraryW, libraryS = cfg.usgsLib.unzipLibrary(libFile)
+						cfg.sigImport.USGSLibrary(libraryR, libraryW, libraryS)
+					elif libFile.lower().endswith('.txt'):
+						cfg.sigImport.ASTERLibrary(libFile)
+					elif libFile.lower().endswith('.csv'):
+						cfg.sigImport.CSVLibrary(libFile)
+					elif libFile.lower().endswith('.scp'):
+						self.importSLCSignatureList(libFile, 'Yes')
+					cfg.uiUtls.removeProgressBar()
+					# logger
+					cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' spectral library ' + str(libFile))
+				cfg.mx.msg28()
 		except Exception as err:
 			cfg.uiUtls.removeProgressBar()
 			cfg.mx.msgWar8()
@@ -822,7 +827,7 @@ class SCPDock:
 	# export signatures to CSV library
 	def exportToCSVLibrary(self):
 		tW = cfg.uidc.signature_list_treeWidget
-		v = cfg.SCPD.getHighlightedIDs('Yes')
+		v = cfg.SCPD.getHighlightedIDs('Yes', 'Yes')
 		if len(v) > 0:
 			d = cfg.utls.getExistingDirectory(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Export the highlighted signatures to CSV library'))
 			if len(d) > 0:
@@ -2093,24 +2098,30 @@ class SCPDock:
 		# ask for confirm
 		a = cfg.utls.questionBox(cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Remove training input'), cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Are you sure you want to remove training input?'))
 		if a == 'Yes':
-			cfg.treeDockItm = {}
-			cfg.treeDockMCItm = {}
-			cfg.uidc.signature_list_treeWidget.clear()
-			try:
-				cfg.utls.removeLayerByLayer(cfg.shpLay)
-				cfg.cnvs.refresh()
-			except:
-				pass
-			# shape layer
-			cfg.shpLay = None
-			# training layer name
-			cfg.trnLay = None
-			# signature file path
-			cfg.sigFile = None
-			cfg.inptDir = None
-			cfg.scpFlPath = None
-			cfg.uidc.trainingFile_lineEdit.setText('')
-			cfg.utls.writeProjectVariable('trainingLayer', '')
+			cfg.SCPD.resetInputDock()
+		
+	# reset input 
+	def resetInputDock(self):
+		cfg.treeDockItm = {}
+		cfg.treeDockMCItm = {}
+		cfg.uidc.signature_list_treeWidget.clear()
+		try:
+			cfg.utls.removeLayerByLayer(cfg.shpLay)
+			cfg.cnvs.refresh()
+		except:
+			pass
+		# shape layer
+		cfg.shpLay = None
+		# training layer name
+		cfg.trnLay = None
+		# signature file path
+		cfg.sigFile = None
+		cfg.inptDir = None
+		cfg.scpFlPath = None
+		cfg.signList = {}
+		cfg.signIDs = {}
+		cfg.uidc.trainingFile_lineEdit.setText('')
+		cfg.utls.writeProjectVariable('trainingLayer', '')
 		
 	# Create new input 
 	def createInput(self):
@@ -2119,6 +2130,7 @@ class SCPDock:
 		try:
 			sL = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Create SCP training input'), '', '*.scp', 'scp')
 			if sL is not False:
+				cfg.SCPD.resetInputDock()
 				try:
 					# band set
 					if cfg.bandSetsList[cfg.bndSetNumber][0] == 'Yes':
@@ -2127,12 +2139,22 @@ class SCPDock:
 						b = cfg.utls.selectLayerbyName(cfg.bandSetsList[cfg.bndSetNumber][3][0], 'Yes')
 						filePath = cfg.utls.layerSource(b)
 						crs = cfg.utls.getCrsGDAL(filePath)
+						if len(crs) == 0:
+							# logger
+							cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR crs')
+							cfg.mx.msgErr61(cfg.bandSetsList[cfg.bndSetNumber][3][0])
+							return
 					else:
 						# crs of loaded raster
 						b = cfg.utls.selectLayerbyName(cfg.bandSetsList[cfg.bndSetNumber][8])
 						filePath = cfg.utls.layerSource(b)
 						crs = cfg.utls.getCrsGDAL(filePath)
 						iB = b.bandCount()
+						if len(crs) == 0:
+							# logger
+							cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR crs')
+							cfg.mx.msgErr61(cfg.bandSetsList[cfg.bndSetNumber][8])
+							return
 					# shapefile
 					name = cfg.utls.fileNameNoExt(sL)
 					dT = cfg.utls.getTime()
@@ -2153,7 +2175,7 @@ class SCPDock:
 				except Exception as err:
 					# logger
 					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
-					cfg.SCPD.refreshRasterLayer()
+					cfg.ipt.refreshRasterLayer()
 					cfg.mx.msg4()
 		except Exception as err:
 			# logger

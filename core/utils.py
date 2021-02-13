@@ -6664,13 +6664,14 @@ class Utils:
 		tSS.dataProvider().createSpatialIndex()
 		tSS.updateExtents()
 		return tSS
-		
+			
 	# save features to shapefile
 	def featuresToShapefile(self, idList):
 		# create shapefile
 		crs = cfg.utls.getCrs(cfg.shpLay)
 		f = cfg.qgisCoreSCP.QgsFields()
 		# add Class ID, macroclass ID and Info fields
+		f.append(cfg.qgisCoreSCP.QgsField('fid', cfg.QVariantSCP.Int))
 		f.append(cfg.qgisCoreSCP.QgsField(cfg.fldMacroID_class, cfg.QVariantSCP.Int))
 		f.append(cfg.qgisCoreSCP.QgsField(cfg.fldROIMC_info, cfg.QVariantSCP.String))
 		f.append(cfg.qgisCoreSCP.QgsField(cfg.fldID_class, cfg.QVariantSCP.Int))
@@ -6686,7 +6687,7 @@ class Utils:
 		for f in cfg.shpLay.getFeatures():
 			SCP_UID  = str(f[cfg.fldSCP_UID])
 			if SCP_UID in idList:
-				tSS.addFeature(f)
+				a = tSS.addFeature(f)
 				count = count + 1
 		if count == 0:
 			tSS.commitChanges()
@@ -6728,13 +6729,29 @@ class Utils:
 			if l is None:
 				crs = None
 			else:
-				# check projections
-				crs = l.GetProjection()
+				try:
+					# check projections
+					crs = l.GetProjection()
+					if len(crs) == 0:
+						crs = None
+				# in case of errors
+				except Exception as err:
+					crs = None
+					# logger
+					cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 		else:
 			gL = l.GetLayer()
 			# check projection
 			lP = gL.GetSpatialRef()
-			crs = lP.ExportToWkt()
+			try:
+				crs = lP.ExportToWkt()
+				if len(crs) == 0:
+					crs = None
+			# in case of errors
+			except Exception as err:
+				crs = None
+				# logger
+				cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 		# logger
 		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' lyr ' + str(layerPath) + ' crs: ' + str(crs))
 		return crs

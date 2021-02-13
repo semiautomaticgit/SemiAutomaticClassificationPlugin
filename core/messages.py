@@ -134,6 +134,9 @@ class Messages:
 	def msg27(self):
 		self.msgBar(cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Information') + ' [27]', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Signatures exported'))
 		
+	def msg28(self):
+		self.msgBar(cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Information') + ' [28]', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Signatures imported'))
+		
 	''' Errors '''
 		
 	def msgErr2(self, SMTP = None):

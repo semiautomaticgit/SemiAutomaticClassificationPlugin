@@ -71,7 +71,7 @@ class Signature_Importer:
 		if cfg.osSCP.path.isfile(libraryPath):
 			f = open(libraryPath)
 			file = f.readlines()
-			if "Name" in file[0]:
+			if 'Name' in file[0]:
 				wl = []
 				ref = []
 				sD = []
@@ -182,5 +182,5 @@ class Signature_Importer:
 			cfg.ui.C_Info_combo.addItems(fields)
 			cfg.ui.select_shapefile_label.setText(shpFile)
 			# logger
-			cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " open Shapefile")
+			cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), ' open Shapefile')
 			

@@ -4712,37 +4712,37 @@ ROI</source>
         <translation>Selecciona una Entrada de Entrenamiento SCP</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="731"/>
+        <location filename="../dock/scpdock.py" line="733"/>
         <source>Export SCP training input</source>
         <translation>Exportar Entrada de Entrenamiento SCP</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="802"/>
+        <location filename="../dock/scpdock.py" line="804"/>
         <source>Select a library file</source>
         <translation>Selecciona un archivo de librería</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="827"/>
+        <location filename="../dock/scpdock.py" line="832"/>
         <source>Export the highlighted signatures to CSV library</source>
         <translation>Exportar las firmas seleccionadas a librería CSV</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1313"/>
+        <location filename="../dock/scpdock.py" line="1318"/>
         <source>Calculate signatures</source>
         <translation>Calcular firmas</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="886"/>
+        <location filename="../dock/scpdock.py" line="891"/>
         <source>Calculate signatures for highlighted items?</source>
         <translation>¿Calcular firmas para los elementos seleccionados?</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="912"/>
+        <location filename="../dock/scpdock.py" line="917"/>
         <source>Merge signatures</source>
         <translation>Combinar firmas</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="912"/>
+        <location filename="../dock/scpdock.py" line="917"/>
         <source>Merge highlighted signatures?</source>
         <translation>¿Combinar firmas seleccionadas?</translation>
     </message>
@@ -4752,34 +4752,34 @@ ROI</source>
         <translation>Eliminar firmas</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1032"/>
+        <location filename="../dock/scpdock.py" line="1037"/>
         <source>Are you sure you want to delete highlighted ROIs and signatures?</source>
         <translation>¿Estás seguro que quieres eliminar los ROIs y las firmas seleccionadas?</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="2120"/>
+        <location filename="../dock/scpdock.py" line="2131"/>
         <source>Create SCP training input</source>
         <translation>Crear Entrenamiento de Entrada SCP</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="2220"/>
+        <location filename="../dock/scpdock.py" line="2242"/>
         <source>It appears that the shapefile </source>
         <translation>Parece que el archivo shape</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="2220"/>
+        <location filename="../dock/scpdock.py" line="2242"/>
         <source> is missing some fields that are required for the signature calculation. 
 Do you want to add the required fields to this shapefile?</source>
         <translation>no se encuentran algunos campos que son requeridos para el cálculo de firmas.
 ¿Deseas agregar los campos requeridos a este archivo shape?</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="2312"/>
+        <location filename="../dock/scpdock.py" line="2334"/>
         <source>Undo save ROI</source>
         <translation>Deshacer guardar ROI</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="2312"/>
+        <location filename="../dock/scpdock.py" line="2334"/>
         <source>Are you sure you want to delete the last saved ROI?</source>
         <translation>¿Estás seguro que quieres eliminar el último ROI guardado?</translation>
     </message>
@@ -4974,7 +4974,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation>Resultados de la prueba</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="135"/>
+        <location filename="../core/messages.py" line="138"/>
         <source>Information</source>
         <translation>Información</translation>
     </message>
@@ -5064,207 +5064,207 @@ Do you want to add the required fields to this shapefile?</source>
         <translation>Error</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="155"/>
+        <location filename="../core/messages.py" line="158"/>
         <source>No metadata found inside the input directory (a .txt file whose name contains MTL)</source>
         <translation>No se encontró metadatos en el directorio de entrada (un archivo .txt cuyo nombre contiene MTL)</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="158"/>
+        <location filename="../core/messages.py" line="161"/>
         <source>Raster not found</source>
         <translation>Ráster no encontrada</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="164"/>
+        <location filename="../core/messages.py" line="167"/>
         <source>Error saving signatures</source>
         <translation>Error guardando firmas</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="167"/>
+        <location filename="../core/messages.py" line="170"/>
         <source>Error opening signatures</source>
         <translation>Error abriendo firmas</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="170"/>
+        <location filename="../core/messages.py" line="173"/>
         <source>Error opening spectral library</source>
         <translation>Error abriendo librería espectral</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="173"/>
+        <location filename="../core/messages.py" line="176"/>
         <source>Error saving spectral library</source>
         <translation>Error guardando librería espectral</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="176"/>
+        <location filename="../core/messages.py" line="179"/>
         <source>Import failed</source>
         <translation>Falló la importación</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="179"/>
+        <location filename="../core/messages.py" line="182"/>
         <source>ROI creation failed</source>
         <translation>Falló la creación del ROI</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="182"/>
+        <location filename="../core/messages.py" line="185"/>
         <source>Internet connection failed</source>
         <translation>Falló la conexión a internet</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="191"/>
+        <location filename="../core/messages.py" line="194"/>
         <source>Error reading raster. Possibly the raster path contains unicode characters</source>
         <translation>Error leyendo ráster. Posiblemente la ruta contiene caracteres unicode</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="206"/>
+        <location filename="../core/messages.py" line="209"/>
         <source>Error calculating signature. Possibly ROI is too small</source>
         <translation>Error calculando firmas. Tal vez el ROI es demasiado pequeño</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="209"/>
+        <location filename="../core/messages.py" line="212"/>
         <source>Unable to split bands</source>
         <translation>Imposible separar las bandas</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="212"/>
+        <location filename="../core/messages.py" line="215"/>
         <source>Error reading band set. Possibly raster files are not loaded</source>
         <translation>Error leyendo el Juego de Bandas. Es posible que los archivos ráster no se hayan cargado</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="215"/>
+        <location filename="../core/messages.py" line="218"/>
         <source>Clip area outside image. Check the raster projection</source>
         <translation>Area de corte fuera de la imagen. Revisa la proyección del ráster</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="218"/>
+        <location filename="../core/messages.py" line="221"/>
         <source>Unable to merge. Signatures have different unit or wavelength</source>
         <translation>Imposible combinar. Las Firmas tienen diferente unidad de longitud de onda</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="221"/>
+        <location filename="../core/messages.py" line="224"/>
         <source>Unable to calculate. Expression error</source>
         <translation>Imposible calcular. Error en la expresión</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="224"/>
+        <location filename="../core/messages.py" line="227"/>
         <source>Unable to calculate. Metadata error</source>
         <translation>Imposible calcular. Error en metadatos</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="230"/>
+        <location filename="../core/messages.py" line="233"/>
         <source>Unable to find images</source>
         <translation>Imposible encontrar imágenes</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="233"/>
+        <location filename="../core/messages.py" line="236"/>
         <source>Unable to connect</source>
         <translation>Imposible conectar</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="236"/>
+        <location filename="../core/messages.py" line="239"/>
         <source>Unable to load image</source>
         <translation>Imposible cargar imagen</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="242"/>
+        <location filename="../core/messages.py" line="245"/>
         <source>Attribute table error</source>
         <translation>Error en tabla de atributos</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="245"/>
+        <location filename="../core/messages.py" line="248"/>
         <source>Unable to pansharpen: missing bands </source>
         <translation>Imposible realizar pansharpen: bandas ausentes</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="248"/>
+        <location filename="../core/messages.py" line="251"/>
         <source>Unable to calculate</source>
         <translation>Imposible calcular</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="251"/>
+        <location filename="../core/messages.py" line="254"/>
         <source>Error reading raster. Possibly bands are not aligned</source>
         <translation>Error leyendo ráster. Es posible que las bandas no estén alineadas</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="254"/>
+        <location filename="../core/messages.py" line="257"/>
         <source>Unable to get raster projection. Try to reproject the raster</source>
         <translation>Imposible obtener la proyección del ráster. Intenta reproyectar el ráster</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="263"/>
+        <location filename="../core/messages.py" line="266"/>
         <source>Memory error. Please, decrease decimal precision</source>
         <translation>Error de memoria. Por favor, disminuye la precisión decimal</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="266"/>
+        <location filename="../core/messages.py" line="269"/>
         <source>Error calculating plot</source>
         <translation>Error calculando el gráfico</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="272"/>
+        <location filename="../core/messages.py" line="275"/>
         <source>SSL connection error. Please see the FAQ of the plugin user manual for solving this</source>
         <translation>Error de conexión SSL. Por favor mira las FAQ o el Manual del Usuario del complemento para resolver esto</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="400"/>
+        <location filename="../core/messages.py" line="403"/>
         <source>Warning</source>
         <translation>Advertencia</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="312"/>
+        <location filename="../core/messages.py" line="315"/>
         <source>It appears that SciPy is not correctly installed. Please, update QGIS </source>
         <translation>Parece que SciPy no está instalado correctamente. Por favor, actualiza QGIS</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="318"/>
+        <location filename="../core/messages.py" line="321"/>
         <source>Wavelength already present</source>
         <translation>Longitud de onda ya presente</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="321"/>
+        <location filename="../core/messages.py" line="324"/>
         <source>Wavelength unit not provided in band set</source>
         <translation>No se ha indicado la unidad de longitud de onda en el Juego de Bandas</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="331"/>
+        <location filename="../core/messages.py" line="334"/>
         <source>RAM value was too high. Value has been decreased automatically</source>
         <translation>El valor de RAM era demasiado alto. El valor se ha disminuido automáticamente</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="337"/>
+        <location filename="../core/messages.py" line="340"/>
         <source>Unable to load the virtual raster. Please create it manually</source>
         <translation>Imposible cargar el ráster virtual. Por favor procede a crearlo manualmente</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="340"/>
+        <location filename="../core/messages.py" line="343"/>
         <source>Unable to proceed. The raster must be in projected coordinates</source>
         <translation>Imposible continuar. El ráster debe estar en coordenadas proyectadas</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="346"/>
+        <location filename="../core/messages.py" line="349"/>
         <source>Incorrect expression</source>
         <translation>Expresión incorrecta</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="349"/>
+        <location filename="../core/messages.py" line="352"/>
         <source>Unable to access the temporary directory</source>
         <translation>Imposible acceder al directorio temporal</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="352"/>
+        <location filename="../core/messages.py" line="355"/>
         <source>Reduce the search area extent within 10 degrees of latitude and 10 degrees of longitude</source>
         <translation>Reduce la extensión del área de búsqueda en 10 grados de latitud y 10 grados de longitud</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="355"/>
+        <location filename="../core/messages.py" line="358"/>
         <source>Macroclass symbology is missing</source>
         <translation>No se encuentra la simbología de la Macroclase</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="358"/>
+        <location filename="../core/messages.py" line="361"/>
         <source>Missing bands</source>
         <translation>Bandas perdidas</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="361"/>
+        <location filename="../core/messages.py" line="364"/>
         <source>No metadata found inside the input directory. Default values will be used</source>
         <translation>No se encuentran metadatos en el directorio de entrada. Se usarán los valores por defecto</translation>
     </message>
@@ -5409,12 +5409,12 @@ Do you want to add the required fields to this shapefile?</source>
         <translation>Guardar ráster</translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="6858"/>
+        <location filename="../core/utils.py" line="6875"/>
         <source>Build overviews</source>
         <translation>Construir vistas generales</translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="6858"/>
+        <location filename="../core/utils.py" line="6875"/>
         <source>Do you want to build the external overviews of bands?</source>
         <translation>¿Quieres construir vistas generales externas?</translation>
     </message>
@@ -5834,12 +5834,12 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished">Depurar</translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="364"/>
+        <location filename="../core/messages.py" line="367"/>
         <source>The coordinate system of training input is different from the input image. Please create a new training input</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="278"/>
+        <location filename="../core/messages.py" line="281"/>
         <source>Directory error. Check write permission</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5879,17 +5879,17 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="281"/>
+        <location filename="../core/messages.py" line="284"/>
         <source>Error accessing training input</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="284"/>
+        <location filename="../core/messages.py" line="287"/>
         <source>Rasters appear to be in different projections. Reproject rasters to the same CRS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="370"/>
+        <location filename="../core/messages.py" line="373"/>
         <source>Search error HTTP Status 500, reduce the result number</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5934,7 +5934,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="2220"/>
+        <location filename="../dock/scpdock.py" line="2242"/>
         <source>Add required fields</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5969,37 +5969,37 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="161"/>
+        <location filename="../core/messages.py" line="164"/>
         <source>Vector or raster not found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="185"/>
+        <location filename="../core/messages.py" line="188"/>
         <source>Error saving raster</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="194"/>
+        <location filename="../core/messages.py" line="197"/>
         <source>The version of Numpy is outdated</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="197"/>
+        <location filename="../core/messages.py" line="200"/>
         <source>Unable to perform operation. Possibly OGR is missing drivers. Please repeat QGIS installation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="200"/>
+        <location filename="../core/messages.py" line="203"/>
         <source>Memory error. Please, set a lower value of RAM in the tab Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="203"/>
+        <location filename="../core/messages.py" line="206"/>
         <source>Edge error. Reduce the ROI width or draw a ROI manually</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="315"/>
+        <location filename="../core/messages.py" line="318"/>
         <source>It appears that SciPy is not correctly installed. Please, check the user manual</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6029,7 +6029,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished">Sentinel-3</translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="8945"/>
+        <location filename="../core/utils.py" line="8962"/>
         <source>SCP: completed process</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6089,12 +6089,12 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="343"/>
+        <location filename="../core/messages.py" line="346"/>
         <source>Select at least one raster band</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="382"/>
+        <location filename="../core/messages.py" line="385"/>
         <source>Please define band sets with matching number of bands</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6109,7 +6109,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="385"/>
+        <location filename="../core/messages.py" line="388"/>
         <source>Please add single band rasters to the band set</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6169,7 +6169,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="293"/>
+        <location filename="../core/messages.py" line="296"/>
         <source>Memory error, too many combinations. Try to reclassify the values</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6194,7 +6194,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="296"/>
+        <location filename="../core/messages.py" line="299"/>
         <source>Error, please change stratification parameters</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6289,7 +6289,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="388"/>
+        <location filename="../core/messages.py" line="391"/>
         <source>Please lower the RAM value or thread number in Settings</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6299,7 +6299,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="391"/>
+        <location filename="../core/messages.py" line="394"/>
         <source>Please set the path to ESA SNAP GPT executable in Settings</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6319,22 +6319,22 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="302"/>
+        <location filename="../core/messages.py" line="305"/>
         <source>Error, select a stastistic</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="257"/>
+        <location filename="../core/messages.py" line="260"/>
         <source>Error calculating accuracy. Possibly vector polygons are outside classification</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="299"/>
+        <location filename="../core/messages.py" line="302"/>
         <source>Error, extent of vector too large or attribute table error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="394"/>
+        <location filename="../core/messages.py" line="397"/>
         <source>Memory error. Please, decrease decimal precision of plot</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6374,7 +6374,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="379"/>
+        <location filename="../core/messages.py" line="382"/>
         <source>Signature bands do not match band set. Calculate the spectral signature again</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6389,12 +6389,12 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="305"/>
+        <location filename="../core/messages.py" line="308"/>
         <source>Projection error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="308"/>
+        <location filename="../core/messages.py" line="311"/>
         <source>Sum method is available only with GDAL version &gt;= 3.1 . Please update GDAL</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6409,37 +6409,37 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="2191"/>
+        <location filename="../dock/scpdock.py" line="2213"/>
         <source>Creating ROI</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="140"/>
+        <location filename="../core/messages.py" line="143"/>
         <source>ROI creation failed. Possible reason: one or more band of the band set are missing or pixel is NoData</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="143"/>
+        <location filename="../core/messages.py" line="146"/>
         <source>Signature calculation failed. Possible reason: the raster is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="146"/>
+        <location filename="../core/messages.py" line="149"/>
         <source>Import failed. Possible reason: selected file is not a band set</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="149"/>
+        <location filename="../core/messages.py" line="152"/>
         <source>Classification failed. It appears the one or more bands of the band set are missing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="152"/>
+        <location filename="../core/messages.py" line="155"/>
         <source>ROI creation failed. Possible reason: input is a virtual raster or band is not loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="397"/>
+        <location filename="../core/messages.py" line="400"/>
         <source>The process could still be running in the background. Please terminate it manually</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6449,7 +6449,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7114"/>
+        <location filename="../core/utils.py" line="7131"/>
         <source>Writing file</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6459,12 +6459,12 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="6807"/>
+        <location filename="../core/utils.py" line="6824"/>
         <source>Sieve</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="6937"/>
+        <location filename="../core/utils.py" line="6954"/>
         <source>Building overviews</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6489,12 +6489,12 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="2094"/>
+        <location filename="../dock/scpdock.py" line="2099"/>
         <source>Remove training input</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="2094"/>
+        <location filename="../dock/scpdock.py" line="2099"/>
         <source>Are you sure you want to remove training input?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6504,12 +6504,12 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="8400"/>
+        <location filename="../core/utils.py" line="8417"/>
         <source>Remove rows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="8400"/>
+        <location filename="../core/utils.py" line="8417"/>
         <source>Are you sure you want to remove highlighted rows from the table?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6554,7 +6554,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/messages.py" line="400"/>
+        <location filename="../core/messages.py" line="403"/>
         <source>Please define a date range within the same year</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6644,177 +6644,177 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1266"/>
+        <location filename="../dock/scpdock.py" line="1271"/>
         <source>MC ID</source>
         <translation type="unfinished">MC ID</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1267"/>
+        <location filename="../dock/scpdock.py" line="1272"/>
         <source>C ID</source>
         <translation type="unfinished">C ID</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1268"/>
+        <location filename="../dock/scpdock.py" line="1273"/>
         <source>Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1269"/>
+        <location filename="../dock/scpdock.py" line="1274"/>
         <source>Type</source>
         <translation type="unfinished">Tipo</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1270"/>
+        <location filename="../dock/scpdock.py" line="1275"/>
         <source>Color</source>
         <translation type="unfinished">Color</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1271"/>
+        <location filename="../dock/scpdock.py" line="1276"/>
         <source>SCPID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1304"/>
+        <location filename="../dock/scpdock.py" line="1309"/>
         <source>Zoom to highlighted items</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1306"/>
+        <location filename="../dock/scpdock.py" line="1311"/>
         <source>Clear selection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1307"/>
+        <location filename="../dock/scpdock.py" line="1312"/>
         <source>Collapse/expand all</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1312"/>
+        <location filename="../dock/scpdock.py" line="1317"/>
         <source>Merge highlighted items</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1313"/>
+        <location filename="../dock/scpdock.py" line="1318"/>
         <source>Calculate signatures for highlighted items</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1314"/>
+        <location filename="../dock/scpdock.py" line="1319"/>
         <source>Delete highlighted items</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1309"/>
+        <location filename="../dock/scpdock.py" line="1314"/>
         <source>Change MC ID for highlighted items</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1316"/>
+        <location filename="../dock/scpdock.py" line="1321"/>
         <source>Add highlighted items to spectral plot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1317"/>
+        <location filename="../dock/scpdock.py" line="1322"/>
         <source>Add highlighted items to scatter plot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1346"/>
+        <location filename="../dock/scpdock.py" line="1351"/>
         <source>Change Macroclass ID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1346"/>
+        <location filename="../dock/scpdock.py" line="1351"/>
         <source>Change the Macroclass ID for highlighted items to </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1318"/>
+        <location filename="../dock/scpdock.py" line="1323"/>
         <source>Properties</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1304"/>
+        <location filename="../dock/scpdock.py" line="1309"/>
         <source>Zoom to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1305"/>
+        <location filename="../dock/scpdock.py" line="1310"/>
         <source>Check/uncheck</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1305"/>
+        <location filename="../dock/scpdock.py" line="1310"/>
         <source>Check/uncheck highlighted items</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1306"/>
+        <location filename="../dock/scpdock.py" line="1311"/>
         <source>Clear selection of highlighted items</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1307"/>
+        <location filename="../dock/scpdock.py" line="1312"/>
         <source>Collapse/expand all macroclasses</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1309"/>
+        <location filename="../dock/scpdock.py" line="1314"/>
         <source>Change MC ID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1310"/>
+        <location filename="../dock/scpdock.py" line="1315"/>
         <source>Change color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1310"/>
+        <location filename="../dock/scpdock.py" line="1315"/>
         <source>Change color for highlighted items</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1312"/>
+        <location filename="../dock/scpdock.py" line="1317"/>
         <source>Merge items</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1314"/>
+        <location filename="../dock/scpdock.py" line="1319"/>
         <source>Delete items</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1316"/>
+        <location filename="../dock/scpdock.py" line="1321"/>
         <source>Add to spectral plot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1317"/>
+        <location filename="../dock/scpdock.py" line="1322"/>
         <source>Add to scatter plot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1318"/>
+        <location filename="../dock/scpdock.py" line="1323"/>
         <source>Properties for highlighted items</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1320"/>
+        <location filename="../dock/scpdock.py" line="1325"/>
         <source>Import</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1320"/>
+        <location filename="../dock/scpdock.py" line="1325"/>
         <source>Import spectral signatures</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1321"/>
+        <location filename="../dock/scpdock.py" line="1326"/>
         <source>Export</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1321"/>
+        <location filename="../dock/scpdock.py" line="1326"/>
         <source>Export highlighted items</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6836,6 +6836,11 @@ Do you want to add the required fields to this shapefile?</source>
     <message>
         <location filename="../core/messages.py" line="135"/>
         <source>Signatures exported</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../core/messages.py" line="138"/>
+        <source>Signatures imported</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
