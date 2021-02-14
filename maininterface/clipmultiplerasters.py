@@ -239,7 +239,7 @@ class ClipMultipleRasters:
 					except:
 						s = cfg.utls.saveMemoryLayerToShapefile(s, tSHP, format = 'GPKG')
 					s = cfg.utls.layerSource(s)
-					vEPSG = cfg.utls.getEPSGVector(tSHP)
+					vCrs = cfg.utls.getCrsGDAL(tSHP)
 				elif 'QgsVectorLayer' in str(s):
 					# temporary layer
 					tLN = cfg.subsTmpROI + dT + '.shp'
@@ -255,9 +255,9 @@ class ClipMultipleRasters:
 						# copy ROI to temp shapefile
 						cfg.utls.copyFeatureToLayer(s, ID, mL)
 					s = tLP
-					vEPSG = cfg.utls.getEPSGVector(s)
+					vCrs = cfg.utls.getCrsGDAL(s)
 				else:
-					vEPSG = cfg.utls.getEPSGVector(s)
+					vCrs = cfg.utls.getCrsGDAL(s)
 				# in case of reprojection
 				reprjShapefile = cfg.tmpDir + '/' + dT + cfg.utls.fileNameNoExt(s) + '.shp'
 				# band list
@@ -267,14 +267,22 @@ class ClipMultipleRasters:
 					cL = cfg.utls.layerSource(lC)
 					bbList.append(cL)
 				tRxs = cfg.utls.createTempRasterPath('tif')
-				rEPSG = cfg.utls.getEPSGRaster(cL)
+				# check projection
+				vEPSG = cfg.osrSCP.SpatialReference()
+				vEPSG.ImportFromWkt(vCrs)
+				rP = cfg.utls.getCrsGDAL(cL)
+				rEPSG = cfg.osrSCP.SpatialReference()
+				rEPSG.ImportFromWkt(rP)
+				# logger
+				cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' rP: ' + str(rP))
+				cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' vCrs: ' + str(vCrs))
 				vect = s
-				if vEPSG != rEPSG:
+				if vEPSG.IsSame(rEPSG) != 1:
 					if cfg.osSCP.path.isfile(reprjShapefile):
 						vect = reprjShapefile
 					else:
 						try:
-							cfg.utls.repojectShapefile(s, int(vEPSG), reprjShapefile, int(rEPSG))
+							cfg.utls.repojectShapefile(s, vEPSG, reprjShapefile, rEPSG)
 						except Exception as err:
 							# logger
 							cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))	
@@ -316,7 +324,7 @@ class ClipMultipleRasters:
 								cfg.uiUtls.removeProgressBar()
 				# without field iteration
 				else:
-					check = cfg.utls.vectorToRaster(cfg.emptyFN, vect, cfg.emptyFN, tRxs, cL, None, "GTiff", 1)
+					check = cfg.utls.vectorToRaster(cfg.emptyFN, vect, cfg.emptyFN, tRxs, cL, None, 'GTiff', 1)
 					if check != 'No':
 						outList = cfg.utls.clipRasterByRaster(bbList, tRxs, oD, 'GTiff', noDt, outputNameRoot = outputName + '_' )
 						try:

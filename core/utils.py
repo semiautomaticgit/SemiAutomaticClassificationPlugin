@@ -735,7 +735,7 @@ class Utils:
 		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "" + str(ql))
 		
 	# Define raster symbology
-	def rasterSymbolGeneric(self, rasterLayer, zeroValue = "Unchanged", rasterUniqueValueList = None):
+	def rasterSymbolGeneric(self, rasterLayer, zeroValue = 'Unchanged', rasterUniqueValueList = None):
 		if rasterUniqueValueList is None:
 			ql = cfg.utls.layerSource(rasterLayer)
 			cfg.parallelArrayDict = {}
@@ -752,7 +752,10 @@ class Utils:
 			refRasterBandUniqueVal = sorted(rasterBandUniqueVal)
 		else:
 			refRasterBandUniqueVal = rasterUniqueValueList
-		maxV = max(refRasterBandUniqueVal)
+		try:
+			maxV = max(refRasterBandUniqueVal)
+		except:
+			maxV = 1
 		# Color list for ramp
 		cL = [ cfg.qgisCoreSCP.QgsPalettedRasterRenderer.Class(0, cfg.QtGuiSCP.QColor(0,0,0), zeroValue)]
 		for i in refRasterBandUniqueVal:
@@ -769,7 +772,7 @@ class Utils:
 		# Apply the renderer to rasterLayer
 		rasterLayer.setRenderer(lyrRndr)
 		# refresh legend
-		if hasattr(rasterLayer, "setCacheImage"):
+		if hasattr(rasterLayer, 'setCacheImage'):
 			rasterLayer.setCacheImage(None)
 		rasterLayer.triggerRepaint()
 		cfg.utls.refreshLayerSymbology(rasterLayer)
@@ -2305,7 +2308,7 @@ class Utils:
 			# check projections
 			try:
 				if rP is not None:
-					epsgList.append(str(rP)	)
+					epsgList.append(rP)
 				else:
 					# logger
 					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'rP is None ' + str(rP))
@@ -2325,8 +2328,13 @@ class Utils:
 			gdalRaster = None
 		# check projections
 		epsgListI = list(set(epsgList))
-		if len(epsgListI) > 1:
-			cfg.mx.msgErr60()
+		rEPSG = cfg.osrSCP.SpatialReference()
+		rEPSG.ImportFromWkt(epsgListI[0])
+		for epsg in epsgListI:
+			vEPSG = cfg.osrSCP.SpatialReference()
+			vEPSG.ImportFromWkt(epsg)
+			if vEPSG.IsSame(rEPSG) != 1:
+				cfg.mx.msgErr60()
 		# find raster box
 		iLeft = min(leftList)
 		iTop= max(topList)
@@ -3129,7 +3137,7 @@ class Utils:
 				functionList.append(e)
 				variableList.append(varList)
 			oM = cfg.utls.createTempRasterList(bC-1)
-			oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, "GTiff", cfg.rasterDataType, 0, None, 'No')
+			oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, 'GTiff', cfg.rasterDataType, 0, None, 'No')
 			# close GDAL rasters
 			for b in range(0, len(oMR)):
 				oMR[b] = None
@@ -6641,11 +6649,14 @@ class Utils:
 		
 	# save memory layer to shapefile
 	def saveMemoryLayerToShapefile(self, memoryLayer, output, name = None, format = 'ESRI Shapefile', IDList = None, listFieldName = None):
-		shpF = output
+		if format != 'ESRI Shapefile':
+			shpF = cfg.utls.createTempRasterPath('shp')
+		else:
+			shpF = output
 		# create shapefile
 		dp = memoryLayer.dataProvider()
 		fds = dp.fields()
-		cfg.qgisCoreSCP.QgsVectorFileWriter(str(shpF), 'CP1250', fds, cfg.qgisCoreSCP.QgsWkbTypes.MultiPolygon , memoryLayer.crs(), format)
+		cfg.qgisCoreSCP.QgsVectorFileWriter(str(shpF), 'CP1250', fds, cfg.qgisCoreSCP.QgsWkbTypes.MultiPolygon , memoryLayer.crs(), 'ESRI Shapefile')
 		if name is None:
 			name = cfg.utls.fileName(shpF)
 		tSS = cfg.utls.addVectorLayer(shpF, name, 'ogr')
@@ -6663,6 +6674,9 @@ class Utils:
 		tSS.commitChanges()
 		tSS.dataProvider().createSpatialIndex()
 		tSS.updateExtents()
+		if format != 'ESRI Shapefile':
+			v = cfg.utls.mergeAllLayers([shpF], output)
+			tSS = cfg.utls.addVectorLayer(output)
 		return tSS
 			
 	# save features to shapefile
@@ -6721,7 +6735,7 @@ class Utils:
 		rD = None
 		return nd
 			
-	# Get CRS of a layer
+	# Get CRS of a layer raster or vector
 	def getCrsGDAL(self, layerPath):
 		l = cfg.ogrSCP.Open(layerPath)
 		if l is None:
@@ -7477,6 +7491,10 @@ class Utils:
 			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 			cfg.mx.msg4()
 			return 'No'
+		if not layerPath.lower().endswith('.gpkg'):
+			tVect = cfg.utls.createTempRasterPath('gpkg')
+			v = cfg.utls.mergeAllLayers([layerPath], tVect)
+			layerPath = tVect
 		l = cfg.ogrSCP.Open(layerPath)
 		try:
 			gL = l.GetLayer()
@@ -7512,11 +7530,9 @@ class Utils:
 				gL = l.GetLayer()
 			if filter is not None:
 				gL.SetAttributeFilter(filter)
-				# create a shapefile
-				d = cfg.ogrSCP.GetDriverByName('GPKG')
-				gLCopy = cfg.tmpDir + '/' + 'copy' + dT + cfg.utls.fileNameNoExt(layerPath) + '.gpkg'
-				dS = d.CreateDataSource(gLCopy)
-				ou = dS.CopyLayer(gL,dS.GetName())
+				d = cfg.ogrSCP.GetDriverByName('MEMORY')
+				dS = d.CreateDataSource('memData')
+				ou = dS.CopyLayer(gL,dS.GetName(),['OVERWRITE=YES'])
 				minX, maxX, minY, maxY = ou.GetExtent()
 			else:
 				minX, maxX, minY, maxY = gL.GetExtent()
@@ -7798,7 +7814,7 @@ class Utils:
 		except Exception as err:
 			# logger
 			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err) + ' rasterPath: ' + str(rasterPath))
-			return 'No'
+			return 'No', 'No', 'No', 'No', 'No', 'No', 'No', 'No'
 			
 ##################################
 	''' vector functions '''
