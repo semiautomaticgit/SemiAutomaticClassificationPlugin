@@ -6649,14 +6649,11 @@ class Utils:
 		
 	# save memory layer to shapefile
 	def saveMemoryLayerToShapefile(self, memoryLayer, output, name = None, format = 'ESRI Shapefile', IDList = None, listFieldName = None):
-		if format != 'ESRI Shapefile':
-			shpF = cfg.utls.createTempRasterPath('shp')
+		shpF = output
+		if format == 'ESRI Shapefile':
+			cfg.utls.createSCPShapefile(memoryLayer.crs(), shpF)
 		else:
-			shpF = output
-		# create shapefile
-		dp = memoryLayer.dataProvider()
-		fds = dp.fields()
-		cfg.qgisCoreSCP.QgsVectorFileWriter(str(shpF), 'CP1250', fds, cfg.qgisCoreSCP.QgsWkbTypes.MultiPolygon , memoryLayer.crs(), 'ESRI Shapefile')
+			cfg.utls.createSCPVector(memoryLayer.crs(), shpF, format = format)
 		if name is None:
 			name = cfg.utls.fileName(shpF)
 		tSS = cfg.utls.addVectorLayer(shpF, name, 'ogr')
@@ -6674,9 +6671,6 @@ class Utils:
 		tSS.commitChanges()
 		tSS.dataProvider().createSpatialIndex()
 		tSS.updateExtents()
-		if format != 'ESRI Shapefile':
-			v = cfg.utls.mergeAllLayers([shpF], output)
-			tSS = cfg.utls.addVectorLayer(output)
 		return tSS
 			
 	# save features to shapefile
@@ -7747,7 +7741,7 @@ class Utils:
 				oF = cfg.ogrSCP.Feature(oLDefn)
 				oF.SetGeometry(g)
 				for i in range(0, oLFcount):
-					nmRef = oLDefn.GetFieldDefn(i).GetNameRef()
+					nmRef = iLDefn.GetFieldDefn(i).GetNameRef()
 					field = iF.GetField(i)
 					oF.SetField(nmRef, field)
 				oL.CreateFeature(oF)
@@ -7876,6 +7870,8 @@ class Utils:
 		sR.ImportFromWkt(crsWkt)
 		nm = cfg.utls.fileNameNoExt(outputVector)
 		rL = dS.CreateLayer(nm, sR, cfg.ogrSCP.wkbMultiPolygon)
+		fd0 = cfg.ogrSCP.FieldDefn('fid', cfg.ogrSCP.OFTInteger)
+		rL.CreateField(fd0)
 		fd1 = cfg.ogrSCP.FieldDefn(cfg.fldMacroID_class, cfg.ogrSCP.OFTInteger)
 		rL.CreateField(fd1)
 		fd2 = cfg.ogrSCP.FieldDefn(cfg.fldROIMC_info, cfg.ogrSCP.OFTString)
@@ -7892,14 +7888,14 @@ class Utils:
 		cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'outputVector: ' + str(outputVector))
 		
 	# create a polygon gpkg with OGR
-	def createSCPVector(self, crsWkt, outputVector):
+	def createSCPVector(self, crsWkt, outputVector, format = 'GPKG'):
 		try:
 			crsWkt = str(crsWkt.toWkt())
 		except:
 			pass
 		# logger
 		cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'crsWkt: ' + str(crsWkt))
-		d = cfg.ogrSCP.GetDriverByName('GPKG')
+		d = cfg.ogrSCP.GetDriverByName(format)
 		dS = d.CreateDataSource(outputVector)
 		# shapefile
 		sR = cfg.osrSCP.SpatialReference()

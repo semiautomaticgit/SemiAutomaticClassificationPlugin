@@ -1090,6 +1090,14 @@ class SCPDock:
 		cfg.signList.pop('ML_THRESHOLD_' + str(id))
 		cfg.signList.pop('SAM_THRESHOLD_' + str(id))
 		try:
+			cfg.signList.pop('CHECKBOX' + str(id))
+		except:
+			pass
+		try:
+			cfg.signList.pop('LCS_ROW' + str(id))
+		except:
+			pass
+		try:
 			cfg.scaPlT.removeScatterByID(id)
 			cfg.scaPlT.scatterPlotListTable(cfg.uiscp.scatter_list_plot_tableWidget)
 		except:
@@ -1183,6 +1191,8 @@ class SCPDock:
 		cfg.ROI_Count = {}
 		cfg.ROI_ShapeID = {}
 		cfg.ROI_SCP_UID = {}
+		cfg.treeDockItm = {}
+		cfg.treeDockMCItm = {}
 		if l is not None:
 			i = 0
 			for f in l.getFeatures():
@@ -1446,31 +1456,31 @@ class SCPDock:
 			# ROIs
 			for k in sorted(cfg.ROI_SCP_UID.values()):
 				if str(k) in list(cfg.signIDs.values()):
-					cfg.SCPD.addChildTreeItem(l, [int(cfg.ROI_MC_ID[k]), str(cfg.ROI_MC_Info[k]), int(cfg.ROI_C_ID[k]), str(cfg.ROI_C_Info[k]), cfg.ROISigTypeNm, k], checkboxState = cfg.signList['CHECKBOX_' + str(k)], color = cfg.signList['COLOR_' + str(k)])
+					cfg.SCPD.addChildTreeItem(l, [int(float(cfg.ROI_MC_ID[k])), str(cfg.ROI_MC_Info[k]), int(float(cfg.ROI_C_ID[k])), str(cfg.ROI_C_Info[k]), cfg.ROISigTypeNm, k], checkboxState = cfg.signList['CHECKBOX_' + str(k)], color = cfg.signList['COLOR_' + str(k)])
 					# for signature list coherence
 					try:
-						cfg.signList['MACROCLASSID_' + str(k)] = int(cfg.ROI_MC_ID[k])
+						cfg.signList['MACROCLASSID_' + str(k)] = int(float(cfg.ROI_MC_ID[k]))
 					except:
 						cfg.signList['MACROCLASSID_' + str(k)] = int(0)
 					cfg.signList['MACROCLASSINFO_' + str(k)] = str(cfg.ROI_MC_Info[k])
 					try:
-						cfg.signList['CLASSID_' + str(k)] = int(cfg.ROI_C_ID[k])
+						cfg.signList['CLASSID_' + str(k)] = int(float(cfg.ROI_C_ID[k]))
 					except:
 						cfg.signList['CLASSID_' + str(k)] = int(0)
 					cfg.signList['CLASSINFO_' + str(k)] = str(cfg.ROI_C_Info[k])
 				else:
 					try:
-						cfg.SCPD.addChildTreeItem(l, [int(cfg.ROI_MC_ID[k]), str(cfg.ROI_MC_Info[k]), int(cfg.ROI_C_ID[k]), str(cfg.ROI_C_Info[k]), cfg.ROITypeNm, k], checkboxState = cfg.signList['CHECKBOX_' + str(k)])
+						cfg.SCPD.addChildTreeItem(l, [int(float(cfg.ROI_MC_ID[k])), str(cfg.ROI_MC_Info[k]), int(float(cfg.ROI_C_ID[k])), str(cfg.ROI_C_Info[k]), cfg.ROITypeNm, k], checkboxState = cfg.signList['CHECKBOX_' + str(k)])
 					except:
-						cfg.SCPD.addChildTreeItem(l, [int(cfg.ROI_MC_ID[k]), str(cfg.ROI_MC_Info[k]), int(cfg.ROI_C_ID[k]), str(cfg.ROI_C_Info[k]), cfg.ROITypeNm, k], checkboxState = cfg.QtSCP.Checked)
+						cfg.SCPD.addChildTreeItem(l, [int(float(cfg.ROI_MC_ID[k])), str(cfg.ROI_MC_Info[k]), int(float(cfg.ROI_C_ID[k])), str(cfg.ROI_C_Info[k]), cfg.ROITypeNm, k], checkboxState = cfg.QtSCP.Checked)
 					# for signature list coherence
 					try:
-						cfg.signList['MACROCLASSID_' + str(k)] = int(cfg.ROI_MC_ID[k])
+						cfg.signList['MACROCLASSID_' + str(k)] = int(float(cfg.ROI_MC_ID[k]))
 					except:
 						cfg.signList['MACROCLASSID_' + str(k)] = int(0)
 					cfg.signList['MACROCLASSINFO_' + str(k)] = str(cfg.ROI_MC_Info[k])
 					try:
-						cfg.signList['CLASSID_' + str(k)] = int(cfg.ROI_C_ID[k])
+						cfg.signList['CLASSID_' + str(k)] = int(float(cfg.ROI_C_ID[k]))
 					except:
 						cfg.signList['CLASSID_' + str(k)] = int(0)
 					cfg.signList['CLASSINFO_' + str(k)] = str(cfg.ROI_C_Info[k])
