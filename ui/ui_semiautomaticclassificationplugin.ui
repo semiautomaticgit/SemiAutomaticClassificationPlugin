@@ -1088,9 +1088,6 @@ unit</string>
                       <attribute name="verticalHeaderVisible">
                        <bool>false</bool>
                       </attribute>
-                      <attribute name="verticalHeaderDefaultSectionSize">
-                       <number>20</number>
-                      </attribute>
                       <column>
                        <property name="text">
                         <string>Band</string>
@@ -3099,8 +3096,8 @@ QTabBar::tab:selected { font: bold; color: green; }</string>
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>909</width>
-                     <height>392</height>
+                     <width>357</width>
+                     <height>448</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -3345,8 +3342,8 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>923</width>
-                     <height>382</height>
+                     <width>417</width>
+                     <height>165</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -4476,7 +4473,7 @@ min-height: 18px;
                  <attribute name="title">
                   <string>Login data</string>
                  </attribute>
-                 <layout class="QGridLayout" name="gridLayout_login">
+                 <layout class="QGridLayout" name="gridLayout_238">
                   <item row="0" column="0">
                    <layout class="QGridLayout" name="gridLayout_227">
                     <item row="1" column="4">
@@ -4613,6 +4610,13 @@ min-height: 18px;
                   </item>
                   <item row="2" column="0">
                    <layout class="QGridLayout" name="gridLayout_159">
+                    <item row="2" column="1">
+                     <widget class="QLineEdit" name="user_scihub_lineEdit">
+                      <property name="toolTip">
+                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;User name&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                      </property>
+                     </widget>
+                    </item>
                     <item row="2" column="2">
                      <widget class="QLabel" name="password_scihub_label">
                       <property name="text">
@@ -4659,13 +4663,6 @@ min-height: 18px;
                      <widget class="QLabel" name="user_scihub_label">
                       <property name="text">
                        <string>User</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="2" column="1">
-                     <widget class="QLineEdit" name="user_scihub_lineEdit">
-                      <property name="toolTip">
-                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;User name&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                       </property>
                      </widget>
                     </item>
@@ -4719,6 +4716,16 @@ min-height: 18px;
                        </widget>
                       </item>
                      </layout>
+                    </item>
+                    <item row="3" column="0" colspan="5">
+                     <widget class="QCheckBox" name="sentinel2_alternative_search_checkBox">
+                      <property name="toolTip">
+                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If checked, use alternative search for Sentinel-2 (no authentication required)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                      </property>
+                      <property name="text">
+                       <string>Use alternative search for Sentinel-2 (no authentication required)</string>
+                      </property>
+                     </widget>
                     </item>
                    </layout>
                   </item>
@@ -12792,8 +12799,8 @@ distance</string>
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>923</width>
-                     <height>413</height>
+                     <width>343</width>
+                     <height>180</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -15816,8 +15823,8 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>923</width>
-                     <height>413</height>
+                     <width>428</width>
+                     <height>229</height>
                     </rect>
                    </property>
                    <attribute name="label">

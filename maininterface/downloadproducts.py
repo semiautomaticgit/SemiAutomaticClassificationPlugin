@@ -473,6 +473,27 @@ class DownloadProducts:
 						
 	# display image in label
 	def previewInLabel(self, imagePath):
+		tmpImage = imagePath.replace('.jp2', '.png')
+		if imagePath.endswith('.jp2') and not cfg.osSCP.path.isfile(tmpImage):
+			cfg.utls.getGDALForMac()
+			# georeference thumbnail
+			a = cfg.gdalPath + 'gdal_translate ' + imagePath + ' ' + tmpImage + ' -of PNG'
+			if cfg.sysSCPNm != 'Windows':
+				a = cfg.shlexSCP.split(a)
+			try:
+				if cfg.sysSCPNm == 'Windows':
+					startupinfo = cfg.subprocessSCP.STARTUPINFO()
+					startupinfo.dwFlags = cfg.subprocessSCP.STARTF_USESHOWWINDOW
+					startupinfo.wShowWindow = cfg.subprocessSCP.SW_HIDE
+					sP = cfg.subprocessSCP.Popen(a, shell=False, startupinfo = startupinfo, stdin = cfg.subprocessSCP.DEVNULL)
+				else:
+					sP = cfg.subprocessSCP.Popen(a, shell=False)
+				sP.wait()
+			# in case of errors
+			except Exception as err:
+				# logger
+				cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+		imagePath = tmpImage
 		label = cfg.ui.image_preview_label
 		pixmap = cfg.QtGuiSCP.QPixmap(imagePath).scaled(300, 300)
 		label.setPixmap(pixmap)
@@ -1142,6 +1163,12 @@ class DownloadProducts:
 			cfg.utls.setQGISRegSetting(cfg.regSciHubUser, '')
 			cfg.utls.setQGISRegSetting(cfg.regSciHubPass, '')
 			
+	def alternativeCheckboxSentinel2(self):
+		if cfg.ui.sentinel2_alternative_search_checkBox.isChecked():
+			cfg.utls.setQGISRegSetting(cfg.regSentinelAlternativeSearch, '2')
+		else:
+			cfg.utls.setQGISRegSetting(cfg.regSentinelAlternativeSearch, '0')
+			
 	# reset service
 	def resetService(self):
 		cfg.ui.sentinel_service_lineEdit.setText(cfg.SciHubServiceNm)
@@ -1195,7 +1222,7 @@ class DownloadProducts:
 		if preview == 'Yes' and cfg.osSCP.path.isfile(imOut):
 			self.previewInLabel(imOut)
 			return imOut
-		if cfg.osSCP.path.isfile(imOut  + '.vrt'):
+		if cfg.osSCP.path.isfile(imOut  + '.vrt') or cfg.osSCP.path.isfile(imOut.replace('.jp2', '.png')  + '.vrt'):
 			l = cfg.utls.selectLayerbyName(imgID)
 			if l is not None:		
 				cfg.utls.setLayerVisible(l, True)
@@ -1203,25 +1230,26 @@ class DownloadProducts:
 			else:
 				r =cfg.utls.addRasterLayer(imOut + '.vrt', imgID)
 		else:
-			# single granule
-			if 'MB' in str(tW.item(i, 10).text()) or imgNm[0:4] == 'L2A_':
+			if 'storage.googleapis.com' in url:
+				check = cfg.utls.downloadFile(url, imOut, None, progress)
+			else:
+				check = self.downloadFileSentinel2(url, imOut, progress)
+			if check == 'Yes':
+				if preview == 'Yes':
+					self.previewInLabel(imOut)
+					return imOut
 				min_lat = str(tW.item(i, 6).text())
 				min_lon = str(tW.item(i, 7).text())
 				max_lat = str(tW.item(i, 8).text())
 				max_lon = str(tW.item(i, 9).text())
-				self.downloadThumbnailSentinel2(imgID, min_lat, min_lon, max_lat, max_lon, url, progress, preview)
-				if cfg.osSCP.path.isfile(imOut + '.vrt'):
-					r =cfg.utls.addRasterLayer(imOut + '.vrt', imgID.replace('.vrt',''))
-					cfg.utls.setRasterColorComposite(r, 1, 2, 3)
-			else:
-				self.downloadFileSentinel2(url, imOut + '.vrt', progress)
+				self.onflyGeorefImage(imOut, imOut + '.vrt', min_lon, max_lon, min_lat, max_lat)
 				if cfg.osSCP.path.isfile(imOut + '.vrt'):
 					r =cfg.utls.addRasterLayer(imOut + '.vrt', imgID.replace('.vrt',''))
 		# logger
 		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' granules displayed')
 					
-	# read database
-	def queryDatabaseSentinel2(self):
+	# use CREODIAS Finder API https://creodias.eu/ (from https://creodias.eu/eo-data-finder-api-manual the database is accessible free and anonymously, and open for anonymous access to everyone, no authorization is used). For other DIAS platforms see https://www.copernicus.eu/en/access-data/dias
+	def queryDatabaseSentinel2Alternative(self):
 		QdateFrom = cfg.ui.dateEdit_from.date()
 		QdateTo = cfg.ui.dateEdit_to.date()
 		dateFrom = QdateFrom.toPyDate().strftime('%Y-%m-%d') 
@@ -1259,123 +1287,66 @@ class DownloadProducts:
 				cfg.mx.msg23()
 				return 'No'
 		cfg.uiUtls.addProgressBar()
+		imgQuery = cfg.ui.imageID_lineEdit.text()
+		if len(imgQuery) == 0:
+			imgQuery = 'S2'
 		tW = cfg.ui.download_images_tableWidget
 		cfg.uiUtls.updateBar(30, cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Searching ...'))
 		cfg.QtWidgetsSCP.qApp.processEvents()
-		user = cfg.ui.user_scihub_lineEdit.text()
-		password =cfg.ui.password_scihub_lineEdit.text()
 		imageTableList = []
-		# check url
-		topLevelUrl = cfg.ui.sentinel_service_lineEdit.text()
-		topUrl =topLevelUrl
 		# loop for results
 		maxResultNum = resultNum
 		if maxResultNum > 100:
 			maxResultNum = 100
 		for startR in range(0, resultNum, maxResultNum):
 			if NoRect == 'Yes':
-				url = topUrl + '/search?q=(' + imgQuery + 'platformname:Sentinel-2)%20AND%20cloudcoverpercentage:[0%20TO%20' + str(maxCloudCover) + ']%20AND%20beginPosition:[' + str(dateFrom) + 'T00:00:00.000Z%20TO%20' + str(dateTo) + 'T23:59:59.999Z]' + '&rows=' + str(maxResultNum) + '&start=' + str(startR)
+				url = 'https://finder.creodias.eu/resto/api/collections/Sentinel2/search.json?cloudCover=[0%2C' + str(maxCloudCover) + ']&maxRecords=' + str(maxResultNum) + '&page=' + str(startR+1) + '&sortParam=startDate&sortOrder=descending&status=all&dataset=ESA-DATASET' + '&productIdentifier=%25' + imgQuery + '%25&startDate=' + str(dateFrom) + 'T00%3A00%3A00Z&completionDate=' + str(dateTo) + 'T23%3A59%3A59Z'
 			else:
-				url = topUrl + '/search?q=(' + imgQuery + 'platformname:Sentinel-2)%20AND%20cloudcoverpercentage:[0%20TO%20' + str(maxCloudCover) + ']%20AND%20beginPosition:[' + str(dateFrom) + 'T00:00:00.000Z%20TO%20' + str(dateTo) + 'T23:59:59.999Z]%20AND%20footprint:%22Intersects(POLYGON((' + cfg.ui.UX_lineEdit_3.text() + '%20' + cfg.ui.UY_lineEdit_3.text() + ',' + cfg.ui.UX_lineEdit_3.text() + '%20' + cfg.ui.LY_lineEdit_3.text() + ',' + cfg.ui.LX_lineEdit_3.text() + '%20' + cfg.ui.LY_lineEdit_3.text() + ',' + cfg.ui.LX_lineEdit_3.text() + '%20' + cfg.ui.UY_lineEdit_3.text() + ',' + cfg.ui.UX_lineEdit_3.text() + '%20' + cfg.ui.UY_lineEdit_3.text() + ')))%22' + '&rows=' + str(maxResultNum) + '&start=' + str(startR)
-			response = cfg.utls.passwordConnectPython(user, password, url, topLevelUrl, quiet = 'Yes')
-			if response == 'No':
-				# second try
-				topLevelUrl = 'https://scihub.copernicus.eu/dhus'
-				url = url.replace(topUrl, topLevelUrl)
-				topUrl =topLevelUrl
-				response = cfg.utls.passwordConnectPython(user, password, url, topLevelUrl)
-				if response == 'No':
-					cfg.uiUtls.removeProgressBar()
-					return 'No'
-			#info = response.info()
+				url = 'https://finder.creodias.eu/resto/api/collections/Sentinel2/search.json?cloudCover=[0%2C' + str(maxCloudCover) + ']&maxRecords=' + str(maxResultNum) + '&page=' + str(startR+1) + '&sortParam=startDate&sortOrder=descending&status=all&dataset=ESA-DATASET' + '&productIdentifier=%25' + imgQuery + '%25&startDate=' + str(dateFrom) + 'T00%3A00%3A00Z&completionDate=' + str(dateTo) + 'T23%3A59%3A59Z&geometry=POLYGON((' + cfg.ui.UX_lineEdit_3.text() + '%20' + cfg.ui.UY_lineEdit_3.text() + ',' + cfg.ui.UX_lineEdit_3.text() + '%20' + cfg.ui.LY_lineEdit_3.text() + ',' + cfg.ui.LX_lineEdit_3.text() + '%20' + cfg.ui.LY_lineEdit_3.text() + ',' + cfg.ui.LX_lineEdit_3.text() + '%20' + cfg.ui.UY_lineEdit_3.text() + ',' + cfg.ui.UX_lineEdit_3.text() + '%20' + cfg.ui.UY_lineEdit_3.text() + '))'
+			jsonT = cfg.utls.createTempRasterPath('json')
+			check = cfg.utls.downloadFile(url, jsonT)
+			if check != 'Yes':
+				cfg.uiUtls.removeProgressBar()
+				return 'No'
 			try:
-				xml = response.read()
-				doc = cfg.minidomSCP.parseString(xml)
+				with open(jsonT) as jsonTF:
+					doc = cfg.jsonSCP.load(jsonTF)
 			except Exception as err:
 				# logger
 				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
-				try:
-					if 'HTTP Status 500' in xml:
-						cfg.mx.msgWar24()
-					else:
-						cfg.mx.msgErr40()
-				except:
-					cfg.mx.msgErr40()
+				cfg.mx.msgErr40()
 				cfg.uiUtls.removeProgressBar()
 				return 'No'
 			tW.setSortingEnabled(False)
-			entries = doc.getElementsByTagName('entry')
+			entries = doc['features']
 			e = 0
 			for entry in entries:
 				if cfg.actionCheck == 'Yes':
 					productType = 'S2MSI1C'
 					e = e + 1
 					cfg.uiUtls.updateBar(30 + e * int(70/len(entries)), cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Searching ...'))
-					imgNameTag = entry.getElementsByTagName('title')[0]
-					imgName = imgNameTag.firstChild.data
-					imgIDTag = entry.getElementsByTagName('id')[0]
-					imgID = imgIDTag.firstChild.data
-					summary = entry.getElementsByTagName('summary')[0]
-					infos = summary.firstChild.data.split(',')
-					for info in infos:
-						infoIt = info.strip().split(' ')
-						if infoIt[0] == 'Date:':
-							acqDateI = infoIt[1]
-						# if infoIt[0] == 'Satellite:':
-							# print "Satellite " + infoIt[1]
-						if infoIt[0] == 'Size:':
-							size = infoIt[1] + ' ' + infoIt[2]
-					strings = entry.getElementsByTagName('str')
-					for x in strings:
-						attr = x.getAttribute('name')
-						if attr == 'producttype':
-							productType = x.firstChild.data
-						if attr == 'footprint':
-							footprintCoord = x.firstChild.data.replace('MULTIPOLYGON (((', '').replace('POLYGON ((', '').replace(')))', '').replace('))', '').split(',')
-							xList = []
-							yList = []
-							for coords in footprintCoord:
-								cc = coords.lstrip()
-								xList.append(float(cc.split(' ')[0]))
-								yList.append(float(cc.split(' ')[1]))
-							min_lon = min(xList)
-							max_lon = max(xList)
-							min_lat = min(yList)
-							max_lat = max(yList)
-					doubles = entry.getElementsByTagName('double')
-					for xd in doubles:
-						attr = xd.getAttribute('name')
-						if attr == 'cloudcoverpercentage':
-							cloudcoverpercentage = xd.firstChild.data
+					imgName = entry['properties']['title'].replace('.SAFE', '')
+					acqDateI =  entry['properties']['startDate']
+					productType =  entry['properties']['productType']
+					cloudcoverpercentage =  entry['properties']['cloudCover']
+					footprintCoord =  entry['geometry']['coordinates'][0]
+					xList = []
+					yList = []
+					for coords in footprintCoord:
+						xList.append(float(coords[0]))
+						yList.append(float(coords[1]))
+					min_lon = min(xList)
+					max_lon = max(xList)
+					min_lat = min(yList)
+					max_lat = max(yList)
 					if cfg.actionCheck == 'Yes':
 						# download Sentinel data using the service https://storage.googleapis.com/gcp-public-data-sentinel-2
-						if productType == 'S2MSI2Ap' or productType == 'S2MSI2A':
-							url2 = 'https://storage.googleapis.com/gcp-public-data-sentinel-2/L2/tiles/' + imgName[39:41] + '/'+  imgName[41]  + '/'+ imgName[42:44] + '/' +imgName + '.SAFE/MTD_MSIL2A.xml'
-						else:
+						if productType == 'L1C':
 							url2 = 'https://storage.googleapis.com/gcp-public-data-sentinel-2/tiles/' + imgName[39:41] + '/'+  imgName[41]  + '/'+ imgName[42:44] + '/' +imgName + '.SAFE/MTD_MSIL1C.xml'
+						else:
+							url2 = 'https://storage.googleapis.com/gcp-public-data-sentinel-2/L2/tiles/' + imgName[39:41] + '/'+  imgName[41]  + '/'+ imgName[42:44] + '/' +imgName + '.SAFE/MTD_MSIL2A.xml'
 						xml2T = cfg.utls.createTempRasterPath('xml')
 						check = cfg.utls.downloadFile(url2, xml2T)
-						if check == 'Yes':
-							pass
-						else:
-							xml2T = None
-							if productType == 'S2MSI2Ap' or productType == 'S2MSI2A':
-								url2 = topUrl + "/odata/v1/Products('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('MTD_MSIL2A.xml')/$value"
-							else:
-								url2 = topUrl + "/odata/v1/Products('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('MTD_MSIL1C.xml')/$value"
-							response2 = cfg.utls.passwordConnectPython(user, password, url2, topLevelUrl, None, None, quiet = 'No')
-							try:
-								xml2 = response2.read()
-							except:
-								xml2 = response2
-							if len(xml2) == 0 or 'Navigation failed' in str(xml2) or 'Internal Server Error' in str(xml2):
-								# old xml version
-								#url2 = topUrl + "/odata/v1/Products('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('" + imgName.replace('_PRD_MSIL1C_', '_MTD_SAFL1C_') + ".xml')/$value"
-								#response2 = cfg.utls.passwordConnectPython(user, password, url2, topLevelUrl)
-								pass
-							if response2 == 'No':
-								cfg.uiUtls.removeProgressBar()
-								return 'No'
 						# logger
 						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' xml downloaded' )
 						try:
@@ -1397,25 +1368,29 @@ class DownloadProducts:
 										c = tW.rowCount()
 										# add list items to table
 										tW.setRowCount(c + 1)
-										if xml2T is None:
-											imgPreview = topUrl + "/odata/v1/Products('" +  imgID + "')/Products('Quicklook')/$value"
-											imgPreview2 = topUrl + "/odata/v1/Products('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('IMG_DATA')/Nodes('" + imgName2[0:-7] + "_B01.jp2')/$value"
+										if productType == 'L1C':
+											imgName3 = imgName2Tag.firstChild.data.split('/')[3]
+											imgName3 = imgName3.split('_')
+											pviName = imgName3[0] + '_' + imgName3[1] + '_PVI.jp2'
+											imgPreview = 'https://storage.googleapis.com/gcp-public-data-sentinel-2/tiles/' + imgName[39:41] + '/'+  imgName[41]  + '/'+ imgName[42:44] + '/' +imgName + '.SAFE/GRANULE/' + imgName2 + '/QI_DATA/' + pviName 
 										else:
-											imgPreview = topUrl + "/odata/v1/Products('" +  imgID + "')/Products('Quicklook')/$value"
-											imgPreview2 = topUrl + "/odata/v1/Products('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('IMG_DATA')/Nodes('" + imgName2[0:-7] + "_B01.jp2')/$value"
+											imgName3 = imgName2Tag.firstChild.data.split('/')[4]
+											imgName3 = imgName3.split('_')
+											pviName = imgName3[0] + '_' + imgName3[1] + '_PVI.jp2'
+											imgPreview = 'https://storage.googleapis.com/gcp-public-data-sentinel-2/L2/tiles/' + imgName[39:41] + '/'+  imgName[41]  + '/'+ imgName[42:44] + '/' +imgName + '.SAFE/GRANULE/' + imgName2 + '/QI_DATA/' + pviName
 										cfg.utls.addTableItem(tW, sat, c, 0)
 										cfg.utls.addTableItem(tW, imgName2, c, 1)
 										cfg.utls.addTableItem(tW, acqDateI, c, 2)
 										cfg.utls.addTableItem(tW, float(cloudcoverpercentage), c, 3)
 										cfg.utls.addTableItem(tW, acZoneI, c, 4)
-										cfg.utls.addTableItem(tW, "", c, 5)
+										cfg.utls.addTableItem(tW, '', c, 5)
 										cfg.utls.addTableItem(tW, float(min_lat), c, 6)
 										cfg.utls.addTableItem(tW, float(min_lon), c, 7)
 										cfg.utls.addTableItem(tW, float(max_lat), c, 8)
 										cfg.utls.addTableItem(tW, float(max_lon), c, 9)
-										cfg.utls.addTableItem(tW, size, c, 10)
+										cfg.utls.addTableItem(tW, '', c, 10)
 										cfg.utls.addTableItem(tW, imgPreview, c, 11)
-										cfg.utls.addTableItem(tW, imgID, c, 12)
+										cfg.utls.addTableItem(tW, imgName, c, 12)
 										cfg.utls.addTableItem(tW, imgName, c, 13)
 										newV = 'Yes'
 										break
@@ -1432,61 +1407,296 @@ class DownloadProducts:
 										cfg.utls.addTableItem(tW, imgName, c, 1, 'Yes', co)
 										cfg.utls.addTableItem(tW, acqDateI, c, 2, 'Yes', co)
 										cfg.utls.addTableItem(tW, float(cloudcoverpercentage), c, 3, 'Yes', co)
-										cfg.utls.addTableItem(tW, "", c, 4, 'Yes', co)
-										cfg.utls.addTableItem(tW, "", c, 5, 'Yes', co)
+										cfg.utls.addTableItem(tW, '', c, 4, 'Yes', co)
+										cfg.utls.addTableItem(tW, '', c, 5, 'Yes', co)
 										cfg.utls.addTableItem(tW, float(min_lat), c, 6, 'Yes', co)
 										cfg.utls.addTableItem(tW, float(min_lon), c, 7, 'Yes', co)
 										cfg.utls.addTableItem(tW, float(max_lat), c, 8, 'Yes', co)
 										cfg.utls.addTableItem(tW, float(max_lon), c, 9, 'Yes', co)
-										cfg.utls.addTableItem(tW, size, c, 10, 'Yes', co)
-										cfg.utls.addTableItem(tW, "", c, 11, 'Yes', co)
-										cfg.utls.addTableItem(tW, imgID, c, 12, 'Yes', co)
+										cfg.utls.addTableItem(tW, '', c, 10, 'Yes', co)
+										cfg.utls.addTableItem(tW, '', c, 11, 'Yes', co)
+										cfg.utls.addTableItem(tW, imgName, c, 12, 'Yes', co)
 										cfg.utls.addTableItem(tW, imgName, c, 13, 'Yes', co)
 										newV = 'Yes'
 										# logger
 										cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 										break
-						if newV is None:
-							# old xml version
-							try:
-								doc2 = cfg.minidomSCP.parseString(xml2)
-								entries2 = doc2.getElementsByTagName("Granules")
-								if len(entries2) == 0:
-									entries2 = doc2.getElementsByTagName("Granule")
-								for entry2 in entries2:
-									if cfg.actionCheck == 'Yes':
-										imgName2 = entry2.attributes["granuleIdentifier"].value
-										for filter in imageFindList:
-											if filter in imgName.lower() or filter in imgName2.lower():
-												acZoneI = imgName2[-12:-7]
-												# add item to table
-												c = tW.rowCount()
-												# add list items to table
-												tW.setRowCount(c + 1)
-												imgPreview = topUrl + "/odata/v1/Products('" +  imgID + "')/Products('Quicklook')/$value"
-												imgPreview2 = topUrl + "/odata/v1/Products('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('IMG_DATA')/Nodes('" + imgName2[0:-7] + "_B01.jp2')/$value"
-												cfg.utls.addTableItem(tW, sat, c, 0)
-												cfg.utls.addTableItem(tW, imgName2, c, 1)
-												cfg.utls.addTableItem(tW, acqDateI, c, 2)
-												cfg.utls.addTableItem(tW, float(cloudcoverpercentage), c, 3)
-												cfg.utls.addTableItem(tW, acZoneI, c, 4)
-												cfg.utls.addTableItem(tW, "", c, 5)
-												cfg.utls.addTableItem(tW, float(min_lat), c, 6)
-												cfg.utls.addTableItem(tW, float(min_lon), c, 7)
-												cfg.utls.addTableItem(tW, float(max_lat), c, 8)
-												cfg.utls.addTableItem(tW, float(max_lon), c, 9)
-												cfg.utls.addTableItem(tW, size, c, 10)
-												cfg.utls.addTableItem(tW, imgPreview2, c, 11)
-												cfg.utls.addTableItem(tW, imgID, c, 12)
-												cfg.utls.addTableItem(tW, imgName, c, 13)
-							except Exception as err:
-								# logger
-								cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 		tW.setSortingEnabled(True)		
 		cfg.uiUtls.removeProgressBar()
 		self.clearCanvasPoly()
 		# logger
-		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " Sentinel images")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' Sentinel images')
+		
+	# read database
+	def queryDatabaseSentinel2(self):
+		if len(cfg.ui.user_scihub_lineEdit.text()) == 0 or cfg.ui.sentinel2_alternative_search_checkBox.isChecked():
+			cfg.downProd.queryDatabaseSentinel2Alternative()
+		else:
+			QdateFrom = cfg.ui.dateEdit_from.date()
+			QdateTo = cfg.ui.dateEdit_to.date()
+			dateFrom = QdateFrom.toPyDate().strftime('%Y-%m-%d') 
+			dateTo = QdateTo.toPyDate().strftime('%Y-%m-%d') 
+			maxCloudCover = int(cfg.ui.cloud_cover_spinBox.value())
+			resultNum = int(cfg.ui.result_number_spinBox_2.value())
+			sat = cfg.ui.landsat_satellite_combo.currentText()
+			imageFindList = []
+			m = 'S2*'
+			if len(cfg.ui.imageID_lineEdit.text()) > 0:
+				imgIDLine = cfg.ui.imageID_lineEdit.text()
+				imgIDLineSplit = str(imgIDLine).replace(' ', '').split(';')
+				if len(imgIDLineSplit) == 1:
+					imgIDLineSplit = str(imgIDLine).replace(' ', '').split(',')
+				for m in imgIDLineSplit:
+					imageFindList.append(m.lower().replace('*', ''))
+				imgQuery = ''
+				if len(imageFindList) == 1:
+					imgQuery = m + '%20AND%20'
+			else:
+				imageFindList.append('s2')
+				imgQuery = ''
+			try:
+				NoRect = 'No'
+				rubbRect = cfg.qgisCoreSCP.QgsRectangle(float(cfg.ui.UX_lineEdit_3.text()), float(cfg.ui.UY_lineEdit_3.text()), float(cfg.ui.LX_lineEdit_3.text()), float(cfg.ui.LY_lineEdit_3.text()))
+				if abs(float(cfg.ui.UX_lineEdit_3.text()) - float(cfg.ui.LX_lineEdit_3.text())) > 10 or abs(float(cfg.ui.UY_lineEdit_3.text()) - float(cfg.ui.LY_lineEdit_3.text())) > 10:
+					cfg.mx.msgWar18()
+			except Exception as err:
+				if len(imageFindList) == 1:
+					imgQuery = m + '*' + '%20AND%20'
+					NoRect = 'Yes'
+				else:
+					# logger
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+					cfg.mx.msg23()
+					return 'No'
+			cfg.uiUtls.addProgressBar()
+			tW = cfg.ui.download_images_tableWidget
+			cfg.uiUtls.updateBar(30, cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Searching ...'))
+			cfg.QtWidgetsSCP.qApp.processEvents()
+			user = cfg.ui.user_scihub_lineEdit.text()
+			password =cfg.ui.password_scihub_lineEdit.text()
+			imageTableList = []
+			# check url
+			topLevelUrl = cfg.ui.sentinel_service_lineEdit.text()
+			topUrl =topLevelUrl
+			# loop for results
+			maxResultNum = resultNum
+			if maxResultNum > 100:
+				maxResultNum = 100
+			for startR in range(0, resultNum, maxResultNum):
+				if NoRect == 'Yes':
+					url = topUrl + '/search?q=(' + imgQuery + 'platformname:Sentinel-2)%20AND%20cloudcoverpercentage:[0%20TO%20' + str(maxCloudCover) + ']%20AND%20beginPosition:[' + str(dateFrom) + 'T00:00:00.000Z%20TO%20' + str(dateTo) + 'T23:59:59.999Z]' + '&rows=' + str(maxResultNum) + '&start=' + str(startR)
+				else:
+					url = topUrl + '/search?q=(' + imgQuery + 'platformname:Sentinel-2)%20AND%20cloudcoverpercentage:[0%20TO%20' + str(maxCloudCover) + ']%20AND%20beginPosition:[' + str(dateFrom) + 'T00:00:00.000Z%20TO%20' + str(dateTo) + 'T23:59:59.999Z]%20AND%20footprint:%22Intersects(POLYGON((' + cfg.ui.UX_lineEdit_3.text() + '%20' + cfg.ui.UY_lineEdit_3.text() + ',' + cfg.ui.UX_lineEdit_3.text() + '%20' + cfg.ui.LY_lineEdit_3.text() + ',' + cfg.ui.LX_lineEdit_3.text() + '%20' + cfg.ui.LY_lineEdit_3.text() + ',' + cfg.ui.LX_lineEdit_3.text() + '%20' + cfg.ui.UY_lineEdit_3.text() + ',' + cfg.ui.UX_lineEdit_3.text() + '%20' + cfg.ui.UY_lineEdit_3.text() + ')))%22' + '&rows=' + str(maxResultNum) + '&start=' + str(startR)
+				response = cfg.utls.passwordConnectPython(user, password, url, topLevelUrl, quiet = 'Yes')
+				if response == 'No':
+					# second try
+					topLevelUrl = 'https://scihub.copernicus.eu/dhus'
+					url = url.replace(topUrl, topLevelUrl)
+					topUrl =topLevelUrl
+					response = cfg.utls.passwordConnectPython(user, password, url, topLevelUrl)
+					if response == 'No':
+						cfg.uiUtls.removeProgressBar()
+						return 'No'
+				#info = response.info()
+				try:
+					xml = response.read()
+					doc = cfg.minidomSCP.parseString(xml)
+				except Exception as err:
+					# logger
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+					try:
+						if 'HTTP Status 500' in xml:
+							cfg.mx.msgWar24()
+						else:
+							cfg.mx.msgErr40()
+					except:
+						cfg.mx.msgErr40()
+					cfg.uiUtls.removeProgressBar()
+					return 'No'
+				tW.setSortingEnabled(False)
+				entries = doc.getElementsByTagName('entry')
+				e = 0
+				for entry in entries:
+					if cfg.actionCheck == 'Yes':
+						productType = 'S2MSI1C'
+						e = e + 1
+						cfg.uiUtls.updateBar(30 + e * int(70/len(entries)), cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Searching ...'))
+						imgNameTag = entry.getElementsByTagName('title')[0]
+						imgName = imgNameTag.firstChild.data
+						imgIDTag = entry.getElementsByTagName('id')[0]
+						imgID = imgIDTag.firstChild.data
+						summary = entry.getElementsByTagName('summary')[0]
+						infos = summary.firstChild.data.split(',')
+						for info in infos:
+							infoIt = info.strip().split(' ')
+							if infoIt[0] == 'Date:':
+								acqDateI = infoIt[1]
+							# if infoIt[0] == 'Satellite:':
+								# print "Satellite " + infoIt[1]
+							if infoIt[0] == 'Size:':
+								size = infoIt[1] + ' ' + infoIt[2]
+						strings = entry.getElementsByTagName('str')
+						for x in strings:
+							attr = x.getAttribute('name')
+							if attr == 'producttype':
+								productType = x.firstChild.data
+							if attr == 'footprint':
+								footprintCoord = x.firstChild.data.replace('MULTIPOLYGON (((', '').replace('POLYGON ((', '').replace(')))', '').replace('))', '').split(',')
+								xList = []
+								yList = []
+								for coords in footprintCoord:
+									cc = coords.lstrip()
+									xList.append(float(cc.split(' ')[0]))
+									yList.append(float(cc.split(' ')[1]))
+								min_lon = min(xList)
+								max_lon = max(xList)
+								min_lat = min(yList)
+								max_lat = max(yList)
+						doubles = entry.getElementsByTagName('double')
+						for xd in doubles:
+							attr = xd.getAttribute('name')
+							if attr == 'cloudcoverpercentage':
+								cloudcoverpercentage = xd.firstChild.data
+						if cfg.actionCheck == 'Yes':
+							# download Sentinel data using the service https://storage.googleapis.com/gcp-public-data-sentinel-2
+							if productType == 'S2MSI2Ap' or productType == 'S2MSI2A':
+								url2 = 'https://storage.googleapis.com/gcp-public-data-sentinel-2/L2/tiles/' + imgName[39:41] + '/'+  imgName[41]  + '/'+ imgName[42:44] + '/' +imgName + '.SAFE/MTD_MSIL2A.xml'
+							else:
+								url2 = 'https://storage.googleapis.com/gcp-public-data-sentinel-2/tiles/' + imgName[39:41] + '/'+  imgName[41]  + '/'+ imgName[42:44] + '/' +imgName + '.SAFE/MTD_MSIL1C.xml'
+							xml2T = cfg.utls.createTempRasterPath('xml')
+							check = cfg.utls.downloadFile(url2, xml2T)
+							if check == 'Yes':
+								pass
+							else:
+								xml2T = None
+								if productType == 'S2MSI2Ap' or productType == 'S2MSI2A':
+									url2 = topUrl + "/odata/v1/Products('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('MTD_MSIL2A.xml')/$value"
+								else:
+									url2 = topUrl + "/odata/v1/Products('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('MTD_MSIL1C.xml')/$value"
+								response2 = cfg.utls.passwordConnectPython(user, password, url2, topLevelUrl, None, None, quiet = 'No')
+								try:
+									xml2 = response2.read()
+								except:
+									xml2 = response2
+								if len(xml2) == 0 or 'Navigation failed' in str(xml2) or 'Internal Server Error' in str(xml2):
+									# old xml version
+									#url2 = topUrl + "/odata/v1/Products('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('" + imgName.replace('_PRD_MSIL1C_', '_MTD_SAFL1C_') + ".xml')/$value"
+									#response2 = cfg.utls.passwordConnectPython(user, password, url2, topLevelUrl)
+									pass
+								if response2 == 'No':
+									cfg.uiUtls.removeProgressBar()
+									return 'No'
+							# logger
+							cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' xml downloaded' )
+							try:
+								newV = None
+								if xml2T is not None:
+									doc2 = cfg.minidomSCP.parse(xml2T)
+								else:
+									doc2 = cfg.minidomSCP.parseString(xml2)
+								try:
+									imgName2Tag = doc2.getElementsByTagName('IMAGE_FILE')[0]
+								except:
+									imgName2Tag = doc2.getElementsByTagName('IMAGE_FILE_2A')[0]
+								imgName2 = imgName2Tag.firstChild.data.split('/')[1]
+								if cfg.actionCheck == 'Yes':								
+									for filter in imageFindList:
+										if filter in imgName.lower() or filter in imgName2.lower():
+											acZoneI = imgName2.split("_")[1][1:]
+											# add item to table
+											c = tW.rowCount()
+											# add list items to table
+											tW.setRowCount(c + 1)
+											if xml2T is None:
+												imgPreview = topUrl + "/odata/v1/Products('" +  imgID + "')/Products('Quicklook')/$value"
+												imgPreview2 = topUrl + "/odata/v1/Products('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('IMG_DATA')/Nodes('" + imgName2[0:-7] + "_B01.jp2')/$value"
+											else:
+												imgPreview = topUrl + "/odata/v1/Products('" +  imgID + "')/Products('Quicklook')/$value"
+												imgPreview2 = topUrl + "/odata/v1/Products('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('IMG_DATA')/Nodes('" + imgName2[0:-7] + "_B01.jp2')/$value"
+											cfg.utls.addTableItem(tW, sat, c, 0)
+											cfg.utls.addTableItem(tW, imgName2, c, 1)
+											cfg.utls.addTableItem(tW, acqDateI, c, 2)
+											cfg.utls.addTableItem(tW, float(cloudcoverpercentage), c, 3)
+											cfg.utls.addTableItem(tW, acZoneI, c, 4)
+											cfg.utls.addTableItem(tW, "", c, 5)
+											cfg.utls.addTableItem(tW, float(min_lat), c, 6)
+											cfg.utls.addTableItem(tW, float(min_lon), c, 7)
+											cfg.utls.addTableItem(tW, float(max_lat), c, 8)
+											cfg.utls.addTableItem(tW, float(max_lon), c, 9)
+											cfg.utls.addTableItem(tW, size, c, 10)
+											cfg.utls.addTableItem(tW, imgPreview, c, 11)
+											cfg.utls.addTableItem(tW, imgID, c, 12)
+											cfg.utls.addTableItem(tW, imgName, c, 13)
+											newV = 'Yes'
+											break
+							except Exception as err:
+								if cfg.actionCheck == 'Yes':								
+									for filter in imageFindList:
+										if filter in imgName.lower():
+											# add item to table
+											c = tW.rowCount()
+											co = cfg.QtGuiSCP.QColor(160, 160, 160)
+											# add list items to table
+											tW.setRowCount(c + 1)
+											cfg.utls.addTableItem(tW, sat, c, 0, 'Yes', co)
+											cfg.utls.addTableItem(tW, imgName, c, 1, 'Yes', co)
+											cfg.utls.addTableItem(tW, acqDateI, c, 2, 'Yes', co)
+											cfg.utls.addTableItem(tW, float(cloudcoverpercentage), c, 3, 'Yes', co)
+											cfg.utls.addTableItem(tW, "", c, 4, 'Yes', co)
+											cfg.utls.addTableItem(tW, "", c, 5, 'Yes', co)
+											cfg.utls.addTableItem(tW, float(min_lat), c, 6, 'Yes', co)
+											cfg.utls.addTableItem(tW, float(min_lon), c, 7, 'Yes', co)
+											cfg.utls.addTableItem(tW, float(max_lat), c, 8, 'Yes', co)
+											cfg.utls.addTableItem(tW, float(max_lon), c, 9, 'Yes', co)
+											cfg.utls.addTableItem(tW, size, c, 10, 'Yes', co)
+											cfg.utls.addTableItem(tW, "", c, 11, 'Yes', co)
+											cfg.utls.addTableItem(tW, imgID, c, 12, 'Yes', co)
+											cfg.utls.addTableItem(tW, imgName, c, 13, 'Yes', co)
+											newV = 'Yes'
+											# logger
+											cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+											break
+							if newV is None:
+								# old xml version
+								try:
+									doc2 = cfg.minidomSCP.parseString(xml2)
+									entries2 = doc2.getElementsByTagName("Granules")
+									if len(entries2) == 0:
+										entries2 = doc2.getElementsByTagName("Granule")
+									for entry2 in entries2:
+										if cfg.actionCheck == 'Yes':
+											imgName2 = entry2.attributes["granuleIdentifier"].value
+											for filter in imageFindList:
+												if filter in imgName.lower() or filter in imgName2.lower():
+													acZoneI = imgName2[-12:-7]
+													# add item to table
+													c = tW.rowCount()
+													# add list items to table
+													tW.setRowCount(c + 1)
+													imgPreview = topUrl + "/odata/v1/Products('" +  imgID + "')/Products('Quicklook')/$value"
+													imgPreview2 = topUrl + "/odata/v1/Products('" +imgID  + "')/Nodes('" +imgName + ".SAFE')/Nodes('GRANULE')/Nodes('" + imgName2 + "')/Nodes('IMG_DATA')/Nodes('" + imgName2[0:-7] + "_B01.jp2')/$value"
+													cfg.utls.addTableItem(tW, sat, c, 0)
+													cfg.utls.addTableItem(tW, imgName2, c, 1)
+													cfg.utls.addTableItem(tW, acqDateI, c, 2)
+													cfg.utls.addTableItem(tW, float(cloudcoverpercentage), c, 3)
+													cfg.utls.addTableItem(tW, acZoneI, c, 4)
+													cfg.utls.addTableItem(tW, "", c, 5)
+													cfg.utls.addTableItem(tW, float(min_lat), c, 6)
+													cfg.utls.addTableItem(tW, float(min_lon), c, 7)
+													cfg.utls.addTableItem(tW, float(max_lat), c, 8)
+													cfg.utls.addTableItem(tW, float(max_lon), c, 9)
+													cfg.utls.addTableItem(tW, size, c, 10)
+													cfg.utls.addTableItem(tW, imgPreview2, c, 11)
+													cfg.utls.addTableItem(tW, imgID, c, 12)
+													cfg.utls.addTableItem(tW, imgName, c, 13)
+								except Exception as err:
+									# logger
+									cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+			tW.setSortingEnabled(True)		
+			cfg.uiUtls.removeProgressBar()
+			self.clearCanvasPoly()
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' Sentinel images')
 
 	# download images
 	def downloadSentinelImages(self, outputDirectory, exporter = 'No'):
@@ -1587,7 +1797,7 @@ class DownloadProducts:
 							# download Sentinel data using the service https://storage.googleapis.com/gcp-public-data-sentinel-2
 							urlL1.append('https://storage.googleapis.com/gcp-public-data-sentinel-2/tiles/' + imgName[39:41] + '/'+  imgName[41]  + '/'+ imgName[42:44] + '/' +imgName + '.SAFE/' + imgName.replace('_PRD_MSIL1C_', '_MTD_SAFL1C_') + '.xml')
 							urlL2.append('https://storage.googleapis.com/gcp-public-data-sentinel-2/tiles/' + imgName[39:41] + '/'+  imgName[41]  + '/'+ imgName[42:44] + '/' +imgName + '.SAFE/' + imgName2 + '/GRANULE/' + imgName2[0:-7].replace('_MSI_L1C_', '_MTD_L1C_') + '.xml')
-							urlL3.append('https://storage.googleapis.com/gcp-public-data-sentinel-2/tiles/' + imgName[39:41] + '/'+  imgName[41]  + '/'+ imgName[42:44] + '/' +imgName + '.SAFE/' + imgName2 + '/GRANULE/QI_DATA/' + + imgName2[0:-7].replace('_MSI_L1C_TL_', '_MSK_CLOUDS_')  + '_B00_MSIL1C.gml')
+							urlL3.append('https://storage.googleapis.com/gcp-public-data-sentinel-2/tiles/' + imgName[39:41] + '/'+  imgName[41]  + '/'+ imgName[42:44] + '/' +imgName + '.SAFE/' + imgName2 + '/GRANULE/QI_DATA/' + imgName2[0:-7].replace('_MSI_L1C_TL_', '_MSK_CLOUDS_')  + '_B00_MSIL1C.gml')
 						tempFile1 = cfg.utls.createTempRasterPath('xml')
 						check = cfg.utls.downloadFile(urlL1[1], tempFile1, None, progress)
 						if cfg.ui.ancillary_data_checkBox.isChecked():

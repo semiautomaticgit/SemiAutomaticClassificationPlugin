@@ -54,6 +54,7 @@ import random
 import re
 import xml.etree.cElementTree as ET
 from xml.dom import minidom
+import json
 import hashlib
 import ctypes
 import shlex
@@ -224,6 +225,7 @@ class SemiAutomaticClassificationPlugin:
 			cfg.reSCP = re
 			cfg.ETSCP = ET
 			cfg.minidomSCP = minidom
+			cfg.jsonSCP = json
 			cfg.hashlibSCP = hashlib
 			cfg.ctypesSCP = ctypes
 			cfg.shlexSCP = shlex
@@ -438,6 +440,7 @@ class SemiAutomaticClassificationPlugin:
 		cfg.fldID_class = cfg.utls.readRegistryKeys(cfg.regIDFieldName, cfg.fldID_class)
 		cfg.fldMacroID_class = cfg.utls.readRegistryKeys(cfg.regMacroIDFieldName, cfg.fldMacroID_class)
 		cfg.macroclassCheck = cfg.utls.readRegistryKeys(cfg.regConsiderMacroclass, cfg.macroclassCheck)
+		cfg.sentinelAlternativeSearch = cfg.utls.readRegistryKeys(cfg.regSentinelAlternativeSearch, cfg.sentinelAlternativeSearch)
 		cfg.LCsignatureCheckBox = cfg.utls.readRegistryKeys(cfg.regLCSignature, cfg.LCsignatureCheckBox)
 		cfg.fldROI_info = cfg.utls.readRegistryKeys(cfg.regInfoFieldName, cfg.fldROI_info)
 		cfg.fldROIMC_info = cfg.utls.readRegistryKeys(cfg.regMCInfoFieldName, cfg.fldROIMC_info)
@@ -508,19 +511,19 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.plugin_version_label.setText(semiautomaticclassVersion())
 			cfg.uidc.plugin_version_label2.setText('SCP ' + semiautomaticclassVersion())
 			# row height
-			cfg.ui.download_images_tableWidget.verticalHeader().setDefaultSectionSize(16)
-			cfg.ui.tableWidget_band_calc.verticalHeader().setDefaultSectionSize(16)
-			cfg.ui.landsat_tableWidget.verticalHeader().setDefaultSectionSize(16)
-			cfg.ui.sentinel_2_tableWidget.verticalHeader().setDefaultSectionSize(16)
+			cfg.ui.download_images_tableWidget.verticalHeader().setDefaultSectionSize(24)
+			cfg.ui.tableWidget_band_calc.verticalHeader().setDefaultSectionSize(24)
+			cfg.ui.landsat_tableWidget.verticalHeader().setDefaultSectionSize(24)
+			cfg.ui.sentinel_2_tableWidget.verticalHeader().setDefaultSectionSize(24)
 			cfg.utls.setColumnWidthList(cfg.ui.sentinel_2_tableWidget, [[0, 400], [1, 200], [2, 60]])
-			cfg.ui.ASTER_tableWidget.verticalHeader().setDefaultSectionSize(16)
+			cfg.ui.ASTER_tableWidget.verticalHeader().setDefaultSectionSize(24)
 			cfg.utls.setColumnWidthList(cfg.ui.ASTER_tableWidget, [[0, 400], [1, 200], [2, 60]])
-			cfg.ui.MODIS_tableWidget.verticalHeader().setDefaultSectionSize(16)
+			cfg.ui.MODIS_tableWidget.verticalHeader().setDefaultSectionSize(24)
 			cfg.utls.setColumnWidthList(cfg.ui.MODIS_tableWidget, [[0, 400], [1, 200], [2, 60]])
-			cfg.ui.LCS_tableWidget.verticalHeader().setDefaultSectionSize(16)
-			cfg.ui.signature_threshold_tableWidget.verticalHeader().setDefaultSectionSize(16)
-			cfg.ui.point_tableWidget.verticalHeader().setDefaultSectionSize(16)
-			cfg.ui.log_tableWidget.verticalHeader().setDefaultSectionSize(16)
+			cfg.ui.LCS_tableWidget.verticalHeader().setDefaultSectionSize(24)
+			cfg.ui.signature_threshold_tableWidget.verticalHeader().setDefaultSectionSize(24)
+			cfg.ui.point_tableWidget.verticalHeader().setDefaultSectionSize(24)
+			cfg.ui.log_tableWidget.verticalHeader().setDefaultSectionSize(24)
 			cfg.utls.setColumnWidthList(cfg.ui.log_tableWidget, [[0, 100], [1, 200], [2, 800]])
 			# spectral signature plot list
 			cfg.utls.insertTableColumn(cfg.uisp.signature_list_plot_tableWidget, 6, cfg.tableColString, None, 'Yes')
@@ -678,6 +681,9 @@ class SemiAutomaticClassificationPlugin:
 			except Exception as err:
 				# logger
 				cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+			cfg.ui.sentinel2_alternative_search_checkBox.blockSignals(True)
+			cfg.ui.sentinel2_alternative_search_checkBox.setCheckState(int(cfg.sentinelAlternativeSearch))
+			cfg.ui.sentinel2_alternative_search_checkBox.blockSignals(False)
 
 			''' SCP tab '''
 			cfg.ui.SCP_tabs.currentChanged.connect(cfg.ipt.SCPTabChanged)
@@ -794,6 +800,7 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.password_usgs_lineEdit.editingFinished.connect(cfg.downProd.rememberUser)
 			cfg.ui.reset_sentinel_service_toolButton.clicked.connect(cfg.downProd.resetService)
 			cfg.ui.remember_user_checkBox.stateChanged.connect(cfg.downProd.rememberUserCheckboxSentinel2)
+			cfg.ui.sentinel2_alternative_search_checkBox.stateChanged.connect(cfg.downProd.alternativeCheckboxSentinel2)
 			cfg.ui.user_scihub_lineEdit.editingFinished.connect(cfg.downProd.rememberUserSentinel2)
 			cfg.ui.password_scihub_lineEdit.editingFinished.connect(cfg.downProd.rememberUserSentinel2)
 			cfg.ui.sentinel_service_lineEdit.editingFinished.connect(cfg.downProd.rememberService)
@@ -828,6 +835,7 @@ class SemiAutomaticClassificationPlugin:
 			cfg.uidc.button_Save_ROI.clicked.connect(cfg.SCPD.saveROItoShapefile)
 			# connect to undo save ROI 
 			cfg.uidc.undo_save_Button.clicked.connect(cfg.SCPD.undoSaveROI)
+			cfg.uidc.redo_save_Button.clicked.connect(cfg.SCPD.redoSaveROI)
 			# connect the signature calculation checkBox
 			cfg.uidc.signature_checkBox.stateChanged.connect(cfg.SCPD.signatureCheckbox)
 			cfg.uidc.scatterPlot_toolButton.clicked.connect(cfg.SCPD.addROIToScatterPlot)
@@ -1425,7 +1433,6 @@ class SemiAutomaticClassificationPlugin:
 				cfg.SCPD.saveSignatureListToFile()
 			if cfg.scpFlPath is not None:
 				cfg.SCPD.saveMemToSHP(cfg.shpLay)
-				cfg.utls.createBackupFile(cfg.scpFlPath)
 				cfg.utls.zipDirectoryInFile(cfg.scpFlPath, cfg.inptDir)
 			cfg.downProd.saveDownloadTable()
 		
@@ -1580,6 +1587,7 @@ class SemiAutomaticClassificationPlugin:
 		
 	# remove plugin menu and icon	
 	def unload(self):
+		cfg.utls.createBackupFile(cfg.scpFlPath)
 		# save window size
 		try:
 			cfg.utls.setQGISRegSetting(cfg.regWindowSizeW, cfg.dlg.size().width())

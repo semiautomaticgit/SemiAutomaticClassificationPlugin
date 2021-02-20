@@ -257,9 +257,10 @@ class Sentinel1Tab:
 			stF.close()
 			# get error
 			out, err = cfg.subprocDictProc['proc_'+ str(sPL)].communicate()
-			if len(err) > 0:
-				# logger
-				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' error: ' + str(err))
+			if err is not None:
+				if len(err) > 0:
+					# logger
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' error: ' + str(err))
 			# logger
 			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' image: ' + str(tVsnap))
 			self.processS1toDB(tVsnap, outputRasterVH)
@@ -328,9 +329,10 @@ class Sentinel1Tab:
 			stF.close()
 			# get error
 			out, err = cfg.subprocDictProc['proc_'+ str(sPL)].communicate()
-			if len(err) > 0:
-				# logger
-				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' error: ' + str(err))
+			if err is not None:
+				if len(err) > 0:
+					# logger
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' error: ' + str(err))
 			# logger
 			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' image: ' + str(tVsnap))
 			self.processS1toDB(tVsnap, outputRaster)

@@ -37,6 +37,11 @@ cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 class SCPDock:
 
 	def __init__(self):
+		cfg.shpLay = None
+		cfg.shpLayList = []
+		cfg.shpLayListCounter = 1
+		cfg.uidc.undo_save_Button.setEnabled(False)
+		cfg.uidc.redo_save_Button.setEnabled(False)
 		# rubber band
 		cfg.rbbrBnd = cfg.qgisGuiSCP.QgsRubberBand(cfg.cnvs, False)
 		cfg.rbbrBnd.setColor(cfg.QtGuiSCP.QColor(0,255,255))
@@ -277,8 +282,9 @@ class SCPDock:
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " signatures opened: " + str(scpPath))
 		else:
-			# shape layer
-			cfg.shpLay = None
+			cfg.SCPD.resetShapeList()
+			cfg.uidc.undo_save_Button.setEnabled(False)
+			cfg.uidc.redo_save_Button.setEnabled(False)
 			# training layer name
 			cfg.trnLay = None
 			# signature file path
@@ -362,21 +368,30 @@ class SCPDock:
 		if check == 'Yes':
 			# create memory layer
 			provider = tSS.dataProvider()
-			fields = provider.fields()
+			fields = provider.fields().toList()
 			pCrs = cfg.utls.getCrs(tSS)
 			mL = cfg.qgisCoreSCP.QgsVectorLayer('MultiPolygon?crs=' + str(pCrs.toWkt()), name, 'memory')
+			mL2 = cfg.qgisCoreSCP.QgsVectorLayer('MultiPolygon?crs=' + str(pCrs.toWkt()), dT, 'memory')
 			mL.setCrs(pCrs)
+			mL2.setCrs(pCrs)
 			pr = mL.dataProvider()
-			for fld in fields:
-				pr.addAttributes([fld])
+			pr2 = mL2.dataProvider()
+			pr.addAttributes(fields)
+			pr2.addAttributes(fields)
 			mL.updateFields()
+			mL2.updateFields()
 			f = cfg.qgisCoreSCP.QgsFeature()
 			mL.startEditing()
+			mL2.startEditing()
 			for f in tSS.getFeatures():
 				mL.addFeature(f)	
+				mL2.addFeature(f)	
 			mL.commitChanges()
+			mL2.commitChanges()
 			mL.dataProvider().createSpatialIndex()
+			mL2.dataProvider().createSpatialIndex()
 			mL.updateExtents()
+			mL2.updateExtents()
 			cfg.utls.ROISymbol(mL)
 			cfg.shpLay = mL
 			cfg.trnLay = name
@@ -396,6 +411,9 @@ class SCPDock:
 				cfg.SCPD.saveSignatureList(cfg.sigFile)
 				cfg.mx.msg20()
 				cfg.SCPD.openSignatureList(cfg.sigFile)
+			cfg.SCPD.manageShapeList(mL2, cfg.sigFile)
+			cfg.uidc.undo_save_Button.setEnabled(False)
+			cfg.uidc.redo_save_Button.setEnabled(False)
 		return check
 		
 	# save memory layer to shapefile
@@ -418,21 +436,30 @@ class SCPDock:
 		tSS = cfg.shpLay
 		# create memory layer
 		provider = tSS.dataProvider()
-		fields = provider.fields()
+		fields = provider.fields().toList()
 		pCrs = cfg.utls.getCrs(tSS)
 		mL = cfg.qgisCoreSCP.QgsVectorLayer('MultiPolygon?crs=' + str(pCrs.toWkt()), cfg.trnLay, 'memory')
+		mL2 = cfg.qgisCoreSCP.QgsVectorLayer('MultiPolygon?crs=' + str(pCrs.toWkt()), dT, 'memory')
 		mL.setCrs(pCrs)
+		mL2.setCrs(pCrs)
 		pr = mL.dataProvider()
-		for fld in fields:
-			pr.addAttributes([fld])
+		pr2 = mL2.dataProvider()
+		pr.addAttributes(fields)
+		pr2.addAttributes(fields)
 		mL.updateFields()
+		mL2.updateFields()
 		f = cfg.qgisCoreSCP.QgsFeature()
 		mL.startEditing()
+		mL2.startEditing()
 		for f in tSS.getFeatures():
 			mL.addFeature(f)	
+			mL2.addFeature(f)	
 		mL.commitChanges()
+		mL2.commitChanges()
 		mL.dataProvider().createSpatialIndex()
+		mL2.dataProvider().createSpatialIndex()
 		mL.updateExtents()
+		mL2.updateExtents()
 		cfg.utls.ROISymbol(mL)
 		try:
 			cfg.utls.removeLayerByLayer(cfg.shpLay)
@@ -443,6 +470,44 @@ class SCPDock:
 		sigFileNm = cfg.trnLay + '.slf'
 		cfg.sigFile = cfg.inptDir + '/' + sigFileNm 
 		cfg.SCPD.saveSignatureList(cfg.sigFile)
+		cfg.SCPD.manageShapeList(mL2, cfg.sigFile)
+		cfg.uidc.undo_save_Button.setEnabled(True)
+		cfg.uidc.redo_save_Button.setEnabled(False)
+				
+	# reset shape list
+	def resetShapeList(self):
+		for i in range(0, len(cfg.shpLayList)):
+			try:
+				cfg.utls.removeLayerByLayer(cfg.shpLayList[i][0])
+			except:
+				pass
+			try:
+				cfg.shpLayList.pop(i)
+			except:
+				pass
+		# shape layer
+		cfg.shpLay = None
+		cfg.shpLayList = []
+		cfg.shpLayListCounter = 1
+			
+	# manage shape list
+	def manageShapeList(self, memoryLayer, sigFile):
+		try:
+			for sK in range(1, cfg.shpLayListCounter):
+				cfg.shpLayList.pop(-sK)
+		except:
+			pass
+		cfg.shpLayList.append([memoryLayer, sigFile])
+		cfg.shpLayListCounter = 1
+		if len(cfg.shpLayList) > 10:
+			try:
+				cfg.utls.removeLayerByLayer(cfg.shpLayList[0][0])
+			except:
+				pass
+			try:
+				cfg.shpLayList.pop(0)
+			except:
+				pass
 				
 	# check shapefile and fields
 	def checkFields(self, trainingLayer):
@@ -520,7 +585,11 @@ class SCPDock:
 		tVect = cfg.utls.createTempRasterPath('gpkg')
 		inputLayersList = [sL, shpF]
 		v = cfg.utls.mergeAllLayers(inputLayersList, tVect)
-		l = cfg.shpLay
+		# create memory layer
+		mL2 = cfg.utls.duplicateMemoryLayer(cfg.shpLay)
+		cfg.SCPD.manageShapeList(mL2, cfg.sigFile)
+		cfg.uidc.undo_save_Button.setEnabled(True)
+		cfg.uidc.redo_save_Button.setEnabled(False)
 		try:
 			tSS = cfg.utls.addVectorLayer(tVect)
 		except:
@@ -533,14 +602,14 @@ class SCPDock:
 			cfg.utls.removeLayer(cfg.trnLay)
 		except:
 			pass
+		# create memory layer
 		provider = tSS.dataProvider()
-		fields = provider.fields()
+		fields = provider.fields().toList()
 		pCrs = cfg.utls.getCrs(tSS)
 		mL = cfg.qgisCoreSCP.QgsVectorLayer('MultiPolygon?crs=' + str(pCrs.toWkt()), cfg.trnLay , 'memory')
 		mL.setCrs(pCrs)
 		pr = mL.dataProvider()
-		for fld in fields:
-			pr.addAttributes([fld])
+		pr.addAttributes(fields)
 		mL.updateFields()
 		fldSCP_UID = cfg.utls.fieldID(tSS, cfg.fldSCP_UID)
 		f = cfg.qgisCoreSCP.QgsFeature()
@@ -906,6 +975,12 @@ class SCPDock:
 			if cfg.saveInputCheck == '2':
 				cfg.SCPD.saveMemToSHP(cfg.shpLay)
 				cfg.utls.zipDirectoryInFile(cfg.scpFlPath, cfg.inptDir)
+			else:
+				# create memory layer
+				mL2 = cfg.utls.duplicateMemoryLayer(cfg.shpLay)
+				cfg.SCPD.manageShapeList(mL2, cfg.sigFile)
+				cfg.uidc.undo_save_Button.setEnabled(True)
+				cfg.uidc.redo_save_Button.setEnabled(False)
 			cfg.uiUtls.removeProgressBar()
 			
 	# merge highlighted signatures
@@ -963,7 +1038,7 @@ class SCPDock:
 				i = cfg.utls.signatureID()
 				# if ROIs
 				if 0 not in ROIcheck:
-					attributeList = [cfg.ROI_MC_ID[id], cfg.merged_name + cfg.ROI_MC_Info[id], cfg.ROI_C_ID[id], cfg.merged_name + cfg.ROI_C_Info[id], i]
+					attributeList = [1, cfg.ROI_MC_ID[id], cfg.merged_name + cfg.ROI_MC_Info[id], cfg.ROI_C_ID[id], cfg.merged_name + cfg.ROI_C_Info[id], i]
 					tl = cfg.utls.mergePolygons(cfg.shpLay, ids, attributeList)
 					rId = cfg.utls.getIDByAttributes(cfg.shpLay, cfg.fldSCP_UID, str(i))
 					cfg.utls.calculateSignature(cfg.shpLay, cfg.bandSetsList[cfg.bndSetNumber][8], rId, cfg.ROI_MC_ID[id], cfg.ROI_MC_Info[id], cfg.ROI_C_ID[id], cfg.ROI_C_Info[id], None, None, 'No', 'No', i)
@@ -1024,6 +1099,12 @@ class SCPDock:
 				if cfg.saveInputCheck == '2':
 					cfg.SCPD.saveMemToSHP(cfg.shpLay)
 					cfg.utls.zipDirectoryInFile(cfg.scpFlPath, cfg.inptDir)
+				else:
+					# create memory layer
+					mL2 = cfg.utls.duplicateMemoryLayer(cfg.shpLay)
+					cfg.SCPD.manageShapeList(mL2, cfg.sigFile)
+					cfg.uidc.undo_save_Button.setEnabled(True)
+					cfg.uidc.redo_save_Button.setEnabled(False)
 				cfg.uiUtls.removeProgressBar()
 				# logger
 				cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' merged signatures: ' + str(v))
@@ -1061,6 +1142,12 @@ class SCPDock:
 				if cfg.saveInputCheck == '2':
 					cfg.SCPD.saveMemToSHP(cfg.shpLay)
 					cfg.utls.zipDirectoryInFile(cfg.scpFlPath, cfg.inptDir)
+				else:
+					# create memory layer
+					mL2 = cfg.utls.duplicateMemoryLayer(cfg.shpLay)
+					cfg.SCPD.manageShapeList(mL2, cfg.sigFile)
+					cfg.uidc.undo_save_Button.setEnabled(True)
+					cfg.uidc.redo_save_Button.setEnabled(False)
 				# logger
 				cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' removed signatures: ' + str(ids))
 		
@@ -2120,8 +2207,9 @@ class SCPDock:
 			cfg.cnvs.refresh()
 		except:
 			pass
-		# shape layer
-		cfg.shpLay = None
+		cfg.SCPD.resetShapeList()
+		cfg.uidc.undo_save_Button.setEnabled(False)
+		cfg.uidc.redo_save_Button.setEnabled(False)
 		# training layer name
 		cfg.trnLay = None
 		# signature file path
@@ -2316,6 +2404,12 @@ class SCPDock:
 			if cfg.saveInputCheck == '2':
 				cfg.SCPD.saveMemToSHP(cfg.shpLay)
 				cfg.utls.zipDirectoryInFile(cfg.scpFlPath, cfg.inptDir)
+			else:
+				# create memory layer
+				mL2 = cfg.utls.duplicateMemoryLayer(cfg.shpLay)
+				cfg.SCPD.manageShapeList(mL2, cfg.sigFile)
+				cfg.uidc.undo_save_Button.setEnabled(True)
+				cfg.uidc.redo_save_Button.setEnabled(False)
 			if progressbar == 'Yes':
 				cfg.uiUtls.updateBar(100)
 				cfg.uiUtls.removeProgressBar()
@@ -2333,30 +2427,67 @@ class SCPDock:
 			# logger
 			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 			cfg.mx.msg3()
-		# check if no layer is selected
-		if cfg.shpLay is None:
-			cfg.mx.msg3()
-		# check if no ROI created
-		elif cfg.lstROI is None:
-			cfg.mx.msg6()
-		else:
-			# ask for confirm
-			a = cfg.utls.questionBox(cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Undo save ROI'), cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Are you sure you want to delete the last saved ROI?'))
-			if a == 'Yes':
-				f = cfg.utls.getFeaturebyID(cfg.shpLay, self.ROILastID)
-				SCP_UID  = str(f[cfg.fldSCP_UID])
-				cfg.utls.deleteFeatureShapefile(cfg.shpLay, [self.ROILastID])
-				try:
-					cfg.SCPD.deleteSignatureByID(SCP_UID)
-					del cfg.treeDockItm[SCP_UID]
-				except:
-					pass
+		# ask for confirm
+		a = cfg.utls.questionBox(cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Undo save ROI'), cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Are you sure you want to undo?'))
+		if a == 'Yes':
+			# create memory layer
+			mL2 = cfg.utls.duplicateMemoryLayer(cfg.shpLay)
+			cfg.shpLayList[-(cfg.shpLayListCounter)][0] = mL2
+			cfg.shpLayListCounter = cfg.shpLayListCounter+1
+			try:
+				cfg.utls.removeLayerByLayer(cfg.shpLay)
+			except:
+				pass
+			# create memory layer
+			cfg.shpLay = cfg.utls.duplicateMemoryLayer(cfg.shpLayList[-(cfg.shpLayListCounter)][0])
+			cfg.utls.ROISymbol(cfg.shpLay)
+			cfg.utls.addLayerToMap(cfg.shpLay)
+			cfg.sigFile = cfg.shpLayList[-(cfg.shpLayListCounter)][1]
+			cfg.uidc.redo_save_Button.setEnabled(True)
+			if cfg.shpLayListCounter == len(cfg.shpLayList):
 				cfg.uidc.undo_save_Button.setEnabled(False)
-				cfg.SCPD.ROIListTableTree(cfg.shpLay, cfg.uidc.signature_list_treeWidget)
-				cfg.cnvs.refresh()
-				# logger
-				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'roi deleted: ' + str(self.ROILastID))
+			cfg.SCPD.openSignatureListFile(cfg.sigFile)
+			cfg.SCPD.ROIListTableTree(cfg.shpLay, cfg.uidc.signature_list_treeWidget)
+			cfg.cnvs.refresh()
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'undo ROI')
 				
+	# redo saved ROI
+	def redoSaveROI(self):
+		l = cfg.shpLay
+		if l is None:
+			cfg.mx.msg3()
+			return 0
+		# check if layer was removed ## there is an issue if the removed layer was already saved in the project ##
+		try:
+			s = str(cfg.shpLay.name())
+		except Exception as err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+			cfg.mx.msg3()
+		# ask for confirm
+		a = cfg.utls.questionBox(cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Redo save ROI'), cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Are you sure you want to redo?'))
+		if a == 'Yes':
+			# create memory layer
+			mL2 = cfg.utls.duplicateMemoryLayer(cfg.shpLay)
+			cfg.shpLayList[-(cfg.shpLayListCounter)][0] = mL2
+			cfg.shpLayListCounter = cfg.shpLayListCounter-1
+			try:
+				cfg.utls.removeLayerByLayer(cfg.shpLay)
+			except:
+				pass
+			cfg.shpLay = cfg.utls.duplicateMemoryLayer(cfg.shpLayList[-(cfg.shpLayListCounter)][0])
+			cfg.utls.ROISymbol(cfg.shpLay)
+			cfg.utls.addLayerToMap(cfg.shpLay)
+			cfg.sigFile = cfg.shpLayList[-(cfg.shpLayListCounter)][1]
+			cfg.uidc.undo_save_Button.setEnabled(True)
+			if cfg.shpLayListCounter == 1:
+				cfg.uidc.redo_save_Button.setEnabled(False)
+			cfg.SCPD.openSignatureListFile(cfg.sigFile)
+			cfg.SCPD.ROIListTableTree(cfg.shpLay, cfg.uidc.signature_list_treeWidget)
+			cfg.cnvs.refresh()
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'redo ROI')
 		
 ##################################
 	''' Map functions '''

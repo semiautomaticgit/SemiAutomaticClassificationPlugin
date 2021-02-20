@@ -683,7 +683,7 @@ class BandsetTab:
 		item.setText(cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Image name'))
 		item = tW.horizontalHeaderItem(6)
 		item.setText(cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Date'))
-		tW.verticalHeader().setDefaultSectionSize(16)
+		tW.verticalHeader().setDefaultSectionSize(24)
 		tW.horizontalHeader().setStretchLastSection(True)
 		gridLayout.addWidget(tW, 0, 0, 1, 1)
 		# connect to edited cell

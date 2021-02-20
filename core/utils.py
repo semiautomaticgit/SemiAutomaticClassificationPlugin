@@ -6673,6 +6673,27 @@ class Utils:
 		tSS.updateExtents()
 		return tSS
 			
+	# duplicate memory layer
+	def duplicateMemoryLayer(self, layer):
+		# create memory layer
+		provider = layer.dataProvider()
+		fields = provider.fields().toList()
+		pCrs = cfg.utls.getCrs(layer)
+		dT = cfg.utls.getTime()
+		mL2 = cfg.qgisCoreSCP.QgsVectorLayer('MultiPolygon?crs=' + str(pCrs.toWkt()), dT, 'memory')
+		mL2.setCrs(pCrs)
+		pr2 = mL2.dataProvider()
+		pr2.addAttributes(fields)
+		mL2.updateFields()
+		f = cfg.qgisCoreSCP.QgsFeature()
+		mL2.startEditing()
+		for f in layer.getFeatures():
+			mL2.addFeature(f)
+		mL2.commitChanges()
+		mL2.dataProvider().createSpatialIndex()
+		mL2.updateExtents()
+		return mL2
+	
 	# save features to shapefile
 	def featuresToShapefile(self, idList):
 		# create shapefile
@@ -8055,7 +8076,9 @@ class Utils:
 				g.convertToMultiType()
 				sg.addPartGeometry(g)
 		pr = targetLayer.dataProvider()
+		fields = pr.fields().toList()
 		targetLayer.startEditing()
+		f = cfg.qgisCoreSCP.QgsFeature()
 		f.setGeometry(sg)
 		f.setAttributes(attributeList)
 		pr.addFeatures([f])
