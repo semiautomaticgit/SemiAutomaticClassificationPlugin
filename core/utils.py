@@ -1857,6 +1857,10 @@ class Utils:
 			cIdF = self.fieldID(tSS, cfg.ui.C_ID_combo.currentText())
 			cInfoF = self.fieldID(tSS, cfg.ui.C_Info_combo.currentText())
 			for f in tSS.getFeatures():
+				oFid = cfg.shpLay.fields().indexFromName('fid')
+				mFid = cfg.shpLay.maximumValue(oFid) + 1
+				if mFid < 1:
+					mFid = 1
 				cfg.shpLay.startEditing()
 				aF = f.geometry()
 				if pCrs != tCrs:
@@ -1878,7 +1882,7 @@ class Utils:
 					cId = cfg.ROIID
 				cInfo = f.attributes()[cInfoF]
 				i = cfg.utls.signatureID()
-				attributeList = [mcId, mcInfo, cId, cInfo, i]
+				attributeList = [mFid, mcId, mcInfo, cId, cInfo, i]
 				oF.setAttributes(attributeList)
 				cfg.shpLay.addFeature(oF)
 				cfg.shpLay.commitChanges()

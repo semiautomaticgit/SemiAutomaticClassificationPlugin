@@ -1038,7 +1038,11 @@ class SCPDock:
 				i = cfg.utls.signatureID()
 				# if ROIs
 				if 0 not in ROIcheck:
-					attributeList = [1, cfg.ROI_MC_ID[id], cfg.merged_name + cfg.ROI_MC_Info[id], cfg.ROI_C_ID[id], cfg.merged_name + cfg.ROI_C_Info[id], i]
+					oFid = cfg.shpLay.fields().indexFromName('fid')
+					mFid = cfg.shpLay.maximumValue(oFid) + 1
+					if mFid < 1:
+						mFid = 1
+					attributeList = [mFid, cfg.ROI_MC_ID[id], cfg.merged_name + cfg.ROI_MC_Info[id], cfg.ROI_C_ID[id], cfg.merged_name + cfg.ROI_C_Info[id], i]
 					tl = cfg.utls.mergePolygons(cfg.shpLay, ids, attributeList)
 					rId = cfg.utls.getIDByAttributes(cfg.shpLay, cfg.fldSCP_UID, str(i))
 					cfg.utls.calculateSignature(cfg.shpLay, cfg.bandSetsList[cfg.bndSetNumber][8], rId, cfg.ROI_MC_ID[id], cfg.ROI_MC_Info[id], cfg.ROI_C_ID[id], cfg.ROI_C_Info[id], None, None, 'No', 'No', i)

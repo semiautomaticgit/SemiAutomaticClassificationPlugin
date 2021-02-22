@@ -719,7 +719,7 @@ class Scatter_Plot:
 		# temporary layer
 		tLP = cfg.utls.createTempRasterPath('gpkg')
 		cfg.utls.multiProcessRasterToVector(rasterPath = r, outputVectorPath = tLP, dissolveOutput = 'Yes')
-		vl = cfg.utls.addVectorLayer(tLP, tLN, 'ogr')
+		vl = cfg.utls.addVectorLayer(tLP)
 		f = cfg.qgisCoreSCP.QgsFeature()
 		ids = []
 		for f in vl.getFeatures():
@@ -744,14 +744,14 @@ class Scatter_Plot:
 	# conver polygon to raster
 	def polygonToRaster(self, polygon, xMin, xMax, yMin, yMax, dX, dY):
 		# temporary layer
-		tLP = cfg.utls.createTempRasterPath('gpkg')
+		tLP = cfg.utls.createTempRasterPath('shp')
 		# get layer crs
 		#crs = cfg.qgisCoreSCP.QgsCoordinateReferenceSystem('EPSG:4326')
 		srs = cfg.osrSCP.SpatialReference()
 		srs.ImportFromEPSG(4326)
 		crs = srs.ExportToWkt()
 		# create a temp shapefile with a field
-		cfg.utls.createEmptyShapefile(crs, tLP, format = 'GPKG')
+		cfg.utls.createEmptyShapefile(crs, tLP, format = 'ESRI Shapefile')
 		tSS = cfg.utls.addVectorLayer(tLP)
 		pointF = cfg.QtCoreSCP.QPointF()
 		polF = cfg.QtGuiSCP.QPolygonF()
@@ -873,7 +873,7 @@ class Scatter_Plot:
 							ranges = self.aggregateGrid(grid, h[0], h[1][0], h[1][-1], h[2][0], h[2][-1], h[1][1]-h[1][0], h[2][1]-h[2][0])
 							rangeList.append([ranges, n])
 			rasterSymbol = cfg.utls.rasterScatterSymbol(colorList)
-			condition = cfg.utls.createScatterPlotRasterCondition(rangeList)
+			condition = cfg.utls.createScatterPlotRasterCondition(rangeList, nodataValue = cfg.NoDataVal)
 			aX = cfg.scatterBandX - 1
 			aY = cfg.scatterBandY - 1
 			# virtual raster
@@ -899,10 +899,10 @@ class Scatter_Plot:
 			vrtCheck = cfg.utls.createTempVirtualRaster(bList, bandNumberList, 'Yes', 'Yes', 0, 'No', 'No')
 			variableList = [['bandX', 'a'], ['bandY', 'b']]
 			if condition == 0:
-				conditions = cfg.utls.singleScatterPlotRasterCondition(rangeList)
-				o = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.scatterRasterMultipleWhere, outputRasterList = [tPMD2], functionBandArgument = conditions, functionVariable = variableList, progressMessage = 'Threshold ', compress = cfg.rasterCompression, compressFormat = 'LZW')
+				conditions = cfg.utls.singleScatterPlotRasterCondition(rangeList, nodataValue = cfg.NoDataVal)
+				o = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.scatterRasterMultipleWhere, outputRasterList = [tPMD2], nodataValue = cfg.NoDataVal, functionBandArgument = conditions, functionVariable = variableList, progressMessage = 'Threshold ', compress = cfg.rasterCompression, compressFormat = 'LZW')
 			else:
-				o = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.scatterRasterBandCalculation, outputRasterList = [tPMD2], functionBandArgument = condition, functionVariable = variableList, progressMessage = 'Threshold ', compress = cfg.rasterCompression, compressFormat = 'LZW')
+				o = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.scatterRasterBandCalculation, outputRasterList = [tPMD2], nodataValue = cfg.NoDataVal, functionBandArgument = condition, functionVariable = variableList, progressMessage = 'Threshold ', compress = cfg.rasterCompression, compressFormat = 'LZW')
 			if saveSignature is None:
 				# move previous preview to group
 				g = cfg.utls.groupIndex(cfg.grpNm)
