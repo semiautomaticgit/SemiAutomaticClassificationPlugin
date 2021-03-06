@@ -373,6 +373,15 @@
           </item>
           <item>
            <property name="text">
+            <string>Neighbor pixels</string>
+           </property>
+           <property name="icon">
+            <iconset resource="resources.qrc">
+             <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_neighbor_pixels.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_neighbor_pixels.svg</iconset>
+           </property>
+          </item>
+          <item>
+           <property name="text">
             <string>Reproject raster bands</string>
            </property>
            <property name="icon">
@@ -12758,6 +12767,465 @@ distance</string>
                 </item>
                </layout>
               </widget>
+              <widget class="QWidget" name="tab_neighbor_pixels">
+               <attribute name="title">
+                <string>Neighbor pixels</string>
+               </attribute>
+               <layout class="QGridLayout" name="gridLayout_310">
+                <item row="0" column="0">
+                 <layout class="QGridLayout" name="gridLayout_240">
+                  <item row="8" column="0" colspan="3">
+                   <widget class="QLabel" name="label_283">
+                    <property name="styleSheet">
+                     <string notr="true">background-color : #656565; color : white</string>
+                    </property>
+                    <property name="frameShape">
+                     <enum>QFrame::Panel</enum>
+                    </property>
+                    <property name="frameShadow">
+                     <enum>QFrame::Sunken</enum>
+                    </property>
+                    <property name="text">
+                     <string> Run</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="0" colspan="3">
+                   <layout class="QGridLayout" name="gridLayout_309">
+                    <item row="0" column="1">
+                     <widget class="QLabel" name="label_287">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="frameShape">
+                       <enum>QFrame::Panel</enum>
+                      </property>
+                      <property name="frameShadow">
+                       <enum>QFrame::Sunken</enum>
+                      </property>
+                      <property name="text">
+                       <string/>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="0">
+                     <widget class="QLabel" name="label_281">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="minimumSize">
+                       <size>
+                        <width>229</width>
+                        <height>0</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <weight>50</weight>
+                        <bold>false</bold>
+                       </font>
+                      </property>
+                      <property name="frameShadow">
+                       <enum>QFrame::Sunken</enum>
+                      </property>
+                      <property name="text">
+                       <string>Matrix file (optional)</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="2">
+                     <widget class="QToolButton" name="toolButton_input_matrix">
+                      <property name="toolTip">
+                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span &gt;Open a file&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">margin: 0px;padding: 0px;</string>
+                      </property>
+                      <property name="icon">
+                       <iconset resource="resources.qrc">
+                        <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_open_file.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_open_file.svg</iconset>
+                      </property>
+                      <property name="iconSize">
+                       <size>
+                        <width>22</width>
+                        <height>22</height>
+                       </size>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="0" colspan="3">
+                     <layout class="QHBoxLayout" name="horizontalLayout_71">
+                      <item>
+                       <widget class="QLabel" name="label_279">
+                        <property name="sizePolicy">
+                         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                         </sizepolicy>
+                        </property>
+                        <property name="minimumSize">
+                         <size>
+                          <width>229</width>
+                          <height>0</height>
+                         </size>
+                        </property>
+                        <property name="frameShadow">
+                         <enum>QFrame::Sunken</enum>
+                        </property>
+                        <property name="text">
+                         <string>Output name prefix</string>
+                        </property>
+                        <property name="alignment">
+                         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QLineEdit" name="neighbor_output_name_lineEdit">
+                        <property name="toolTip">
+                         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Output name prefix&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                        </property>
+                        <property name="text">
+                         <string>neighbor</string>
+                        </property>
+                        <property name="maxLength">
+                         <number>10</number>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="9" column="1">
+                   <widget class="QToolButton" name="neighbor_pixels">
+                    <property name="font">
+                     <font>
+                      <weight>75</weight>
+                      <bold>true</bold>
+                     </font>
+                    </property>
+                    <property name="toolTip">
+                     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Function to Batch&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                    </property>
+                    <property name="layoutDirection">
+                     <enum>Qt::RightToLeft</enum>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">margin: 0px;padding: 0px;</string>
+                    </property>
+                    <property name="text">
+                     <string> BATCH</string>
+                    </property>
+                    <property name="icon">
+                     <iconset resource="resources.qrc">
+                      <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_batch.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_batch.svg</iconset>
+                    </property>
+                    <property name="iconSize">
+                     <size>
+                      <width>34</width>
+                      <height>34</height>
+                     </size>
+                    </property>
+                    <property name="toolButtonStyle">
+                     <enum>Qt::ToolButtonTextBesideIcon</enum>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="9" column="0">
+                   <spacer name="horizontalSpacer_99">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item row="9" column="2">
+                   <widget class="QToolButton" name="class_neighbor_toolButton">
+                    <property name="font">
+                     <font>
+                      <weight>75</weight>
+                      <bold>true</bold>
+                     </font>
+                    </property>
+                    <property name="toolTip">
+                     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span &gt;Run&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                    </property>
+                    <property name="layoutDirection">
+                     <enum>Qt::RightToLeft</enum>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">margin: 0px;padding: 0px;</string>
+                    </property>
+                    <property name="text">
+                     <string>  RUN</string>
+                    </property>
+                    <property name="icon">
+                     <iconset resource="resources.qrc">
+                      <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_run.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin_run.svg</iconset>
+                    </property>
+                    <property name="iconSize">
+                     <size>
+                      <width>34</width>
+                      <height>34</height>
+                     </size>
+                    </property>
+                    <property name="toolButtonStyle">
+                     <enum>Qt::ToolButtonTextBesideIcon</enum>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="7" column="2">
+                   <spacer name="verticalSpacer_33">
+                    <property name="orientation">
+                     <enum>Qt::Vertical</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>20</width>
+                      <height>40</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item row="0" column="0" colspan="3">
+                   <layout class="QHBoxLayout" name="horizontalLayout_70">
+                    <item>
+                     <widget class="QLabel" name="label_286">
+                      <property name="styleSheet">
+                       <string notr="true">background-color : #656565; color : white</string>
+                      </property>
+                      <property name="frameShape">
+                       <enum>QFrame::Panel</enum>
+                      </property>
+                      <property name="frameShadow">
+                       <enum>QFrame::Sunken</enum>
+                      </property>
+                      <property name="text">
+                       <string> Neighbor pixels</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="6" column="0" colspan="3">
+                   <layout class="QGridLayout" name="gridLayout_277">
+                    <item row="1" column="2">
+                     <widget class="QLineEdit" name="statistic_lineEdit_2">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>200</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
+                      <property name="toolTip">
+                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter a value&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                      </property>
+                      <property name="text">
+                       <string/>
+                      </property>
+                      <property name="maxLength">
+                       <number>10000</number>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="1">
+                     <widget class="QComboBox" name="statistic_name_combobox_2">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                        <horstretch>1</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>200</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
+                      <property name="toolTip">
+                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select a statistic&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="0">
+                     <widget class="QLabel" name="label_284">
+                      <property name="frameShadow">
+                       <enum>QFrame::Sunken</enum>
+                      </property>
+                      <property name="text">
+                       <string>Select a statistic</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="3">
+                     <spacer name="horizontalSpacer_103">
+                      <property name="orientation">
+                       <enum>Qt::Horizontal</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>40</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item row="0" column="0" colspan="4">
+                     <widget class="QLabel" name="label_285">
+                      <property name="styleSheet">
+                       <string notr="true">background-color : #656565; color : white</string>
+                      </property>
+                      <property name="frameShape">
+                       <enum>QFrame::Panel</enum>
+                      </property>
+                      <property name="frameShadow">
+                       <enum>QFrame::Sunken</enum>
+                      </property>
+                      <property name="text">
+                       <string> Statistic</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="1" column="0" colspan="3">
+                   <layout class="QGridLayout" name="gridLayout_300">
+                    <item row="0" column="0">
+                     <widget class="QLabel" name="label_282">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="frameShadow">
+                       <enum>QFrame::Sunken</enum>
+                      </property>
+                      <property name="text">
+                       <string>Select input band set</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="0">
+                     <widget class="QLabel" name="label_280">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="minimumSize">
+                       <size>
+                        <width>229</width>
+                        <height>0</height>
+                       </size>
+                      </property>
+                      <property name="frameShadow">
+                       <enum>QFrame::Sunken</enum>
+                      </property>
+                      <property name="text">
+                       <string>Neighbor distance in pixels</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="1">
+                     <widget class="QSpinBox" name="band_set_comb_spinBox_15">
+                      <property name="toolTip">
+                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Band set number&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                      </property>
+                      <property name="minimum">
+                       <number>1</number>
+                      </property>
+                      <property name="maximum">
+                       <number>100000</number>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="1">
+                     <widget class="QSpinBox" name="class_neighbor_threshold_spinBox">
+                      <property name="toolTip">
+                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Distance in pixels&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                      </property>
+                      <property name="minimum">
+                       <number>1</number>
+                      </property>
+                      <property name="maximum">
+                       <number>1000</number>
+                      </property>
+                      <property name="value">
+                       <number>1</number>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="2">
+                     <spacer name="horizontalSpacer_100">
+                      <property name="orientation">
+                       <enum>Qt::Horizontal</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>40</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="3" column="0" colspan="3">
+                   <layout class="QHBoxLayout" name="horizontalLayout_72">
+                    <item>
+                     <spacer name="horizontalSpacer_104">
+                      <property name="orientation">
+                       <enum>Qt::Horizontal</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>40</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </widget>
              </widget>
             </item>
            </layout>
@@ -12799,8 +13267,8 @@ distance</string>
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>343</width>
-                     <height>180</height>
+                     <width>923</width>
+                     <height>413</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -15823,8 +16291,8 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>428</width>
-                     <height>229</height>
+                     <width>923</width>
+                     <height>413</height>
                     </rect>
                    </property>
                    <attribute name="label">

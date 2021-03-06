@@ -165,6 +165,9 @@ class SemiAutomaticClassificationPluginDialog(QtWidgets.QDialog):
 	def statistic_name_combo(self, field):
 		self.ui.statistic_name_combobox.addItem(field)
 		
+	def statistic_name_combo2(self, field):
+		self.ui.statistic_name_combobox_2.addItem(field)
+		
 # create the dialog
 class DockClassDialog(QtWidgets.QDockWidget):
 	def __init__(self, parent, iface):

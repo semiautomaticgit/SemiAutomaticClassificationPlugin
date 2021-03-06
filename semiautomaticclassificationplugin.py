@@ -153,6 +153,7 @@ if PluginCheck == 'Yes':
 		from .maininterface.sieveTab import SieveRaster
 		from .maininterface.erosionTab import ErosionRaster
 		from .maininterface.dilationTab import DilationRaster
+		from .maininterface.neighborpixelsTab import NeighborPixels
 		from .maininterface.clipmultiplerasterspointer import ClipMultiplerastersPointer
 		from .maininterface.landcoverchange import LandCoverChange
 		from .maininterface.classreportTab import ClassReportTab
@@ -316,6 +317,7 @@ class SemiAutomaticClassificationPlugin:
 			cfg.sieveRstr = SieveRaster()
 			cfg.ersnRstr = ErosionRaster()
 			cfg.dltnRstr = DilationRaster()
+			cfg.clssNghbr = NeighborPixels()
 			cfg.downProd = DownloadProducts()
 			cfg.landsatT = LandsatTab()
 			cfg.ASTERT = ASTERTab()
@@ -1098,6 +1100,10 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.pushButton_Conversion_8.clicked.connect(cfg.goesT.performGOESConversion)
 			cfg.ui.goes_conversion.clicked.connect(cfg.batchT.setFunctionButton)
 			cfg.ui.GOES_pushButton_remove_band.clicked.connect(cfg.goesT.removeHighlightedBand)
+			''' Classification neighbor tab'''
+			cfg.ui.class_neighbor_toolButton.clicked.connect(cfg.clssNghbr.classNeighborAction)
+			cfg.ui.neighbor_pixels.clicked.connect(cfg.batchT.setFunctionButton)
+			cfg.ui.toolButton_input_matrix.clicked.connect(cfg.clssNghbr.inputMatrixFile)
 			''' Reproject raster bands tab '''
 			# connect to refresh button
 			cfg.ui.toolButton_reload_25.clicked.connect(cfg.rprjRstBndsT.refreshClassificationLayer)
@@ -1264,7 +1270,7 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.classification_dilation.clicked.connect(cfg.batchT.setFunctionButton)
 			# connect the value text
 			cfg.ui.dilation_classes_lineEdit.textChanged.connect(cfg.dltnRstr.textChanged)
-			''' Classification dilation tab'''
+			''' Classification zonal stat tab'''
 			# connect to refresh rasters button
 			cfg.ui.toolButton_reload_24.clicked.connect(cfg.utls.refreshClassificationLayer)
 			cfg.ui.buttonReload_shape_6.clicked.connect(cfg.znlSttRstT.refreshReferenceLayer)
@@ -1481,6 +1487,7 @@ class SemiAutomaticClassificationPlugin:
 		cfg.crossC.refreshReferenceLayer()
 		cfg.znlSttRstT.refreshReferenceLayer()
 		cfg.znlSttRstT.loadStatisticCombo()
+		cfg.clssNghbr.loadStatisticCombo()
 		cfg.landCC.refreshClassificationReferenceLayer()
 		cfg.landCC.refreshNewClassificationLayer()
 		# read variables

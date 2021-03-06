@@ -399,6 +399,8 @@ class ClassRandomForestTab:
 				return 'No'
 		d = '"' + cfg.SNAPGPT + '" -q ' + str(cfg.threads) + ' -c ' + str(cfg.RAMValue) + 'M ' + ' -Dsnap.userdir="' + cfg.tmpDir + '" "' + xmlFile + '" -Pinput="' + inputRaster + '" -PtreeCount=' + str(treeCount) + ' -PnumTrainSamples=' + str(numTrainSamples) + ' -PclassifierName="' + str(classifierName) + '" -PloadClassifier=' + str(loadClassifier) + ' -PtrainingVectors="' + str(trainingVectors) + '" -PfeatureBands=' + str(featureBands) + ' -PevaluateClassifier=' + str(evaluateClassifier) + ' -PevaluateFeaturePowerSet=' + str(evaluateFeaturePowerSet) + ' -PminPowerSetSize=' + str(minPowerSetSize) + ' -PmaxPowerSetSize=' + str(maxPowerSetSize) + ' -Poutput="' + outputRaster + '"'
 		outTxt = cfg.tmpDir + '/auxdata/classifiers/RandomForest/' + classifierName + '.txt'
+		# logger
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' d: ' + str(d))
 		if cfg.sysSCPNm != 'Windows':
 			d = cfg.shlexSCP.split(d)
 		# logger

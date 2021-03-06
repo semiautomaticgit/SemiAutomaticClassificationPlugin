@@ -1802,6 +1802,96 @@ class BatchTab:
 			return 'No', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'missing parameter')
 		return 'Yes', parameters
 
+	# neighbor pixels band sets
+	def performNeighborPixels(self, paramList):
+		matrixSize = 'None'
+		file = 'None'
+		namePrefix = 'None'
+		statPerc = 'None'
+		parameters = []
+		for p in paramList:
+			pSplit = p.split(':', 1)
+			pName = pSplit[0].lower().replace(' ', '')
+			# output directory inside ' '
+			if pName == 'output_dir':
+				pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
+				if len(g[0]) > 0:
+					outputDir = '\'' + g[0] + '\''
+				else:
+					return 'No', pName
+			# output name prefix inside ' '
+			elif pName == 'output_name_prefix':
+				pSplitX = pSplit[1]
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
+				namePrefix = '\'' + g[0] + '\''
+				if len(cfg.utls.fileName(g[0])) > 0:
+					pass
+				else:
+					return 'No', pName
+			# band set number
+			elif pName == 'band_set':
+				try:
+					bandset = str(int(eval(pSplit[1].replace(' ', ''))) - 1)
+				except:
+					return 'No', pName
+			# input file path inside ' '
+			elif pName == 'matrix_file_path':
+				pSplitX = pSplit[1]
+				if cfg.workingDir is not None:
+					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
+				file = '\'' + g[0] + '\''
+				if len(cfg.utls.fileName(g[0])) > 0:
+					pass
+				else:
+					return 'No', pName
+			# matrix size (int value)
+			elif pName == 'matrix_size':
+				try:
+					matrixSize = str(int(eval(pSplit[1].replace(' ', ''))))
+				except:
+					return 'No', pName
+			# statistic name inside ' '
+			elif pName == 'statistic':
+				pSplitX = pSplit[1]
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
+				if len(g[0]) > 0:
+					statName = None
+					for i in cfg.statisticList:
+						if i[0].lower() == g[0].lower():
+							statName = '\'' + g[0] + '\''
+							break
+					if statName is None:
+						return 'No', pName
+				else:
+					return 'No', pName
+			# stat value (int value)
+			elif pName == 'stat_value':
+				try:
+					statPerc = int(eval(pSplit[1].replace(' ', '')))
+				except:
+					return 'No', pName
+			else:
+				if len(pName.strip()) > 0:
+					return 'No', pName
+		# append parameters
+		try:
+			# batch
+			parameters.append('\'Yes\'')
+			parameters.append(bandset)
+			parameters.append(outputDir)
+			parameters.append(matrixSize)
+			parameters.append(file)
+			parameters.append(statName)
+			parameters.append(statPerc)
+			parameters.append(namePrefix)
+		except:
+			return 'No', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'missing parameter')
+		return 'Yes', parameters
+
 	# batch band calc
 	def performBandCalc(self, paramList):
 		extentRaster = 'None'

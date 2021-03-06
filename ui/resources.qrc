@@ -91,6 +91,7 @@
     <file>icons/semiautomaticclassificationplugin_random_forest.svg</file>
     <file>icons/semiautomaticclassificationplugin_reclassification_tool.svg</file>
     <file>icons/semiautomaticclassificationplugin_docks.svg</file>
+    <file>icons/semiautomaticclassificationplugin_neighbor_pixels.svg</file>
     <file>icons/semiautomaticclassificationplugin_class_to_vector_tool.svg</file>
     <file>icons/help.svg</file>
     <file>icons/semiautomaticclassificationplugin_report_tool.svg</file>

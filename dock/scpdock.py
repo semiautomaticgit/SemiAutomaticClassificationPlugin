@@ -2705,7 +2705,7 @@ class SCPDock:
 			tN = cfg.subsTmpROI + dT
 			# crs
 			pCrs = cfg.utls.getQGISCrs()
-			cfg.parallelArrayDict = {}
+			#cfg.parallelArrayDict = {}
 			# band set
 			if cfg.bandSetsList[bandSetNumber][0] == 'Yes':
 				try:
@@ -2723,6 +2723,7 @@ class SCPDock:
 				iCrs = cfg.utls.getCrsGDAL(filePath)
 				bList = []
 				bandNumberList = []
+				bandNumberList2 = []
 				functionList = []
 				if cfg.rpdROICheck == '0':
 					# subset
@@ -2730,6 +2731,7 @@ class SCPDock:
 						oL = cfg.utls.subsetImage(cfg.bandSetsList[bandSetNumber][3][b], point.x(), point.y(), float(cfg.maxROIWdth), float(cfg.maxROIWdth), virtual ='Yes')
 						bList.append(oL)
 						bandNumberList.append(1)
+						bandNumberList2.append([b])
 						functionList.append(b)
 				# rapid ROI
 				else:
@@ -2737,6 +2739,7 @@ class SCPDock:
 					oL = cfg.utls.subsetImage(cfg.bandSetsList[bandSetNumber][3][b], point.x(), point.y(), float(cfg.maxROIWdth), float(cfg.maxROIWdth), virtual ='Yes')
 					bList.append(oL)
 					bandNumberList.append(1)
+					bandNumberList2.append([b])
 					functionList.append(0)
 			# multiband image
 			else:
@@ -2747,6 +2750,7 @@ class SCPDock:
 				tRR = cfg.utls.createTempRasterPath('tif')
 				bList = []
 				bandNumberList = []
+				bandNumberList2 = []
 				functionList = []
 				if cfg.rpdROICheck == '0':
 					# subset image
@@ -2754,6 +2758,7 @@ class SCPDock:
 					bList = cfg.utls.rasterToBands(tRR, cfg.tmpDir, None, 'No', cfg.bandSetsList[bandSetNumber][6])
 					for b in range(0, len(bList)):
 						bandNumberList.append(1)
+						bandNumberList2.append([b])
 						functionList.append(b)
 				# rapid ROI
 				else:
@@ -2763,6 +2768,7 @@ class SCPDock:
 					b = int(cfg.ROIband) - 1
 					bList = [bList[b]]
 					bandNumberList.append(1)
+					bandNumberList2.append([b])
 					functionList.append(0)
 			# open input with GDAL
 			try:
@@ -2805,12 +2811,12 @@ class SCPDock:
 			tPMD = cfg.utls.createTempRasterPath('vrt')
 			vrtCheck = cfg.utls.createVirtualRaster(bList, tPMD, bandNumberList, 'Yes', 'Yes', 0)
 			# region growing
-			o = cfg.utls.multiProcessRaster(rasterPath = tPMD, functionBand = 'No', functionRaster = cfg.utls.regionGrowingAlgMultiprocess, outputRasterList = oM, functionBandArgument = functionList, functionVariable = fVarList, progressMessage = 'Region growing', parallel = cfg.parallelRaster, skipSingleBand = 'Yes')
+			#o = cfg.utls.multiProcessRaster(rasterPath = tPMD, functionBand = 'No', functionRaster = cfg.utls.regionGrowingAlgMultiprocess, outputRasterList = oM, functionBandArgument = functionList, functionVariable = fVarList, progressMessage = 'Region growing', parallel = cfg.parallelRaster, skipSingleBand = 'Yes')
+			o = cfg.utls.multiProcessNoBlocks(rasterPath = tPMD, bandNumberList = bandNumberList2, functionRaster = cfg.utls.regionGrowingAlgMultiprocess, functionBandArgument = functionList, functionVariable = fVarList, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Region growing'))
 			# run segmentation
-			for x in sorted(cfg.parallelArrayDict):
+			for x in sorted(o):
 				try:
-					for dic in cfg.parallelArrayDict[x]:
-						arr = dic[0]
+					for arr in o[x]:
 						try:
 							r = r * arr.astype(int)
 						except:
