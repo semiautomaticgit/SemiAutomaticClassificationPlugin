@@ -1,6 +1,10 @@
 # Semi Automatic Classification Plugin (SCP)
 
-The Semi-Automatic Classification Plugin (SCP) is a free open source plugin for QGIS that allows for the semi-automatic classification (also supervised and unsupervised classification) of remote sensing images. Also, it provides several tools for the download of free images (Landsat, Sentinel-2, Sentinel-3, ASTER, MODIS), the preprocessing of images, the postprocessing of classifications, and the raster calculation.
+![SCP](semiautomaticclassificationplugin.png) The Semi-Automatic Classification Plugin (SCP) is a free open source plugin for QGIS that allows  for the supervised classification of remote sensing images, providing tools for the download, the preprocessing and postprocessing of images.
+
+The overall objective of SCP is to provide a set of intertwined tools for raster processing in order to make an automatic workflow and ease the land cover classification, which could be performed also by people whose main field is not remote sensing.
+
+Search and download is available for ASTER, GOES, Landsat, MODIS, Sentinel-1, Sentinel-2, and Sentinel-3 images. Several algorithms are available for the land cover classification. This plugin requires the installation of GDAL, OGR, Numpy, SciPy, and Matplotlib. Some tools require also the installation of SNAP (ESA Sentinel Application Platform).
 
 ## Contributing to the development
 
