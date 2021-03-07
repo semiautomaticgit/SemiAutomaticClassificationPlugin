@@ -1,4 +1,4 @@
-# Semi-Automatic Classification Plugin (SCP)
+# Semi-Automatic Classification Plugin
 
 ![SCP](semiautomaticclassificationplugin.png) The Semi-Automatic Classification Plugin (SCP) is a free open source plugin for QGIS that allows  for the supervised classification of remote sensing images, providing tools for the download, the preprocessing and postprocessing of images.
 
