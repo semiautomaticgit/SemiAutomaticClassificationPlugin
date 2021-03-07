@@ -6,11 +6,18 @@ The overall objective of SCP is to provide a set of intertwined tools for raster
 
 Search and download is available for ASTER, GOES, Landsat, MODIS, Sentinel-1, Sentinel-2, and Sentinel-3 images. Several algorithms are available for the land cover classification. This plugin requires the installation of GDAL, OGR, Numpy, SciPy, and Matplotlib. Some tools require also the installation of SNAP (ESA Sentinel Application Platform).
 
+## Plugin installation
+
+The SCP is available for QGIS version 3.x.
+The SCP is developed with Python 3 and requires the installation of GDAL (OGR), NumPy, SciPy and Matplotlib.
+
+For the installation of QGIS and SCP on different operating systems please follow this [guide](https://semiautomaticclassificationmanual.readthedocs.io/en/latest/installation.html).
+
+
 ## Using the plugin
 
-To use this plugin you just need to install it using the QGIS interface.
+If you are new to SCP, please follow this [tutorial](https://semiautomaticclassificationmanual.readthedocs.io/en/latest/tutorial_1.html).
 
-The plugin is available for QGIS version 3.x.
 
 ## Web site
 
