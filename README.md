@@ -18,7 +18,7 @@ All the SCP information is available from the [SCP website](https://fromgistors.
 
 ## Documentation
 
-Check [the user manual](https://fromgistors.blogspot.com/p/user-manual.html) or the online [tutorials](https://fromgistors.blogspot.com/search/label/Tutorial) available.
+Check [the user manual](https://semiautomaticclassificationmanual.readthedocs.io) or the online [tutorials](https://fromgistors.blogspot.com/search/label/Tutorial) available.
 
 [Videos](https://www.youtube.com/user/fromgistors) are also available.
 
