@@ -724,16 +724,21 @@ class Utils:
 	def rasterSymbolSingleBandGray(self, layer):
 		# QGIS3
 		#layer.setDrawingStyle("SingleBandGray")
-		layer.setContrastEnhancement(cfg.qgisCoreSCP.QgsContrastEnhancement.StretchToMinimumMaximum, cfg.qgisCoreSCP.QgsRasterMinMaxOrigin.CumulativeCut)
-		# refresh legend
-		if hasattr(layer, "setCacheImage"):
-			layer.setCacheImage(None)
-		layer.triggerRepaint()
-		cfg.utls.refreshLayerSymbology(layer)
-		ql = cfg.utls.layerSource(layer)
-		# logger
-		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "" + str(ql))
-		
+		try:
+			layer.setContrastEnhancement(cfg.qgisCoreSCP.QgsContrastEnhancement.StretchToMinimumMaximum, cfg.qgisCoreSCP.QgsRasterMinMaxOrigin.CumulativeCut)
+			# refresh legend
+			if hasattr(layer, "setCacheImage"):
+				layer.setCacheImage(None)
+			layer.triggerRepaint()
+			cfg.utls.refreshLayerSymbology(layer)
+			ql = cfg.utls.layerSource(layer)
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "" + str(ql))
+		except Exception as err:
+			list = 'No'
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+			
 	# Define raster symbology
 	def rasterSymbolGeneric(self, rasterLayer, zeroValue = 'Unchanged', rasterUniqueValueList = None):
 		if rasterUniqueValueList is None:
@@ -6414,14 +6419,15 @@ class Utils:
 		cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'group ' + str(groupName) + ' Position: ' + str(p))
 
 	# Layer ID by its name
-	def layerID(self, layerName):
+	def layerID(self, layerName, trainingID):
 		lsx = cfg.qgisCoreSCP.QgsProject.instance().mapLayers().values()
 		for lx in lsx:
 			lN = lx.name()
 			if lN == layerName:
 				# logger
 				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'layer: ' + str(layerName) + ' ID: ' + str(lx.id()))
-				return lx.id()
+				if lx.id() != trainingID:
+					return lx.id()
 
 	# read project variable
 	def readProjectVariable(self, variableName, value):
@@ -6516,6 +6522,14 @@ class Utils:
 			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 		cfg.prevList = []
 		cfg.tmpVrtDict[cfg.bndSetNumber] = None
+		# remove layers with the same name as training input
+		try:
+			scpPath = cfg.utls.readProjectVariable('trainingLayer', '')
+			name = cfg.utls.fileNameNoExt(scpPath)
+			duplicateID = cfg.utls.layerID(name, cfg.shpLay.id())
+			cfg.qgisCoreSCP.QgsProject.instance().removeMapLayer(duplicateID)
+		except:
+			pass
 		# enable map canvas render
 		cfg.cnvs.setRenderFlag(True)
 		
@@ -6663,8 +6677,11 @@ class Utils:
 	def refreshLayerSymbology(self, layer):
 		root = cfg.qgisCoreSCP.QgsProject.instance().layerTreeRoot()
 		model = cfg.iface.layerTreeView().model()
-		g = root.findLayer(layer.id())
-		model.refreshLayerLegend(g)
+		try:
+			g = root.findLayer(layer.id())
+			model.refreshLayerLegend(g)
+		except:
+			cfg.iface.layerTreeView().refreshLayerSymbology(layer.id())
 
 	# Select layer by name thereof
 	def selectLayerbyName(self, layerName, filterRaster=None):
@@ -6806,28 +6823,34 @@ class Utils:
 	# save memory layer to shapefile
 	def saveMemoryLayerToShapefile(self, memoryLayer, output, name = None, format = 'ESRI Shapefile', IDList = None, listFieldName = None):
 		shpF = output
-		if format == 'ESRI Shapefile':
-			cfg.utls.createSCPShapefile(memoryLayer.crs(), shpF)
-		else:
-			cfg.utls.createSCPVector(memoryLayer.crs(), shpF, format = format)
-		if name is None:
-			name = cfg.utls.fileName(shpF)
-		tSS = cfg.utls.addVectorLayer(shpF, name, 'ogr')
-		tSS.updateFields()
-		f = cfg.qgisCoreSCP.QgsFeature()
-		tSS.startEditing()
-		if IDList is None:
-			for f in memoryLayer.getFeatures():
-				tSS.addFeature(f)
-		else:
-			for f in memoryLayer.getFeatures():
-				UID  = str(f[listFieldName])
-				if UID in IDList:
+		try:
+			if format == 'ESRI Shapefile':
+				cfg.utls.createSCPShapefile(memoryLayer.crs(), shpF)
+			else:
+				cfg.utls.createSCPVector(memoryLayer.crs(), shpF, format = format)
+			if name is None:
+				name = cfg.utls.fileName(shpF)
+			tSS = cfg.utls.addVectorLayer(shpF, name, 'ogr')
+			tSS.updateFields()
+			f = cfg.qgisCoreSCP.QgsFeature()
+			tSS.startEditing()
+			if IDList is None:
+				for f in memoryLayer.getFeatures():
 					tSS.addFeature(f)
-		tSS.commitChanges()
-		tSS.dataProvider().createSpatialIndex()
-		tSS.updateExtents()
-		return tSS
+			else:
+				for f in memoryLayer.getFeatures():
+					UID  = str(f[listFieldName])
+					if UID in IDList:
+						tSS.addFeature(f)
+			tSS.commitChanges()
+			tSS.dataProvider().createSpatialIndex()
+			tSS.updateExtents()
+			return tSS
+		# in case of errors
+		except Exception as err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+			return None
 			
 	# duplicate memory layer
 	def duplicateMemoryLayer(self, layer):
@@ -6864,27 +6887,33 @@ class Utils:
 		f.append(cfg.qgisCoreSCP.QgsField(cfg.fldSCP_UID, cfg.QVariantSCP.String))
 		# shapefile
 		shpF = cfg.utls.createTempRasterPath('shp')
-		cfg.qgisCoreSCP.QgsVectorFileWriter(shpF, 'CP1250', f, cfg.qgisCoreSCP.QgsWkbTypes.MultiPolygon , crs, 'ESRI Shapefile')
-		tSS = cfg.utls.addVectorLayer(shpF)
-		f = cfg.qgisCoreSCP.QgsFeature()
-		tSS.startEditing()
-		count = 0
-		for f in cfg.shpLay.getFeatures():
-			SCP_UID  = str(f[cfg.fldSCP_UID])
-			if SCP_UID in idList:
-				a = tSS.addFeature(f)
-				count = count + 1
-		if count == 0:
+		try:
+			cfg.qgisCoreSCP.QgsVectorFileWriter(shpF, 'CP1250', f, cfg.qgisCoreSCP.QgsWkbTypes.MultiPolygon , crs, 'ESRI Shapefile')
+			tSS = cfg.utls.addVectorLayer(shpF)
+			f = cfg.qgisCoreSCP.QgsFeature()
+			tSS.startEditing()
+			count = 0
+			for f in cfg.shpLay.getFeatures():
+				SCP_UID  = str(f[cfg.fldSCP_UID])
+				if SCP_UID in idList:
+					a = tSS.addFeature(f)
+					count = count + 1
+			if count == 0:
+				tSS.commitChanges()
+				cfg.utls.removeLayerByLayer(tSS)
+				return None
 			tSS.commitChanges()
+			tSS.dataProvider().createSpatialIndex()
+			tSS.updateExtents()
 			cfg.utls.removeLayerByLayer(tSS)
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' vector exported ')
+			return shpF	
+		# in case of errors
+		except Exception as err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 			return None
-		tSS.commitChanges()
-		tSS.dataProvider().createSpatialIndex()
-		tSS.updateExtents()
-		cfg.utls.removeLayerByLayer(tSS)
-		# logger
-		cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' vector exported ')
-		return shpF
 		
 ##################################
 	''' raster GDAL functions '''
@@ -8158,11 +8187,16 @@ class Utils:
 	# Get last feauture id
 	def getLastFeatureID(self, layer):
 		f = cfg.qgisCoreSCP.QgsFeature()
-		for f in layer.getFeatures():
-			ID = f.id()
-		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ID: " + str(ID))
-		return ID
+		try:
+			for f in layer.getFeatures():
+				ID = f.id()
+			# logger
+			cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ID: " + str(ID))
+			return ID
+		except Exception as err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+			return False
 		
 	# Get a feature from a shapefile by feature ID
 	def getFeaturebyID(self, layer, ID):
@@ -8234,21 +8268,25 @@ class Utils:
 		# get geometry
 		fG = f.geometry()
 		f.setGeometry(fG)
-		sF = targetLayer.fields()
-		f.initAttributes(sF.count())
-		if f.hasGeometry() is not True:
-			cfg.mx.msg6()
+		try:
+			sF = targetLayer.fields()
+			f.initAttributes(sF.count())
+			if f.hasGeometry() is not True:
+				cfg.mx.msg6()
+				# logger
+				cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'feature geometry is none')			
+			else:	
+				# copy polygon to shapefile
+				targetLayer.startEditing()
+				targetLayer.addFeature(f)	
+				targetLayer.commitChanges()
+				targetLayer.dataProvider().createSpatialIndex()
+				targetLayer.updateExtents()
+				# logger
+				cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'feature copied')
+		except Exception as err:
 			# logger
-			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'feature geometry is none')			
-		else:	
-			# copy polygon to shapefile
-			targetLayer.startEditing()
-			targetLayer.addFeature(f)	
-			targetLayer.commitChanges()
-			targetLayer.dataProvider().createSpatialIndex()
-			targetLayer.updateExtents()
-			# logger
-			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'feature copied')
+			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 				
 	# merge polygons
 	def mergePolygons(self, targetLayer, idList, attributeList):

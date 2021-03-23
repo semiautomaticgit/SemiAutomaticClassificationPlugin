@@ -4812,12 +4812,12 @@ ROI</source>
         <translation>Wyczyść listę sygnatur</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="873"/>
+        <location filename="../dock/scpdock.py" line="888"/>
         <source>Select a library file</source>
         <translation>Wybierz bibliotekę pliku</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="901"/>
+        <location filename="../dock/scpdock.py" line="916"/>
         <source>Export the highlighted signatures to CSV library</source>
         <translation>Eksportuj wybrane sygnatury do biblioteki CSV</translation>
     </message>
@@ -4832,12 +4832,12 @@ ROI</source>
         <translation>Czy na pewno chcesz usunąć wybrane sygnatury?</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="992"/>
+        <location filename="../dock/scpdock.py" line="1007"/>
         <source>Merge signatures</source>
         <translation>Połącz sygnatury</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="992"/>
+        <location filename="../dock/scpdock.py" line="1007"/>
         <source>Merge highlighted signatures?</source>
         <translation>Połączyć wybrane sygnatury?</translation>
     </message>
@@ -5177,12 +5177,12 @@ ROI</source>
         <translation>Zapisz raster</translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7059"/>
+        <location filename="../core/utils.py" line="7088"/>
         <source>Build overviews</source>
         <translation>Zbuduj podglądy</translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7059"/>
+        <location filename="../core/utils.py" line="7088"/>
         <source>Do you want to build the external overviews of bands?</source>
         <translation>Czy na pewno zbudować zewnętrzne podglądy na kanały?</translation>
     </message>
@@ -5322,19 +5322,19 @@ ROI</source>
         <translation>Czy na pewno wyczyścić progi?</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="2344"/>
+        <location filename="../dock/scpdock.py" line="2364"/>
         <source>It appears that the shapefile </source>
         <translation>Wygląda na to, że ten shapefile</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="2344"/>
+        <location filename="../dock/scpdock.py" line="2364"/>
         <source> is missing some fields that are required for the signature calculation. 
 Do you want to add the required fields to this shapefile?</source>
         <translation> nie posiada pól, które są potrzebne do wyznaczania sygnatur. 
 Chcesz dodać wymagane pola do tego shapefile?</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="2435"/>
+        <location filename="../dock/scpdock.py" line="2455"/>
         <source>Undo save ROI</source>
         <translation>Cofnij zapisywanie OT</translation>
     </message>
@@ -5349,27 +5349,27 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation>Wybierz dane treningowe</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="802"/>
+        <location filename="../dock/scpdock.py" line="817"/>
         <source>Export SCP training input</source>
         <translation>Eksportuj dane treningowe</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1419"/>
+        <location filename="../dock/scpdock.py" line="1434"/>
         <source>Calculate signatures</source>
         <translation>Oblicz sygnatury</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="960"/>
+        <location filename="../dock/scpdock.py" line="975"/>
         <source>Calculate signatures for highlighted items?</source>
         <translation>Obliczyć sygnatury wybranych obiektów?</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1122"/>
+        <location filename="../dock/scpdock.py" line="1137"/>
         <source>Are you sure you want to delete highlighted ROIs and signatures?</source>
         <translation>Czy na pewno chcesz usunąć wybrane OT i sygnatury?</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="2233"/>
+        <location filename="../dock/scpdock.py" line="2246"/>
         <source>Create SCP training input</source>
         <translation>Stwórz dane treningowe</translation>
     </message>
@@ -5969,12 +5969,12 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="1616"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="1623"/>
         <source>Please, restart QGIS for executing the Semi-Automatic Classification Plugin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="2344"/>
+        <location filename="../dock/scpdock.py" line="2364"/>
         <source>Add required fields</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6069,7 +6069,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished">Sentinel-3</translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="9189"/>
+        <location filename="../core/utils.py" line="9227"/>
         <source>SCP: completed process</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6384,7 +6384,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/randomForestTab.py" line="239"/>
+        <location filename="../maininterface/randomForestTab.py" line="292"/>
         <source>Save classification</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6449,7 +6449,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="2315"/>
+        <location filename="../dock/scpdock.py" line="2328"/>
         <source>Creating ROI</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6484,27 +6484,27 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="5977"/>
+        <location filename="../core/utils.py" line="5982"/>
         <source>Calculating signature</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7327"/>
+        <location filename="../core/utils.py" line="7356"/>
         <source>Writing file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="5211"/>
+        <location filename="../core/utils.py" line="5216"/>
         <source>Conversion to vector</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7008"/>
+        <location filename="../core/utils.py" line="7037"/>
         <source>Sieve</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7138"/>
+        <location filename="../core/utils.py" line="7167"/>
         <source>Building overviews</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6514,7 +6514,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/randomForestTab.py" line="454"/>
+        <location filename="../maininterface/randomForestTab.py" line="508"/>
         <source>Random forest classification</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6529,12 +6529,12 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="2200"/>
+        <location filename="../dock/scpdock.py" line="2213"/>
         <source>Remove training input</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="2200"/>
+        <location filename="../dock/scpdock.py" line="2213"/>
         <source>Are you sure you want to remove training input?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6544,12 +6544,12 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="8638"/>
+        <location filename="../core/utils.py" line="8676"/>
         <source>Remove rows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="8638"/>
+        <location filename="../core/utils.py" line="8676"/>
         <source>Are you sure you want to remove highlighted rows from the table?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6574,7 +6574,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="2022"/>
+        <location filename="../core/utils.py" line="2027"/>
         <source>DOS1 calculation</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6684,177 +6684,177 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1372"/>
+        <location filename="../dock/scpdock.py" line="1387"/>
         <source>MC ID</source>
         <translation type="unfinished">MC ID</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1373"/>
+        <location filename="../dock/scpdock.py" line="1388"/>
         <source>C ID</source>
         <translation type="unfinished">C ID</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1374"/>
+        <location filename="../dock/scpdock.py" line="1389"/>
         <source>Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1375"/>
+        <location filename="../dock/scpdock.py" line="1390"/>
         <source>Type</source>
         <translation type="unfinished">Typ</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1376"/>
+        <location filename="../dock/scpdock.py" line="1391"/>
         <source>Color</source>
         <translation type="unfinished">Kolor</translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1377"/>
+        <location filename="../dock/scpdock.py" line="1392"/>
         <source>SCPID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1410"/>
+        <location filename="../dock/scpdock.py" line="1425"/>
         <source>Zoom to highlighted items</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1412"/>
+        <location filename="../dock/scpdock.py" line="1427"/>
         <source>Clear selection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1413"/>
+        <location filename="../dock/scpdock.py" line="1428"/>
         <source>Collapse/expand all</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1418"/>
+        <location filename="../dock/scpdock.py" line="1433"/>
         <source>Merge highlighted items</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1419"/>
+        <location filename="../dock/scpdock.py" line="1434"/>
         <source>Calculate signatures for highlighted items</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1420"/>
+        <location filename="../dock/scpdock.py" line="1435"/>
         <source>Delete highlighted items</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1415"/>
+        <location filename="../dock/scpdock.py" line="1430"/>
         <source>Change MC ID for highlighted items</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1422"/>
+        <location filename="../dock/scpdock.py" line="1437"/>
         <source>Add highlighted items to spectral plot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1423"/>
+        <location filename="../dock/scpdock.py" line="1438"/>
         <source>Add highlighted items to scatter plot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1452"/>
+        <location filename="../dock/scpdock.py" line="1467"/>
         <source>Change Macroclass ID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1452"/>
+        <location filename="../dock/scpdock.py" line="1467"/>
         <source>Change the Macroclass ID for highlighted items to </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1424"/>
+        <location filename="../dock/scpdock.py" line="1439"/>
         <source>Properties</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1410"/>
+        <location filename="../dock/scpdock.py" line="1425"/>
         <source>Zoom to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1411"/>
+        <location filename="../dock/scpdock.py" line="1426"/>
         <source>Check/uncheck</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1411"/>
+        <location filename="../dock/scpdock.py" line="1426"/>
         <source>Check/uncheck highlighted items</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1412"/>
+        <location filename="../dock/scpdock.py" line="1427"/>
         <source>Clear selection of highlighted items</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1413"/>
+        <location filename="../dock/scpdock.py" line="1428"/>
         <source>Collapse/expand all macroclasses</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1415"/>
+        <location filename="../dock/scpdock.py" line="1430"/>
         <source>Change MC ID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1416"/>
+        <location filename="../dock/scpdock.py" line="1431"/>
         <source>Change color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1416"/>
+        <location filename="../dock/scpdock.py" line="1431"/>
         <source>Change color for highlighted items</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1418"/>
+        <location filename="../dock/scpdock.py" line="1433"/>
         <source>Merge items</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1420"/>
+        <location filename="../dock/scpdock.py" line="1435"/>
         <source>Delete items</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1422"/>
+        <location filename="../dock/scpdock.py" line="1437"/>
         <source>Add to spectral plot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1423"/>
+        <location filename="../dock/scpdock.py" line="1438"/>
         <source>Add to scatter plot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1424"/>
+        <location filename="../dock/scpdock.py" line="1439"/>
         <source>Properties for highlighted items</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1426"/>
+        <location filename="../dock/scpdock.py" line="1441"/>
         <source>Import</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1426"/>
+        <location filename="../dock/scpdock.py" line="1441"/>
         <source>Import spectral signatures</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1427"/>
+        <location filename="../dock/scpdock.py" line="1442"/>
         <source>Export</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="1427"/>
+        <location filename="../dock/scpdock.py" line="1442"/>
         <source>Export highlighted items</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6884,17 +6884,17 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="2435"/>
+        <location filename="../dock/scpdock.py" line="2455"/>
         <source>Are you sure you want to undo?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="2473"/>
+        <location filename="../dock/scpdock.py" line="2493"/>
         <source>Redo save ROI</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="2473"/>
+        <location filename="../dock/scpdock.py" line="2493"/>
         <source>Are you sure you want to redo?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6904,7 +6904,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="2815"/>
+        <location filename="../dock/scpdock.py" line="2835"/>
         <source>Region growing</source>
         <translation type="unfinished"></translation>
     </message>

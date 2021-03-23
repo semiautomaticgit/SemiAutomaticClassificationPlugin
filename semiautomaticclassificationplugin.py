@@ -1441,7 +1441,14 @@ class SemiAutomaticClassificationPlugin:
 				cfg.SCPD.saveMemToSHP(cfg.shpLay)
 				cfg.utls.zipDirectoryInFile(cfg.scpFlPath, cfg.inptDir)
 			cfg.downProd.saveDownloadTable()
-		
+			try:
+				scpPath = cfg.utls.readProjectVariable('trainingLayer', '')
+				name = cfg.utls.fileNameNoExt(scpPath)
+				duplicateID = cfg.utls.layerID(name, cfg.shpLay.id())
+				cfg.qgisCoreSCP.QgsProject.instance().removeMapLayer(duplicateID)
+			except:
+				pass
+				
 	# reset all variables and interface
 	def resetSCP(self):
 		# logger

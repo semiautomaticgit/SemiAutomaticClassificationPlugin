@@ -92,74 +92,127 @@ class ClassRandomForestTab:
 		'''
 		refID = 'Read'
 		b = 0
-		for b in range(0, len(vectorList)):
-			nodeID = 'Import-Vector' + str(b)
+		if len(vectorList) > 0:
+			for b in range(0, len(vectorList)):
+				nodeID = 'Import-Vector' + str(b)
+				xml = '''
+				<node id="%s">
+				 <operator>Import-Vector</operator>
+				 <sources>
+				   <sourceProduct refid="%s"/>
+				 </sources>
+				 <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+				   <vectorFile>%s</vectorFile>
+				   <separateShapes>false</separateShapes>
+				 </parameters>
+				</node>
+				'''
+				importVector = importVector + xml % (nodeID, refID, vectorList[b])
+				refID = 'Import-Vector' + str(b)
+			# add random forest
 			xml = '''
-			<node id="%s">
-			 <operator>Import-Vector</operator>
-			 <sources>
-			   <sourceProduct refid="%s"/>
-			 </sources>
-			 <parameters class="com.bc.ceres.binding.dom.XppDomElement">
-			   <vectorFile>%s</vectorFile>
-			   <separateShapes>false</separateShapes>
-			 </parameters>
-			</node>
-			'''
-			importVector = importVector + xml % (nodeID, refID, vectorList[b])
-			refID = 'Import-Vector' + str(b)
-		# add random forest
-		xml = '''
-		<node id="Random-Forest-Classifier">
-			<operator>Random-Forest-Classifier</operator>
-			<sources>
-			  <sourceProduct refid="%s"/>
-			</sources>
-			<parameters class="com.bc.ceres.binding.dom.XppDomElement">
-			  <treeCount>$treeCount</treeCount>
-			  <numTrainSamples>$numTrainSamples</numTrainSamples>
-			  <savedClassifierName>$classifierName</savedClassifierName>
-			  <doLoadClassifier>$loadClassifier</doLoadClassifier>
-			  <doClassValQuantization>false</doClassValQuantization>
-			  <minClassValue>0.0</minClassValue>
-			  <classValStepSize>5.0</classValStepSize>
-			  <classLevels>101</classLevels>
-			  <trainOnRaster>false</trainOnRaster>
-			  <trainingBands/>
-			  <trainingVectors>${trainingVectors}</trainingVectors>
-			  <featureBands>${featureBands}</featureBands>
-			  <labelSource>VectorNodeName</labelSource>
-			  <evaluateClassifier>$evaluateClassifier</evaluateClassifier>
-			  <evaluateFeaturePowerSet>$evaluateFeaturePowerSet</evaluateFeaturePowerSet>
-			  <minPowerSetSize>$minPowerSetSize</minPowerSetSize>
-			  <maxPowerSetSize>$maxPowerSetSize</maxPowerSetSize>
-			</parameters>
-		  </node>
-		  <node id="Write">
-			<operator>Write</operator>
-			<sources>
-			  <sourceProduct refid="Random-Forest-Classifier"/>
-			</sources>
-			<parameters class="com.bc.ceres.binding.dom.XppDomElement">
-			  <file>$output</file>
-			  <formatName>GeoTIFF-BigTIFF</formatName>
-			</parameters>
-		  </node>
-		  <applicationData id="Presentation">
-			<Description/>
-			<node id="Read">
-					<displayPosition x="10.0" y="160.0"/>
-			</node>
 			<node id="Random-Forest-Classifier">
-			  <displayPosition x="100.0" y="160.0"/>
-			</node>
-			<node id="Write">
-					<displayPosition x="300.0" y="160.0"/>
-			</node>
-		  </applicationData>
-		</graph>
-		'''
-		importVector = importVector + xml % ('Import-Vector' + str(b))
+				<operator>Random-Forest-Classifier</operator>
+				<sources>
+				  <sourceProduct refid="%s"/>
+				</sources>
+				<parameters class="com.bc.ceres.binding.dom.XppDomElement">
+				  <treeCount>$treeCount</treeCount>
+				  <numTrainSamples>$numTrainSamples</numTrainSamples>
+				  <savedClassifierName>$classifierName</savedClassifierName>
+				  <doLoadClassifier>$loadClassifier</doLoadClassifier>
+				  <doClassValQuantization>false</doClassValQuantization>
+				  <minClassValue>0.0</minClassValue>
+				  <classValStepSize>5.0</classValStepSize>
+				  <classLevels>101</classLevels>
+				  <trainOnRaster>false</trainOnRaster>
+				  <trainingBands/>
+				  <trainingVectors>${trainingVectors}</trainingVectors>
+				  <featureBands>${featureBands}</featureBands>
+				  <labelSource>VectorNodeName</labelSource>
+				  <evaluateClassifier>$evaluateClassifier</evaluateClassifier>
+				  <evaluateFeaturePowerSet>$evaluateFeaturePowerSet</evaluateFeaturePowerSet>
+				  <minPowerSetSize>$minPowerSetSize</minPowerSetSize>
+				  <maxPowerSetSize>$maxPowerSetSize</maxPowerSetSize>
+				</parameters>
+			  </node>
+			  <node id="Write">
+				<operator>Write</operator>
+				<sources>
+				  <sourceProduct refid="Random-Forest-Classifier"/>
+				</sources>
+				<parameters class="com.bc.ceres.binding.dom.XppDomElement">
+				  <file>$output</file>
+				  <formatName>GeoTIFF-BigTIFF</formatName>
+				</parameters>
+			  </node>
+			  <applicationData id="Presentation">
+				<Description/>
+				<node id="Read">
+						<displayPosition x="10.0" y="160.0"/>
+				</node>
+				<node id="Random-Forest-Classifier">
+				  <displayPosition x="100.0" y="160.0"/>
+				</node>
+				<node id="Write">
+						<displayPosition x="300.0" y="160.0"/>
+				</node>
+			  </applicationData>
+			</graph>
+			'''
+			importVector = importVector + xml % ('Import-Vector' + str(b))
+		else:
+			xml = '''
+			<node id="Random-Forest-Classifier">
+				<operator>Random-Forest-Classifier</operator>
+				<sources>
+				  <sourceProduct refid="Read"/>
+				</sources>
+				<parameters class="com.bc.ceres.binding.dom.XppDomElement">
+				  <treeCount>$treeCount</treeCount>
+				  <numTrainSamples>$numTrainSamples</numTrainSamples>
+				  <savedClassifierName>$classifierName</savedClassifierName>
+				  <doLoadClassifier>$loadClassifier</doLoadClassifier>
+				  <doClassValQuantization>false</doClassValQuantization>
+				  <minClassValue>0.0</minClassValue>
+				  <classValStepSize>5.0</classValStepSize>
+				  <classLevels>101</classLevels>
+				  <trainOnRaster>false</trainOnRaster>
+				  <trainingBands/>
+				  <trainingVectors>false</trainingVectors>
+				  <featureBands>${featureBands}</featureBands>
+				  <labelSource>VectorNodeName</labelSource>
+				  <evaluateClassifier>$evaluateClassifier</evaluateClassifier>
+				  <evaluateFeaturePowerSet>$evaluateFeaturePowerSet</evaluateFeaturePowerSet>
+				  <minPowerSetSize>$minPowerSetSize</minPowerSetSize>
+				  <maxPowerSetSize>$maxPowerSetSize</maxPowerSetSize>
+				</parameters>
+			  </node>
+			  <node id="Write">
+				<operator>Write</operator>
+				<sources>
+				  <sourceProduct refid="Random-Forest-Classifier"/>
+				</sources>
+				<parameters class="com.bc.ceres.binding.dom.XppDomElement">
+				  <file>$output</file>
+				  <formatName>GeoTIFF-BigTIFF</formatName>
+				</parameters>
+			  </node>
+			  <applicationData id="Presentation">
+				<Description/>
+				<node id="Read">
+						<displayPosition x="10.0" y="160.0"/>
+				</node>
+				<node id="Random-Forest-Classifier">
+				  <displayPosition x="100.0" y="160.0"/>
+				</node>
+				<node id="Write">
+						<displayPosition x="300.0" y="160.0"/>
+				</node>
+			  </applicationData>
+			</graph>
+			'''
+			importVector = importVector + xml
 		tXml = cfg.utls.createTempRasterPath('xml')
 		with open(tXml, 'w') as f:
 			f.write(importVector)
@@ -389,6 +442,7 @@ class ClassRandomForestTab:
 		if len(classifierPath) > 0:
 			loadClassifier = 'true'
 			classifierName = cfg.utls.fileNameNoExt(classifierPath)
+			cfg.utls.makeDirectory(cfg.tmpDir + '/auxdata/classifiers/RandomForest/')
 			xml = cfg.tmpDir + '/auxdata/classifiers/RandomForest/' + classifierName + '.xml'
 			cl = cfg.tmpDir + '/auxdata/classifiers/RandomForest/' + classifierName + '.class'
 			# copy files
