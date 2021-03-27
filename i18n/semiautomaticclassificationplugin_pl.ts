@@ -5192,7 +5192,7 @@ ROI</source>
         <translation>Nieznane</translation>
     </message>
     <message>
-        <location filename="../maininterface/clusteringTab.py" line="1254"/>
+        <location filename="../maininterface/zonalStatRasterTab.py" line="255"/>
         <source>Class</source>
         <translation>Klasyf</translation>
     </message>

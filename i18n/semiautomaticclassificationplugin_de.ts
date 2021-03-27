@@ -5475,7 +5475,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/clusteringTab.py" line="1254"/>
+        <location filename="../maininterface/zonalStatRasterTab.py" line="255"/>
         <source>Class</source>
         <translation type="unfinished"></translation>
     </message>

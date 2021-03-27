@@ -247,6 +247,13 @@ class ZonalStatRasterTab:
 				# calculation statistic
 				o = cfg.utls.multiProcessNoBlocks(rasterPath = vrtCheck, bandNumberList = bandNumberList, functionRaster = cfg.utls.noBlocksCalculation, nodataValue = nD, functionBandArgument = functionList, functionVariable = variableList, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Raster statistics'))
 				cfg.uiUtls.updateBar(60)
+				# write report
+				colStat = statName
+				if statPerc is not None:
+					colStat = statName + statPerc
+				l = open(zonalRstPath[:-4] + '_report.csv', 'w')
+				t = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Class') + '	' + colStat + str('\n')
+				l.write(t)
 				# get values
 				for c in classes:
 					if c != nD:
@@ -295,6 +302,9 @@ class ZonalStatRasterTab:
 								oMR[b] = None
 							# add raster to layers
 							rstr = cfg.utls.addRasterLayer(outRaster)
+							t = str(c) + '	' + str(value) + str('\n')
+							l.write(t)
+				l.close()
 				rDD = None
 				# remove temp
 				try:
