@@ -3700,10 +3700,10 @@ class Utils:
 		for i in functionBandArgument:
 			# create condition
 			try:
-				o[a==int(i[0])] = int(i[1])
+				o[a==int(i[0])] = float(i[1])
 			except Exception as err:
 				try:
-					exp = 'o[' + i[0].replace(functionVariableList, 'a') + '] = int(i[1])'
+					exp = 'o[' + i[0].replace(functionVariableList, 'a') + '] = float(i[1])'
 					exec(exp)
 				except Exception as err:
 					# logger
