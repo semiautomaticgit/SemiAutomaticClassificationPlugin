@@ -5396,8 +5396,8 @@ class Utils:
 			# it seems a GDAL issue that if scale is float the datatype is converted to Float32
 			if scale is not None or offset is not None:
 				dataArray = cfg.np.subtract(dataArray/scale, offset/scale)
-				#bO.SetScale(scale)
-				#bO.SetOffset(offset)
+				bO.SetScale(scale)
+				bO.SetOffset(offset)
 		except Exception as err:
 			# logger
 			cfg.utls.logToFile(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
@@ -5448,8 +5448,8 @@ class Utils:
 			# it seems a GDAL issue that if scale is float the datatype is converted to Float32
 			if scale is not None or offset is not None:
 				dataArray = cfg.np.subtract(dataArray/scale, offset/scale)
-				#bO.SetScale(scale)
-				#bO.SetOffset(offset)
+				bO.SetScale(scale)
+				bO.SetOffset(offset)
 		except Exception as err:
 			# logger
 			cfg.utls.logToFile(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
