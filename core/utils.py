@@ -7956,12 +7956,13 @@ class Utils:
 		iNm0 = iL0.GetName()
 		iSR = iL0.GetSpatialRef()
 		iLDefn = iL0.GetLayerDefn()
+		iLFcount = iLDefn.GetFieldCount()
 		iD = cfg.ogrSCP.GetDriverByName('GPKG')
 		oS = iD.CreateDataSource(targetLayer)
 		nm = cfg.utls.fileNameNoExt(targetLayer)
 		oL = oS.CreateLayer(str(nm), iSR, cfg.ogrSCP.wkbMultiPolygon)
 		# fields
-		for f in range(0, iLDefn.GetFieldCount()):
+		for f in range(0, iLFcount):
 			fDefn = iLDefn.GetFieldDefn(f)
 			oL.CreateField(fDefn)
 		oLDefn = oL.GetLayerDefn()
@@ -7975,10 +7976,14 @@ class Utils:
 				g = iF.GetGeometryRef()
 				oF = cfg.ogrSCP.Feature(oLDefn)
 				oF.SetGeometry(g)
-				for i in range(0, oLFcount):
-					nmRef = iLDefn.GetFieldDefn(i).GetNameRef()
-					field = iF.GetField(i)
-					oF.SetField(nmRef, field)
+				for i in range(0, iLFcount):
+					try:
+						nmRef = iLDefn.GetFieldDefn(i).GetNameRef()
+						field = iF.GetField(i)
+						oF.SetField(nmRef, field)
+					except Exception as err:
+						# logger
+						cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 				oL.CreateFeature(oF)
 				iF = iL0.GetNextFeature()
 		oL.CommitTransaction()
