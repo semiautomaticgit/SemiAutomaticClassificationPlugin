@@ -6069,7 +6069,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished">Sentinel-3</translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="9232"/>
+        <location filename="../core/utils.py" line="9234"/>
         <source>SCP: completed process</source>
         <translation type="unfinished"></translation>
     </message>

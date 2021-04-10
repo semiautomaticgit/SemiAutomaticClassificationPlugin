@@ -268,7 +268,7 @@ class CrossClassification:
 				o = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.crossRasters, outputRasterList = [crossRstPath], nodataValue = nD,  functionBandArgument = reclassList, functionVariable = e, progressMessage = 'cross classification ', compress = cfg.rasterCompression, outputNoDataValue = 0, compressFormat = 'DEFLATE -co PREDICTOR=2 -co ZLEVEL=1', dataType = 'UInt16')
 				cfg.uiUtls.updateBar(60)
 				cfg.parallelArrayDict = {}
-				o = cfg.utls.multiProcessRaster(rasterPath = crossRstPath, functionBand = 'No', functionRaster = cfg.utls.rasterUniqueValuesWithSum, nodataValue = nD, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Unique values'))
+				o = cfg.utls.multiProcessRaster(rasterPath = crossRstPath, functionBand = 'No', functionRaster = cfg.utls.rasterUniqueValuesWithSum, nodataValue = 0, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Unique values'))
 				if o == 'No':
 					if batch == 'No':
 						# enable map canvas render

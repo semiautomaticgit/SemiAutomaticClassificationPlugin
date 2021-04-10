@@ -206,7 +206,7 @@ class BandCombination:
 			o = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.crossRasters, outputRasterList = [combRstPath], nodataValue = nD, functionBandArgument = reclassList, functionVariable = e, progressMessage = 'band combination ', dataType = 'UInt16', outputNoDataValue = 0, compress = cfg.rasterCompression, compressFormat = 'DEFLATE -co PREDICTOR=2 -co ZLEVEL=1')
 			cfg.uiUtls.updateBar(60)
 			cfg.parallelArrayDict = {}
-			o = cfg.utls.multiProcessRaster(rasterPath = combRstPath, functionBand = 'No', functionRaster = cfg.utls.rasterUniqueValuesWithSum, nodataValue = nD, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Unique values'), deleteArray = 'No')
+			o = cfg.utls.multiProcessRaster(rasterPath = combRstPath, functionBand = 'No', functionRaster = cfg.utls.rasterUniqueValuesWithSum, nodataValue = 0, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Unique values'), deleteArray = 'No')
 			# calculate unique values
 			values = cfg.np.array([])
 			sumVal = cfg.np.array([])

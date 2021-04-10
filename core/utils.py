@@ -9181,11 +9181,13 @@ class Utils:
 				cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 				
 	# send SMTP message
-	def sendSMTPMessage(self, subject = None, message = None):		
+	def sendSMTPMessage(self, subject = None, message = None):
 		if cfg.SMTPCheck == '2':
 			try:
 				if len(cfg.SMTPServer) > 0:
-					s = cfg.smtplibSCP.SMTP_SSL(cfg.SMTPServer)
+					s = cfg.smtplibSCP.SMTP(cfg.SMTPServer, 587)
+					c = cfg.sslSCP.create_default_context()
+					s.starttls(context = c)
 					s.login(cfg.SMTPUser, cfg.SMTPPassword)
 					tolist = cfg.SMTPtoEmails.split(',')
 					if subject is None:
