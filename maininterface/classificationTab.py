@@ -130,7 +130,7 @@ class ClassificationTab:
 				cfg.mx.msgWar25(bandSetNumber + 1)
 				return 'No'	
 			if batch == 'No':
-				clssOut = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Save classification output'), '', '*.tif', 'tif')
+				clssOut = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Save classification output'), '', 'TIF file (*.tif);;VRT file (*.vrt)')
 			else:
 				clssOut = outputClassification
 			if clssOut is not False:
@@ -233,7 +233,7 @@ class ClassificationTab:
 							if cfg.ui.LC_signature_checkBox.isChecked() is True:
 								useLcs = 'Yes'
 						try:
-							c = cfg.utls.addRasterLayer(algRasterPath)
+							c = cfg.utls.addRasterLayer(mOut)
 							if useLcs == 'Yes':
 								cfg.utls.rasterSymbolLCSAlgorithmRaster(c)
 							for r in opOut:
@@ -572,12 +572,27 @@ class ClassificationTab:
 			return 'No', None, None, None
 		# output rasters
 		outputClasses, outputAlgs, outSigDict = o
-		tPMDC = cfg.utls.createTempRasterPath('vrt')
-		cfg.utls.createVirtualRaster2(inputRasterList = outputClasses, output = tPMDC, NoDataValue = 'Yes')
+		# virtual raster
+		vrtR = 'No'
+		if outputRasterPath.lower().endswith('.vrt'):
+			vrtR = 'Yes'
+			tmpList = []
+			dirPath = cfg.osSCP.path.dirname(outputRasterPath)
+			fCount = 1
+			for tR in outputClasses:
+				oTR = dirPath + '/' + cfg.utls.fileNameNoExt(outputRasterPath) + '_%02d' % (fCount,) + '.tif'
+				fCount = fCount + 1
+				tmpList.append(oTR)
+				cfg.shutilSCP.move(tR, oTR)
+			cfg.utls.createVirtualRaster2(inputRasterList = tmpList, output = outputRasterPath, NoDataValue = 'Yes')
+			cOut = outputRasterPath
+		else:
+			tPMDC = cfg.utls.createTempRasterPath('vrt')
+			cfg.utls.createVirtualRaster2(inputRasterList = outputClasses, output = tPMDC, NoDataValue = 'Yes')
 		# mosaic rasters
 		if 	previewSize > 0:
 			cOut = tPMDC
-		else:
+		elif vrtR == 'No':
 			gcopy = cfg.utls.GDALCopyRaster(tPMDC, outputRasterPath, 'GTiff', compress, 'DEFLATE -co PREDICTOR=2 -co ZLEVEL=1', additionalParams = '-ot  Int16')
 			cOut = outputRasterPath
 			for oC in outputClasses:
@@ -587,27 +602,54 @@ class ClassificationTab:
 					pass
 		opOut = []
 		if algRasterPath is not None:
-			tPMDA = cfg.utls.createTempRasterPath('vrt')
-			cfg.utls.createVirtualRaster2(inputRasterList = outputAlgs, output = tPMDA, NoDataValue = 'Yes')
-			gcopy = cfg.utls.GDALCopyRaster(tPMDA, algRasterPath, 'GTiff', compress, 'LZW')
-			for oA in outputAlgs:
-				try:
-					cfg.osSCP.remove(oA)
-				except:
-					pass
-			rOBaseNm = cfg.osSCP.path.dirname(outputRasterPath)
+			if vrtR == 'Yes':
+				tmpList = []
+				dirPath = cfg.osSCP.path.dirname(algRasterPath)
+				fCount = 1
+				for tR in outputAlgs:
+					oTR = dirPath + '/' + cfg.utls.fileNameNoExt(algRasterPath) + '_%02d' % (fCount,) + '.tif'
+					algRasterPath = dirPath + '/' + cfg.utls.fileNameNoExt(algRasterPath) + '.vrt'
+					fCount = fCount + 1
+					tmpList.append(oTR)
+					cfg.shutilSCP.move(tR, oTR)
+				cfg.utls.createVirtualRaster2(inputRasterList = tmpList, output = algRasterPath, NoDataValue = 'Yes')
+			else:
+				tPMDA = cfg.utls.createTempRasterPath('vrt')
+				cfg.utls.createVirtualRaster2(inputRasterList = outputAlgs, output = tPMDA, NoDataValue = 'Yes')
+				gcopy = cfg.utls.GDALCopyRaster(tPMDA, algRasterPath, 'GTiff', compress, 'LZW')
+				for oA in outputAlgs:
+					try:
+						cfg.osSCP.remove(oA)
+					except:
+						pass
+				rOBaseNm = cfg.osSCP.path.dirname(outputRasterPath)
 			for s in range(0, len(signatureList)):
 				sLR = str(signatureList[s][0]) + '_' + str(signatureList[s][2])
-				try:
-					tPMDS = cfg.utls.createTempRasterPath('vrt')
-					cfg.utls.createVirtualRaster2(inputRasterList = outSigDict[sLR], output = tPMDS, NoDataValue = 'Yes')
+				if vrtR == 'Yes':
+					tmpList = []
 					# base name
 					nm = cfg.utls.fileNameNoExt(outputRasterPath)
-					opO = rOBaseNm + '/' + nm + '_' + cfg.sigRasterNm + '_' + sLR + '.tif'
-					gcopy = cfg.utls.GDALCopyRaster(tPMDS, opO, 'GTiff', compress, 'LZW')
+					opO = cfg.osSCP.path.dirname(outputRasterPath) + '/' + nm + '_' + cfg.sigRasterNm + '_' + sLR + '.vrt'
+					dirPath = cfg.osSCP.path.dirname(opO)
+					fCount = 1
+					for tR in outSigDict[sLR]:
+						oTR = dirPath + '/' + cfg.utls.fileNameNoExt(opO) + '_%02d' % (fCount,) + '.tif'
+						fCount = fCount + 1
+						tmpList.append(oTR)
+						cfg.shutilSCP.move(tR, oTR)
+					cfg.utls.createVirtualRaster2(inputRasterList = tmpList, output = opO, NoDataValue = 'Yes')
 					opOut.append(opO)
-				except:
-					pass
+				else:
+					try:
+						tPMDS = cfg.utls.createTempRasterPath('vrt')
+						cfg.utls.createVirtualRaster2(inputRasterList = outSigDict[sLR], output = tPMDS, NoDataValue = 'Yes')
+						# base name
+						nm = cfg.utls.fileNameNoExt(outputRasterPath)
+						opO = rOBaseNm + '/' + nm + '_' + cfg.sigRasterNm + '_' + sLR + '.tif'
+						gcopy = cfg.utls.GDALCopyRaster(tPMDS, opO, 'GTiff', compress, 'LZW')
+						opOut.append(opO)
+					except:
+						pass
 		else:
 			for oA in outputAlgs:
 				try:

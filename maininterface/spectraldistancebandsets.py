@@ -79,9 +79,13 @@ class SpectralDistanceBandsets:
 		bSL.append(firstBandSet)
 		bSL.append(secondBandSet)
 		if batch == 'No':
-			specRstPath = cfg.utls.getSaveFileName(None, cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Save distance raster output'), '', '*.tif', 'tif')
+			specRstPath = cfg.utls.getSaveFileName(None, cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Save distance raster output'), '', 'TIF file (*.tif);;VRT file (*.vrt)')
 		else:
 			specRstPath = outputRaster
+		# virtual raster
+		vrtR = 'No'
+		if specRstPath.lower().endswith('.vrt'):
+			vrtR = 'Yes'
 		if specRstPath is not False:
 			o = cfg.osSCP.path.dirname(specRstPath)
 			outputName = cfg.utls.fileNameNoExt(specRstPath)  + str(firstBandSet + 1)+ "_" + str(secondBandSet + 1)
@@ -116,7 +120,9 @@ class SpectralDistanceBandsets:
 					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " Warning")
 					return 'No'
 			cfg.uiUtls.updateBar(10)
-			rEPSG = cfg.utls.getEPSGRaster(bndSetSources[0][0])				
+			rCrs = cfg.utls.getCrsGDAL(bndSetSources[0][0])
+			rEPSG = cfg.osrSCP.SpatialReference()
+			rEPSG.ImportFromWkt(rCrs)			
 			if rEPSG is None:
 				if batch == 'No':
 					cfg.uiUtls.removeProgressBar()
@@ -136,15 +142,20 @@ class SpectralDistanceBandsets:
 					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " Warning")
 					return 'No'
 				bstIndex = bndSetSources.index(bst)
-				for b in range(0, len(bst)):						
-					EPSG = cfg.utls.getEPSGRaster(bst[b])
-					if str(EPSG) != str(rEPSG):
+				for b in range(0, len(bst)):
+					eCrs = cfg.utls.getCrsGDAL(bst[b])
+					EPSG = cfg.osrSCP.SpatialReference()
+					EPSG.ImportFromWkt(eCrs)
+					if EPSG.IsSame(rEPSG) != 1:
 						if cfg.bandSetsList[bstIndex][0] == 'Yes':
 							nD = cfg.utls.imageNoDataValue(bst[b])
 							if nD is None:
 								nD = NoDataVal
-							tPMD = cfg.utls.createTempRasterPath('tif')
-							cfg.utls.GDALReprojectRaster(bst[b], tPMD, "GTiff", None, "EPSG:" + str(rEPSG), "-ot Float32 -dstnodata " + str(nD))
+							tPMD = cfg.utls.createTempRasterPath('vrt')
+							cfg.utls.createWarpedVrt(bst[b], tPMD, str(rCrs))
+							cfg.mx.msg9()
+							#tPMD = cfg.utls.createTempRasterPath('tif')
+							#cfg.utls.GDALReprojectRaster(bst[b], tPMD, "GTiff", None, "EPSG:" + str(rEPSG), "-ot Float32 -dstnodata " + str(nD))
 							if cfg.osSCP.path.isfile(tPMD):
 								bndSetSources[bstIndex][b] = tPMD
 							else:
@@ -190,10 +201,13 @@ class SpectralDistanceBandsets:
 				thresh = cfg.ui.thresh_doubleSpinBox_2.value()
 			else:
 				thresh = 0
-			rstrOut = o + '/' + outputName + '.tif'
+			if vrtR == 'Yes':
+				rstrOut = o + '/' + outputName + '.vrt'
+			else:
+				rstrOut = o + '/' + outputName + '.tif'
 			# create virtual raster
 			vrtCheck = cfg.utls.createTempVirtualRaster(bList, bandNumberList, 'Yes', 'Yes', 0, 'No', 'Yes')
-			oo = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.spectralDistanceProcess, outputRasterList = [rstrOut], nodataValue = None,  functionBandArgument = NoDataVal, functionVariable = [alg], progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Spectral distance'), compress = cfg.rasterCompression, compressFormat = 'LZW')
+			oo = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.spectralDistanceProcess, outputRasterList = [rstrOut], nodataValue = None,  functionBandArgument = NoDataVal, functionVariable = [alg], progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Spectral distance'), virtualRaster = vrtR, compress = cfg.rasterCompression, compressFormat = 'LZW')
 			if cfg.osSCP.path.isfile(rstrOut):
 				# add raster to layers
 				cfg.utls.addRasterLayer(rstrOut)
@@ -201,8 +215,11 @@ class SpectralDistanceBandsets:
 					e = 'cfg.np.where("raster" > ' + str(thresh) + ', 1, 0 )'
 					variableList = []
 					variableList.append(['"raster"', '"raster"'])
-					rstrOut2 = o + '/' + outputName + '_change' + '.tif'
-					oo2 = cfg.utls.multiProcessRaster(rasterPath = rstrOut, functionBand = 'No', functionRaster = cfg.utls.bandCalculation, outputRasterList = [rstrOut2], functionBandArgument = e, functionVariable = variableList, progressMessage = 'Threshold ', compress = cfg.rasterCompression, compressFormat = 'LZW')
+					if vrtR == 'Yes':
+						rstrOut2 = o + '/' + outputName + '_change' + '.vrt'
+					else:
+						rstrOut2 = o + '/' + outputName + '_change' + '.tif'
+					oo2 = cfg.utls.multiProcessRaster(rasterPath = rstrOut, functionBand = 'No', functionRaster = cfg.utls.bandCalculation, outputRasterList = [rstrOut2], functionBandArgument = e, functionVariable = variableList, progressMessage = 'Threshold ', virtualRaster = vrtR, compress = cfg.rasterCompression, compressFormat = 'LZW')
 					if cfg.osSCP.path.isfile(rstrOut2):
 						# add raster to layers
 						c = cfg.utls.addRasterLayer(rstrOut2)

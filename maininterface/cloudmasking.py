@@ -124,7 +124,9 @@ class CloudMasking:
 					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " Warning")
 					return 'No'
 				cfg.uiUtls.updateBar(10)
-				rEPSG = cfg.utls.getEPSGRaster(cfg.bndSetLst[0])				
+				rCrs = cfg.utls.getCrsGDAL(cfg.bndSetLst[0])
+				rEPSG = cfg.osrSCP.SpatialReference()
+				rEPSG.ImportFromWkt(rCrs)				
 				if rEPSG is None:
 					if batch == 'No':
 						cfg.uiUtls.removeProgressBar()
@@ -133,13 +135,18 @@ class CloudMasking:
 					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " Warning")
 					return 'No'	
 				cfg.uiUtls.updateBar(20)
-				EPSG = cfg.utls.getEPSGRaster(inputClassification)
-				if str(EPSG) != str(rEPSG):
+				eCrs = cfg.utls.getCrsGDAL(inputClassification)
+				EPSG = cfg.osrSCP.SpatialReference()
+				EPSG.ImportFromWkt(eCrs)
+				if EPSG.IsSame(rEPSG) != 1:
 					nD = cfg.utls.imageNoDataValue(inputClassification)
 					if nD is None:
 						nD = cfg.NoDataVal
-					tPMD = cfg.utls.createTempRasterPath('tif')
-					cfg.utls.GDALReprojectRaster(inputClassification, tPMD, 'GTiff', None, 'EPSG:' + str(rEPSG), '-ot Float32 -dstnodata ' + str(nD))
+					#tPMD = cfg.utls.createTempRasterPath('tif')
+					#cfg.utls.GDALReprojectRaster(inputClassification, tPMD, 'GTiff', None, 'EPSG:' + str(rEPSG), '-ot Float32 -dstnodata ' + str(nD))	
+					tPMD = cfg.utls.createTempRasterPath('vrt')
+					cfg.utls.createWarpedVrt(inputClassification, tPMD, str(rCrs))
+					cfg.mx.msg9()
 					if cfg.osSCP.path.isfile(tPMD):
 						inputClassification = tPMD
 					else:

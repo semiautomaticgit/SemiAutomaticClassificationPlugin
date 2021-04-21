@@ -128,7 +128,7 @@ class ClusteringTab:
 			cfg.mx.msgWar25(bandSetNumber + 1)
 			return 'No'
 		if batch == 'No':
-			clssOut = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Save clustering output'), '', '*.tif', 'tif')
+			clssOut = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Save clustering output'), '', 'TIF file (*.tif)')
 		else:
 			clssOut = outputFile
 		if clssOut is not False:

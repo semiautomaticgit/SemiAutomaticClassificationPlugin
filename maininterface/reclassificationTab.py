@@ -74,11 +74,15 @@ class ReclassificationTab:
 			c = 1
 		if c > 0:
 			if batch == 'No':
-				out = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Save raster output'), '', '*.tif', 'tif')
+				out = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Save raster output'), '', 'TIF file (*.tif);;VRT file (*.vrt)')
 			else:
 				out = rasterOutput
+			# virtual raster
+			vrtR = 'No'
 			if out is not False:
-				if out.lower().endswith('.tif'):
+				if out.lower().endswith('.vrt'):
+					vrtR = 'Yes'
+				elif out.lower().endswith('.tif'):
 					pass
 				else:
 					out = out + '.tif'
@@ -88,7 +92,7 @@ class ReclassificationTab:
 					cfg.cnvs.setRenderFlag(False)
 				cfg.uiUtls.updateBar(10)
 				reclassList = self.createReclassificationStringFromList(list)
-				o = cfg.utls.multiProcessRaster(rasterPath = classificationPath, functionBand = 'No', functionRaster = cfg.utls.reclassifyRaster, outputRasterList = [out], nodataValue = cfg.NoDataVal,  functionBandArgument = reclassList, functionVariable = cfg.variableName, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Reclassify'), compress = cfg.rasterCompression, compressFormat = 'DEFLATE -co PREDICTOR=2 -co ZLEVEL=1')
+				o = cfg.utls.multiProcessRaster(rasterPath = classificationPath, functionBand = 'No', functionRaster = cfg.utls.reclassifyRaster, outputRasterList = [out], nodataValue = cfg.NoDataVal,  functionBandArgument = reclassList, functionVariable = cfg.variableName, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Reclassify'), virtualRaster = vrtR, compress = cfg.rasterCompression)
 				if cfg.osSCP.path.isfile(out):
 					r =cfg.utls.addRasterLayer(out)
 				else:

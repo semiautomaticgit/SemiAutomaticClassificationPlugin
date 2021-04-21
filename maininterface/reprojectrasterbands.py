@@ -160,7 +160,7 @@ class ReprojectRasterBands:
 						# check projections
 						rPSys =cfg.osrSCP.SpatialReference(wkt=rP)
 						rPSys.AutoIdentifyEPSG()
-						EPSG = int(rPSys.GetAuthorityCode(None))
+						EPSG = 'No'
 					except Exception as err:
 						# logger
 						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))	
@@ -191,7 +191,7 @@ class ReprojectRasterBands:
 				# Error latitude or longitude exceeded limits
 				except Exception as err:
 					# logger
-					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 					cfg.mx.msgErr61(lC)
 					return 'No'
 				# minimum extent
@@ -235,7 +235,10 @@ class ReprojectRasterBands:
 					pass
 			# resample
 			else:
-				EPSG = None
+				if EPSG == 'No':
+					pass
+				else:
+					EPSG = None
 				# raster extent and pixel size
 				try:
 					leftS, rightS, topS, bottomS, pXS, pYS, rPS, unitS = cfg.utls.imageGeoTransform(bLS)
@@ -260,7 +263,10 @@ class ReprojectRasterBands:
 			f = oD + '/' + outputName + '_'  + cfg.utls.fileName(l)
 			tRxs = cfg.utls.createTempRasterPath('tif')
 			if EPSG is not None:
-				outEPSG = 'EPSG:' + str(EPSG)
+				if EPSG == 'No':
+					outEPSG = rP
+				else:
+					outEPSG = 'EPSG:' + str(EPSG)
 			else:
 				outEPSG = None
 			if resamplingMethod is None:

@@ -50,11 +50,15 @@ class BandCombination:
 	# cross classification calculation
 	def bandSetCombination(self, batch = 'No', bandSet = None, rasterOutput = None):
 		if batch == 'No':
-			combRstPath = cfg.utls.getSaveFileName(None, cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Save band combination raster output'), '', '*.tif', 'tif')
+			combRstPath = cfg.utls.getSaveFileName(None, cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Save band combination raster output'), '', 'TIF file (*.tif);;VRT file (*.vrt)')
 		else:
 			combRstPath = rasterOutput
+		# virtual raster
+		vrtR = 'No'
 		if combRstPath is not False:
-			if combRstPath.lower().endswith('.tif'):
+			if combRstPath.lower().endswith('.vrt'):
+				vrtR = 'Yes'
+			elif combRstPath.lower().endswith('.tif'):
 				pass
 			else:
 				combRstPath = combRstPath + '.tif'
@@ -92,25 +96,32 @@ class BandCombination:
 				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " Warning")
 				return 'No'
 			cfg.uiUtls.updateBar(10)
-			rEPSG = cfg.utls.getEPSGRaster(cfg.bndSetLst[0])				
+			NoDataVal = cfg.NoDataVal
+			rCrs = cfg.utls.getCrsGDAL(cfg.bndSetLst[0])
+			rEPSG = cfg.osrSCP.SpatialReference()
+			rEPSG.ImportFromWkt(rCrs)
 			if rEPSG is None:
 				if batch == 'No':
 					cfg.uiUtls.removeProgressBar()
 				cfg.mx.msgWar28()
 				# logger
-				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " Warning")
-				return 'No'	
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' Warning')
+				return 'No'
 			cfg.uiUtls.updateBar(20)
-			NoDataVal = cfg.NoDataVal				
-			for b in range(0, len(cfg.bndSetLst)):						
-				EPSG = cfg.utls.getEPSGRaster(cfg.bndSetLst[b])
-				if str(EPSG) != str(rEPSG):
+			for b in range(0, len(cfg.bndSetLst)):
+				eCrs = cfg.utls.getCrsGDAL(cfg.bndSetLst[b])
+				EPSG = cfg.osrSCP.SpatialReference()
+				EPSG.ImportFromWkt(eCrs)
+				if EPSG.IsSame(rEPSG) != 1:
 					if cfg.bandSetsList[bandSetNumber][0] == 'Yes':
 						nD = cfg.utls.imageNoDataValue(cfg.bndSetLst[b])
 						if nD is None:
 							nD = NoDataVal
-						tPMD = cfg.utls.createTempRasterPath('tif')
-						cfg.utls.GDALReprojectRaster(cfg.bndSetLst[b], tPMD, "GTiff", None, "EPSG:" + str(rEPSG), "-ot Float32 -dstnodata " + str(nD))
+						tPMD = cfg.utls.createTempRasterPath('vrt')
+						cfg.utls.createWarpedVrt(cfg.bndSetLst[b], tPMD, str(rCrs))
+						cfg.mx.msg9()
+						#tPMD = cfg.utls.createTempRasterPath('tif')
+						#cfg.utls.GDALReprojectRaster(cfg.bndSetLst[b], tPMD, 'GTiff', None, str(rCrs), '-ot Float32 -dstnodata ' + str(nD))
 						if cfg.osSCP.path.isfile(tPMD):
 							cfg.bndSetLst[b] = tPMD
 						else:
@@ -118,7 +129,7 @@ class BandCombination:
 								cfg.uiUtls.removeProgressBar()
 							cfg.mx.msgErr60()
 							# logger
-							cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " Warning")
+							cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' Warning')
 							return 'No'
 			cfg.uiUtls.updateBar(40)
 			bandsUniqueVal = []
@@ -203,7 +214,7 @@ class BandCombination:
 			# check projections
 			left, right, top, bottom, cRPX, cRPY, rP, un = cfg.utls.imageGeoTransform(vrtCheck)
 			# calculation
-			o = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.crossRasters, outputRasterList = [combRstPath], nodataValue = nD, functionBandArgument = reclassList, functionVariable = e, progressMessage = 'band combination ', dataType = 'UInt16', outputNoDataValue = 0, compress = cfg.rasterCompression, compressFormat = 'DEFLATE -co PREDICTOR=2 -co ZLEVEL=1')
+			o = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.crossRasters, outputRasterList = [combRstPath], nodataValue = nD, functionBandArgument = reclassList, functionVariable = e, progressMessage = 'band combination ', dataType = 'UInt16', outputNoDataValue = 0, virtualRaster = vrtR, compress = cfg.rasterCompression)
 			cfg.uiUtls.updateBar(60)
 			cfg.parallelArrayDict = {}
 			o = cfg.utls.multiProcessRaster(rasterPath = combRstPath, functionBand = 'No', functionRaster = cfg.utls.rasterUniqueValuesWithSum, nodataValue = 0, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Unique values'), deleteArray = 'No')

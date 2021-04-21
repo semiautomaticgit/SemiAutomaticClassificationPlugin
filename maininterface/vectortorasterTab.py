@@ -105,7 +105,7 @@ class VectorToRasterTab:
 				rstr = cfg.utls.addRasterLayer(rstrOut)
 			else:
 				return 'No'
-			cfg.utls.rasterSymbolSingleBandGray(rstr)
+			#cfg.utls.rasterSymbolSingleBandGray(rstr)
 			if batch == 'No':
 				# enable map canvas render
 				cfg.cnvs.setRenderFlag(True)

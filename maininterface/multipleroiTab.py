@@ -362,7 +362,9 @@ class MultipleROITab:
 				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 		elif pointFile.lower().endswith('.shp'):
 			try:
-				lPRS = cfg.utls.getEPSGVector(pointFile)
+				vCrs = cfg.utls.getCrsGDAL(pointFile)
+				lPRS = cfg.osrSCP.SpatialReference()
+				lPRS.ImportFromWkt(vCrs)
 				# band set
 				if cfg.bandSetsList[bandSetNumber][0] == 'Yes':
 					try:
@@ -373,19 +375,24 @@ class MultipleROITab:
 					# image CRS
 					bN0 = cfg.utls.selectLayerbyName(imageName, 'Yes')
 					iCrs = cfg.utls.getCrs(bN0)
+					ql = cfg.utls.layerSource(bN0)
 				else:
 					# image CRS
 					bN0 = cfg.utls.selectLayerbyName(imageName, 'Yes')
 					iCrs = cfg.utls.getCrs(bN0)
+					ql = cfg.utls.layerSource(bN0)
 				self.pCoordinates = iCrs
-				rPSys = cfg.osrSCP.SpatialReference(wkt=iCrs.toWkt())
-				rPSys.AutoIdentifyEPSG()
-				rPRS = rPSys.GetAuthorityCode(None)
-				if str(lPRS) != str(rPRS):
+				#rPSys = cfg.osrSCP.SpatialReference(wkt=iCrs.toWkt())
+				#rPSys.AutoIdentifyEPSG()
+				#rPRS = rPSys.GetAuthorityCode(None)
+				rCrs = cfg.utls.getCrsGDAL(ql)
+				rPRS = cfg.osrSCP.SpatialReference()
+				rPRS.ImportFromWkt(rCrs)
+				if lPRS.IsSame(rPRS) != 1:
 					# date time for temp name
 					dT = cfg.utls.getTime()
 					reprjShapefile = cfg.tmpDir + '/' + dT + cfg.utls.fileName(pointFile)
-					cfg.utls.repojectShapefile(pointFile, int(lPRS), reprjShapefile, int(rPRS), 'wkbPoint')
+					cfg.utls.repojectShapefile(pointFile, lPRS, reprjShapefile, rPRS, 'wkbPoint')
 					pointFile = reprjShapefile
 				d = cfg.ogrSCP.GetDriverByName('ESRI Shapefile')
 				dr = d.Open(pointFile, 0)

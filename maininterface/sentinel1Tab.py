@@ -365,20 +365,21 @@ class Sentinel1Tab:
 					b = cfg.utls.selectLayerbyName(cfg.bandSetsList[bandSetNumber][3][0], 'Yes')
 					rast = cfg.utls.layerSource(b)
 					# image EPSG
-					rEPSG = cfg.utls.getEPSGRaster(rast)
+					rCrs = cfg.utls.getCrsGDAL(rast)
+					rEPSG = cfg.osrSCP.SpatialReference()
+					rEPSG.ImportFromWkt(rCrs)
 				except:
 					cfg.mx.msgWar25(str(bandSetNumber + 1))
 			else:
 				b = cfg.utls.selectLayerbyName(cfg.bandSetsList[bandSetNumber][8])
 				rast = cfg.utls.layerSource(b)
-				rEPSG = cfg.utls.getEPSGRaster(rast)
-			if rEPSG is None:
-				pCrs = cfg.utls.getQGISCrs()
-				rPSys = cfg.osrSCP.SpatialReference(wkt=pCrs.toWkt())
-				rPSys.AutoIdentifyEPSG()
-				rEPSG = rPSys.GetAuthorityCode(None)
-			EPSG = cfg.utls.getEPSGRaster(inputRaster)
-			if str(EPSG) != str(rEPSG):
+				rCrs = cfg.utls.getCrsGDAL(rast)
+				rEPSG = cfg.osrSCP.SpatialReference()
+				rEPSG.ImportFromWkt(rCrs)
+			eCrs = cfg.utls.getCrsGDAL(inputRaster)
+			EPSG = cfg.osrSCP.SpatialReference()
+			EPSG.ImportFromWkt(eCrs)
+			if EPSG.IsSame(rEPSG) != 1:
 				if nD is None:
 					nD = cfg.NoDataVal
 				reproject = 'Yes'

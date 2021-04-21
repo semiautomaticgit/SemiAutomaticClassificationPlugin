@@ -377,7 +377,7 @@ class ClassRandomForestTab:
 					cfg.uiUtls.removeProgressBar()
 				return 'No'
 			# reclassification
-			o = cfg.utls.multiProcessRaster(rasterPath = iL[0], functionBand = 'No', functionRaster = cfg.utls.reclassifyRaster, outputRasterList = [rstrOut], nodataValue = cfg.NoDataVal,  functionBandArgument = reclassList, functionVariable = cfg.variableName, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Reclassify'), compress = cfg.rasterCompression, compressFormat = 'DEFLATE -co PREDICTOR=2 -co ZLEVEL=1', dataType = 'UInt16')
+			o = cfg.utls.multiProcessRaster(rasterPath = iL[0], functionBand = 'No', functionRaster = cfg.utls.reclassifyRaster, outputRasterList = [rstrOut], nodataValue = cfg.NoDataVal,  functionBandArgument = reclassList, functionVariable = cfg.variableName, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Reclassify'), compress = cfg.rasterCompression, dataType = 'UInt16')
 			# copy confidence raster
 			if cfg.rasterCompression != 'No':
 				try:
@@ -415,7 +415,7 @@ class ClassRandomForestTab:
 				v = cfg.utls.addRasterLayer(rstrOut.rstrip('.tif') + '_conf.tif')
 				r = cfg.utls.addRasterLayer(rstrOut)
 				# apply symbology
-				cfg.utls.rasterSymbolSingleBandGray(v)
+				#cfg.utls.rasterSymbolSingleBandGray(v)
 				sL = cfg.classTab.getSignatureList(bandSetNumber)
 				cfg.classTab.applyClassSymbology(r, macroclass, cfg.qmlFl, sL)
 				# save qml file

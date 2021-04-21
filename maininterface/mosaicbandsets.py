@@ -117,7 +117,9 @@ class MosaicBandSets:
 						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' Warning')
 						return 'No'
 				cfg.uiUtls.updateBar(10)
-				rEPSG = cfg.utls.getEPSGRaster(bndSetSources[0][0])				
+				rCrs = cfg.utls.getCrsGDAL(bndSetSources[0][0])
+				rEPSG = cfg.osrSCP.SpatialReference()
+				rEPSG.ImportFromWkt(rCrs)				
 				if rEPSG is None:
 					if batch == 'No':
 						cfg.uiUtls.removeProgressBar()
@@ -139,15 +141,20 @@ class MosaicBandSets:
 						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' Warning')
 						return 'No'
 					bstIndex = bndSetSources.index(bst)
-					for b in range(0, len(bst)):						
-						EPSG = cfg.utls.getEPSGRaster(bst[b])
-						if str(EPSG) != str(rEPSG):
+					for b in range(0, len(bst)):
+						eCrs = cfg.utls.getCrsGDAL(bst[b])
+						EPSG = cfg.osrSCP.SpatialReference()
+						EPSG.ImportFromWkt(eCrs)
+						if EPSG.IsSame(rEPSG) != 1:
 							if cfg.bandSetsList[bstIndex][0] == 'Yes':
 								nD = cfg.utls.imageNoDataValue(bst[b])
 								if nD is None:
 									nD = cfg.NoDataVal
-								tPMD = cfg.utls.createTempRasterPath('tif')
-								cfg.utls.GDALReprojectRaster(bst[b], tPMD, 'GTiff', None, 'EPSG:' + str(rEPSG), '-ot Float32 -dstnodata ' + str(nD))
+								tPMD = cfg.utls.createTempRasterPath('vrt')
+								cfg.utls.createWarpedVrt(bst[b], tPMD, str(rCrs))
+								cfg.mx.msg9()
+								#tPMD = cfg.utls.createTempRasterPath('tif')
+								#cfg.utls.GDALReprojectRaster(bst[b], tPMD, 'GTiff', None, 'EPSG:' + str(rEPSG), '-ot Float32 -dstnodata ' + str(nD))
 								if cfg.osSCP.path.isfile(tPMD):
 									bndSetSources[bstIndex][b] = tPMD
 								else:

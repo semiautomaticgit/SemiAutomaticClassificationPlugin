@@ -114,23 +114,29 @@ class ZonalStatRasterTab:
 						# temp shapefile
 						tSHP = cfg.utls.createTempRasterPath('gpkg')
 						l = cfg.utls.saveMemoryLayerToShapefile(l, tSHP, format = 'GPKG')
-						vEPSG = cfg.utls.getEPSGVector(tSHP)
+						vCrs = cfg.utls.getCrsGDAL(tSHP)
+						vEPSG = cfg.osrSCP.SpatialReference()
+						vEPSG.ImportFromWkt(vCrs)
 					else:
 						ql = cfg.utls.layerSource(l)
-						vEPSG = cfg.utls.getEPSGVector(ql)
+						vCrs = cfg.utls.getCrsGDAL(ql)
+						vEPSG = cfg.osrSCP.SpatialReference()
+						vEPSG.ImportFromWkt(vCrs)
 					dT = cfg.utls.getTime()
 					# in case of reprojection
 					qll = cfg.utls.layerSource(l)
 					reprjShapefile = cfg.tmpDir + '/' + dT + cfg.utls.fileName(qll)
 					qlll = cfg.utls.layerSource(iClass)
-					rEPSG = cfg.utls.getEPSGRaster(qlll)
-					if vEPSG != rEPSG:
+					rCrs = cfg.utls.getCrsGDAL(qlll)
+					rEPSG = cfg.osrSCP.SpatialReference()
+					rEPSG.ImportFromWkt(rCrs)
+					if vEPSG.IsSame(rEPSG) != 1:
 						if cfg.osSCP.path.isfile(reprjShapefile):
 							pass
 						else:
 							try:
 								qllll = cfg.utls.layerSource(l)
-								cfg.utls.repojectShapefile(qllll, int(vEPSG), reprjShapefile, int(rEPSG))
+								cfg.utls.repojectShapefile(qllll, vEPSG, reprjShapefile, rEPSG)
 							except Exception as err:
 								# remove temp layers
 								try:

@@ -101,14 +101,18 @@ class LandCoverChange:
 				newRstrDt = None		
 				refRstrDt = None
 				if batch == 'No':
-					chngRstPath = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Save land cover change raster output"), "", "*.tif", "tif")
+					chngRstPath = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Save land cover change raster output'), '', 'TIF file (*.tif);;VRT file (*.vrt)')
 				else:
 					chngRstPath = rasterOutput
+				# virtual raster
+				vrtR = 'No'
 				if chngRstPath is not False:
-					if chngRstPath.lower().endswith(".tif"):
+					if chngRstPath.lower().endswith('.vrt'):
+						vrtR = 'Yes'
+					elif chngRstPath.lower().endswith('.tif'):
 						pass
 					else:
-						chngRstPath = chngRstPath + ".tif"
+						chngRstPath = chngRstPath + '.tif'
 					if batch == 'No':
 						cfg.uiUtls.addProgressBar()
 						# disable map canvas render for speed
@@ -261,7 +265,7 @@ class LandCoverChange:
 					bandNumberList = [1, 1]
 					vrtCheck = cfg.utls.createTempVirtualRaster(bList, bandNumberList, 'Yes', 'Yes', 0, 'No', 'No')
 					cfg.parallelArrayDict = {}
-					o = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.crossRasters, outputRasterList = [chngRstPath],  functionBandArgument = reclassList, functionVariable = e, progressMessage = 'land cover change ', compress = cfg.rasterCompression, outputNoDataValue = -10, compressFormat = 'DEFLATE -co PREDICTOR=2 -co ZLEVEL=1', dataType = 'Int32')
+					o = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.crossRasters, outputRasterList = [chngRstPath],  functionBandArgument = reclassList, functionVariable = e, progressMessage = 'land cover change ', virtualRaster = vrtR, compress = cfg.rasterCompression, outputNoDataValue = -10, dataType = 'Int32')
 					cfg.parallelArrayDict = {}
 					o = cfg.utls.multiProcessRaster(rasterPath = chngRstPath, functionBand = 'No', functionRaster = cfg.utls.rasterUniqueValuesWithSum, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Unique values'))
 					# check projections

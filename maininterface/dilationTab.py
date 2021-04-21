@@ -70,11 +70,15 @@ class DilationRaster:
 		valueList = self.checkValueList()
 		if len(valueList) > 0:
 			if batch == 'No':
-				outputRaster = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Save output'), '', '*.tif', 'tif')
+				outputRaster = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Save output'), '', 'TIF file (*.tif);;VRT file (*.vrt)')
 			else:
 				outputRaster = rasterOutput
+			# virtual raster
+			vrtR = 'No'
 			if outputRaster is not False:
-				if outputRaster.lower().endswith('.tif'):
+				if outputRaster.lower().endswith('.vrt'):
+					vrtR = 'Yes'
+				elif outputRaster.lower().endswith('.tif'):
 					pass
 				else:
 					outputRaster = outputRaster + '.tif'
@@ -108,19 +112,21 @@ class DilationRaster:
 					size =  cfg.ui.dilation_threshold_spinBox.value()
 					connect = cfg.ui.dilation_connection_combo.currentText()
 					struct = cfg.utls.create3x3Window(connect)
-					tempRasterList = []
 					for s in range(0, size):
-						tPMD = cfg.utls.createTempRasterPath('vrt')
-						tempRasterList.append(tPMD)
+						if vrtR == 'Yes':
+							tPMD = outputRaster
+						else:
+							tPMD = cfg.utls.createTempRasterPath('vrt')
 						# process calculation
 						o = cfg.utls.multiProcessRaster(rasterPath = input, functionBand = 'No', functionRaster = cfg.utls.rasterDilation, outputRasterList = [tPMD], functionBandArgument = struct, functionVariable = valueList, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Dilation '), virtualRaster = 'Yes', compress = 'No', outputNoDataValue = nd, dataType = dType, boundarySize = 3)
 						input = tPMD
-					# copy raster
-					try:
-						cfg.utls.GDALCopyRaster(tPMD, outputRaster, 'GTiff', cfg.rasterCompression, 'LZW')
-					except Exception as err:
-						# logger
-						if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+					if vrtR != 'Yes':
+						# copy raster
+						try:
+							cfg.utls.GDALCopyRaster(tPMD, outputRaster, 'GTiff', cfg.rasterCompression, 'LZW')
+						except Exception as err:
+							# logger
+							if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 					if cfg.osSCP.path.isfile(outputRaster):
 						oR = cfg.utls.addRasterLayer(outputRaster)
 					if r != 'No':

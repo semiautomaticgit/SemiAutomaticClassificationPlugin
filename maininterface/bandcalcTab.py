@@ -141,7 +141,7 @@ class BandCalcTab:
 	# create decision rule expression
 	def decisionRulesExpression(self):
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode())
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode())
 		tW = cfg.ui.decision_rules_tableWidget
 		NoDataValue = cfg.ui.nodata_spinBox_13.value()
 		c = tW.rowCount()
@@ -247,13 +247,14 @@ class BandCalcTab:
 				l.removeRow(i)
 			else:
 				break
-			
 		b = l.rowCount()
+		z = 0
 		for bN in nameList:
 			# Add band to table
 			l.insertRow(b)
-			cfg.utls.addTableItem(l, cfg.variableOutName + str(b + 1), b, 0, 'No')
+			cfg.utls.addTableItem(l, cfg.variableOutName + str(z + 1), b, 0, 'No')
 			cfg.utls.addTableItem(l, bN[0].replace('"', ''), b, 1, 'No')
+			z = z + 1
 			b = b + 1
 		l.blockSignals(False)
 		# logger
@@ -572,6 +573,7 @@ class BandCalcTab:
 					e = eM[0]
 					eN = eM[1]
 					ePath = eM[2]
+					eVrt = eM[3]
 					if batch == 'No':
 						cfg.uiUtls.updateBar(mainMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Band calc') + ' [' + str(it) + '/' + str(nCh) + '] ' + e, message = '')
 					# do not replace expression
@@ -583,7 +585,10 @@ class BandCalcTab:
 					except:
 						eNBS = None
 					# virtual raster
-					vrtR = 'No'
+					if eVrt == 'Yes':
+						vrtR = 'Yes'
+					else:
+						vrtR = 'No'
 					dCheck = 'Yes'
 					if dCheck == 'Yes':
 						if eN is None:
@@ -1083,7 +1088,8 @@ class BandCalcTab:
 								if quiet == 'No':
 									r =cfg.utls.addRasterLayer(out)
 									try:
-										cfg.utls.rasterSymbolSingleBandGray(r)
+										#cfg.utls.rasterSymbolSingleBandGray(r)
+										pass
 									except Exception as err:
 										# logger
 										if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
@@ -1446,13 +1452,18 @@ class BandCalcTab:
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), str(nameList))
 				# replace NoData values
-				f = cfg.utls.replaceOperatorNames(f, nameList)	
+				f = cfg.utls.replaceOperatorNames(f, nameList)
+				vrt = 'No'
 				if nm is not None:
 					try:
 						nm, bsN = nm.split('%')
 						nm = nm.strip()
 					except:
 						pass
+					if nm.lower().endswith('.vrt'):
+						vrt = 'Yes'
+					if nm.lower().endswith('.tif') or nm.lower().endswith('.vrt'):
+						nm = nm[:-4]
 					outNameList.append(['"' + str(nm) + '"', '"' + str(nm) + '"'])
 				oldF = f
 				check = 'Yes'
@@ -1489,7 +1500,7 @@ class BandCalcTab:
 						n2 = nm + '%' + bsN
 					else:
 						n2 = nm
-					ex.append([oldF, n2, nPath])
+					ex.append([oldF, n2, nPath, vrt])
 		if checkO == 'No':
 			cfg.ui.plainTextEdit_calc.setStyleSheet('color : red')
 			if cfg.bandCalcIndex == 0:

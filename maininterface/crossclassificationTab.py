@@ -64,11 +64,15 @@ class CrossClassification:
 			rstrCheck = 'No'
 			cfg.mx.msgErr26()
 		if batch == 'No':
-			crossRstPath = cfg.utls.getSaveFileName(None, cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Save cross classification raster output'), '', '*.tif', 'tif')
+			crossRstPath = cfg.utls.getSaveFileName(None, cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Save cross classification raster output'), '', 'TIF file (*.tif);;VRT file (*.vrt)')
 		else:
 			crossRstPath = rasterOutput
+		# virtual raster
+		vrtR = 'No'
 		if crossRstPath is not False:
-			if crossRstPath.lower().endswith('.tif'):
+			if crossRstPath.lower().endswith('.vrt'):
+				vrtR = 'Yes'
+			elif crossRstPath.lower().endswith('.tif'):
 				pass
 			else:
 				crossRstPath = crossRstPath + '.tif'
@@ -109,22 +113,28 @@ class CrossClassification:
 						# temp shapefile
 						tSHP = cfg.utls.createTempRasterPath('gpkg')
 						l = cfg.utls.saveMemoryLayerToShapefile(l, tSHP, format = 'GPKG')
-						vEPSG = cfg.utls.getEPSGVector(tSHP)
+						vCrs = cfg.utls.getCrsGDAL(tSHP)
+						vEPSG = cfg.osrSCP.SpatialReference()
+						vEPSG.ImportFromWkt(vCrs)
 					else:
 						ql = cfg.utls.layerSource(l)
-						vEPSG = cfg.utls.getEPSGVector(ql)
+						vCrs = cfg.utls.getCrsGDAL(ql)
+						vEPSG = cfg.osrSCP.SpatialReference()
+						vEPSG.ImportFromWkt(vCrs)
 					# in case of reprojection
 					qll = cfg.utls.layerSource(l)
 					reprjShapefile = cfg.tmpDir + '/' + dT + cfg.utls.fileName(qll)
 					qlll = cfg.utls.layerSource(iClass)
-					rEPSG = cfg.utls.getEPSGRaster(qlll)
-					if vEPSG != rEPSG:
+					rCrs = cfg.utls.getCrsGDAL(qlll)
+					rEPSG = cfg.osrSCP.SpatialReference()
+					rEPSG.ImportFromWkt(rCrs)
+					if vEPSG.IsSame(rEPSG) != 1:
 						if cfg.osSCP.path.isfile(reprjShapefile):
 							pass
 						else:
 							try:
 								qllll = cfg.utls.layerSource(l)
-								cfg.utls.repojectShapefile(qllll, int(vEPSG), reprjShapefile, int(rEPSG))
+								cfg.utls.repojectShapefile(qllll, vEPSG, reprjShapefile, rEPSG)
 							except Exception as err:
 								# remove temp layers
 								try:
@@ -265,7 +275,7 @@ class CrossClassification:
 				# check projections
 				left, right, top, bottom, cRPX, cRPY, rP, un = cfg.utls.imageGeoTransform(vrtCheck)					
 				# calculation
-				o = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.crossRasters, outputRasterList = [crossRstPath], nodataValue = nD,  functionBandArgument = reclassList, functionVariable = e, progressMessage = 'cross classification ', compress = cfg.rasterCompression, outputNoDataValue = 0, compressFormat = 'DEFLATE -co PREDICTOR=2 -co ZLEVEL=1', dataType = 'UInt16')
+				o = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.crossRasters, outputRasterList = [crossRstPath], nodataValue = nD,  functionBandArgument = reclassList, functionVariable = e, progressMessage = 'cross classification ', outputNoDataValue = 0,  virtualRaster = vrtR, compress = cfg.rasterCompression, dataType = 'UInt16')
 				cfg.uiUtls.updateBar(60)
 				cfg.parallelArrayDict = {}
 				o = cfg.utls.multiProcessRaster(rasterPath = crossRstPath, functionBand = 'No', functionRaster = cfg.utls.rasterUniqueValuesWithSum, nodataValue = 0, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Unique values'))
