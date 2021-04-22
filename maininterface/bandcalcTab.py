@@ -878,7 +878,7 @@ class BandCalcTab:
 													cfg.uiUtls.removeProgressBar()
 													cfg.cnvs.setRenderFlag(True)
 													return 'No'
-											bandNumberList.append(int(bandNumX))
+											bandNumberList.append(int(bandNumX)+1)
 											bList.append(bPath)
 									# spectral range bands
 									elif cfg.variableBlueName in bN or cfg.variableRedName in bN or cfg.variableNIRName in bN or cfg.variableGreenName in bN or cfg.variableSWIR1Name in bN or cfg.variableSWIR2Name in bN :
@@ -1352,30 +1352,56 @@ class BandCalcTab:
 							except:
 								pass
 							if findB == 'Yes':
-								try:
-									f = f.replace(cfg.variableRedName, cfg.bandSetsList[b-1][3][int(cfg.REDBand) - 1])
-								except:
-									pass
-								try:
-									f = f.replace(cfg.variableNIRName, cfg.bandSetsList[b-1][3][int(cfg.NIRBand) - 1])	
-								except:
-									pass
-								try:
-									f = f.replace(cfg.variableBlueName, cfg.bandSetsList[b-1][3][int(cfg.BLUEBand) - 1])
-								except:
-									pass
-								try:
-									f = f.replace(cfg.variableGreenName, cfg.bandSetsList[b-1][3][int(cfg.GREENBand) - 1])
-								except:
-									pass
-								try:
-									f = f.replace(cfg.variableSWIR1Name, cfg.bandSetsList[b-1][3][int(cfg.SWIR1Band) - 1])
-								except:
-									pass
-								try:
-									f = f.replace(cfg.variableSWIR2Name, cfg.bandSetsList[b-1][3][int(cfg.SWIR2Band) - 1])
-								except:
-									pass
+								if cfg.bandSetsList[b-1][0] == 'Yes':
+									try:
+										f = f.replace(cfg.variableRedName, cfg.bandSetsList[b-1][3][int(cfg.REDBand) - 1])
+									except:
+										pass
+									try:
+										f = f.replace(cfg.variableNIRName, cfg.bandSetsList[b-1][3][int(cfg.NIRBand) - 1])	
+									except:
+										pass
+									try:
+										f = f.replace(cfg.variableBlueName, cfg.bandSetsList[b-1][3][int(cfg.BLUEBand) - 1])
+									except:
+										pass
+									try:
+										f = f.replace(cfg.variableGreenName, cfg.bandSetsList[b-1][3][int(cfg.GREENBand) - 1])
+									except:
+										pass
+									try:
+										f = f.replace(cfg.variableSWIR1Name, cfg.bandSetsList[b-1][3][int(cfg.SWIR1Band) - 1])
+									except:
+										pass
+									try:
+										f = f.replace(cfg.variableSWIR2Name, cfg.bandSetsList[b-1][3][int(cfg.SWIR2Band) - 1])
+									except:
+										pass
+								else:
+									try:
+										f = f.replace(cfg.variableRedName, cfg.variableBandsetName + '#b' + str(cfg.REDBand))
+									except:
+										pass
+									try:
+										f = f.replace(cfg.variableNIRName, cfg.variableBandsetName + '#b' + str(cfg.NIRBand))
+									except:
+										pass
+									try:
+										f = f.replace(cfg.variableBlueName, cfg.variableBandsetName + '#b' + str(cfg.BLUEBand))
+									except:
+										pass
+									try:
+										f = f.replace(cfg.variableGreenName, cfg.variableBandsetName + '#b' + str(cfg.GREENBand))
+									except:
+										pass
+									try:
+										f = f.replace(cfg.variableSWIR1Name, cfg.variableBandsetName + '#b' + str(cfg.SWIR1Band))
+									except:
+										pass
+									try:
+										f = f.replace(cfg.variableSWIR2Name, cfg.variableBandsetName + '#b' + str(cfg.SWIR2Band))
+									except:
+										pass
 								# replace previous output names
 								#for r in nmList:
 								#	f = f.replace(r[0], r[1])

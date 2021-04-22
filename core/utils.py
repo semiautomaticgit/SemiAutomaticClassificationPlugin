@@ -2678,7 +2678,10 @@ class Utils:
 			scl = gBand2.GetScale()
 			noData = gBand2.GetNoDataValue()
 			if noData is None:
-				noData = NoDataValue
+				try:
+					noData = int(NoDataValue)
+				except:
+					noData = cfg.NoDataVal
 			gt = gdalRaster2.GetGeoTransform()
 			pX =  abs(gt[1])
 			pY = abs(gt[5])
@@ -3600,7 +3603,7 @@ class Utils:
 			oR = None
 			rD = None
 		else:
-			vrtCheck = cfg.utls.createVirtualRaster([inputRaster], outputRaster, [band], 'Yes', 'Yes', 'Yes')
+			vrtCheck = cfg.utls.createVirtualRaster2([inputRaster], outputRaster, [band])
 			cfg.timeSCP.sleep(0.1)
 		# logger
 		cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "get band: " + str(band))
@@ -3619,7 +3622,10 @@ class Utils:
 			i = 1
 			for x in range(1, iBC+1):
 				if cfg.actionCheck == 'Yes':
-					xB = outputFolder + '/' + name + '_B' + str(x) + '.tif'
+					if virtual == 'No':
+						xB = outputFolder + '/' + name + '_B' + str(x) + '.tif'
+					else:
+						xB = outputFolder + '/' + name + '_B' + str(x) + '.vrt'
 					if multiAddList is not None:
 						self.getRasterBandByBandNumber(rasterPath, x, xB, 'No', None, [multiAddList[0][x - 1], multiAddList[1][x - 1]])
 					else:

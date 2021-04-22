@@ -42,7 +42,7 @@ def description():
 
 
 def version():
-    return 'Version 7.8.7 - Matera'
+    return 'Version 7.8.8 - Matera'
 
 
 def icon():
