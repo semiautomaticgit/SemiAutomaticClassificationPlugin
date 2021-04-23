@@ -4857,6 +4857,9 @@ class Utils:
 		if blockSizeY > rY:
 			blockSizeY = int(rY/float(threadNumber))+1
 		lY = list(range(0, rY, blockSizeY))
+		if len(lY) < threadNumber:
+			blockSizeY = int(rY/float(threadNumber))+1
+			lY = list(range(0, rY, blockSizeY))
 		gdalRaster = None
 		# set initial value for progress bar
 		try:
