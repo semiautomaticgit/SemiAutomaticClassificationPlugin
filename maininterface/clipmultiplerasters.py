@@ -192,7 +192,7 @@ class ClipMultipleRasters:
 		if cfg.bandSetsList[bandSetNumber][0] == 'Yes':
 			ckB = cfg.utls.checkBandSet(bandSetNumber)
 			if ckB == 'Yes':
-				rT = cfg.bandSetsList[bandSetNumber][3]
+				rT = cfg.bndSetLst
 				# logger
 				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' rasters to be clipped' + str(rT))
 				if len(rT) == 0:
@@ -213,116 +213,93 @@ class ClipMultipleRasters:
 				rT = cfg.utls.rasterToBands(bPath, cfg.tmpDir, outputName = cfg.utls.fileName(cfg.bandSetsList[bandSetNumber][8]), virtual = 'No')
 			else:
 				rT = cfg.utls.rasterToBands(bPath, cfg.tmpDir, outputName = cfg.utls.fileName(cfg.bandSetsList[bandSetNumber][8]), virtual = 'Yes')
-			cfg.uiUtls.updateBar(50)
-			# using coordinates
-			if uS == 0 and len(UX) > 0 and len(UY) > 0 and len(LX) > 0 and len(LY) > 0:
-				for l in rT:
-					f = oD + '/' + outputName + '_'  + cfg.utls.fileName(l)
-					bbList = [l]
-					bandNumberList = [1]		
-					vrtCheck = cfg.utls.createTempVirtualRaster(bbList, bandNumberList, 'Yes', 'Yes', 0, 'No', 'Yes', [float(UX), float(UY), float(LX), float(LY)])
-					cfg.utls.GDALCopyRaster(vrtCheck, f, 'GTiff', cfg.rasterCompression, 'LZW')
-					cfg.utls.addRasterLayer(f)
-					# logger
-					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' rasters clipped' )
-			# using vector
-			elif uS == 1:
-				dT = cfg.utls.getTime()
-				# vector EPSG
-				if 'Polygon?crs=' in str(s) or 'memory?geometry=' in str(s) or '(memory)' in str(s):
-					# temp shapefile
-					tSHP = cfg.utls.createTempRasterPath('gpkg')
-					try:
-						s = cfg.utls.saveMemoryLayerToShapefile(sL, tSHP, format = 'GPKG')
-					except:
-						s = cfg.utls.saveMemoryLayerToShapefile(s, tSHP, format = 'GPKG')
-					s = cfg.utls.layerSource(s)
-					vCrs = cfg.utls.getCrsGDAL(tSHP)
-				elif 'QgsVectorLayer' in str(s):
-					# temporary layer
-					tLN = cfg.subsTmpROI + dT + '.shp'
-					tLP = cfg.tmpDir + '/' + dT + tLN
-					# get layer crs
-					crs = cfg.utls.getCrsGDAL(s)
-					# create a temp shapefile with a field
-					cfg.utls.createEmptyShapefile(crs, tLP)
-					mL = cfg.utls.addVectorLayer(tLP , tLN, 'ogr')
-					f = cfg.qgisCoreSCP.QgsFeature()
-					for f in s.getFeatures():
-						ID = f.id()
-						# copy ROI to temp shapefile
-						cfg.utls.copyFeatureToLayer(s, ID, mL)
-					s = tLP
-					vCrs = cfg.utls.getCrsGDAL(s)
-				else:
-					vCrs = cfg.utls.getCrsGDAL(s)
-				# in case of reprojection
-				reprjShapefile = cfg.tmpDir + '/' + dT + cfg.utls.fileNameNoExt(s) + '.shp'
-				# band list
-				bbList = []
-				for l in rT:
-					bbList.append(l)
-				tRxs = cfg.utls.createTempRasterPath('tif')
-				# check projection
-				vEPSG = cfg.osrSCP.SpatialReference()
-				vEPSG.ImportFromWkt(vCrs)
-				rP = cfg.utls.getCrsGDAL(l)
-				rEPSG = cfg.osrSCP.SpatialReference()
-				rEPSG.ImportFromWkt(rP)
+		cfg.uiUtls.updateBar(50)
+		# using coordinates
+		if uS == 0 and len(UX) > 0 and len(UY) > 0 and len(LX) > 0 and len(LY) > 0:
+			for l in rT:
+				f = oD + '/' + outputName + '_'  + cfg.utls.fileName(l)
+				bbList = [l]
+				bandNumberList = [1]
+				vrtCheck = cfg.utls.createTempVirtualRaster(bbList, bandNumberList, 'Yes', 'Yes', 0, 'No', 'Yes', [float(UX), float(UY), float(LX), float(LY)])
+				cfg.utls.GDALCopyRaster(vrtCheck, f, 'GTiff', cfg.rasterCompression, 'LZW')
+				cfg.utls.addRasterLayer(f)
 				# logger
-				cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' rP: ' + str(rP))
-				cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' vCrs: ' + str(vCrs))
-				vect = s
-				if vEPSG.IsSame(rEPSG) != 1:
-					if cfg.osSCP.path.isfile(reprjShapefile):
-						vect = reprjShapefile
-					else:
-						try:
-							cfg.utls.repojectShapefile(s, vEPSG, reprjShapefile, rEPSG)
-						except Exception as err:
-							# logger
-							cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))	
-							cfg.mx.msgErr43()
-							if batch == 'No':
-								cfg.uiUtls.removeProgressBar()
-							return 'No'
-						vect = reprjShapefile
-				# if iterate through field	
-				if uSF == 1:
-					values = cfg.utls.getVectorFieldfValues(vect, vectorField)
-					if values == 'No':
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' rasters clipped' )
+		# using vector
+		elif uS == 1:
+			dT = cfg.utls.getTime()
+			# vector EPSG
+			if 'Polygon?crs=' in str(s) or 'memory?geometry=' in str(s) or '(memory)' in str(s):
+				# temp shapefile
+				tSHP = cfg.utls.createTempRasterPath('gpkg')
+				try:
+					s = cfg.utls.saveMemoryLayerToShapefile(sL, tSHP, format = 'GPKG')
+				except:
+					s = cfg.utls.saveMemoryLayerToShapefile(s, tSHP, format = 'GPKG')
+				s = cfg.utls.layerSource(s)
+				vCrs = cfg.utls.getCrsGDAL(tSHP)
+			elif 'QgsVectorLayer' in str(s):
+				# temporary layer
+				tLN = cfg.subsTmpROI + dT + '.shp'
+				tLP = cfg.tmpDir + '/' + dT + tLN
+				# get layer crs
+				crs = cfg.utls.getCrsGDAL(s)
+				# create a temp shapefile with a field
+				cfg.utls.createEmptyShapefile(crs, tLP)
+				mL = cfg.utls.addVectorLayer(tLP , tLN, 'ogr')
+				f = cfg.qgisCoreSCP.QgsFeature()
+				for f in s.getFeatures():
+					ID = f.id()
+					# copy ROI to temp shapefile
+					cfg.utls.copyFeatureToLayer(s, ID, mL)
+				s = tLP
+				vCrs = cfg.utls.getCrsGDAL(s)
+			else:
+				vCrs = cfg.utls.getCrsGDAL(s)
+			# in case of reprojection
+			reprjShapefile = cfg.tmpDir + '/' + dT + cfg.utls.fileNameNoExt(s) + '.shp'
+			# band list
+			bbList = []
+			for l in rT:
+				bbList.append(l)
+			tRxs = cfg.utls.createTempRasterPath('tif')
+			# check projection
+			vEPSG = cfg.osrSCP.SpatialReference()
+			vEPSG.ImportFromWkt(vCrs)
+			rP = cfg.utls.getCrsGDAL(l)
+			rEPSG = cfg.osrSCP.SpatialReference()
+			rEPSG.ImportFromWkt(rP)
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' rP: ' + str(rP))
+			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' vCrs: ' + str(vCrs))
+			vect = s
+			if vEPSG.IsSame(rEPSG) != 1:
+				if cfg.osSCP.path.isfile(reprjShapefile):
+					vect = reprjShapefile
+				else:
+					try:
+						cfg.utls.repojectShapefile(s, vEPSG, reprjShapefile, rEPSG)
+					except Exception as err:
+						# logger
+						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))	
 						cfg.mx.msgErr43()
 						if batch == 'No':
-							# enable map canvas render
-							cfg.cnvs.setRenderFlag(True)
 							cfg.uiUtls.removeProgressBar()
-					for v in values:
-						check = cfg.utls.vectorToRaster(cfg.emptyFN, vect, cfg.emptyFN, tRxs, l, None, 'GTiff', 1, vectorField + '=' + str(v))
-						if check != 'No':
-							outList = cfg.utls.clipRasterByRaster(bbList, tRxs, oD, 'GTiff', noDt, outputNameRoot = outputName + vectorField + '_' + str(v) + '_')
-							try:
-								cfg.osSCP.remove(tRxs)
-							except:
-								pass
-							try:
-								for oU in outList:
-									cfg.utls.addRasterLayer(oU)
-							except Exception as err:
-								# logger
-								if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
-							# logger
-							cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' rasters clipped' )
-						else:
-							st = 'Yes'
-							if batch == 'No':
-								# enable map canvas render
-								cfg.cnvs.setRenderFlag(True)
-								cfg.uiUtls.removeProgressBar()
-				# without field iteration
-				else:
-					check = cfg.utls.vectorToRaster(cfg.emptyFN, vect, cfg.emptyFN, tRxs, l, None, 'GTiff', 1)
+						return 'No'
+					vect = reprjShapefile
+			# if iterate through field	
+			if uSF == 1:
+				values = cfg.utls.getVectorFieldfValues(vect, vectorField)
+				if values == 'No':
+					cfg.mx.msgErr43()
+					if batch == 'No':
+						# enable map canvas render
+						cfg.cnvs.setRenderFlag(True)
+						cfg.uiUtls.removeProgressBar()
+				for v in values:
+					check = cfg.utls.vectorToRaster(cfg.emptyFN, vect, cfg.emptyFN, tRxs, l, None, 'GTiff', 1, vectorField + '=' + str(v))
 					if check != 'No':
-						outList = cfg.utls.clipRasterByRaster(bbList, tRxs, oD, 'GTiff', noDt, outputNameRoot = outputName + '_' )
+						outList = cfg.utls.clipRasterByRaster(bbList, tRxs, oD, 'GTiff', noDt, outputNameRoot = outputName + vectorField + '_' + str(v) + '_')
 						try:
 							cfg.osSCP.remove(tRxs)
 						except:
@@ -341,19 +318,42 @@ class ClipMultipleRasters:
 							# enable map canvas render
 							cfg.cnvs.setRenderFlag(True)
 							cfg.uiUtls.removeProgressBar()
+			# without field iteration
 			else:
-				if batch == 'No':
-					cfg.uiUtls.removeProgressBar()
-					# enable map canvas render
-					cfg.cnvs.setRenderFlag(True)
-				return 'No'
-			if  st != 'Yes':
-				if batch == 'No':
-					# enable map canvas render
-					cfg.cnvs.setRenderFlag(True)
-					cfg.uiUtls.removeProgressBar()
-					cfg.utls.finishSound()
-					cfg.utls.sendSMTPMessage(None, str(__name__))
+				check = cfg.utls.vectorToRaster(cfg.emptyFN, vect, cfg.emptyFN, tRxs, l, None, 'GTiff', 1)
+				if check != 'No':
+					outList = cfg.utls.clipRasterByRaster(bbList, tRxs, oD, 'GTiff', noDt, outputNameRoot = outputName + '_' )
+					try:
+						cfg.osSCP.remove(tRxs)
+					except:
+						pass
+					try:
+						for oU in outList:
+							cfg.utls.addRasterLayer(oU)
+					except Exception as err:
+						# logger
+						if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+					# logger
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' rasters clipped' )
+				else:
+					st = 'Yes'
+					if batch == 'No':
+						# enable map canvas render
+						cfg.cnvs.setRenderFlag(True)
+						cfg.uiUtls.removeProgressBar()
+		else:
+			if batch == 'No':
+				cfg.uiUtls.removeProgressBar()
+				# enable map canvas render
+				cfg.cnvs.setRenderFlag(True)
+			return 'No'
+		if  st != 'Yes':
+			if batch == 'No':
+				# enable map canvas render
+				cfg.cnvs.setRenderFlag(True)
+				cfg.uiUtls.removeProgressBar()
+				cfg.utls.finishSound()
+				cfg.utls.sendSMTPMessage(None, str(__name__))
 		
 	# Activate pointer
 	def pointerActive(self):

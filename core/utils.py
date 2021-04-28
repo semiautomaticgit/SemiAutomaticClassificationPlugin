@@ -6470,7 +6470,7 @@ class Utils:
 		cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'group ' + str(groupName) + ' Position: ' + str(p))
 
 	# Layer ID by its name
-	def layerID(self, layerName, trainingID):
+	def layerID(self, layerName, trainingID = None):
 		lsx = cfg.qgisCoreSCP.QgsProject.instance().mapLayers().values()
 		for lx in lsx:
 			lN = lx.name()
