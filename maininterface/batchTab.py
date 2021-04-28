@@ -1758,6 +1758,7 @@ class BatchTab:
 		
 	# mosaic band sets
 	def performMosaicBandSets(self, paramList):
+		virtual = '\'No\''
 		parameters = []
 		for p in paramList:
 			pSplit = p.split(':', 1)
@@ -1786,7 +1787,18 @@ class BatchTab:
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				band_set_list = g[0]
 				if len(band_set_list) > 0:
-					band_set_list = '\'[' + band_set_list + ']\''
+					if band_set_list == '*':
+						band_set_list = '\'*\''
+					else:
+						band_set_list = '\'[' + band_set_list + ']\''
+				else:
+					return 'No', pName
+			# virtual output checkbox (1 checked or 0 unchecked)
+			elif pName == 'virtual_output':
+				if pSplit[1].replace(' ', '') == '1':
+					virtual = '\'Yes\''
+				elif pSplit[1].replace(' ', '') == '0':
+					virtual = '\'No\''
 				else:
 					return 'No', pName
 			else:
@@ -1798,6 +1810,7 @@ class BatchTab:
 			parameters.append('\'Yes\'')
 			parameters.append(outputDir)
 			parameters.append(band_set_list)
+			parameters.append(virtual)
 		except:
 			return 'No', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'missing parameter')
 		return 'Yes', parameters

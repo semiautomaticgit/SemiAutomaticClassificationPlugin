@@ -11687,9 +11687,29 @@ distance</string>
                 <string>Mosaic band sets</string>
                </attribute>
                <layout class="QGridLayout" name="gridLayout_278">
-                <item row="1" column="0" rowspan="2" colspan="3">
+                <item row="0" column="0">
+                 <layout class="QHBoxLayout" name="horizontalLayout_28">
+                  <item>
+                   <widget class="QLabel" name="label_134">
+                    <property name="styleSheet">
+                     <string notr="true">background-color : #656565; color : white</string>
+                    </property>
+                    <property name="frameShape">
+                     <enum>QFrame::Panel</enum>
+                    </property>
+                    <property name="frameShadow">
+                     <enum>QFrame::Sunken</enum>
+                    </property>
+                    <property name="text">
+                     <string> Mosaic of band sets</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item row="1" column="0">
                  <layout class="QGridLayout" name="gridLayout_66">
-                  <item row="2" column="0">
+                  <item row="3" column="0">
                    <widget class="QLabel" name="label_135">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
@@ -11753,7 +11773,7 @@ distance</string>
                     </property>
                    </spacer>
                   </item>
-                  <item row="2" column="1" colspan="2">
+                  <item row="3" column="1" colspan="2">
                    <widget class="QLineEdit" name="mosaic_output_name_lineEdit">
                     <property name="toolTip">
                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Output name prefix&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -11788,16 +11808,26 @@ distance</string>
                   <item row="0" column="1" colspan="2">
                    <widget class="QLineEdit" name="mosaic_band_sets_lineEdit">
                     <property name="toolTip">
-                     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;List of band set numbers separated by comma ,&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;List of band set numbers separated by comma ,&lt;br/&gt;Use * for selecting all the band sets&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                     </property>
                     <property name="text">
                      <string>1, 2</string>
                     </property>
                    </widget>
                   </item>
+                  <item row="2" column="0">
+                   <widget class="QCheckBox" name="mosaic_virtual_checkBox">
+                    <property name="toolTip">
+                     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If checked, output bands are virtual rasters&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                    </property>
+                    <property name="text">
+                     <string>Create virtual raster output</string>
+                    </property>
+                   </widget>
+                  </item>
                  </layout>
                 </item>
-                <item row="3" column="0">
+                <item row="2" column="0">
                  <spacer name="verticalSpacer_32">
                   <property name="orientation">
                    <enum>Qt::Vertical</enum>
@@ -11810,27 +11840,7 @@ distance</string>
                   </property>
                  </spacer>
                 </item>
-                <item row="0" column="0" colspan="3">
-                 <layout class="QHBoxLayout" name="horizontalLayout_28">
-                  <item>
-                   <widget class="QLabel" name="label_134">
-                    <property name="styleSheet">
-                     <string notr="true">background-color : #656565; color : white</string>
-                    </property>
-                    <property name="frameShape">
-                     <enum>QFrame::Panel</enum>
-                    </property>
-                    <property name="frameShadow">
-                     <enum>QFrame::Sunken</enum>
-                    </property>
-                    <property name="text">
-                     <string> Mosaic of band sets</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </item>
-                <item row="4" column="0" colspan="3">
+                <item row="3" column="0">
                  <layout class="QGridLayout" name="gridLayout_228">
                   <item row="1" column="0">
                    <spacer name="horizontalSpacer_94">
