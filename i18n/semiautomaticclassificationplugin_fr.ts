@@ -5727,7 +5727,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation>Numéro de bande</translation>
     </message>
     <message>
-        <location filename="../maininterface/bandsetTab.py" line="699"/>
+        <location filename="../maininterface/bandsetTab.py" line="700"/>
         <source>Band name</source>
         <translation>Nom de bande</translation>
     </message>
@@ -5812,57 +5812,57 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/bandsetTab.py" line="701"/>
+        <location filename="../maininterface/bandsetTab.py" line="702"/>
         <source>Center wavelength</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/bandsetTab.py" line="703"/>
+        <location filename="../maininterface/bandsetTab.py" line="704"/>
         <source>Multiplicative Factor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/bandsetTab.py" line="705"/>
+        <location filename="../maininterface/bandsetTab.py" line="706"/>
         <source>Additive Factor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/bandsetTab.py" line="707"/>
+        <location filename="../maininterface/bandsetTab.py" line="708"/>
         <source>Wavelength unit</source>
         <translation>Unité de longueur d&apos;onde</translation>
     </message>
     <message>
-        <location filename="../maininterface/bandsetTab.py" line="709"/>
+        <location filename="../maininterface/bandsetTab.py" line="710"/>
         <source>Image name</source>
         <translation>Nom de l&apos;image</translation>
     </message>
     <message>
-        <location filename="../maininterface/bandsetTab.py" line="742"/>
+        <location filename="../maininterface/bandsetTab.py" line="743"/>
         <source>Remove band set</source>
         <translation>Supprimer le jeu de bandes</translation>
     </message>
     <message>
-        <location filename="../maininterface/bandsetTab.py" line="882"/>
+        <location filename="../maininterface/bandsetTab.py" line="883"/>
         <source>Save the band set to file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/bandsetTab.py" line="930"/>
+        <location filename="../maininterface/bandsetTab.py" line="931"/>
         <source>Select a band set file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/bandsetTab.py" line="1223"/>
+        <location filename="../maininterface/bandsetTab.py" line="1224"/>
         <source>Remove band</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/bandsetTab.py" line="1223"/>
+        <location filename="../maininterface/bandsetTab.py" line="1224"/>
         <source>Are you sure you want to remove the selected bands from band set?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/bandsetTab.py" line="1282"/>
+        <location filename="../maininterface/bandsetTab.py" line="1283"/>
         <source>Save virtual raster</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6527,7 +6527,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/bandsetTab.py" line="711"/>
+        <location filename="../maininterface/bandsetTab.py" line="712"/>
         <source>Date</source>
         <translation type="unfinished">Date</translation>
     </message>

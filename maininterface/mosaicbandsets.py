@@ -96,6 +96,7 @@ class MosaicBandSets:
 			else:
 				o = outputDirectory
 			if len(o) > 0:
+				cfg.utls.makeDirectory(o)
 				outputName = cfg.ui.mosaic_output_name_lineEdit.text()
 				if len(outputName) > 0:
 					outputName = str(outputName.encode('ascii','replace'))[2:-1] + '_' 
@@ -213,7 +214,6 @@ class MosaicBandSets:
 						bList.append(bndSetSources[x][y])
 					dType = cfg.utls.getRasterDataTypeName(bndSetSources[0][y])
 					if virtual == 'Yes':
-						cfg.utls.makeDirectory(o)
 						tVRT = o + '/' + outputName + cfg.utls.fileNameNoExt(bndSetSources[0][y]) + '.vrt'
 						rstrOut = tVRT
 					else:

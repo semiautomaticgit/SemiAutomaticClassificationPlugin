@@ -654,6 +654,7 @@ class BandsetTab:
 					except:
 						pass
 			cfg.bst.clearBandSet(question = 'No', refresh = 'Yes', bandSetNumber = index)
+			cfg.bst.readBandSet('Yes')
 			
 	# add band set tab
 	def addBandSetTabAction(self):
