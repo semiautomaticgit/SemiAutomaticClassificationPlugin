@@ -106,6 +106,7 @@ class ErosionRaster:
 							cfg.cnvs.setRenderFlag(True)
 						return 'No'
 					cfg.uiUtls.updateBar(10)
+					cfg.utls.makeDirectory(cfg.osSCP.path.dirname(outputRaster))
 					input = rSource
 					nd = cfg.utls.imageNoDataValue(input)
 					dType = cfg.utls.getRasterDataTypeName(input)

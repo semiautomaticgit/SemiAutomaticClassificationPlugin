@@ -107,6 +107,7 @@ class LandCoverChange:
 				# virtual raster
 				vrtR = 'No'
 				if chngRstPath is not False:
+					cfg.utls.makeDirectory(cfg.osSCP.path.dirname(chngRstPath))
 					if chngRstPath.lower().endswith('.vrt'):
 						vrtR = 'Yes'
 					elif chngRstPath.lower().endswith('.tif'):

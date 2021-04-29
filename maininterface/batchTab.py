@@ -75,6 +75,7 @@ class BatchTab:
 	# text changed
 	def textChanged(self):
 		cfg.ui.batch_label.setText(cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Checking ...'))
+		cfg.QtWidgetsSCP.qApp.processEvents()
 		expression = ' ' + cfg.ui.plainTextEdit_batch.toPlainText() + ' '
 		self.checkExpression(expression)
 		#cfg.ui.plainTextEdit_batch.setFocus()
@@ -278,7 +279,10 @@ class BatchTab:
 												fReplace = fstart[0].replace(cfg.FileNm, filePath).replace(cfg.FileDirNm, root)
 												fReplace2 = fReplace2 + fReplace + '\n'
 												break
-						fReplace2 = fReplace2 + fstart[1] + '\n'
+						try:
+							fReplace2 = fReplace2 + fstart[1] + '\n'
+						except:
+							pass
 					else:
 						fReplace2 = fReplace2 + fs + '\n'
 			fexpression = fReplace2.rstrip('\\n').rstrip('\n')
@@ -298,27 +302,33 @@ class BatchTab:
 						fs = '\n'.join(fsSplit)
 					if forBS is not None:
 						bsetList = []
-						try:
-							# range of band sets
-							rgX = forBS.split(',')
-							for rgB in rgX:
-								try:
-									# range of band sets
-									rg = rgB.split(':')
-									bsetList1 = list(range(int(rg[0]), int(rg[1]) + 1))
-									bsetList.extend(bsetList1)
-								except:
+						if forBS == '*':
+							bsetList = list(range(1, len(cfg.bandSetsList)+1))
+						else:
+							try:
+								# range of band sets
+								rgX = forBS.split(',')
+								for rgB in rgX:
 									try:
-										bsetList.extend([int(rgB)])
+										# range of band sets
+										rg = rgB.split(':')
+										bsetList1 = list(range(int(rg[0]), int(rg[1]) + 1))
+										bsetList.extend(bsetList1)
 									except:
-										pass
-						except:
-							pass
+										try:
+											bsetList.extend([int(rgB)])
+										except:
+											pass
+							except:
+								pass
 						fstart = fs.split(cfg.endForBandSetNm)
 						fReplaceB = ''
 						for bsset in bsetList:
-							fReplaceB = fReplaceB + fstart[0].replace(cfg.bandSetNm, str(bsset)) + '\n' 
-						fReplaceB = fReplaceB + fstart[1]
+							fReplaceB = fReplaceB + fstart[0].replace(cfg.bandSetNm, str(bsset)) + '\n'
+						try:
+							fReplaceB = fReplaceB + fstart[1]
+						except:
+							pass
 						fReplace3 = fReplace3 + fReplaceB + '\n'
 					else:
 						fReplace3 = fReplace3 + fs + '\n'
@@ -1604,6 +1614,7 @@ class BatchTab:
 		
 	# batch remove band set
 	def performRemoveBandSet(self, paramList):
+		unload = '\'No\''
 		parameters = []
 		for p in paramList:
 			pSplit = p.split(':', 1)
@@ -1613,18 +1624,28 @@ class BatchTab:
 					bandset = str(int(eval(pSplit[1].replace(' ', ''))) - 1)
 				except:
 					return 'No', pName
+			# unload bands (1 checked or 0 unchecked)
+			elif pName == 'unload_bands':
+				if pSplit[1].replace(' ', '') == '1':
+					unload = '\'Yes\''
+				elif pSplit[1].replace(' ', '') == '0':
+					unload = '\'No\''
+				else:
+					return 'No', pName
 			else:
 				if len(pName.strip()) > 0:
 					return 'No', pName
 		# append parameters
 		try:
 			parameters.append(bandset)
+			parameters.append(unload)
 		except:
 			return 'No', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'missing parameter')
 		return 'Yes', parameters
 		
 	# batch remove band from band set
 	def performRemoveBandFromBandSet(self, paramList):
+		unload = '\'No\''
 		parameters = []
 		for p in paramList:
 			pSplit = p.split(':', 1)
@@ -1643,6 +1664,14 @@ class BatchTab:
 					band_list = '\'[' + band_list + ']\''
 				else:
 					return 'No', pName
+			# unload bands (1 checked or 0 unchecked)
+			elif pName == 'unload_bands':
+				if pSplit[1].replace(' ', '') == '1':
+					unload = '\'Yes\''
+				elif pSplit[1].replace(' ', '') == '0':
+					unload = '\'No\''
+				else:
+					return 'No', pName
 			else:
 				if len(pName.strip()) > 0:
 					return 'No', pName
@@ -1650,6 +1679,7 @@ class BatchTab:
 		try:
 			parameters.append(bandset)
 			parameters.append(band_list)
+			parameters.append(unload)
 		except:
 			return 'No', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'missing parameter')
 		return 'Yes', parameters
@@ -1792,6 +1822,21 @@ class BatchTab:
 					else:
 						band_set_list = '\'[' + band_set_list + ']\''
 				else:
+					return 'No', pName
+			# nodata checkbox (1 checked or 0 unchecked)
+			elif pName == 'use_nodata':
+				if pSplit[1].replace(' ', '') == '1':
+					cfg.ui.nodata_checkBox_9.setCheckState(2)
+				elif pSplit[1].replace(' ', '') == '0':
+					cfg.ui.nodata_checkBox_9.setCheckState(0)
+				else:
+					return 'No', pName
+			# nodata value (int value)
+			elif pName == 'nodata_value':
+				try:
+					val = int(eval(pSplit[1].replace(' ', '')))
+					cfg.ui.nodata_spinBox_10.setValue(val)
+				except:
 					return 'No', pName
 			# virtual output checkbox (1 checked or 0 unchecked)
 			elif pName == 'virtual_output':

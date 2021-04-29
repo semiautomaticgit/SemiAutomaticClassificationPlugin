@@ -1082,6 +1082,7 @@ class BandCalcTab:
 							else:
 								tLX, tLY, lRX, lRY = extentList[0], extentList[1], extentList[2], extentList[3]
 								tPMD = cfg.utls.createTempVirtualRaster(bList, bandNumberList, 'Yes', 'Yes', 0, 'No', 'No', [float(tLX), float(tLY), float(lRX), float(lRY), 'Yes'])
+							cfg.utls.makeDirectory(cfg.osSCP.path.dirname(out))
 							# process calculation
 							o = cfg.utls.multiProcessRaster(rasterPath = tPMD, functionBand = 'No', functionRaster = cfg.utls.bandCalculation, outputRasterList = [out], nodataValue = useNoDataValue,  functionBandArgument = e, functionVariable = variableList, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Calculation ') + str(e), skipReplaceNoData = skipReplaceNoDT, virtualRaster = vrtR, compress = cfg.rasterCompression, compressFormat = 'LZW', outputNoDataValue = outputNoData, dataType = rasterDataType, scale = useScale, offset = useOffset)
 							if o != 'No':
@@ -1092,7 +1093,7 @@ class BandCalcTab:
 										pass
 									except Exception as err:
 										# logger
-										if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+										if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 									if eNBS is not None:
 										try:
 											if eNBS == '#':
@@ -1111,7 +1112,7 @@ class BandCalcTab:
 					cfg.uiUtls.removeProgressBar()
 				else:
 					self.rasterBandName(bandSetNumber)
-				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " band calculation ended")
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' band calculation ended')
 				
 	# text changed
 	def textChanged(self):

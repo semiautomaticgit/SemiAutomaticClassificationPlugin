@@ -102,7 +102,7 @@ class SpectralDistanceBandsets:
 						cfg.uiUtls.removeProgressBar()
 					cfg.mx.msgWar28()
 					# logger
-					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " Warning")
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' Warning')
 					return 'No'
 				if cfg.bandSetsList[bandSetNumber][0] == 'Yes':
 					ckB = cfg.utls.checkBandSet(bandSetNumber)
@@ -117,7 +117,7 @@ class SpectralDistanceBandsets:
 						cfg.uiUtls.removeProgressBar()
 					cfg.mx.msgWar28()
 					# logger
-					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " Warning")
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' Warning')
 					return 'No'
 			cfg.uiUtls.updateBar(10)
 			rCrs = cfg.utls.getCrsGDAL(bndSetSources[0][0])
@@ -128,9 +128,10 @@ class SpectralDistanceBandsets:
 					cfg.uiUtls.removeProgressBar()
 				cfg.mx.msgWar28()
 				# logger
-				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " Warning")
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' Warning')
 				return 'No'	
 			cfg.uiUtls.updateBar(20)
+			cfg.utls.makeDirectory(cfg.osSCP.path.dirname(specRstPath))
 			# No data value
 			NoDataVal = cfg.NoDataVal
 			for bst in bndSetSources:

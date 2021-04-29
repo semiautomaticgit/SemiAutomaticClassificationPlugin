@@ -71,6 +71,7 @@ class SieveRaster:
 					else:
 						return 'No'
 				cfg.uiUtls.updateBar(40)
+				cfg.utls.makeDirectory(cfg.osSCP.path.dirname(outputRaster))
 				pixelThreshold =  cfg.ui.sieve_threshold_spinBox.value()
 				connect = cfg.ui.sieve_connection_combo.currentText()
 				cfg.utls.rasterSieve(rSource, outputRaster, pixelThreshold, connect)

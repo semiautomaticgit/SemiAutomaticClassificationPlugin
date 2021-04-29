@@ -91,6 +91,7 @@ class ReclassificationTab:
 					# disable map canvas render for speed
 					cfg.cnvs.setRenderFlag(False)
 				cfg.uiUtls.updateBar(10)
+				cfg.utls.makeDirectory(cfg.osSCP.path.dirname(out))
 				reclassList = self.createReclassificationStringFromList(list)
 				o = cfg.utls.multiProcessRaster(rasterPath = classificationPath, functionBand = 'No', functionRaster = cfg.utls.reclassifyRaster, outputRasterList = [out], nodataValue = cfg.NoDataVal,  functionBandArgument = reclassList, functionVariable = cfg.variableName, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Reclassify'), virtualRaster = vrtR, compress = cfg.rasterCompression)
 				if cfg.osSCP.path.isfile(out):

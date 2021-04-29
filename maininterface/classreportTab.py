@@ -44,7 +44,7 @@ class ClassReportTab:
 	# calculate classification report
 	def calculateClassificationReport(self, classificationPath, NoDataValue = None,  batch = 'No', rasterOutput = None):
 		if batch == 'No':
-			r = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Save classification report"), "", "*.csv", "csv")
+			r = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Save classification report'), '', '*.csv', 'csv')
 		else:
 			r = rasterOutput
 		if r is not False:
@@ -67,6 +67,7 @@ class ClassReportTab:
 				if batch == 'No':
 					cfg.uiUtls.addProgressBar()
 				cfg.uiUtls.updateBar(10)
+				cfg.utls.makeDirectory(cfg.osSCP.path.dirname(r))
 				# open input with GDAL
 				if cfg.osSCP.path.isfile(clssRstrSrc):
 					rD = cfg.gdalSCP.Open(clssRstrSrc, cfg.gdalSCP.GA_ReadOnly)
@@ -79,7 +80,7 @@ class ClassReportTab:
 				# check projections
 				cRP = rD.GetProjection()
 				cRSR = cfg.osrSCP.SpatialReference(wkt=cRP)
-				un = cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Unknown")
+				un = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Unknown')
 				if cRSR.IsProjected:
 					un = cRSR.GetAttrValue('unit')
 				else:

@@ -89,6 +89,7 @@ class VectorToRasterTab:
 			else:
 				burnValues = cfg.ui.constant_value_spinBox.value()
 			cfg.uiUtls.updateBar(10)
+			cfg.utls.makeDirectory(cfg.osSCP.path.dirname(rstrOut))
 			if cfg.ui.conversion_type_combo.currentText() == cfg.centerOfPixels:
 				conversionType = None
 			else:

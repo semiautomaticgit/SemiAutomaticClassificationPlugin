@@ -89,10 +89,10 @@ class ClipMultipleRasters:
 		if bandSetNumber >= len(cfg.bandSetsList):
 			cfg.mx.msgWar25(bandSetNumber + 1)
 			return 'No'
-		UX = ""
-		UY = ""
-		LX = ""
-		LY = ""
+		UX = ''
+		UY = ''
+		LX = ''
+		LY = ''
 		# creation of the required table of reclassification
 		rT = []
 		# st variable
@@ -119,7 +119,7 @@ class ClipMultipleRasters:
 			except Exception as err:
 				cfg.mx.msgErr11()
 				# logger
-				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 				return 'No'
 		elif cfg.ui.temporary_ROI_checkBox.isChecked() is True:
 			# use shape
@@ -135,7 +135,7 @@ class ClipMultipleRasters:
 			else:
 				cfg.mx.msgErr11()
 				# logger
-				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR: no vector" )
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR: no vector' )
 				return 'No'
 		else:
 			uS = 0
@@ -147,6 +147,7 @@ class ClipMultipleRasters:
 		noDt = cfg.ui.nodata_spinBox.value()
 		if len(oD) > 0:
 			cfg.uiUtls.updateBar(20)
+			cfg.utls.makeDirectory(oD)
 			outputName = cfg.ui.output_clip_name_lineEdit.text()
 			if len(outputName) > 0:
 				outputName = str(outputName.encode('ascii','replace'))[2:-1]

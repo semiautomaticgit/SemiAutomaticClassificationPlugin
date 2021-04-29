@@ -103,6 +103,7 @@ class Accuracy:
 					return 'No'
 			# date time for temp name
 			dT = cfg.utls.getTime()
+			cfg.utls.makeDirectory(cfg.osSCP.path.dirname(errorRstPath))
 			if iClass is not None and l is not None:
 				# if not reference shapefile
 				if l.type() != 0:

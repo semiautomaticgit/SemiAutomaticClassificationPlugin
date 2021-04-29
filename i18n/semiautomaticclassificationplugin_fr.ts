@@ -5152,12 +5152,12 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished">ACP</translation>
     </message>
     <message>
-        <location filename="../maininterface/clusteringTab.py" line="1252"/>
+        <location filename="../maininterface/clusteringTab.py" line="1253"/>
         <source>Clustering</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/spectraldistancebandsets.py" line="210"/>
+        <location filename="../maininterface/spectraldistancebandsets.py" line="211"/>
         <source>Spectral distance</source>
         <translation type="unfinished">Distance spectrale</translation>
     </message>
@@ -5687,37 +5687,37 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/crossclassificationTab.py" line="368"/>
+        <location filename="../maininterface/crossclassificationTab.py" line="369"/>
         <source>Classification</source>
         <translation>Classification</translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="402"/>
+        <location filename="../maininterface/accuracy.py" line="403"/>
         <source>ErrMatrixCode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/crossclassificationTab.py" line="351"/>
+        <location filename="../maininterface/crossclassificationTab.py" line="352"/>
         <source>Reference</source>
         <translation>Référence</translation>
     </message>
     <message>
-        <location filename="../maininterface/landcoverchange.py" line="338"/>
+        <location filename="../maininterface/landcoverchange.py" line="339"/>
         <source>PixelSum</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/landcoverchange.py" line="372"/>
+        <location filename="../maininterface/landcoverchange.py" line="373"/>
         <source>Total</source>
         <translation>Total</translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="540"/>
+        <location filename="../maininterface/accuracy.py" line="541"/>
         <source>Overall accuracy [%] = </source>
         <translation>Précision globale [%]</translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="543"/>
+        <location filename="../maininterface/accuracy.py" line="544"/>
         <source>Kappa hat classification = </source>
         <translation type="unfinished"></translation>
     </message>
@@ -5727,7 +5727,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation>Numéro de bande</translation>
     </message>
     <message>
-        <location filename="../maininterface/bandsetTab.py" line="674"/>
+        <location filename="../maininterface/bandsetTab.py" line="699"/>
         <source>Band name</source>
         <translation>Nom de bande</translation>
     </message>
@@ -5782,17 +5782,17 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/classreportTab.py" line="82"/>
+        <location filename="../maininterface/classreportTab.py" line="83"/>
         <source>Unknown</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/bandcombination.py" line="263"/>
+        <location filename="../maininterface/bandcombination.py" line="264"/>
         <source>RasterValue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/bandcombination.py" line="263"/>
+        <location filename="../maininterface/bandcombination.py" line="264"/>
         <source>Combination</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5812,57 +5812,57 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/bandsetTab.py" line="676"/>
+        <location filename="../maininterface/bandsetTab.py" line="701"/>
         <source>Center wavelength</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/bandsetTab.py" line="678"/>
+        <location filename="../maininterface/bandsetTab.py" line="703"/>
         <source>Multiplicative Factor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/bandsetTab.py" line="680"/>
+        <location filename="../maininterface/bandsetTab.py" line="705"/>
         <source>Additive Factor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/bandsetTab.py" line="682"/>
+        <location filename="../maininterface/bandsetTab.py" line="707"/>
         <source>Wavelength unit</source>
         <translation>Unité de longueur d&apos;onde</translation>
     </message>
     <message>
-        <location filename="../maininterface/bandsetTab.py" line="684"/>
+        <location filename="../maininterface/bandsetTab.py" line="709"/>
         <source>Image name</source>
         <translation>Nom de l&apos;image</translation>
     </message>
     <message>
-        <location filename="../maininterface/bandsetTab.py" line="717"/>
+        <location filename="../maininterface/bandsetTab.py" line="742"/>
         <source>Remove band set</source>
         <translation>Supprimer le jeu de bandes</translation>
     </message>
     <message>
-        <location filename="../maininterface/bandsetTab.py" line="857"/>
+        <location filename="../maininterface/bandsetTab.py" line="882"/>
         <source>Save the band set to file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/bandsetTab.py" line="905"/>
+        <location filename="../maininterface/bandsetTab.py" line="930"/>
         <source>Select a band set file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/bandsetTab.py" line="1198"/>
+        <location filename="../maininterface/bandsetTab.py" line="1223"/>
         <source>Remove band</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/bandsetTab.py" line="1198"/>
+        <location filename="../maininterface/bandsetTab.py" line="1223"/>
         <source>Are you sure you want to remove the selected bands from band set?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/bandsetTab.py" line="1251"/>
+        <location filename="../maininterface/bandsetTab.py" line="1282"/>
         <source>Save virtual raster</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5882,22 +5882,22 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/batchTab.py" line="357"/>
+        <location filename="../maininterface/batchTab.py" line="367"/>
         <source>Check OK</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/batchTab.py" line="415"/>
+        <location filename="../maininterface/batchTab.py" line="425"/>
         <source>Select a batch file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/batchTab.py" line="422"/>
+        <location filename="../maininterface/batchTab.py" line="432"/>
         <source>Save the batch to file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/batchTab.py" line="3602"/>
+        <location filename="../maininterface/batchTab.py" line="3647"/>
         <source>missing parameter</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5907,17 +5907,17 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/zonalStatRasterTab.py" line="261"/>
+        <location filename="../maininterface/zonalStatRasterTab.py" line="262"/>
         <source>Class</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/clusteringTab.py" line="1254"/>
+        <location filename="../maininterface/clusteringTab.py" line="1255"/>
         <source>Signature</source>
         <translation type="unfinished">Signature</translation>
     </message>
     <message>
-        <location filename="../maininterface/clusteringTab.py" line="1262"/>
+        <location filename="../maininterface/clusteringTab.py" line="1263"/>
         <source>C_ID_</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5927,7 +5927,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/classreportTab.py" line="126"/>
+        <location filename="../maininterface/classreportTab.py" line="127"/>
         <source>Percentage %</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5942,27 +5942,27 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/clusteringTab.py" line="805"/>
+        <location filename="../maininterface/clusteringTab.py" line="806"/>
         <source> Calculating. Please wait ...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/clusteringTab.py" line="828"/>
+        <location filename="../maininterface/clusteringTab.py" line="829"/>
         <source> Calculating classification. Please wait ...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/clusteringTab.py" line="1254"/>
+        <location filename="../maininterface/clusteringTab.py" line="1255"/>
         <source>Distance</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/landcoverchange.py" line="338"/>
+        <location filename="../maininterface/landcoverchange.py" line="339"/>
         <source>CrossClassCode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/crossclassificationTab.py" line="366"/>
+        <location filename="../maininterface/crossclassificationTab.py" line="367"/>
         <source>CROSS MATRIX [</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6017,12 +6017,12 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/landcoverchange.py" line="338"/>
+        <location filename="../maininterface/landcoverchange.py" line="339"/>
         <source>ReferenceClass</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/landcoverchange.py" line="355"/>
+        <location filename="../maininterface/landcoverchange.py" line="356"/>
         <source>NewClass</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6232,12 +6232,12 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="466"/>
+        <location filename="../maininterface/accuracy.py" line="467"/>
         <source>Wi</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="489"/>
+        <location filename="../maininterface/accuracy.py" line="490"/>
         <source>SE area</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6247,67 +6247,67 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="402"/>
+        <location filename="../maininterface/accuracy.py" line="403"/>
         <source>Classified</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="439"/>
+        <location filename="../maininterface/accuracy.py" line="440"/>
         <source>ERROR MATRIX (pixel count)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="483"/>
+        <location filename="../maininterface/accuracy.py" line="484"/>
         <source>Area</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="488"/>
+        <location filename="../maininterface/accuracy.py" line="489"/>
         <source>SE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="490"/>
+        <location filename="../maininterface/accuracy.py" line="491"/>
         <source>95% CI area</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="515"/>
+        <location filename="../maininterface/accuracy.py" line="516"/>
         <source>PA  [%]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="516"/>
+        <location filename="../maininterface/accuracy.py" line="517"/>
         <source>UA  [%]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="517"/>
+        <location filename="../maininterface/accuracy.py" line="518"/>
         <source>Kappa hat</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="552"/>
+        <location filename="../maininterface/accuracy.py" line="553"/>
         <source>PA = producer&apos;s accuracy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="554"/>
+        <location filename="../maininterface/accuracy.py" line="555"/>
         <source>UA = user&apos;s accuracy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="548"/>
+        <location filename="../maininterface/accuracy.py" line="549"/>
         <source>SE = standard error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="550"/>
+        <location filename="../maininterface/accuracy.py" line="551"/>
         <source>CI = confidence interval</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="462"/>
+        <location filename="../maininterface/accuracy.py" line="463"/>
         <source>AREA BASED ERROR MATRIX</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6522,17 +6522,17 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/randomForestTab.py" line="508"/>
+        <location filename="../maininterface/randomForestTab.py" line="509"/>
         <source>Random forest classification</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/bandsetTab.py" line="686"/>
+        <location filename="../maininterface/bandsetTab.py" line="711"/>
         <source>Date</source>
         <translation type="unfinished">Date</translation>
     </message>
     <message>
-        <location filename="../maininterface/batchTab.py" line="351"/>
+        <location filename="../maininterface/batchTab.py" line="361"/>
         <source>Error line </source>
         <translation type="unfinished"></translation>
     </message>
@@ -6587,7 +6587,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/zonalStatRasterTab.py" line="200"/>
+        <location filename="../maininterface/zonalStatRasterTab.py" line="201"/>
         <source>Unique values</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6617,7 +6617,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/bandcalcTab.py" line="1087"/>
+        <location filename="../maininterface/bandcalcTab.py" line="1088"/>
         <source>Calculation </source>
         <translation type="unfinished"></translation>
     </message>
@@ -6627,7 +6627,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/landcoverchange.py" line="353"/>
+        <location filename="../maininterface/landcoverchange.py" line="354"/>
         <source>LAND COVER CHANGE MATRIX [</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6642,32 +6642,32 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished">Soutenir SCP</translation>
     </message>
     <message>
-        <location filename="../maininterface/clusteringTab.py" line="1102"/>
+        <location filename="../maininterface/clusteringTab.py" line="1103"/>
         <source>Calculate raster values iteration </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/clusteringTab.py" line="490"/>
+        <location filename="../maininterface/clusteringTab.py" line="491"/>
         <source>Classification iteration </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/clusteringTab.py" line="1066"/>
+        <location filename="../maininterface/clusteringTab.py" line="1067"/>
         <source>Classification iteration</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/dilationTab.py" line="121"/>
+        <location filename="../maininterface/dilationTab.py" line="122"/>
         <source>Dilation </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/erosionTab.py" line="121"/>
+        <location filename="../maininterface/erosionTab.py" line="122"/>
         <source>Erosion </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/cloudmasking.py" line="226"/>
+        <location filename="../maininterface/cloudmasking.py" line="227"/>
         <source>Mask</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6677,7 +6677,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/zonalStatRasterTab.py" line="254"/>
+        <location filename="../maininterface/zonalStatRasterTab.py" line="255"/>
         <source>Raster statistics</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6862,17 +6862,17 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/reclassificationTab.py" line="312"/>
+        <location filename="../maininterface/reclassificationTab.py" line="313"/>
         <source>Select a reclassification file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/reclassificationTab.py" line="352"/>
+        <location filename="../maininterface/reclassificationTab.py" line="353"/>
         <source>Save the reclassification list to file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/reclassificationTab.py" line="95"/>
+        <location filename="../maininterface/reclassificationTab.py" line="96"/>
         <source>Reclassify</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6902,7 +6902,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/neighborpixelsTab.py" line="163"/>
+        <location filename="../maininterface/neighborpixelsTab.py" line="164"/>
         <source>Neighbor pixels</source>
         <translation type="unfinished"></translation>
     </message>

@@ -75,7 +75,7 @@ class BandCombination:
 					cfg.uiUtls.removeProgressBar()
 				cfg.mx.msgWar28()
 				# logger
-				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " Warning")
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' Warning')
 				return 'No'
 			if cfg.bandSetsList[bandSetNumber][0] == 'Yes':
 				ckB = cfg.utls.checkBandSet(bandSetNumber)
@@ -84,7 +84,7 @@ class BandCombination:
 					cfg.uiUtls.removeProgressBar()
 				cfg.mx.msgWar29()
 				# logger
-				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " Warning")
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' Warning')
 				return 'No'
 			if ckB != 'Yes':
 				pass
@@ -93,9 +93,10 @@ class BandCombination:
 					cfg.uiUtls.removeProgressBar()
 				cfg.mx.msgWar28()
 				# logger
-				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " Warning")
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' Warning')
 				return 'No'
 			cfg.uiUtls.updateBar(10)
+			cfg.utls.makeDirectory(cfg.osSCP.path.dirname(combRstPath))
 			NoDataVal = cfg.NoDataVal
 			rCrs = cfg.utls.getCrsGDAL(cfg.bndSetLst[0])
 			rEPSG = cfg.osrSCP.SpatialReference()

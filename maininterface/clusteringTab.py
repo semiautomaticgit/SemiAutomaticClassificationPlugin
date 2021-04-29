@@ -177,6 +177,7 @@ class ClusteringTab:
 				tPMD = cfg.utls.createTempRasterPath('vrt')
 				cfg.utls.createVirtualRaster(inputRasterList = bL, output = tPMD, quiet = 'Yes')
 			if len(bL) > 0:
+				cfg.utls.makeDirectory(cfg.osSCP.path.dirname(clssOut))
 				k_or_sigs = cfg.ui.kmeans_classes_spinBox.value()				
 				if cfg.ui.kmean_siglist_radioButton.isChecked() is True:					
 					sL = cfg.classTab.getSignatureList()					

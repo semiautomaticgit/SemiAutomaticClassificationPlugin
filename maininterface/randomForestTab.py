@@ -291,6 +291,7 @@ class ClassRandomForestTab:
 				return 'No'
 		else:
 			rstrOut = outputFile
+		cfg.utls.makeDirectory(cfg.osSCP.path.dirname(rstrOut))
 		# disable map canvas render for speed
 		if batch == 'No':
 			cfg.cnvs.setRenderFlag(False)

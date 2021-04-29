@@ -2713,17 +2713,17 @@ class Utils:
 				source_path = inputRasterList[b].replace('//', '/')
 				# set metadata xml
 				xml = '''
-				<SimpleSource>
+				<ComplexSource>
 				  <SourceFilename relativeToVRT="%i">%s</SourceFilename>
 				  <SourceBand>%i</SourceBand>
 				  <SourceProperties RasterXSize="%i" RasterYSize="%i" DataType=%s BlockXSize="%i" BlockYSize="%i" />
 				  <SrcRect xOff="%i" yOff="%i" xSize="%i" ySize="%i" />
 				  <DstRect xOff="%i" yOff="%i" xSize="%i" ySize="%i" />
 				  <NODATA>%i</NODATA>
-				</SimpleSource>
+				</ComplexSource>
 				'''
 				source = xml % (relativeToVRT, source_path, bandNumber, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, dataType, x_block, y_block, xoffX, xoffY, rX1, rY1, offX, offY, rX2, rY2, noData)
-				band.SetMetadataItem('SimpleSource', source, 'new_vrt_sources')
+				band.SetMetadataItem('ComplexSource', source, 'new_vrt_sources')
 				if NoDataValue == 'Yes':
 					band.SetNoDataValue(noData)	
 				elif NoDataValue != 'No':
@@ -4203,7 +4203,7 @@ class Utils:
 		
 	# replace numpy operators for expressions in Band calc
 	def replaceNumpyOperators(self, expression):
-		f = ' ' + expression + ' '
+		f = ' ' + expression.replace(',', ', ') + ' '
 		f = f.replace(' np.', ' ' + cfg.numpyn)
 		f = f.replace('~np.', ' ~' + cfg.numpyn)
 		f = f.replace(' ln(', ' ' + cfg.logn + '(')

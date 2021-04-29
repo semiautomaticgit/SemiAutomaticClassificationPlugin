@@ -75,6 +75,7 @@ class ClassToVectorTab:
 				# disable map canvas render
 				cfg.cnvs.setRenderFlag(False)
 			cfg.uiUtls.updateBar(10)
+			cfg.utls.makeDirectory(cfg.osSCP.path.dirname(out))
 			n = cfg.utls.fileName(out)
 			cfg.uiUtls.updateBar(20)
 			if str(cfg.ui.class_macroclass_comboBox.currentText()) == cfg.fldMacroID_class_def:

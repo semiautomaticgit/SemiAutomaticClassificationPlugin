@@ -213,6 +213,7 @@ class MosaicBandSets:
 						bList.append(bndSetSources[x][y])
 					dType = cfg.utls.getRasterDataTypeName(bndSetSources[0][y])
 					if virtual == 'Yes':
+						cfg.utls.makeDirectory(o)
 						tVRT = o + '/' + outputName + cfg.utls.fileNameNoExt(bndSetSources[0][y]) + '.vrt'
 						rstrOut = tVRT
 					else:

@@ -97,7 +97,7 @@ class CloudMasking:
 						cfg.uiUtls.removeProgressBar()
 					cfg.mx.msgWar28()
 					# logger
-					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " Warning")
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' Warning')
 					return 'No'
 				if cfg.bandSetsList[bandSetNumber][0] == 'Yes':
 					ckB = cfg.utls.checkBandSet(bandSetNumber)
@@ -106,7 +106,7 @@ class CloudMasking:
 						cfg.uiUtls.removeProgressBar()
 					cfg.mx.msgWar29()
 					# logger
-					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " Warning")
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' Warning')
 					return 'No'
 				if cfg.bandSetsList[bandSetNumber][0] == 'Yes':
 					ckB = cfg.utls.checkBandSet(bandSetNumber)
@@ -121,7 +121,7 @@ class CloudMasking:
 						cfg.uiUtls.removeProgressBar()
 					cfg.mx.msgWar28()
 					# logger
-					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " Warning")
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' Warning')
 					return 'No'
 				cfg.uiUtls.updateBar(10)
 				rCrs = cfg.utls.getCrsGDAL(cfg.bndSetLst[0])
@@ -132,9 +132,10 @@ class CloudMasking:
 						cfg.uiUtls.removeProgressBar()
 					cfg.mx.msgWar28()
 					# logger
-					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " Warning")
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' Warning')
 					return 'No'	
 				cfg.uiUtls.updateBar(20)
+				cfg.utls.makeDirectory(o)
 				eCrs = cfg.utls.getCrsGDAL(inputClassification)
 				EPSG = cfg.osrSCP.SpatialReference()
 				EPSG.ImportFromWkt(eCrs)

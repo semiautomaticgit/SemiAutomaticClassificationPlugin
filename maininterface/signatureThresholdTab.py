@@ -50,20 +50,20 @@ class SigThresholdTab:
 		x = 0
 		for k in list(cfg.signIDs.values()):
 			cfg.utls.insertTableRow(l, x)
-			cfg.utls.addTableItem(l, int(cfg.signList["MACROCLASSID_" + str(k)]), x, 0, 'No')
-			cfg.utls.addTableItem(l, str(cfg.signList["MACROCLASSINFO_" + str(k)]), x, 1, 'No')
-			cfg.utls.addTableItem(l, int(cfg.signList["CLASSID_" + str(k)]), x, 2, 'No')
-			cfg.utls.addTableItem(l, str(cfg.signList["CLASSINFO_" + str(k)]), x, 3, 'No')
-			cfg.utls.addTableItem(l, str(cfg.signList["MD_THRESHOLD_" + str(k)]), x, 4)
-			cfg.utls.addTableItem(l, str(cfg.signList["ML_THRESHOLD_" + str(k)]), x, 5)
-			cfg.utls.addTableItem(l, str(cfg.signList["SAM_THRESHOLD_" + str(k)]), x, 6)
-			cfg.utls.addTableItem(l, str(cfg.signIDs["ID_" + str(k)]), x, 7, 'No')
+			cfg.utls.addTableItem(l, int(cfg.signList['MACROCLASSID_' + str(k)]), x, 0, 'No')
+			cfg.utls.addTableItem(l, str(cfg.signList['MACROCLASSINFO_' + str(k)]), x, 1, 'No')
+			cfg.utls.addTableItem(l, int(cfg.signList['CLASSID_' + str(k)]), x, 2, 'No')
+			cfg.utls.addTableItem(l, str(cfg.signList['CLASSINFO_' + str(k)]), x, 3, 'No')
+			cfg.utls.addTableItem(l, str(cfg.signList['MD_THRESHOLD_' + str(k)]), x, 4)
+			cfg.utls.addTableItem(l, str(cfg.signList['ML_THRESHOLD_' + str(k)]), x, 5)
+			cfg.utls.addTableItem(l, str(cfg.signList['SAM_THRESHOLD_' + str(k)]), x, 6)
+			cfg.utls.addTableItem(l, str(cfg.signIDs['ID_' + str(k)]), x, 7, 'No')
 			x = x + 1
 		l.blockSignals(False)
 		self.tableEdited = 'Yes'
 		cfg.utls.sortTableColumn(l, 7)
 		# logger
-		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " signature list threshold created")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' signature list threshold created')
 		
 	# read threshold table
 	def readThresholdTable(self):
@@ -75,9 +75,9 @@ class SigThresholdTab:
 				wIML = tAW.item(b, 5).text()
 				wISAM = tAW.item(b, 6).text()
 				id = tAW.item(b, 7).text()
-				cfg.signList["MD_THRESHOLD_" + str(id)] = wI
-				cfg.signList["ML_THRESHOLD_" + str(id)] = wIML
-				cfg.signList["SAM_THRESHOLD_" + str(id)] = wISAM
+				cfg.signList['MD_THRESHOLD_' + str(id)] = wI
+				cfg.signList['ML_THRESHOLD_' + str(id)] = wIML
+				cfg.signList['SAM_THRESHOLD_' + str(id)] = wISAM
 			except:
 				pass
 
@@ -91,7 +91,7 @@ class SigThresholdTab:
 			except:
 				self.tableEdited = 'No'
 				tW.blockSignals(True)
-				cfg.utls.setTableItem(tW, row, column, "0")
+				cfg.utls.setTableItem(tW, row, column, '0')
 				tW.blockSignals(False)
 				self.tableEdited = 'Yes'
 				cfg.signT.readThresholdTable()
@@ -101,7 +101,7 @@ class SigThresholdTab:
 					cfg.mx.msg10()
 					self.tableEdited = 'No'
 					tW.blockSignals(True)
-					cfg.utls.setTableItem(tW, row, column, "100")
+					cfg.utls.setTableItem(tW, row, column, '100')
 					tW.blockSignals(False)
 					self.tableEdited = 'Yes'
 			elif column == 6:
@@ -109,7 +109,7 @@ class SigThresholdTab:
 					cfg.mx.msg11()
 					self.tableEdited = 'No'
 					tW.blockSignals(True)
-					cfg.utls.setTableItem(tW, row, column, "90")
+					cfg.utls.setTableItem(tW, row, column, '90')
 					tW.blockSignals(False)
 					self.tableEdited = 'Yes'
 			cfg.signT.readThresholdTable()
@@ -117,16 +117,16 @@ class SigThresholdTab:
 	# reset thresholds
 	def resetThresholds(self):
 		# ask for confirm
-		a = cfg.utls.questionBox(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Reset thresholds"), cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Are you sure you want to reset thresholds?"))
+		a = cfg.utls.questionBox(cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Reset thresholds'), cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Are you sure you want to reset thresholds?'))
 		if a == 'Yes':
 			tW = cfg.ui.signature_threshold_tableWidget
 			v = tW.rowCount()
 			self.tableEdited = 'No'
 			tW.blockSignals(True)
 			for c in range(0, v):
-				cfg.utls.setTableItem(tW, c, 4, "0")
-				cfg.utls.setTableItem(tW, c, 5, "0")
-				cfg.utls.setTableItem(tW, c, 6, "0")
+				cfg.utls.setTableItem(tW, c, 4, '0')
+				cfg.utls.setTableItem(tW, c, 5, '0')
+				cfg.utls.setTableItem(tW, c, 6, '0')
 			tW.blockSignals(False)
 			self.tableEdited = 'Yes'
 			cfg.signT.readThresholdTable()
@@ -188,8 +188,8 @@ class SigThresholdTab:
 			for c in reversed(iR):
 				id = tW.item(c[0], 7).text()
 				# wavelength
-				wlg = cfg.signList["WAVELENGTH_" + str(id)]
-				val = cfg.signList["VALUES_" + str(id)]
+				wlg = cfg.signList['WAVELENGTH_' + str(id)]
+				val = cfg.signList['VALUES_' + str(id)]
 				# counter
 				n = 0
 				m = []

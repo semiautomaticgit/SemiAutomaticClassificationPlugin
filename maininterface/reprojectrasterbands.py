@@ -153,6 +153,7 @@ class ReprojectRasterBands:
 						outputName = cfg.reprojNm
 				else:
 					return 'No'
+				cfg.utls.makeDirectory(oD)
 				if alignRasterPath is not None:
 					# raster extent and pixel size	
 					try:

@@ -65,6 +65,7 @@ class NeighborPixels:
 			else:
 				o = outputDirectory
 			if len(o) > 0:
+				cfg.utls.makeDirectory(o)
 				if outputName is None:
 					outputName = cfg.ui.neighbor_output_name_lineEdit.text()
 					if len(outputName) > 0:

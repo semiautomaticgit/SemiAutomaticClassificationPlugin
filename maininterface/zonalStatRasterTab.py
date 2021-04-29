@@ -97,6 +97,7 @@ class ZonalStatRasterTab:
 				pass
 			else:
 				zonalRstPath = zonalRstPath + '.tif'
+			cfg.utls.makeDirectory(cfg.osSCP.path.dirname(zonalRstPath))
 			if iClass is not None and l is not None:
 				if batch == 'No':
 					cfg.uiUtls.addProgressBar()

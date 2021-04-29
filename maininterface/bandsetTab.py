@@ -244,7 +244,7 @@ class BandsetTab:
 		self.addFileToBandSet()
 		
 	# add file to band set
-	def addFileToBandSet(self, batch = 'No', fileListString = None, wavelengthString = None, multiplicativeFactorString = None, additiveFactorString = None, date = None, bandSetNumber = None):		
+	def addFileToBandSet(self, batch = 'No', fileListString = None, wavelengthString = None, multiplicativeFactorString = None, additiveFactorString = None, date = None, bandSetNumber = None):
 		if bandSetNumber is None:
 			bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
 		tW = eval('cfg.ui.tableWidget__' + cfg.bndSetTabList[bandSetNumber])
@@ -295,7 +295,7 @@ class BandsetTab:
 				iBC = cfg.utls.getNumberBandRaster(files[0])
 			except Exception as err:
 				# logger
-				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 				cfg.mx.msgErr25()
 				return 'No'
 			if iBC > 1:
@@ -316,7 +316,7 @@ class BandsetTab:
 				iBC = cfg.utls.getNumberBandRaster(i)
 			except Exception as err:
 				# logger
-				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 				cfg.mx.msgErr25()
 				iBC = None
 				check = 'No'
@@ -362,7 +362,7 @@ class BandsetTab:
 		if satellite is not None:
 			cfg.bst.setSatelliteWavelength(satellite)
 		# logger
-		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' band set changed n. of bands' + str(c))
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' band set changed n. of bands' + str(c+1))
 			
 	# add band to band set
 	def addBandToSet(self):	
@@ -471,13 +471,13 @@ class BandsetTab:
 	def clearBandSet(self, question = 'Yes', refresh = 'Yes', bandSetNumber = None):
 		if question == 'Yes':
 			# ask for confirm
-			a = cfg.utls.questionBox(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Clear band set"), cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Are you sure you want to clear the band set?"))
+			a = cfg.utls.questionBox(cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Clear band set'), cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Are you sure you want to clear the band set?'))
 		else:
 			a = 'Yes'
 		if a == 'Yes':	
 			if bandSetNumber is None:
 				bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
-			tW = eval("cfg.ui.tableWidget__" + cfg.bndSetTabList[bandSetNumber])
+			tW = eval('cfg.ui.tableWidget__' + cfg.bndSetTabList[bandSetNumber])
 			cfg.BandTabEdited = 'No'
 			cfg.utls.clearTable(tW)
 			cfg.BandTabEdited = 'Yes'
@@ -623,13 +623,38 @@ class BandsetTab:
 			cfg.ui.Band_set_tabWidget.setCurrentIndex(index)
 		
 	# select band set tab
-	def removeBandSetTab(self, index):
+	def removeBandSetTab(self, index, unloadBands = None):
 		t = len(cfg.bndSetTabList)
 		if t > 1:
+			if unloadBands == 'Yes':
+				if cfg.bandSetsList[index][0] == 'Yes':
+					for fN in cfg.bandSetsList[index][3]:
+						try:
+							cfg.utls.removeLayer(fN)
+						except:
+							pass
+				else:	
+					try:
+						cfg.utls.removeLayer(cfg.bandSetsList[index][8])
+					except:
+						pass
 			cfg.bst.deleteBandSetTab(index)
 		else:
-			cfg.mx.msgErr62(str(index + 1))
-		
+			cfg.mx.msg24()
+			if unloadBands == 'Yes':
+				if cfg.bandSetsList[index][0] == 'Yes':
+					for fN in cfg.bandSetsList[index][3]:
+						try:
+							cfg.utls.removeLayer(fN)
+						except:
+							pass
+				else:	
+					try:
+						cfg.utls.removeLayer(cfg.bandSetsList[index][8])
+					except:
+						pass
+			cfg.bst.clearBandSet(question = 'No', refresh = 'Yes', bandSetNumber = index)
+			
 	# add band set tab
 	def addBandSetTabAction(self):
 		b = cfg.bst.addBandSetTab()
@@ -1196,11 +1221,17 @@ class BandsetTab:
 				self.removeBandsFromBandSet(bandSetNumber, r)
 
 	# select all bands for set
-	def removeBandsFromBandSet(self, bandSetNumber, bandList):
+	def removeBandsFromBandSet(self, bandSetNumber, bandList, unloadBands = None):
 		tW = eval('cfg.ui.tableWidget__' + cfg.bndSetTabList[bandSetNumber])
 		v = sorted(list(set(eval(str(bandList)))))
 		cfg.BandTabEdited = 'No'
 		for x in reversed(v):
+			if unloadBands == 'Yes':
+				fN = cfg.bandSetsList[bandSetNumber][3][x-1]
+				try:
+					cfg.utls.removeLayer(fN)
+				except:
+					pass
 			# remove items
 			tW.removeRow(int(x)-1)
 		self.readBandSet('Yes')

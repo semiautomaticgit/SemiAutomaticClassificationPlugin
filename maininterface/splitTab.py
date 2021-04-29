@@ -45,7 +45,7 @@ class SplitTab:
 	def rasterLayerName(self):
 		self.rstrLyNm = cfg.ui.raster_name_combo.currentText()
 		# logger
-		cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "raster name: " + self.rstrLyNm)
+		cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'raster name: ' + self.rstrLyNm)
 		
 	def refreshClassificationLayer(self):
 		ls = cfg.qgisCoreSCP.QgsProject.instance().mapLayers().values()
@@ -57,7 +57,7 @@ class SplitTab:
 				if l.bandCount() > 1:
 					cfg.dlg.raster_layer_combo(l.name())
 		# logger
-		cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), "raster layers refreshed")
+		cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'raster layers refreshed')
 		
 	# split raster button
 	def splitRaster(self):
@@ -69,19 +69,19 @@ class SplitTab:
 		if i > 0:
 			self.splitRasterToBands(self.rstrLyNm)
 			# logger
-			cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " split raster layer to band")
+			cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' split raster layer to band')
 		else:
 			self.refreshClassificationLayer()
 		
 	# split raster to bands
 	def splitRasterToBands(self, rasterName, batch = 'No',  inputFile = None, outputDirectory = None):
 		if batch == 'No':
-			o = cfg.utls.getExistingDirectory(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Select a directory"))
+			o = cfg.utls.getExistingDirectory(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Select a directory'))
 		else:
 			o = outputDirectory
 		outputName = cfg.ui.output_name_lineEdit.text()
 		if len(outputName) > 0:
-			outputName = str(outputName.encode('ascii','replace'))[2:-1] + "_" 
+			outputName = str(outputName.encode('ascii','replace'))[2:-1] + '_' 
 		if len(o) > 0:
 			oDir = cfg.utls.makeDirectory(o)
 			if oDir is None:
@@ -120,10 +120,10 @@ class SplitTab:
 					cfg.cnvs.setRenderFlag(True)
 					cfg.uiUtls.removeProgressBar()
 				# logger
-				cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " end split raster layer to band")
+				cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' end split raster layer to band')
 			except Exception as err:
 				# logger
-				cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 				if batch == 'No':
 					# enable map canvas render
 					cfg.cnvs.setRenderFlag(True)

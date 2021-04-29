@@ -99,6 +99,7 @@ class CrossClassification:
 			# date time for temp name
 			dT = cfg.utls.getTime()
 			if iClass is not None and l is not None:
+				cfg.utls.makeDirectory(cfg.osSCP.path.dirname(crossRstPath))
 				# if not reference shapefile
 				if l.type() != 0:
 					# check projections
