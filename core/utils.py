@@ -2954,7 +2954,8 @@ class Utils:
 	def writeRasterBlock(self, gdalRaster, bandNumber, dataArray, pixelStartColumn, pixelStartRow, nodataValue=None):
 		b = gdalRaster.GetRasterBand(bandNumber)
 		y, x = dataArray.shape
-		b.WriteRaster(pixelStartColumn, pixelStartRow, x, y, dataArray.tostring())
+		#b.WriteRaster(pixelStartColumn, pixelStartRow, x, y, dataArray.tostring())
+		b.WriteArray(dataArray, pixelStartColumn, pixelStartRow)
 		if nodataValue is not None:
 			b.SetNoDataValue(nodataValue)
 		b.FlushCache()
@@ -4762,12 +4763,10 @@ class Utils:
 								pCount = 0
 								while True:
 									pCount = pCount + 1
-									#writeOut = cfg.utls.writeRaster(wrtFile, [tLX + x*pSX, pSX, rGT[2], tLY + y*pSY, rGT[4], pSY], rP, bSX, bSY, format, oo, outputNoData, scl, offs, compress, compressFormat, dataType)
 									writeOut = cfg.utls.writeRasterNew(wrtFile, x-roX, y-roY, bSX, bSY, oo, outputNoData, scl, offs, dataType)
 									oR = cfg.gdalSCP.Open(wrtFile, cfg.gdalSCP.GA_ReadOnly)
 									bO = oR.GetRasterBand(1)
 									oo2 = cfg.utls.readArrayBlock(bO, x-roX, y-roY, bSX, bSY)
-									#oo2 = bO.ReadAsArray()
 									bO = None
 									oR = None
 									checkOO = cfg.np.allclose(oo, oo2, equal_nan=True)
@@ -4778,7 +4777,6 @@ class Utils:
 									if pCount > 3:
 										break
 							else:
-								#writeOut = cfg.utls.writeRaster(wrtFile, [tLX + x*pSX, pSX, rGT[2], tLY + y*pSY, rGT[4], pSY], rP, bSX, bSY, format, oo, outputNoData, scl, offs, compress, compressFormat, dataType)
 								# logger
 								cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'writeRasterNew compress ' + str(compress))
 								writeOut = cfg.utls.writeRasterNew(wrtFile, x-roX, y-roY, bSX, bSY, oo, outputNoData, scl, offs, dataType)
@@ -5396,78 +5394,10 @@ class Utils:
 				pass
 			cfg.utls.writeArrayBlock(r, 1, arrayFile, section[0], section[1])
 			r = None
-			
-	# write raster
-	def writeRaster(self, rasterPath, geoTransform, projection, bSX, bSY, format, dataArray, nodataValue = None, scale = None, offset = None, compress = 'No', compressFormat = 'LZW', dataType = None):
-		tD = cfg.gdalSCP.GetDriverByName('GTiff')
-		if compress == 'Yes':
-			option = ['COMPRESS=' + compressFormat]
-		else:
-			option = []
-		if dataType is not None:
-			try:
-				format = eval('cfg.gdalSCP.GDT_' + dataType)
-			except:
-				format = cfg.gdalSCP.GDT_Float32
-			if dataType == 'Float64':
-				oType = cfg.np.float64
-			elif dataType == 'Float32':
-				oType = cfg.np.float32
-			elif dataType == 'Int32':
-				oType = cfg.np.int32
-			elif dataType == 'UInt32':
-				oType = cfg.np.uint32
-			elif dataType == 'Int16':
-				oType = cfg.np.int16
-			elif dataType == 'UInt16':
-				oType = cfg.np.uint16
-			elif dataType == 'Byte':
-				oType = cfg.np.byte
-			else:
-				oType = cfg.np.float32
-		else:
-			format = cfg.gdalSCP.GDT_Float32
-			oType = cfg.np.float32
-		oR = tD.Create(rasterPath, bSX, bSY, 1, format, options = option)
-		# logger
-		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'oR write ' + str(rasterPath))
-		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'format ' + str(format))
-		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'option ' + str(option))
-		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'oType ' + str(oType))
-		# set raster projection from reference
-		oR.SetGeoTransform(geoTransform)
-		oR.SetProjection(projection)
-		bO = oR.GetRasterBand(1)
-		# logger
-		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'write bO ' + str(bO))
-		# logger
-		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'dataArray shape write ' + str(dataArray.shape) + ' type ' + str(dataArray.dtype) )
-		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' scale ' + str(scale) )
-		try:
-			# it seems a GDAL issue that if scale is float the datatype is converted to Float32
-			if scale is not None or offset is not None:
-				dataArray = cfg.np.subtract(dataArray/scale, offset/scale)
-				bO.SetScale(scale)
-				bO.SetOffset(offset)
-		except Exception as err:
-			# logger
-			cfg.utls.logToFile(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
-		if nodataValue is not None:
-			bO.SetNoDataValue(int(nodataValue))
-		try:
-			dataArray = dataArray[::, ::, 0]
-		except:
-			pass
-		r = bO.WriteRaster(0, 0, bSX, bSY, dataArray[:bSY, :bSX].astype(oType).tostring())
-		# logger
-		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'output r ' + str(r))
-		bO.FlushCache()
-		bO = None
-		oR = None
-		return rasterPath
 		
 	# write raster
 	def writeRasterNew(self, rasterPath, x, y, bSX, bSY, dataArray, nodataValue = None, scale = None, offset = None, dataType = None):
+		'''
 		if dataType is not None:
 			if dataType == 'Float64':
 				oType = cfg.np.float64
@@ -5488,6 +5418,7 @@ class Utils:
 		else:
 			oType = cfg.np.float32
 		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'oType ' + str(oType))
+		'''
 		oR = cfg.gdalSCP.Open(rasterPath, cfg.gdalSCP.GA_Update)
 		bO = oR.GetRasterBand(1)
 		# logger
@@ -5510,7 +5441,7 @@ class Utils:
 			dataArray = dataArray[::, ::, 0]
 		except:
 			pass
-		r = bO.WriteRaster(x, y, bSX, bSY, dataArray[:bSY, :bSX].astype(oType).tostring())
+		r = bO.WriteArray(dataArray, x, y)
 		# logger
 		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'output r ' + str(r))
 		bO.FlushCache()
