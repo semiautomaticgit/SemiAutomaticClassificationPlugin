@@ -523,7 +523,7 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(' ', '')
 			# input file path inside ' '
 			if pName == 'input_raster_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -532,7 +532,7 @@ class BatchTab:
 				else:
 					return 'No', pName
 			elif pName == 'input_raster_name':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0].strip()) > 0:
 					name = '\'' + g[0].strip() + '\''
@@ -540,12 +540,12 @@ class BatchTab:
 					return 'No', pName
 			elif pName == 'band_set':
 				try:
-					bandset = str(int(eval(pSplit[1].replace(' ', ''))) - 1)
+					bandset = str(int(eval(pSplit[1].strip().replace(' ', ''))) - 1)
 				except:
 					return 'No', pName
 			elif pName == 'center_wavelength':
 				try:
-					wavelength = str(float(pSplit[1].replace(' ', '')))
+					wavelength = str(float(pSplit[1].strip().replace(' ', '')))
 				except:
 					return 'No', pName
 			else:
@@ -570,7 +570,7 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(' ', '')
 			# input directory inside ' '
 			if pName == 'input_dir':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -584,7 +584,7 @@ class BatchTab:
 					return 'No', pName
 			# output directory inside ' '
 			elif pName == 'output_dir':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -595,60 +595,60 @@ class BatchTab:
 			# band set number
 			elif pName == 'band_set':
 				try:
-					bandset = str(int(eval(pSplit[1].replace(' ', ''))) - 1)
+					bandset = str(int(eval(pSplit[1].strip().replace(' ', ''))) - 1)
 				except:
 					return 'No', pName
 			# MTL file path inside ' '
 			elif pName == 'mtl_file_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				cfg.ui.label_27.setText(g[0])
 			# temperature in Celsius checkbox (1 checked or 0 unchecked)
 			elif pName == 'celsius_temperature':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.celsius_checkBox.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.celsius_checkBox.setCheckState(0)
 				else:
 					return 'No', pName
 			# DOS1 checkbox (1 checked or 0 unchecked)
 			elif pName == 'apply_dos1':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.DOS1_checkBox.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.DOS1_checkBox.setCheckState(0)
 				else:
 					return 'No', pName
 			# nodata checkbox (1 checked or 0 unchecked)
 			elif pName == 'use_nodata':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.nodata_checkBox_2.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.nodata_checkBox_2.setCheckState(0)
 				else:
 					return 'No', pName
 			# nodata value (int value)
 			elif pName == 'nodata_value':
 				try:
-					val = int(eval(pSplit[1].replace(' ', '')))
+					val = int(eval(pSplit[1].strip().replace(' ', '')))
 					cfg.ui.nodata_spinBox_3.setValue(val)
 				except:
 					return 'No', pName
 			# pansharpening checkbox (1 checked or 0 unchecked)
 			elif pName == 'pansharpening':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.pansharpening_checkBox.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.pansharpening_checkBox.setCheckState(0)
 				else:
 					return 'No', pName
 			# bandset checkbox (1 checked or 0 unchecked)
 			elif pName == 'create_bandset':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.create_bandset_checkBox.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.create_bandset_checkBox.setCheckState(0)
 				else:
 					return 'No', pName
@@ -680,7 +680,7 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(' ', '')
 			# input file inside ' '
 			if pName == 'input_raster_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -694,7 +694,7 @@ class BatchTab:
 					return 'No', pName
 			# output directory inside ' '
 			elif pName == 'output_dir':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -705,45 +705,45 @@ class BatchTab:
 			# band set number
 			elif pName == 'band_set':
 				try:
-					bandset = str(int(eval(pSplit[1].replace(' ', ''))) - 1)
+					bandset = str(int(eval(pSplit[1].strip().replace(' ', ''))) - 1)
 				except:
 					return 'No', pName
 			# temperature in Celsius checkbox (1 checked or 0 unchecked)
 			elif pName == 'celsius_temperature':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.celsius_checkBox_2.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.celsius_checkBox_2.setCheckState(0)
 				else:
 					return 'No', pName
 			# DOS1 checkbox (1 checked or 0 unchecked)
 			elif pName == 'apply_dos1':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.DOS1_checkBox_2.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.DOS1_checkBox_2.setCheckState(0)
 				else:
 					return 'No', pName
 			# nodata checkbox (1 checked or 0 unchecked)
 			elif pName == 'use_nodata':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.nodata_checkBox_5.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.nodata_checkBox_5.setCheckState(0)
 				else:
 					return 'No', pName
 			# nodata value (int value)
 			elif pName == 'nodata_value':
 				try:
-					val = int(eval(pSplit[1].replace(' ', '')))
+					val = int(eval(pSplit[1].strip().replace(' ', '')))
 					cfg.ui.nodata_spinBox_6.setValue(val)
 				except:
 					return 'No', pName
 			# bandset checkbox (1 checked or 0 unchecked)
 			elif pName == 'create_bandset':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.create_bandset_checkBox_2.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.create_bandset_checkBox_2.setCheckState(0)
 				else:
 					return 'No', pName
@@ -775,7 +775,7 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(' ', '')
 			# input file inside ' '
 			if pName == 'input_raster_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -789,7 +789,7 @@ class BatchTab:
 					return 'No', pName
 			# output directory inside ' '
 			elif pName == 'output_dir':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -800,37 +800,37 @@ class BatchTab:
 			# band set number
 			elif pName == 'band_set':
 				try:
-					bandset = str(int(eval(pSplit[1].replace(' ', ''))) - 1)
+					bandset = str(int(eval(pSplit[1].strip().replace(' ', ''))) - 1)
 				except:
 					return 'No', pName
 			# reproject to WGS 84 checkbox (1 checked or 0 unchecked)
 			elif pName == 'reproject_wgs84':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.reproject_modis_checkBox.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.reproject_modis_checkBox.setCheckState(0)
 				else:
 					return 'No', pName
 			# nodata checkbox (1 checked or 0 unchecked)
 			elif pName == 'use_nodata':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.nodata_checkBox_7.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.nodata_checkBox_7.setCheckState(0)
 				else:
 					return 'No', pName
 			# nodata value (int value)
 			elif pName == 'nodata_value':
 				try:
-					val = int(eval(pSplit[1].replace(' ', '')))
+					val = int(eval(pSplit[1].strip().replace(' ', '')))
 					cfg.ui.nodata_spinBox_8.setValue(val)
 				except:
 					return 'No', pName
 			# bandset checkbox (1 checked or 0 unchecked)
 			elif pName == 'create_bandset':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.create_bandset_checkBox_3.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.create_bandset_checkBox_3.setCheckState(0)
 				else:
 					return 'No', pName
@@ -862,7 +862,7 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(' ', '')
 			# input directory inside ' '
 			if pName == 'input_raster_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -873,7 +873,7 @@ class BatchTab:
 					return 'No', pName
 			# output directory inside ' '
 			elif pName == 'output_dir':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -884,75 +884,75 @@ class BatchTab:
 			# band set number
 			elif pName == 'band_set':
 				try:
-					bandset = str(int(eval(pSplit[1].replace(' ', ''))) - 1)
+					bandset = str(int(eval(pSplit[1].strip().replace(' ', ''))) - 1)
 				except:
 					return 'No', pName
 			# xml graph file path inside ' '
 			elif pName == 'xml_file_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				cfg.ui.S2_label_94.setText(g[0])
 			# VH polarization checkbox (1 checked or 0 unchecked)
 			elif pName == 'vh':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.VH_checkBox_S1.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.VH_checkBox_S1.setCheckState(0)
 				else:
 					return 'No', pName
 			# VV polarization checkbox (1 checked or 0 unchecked)
 			elif pName == 'vv':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.VV_checkBox_S1.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.VV_checkBox_S1.setCheckState(0)
 				else:
 					return 'No', pName
 			# raster conversion to dB
 			elif pName == 'convert_to_db':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.convert_to_db_checkBox.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.convert_to_db_checkBox.setCheckState(0)
 				else:
 					return 'No', pName
 			# raster projection as band set
 			elif pName == 'raster_project':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.projection_checkBox_S1.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.projection_checkBox_S1.setCheckState(0)
 				else:
 					return 'No', pName
 			# band set number
 			elif pName == 'raster_projections_band_set':
 				try:
-					val = int(eval(pSplit[1].replace(' ', '')))
+					val = int(eval(pSplit[1].strip().replace(' ', '')))
 					cfg.ui.band_set_comb_spinBox_11.setValue(val)
 				except:
 					return 'No', pName
 			# nodata checkbox (1 checked or 0 unchecked)
 			elif pName == 'use_nodata':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.S1_nodata_checkBox.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.S1_nodata_checkBox.setCheckState(0)
 				else:
 					return 'No', pName
 			# nodata value (int value)
 			elif pName == 'nodata_value':
 				try:
-					val = int(eval(pSplit[1].replace(' ', '')))
+					val = int(eval(pSplit[1].strip().replace(' ', '')))
 					cfg.ui.S1_nodata_spinBox.setValue(val)
 				except:
 					return 'No', pName
 			# bandset checkbox (1 checked or 0 unchecked)
 			elif pName == 'create_bandset':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.S1_create_bandset_checkBox.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.S1_create_bandset_checkBox.setCheckState(0)
 				else:
 					return 'No', pName
@@ -982,7 +982,7 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(' ', '')
 			# input directory inside ' '
 			if pName == 'input_dir':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -996,7 +996,7 @@ class BatchTab:
 					return 'No', pName
 			# output directory inside ' '
 			elif pName == 'output_dir':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -1007,52 +1007,52 @@ class BatchTab:
 			# band set number
 			elif pName == 'band_set':
 				try:
-					bandset = str(int(eval(pSplit[1].replace(' ', '')) - 1))
+					bandset = str(int(eval(pSplit[1].strip().replace(' ', '')) - 1))
 				except:
 					return 'No', pName
 			# MTD_SAFL1C file path inside ' '
 			elif pName == 'mtd_safl1c_file_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				cfg.ui.S2_label_94.setText(g[0])
 			# DOS1 checkbox (1 checked or 0 unchecked)
 			elif pName == 'apply_dos1':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.DOS1_checkBox_S2.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.DOS1_checkBox_S2.setCheckState(0)
 				else:
 					return 'No', pName
 			# nodata checkbox (1 checked or 0 unchecked)
 			elif pName == 'use_nodata':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.S2_nodata_checkBox.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.S2_nodata_checkBox.setCheckState(0)
 				else:
 					return 'No', pName
 			# preprocess bands 1 9 10
 			elif pName == 'preprocess_bands_1_9_10':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.preprocess_b_1_9_10_checkBox.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.preprocess_b_1_9_10_checkBox.setCheckState(0)
 				else:
 					return 'No', pName
 			# nodata value (int value)
 			elif pName == 'nodata_value':
 				try:
-					val = int(eval(pSplit[1].replace(' ', '')))
+					val = int(eval(pSplit[1].strip().replace(' ', '')))
 					cfg.ui.S2_nodata_spinBox.setValue(val)
 				except:
 					return 'No', pName
 			# bandset checkbox (1 checked or 0 unchecked)
 			elif pName == 'create_bandset':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.S2_create_bandset_checkBox.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.S2_create_bandset_checkBox.setCheckState(0)
 				else:
 					return 'No', pName
@@ -1084,7 +1084,7 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(' ', '')
 			# input directory inside ' '
 			if pName == 'input_dir':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -1098,7 +1098,7 @@ class BatchTab:
 					return 'No', pName
 			# output directory inside ' '
 			elif pName == 'output_dir':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -1109,37 +1109,37 @@ class BatchTab:
 			# band set number
 			elif pName == 'band_set':
 				try:
-					bandset = str(int(eval(pSplit[1].replace(' ', ''))) - 1)
+					bandset = str(int(eval(pSplit[1].strip().replace(' ', ''))) - 1)
 				except:
 					return 'No', pName
 			# DOS1 checkbox (1 checked or 0 unchecked)
 			elif pName == 'apply_dos1':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.DOS1_checkBox_S3.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.DOS1_checkBox_S3.setCheckState(0)
 				else:
 					return 'No', pName
 			# nodata checkbox (1 checked or 0 unchecked)
 			elif pName == 'use_nodata':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.S3_nodata_checkBox.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.S3_nodata_checkBox.setCheckState(0)
 				else:
 					return 'No', pName
 			# nodata value (int value)
 			elif pName == 'nodata_value':
 				try:
-					val = int(eval(pSplit[1].replace(' ', '')))
+					val = int(eval(pSplit[1].strip().replace(' ', '')))
 					cfg.ui.S2_nodata_spinBox_2.setValue(val)
 				except:
 					return 'No', pName
 			# bandset checkbox (1 checked or 0 unchecked)
 			elif pName == 'create_bandset':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.S3_create_bandset_checkBox.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.S3_create_bandset_checkBox.setCheckState(0)
 				else:
 					return 'No', pName
@@ -1171,7 +1171,7 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(' ', '')
 			# input directory inside ' '
 			if pName == 'input_dir':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -1185,7 +1185,7 @@ class BatchTab:
 					return 'No', pName
 			# output directory inside ' '
 			elif pName == 'output_dir':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -1196,29 +1196,29 @@ class BatchTab:
 			# band set number
 			elif pName == 'band_set':
 				try:
-					bandset = str(int(eval(pSplit[1].replace(' ', ''))) - 1)
+					bandset = str(int(eval(pSplit[1].strip().replace(' ', ''))) - 1)
 				except:
 					return 'No', pName
 			# nodata checkbox (1 checked or 0 unchecked)
 			elif pName == 'use_nodata':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.GOES_nodata_checkBox.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.GOES_nodata_checkBox.setCheckState(0)
 				else:
 					return 'No', pName
 			# nodata value (int value)
 			elif pName == 'nodata_value':
 				try:
-					val = int(eval(pSplit[1].replace(' ', '')))
+					val = int(eval(pSplit[1].strip().replace(' ', '')))
 					cfg.ui.GOES_nodata_spinBox.setValue(val)
 				except:
 					return 'No', pName
 			# bandset checkbox (1 checked or 0 unchecked)
 			elif pName == 'create_bandset':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.GOES_create_bandset_checkBox.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.GOES_create_bandset_checkBox.setCheckState(0)
 				else:
 					return 'No', pName
@@ -1258,7 +1258,7 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(' ', '')
 			# output classification inside ' '
 			if pName == 'output_classification_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -1268,53 +1268,53 @@ class BatchTab:
 					return 'No', pName
 			# use macroclass checkbox (1 checked or 0 unchecked)
 			elif pName == 'use_macroclass':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					useMacroclass = '\'Yes\''
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					useMacroclass = '\'No\''
 				else:
 					return 'No', pName
 			# band set number
 			elif pName == 'band_set':
 				try:
-					bandset = str(int(eval(pSplit[1].replace(' ', ''))) - 1)
+					bandset = str(int(eval(pSplit[1].strip().replace(' ', ''))) - 1)
 				except:
 					return 'No', pName
 			# use LCS checkbox (1 checked or 0 unchecked)
 			elif pName == 'use_lcs':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					useLcs = '\'Yes\''
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					useLcs = '\'No\''
 				else:
 					return 'No', pName
 			# use LCS with algorithm checkbox (1 checked or 0 unchecked)
 			elif pName == 'use_lcs_algorithm':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					useLcsAlgorithm = '\'Yes\''
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					useLcsAlgorithm = '\'No\''
 				else:
 					return 'No', pName
 			# use LCS only overlap checkbox (1 checked or 0 unchecked)
 			elif pName == 'use_lcs_only_overlap':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					useLcsOnlyOverlap = '\'Yes\''
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					useLcsOnlyOverlap = '\'No\''
 				else:
 					return 'No', pName
 			# apply mask checkbox (1 checked or 0 unchecked)
 			elif pName == 'apply_mask':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					maskCheckBox = '\'Yes\''
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					maskCheckBox = '\'No\''
 				else:
 					return 'No', pName
 			# mask file path inside ' '
 			elif pName == 'mask_file_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -1324,32 +1324,32 @@ class BatchTab:
 					return 'No', pName
 			# vector output checkbox (1 checked or 0 unchecked)
 			elif pName == 'vector_output':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					vectorOutput = '\'Yes\''
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					vectorOutput = '\'No\''
 				else:
 					return 'No', pName
 			# classification report checkbox (1 checked or 0 unchecked)
 			elif pName == 'classification_report':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					reportCheckBox = '\'Yes\''
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					reportCheckBox = '\'No\''
 				else:
 					return 'No', pName
 			# save algorithm files checkbox (1 checked or 0 unchecked)
 			elif pName == 'save_algorithm_files':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					algFiles = '\'Yes\''
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					algFiles = '\'No\''
 				else:
 					return 'No', pName
 			# algorithm name 'Minimum Distance' 'Maximum Likelihood' 'Spectral Angle Mapping'
 			elif pName == 'algorithm_name':
 				aL = [cfg.algMinDist, cfg.algML, cfg.algSAM]
-				a = pSplit[1].strip().replace('\'', '')
+				a = pSplit[1].strip().strip().replace('\'', '')
 				if a in aL:
 					algorithm =  '\'' + a + '\''
 				else:
@@ -1391,7 +1391,7 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(' ', '')
 			# output classification inside ' '
 			if pName == 'output_classification_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -1401,62 +1401,62 @@ class BatchTab:
 					return 'No', pName
 			# use macroclass checkbox (1 checked or 0 unchecked)
 			elif pName == 'use_macroclass':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.macroclass_checkBox_rf.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.macroclass_checkBox_rf.setCheckState(0)
 				else:
 					return 'No', pName
 			# band set number
 			elif pName == 'band_set':
 				try:
-					bandset = str(int(eval(pSplit[1].replace(' ', ''))) - 1)
+					bandset = str(int(eval(pSplit[1].strip().replace(' ', ''))) - 1)
 				except:
 					return 'No', pName
 			# number of training samples
 			elif pName == 'number_training_samples':
 				try:
-					numberTrainingSamples = str(int(eval(pSplit[1].replace(' ', ''))))
+					numberTrainingSamples = str(int(eval(pSplit[1].strip().replace(' ', ''))))
 				except:
 					return 'No', pName
 			# number of training samples
 			elif pName == 'number_trees':
 				try:
-					treeCount = str(int(eval(pSplit[1].replace(' ', ''))))
+					treeCount = str(int(eval(pSplit[1].strip().replace(' ', ''))))
 				except:
 					return 'No', pName
 			# evaluate classifier (1 checked or 0 unchecked)
 			elif pName == 'evaluate_classifier':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					evalClassifier = '\'true\''
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					evalClassifier = '\'false\''
 				else:
 					return 'No', pName
 			# evaluate feature power set (1 checked or 0 unchecked)
 			elif pName == 'evaluate_feature_power_set':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					evalFeaturePowerSet = '\'true\''
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					evalFeaturePowerSet = '\'false\''
 				else:
 					return 'No', pName
 			# min power
 			elif pName == 'min_power':
 				try:
-					minPowerSize = str(int(eval(pSplit[1].replace(' ', ''))))
+					minPowerSize = str(int(eval(pSplit[1].strip().replace(' ', ''))))
 				except:
 					return 'No', pName
 			# max power
 			elif pName == 'max_power':
 				try:
-					maxPowerSize = str(int(eval(pSplit[1].replace(' ', ''))))
+					maxPowerSize = str(int(eval(pSplit[1].strip().replace(' ', ''))))
 				except:
 					return 'No', pName
 					
 			# classifier file path inside ' '
 			elif pName == 'classifier_file_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -1467,9 +1467,9 @@ class BatchTab:
 					return 'No', pName
 			# save classifier checkbox (1 checked or 0 unchecked)
 			elif pName == 'save_classifier':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					saveClassifier = '\'Yes\''
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					saveClassifier = '\'No\''
 				else:
 					return 'No', pName
@@ -1499,7 +1499,7 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(' ', '')
 			# input file path inside ' ' separated by ,
 			if pName == 'raster_path_list':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -1510,17 +1510,17 @@ class BatchTab:
 					return 'No', pName
 			#  wavelength unit 0=number 1=u'µm (1 E-6m)' 2='nm (1 E-9m)'
 			elif pName == 'wavelength_unit':
-				if pSplit[1].replace(' ', '') == '0':
+				if pSplit[1].strip().replace(' ', '') == '0':
 					noUnitId = cfg.ui.unit_combo.findText(cfg.wlMicro)
 					cfg.ui.unit_combo.setCurrentIndex(noUnitId)
 					id = cfg.ui.unit_combo.findText(cfg.noUnit)
 					cfg.ui.unit_combo.setCurrentIndex(id)
-				elif pSplit[1].replace(' ', '') == '1':
+				elif pSplit[1].strip().replace(' ', '') == '1':
 					noUnitId = cfg.ui.unit_combo.findText(cfg.noUnit)
 					cfg.ui.unit_combo.setCurrentIndex(noUnitId)
 					id = cfg.ui.unit_combo.findText(cfg.wlMicro)
 					cfg.ui.unit_combo.setCurrentIndex(id)
-				elif pSplit[1].replace(' ', '') == '2':
+				elif pSplit[1].strip().replace(' ', '') == '2':
 					noUnitId = cfg.ui.unit_combo.findText(cfg.noUnit)
 					cfg.ui.unit_combo.setCurrentIndex(noUnitId)
 					id = cfg.ui.unit_combo.findText(cfg.wlNano)
@@ -1529,7 +1529,7 @@ class BatchTab:
 					return 'No', pName
 			# center wavelength inside ' ' separated by ,
 			elif pName == 'center_wavelength':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				center_wavelength = g[0]
 				if len(center_wavelength) > 0:
@@ -1538,7 +1538,7 @@ class BatchTab:
 					return 'No', pName
 			# multiplicative factor inside ' ' separated by ,
 			elif pName == 'multiplicative_factor':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				multiplicative_factor = g[0]
 				if len(multiplicative_factor) > 0:
@@ -1547,7 +1547,7 @@ class BatchTab:
 					return 'No', pName
 			# additive factor inside ' ' separated by ,
 			elif pName == 'additive_factor':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				additive_factor = g[0]
 				if len(additive_factor) > 0:
@@ -1556,7 +1556,7 @@ class BatchTab:
 					return 'No', pName
 			# date in format %Y-%m-%d
 			elif pName == 'date':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				date = g[0]
 				if len(date) > 0:
@@ -1599,7 +1599,7 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(' ', '')
 			if pName == 'band_set':
 				try:
-					bandset = str(int(eval(pSplit[1].replace(' ', ''))) - 1)
+					bandset = str(int(eval(pSplit[1].strip().replace(' ', ''))) - 1)
 				except:
 					return 'No', pName
 			else:
@@ -1621,14 +1621,14 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(' ', '')
 			if pName == 'band_set':
 				try:
-					bandset = str(int(eval(pSplit[1].replace(' ', ''))) - 1)
+					bandset = str(int(eval(pSplit[1].strip().replace(' ', ''))) - 1)
 				except:
 					return 'No', pName
 			# unload bands (1 checked or 0 unchecked)
 			elif pName == 'unload_bands':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					unload = '\'Yes\''
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					unload = '\'No\''
 				else:
 					return 'No', pName
@@ -1652,12 +1652,12 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(' ', '')
 			if pName == 'band_set':
 				try:
-					bandset = str(int(eval(pSplit[1].replace(' ', ''))) - 1)
+					bandset = str(int(eval(pSplit[1].strip().replace(' ', ''))) - 1)
 				except:
 					return 'No', pName
 			# band set list ' ' separated by ,
 			elif pName == 'band_list':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				band_list = g[0]
 				if len(band_list) > 0:
@@ -1666,9 +1666,9 @@ class BatchTab:
 					return 'No', pName
 			# unload bands (1 checked or 0 unchecked)
 			elif pName == 'unload_bands':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					unload = '\'Yes\''
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					unload = '\'No\''
 				else:
 					return 'No', pName
@@ -1693,7 +1693,7 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(' ', '')
 			if pName == 'band_set':
 				try:
-					bandset = str(int(eval(pSplit[1].replace(' ', ''))))
+					bandset = str(int(eval(pSplit[1].strip().replace(' ', ''))))
 				except:
 					return 'No', pName
 			else:
@@ -1711,12 +1711,12 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(' ', '')
 			if pName == 'band_set':
 				try:
-					bandset = str(int(eval(pSplit[1].replace(' ', ''))) - 1)
+					bandset = str(int(eval(pSplit[1].strip().replace(' ', ''))) - 1)
 				except:
 					return 'No', pName
 			# output file path inside ' '
 			elif pName == 'output_raster_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -1745,7 +1745,7 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(' ', '')
 			# input file path inside ' '
 			if pName == 'input_raster_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -1756,7 +1756,7 @@ class BatchTab:
 					return 'No', pName
 			# output directory inside ' '
 			elif pName == 'output_dir':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -1766,7 +1766,7 @@ class BatchTab:
 					return 'No', pName
 			# output name prefix inside ' '
 			elif pName == 'output_name_prefix':
-				g = pSplit[1].replace('\'', '')
+				g = pSplit[1].strip().replace('\'', '')
 				if len(g) > 0:
 					cfg.ui.output_name_lineEdit.setText(g)
 				else:
@@ -1795,7 +1795,7 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(' ', '')
 			# output directory inside ' '
 			if pName == 'output_dir':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -1805,7 +1805,7 @@ class BatchTab:
 					return 'No', pName
 			# output name prefix inside ' '
 			elif pName == 'output_name_prefix':
-				g = pSplit[1].replace('\'', '')
+				g = pSplit[1].strip().replace('\'', '')
 				if len(g) > 0:
 					cfg.ui.mosaic_output_name_lineEdit.setText(g)
 				else:
@@ -1813,7 +1813,7 @@ class BatchTab:
 					return 'No', pName
 			# band set list ' ' separated by ,
 			elif pName == 'band_set_list':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				band_set_list = g[0]
 				if len(band_set_list) > 0:
@@ -1825,24 +1825,24 @@ class BatchTab:
 					return 'No', pName
 			# nodata checkbox (1 checked or 0 unchecked)
 			elif pName == 'use_nodata':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.nodata_checkBox_9.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.nodata_checkBox_9.setCheckState(0)
 				else:
 					return 'No', pName
 			# nodata value (int value)
 			elif pName == 'nodata_value':
 				try:
-					val = int(eval(pSplit[1].replace(' ', '')))
+					val = int(eval(pSplit[1].strip().replace(' ', '')))
 					cfg.ui.nodata_spinBox_10.setValue(val)
 				except:
 					return 'No', pName
 			# virtual output checkbox (1 checked or 0 unchecked)
 			elif pName == 'virtual_output':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					virtual = '\'Yes\''
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					virtual = '\'No\''
 				else:
 					return 'No', pName
@@ -1872,7 +1872,7 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(' ', '')
 			# output directory inside ' '
 			if pName == 'output_dir':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -1882,7 +1882,7 @@ class BatchTab:
 					return 'No', pName
 			# output name prefix inside ' '
 			elif pName == 'output_name_prefix':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				namePrefix = '\'' + g[0] + '\''
 				if len(cfg.utls.fileName(g[0])) > 0:
@@ -1892,12 +1892,12 @@ class BatchTab:
 			# band set number
 			elif pName == 'band_set':
 				try:
-					bandset = str(int(eval(pSplit[1].replace(' ', ''))) - 1)
+					bandset = str(int(eval(pSplit[1].strip().replace(' ', ''))) - 1)
 				except:
 					return 'No', pName
 			# input file path inside ' '
 			elif pName == 'matrix_file_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -1909,12 +1909,12 @@ class BatchTab:
 			# matrix size (int value)
 			elif pName == 'matrix_size':
 				try:
-					matrixSize = str(int(eval(pSplit[1].replace(' ', ''))))
+					matrixSize = str(int(eval(pSplit[1].strip().replace(' ', ''))))
 				except:
 					return 'No', pName
 			# statistic name inside ' '
 			elif pName == 'statistic':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					statName = None
@@ -1929,7 +1929,7 @@ class BatchTab:
 			# stat value (int value)
 			elif pName == 'stat_value':
 				try:
-					statPerc = int(eval(pSplit[1].replace(' ', '')))
+					statPerc = int(eval(pSplit[1].strip().replace(' ', '')))
 				except:
 					return 'No', pName
 			else:
@@ -1970,14 +1970,14 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(' ', '')
 			# expression inside ' '
 			if pName == 'expression':
-				g = pSplit[1].replace('!!', ';')
+				g = pSplit[1].strip().replace('!!', ';')
 				if len(g) > 2:
 					expr = g
 				else:
 					return 'No', pName
 			# output file path inside ' '
 			elif pName == 'output_raster_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -1988,7 +1988,7 @@ class BatchTab:
 					return 'No', pName
 			# extent same as raster name inside ' '
 			elif pName == 'extent_same_as_raster_name':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				extentRaster = '\'' + g[0] + '\''
 				if len(g[0]) > 0:
@@ -1997,61 +1997,61 @@ class BatchTab:
 					return 'No', pName
 			# extent checkbox (1 checked or 0 unchecked)
 			elif pName == 'extent_intersection':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					extentIntersection = '\'Yes\''
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					extentIntersection = '\'No\''
 				else:
 					return 'No', pName
 			# align checkbox (1 checked or 0 unchecked)
 			elif pName == 'align':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					align = '\'Yes\''
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					align = '\'No\''
 				else:
 					return 'No', pName
 			# band set number
 			elif pName == 'band_set':
 				try:
-					bandset = str(int(eval(pSplit[1].replace(' ', ''))) - 1)
+					bandset = str(int(eval(pSplit[1].strip().replace(' ', ''))) - 1)
 				except:
 					return 'No', pName
 			# nodata as value checkbox (1 checked or 0 unchecked)
 			elif pName == 'input_nodata_as_value':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					inputNodataAsValue = '\'Yes\''
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					inputNodataAsValue = '\'No\''
 				else:
 					return 'No', pName
 			# nodata value (int value)
 			elif pName == 'use_value_nodata':
 				try:
-					useValueNoData = str(int(eval(pSplit[1].replace(' ', ''))))
+					useValueNoData = str(int(eval(pSplit[1].strip().replace(' ', ''))))
 				except:
 					return 'No', pName
 			# nodata value (int value)
 			elif pName == 'output_nodata_value':
 				try:
-					outputNoData = int(eval(pSplit[1].replace(' ', '')))
+					outputNoData = int(eval(pSplit[1].strip().replace(' ', '')))
 				except:
 					return 'No', pName
 			# scale value (float value)
 			elif pName == 'scale_value':
 				try:
-					scaleValue = str(float(pSplit[1].replace(' ', '')))
+					scaleValue = str(float(pSplit[1].strip().replace(' ', '')))
 				except:
 					return 'No', pName
 			# offset value (float value)
 			elif pName == 'offset_value':
 				try:
-					offsetValue = str(float(pSplit[1].replace(' ', '')))
+					offsetValue = str(float(pSplit[1].strip().replace(' ', '')))
 				except:
 					return 'No', pName
 			# data type prefix inside ' '
 			elif pName == 'data_type':
-				g = pSplit[1].replace('\'', '')
+				g = pSplit[1].strip().replace('\'', '')
 				if len(g) > 0:
 					dataType = '\'' + g + '\''
 				else:
@@ -2093,7 +2093,7 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(' ', '')
 			# output directory inside ' '
 			if pName == 'output_dir':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -2103,7 +2103,7 @@ class BatchTab:
 					return 'No', pName
 			# output name prefix inside ' '
 			elif pName == 'output_name_prefix':
-				g = pSplit[1].replace('\'', '')
+				g = pSplit[1].strip().replace('\'', '')
 				if len(g) > 0:
 					cfg.ui.output_clip_name_lineEdit.setText(g)
 				else:
@@ -2112,28 +2112,28 @@ class BatchTab:
 			# band set number
 			elif pName == 'band_set':
 				try:
-					bandset = str(int(eval(pSplit[1].replace(' ', ''))) - 1)
+					bandset = str(int(eval(pSplit[1].strip().replace(' ', ''))) - 1)
 				except:
 					return 'No', pName
 			# use vector checkbox (1 checked or 0 unchecked)
 			elif pName == 'use_vector':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.shapefile_checkBox.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.shapefile_checkBox.setCheckState(0)
 				else:
 					return 'No', pName
 			# use vector field checkbox (1 checked or 0 unchecked)
 			elif pName == 'use_vector_field':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.vector_field_checkBox.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.vector_field_checkBox.setCheckState(0)
 				else:
 					return 'No', pName
 			# vector path inside ' '
 			elif pName == 'vector_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -2143,7 +2143,7 @@ class BatchTab:
 					return 'No', pName
 			# vector field inside ' '
 			elif pName == 'vector_field':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -2153,7 +2153,7 @@ class BatchTab:
 					return 'No', pName
 			# ul_x inside ' '
 			elif pName == 'ul_x':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					cfg.ui.UX_lineEdit.setText(g[0])
@@ -2162,7 +2162,7 @@ class BatchTab:
 					return 'No', pName
 			# ul_y inside ' '
 			elif pName == 'ul_y':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					cfg.ui.UY_lineEdit.setText(g[0])
@@ -2171,7 +2171,7 @@ class BatchTab:
 					return 'No', pName
 			# lr_x inside ' '
 			elif pName == 'lr_x':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					cfg.ui.LX_lineEdit.setText(g[0])
@@ -2180,7 +2180,7 @@ class BatchTab:
 					return 'No', pName
 			# lr_y inside ' '
 			elif pName == 'lr_y':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					cfg.ui.LY_lineEdit.setText(g[0])
@@ -2190,7 +2190,7 @@ class BatchTab:
 			# nodata value (int value)
 			elif pName == 'nodata_value':
 				try:
-					val = int(eval(pSplit[1].replace(' ', '')))
+					val = int(eval(pSplit[1].strip().replace(' ', '')))
 					cfg.ui.nodata_spinBox.setValue(val)
 				except:
 					return 'No', pName
@@ -2227,7 +2227,7 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(' ', '')
 			# output directory inside ' '
 			if pName == 'output_dir':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -2237,21 +2237,21 @@ class BatchTab:
 					return 'No', pName
 			# output name prefix inside ' '
 			elif pName == 'output_name_prefix':
-				g = pSplit[1].replace('\'', '')
+				g = pSplit[1].strip().replace('\'', '')
 				if len(g) > 0:
 					outName = '\'' + g[0] + '\''
 				else:
 					return 'No', pName
 			# resampling method inside ' '
 			elif pName == 'resampling_method':
-				g = pSplit[1].replace('\'', '')
+				g = pSplit[1].strip().replace('\'', '')
 				if g in resampling_methods:
 					resamplingMethod = '\'' + g + '\''
 				else:
 					return 'No', pName
 			# data type prefix inside ' '
 			elif pName == 'data_type':
-				g = pSplit[1].replace('\'', '')
+				g = pSplit[1].strip().replace('\'', '')
 				if len(g) > 0:
 					dataType = '\'' + g + '\''
 				else:
@@ -2259,20 +2259,20 @@ class BatchTab:
 			# band set number
 			elif pName == 'band_set':
 				try:
-					bandset = str(int(eval(pSplit[1].replace(' ', ''))) - 1)
+					bandset = str(int(eval(pSplit[1].strip().replace(' ', ''))) - 1)
 				except:
 					return 'No', pName
 			# use extent checkbox (1 checked or 0 unchecked)
 			elif pName == 'same_extent_reference':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					sameExtent = '\'Yes\''
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					sameExtent = '\'No\''
 				else:
 					return 'No', pName
 			# raster path inside ' '
 			elif pName == 'align_raster_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -2282,7 +2282,7 @@ class BatchTab:
 					return 'No', pName
 			# epsg  inside ' '
 			elif pName == 'epsg':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					epsgVal = '\'' + g[0] + '\''
@@ -2290,7 +2290,7 @@ class BatchTab:
 					return 'No', pName
 			# epsg  inside ' '
 			elif pName == 'resample_pixel_size':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					resamplePixelSize = '\'' + g[0] + '\''
@@ -2298,7 +2298,7 @@ class BatchTab:
 					return 'No', pName
 			# x resolution  inside ' '
 			elif pName == 'x_resolution':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					xresolution = '\'' + g[0] + '\''
@@ -2307,12 +2307,12 @@ class BatchTab:
 			# nodata value (int value)
 			elif pName == 'output_nodata_value':
 				try:
-					outputNoData = int(eval(pSplit[1].replace(' ', '')))
+					outputNoData = int(eval(pSplit[1].strip().replace(' ', '')))
 				except:
 					return 'No', pName
 			# y resolution  inside ' '
 			elif pName == 'y_resolution':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					yresolution = '\'' + g[0] + '\''
@@ -2352,7 +2352,7 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(' ', '')
 			# output directory inside ' '
 			if pName == 'output_dir':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -2362,7 +2362,7 @@ class BatchTab:
 					return 'No', pName
 			# output name prefix inside ' '
 			elif pName == 'output_name_prefix':
-				g = pSplit[1].replace('\'', '')
+				g = pSplit[1].strip().replace('\'', '')
 				if len(g) > 0:
 					cfg.ui.mask_output_name_lineEdit.setText(g)
 				else:
@@ -2371,34 +2371,34 @@ class BatchTab:
 			# band set number
 			elif pName == 'band_set':
 				try:
-					bandset = str(int(eval(pSplit[1].replace(' ', ''))) - 1)
+					bandset = str(int(eval(pSplit[1].strip().replace(' ', ''))) - 1)
 				except:
 					return 'No', pName
 			# use buffer checkbox (1 checked or 0 unchecked)
 			elif pName == 'use_buffer':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.cloud_buffer_checkBox.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.cloud_buffer_checkBox.setCheckState(0)
 				else:
 					return 'No', pName
 			# size buffer value (int value)
 			elif pName == 'size_in_pixels':
 				try:
-					val = int(eval(pSplit[1].replace(' ', '')))
+					val = int(eval(pSplit[1].strip().replace(' ', '')))
 					cfg.ui.cloud_buffer_spinBox.setValue(val)
 				except:
 					return 'No', pName
 			# nodata value (int value)
 			elif pName == 'nodata_value':
 				try:
-					val = int(eval(pSplit[1].replace(' ', '')))
+					val = int(eval(pSplit[1].strip().replace(' ', '')))
 					cfg.ui.nodata_spinBox_11.setValue(val)
 				except:
 					return 'No', pName
 			# input file path inside ' '
 			elif pName == 'input_raster_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -2409,7 +2409,7 @@ class BatchTab:
 					return 'No', pName
 			# class values inside ' '
 			elif pName == 'class_values':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					cfg.ui.cloud_mask_classes_lineEdit.setText(g[0])
@@ -2439,7 +2439,7 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(' ', '')
 			# output raster inside ' '
 			if pName == 'output_raster_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -2451,37 +2451,37 @@ class BatchTab:
 			# band set number
 			elif pName == 'first_band_set':
 				try:
-					bandset1 = str(int(eval(pSplit[1].replace(' ', ''))) - 1)
+					bandset1 = str(int(eval(pSplit[1].strip().replace(' ', ''))) - 1)
 				except:
 					return 'No', pName
 			# band set number
 			elif pName == 'second_band_set':
 				try:
-					bandset2 = str(int(eval(pSplit[1].replace(' ', ''))) - 1)
+					bandset2 = str(int(eval(pSplit[1].strip().replace(' ', ''))) - 1)
 				except:
 					return 'No', pName
 			# method (1 minimum distance, 2 SAM)
 			elif pName == 'distance_algorithm':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.min_distance_radioButton_2.setChecked(True)
 					cfg.ui.spectral_angle_map_radioButton_2.setChecked(False)
-				elif pSplit[1].replace(' ', '') == '2':
+				elif pSplit[1].strip().replace(' ', '') == '2':
 					cfg.ui.min_distance_radioButton_2.setChecked(False)
 					cfg.ui.spectral_angle_map_radioButton_2.setChecked(True)
 				else:
 					return 'No', pName
 			# threshold checkbox (1 checked or 0 unchecked)
 			elif pName == 'use_distance_threshold':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.distance_threshold_checkBox.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.distance_threshold_checkBox.setCheckState(0)
 				else:
 					return 'No', pName
 			# threshold value (float value)
 			elif pName == 'threshold_value':
 				try:
-					val = float(pSplit[1].replace(' ', ''))
+					val = float(pSplit[1].strip().replace(' ', ''))
 					cfg.ui.thresh_doubleSpinBox_2.setValue(val)
 				except:
 					return 'No', pName
@@ -2508,12 +2508,12 @@ class BatchTab:
 			# band set number
 			if pName == 'band_set':
 				try:
-					bandset = str(int(eval(pSplit[1].replace(' ', ''))) - 1)
+					bandset = str(int(eval(pSplit[1].strip().replace(' ', ''))) - 1)
 				except:
 					return 'No', pName
 			# output file path inside ' '
 			elif pName == 'output_raster_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -2543,7 +2543,7 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(' ', '')
 			# input file path inside ' '
 			if pName == 'input_raster_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -2554,7 +2554,7 @@ class BatchTab:
 					return 'No', pName
 			# output file path inside ' '
 			elif pName == 'output_raster_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -2565,7 +2565,7 @@ class BatchTab:
 					return 'No', pName
 			# reclassification values inside ' ' (list of oldValue_newValue separated by ,)
 			elif pName == 'value_list':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				values = g[0]
 				if len(values) > 0:
@@ -2579,15 +2579,15 @@ class BatchTab:
 					return 'No', pName
 			# use signature list code checkbox (1 checked or 0 unchecked)
 			elif pName == 'use_signature_list_code':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.apply_symbology_checkBox.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.apply_symbology_checkBox.setCheckState(0)
 				else:
 					return 'No', pName
 			# code field
 			elif pName == 'code_field':
-				id = cfg.ui.class_macroclass_comboBox_2.findText(pSplit[1].strip().replace('\'', ''))
+				id = cfg.ui.class_macroclass_comboBox_2.findText(pSplit[1].strip().strip().replace('\'', ''))
 				if id >= 0:
 					cfg.ui.class_macroclass_comboBox_2.setCurrentIndex(id)
 				else:
@@ -2614,7 +2614,7 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(' ', '')
 			# input file path inside ' '
 			if pName == 'input_raster_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -2625,7 +2625,7 @@ class BatchTab:
 					return 'No', pName
 			# output file path inside ' '
 			elif pName == 'output_raster_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -2637,13 +2637,13 @@ class BatchTab:
 			# size threshold value (int value)
 			elif pName == 'size_threshold':
 				try:
-					val = int(eval(pSplit[1].replace(' ', '')))
+					val = int(eval(pSplit[1].strip().replace(' ', '')))
 					cfg.ui.sieve_threshold_spinBox.setValue(val)
 				except:
 					return 'No', pName
 			# code field
 			elif pName == 'pixel_connection':
-				id = cfg.ui.sieve_connection_combo.findText(pSplit[1].strip().replace('\'', ''))
+				id = cfg.ui.sieve_connection_combo.findText(pSplit[1].strip().strip().replace('\'', ''))
 				if id >= 0:
 					cfg.ui.sieve_connection_combo.setCurrentIndex(id)
 				else:
@@ -2669,7 +2669,7 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(' ', '')
 			# input file path inside ' '
 			if pName == 'input_raster_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -2680,7 +2680,7 @@ class BatchTab:
 					return 'No', pName
 			# output file path inside ' '
 			elif pName == 'output_raster_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -2691,7 +2691,7 @@ class BatchTab:
 					return 'No', pName
 			# class values inside ' '
 			elif pName == 'class_values':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					cfg.ui.erosion_classes_lineEdit.setText(g[0])
@@ -2701,13 +2701,13 @@ class BatchTab:
 			# size threshold value (int value)
 			elif pName == 'size_in_pixels':
 				try:
-					val = int(eval(pSplit[1].replace(' ', '')))
+					val = int(eval(pSplit[1].strip().replace(' ', '')))
 					cfg.ui.erosion_threshold_spinBox.setValue(val)
 				except:
 					return 'No', pName
 			# code field
 			elif pName == 'pixel_connection':
-				id = cfg.ui.erosion_connection_combo.findText(pSplit[1].strip().replace('\'', ''))
+				id = cfg.ui.erosion_connection_combo.findText(pSplit[1].strip().strip().replace('\'', ''))
 				if id >= 0:
 					cfg.ui.erosion_connection_combo.setCurrentIndex(id)
 				else:
@@ -2733,7 +2733,7 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(' ', '')
 			# input file path inside ' '
 			if pName == 'input_raster_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -2744,7 +2744,7 @@ class BatchTab:
 					return 'No', pName
 			# output file path inside ' '
 			elif pName == 'output_raster_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -2755,7 +2755,7 @@ class BatchTab:
 					return 'No', pName
 			# class values inside ' '
 			elif pName == 'class_values':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					cfg.ui.dilation_classes_lineEdit.setText(g[0])
@@ -2765,13 +2765,13 @@ class BatchTab:
 			# size threshold value (int value)
 			elif pName == 'size_in_pixels':
 				try:
-					val = int(eval(pSplit[1].replace(' ', '')))
+					val = int(eval(pSplit[1].strip().replace(' ', '')))
 					cfg.ui.dilation_threshold_spinBox.setValue(val)
 				except:
 					return 'No', pName
 			# code field
 			elif pName == 'pixel_connection':
-				id = cfg.ui.dilation_connection_combo.findText(pSplit[1].strip().replace('\'', ''))
+				id = cfg.ui.dilation_connection_combo.findText(pSplit[1].strip().strip().replace('\'', ''))
 				if id >= 0:
 					cfg.ui.dilation_connection_combo.setCurrentIndex(id)
 				else:
@@ -2799,7 +2799,7 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(' ', '')
 			# input file path inside ' '
 			if pName == 'input_raster_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -2810,7 +2810,7 @@ class BatchTab:
 					return 'No', pName
 			# input vector inside ' '
 			elif pName == 'input_vector_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -2821,7 +2821,7 @@ class BatchTab:
 					return 'No', pName
 			# vector field name inside ' '
 			elif pName == 'vector_field_name':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					vectorFieldName = '\'' + g[0] + '\''
@@ -2830,7 +2830,7 @@ class BatchTab:
 					return 'No', pName
 			# expression inside ' '
 			elif pName == 'expression':
-				g = pSplit[1].replace('\'', '')
+				g = pSplit[1].strip().replace('\'', '')
 				if len(g) > 0:
 					cfg.ui.expression_lineEdit.setText(g)
 					cfg.ui.use_expression_checkBox.setCheckState(2)
@@ -2840,7 +2840,7 @@ class BatchTab:
 			# constant value (int value)
 			elif pName == 'constant_value':
 				try:
-					val = int(eval(pSplit[1].replace(' ', '')))
+					val = int(eval(pSplit[1].strip().replace(' ', '')))
 					cfg.ui.value_spinBox.setValue(val)
 					cfg.ui.use_constant_val_checkBox.setCheckState(2)
 				except:
@@ -2867,7 +2867,7 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(' ', '')
 			# output directory inside ' '
 			if pName == 'output_dir':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -2877,37 +2877,37 @@ class BatchTab:
 					return 'No', pName
 			# use number of components checkbox (1 checked or 0 unchecked)
 			elif pName == 'use_number_of_components':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.num_comp_checkBox.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.num_comp_checkBox.setCheckState(0)
 				else:
 					return 'No', pName
 			# number of components (int value)
 			elif pName == 'number_of_components':
 				try:
-					val = int(eval(pSplit[1].replace(' ', '')))
+					val = int(eval(pSplit[1].strip().replace(' ', '')))
 					cfg.ui.pca_components_spinBox.setValue(val)
 				except:
 					return 'No', pName
 			# band set number
 			elif pName == 'band_set':
 				try:
-					bandset = str(int(eval(pSplit[1].replace(' ', ''))) - 1)
+					bandset = str(int(eval(pSplit[1].strip().replace(' ', ''))) - 1)
 				except:
 					return 'No', pName
 			# nodata checkbox (1 checked or 0 unchecked)
 			elif pName == 'use_nodata':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.nodata_checkBox_4.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.nodata_checkBox_4.setCheckState(0)
 				else:
 					return 'No', pName
 			# nodata value (int value)
 			elif pName == 'nodata_value':
 				try:
-					val = int(eval(pSplit[1].replace(' ', '')))
+					val = int(eval(pSplit[1].strip().replace(' ', '')))
 					cfg.ui.nodata_spinBox_5.setValue(val)
 				except:
 					return 'No', pName
@@ -2932,7 +2932,7 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(' ', '')
 			# output path inside ' '
 			if pName == 'output_raster_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -2943,100 +2943,100 @@ class BatchTab:
 			# band set number
 			elif pName == 'band_set':
 				try:
-					bandset = str(int(eval(pSplit[1].replace(' ', ''))) - 1)
+					bandset = str(int(eval(pSplit[1].strip().replace(' ', ''))) - 1)
 				except:
 					return 'No', pName
 			# number of classes (int value)
 			elif pName == 'number_of_classes':
 				try:
-					val = int(eval(pSplit[1].replace(' ', '')))
+					val = int(eval(pSplit[1].strip().replace(' ', '')))
 					cfg.ui.kmeans_classes_spinBox.setValue(val)
 				except:
 					return 'No', pName
 			# max number of iterations (int value)
 			elif pName == 'max_iterations':
 				try:
-					val = int(eval(pSplit[1].replace(' ', '')))
+					val = int(eval(pSplit[1].strip().replace(' ', '')))
 					cfg.ui.kmeans_iter_spinBox.setValue(val)
 				except:
 					return 'No', pName
 			# ISODATA maximum standard deviation (float value)
 			elif pName == 'isodata_max_std_dev':
 				try:
-					val = float(pSplit[1].replace(' ', ''))
+					val = float(pSplit[1].strip().replace(' ', ''))
 					cfg.ui.std_dev_doubleSpinBox.setValue(val)
 				except:
 					return 'No', pName
 			# ISODATA minimum class size (int value)
 			elif pName == 'isodata_min_class_size':
 				try:
-					val = int(eval(pSplit[1].replace(' ', '')))
+					val = int(eval(pSplit[1].strip().replace(' ', '')))
 					cfg.ui.min_size_class_spinBox.setValue(val)
 				except:
 					return 'No', pName
 			# threshold checkbox (1 checked or 0 unchecked)
 			elif pName == 'use_distance_threshold':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.kmean_threshold_checkBox.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.kmean_threshold_checkBox.setCheckState(0)
 				else:
 					return 'No', pName
 			# method (1 K-means, 2 ISODATA)
 			elif pName == 'clustering_method':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.kmeans_radioButton.setChecked(True)
 					cfg.ui.isodata_radioButton.setChecked(False)
-				elif pSplit[1].replace(' ', '') == '2':
+				elif pSplit[1].strip().replace(' ', '') == '2':
 					cfg.ui.kmeans_radioButton.setChecked(False)
 					cfg.ui.isodata_radioButton.setChecked(True)
 				else:
 					return 'No', pName
 			# seed signatures (1 from band values, 2 from signature list, or 3 random)
 			elif pName == 'seed_signatures':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.kmean_minmax_radioButton.setChecked(True)
-				elif pSplit[1].replace(' ', '') == '2':
+				elif pSplit[1].strip().replace(' ', '') == '2':
 					cfg.ui.kmean_siglist_radioButton.setChecked(True)
-				elif pSplit[1].replace(' ', '') == '3':
+				elif pSplit[1].strip().replace(' ', '') == '3':
 					cfg.ui.kmean_randomsiglist_radioButton.setChecked(True)
 				else:
 					return 'No', pName
 			# algorithm (1 Minimum Distance, 2 Spectral Angle Mapping)
 			elif pName == 'distance_algorithm':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.min_distance_radioButton.setChecked(True)
-				elif pSplit[1].replace(' ', '') == '2':
+				elif pSplit[1].strip().replace(' ', '') == '2':
 					cfg.ui.spectral_angle_map_radioButton.setChecked(True)
 				else:
 					return 'No', pName
 			# save signatures checkbox (1 checked or 0 unchecked)
 			elif pName == 'save_signatures':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.kmean_save_siglist_checkBox.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.kmean_save_siglist_checkBox.setCheckState(0)
 				else:
 					return 'No', pName
 			# threshold value (float value)
 			elif pName == 'threshold_value':
 				try:
-					val = float(pSplit[1].replace(' ', ''))
+					val = float(pSplit[1].strip().replace(' ', ''))
 					cfg.ui.thresh_doubleSpinBox.setValue(val)
 				except:
 					return 'No', pName
 			# nodata checkbox (1 checked or 0 unchecked)
 			elif pName == 'use_nodata':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.nodata_checkBox_8.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.nodata_checkBox_8.setCheckState(0)
 				else:
 					return 'No', pName
 			# nodata value (int value)
 			elif pName == 'nodata_value':
 				try:
-					val = int(eval(pSplit[1].replace(' ', '')))
+					val = int(eval(pSplit[1].strip().replace(' ', '')))
 					cfg.ui.nodata_spinBox_9.setValue(val)
 				except:
 					return 'No', pName
@@ -3063,7 +3063,7 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(' ', '')
 			# classification path inside ' '
 			if pName == 'classification_file_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -3073,7 +3073,7 @@ class BatchTab:
 					return 'No', pName
 			# output path inside ' '
 			elif pName == 'output_raster_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -3083,7 +3083,7 @@ class BatchTab:
 					return 'No', pName
 			# shapefile field name inside ' '
 			elif pName == 'vector_field_name':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					shapefileField = '\'' + g[0] + '\''
@@ -3091,7 +3091,7 @@ class BatchTab:
 					return 'No', pName
 			# reference path inside ' '
 			elif pName == 'reference_file_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -3102,7 +3102,7 @@ class BatchTab:
 			# nodata value (int value)
 			elif pName == 'use_value_nodata':
 				try:
-					useNoData = int(eval(pSplit[1].replace(' ', '')))
+					useNoData = int(eval(pSplit[1].strip().replace(' ', '')))
 				except:
 					return 'No', pName
 			else:
@@ -3130,7 +3130,7 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(' ', '')
 			# classification path inside ' '
 			if pName == 'classification_file_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -3140,7 +3140,7 @@ class BatchTab:
 					return 'No', pName
 			# output path inside ' '
 			elif pName == 'output_raster_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -3150,7 +3150,7 @@ class BatchTab:
 					return 'No', pName
 			# shapefile field name inside ' '
 			elif pName == 'vector_field_name':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					shapefileField = '\'' + g[0] + '\''
@@ -3158,7 +3158,7 @@ class BatchTab:
 					return 'No', pName
 			# reference path inside ' '
 			elif pName == 'reference_file_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -3168,16 +3168,16 @@ class BatchTab:
 					return 'No', pName
 			# nodata checkbox (1 checked or 0 unchecked)
 			elif pName == 'use_nodata':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.nodata_checkBox_6.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.nodata_checkBox_6.setCheckState(0)
 				else:
 					return 'No', pName
 			# nodata value (int value)
 			elif pName == 'nodata_value':
 				try:
-					val = int(eval(pSplit[1].replace(' ', '')))
+					val = int(eval(pSplit[1].strip().replace(' ', '')))
 					cfg.ui.nodata_spinBox_7.setValue(val)
 				except:
 					return 'No', pName
@@ -3207,7 +3207,7 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(' ', '')
 			# inputRaster path inside ' '
 			if pName == 'input_raster_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -3217,7 +3217,7 @@ class BatchTab:
 					return 'No', pName
 			# output path inside ' '
 			elif pName == 'output_raster_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -3227,7 +3227,7 @@ class BatchTab:
 					return 'No', pName
 			# shapefile field name inside ' '
 			elif pName == 'vector_field_name':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					shapefileField = '\'' + g[0] + '\''
@@ -3235,7 +3235,7 @@ class BatchTab:
 					return 'No', pName
 			# statistic name inside ' '
 			elif pName == 'statistic':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					statName = None
@@ -3249,7 +3249,7 @@ class BatchTab:
 					return 'No', pName
 			# reference path inside ' '
 			elif pName == 'reference_file_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -3259,22 +3259,22 @@ class BatchTab:
 					return 'No', pName
 			# nodata checkbox (1 checked or 0 unchecked)
 			elif pName == 'use_nodata':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.nodata_checkBox_10.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.nodata_checkBox_10.setCheckState(0)
 				else:
 					return 'No', pName
 			# nodata value (int value)
 			elif pName == 'nodata_value':
 				try:
-					NoDataValue = int(eval(pSplit[1].replace(' ', '')))
+					NoDataValue = int(eval(pSplit[1].strip().replace(' ', '')))
 				except:
 					return 'No', pName
 			# stat value (int value)
 			elif pName == 'stat_value':
 				try:
-					statPerc = int(eval(pSplit[1].replace(' ', '')))
+					statPerc = int(eval(pSplit[1].strip().replace(' ', '')))
 				except:
 					return 'No', pName
 			else:
@@ -3304,7 +3304,7 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(' ', '')
 			# output path inside ' '
 			if pName == 'output_raster_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -3314,7 +3314,7 @@ class BatchTab:
 					return 'No', pName
 			# input vector path inside ' '
 			elif pName == 'vector_file_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -3324,7 +3324,7 @@ class BatchTab:
 					return 'No', pName
 			# input vector field name ' '
 			elif pName == 'vector_field_name':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
 				if len(g[0]) > 0:
 					vectorFieldName = '\'' + g[0] + '\''
@@ -3332,37 +3332,37 @@ class BatchTab:
 					return 'No', pName
 			# use value field checkbox (1 checked or 0 unchecked)
 			elif pName == 'use_value_field':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.field_checkBox.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.field_checkBox.setCheckState(0)
 				else:
 					return 'No', pName
 			# extent same as reference (1 checked or 0 unchecked)
 			elif pName == 'extent_same_as_reference':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.extent_checkBox_2.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.extent_checkBox_2.setCheckState(0)
 				else:
 					return 'No', pName
 			# constant value (int value)
 			elif pName == 'constant_value':
 				try:
-					val = int(eval(pSplit[1].replace(' ', '')))
+					val = int(eval(pSplit[1].strip().replace(' ', '')))
 					cfg.ui.constant_value_spinBox.setValue(val)
 				except:
 					return 'No', pName
 			# type of conversion inside ' ' ('Center of pixels' , 'All pixels touched')
 			elif pName == 'type_of_conversion':
-				id = cfg.ui.conversion_type_combo.findText(pSplit[1].strip().replace('\'', ''))
+				id = cfg.ui.conversion_type_combo.findText(pSplit[1].strip().strip().replace('\'', ''))
 				if id >= 0:
 					cfg.ui.conversion_type_combo.setCurrentIndex(id)
 				else:
 					return 'No', pName
 			# input raster path inside ' '
 			elif pName == 'reference_raster_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -3393,7 +3393,7 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(' ', '')
 			# output path inside ' '
 			if pName == 'output_raster_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -3403,7 +3403,7 @@ class BatchTab:
 					return 'No', pName
 			# input raster path inside ' '
 			elif pName == 'reference_raster_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -3413,7 +3413,7 @@ class BatchTab:
 					return 'No', pName
 			# input raster path inside ' '
 			elif pName == 'new_raster_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -3443,7 +3443,7 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(' ', '')
 			# output path inside ' '
 			if pName == 'output_report_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -3453,7 +3453,7 @@ class BatchTab:
 					return 'No', pName
 			# input raster path inside ' '
 			elif pName == 'input_raster_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -3463,16 +3463,16 @@ class BatchTab:
 					return 'No', pName
 			# nodata checkbox (1 checked or 0 unchecked)
 			elif pName == 'use_nodata':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.nodata_checkBox.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.nodata_checkBox.setCheckState(0)
 				else:
 					return 'No', pName
 			# nodata value (int value)
 			elif pName == 'nodata_value':
 				try:
-					val = int(eval(pSplit[1].replace(' ', '')))
+					val = int(eval(pSplit[1].strip().replace(' ', '')))
 					cfg.ui.nodata_spinBox_2.setValue(val)
 				except:
 					return 'No', pName
@@ -3500,7 +3500,7 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(' ', '')
 			# input raster path inside ' '
 			if pName == 'input_raster_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -3510,7 +3510,7 @@ class BatchTab:
 					return 'No', pName
 			# output vector path inside ' '
 			elif pName == 'output_vector_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -3520,23 +3520,23 @@ class BatchTab:
 					return 'No', pName
 			# use signature list code checkbox (1 checked or 0 unchecked)
 			elif pName == 'use_signature_list_code':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					useCode = '\'Yes\''
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					useCode = '\'No\''
 				else:
 					return 'No', pName
 			# use signature list code checkbox (1 checked or 0 unchecked)
 			elif pName == 'dissolve_output':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					dissolve = '\'Yes\''
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					dissolve = '\'No\''
 				else:
 					return 'No', pName
 			# code field
 			elif pName == 'code_field':
-				id = cfg.ui.class_macroclass_comboBox.findText(pSplit[1].strip().replace('\'', ''))
+				id = cfg.ui.class_macroclass_comboBox.findText(pSplit[1].strip().strip().replace('\'', ''))
 				if id >= 0:
 					cfg.ui.class_macroclass_comboBox.setCurrentIndex(id)
 				else:
@@ -3565,7 +3565,7 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(' ', '')
 			# input raster path inside ' '
 			if pName == 'input_raster_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -3575,7 +3575,7 @@ class BatchTab:
 					return 'No', pName
 			# output vector path inside ' '
 			elif pName == 'output_text_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
@@ -3585,16 +3585,16 @@ class BatchTab:
 					return 'No', pName
 			# use signature list code checkbox (1 checked or 0 unchecked)
 			elif pName == 'save_signatures':
-				if pSplit[1].replace(' ', '') == '1':
+				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.class_signature_save_siglist_checkBox.setCheckState(2)
-				elif pSplit[1].replace(' ', '') == '0':
+				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.class_signature_save_siglist_checkBox.setCheckState(0)
 				else:
 					return 'No', pName
 			# band set number
 			elif pName == 'band_set':
 				try:
-					bandset = str(int(eval(pSplit[1].replace(' ', '')) - 1))
+					bandset = str(int(eval(pSplit[1].strip().replace(' ', '')) - 1))
 				except:
 					return 'No', pName
 			else:
@@ -3619,7 +3619,7 @@ class BatchTab:
 			pName = pSplit[0].lower().replace(' ', '')
 			# input file path inside ' '
 			if pName == 'training_file_path':
-				pSplitX = pSplit[1]
+				pSplitX = pSplit[1].strip()
 				if cfg.workingDir is not None:
 					pSplitX = pSplitX.replace(cfg.workingDirNm, cfg.workingDir)
 				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
