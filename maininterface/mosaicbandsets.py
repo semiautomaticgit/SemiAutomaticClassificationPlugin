@@ -117,7 +117,8 @@ class MosaicBandSets:
 					if cfg.bandSetsList[bandSetNumber][0] == 'Yes':
 						ckB = cfg.utls.checkBandSet(bandSetNumber)
 						if ckB == 'Yes':
-							bndSetSources.append(cfg.bndSetLst)
+							if len(cfg.bndSetLst) > 0:
+								bndSetSources.append(cfg.bndSetLst)
 					else:
 						bi = cfg.utls.selectLayerbyName(cfg.bandSetsList[bandSetNumber][8], 'Yes')
 						try:
@@ -127,14 +128,21 @@ class MosaicBandSets:
 							# logger
 							cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 						rT = cfg.utls.rasterToBands(bPath, cfg.tmpDir, outputName = cfg.utls.fileName(cfg.bandSetsList[bandSetNumber][8]), virtual = 'No')
-						bndSetSources.append(rT)
+						if len(rT) > 0:
+							bndSetSources.append(rT)
 					if len(cfg.bndSetLst) == 0:
 						if batch == 'No':
 							cfg.uiUtls.removeProgressBar()
 						cfg.mx.msgWar28()
 						# logger
 						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' Warning')
-						return 'No'
+				if len(bndSetSources) == 0:
+					if batch == 'No':
+						cfg.uiUtls.removeProgressBar()
+					cfg.mx.msgWar28()
+					# logger
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' Warning')
+					return 'No'
 				cfg.uiUtls.updateBar(10)
 				rCrs = cfg.utls.getCrsGDAL(bndSetSources[0][0])
 				rEPSG = cfg.osrSCP.SpatialReference()
