@@ -53,7 +53,7 @@ class NeighborPixels:
 		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), str(m))
 		
 	# classification neighbor
-	def classNeighbor(self, batch = 'No', bandSetNumber = None, outputDirectory = None, size = None, structure = None, statName = None, statPerc = None, outputName = None):
+	def classNeighbor(self, batch = 'No', bandSetNumber = None, outputDirectory = None, size = None, structure = None, statName = None, statPerc = None, outputName = None, circularStructure = None):
 			if bandSetNumber is None:
 				bandSet = cfg.ui.band_set_comb_spinBox_15.value()
 				bandSetNumber = bandSet - 1
@@ -87,8 +87,16 @@ class NeighborPixels:
 					ckB = cfg.utls.checkBandSet(bandSetNumber)
 					bndSetSources = cfg.bndSetLst
 				else:
-					r = cfg.utls.selectLayerbyName(cfg.bandSetsList[bandSetNumber][8], 'Yes')
-					iR = cfg.utls.layerSource(r)
+					try:
+						r = cfg.utls.selectLayerbyName(cfg.bandSetsList[bandSetNumber][8], 'Yes')
+						iR = cfg.utls.layerSource(r)
+					except:
+						if batch == 'No':
+							cfg.uiUtls.removeProgressBar()
+						cfg.mx.msgWar28()
+						# logger
+						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' Warning')
+						return 'No'
 					iBC = cfg.utls.getNumberBandRaster(iR)
 					for i in range(1, iBC+1):
 						bndNumberList.append(i)
@@ -107,6 +115,11 @@ class NeighborPixels:
 					size =  cfg.ui.class_neighbor_threshold_spinBox.value()
 				if statName is None:
 					statName =  cfg.ui.statistic_name_combobox_2.currentText()
+				if circularStructure is None:
+					if cfg.ui.circular_structure_checkBox.isChecked():
+						circularStructure = 'Yes'
+					else:
+						circularStructure = 'No'
 				for i in cfg.statisticList:
 					if i[0].lower() == statName.lower():
 						statNp = i[1]
@@ -140,7 +153,10 @@ class NeighborPixels:
 							if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 							return 'No'
 					else:
-						structure = cfg.np.ones((size*2+1,size*2+1))
+						if circularStructure == 'No':
+							structure = cfg.np.ones((size*2+1,size*2+1))
+						else:
+							structure = self.createCircularStructure(size)
 				else:
 					try:
 						structure = self.openStructure(structure)
@@ -186,6 +202,15 @@ class NeighborPixels:
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode())
 		
+	# create a circular structure
+	def createCircularStructure(self, radius):
+		circle = cfg.np.zeros([radius*2+1, radius*2+1])
+		for x in range(0, radius*2+1):
+			for y in range(0, radius*2+1):
+				if (x - radius)**2 + (y - radius)**2 <= radius**2:
+					circle[x,y] = 1
+		return circle
+			
 	# open structure file
 	def openStructure(self, structure):
 		text = open(structure, 'r')

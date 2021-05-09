@@ -58,16 +58,19 @@ class Messages:
 	# Message bar information
 	def msgBar(self, title, message):
 		cfg.iface.messageBar().pushMessage(title, message, level= cfg.qgisCoreSCP.Qgis.Info, duration=7)
+		cfg.iface.messageBar().findChildren(cfg.QtWidgetsSCP.QToolButton)[0].setHidden(False)
 		
 	# Message bar error
 	def msgBarError(self, title, message, SMTP = None):
 		cfg.iface.messageBar().pushMessage(title, message, level= cfg.qgisCoreSCP.Qgis.Critical)
+		cfg.iface.messageBar().findChildren(cfg.QtWidgetsSCP.QToolButton)[0].setHidden(False)
 		if SMTP is None:
 			cfg.utls.sendSMTPMessage('SCP: ' + title, message)
 	
 	# Message bar warning
 	def msgBarWarning(self, title, message):
 		cfg.iface.messageBar().pushMessage(title, message, level= cfg.qgisCoreSCP.Qgis.Warning, duration=7)
+		cfg.iface.messageBar().findChildren(cfg.QtWidgetsSCP.QToolButton)[0].setHidden(False)
 		
 	''' Messages '''
 	''' Information '''
@@ -234,6 +237,9 @@ class Messages:
 		
 	def msgErr40(self, SMTP = None):
 		self.msgBarError(cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Error') + ' [40]', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Unable to connect'), SMTP)
+		
+	def msgErr40bis(self, SMTP = None):
+		self.msgBarError(cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Error') + ' [40]', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Unable to connect, possibly archived image'), SMTP)
 		
 	def msgErr41(self, SMTP = None):
 		self.msgBarError(cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Error') + ' [41]', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Unable to load image'), SMTP)

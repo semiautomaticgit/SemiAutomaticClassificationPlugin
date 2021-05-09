@@ -202,7 +202,7 @@ class MosaicBandSets:
 									tPMD = o + '/' + cfg.utls.fileNameNoExt(bndSetSources[bstIndex][b]) + 'p.tif'
 								else:
 									tPMD = cfg.utls.createTempRasterPath('tif')
-								cfg.utls.GDALReprojectRaster(bst[b], tPMD, 'GTiff', None, 'EPSG:' + str(rEPSG), '-ot Float32 -dstnodata ' + str(nD))
+								cfg.utls.GDALReprojectRaster(bst[b], tPMD, 'GTiff', None, rCrs, '-ot Float32 -dstnodata ' + str(nD))
 								if cfg.osSCP.path.isfile(tPMD):
 									for bb in range(0, len(bst)):
 										bndSetSources[bstIndex][bb] = tPMD

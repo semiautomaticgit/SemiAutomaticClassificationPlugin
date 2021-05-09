@@ -171,7 +171,7 @@ class SpectralDistanceBandsets:
 							if nD is None:
 								nD = NoDataVal
 							tPMD = cfg.utls.createTempRasterPath('tif')
-							cfg.utls.GDALReprojectRaster(bst[b], tPMD, "GTiff", None, "EPSG:" + str(rEPSG), "-ot Float32 -dstnodata " + str(nD))
+							cfg.utls.GDALReprojectRaster(bst[b], tPMD, "GTiff", None, rCrs, '-ot Float32 -dstnodata ' + str(nD))
 							if cfg.osSCP.path.isfile(tPMD):
 								for bb in range(0, len(bst)):
 									bndSetSources[bstIndex][bb] = tPMD

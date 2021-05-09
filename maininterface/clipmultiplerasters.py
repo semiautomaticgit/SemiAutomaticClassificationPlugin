@@ -218,7 +218,7 @@ class ClipMultipleRasters:
 		# using coordinates
 		if uS == 0 and len(UX) > 0 and len(UY) > 0 and len(LX) > 0 and len(LY) > 0:
 			for l in rT:
-				f = oD + '/' + outputName + '_'  + cfg.utls.fileName(l)
+				f = oD + '/' + outputName + '_' + cfg.utls.fileNameNoExt(l) + '.tif'
 				bbList = [l]
 				bandNumberList = [1]
 				vrtCheck = cfg.utls.createTempVirtualRaster(bbList, bandNumberList, 'Yes', 'Yes', 0, 'No', 'Yes', [float(UX), float(UY), float(LX), float(LY)])

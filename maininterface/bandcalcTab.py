@@ -798,6 +798,7 @@ class BandCalcTab:
 							variableList = []
 							# band list
 							bList = []
+							refCRS = None
 							bandNumberList = []
 							for b in range(0, c):
 								try:
@@ -807,7 +808,7 @@ class BandCalcTab:
 									cfg.mx.msg4()
 									self.rasterBandName(bandSetNumber)
 									# logger
-									cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err) + " bandset" + str(bandSetNumberX+1) + " band" + str(bandNumX+1) + " layer " + str(cfg.bandSetsList[bandSetNumberX][3][bandNumX]))
+									cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err) + ' bandset' + str(bandSetNumberX+1) + ' band' + str(bandNumX+1) + ' layer ' + str(cfg.bandSetsList[bandSetNumberX][3][bandNumX]))
 									if outFile is None:
 										cfg.uiUtls.removeProgressBar()
 										cfg.cnvs.setRenderFlag(True)
@@ -819,7 +820,8 @@ class BandCalcTab:
 										bandNumber = bN.split('#b')
 										if cfg.bandSetsList[bandSetNumber][0] == 'Yes':
 											try:
-												bPath = cfg.bndSetLst[int(bandNumber[1]) - 1]
+												rPath = cfg.bndSetLst[int(bandNumber[1]) - 1]
+												bPath, refCRS = cfg.bCalc.checkProjectionRaster(rPath, referenceCRS = refCRS, extentRaster = extentRaster, extentIntersection = extentIntersection, extentSameAs = extentSameAs)
 												bandNumberList.append(1)
 												bList.append(bPath)
 											except Exception as err:
@@ -853,7 +855,7 @@ class BandCalcTab:
 										if cfg.bandSetsList[bandSetNumberX][0] == 'Yes':
 											i = cfg.utls.selectLayerbyName(cfg.bandSetsList[bandSetNumberX][3][bandNumX], 'Yes')
 											try:
-												bPath = cfg.utls.layerSource(i)
+												rPath = cfg.utls.layerSource(i)
 											except Exception as err:
 												cfg.mx.msg4()
 												self.rasterBandName(bandSetNumber)
@@ -863,6 +865,7 @@ class BandCalcTab:
 													cfg.uiUtls.removeProgressBar()
 													cfg.cnvs.setRenderFlag(True)
 													return 'No'
+											bPath, refCRS = cfg.bCalc.checkProjectionRaster(rPath, referenceCRS = refCRS, extentRaster = extentRaster, extentIntersection = extentIntersection, extentSameAs = extentSameAs)
 											bandNumberList.append(1)
 											bList.append(bPath)
 										else:
@@ -902,9 +905,10 @@ class BandCalcTab:
 												return 'No'
 										if cfg.bandSetsList[bandSetNumber][0] == 'Yes':
 											try:
-												bPath = cfg.bndSetLst[int(bandNumber[1]) - 1]
+												rPath = cfg.bndSetLst[int(bandNumber[1]) - 1]
 											except:
 												return 'No'
+											bPath, refCRS = cfg.bCalc.checkProjectionRaster(rPath, referenceCRS = refCRS, extentRaster = extentRaster, extentIntersection = extentIntersection, extentSameAs = extentSameAs)
 											bandNumberList.append(1)
 											bList.append(bPath)
 										else:
@@ -925,7 +929,7 @@ class BandCalcTab:
 									else:
 										i = cfg.utls.selectLayerbyName(bN, 'Yes')
 										try:
-											bPath = cfg.utls.layerSource(i)
+											rPath = cfg.utls.layerSource(i)
 										except Exception as err:
 											cfg.mx.msg4()
 											self.rasterBandName(bandSetNumber)
@@ -935,6 +939,7 @@ class BandCalcTab:
 												cfg.uiUtls.removeProgressBar()
 												cfg.cnvs.setRenderFlag(True)
 												return 'No'
+										bPath, refCRS = cfg.bCalc.checkProjectionRaster(rPath, referenceCRS = refCRS, extentRaster = extentRaster, extentIntersection = extentIntersection, extentSameAs = extentSameAs)
 										bandNumberList.append(1)
 										bList.append(bPath)
 							try:
@@ -1028,12 +1033,12 @@ class BandCalcTab:
 													lRY = lRPoint.y()
 											except Exception as err:
 												# logger
-												cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+												cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 												cfg.uiUtls.removeProgressBar()
 												cfg.cnvs.setRenderFlag(True)
 												return 'No'
-									elif extRaster == cfg.pixelExtent:
-										tLX, tLY, lRX, lRY = extentList[0], extentList[1], extentList[2], extentList[3]
+									#elif extRaster == cfg.pixelExtent:
+									#	tLX, tLY, lRX, lRY = extentList[0], extentList[1], extentList[2], extentList[3]
 									else:
 										tLX, tLY, lRX, lRY, pSX, pSY = cfg.utls.imageInformationSize(extRaster)
 										if align is None:
@@ -1042,7 +1047,7 @@ class BandCalcTab:
 												# add extent raster to virtual raster list
 												i = cfg.utls.selectLayerbyName(extRaster, 'Yes')
 												try:
-													bPath = cfg.utls.layerSource(i)
+													rPath = cfg.utls.layerSource(i)
 												except Exception as err:
 													cfg.mx.msg4()
 													self.rasterBandName(bandSetNumber)
@@ -1052,6 +1057,7 @@ class BandCalcTab:
 														cfg.uiUtls.removeProgressBar()
 														cfg.cnvs.setRenderFlag(True)
 														return 'No'
+												bPath, refCRS = cfg.bCalc.checkProjectionRaster(rPath, referenceCRS = refCRS, extentRaster = extentRaster, extentIntersection = extentIntersection, extentSameAs = extentSameAs)
 												bandNumberList.append(1)
 												bList.append(bPath)
 										elif align == 'Yes':
@@ -1059,7 +1065,7 @@ class BandCalcTab:
 											# add extent raster to virtual raster list
 											i = cfg.utls.selectLayerbyName(extRaster, 'Yes')
 											try:
-												bPath = cfg.utls.layerSource(i)
+												rPath = cfg.utls.layerSource(i)
 											except Exception as err:
 												cfg.mx.msg4()
 												self.rasterBandName(bandSetNumber)
@@ -1069,6 +1075,7 @@ class BandCalcTab:
 													cfg.uiUtls.removeProgressBar()
 													cfg.cnvs.setRenderFlag(True)
 													return 'No'
+											bPath, refCRS = cfg.bCalc.checkProjectionRaster(rPath, referenceCRS = refCRS, extentRaster = extentRaster, extentIntersection = extentIntersection, extentSameAs = extentSameAs)
 											bandNumberList.append(1)
 											bList.append(bPath)
 									if tLX is None:
@@ -1114,6 +1121,38 @@ class BandCalcTab:
 					self.rasterBandName(bandSetNumber)
 				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' band calculation ended')
 				
+	# check projection and reproject
+	def checkProjectionRaster(self, inputRaster, referenceCRS = None, extentRaster = None, extentIntersection = None, extentSameAs = None):
+		bPath = None
+		if (extentIntersection is None and cfg.ui.intersection_checkBox.isChecked() is True) or extentIntersection == 'Yes':
+			pass
+		elif (extentSameAs is None and cfg.ui.extent_checkBox.isChecked() is True) or extentSameAs == 'Yes':
+			if extentRaster is None:
+				extRaster = cfg.ui.raster_extent_combo.currentText()
+			else:
+				extRaster = extentRaster
+			if extRaster == cfg.mapExtent:
+				pCrs = cfg.utls.getQGISCrs()
+				referenceCRS = pCrs.toWkt().replace(' ', '')
+			else:
+				i = cfg.utls.selectLayerbyName(extRaster, 'Yes')
+				bPath = cfg.utls.layerSource(i)
+				referenceCRS = cfg.utls.getCrsGDAL(bPath)
+		eCrs = cfg.utls.getCrsGDAL(inputRaster)
+		if referenceCRS is None:
+			return [inputRaster, eCrs]
+		else:
+			rEPSG = cfg.osrSCP.SpatialReference()
+			rEPSG.ImportFromWkt(referenceCRS)
+			EPSG = cfg.osrSCP.SpatialReference()
+			EPSG.ImportFromWkt(eCrs)
+			if EPSG.IsSame(rEPSG) != 1:
+				tVRT = cfg.utls.createTempRasterPath('vrt')
+				cfg.utls.createWarpedVrt(rasterPath = inputRaster, outputPath = tVRT, outputWkt = referenceCRS, alignRasterPath = bPath, sameExtent = 'No')
+				return [tVRT, referenceCRS]
+			else:
+				return [inputRaster, referenceCRS]
+	
 	# text changed
 	def textChanged(self):
 		if cfg.bandCalcIndex == 0:

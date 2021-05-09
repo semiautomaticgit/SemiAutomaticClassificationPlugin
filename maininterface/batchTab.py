@@ -74,8 +74,6 @@ class BatchTab:
 		
 	# text changed
 	def textChanged(self):
-		cfg.ui.batch_label.setText(cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Checking ...'))
-		cfg.QtWidgetsSCP.qApp.processEvents()
 		expression = ' ' + cfg.ui.plainTextEdit_batch.toPlainText() + ' '
 		self.checkExpression(expression)
 		#cfg.ui.plainTextEdit_batch.setFocus()
@@ -109,6 +107,8 @@ class BatchTab:
 		variables = {}
 		rexpression = ''
 		varList = [cfg.workingDirNm, cfg.startForDirNm, cfg.DirNm, cfg.directoryName, cfg.endForDirNm, cfg.startForFileNm, cfg.FileNm, cfg.FileDirNm, cfg.endForFileNm, cfg.startForBandSetNm, cfg.bandSetNm, cfg.endForBandSetNm]
+		cfg.ui.batch_label.setText(cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Checking ...'))
+		cfg.QtWidgetsSCP.qApp.processEvents()
 		for traiL in vexpression.split('\n'):
 			if len(traiL.strip()) > 0 and traiL.strip()[0] == '!' and traiL.replace(' ', '').split('=')[0].replace('!', '') not in varList:
 				try:
@@ -1866,6 +1866,7 @@ class BatchTab:
 		file = 'None'
 		namePrefix = 'None'
 		statPerc = 'None'
+		circular = 'None'
 		parameters = []
 		for p in paramList:
 			pSplit = p.split(':', 1)
@@ -1912,6 +1913,14 @@ class BatchTab:
 					matrixSize = str(int(eval(pSplit[1].strip().replace(' ', ''))))
 				except:
 					return 'No', pName
+			# circular checkbox (1 checked or 0 unchecked)
+			elif pName == 'circular':
+				if pSplit[1].strip().replace(' ', '') == '1':
+					circular = '\'Yes\''
+				elif pSplit[1].strip().replace(' ', '') == '0':
+					circular = '\'No\''
+				else:
+					return 'No', pName
 			# statistic name inside ' '
 			elif pName == 'statistic':
 				pSplitX = pSplit[1].strip()
@@ -1946,6 +1955,7 @@ class BatchTab:
 			parameters.append(statName)
 			parameters.append(statPerc)
 			parameters.append(namePrefix)
+			parameters.append(circular)
 		except:
 			return 'No', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'missing parameter')
 		return 'Yes', parameters

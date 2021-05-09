@@ -503,7 +503,11 @@ class DownloadProducts:
 	def tableClick(self):
 		tW = cfg.ui.download_images_tableWidget
 		i = tW.currentRow()
-		if i >= 0:
+		ids = []
+		for tI in tW.selectedIndexes():
+			ids.append(tI.row())
+		idT = set(ids)
+		if i >= 0 and not len(idT) > 1:
 			cfg.uiUtls.addProgressBar()
 			progress = 10
 			sat = str(tW.item(i, 0).text())
@@ -985,7 +989,7 @@ class DownloadProducts:
 					return imOut
 				self.onflyGeorefImage(cfg.tmpDir + '//' + imgID, cfg.tmpDir + '//' + imgID + '.vrt', min_lon, max_lon, min_lat, max_lat)
 			else:
-				cfg.mx.msgErr40()
+				cfg.mx.msgErr40bis()
 
 	# download images
 	def downloadSentinel3Images(self, outputDirectory, exporter = 'No'):
@@ -1201,7 +1205,7 @@ class DownloadProducts:
 			if check == 'Yes':
 				return output
 			else:
-				cfg.mx.msgErr40()
+				cfg.mx.msgErr40bis()
 				return 'No'
 
 	# display granule preview	
@@ -1990,7 +1994,7 @@ class DownloadProducts:
 					return imOut
 				self.onflyGeorefImage(cfg.tmpDir + '//' + imgID, cfg.tmpDir + '//' + imgID + '.vrt', min_lon, max_lon, min_lat, max_lat)
 			else:
-				cfg.mx.msgErr40()
+				cfg.mx.msgErr40bis()
 			
 	# georef image on the fly based on UL and LR
 	def onflyGeorefImage(self, inputImage, outputVRT, min_lon, max_lon, min_lat, max_lat):
@@ -2304,7 +2308,7 @@ class DownloadProducts:
 					return imOut
 				self.onflyGeorefImage(cfg.tmpDir + '//' + imgID, cfg.tmpDir + '//' + imgID + '.vrt', min_lon, max_lon, min_lat, max_lat)
 			else:
-				cfg.mx.msgErr40()
+				cfg.mx.msgErr40bis()
 	
 	# download images
 	def downloadSentinel1Images(self, outputDirectory, exporter = 'No'):
@@ -2334,7 +2338,10 @@ class DownloadProducts:
 						pass
 					else:
 						# add info to name
-						imgName = imgName.replace('.zip', '') + '_s' + orbit[0] + '_' + relativeOrbit + '_' + sliceNumber + '_' + acquisitionDate[0:10] 
+						try:
+							imgName = imgName.replace('.zip', '') + '_s' + orbit[0] + '_' + relativeOrbit + '_' + sliceNumber + '_' + acquisitionDate[0:10]
+						except:
+							imgName = imgName.replace('.zip', '')
 						outDirList.append(outputDirectory + '//' + imgName)
 						progress = progress + progressStep
 						if exporter == 'No':
@@ -2428,7 +2435,7 @@ class DownloadProducts:
 			if check == 'Yes':
 				return output
 			else:
-				cfg.mx.msgErr40()
+				cfg.mx.msgErr40bis()
 				return 'No'
 			
 ### ASTER

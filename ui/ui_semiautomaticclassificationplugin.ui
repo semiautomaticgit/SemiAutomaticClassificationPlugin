@@ -13200,7 +13200,7 @@ distance</string>
                       </property>
                      </widget>
                     </item>
-                    <item row="1" column="2">
+                    <item row="1" column="3">
                      <spacer name="horizontalSpacer_100">
                       <property name="orientation">
                        <enum>Qt::Horizontal</enum>
@@ -13212,6 +13212,16 @@ distance</string>
                        </size>
                       </property>
                      </spacer>
+                    </item>
+                    <item row="1" column="2">
+                     <widget class="QCheckBox" name="circular_structure_checkBox">
+                      <property name="toolTip">
+                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If checked, neighbor pixels are calculated inside a circle of radius equal to the distance in pixels&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                      </property>
+                      <property name="text">
+                       <string>Circular</string>
+                      </property>
+                     </widget>
                     </item>
                    </layout>
                   </item>

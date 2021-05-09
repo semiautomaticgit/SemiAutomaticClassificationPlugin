@@ -2850,12 +2850,66 @@ class Utils:
 		return str(output)
 		
 	# create warped virtual raster
-	def createWarpedVrt(self, rasterPath, outputPath, outputWkt, maxError = 0.125):
+	def createWarpedVrtGDAL(self, rasterPath, outputPath, outputWkt, maxError = 0.125):
 		rD = cfg.gdalSCP.Open(rasterPath, cfg.gdalSCP.GA_ReadOnly)
 		t = cfg.gdalSCP.AutoCreateWarpedVRT(rD, None, outputWkt, cfg.gdalSCP.GRA_NearestNeighbour, maxError)
 		rD = None
 		vrt = cfg.gdalSCP.GetDriverByName('VRT').CreateCopy(outputPath, t)
 		vrt = None
+		return outputPath
+		
+	# create warped virtual raster
+	def createWarpedVrt(self, rasterPath, outputPath, outputWkt = None, maxError = None, alignRasterPath = None, sameExtent = 'No'):
+		# logger
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' rasters to be projected' + str(rasterPath))
+		extra = None
+		# calculate minimal extent
+		if alignRasterPath is not None:
+			# raster extent and pixel size	
+			try:
+				left, right, top, bottom, pX, pY, outputWkt, unit = cfg.utls.imageGeoTransform(alignRasterPath)
+				# check projections
+				rPSys =cfg.osrSCP.SpatialReference(wkt=outputWkt)
+			except Exception as err:
+				# logger
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+				return 'No'
+			# raster extent and pixel size
+			try:
+				leftS, rightS, topS, bottomS, pXS, pYS, rPS, unitS = cfg.utls.imageGeoTransform(rasterPath)
+				rPSC =cfg.osrSCP.SpatialReference(wkt=rPS)
+				leftSP, topSP  = cfg.utls.projectPointCoordinatesOGR(leftS, topS, rPSC, rPSys)
+				rightSP, bottomSP = cfg.utls.projectPointCoordinatesOGR(rightS, bottomS, rPSC, rPSys)
+			# Error latitude or longitude exceeded limits
+			except Exception as err:
+				# logger
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+				return 'No'
+			if sameExtent == 'No':
+				# minimum extent
+				if leftSP < left:
+					leftR = left - int(2 + (left - leftSP) / pX) * pX
+				else:
+					leftR = left + int((leftSP- left) / pX - 2) * pX
+				if rightSP > right:
+					rightR = right + int(2 + (rightSP - right) / pX) * pX
+				else:
+					rightR = right - int((right - rightSP) / pX - 2) * pX
+				if topSP > top:
+					topR = top + int(2 + (topSP - top) / pY) * pY
+				else:
+					topR = top - int((top - topSP) / pY - 2) * pY
+				if bottomSP > bottom:
+					bottomR = bottom + int((bottomSP - bottom) / pY - 2) * pY
+				else:
+					bottomR = bottom - int(2 + (bottom - bottomSP) / pY) * pY
+			else:
+				leftR = left
+				rightR = right
+				topR = top
+				bottomR = bottom
+			extra = '-tr ' + str(pX) + ' ' + str(pY) + ' -te ' + str(leftR) + ' ' + str(bottomR) + ' ' + str(rightR) + ' ' + str(topR)
+		cfg.utls.GDALReprojectRaster(input = rasterPath, output = outputPath, outFormat = 'VRT', s_srs = None, t_srs = outputWkt, additionalParams = extra)
 		return outputPath
 	
 	# calculate raster block ranges
@@ -4718,8 +4772,9 @@ class Utils:
 								o.append(oo)
 							# logger
 							cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'functionBand No functionRaster ' + str(functionRaster))
-							if oo == 'No':
-								procError = 'Error function raster'
+							if type(oo) is not cfg.np.ndarray:
+								if oo == 'No':
+									procError = 'Error function raster'
 						# classification
 						else:
 							# logger
@@ -4731,8 +4786,9 @@ class Utils:
 							o = [outClasses, outAlgs, outSigDict]
 							# logger
 							cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'functionRaster ' + str(functionRaster))
-							if oo == 'No':
-								procError = 'Error function band'	
+							if type(oo) is not cfg.np.ndarray:
+								if oo == 'No':
+									procError = 'Error function band'	
 					# output
 					if wrtOut is not None:
 						try:
@@ -6950,7 +7006,7 @@ class Utils:
 				cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 		# logger
 		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' lyr ' + str(layerPath) + ' crs: ' + str(crs))
-		return crs
+		return crs.replace(' ', '')
 		
 	# raster sieve with GDAL
 	def rasterSieve(self, inputRaster, outputRaster, pixelThreshold, connect = 4, outFormat = 'GTiff', quiet = 'No'):
@@ -7414,6 +7470,8 @@ class Utils:
 		d = a + ' ' + b + ' ' + c
 		if cfg.sysSCPNm != 'Windows':
 			d = cfg.shlexSCP.split(d)
+		# logger
+		cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' GDAL: ' + str(d))
 		tPMD = cfg.utls.createTempRasterPath('txt')
 		stF = open(tPMD, 'a')
 		sPL = len(cfg.subprocDictProc)
@@ -7966,7 +8024,7 @@ class Utils:
 			if cRSR.IsProjected:
 				un = cRSR.GetAttrValue('unit')
 			rD = None
-			return left, right, top, bottom, pX, pY, rP, un
+			return left, right, top, bottom, pX, pY, rP.replace(' ', ''), un
 		except Exception as err:
 			# logger
 			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err) + ' rasterPath: ' + str(rasterPath))
