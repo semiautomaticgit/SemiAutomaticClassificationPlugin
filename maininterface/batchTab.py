@@ -1907,6 +1907,14 @@ class BatchTab:
 					pass
 				else:
 					return 'No', pName
+			# virtual output checkbox (1 checked or 0 unchecked)
+			elif pName == 'virtual_output':
+				if pSplit[1].strip().replace(' ', '') == '1':
+					virtual = '\'Yes\''
+				elif pSplit[1].strip().replace(' ', '') == '0':
+					virtual = '\'No\''
+				else:
+					return 'No', pName
 			# matrix size (int value)
 			elif pName == 'matrix_size':
 				try:

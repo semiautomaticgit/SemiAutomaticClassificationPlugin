@@ -12875,7 +12875,7 @@ distance</string>
                       </property>
                      </widget>
                     </item>
-                    <item row="1" column="0" colspan="3">
+                    <item row="2" column="0" colspan="3">
                      <layout class="QHBoxLayout" name="horizontalLayout_71">
                       <item>
                        <widget class="QLabel" name="label_279">
@@ -12916,6 +12916,16 @@ distance</string>
                        </widget>
                       </item>
                      </layout>
+                    </item>
+                    <item row="1" column="0">
+                     <widget class="QCheckBox" name="neighbor_virtual_checkBox">
+                      <property name="toolTip">
+                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If checked, output bands are virtual rasters&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                      </property>
+                      <property name="text">
+                       <string>Create virtual raster output</string>
+                      </property>
+                     </widget>
                     </item>
                    </layout>
                   </item>
@@ -13499,7 +13509,7 @@ distance</string>
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>98</width>
+                     <width>90</width>
                      <height>90</height>
                     </rect>
                    </property>
@@ -13798,7 +13808,7 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>98</width>
+                     <width>90</width>
                      <height>90</height>
                     </rect>
                    </property>
@@ -14493,7 +14503,7 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>98</width>
+                     <width>90</width>
                      <height>90</height>
                     </rect>
                    </property>
@@ -16231,7 +16241,7 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>98</width>
+                     <width>90</width>
                      <height>90</height>
                     </rect>
                    </property>
@@ -16672,7 +16682,7 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>98</width>
+                     <width>90</width>
                      <height>90</height>
                     </rect>
                    </property>
@@ -17020,7 +17030,7 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>98</width>
+                     <width>90</width>
                      <height>90</height>
                     </rect>
                    </property>
@@ -17326,7 +17336,7 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>98</width>
+                     <width>90</width>
                      <height>90</height>
                     </rect>
                    </property>
@@ -17725,7 +17735,7 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>98</width>
+                     <width>90</width>
                      <height>90</height>
                     </rect>
                    </property>
@@ -18070,7 +18080,7 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>98</width>
+                     <width>90</width>
                      <height>90</height>
                     </rect>
                    </property>

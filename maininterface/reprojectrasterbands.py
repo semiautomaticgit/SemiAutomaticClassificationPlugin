@@ -118,6 +118,7 @@ class ReprojectRasterBands:
 		
 	# reproject multiple rasters
 	def reprojectRasters(self, batch = 'No', outputDirectory = None, alignRasterPath = None, sameExtent = 'No', EPSGCode = None, xResolution = None, yResolution = None, resamplePixelFactor = None, resamplingMethod = None, outputType = None, noDataValue = None, outputName = None, bandSetNumber = None, outFormat = 'GTiff'):
+		EPSG = None
 		if bandSetNumber is None:
 			bandSet = cfg.ui.band_set_comb_spinBox_14.value()
 			bandSetNumber = bandSet - 1

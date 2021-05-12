@@ -3874,57 +3874,42 @@ class Utils:
 		structure = functionBandArgument
 		# logger
 		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'structure ' + str(structure))
-
+		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'functionVariableList ' + str(functionVariableList[0]))
+		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'rasterSCPArrayfunctionBand' + str(rasterSCPArrayfunctionBand[0,0,0]))
 		sizeJ = int(structure.shape[0]/2)
 		sizeI = int(structure.shape[1]/2)
-		# faster
+		# calculate
 		if 'nansum' in functionVariableList[0]:
-			o = cfg.signalSCP.convolve2d(rasterSCPArrayfunctionBand[:,:,0], structure, 'same', boundary='fill', fillvalue=cfg.np.nan)
-		else:
-			# logger
-			cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'sizeI ' + str(sizeI))
-			cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'sizeJ ' + str(sizeJ))
-			A = cfg.np.zeros([rasterSCPArrayfunctionBand.shape[0], rasterSCPArrayfunctionBand.shape[1], structure.shape[0]*structure.shape[1]])
-			A[:] = cfg.np.nan
-			z = 0
-			for i in range(-sizeI, sizeI+1):
-				for j in range(-sizeJ, sizeJ+1):
-					try:
-						# logger
-						cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), '[i,j] ' + str([i,j]) )
-						cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'structure[j+sizeJ,i+sizeI] ' + str(structure[j+sizeJ,i+sizeI]) )
-						if not cfg.np.isnan(structure[j+sizeJ,i+sizeI]):
-							if i < 0:
-								if j < 0:
-									A[-j:,-i:,z] = rasterSCPArrayfunctionBand[0:j,0:i,0] * structure[j+sizeJ,i+sizeI]
-								elif j == 0:
-									A[:,-i:,z] = rasterSCPArrayfunctionBand[:,0:i,0] * structure[j+sizeJ,i+sizeI]
-								else:
-									A[0:-j,-i:,z] = rasterSCPArrayfunctionBand[j:,0:i,0] * structure[j+sizeJ,i+sizeI]
-							elif i == 0:
-								if j < 0:
-									A[-j:,:,z] = rasterSCPArrayfunctionBand[0:j,:,0] * structure[j+sizeJ,i+sizeI]
-								elif j == 0:
-									A[:,:,z] = rasterSCPArrayfunctionBand[:,:,0] * structure[j+sizeJ,i+sizeI]
-								else:
-									A[0:-j,:,z] = rasterSCPArrayfunctionBand[j:,:,0] * structure[j+sizeJ,i+sizeI]
-							else:
-								if j < 0:
-									A[-j:,0:-i,z] = rasterSCPArrayfunctionBand[0:j,i:,0] * structure[j+sizeJ,i+sizeI]
-								elif j == 0:
-									A[:,0:-i,z] = rasterSCPArrayfunctionBand[:,i:,0] * structure[j+sizeJ,i+sizeI]
-								else:
-									A[0:-j,0:-i,z] = rasterSCPArrayfunctionBand[j:,i:,0] * structure[j+sizeJ,i+sizeI]
-							# logger
-							cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'A[:,:,z] ' + str(A[0,0,z]) )	
-							z = z+1
-					except:
-						pass
-			# logger
-			cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'A[0,0,:] ' + str(A[0,0,:]) )	
-			# logger
-			cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'functionVariableList ' + str(functionVariableList[0]) )
-			o = eval(functionVariableList[0])
+			try:
+				o = cfg.signalSCP.oaconvolve(cfg.np.nan_to_num(rasterSCPArrayfunctionBand[:,:,0]), structure, mode='same')
+			except:
+				# if scipy version < 1.4
+				o = cfg.signalSCP.fftconvolve(cfg.np.nan_to_num(rasterSCPArrayfunctionBand[:,:,0]), structure, mode='same')
+			o[::, ::][cfg.np.isnan(rasterSCPArrayfunctionBand[:, :, 0])] = cfg.np.nan	
+		elif 'nanmean' in functionVariableList[0]:
+			try:
+				o = cfg.signalSCP.oaconvolve(cfg.np.nan_to_num(rasterSCPArrayfunctionBand[:,:,0]), structure, mode='same') / cfg.signalSCP.oaconvolve(~cfg.np.isnan(rasterSCPArrayfunctionBand[:,:,0]), structure, mode='same')
+			except:
+				# if scipy version < 1.4
+				o = cfg.signalSCP.fftconvolve(cfg.np.nan_to_num(rasterSCPArrayfunctionBand[:,:,0]), structure, mode='same') / cfg.signalSCP.fftconvolve(~cfg.np.isnan(rasterSCPArrayfunctionBand[:,:,0]), structure, mode='same')
+			o[::, ::][cfg.np.isnan(rasterSCPArrayfunctionBand[:, :, 0])] = cfg.np.nan	
+		elif 'nanmax' in functionVariableList[0]:
+			o = cfg.maximum_filterSCP(rasterSCPArrayfunctionBand[:,:,0], footprint=structure, mode='constant', cval=cfg.np.nan)
+		elif 'nanmin' in functionVariableList[0]:
+			o = cfg.minimum_filterSCP(rasterSCPArrayfunctionBand[:,:,0], footprint=structure, mode='constant', cval=cfg.np.nan)
+		elif 'median' in functionVariableList[0]:
+			o = cfg.median_filterSCP(rasterSCPArrayfunctionBand[:,:,0], footprint=structure, mode='constant', cval=cfg.np.nan)
+		elif 'count' in functionVariableList[0]:
+			try:
+				o = cfg.signalSCP.oaconvolve(~cfg.np.isnan(rasterSCPArrayfunctionBand[:,:,0]), structure, mode='same')
+			except:
+				# if scipy version < 1.4
+				o = cfg.signalSCP.fftconvolve(~cfg.np.isnan(rasterSCPArrayfunctionBand[:,:,0]), structure, mode='same')
+			o[::, ::][cfg.np.isnan(rasterSCPArrayfunctionBand[:, :, 0])] = cfg.np.nan	
+		elif 'std' in functionVariableList[0]:
+			o = cfg.generic_filterSCP(rasterSCPArrayfunctionBand[:,:,0], cfg.np.std, footprint=structure, mode='constant', cval=cfg.np.nan)
+		elif 'percentile' in functionVariableList[0]:
+			o = cfg.percentile_filterSCP(rasterSCPArrayfunctionBand[:,:,0], percentile = int(functionVariableList[0].split(',')[1].strip(')')), footprint=structure, mode='constant', cval=cfg.np.nan)
 		# logger
 		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'o ' + str(o) )
 		return o
@@ -4331,6 +4316,19 @@ class Utils:
 			cfg.labelSCP = label
 		except:
 			pass
+		try:
+			from scipy.ndimage.filters import maximum_filter
+			from scipy.ndimage.filters import minimum_filter
+			from scipy.ndimage.filters import percentile_filter
+			from scipy.ndimage.filters import generic_filter
+			from scipy.ndimage.filters import median_filter
+			cfg.maximum_filterSCP = maximum_filter
+			cfg.minimum_filterSCP = minimum_filter
+			cfg.percentile_filterSCP = percentile_filter
+			cfg.generic_filterSCP = generic_filter
+			cfg.median_filterSCP = median_filter
+		except:
+			pass
 		from osgeo import gdal
 		from osgeo import ogr
 		from osgeo import osr
@@ -4507,6 +4505,19 @@ class Utils:
 		try:
 			from scipy import signal
 			cfg.signalSCP = signal
+		except:
+			pass
+		try:
+			from scipy.ndimage.filters import maximum_filter
+			from scipy.ndimage.filters import minimum_filter
+			from scipy.ndimage.filters import percentile_filter
+			from scipy.ndimage.filters import generic_filter
+			from scipy.ndimage.filters import median_filter
+			cfg.maximum_filterSCP = maximum_filter
+			cfg.minimum_filterSCP = minimum_filter
+			cfg.percentile_filterSCP = percentile_filter
+			cfg.generic_filterSCP = generic_filter
+			cfg.median_filterSCP = median_filter
 		except:
 			pass
 		from osgeo import gdal
@@ -4710,12 +4721,17 @@ class Utils:
 								sclB = gdalBandList[b].GetScale()
 								if sclB is not None:
 									sclB = float(sclB)
+								else:
+									sclB = 1
 								if offsB is not None:
 									offsB = float(offsB)
+								else:
+									offsB = 0
 								ndvBand = gdalBandList[b].GetNoDataValue()
 								# logger
 								cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'ndvBand ' + str(ndvBand) )
 								ndvBand = ndvBand * sclB + offsB
+								
 							except:
 								ndvBand = None
 						# logger
