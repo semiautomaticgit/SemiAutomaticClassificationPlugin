@@ -764,6 +764,7 @@ usgs_C7p = '/spectralsignature/usgs_spectral_library/vegetation.csv'
 ''' Batch '''
 workingDirNm = '!working_dir!'
 tempRasterNm = '!temp_raster_'
+tempDirNm = '!temp_dir!'
 startForDirNm = '!for_directory_in!'
 DirNm = '!directory!'
 directoryName = '!directory_name!'
@@ -813,7 +814,7 @@ functionNames.append([[' spectral_distance', 'cfg.batchT.performSpectralDistance
 functionNames.append([['Postprocessing']])
 functionNames.append([[' accuracy', 'cfg.batchT.performAccuracy',  'cfg.acc.errorMatrix', ['classification_file_path : \'\'', 'reference_file_path : \'\'', 'vector_field_name : \'\'', 'output_raster_path : \'\'', 'use_value_nodata : 0']]])
 functionNames.append([[' class_signature', 'cfg.batchT.performClassSignature',  'cfg.classSigT.calculateClassSignature', ['input_raster_path : \'\'', 'band_set : 1', 'save_signatures : 1', 'output_text_path : \'\'']]])
-functionNames.append([[' classification_dilation', 'cfg.batchT.performClassificationDilation', 'cfg.dltnRstr.dilationClassification', ['input_raster_path : \'\'', 'class_values : \'\'', 'size_in_pixels : 1', 'pixel_connection : 4', 'output_raster_path : \'\'']]])
+functionNames.append([[' classification_dilation', 'cfg.batchT.performClassificationDilation', 'cfg.dltnRstr.dilationClassification', ['input_raster_path : \'\'', 'class_values : \'\'', 'size_in_pixels : 1',  'circular : 0', 'output_raster_path : \'\'']]])
 functionNames.append([[' classification_erosion', 'cfg.batchT.performClassificationErosion', 'cfg.ersnRstr.erosionClassification', ['input_raster_path : \'\'', 'class_values : \'\'', 'size_in_pixels : 1', 'pixel_connection : 4', 'output_raster_path : \'\'']]])
 functionNames.append([[' classification_report', 'cfg.batchT.performClassificationReport',  'cfg.classRep.calculateClassificationReport', ['input_raster_path : \'\'', 'use_nodata : 0', 'nodata_value : 0', 'output_report_path : \'\'']]])
 functionNames.append([[' classification_sieve', 'cfg.batchT.performClassificationSieve',  'cfg.sieveRstr.sieveClassification', ['input_raster_path : \'\'', 'size_threshold : 2', 'pixel_connection : 4', 'output_raster_path : \'\'']]])
@@ -836,7 +837,8 @@ functionNames.append([[endForFileNm, '', '', []]])
 functionNames.append([[startForBandSetNm, '', '', ['\'\'']]])
 functionNames.append([[bandSetNm, '', '', []]])
 functionNames.append([[endForBandSetNm, '', '', []]])
-functionNames.append([['!temp_raster_1!', '', '', []]])
+functionNames.append([[tempRasterNm + '1!', '', '', []]])
+functionNames.append([[tempDirNm, '', '', []]])
 
 ''' Scatter plot '''
 scatterColorMap = ['rainbow', 'gist_rainbow', 'jet', 'afmhot', 'bwr', 'gnuplot', 'gnuplot2', 'BrBG', 'coolwarm', 'PiYG', 'PRGn', 'PuOr', 'RdBu', 'RdGy', 'RdYlBu', 'RdYlGn', 'Spectral', 'seismic', 'ocean', 'terrain', 'Blues', 'BuGn', 'BuPu', 'GnBu', 'Greens', 'Greys', 'Oranges', 'OrRd', 'PuBu', 'PuBuGn', 'PuRd', 'Purples', 'RdPu', 'Reds', 'YlGn', 'YlGnBu', 'YlOrBr', 'YlOrRd']

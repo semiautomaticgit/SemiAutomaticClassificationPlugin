@@ -132,6 +132,12 @@ class BatchTab:
 					rP = cfg.utls.createTempRasterPathBatch(cfg.tempRasterNm.replace('!', '') + str(rN), 'tif')
 				self.tempRasters.append(rP)
 				rexpression = rexpression.replace(cfg.tempRasterNm + str(rN) + '!', rP)
+		# temporary directory
+		if cfg.tempDirNm in rexpression:
+			try:
+				rexpression = rexpression.replace(cfg.tempDirNm, cfg.tmpDir)
+			except:
+				pass
 		fexpression = rexpression
 		# for directory
 		if cfg.startForDirNm in fexpression:
@@ -2744,7 +2750,8 @@ class BatchTab:
 		return 'Yes', parameters
 					
 	# batch classification dilation
-	def performClassificationDilation(self, paramList):
+	def performClassificationDilation(self, paramList):	
+		circular = 'None'
 		parameters = []
 		for p in paramList:
 			pSplit = p.split(':', 1)
@@ -2787,11 +2794,12 @@ class BatchTab:
 					cfg.ui.dilation_threshold_spinBox.setValue(val)
 				except:
 					return 'No', pName
-			# code field
-			elif pName == 'pixel_connection':
-				id = cfg.ui.dilation_connection_combo.findText(pSplit[1].strip().strip().replace('\'', ''))
-				if id >= 0:
-					cfg.ui.dilation_connection_combo.setCurrentIndex(id)
+			# circular checkbox (1 checked or 0 unchecked)
+			elif pName == 'circular':
+				if pSplit[1].strip().replace(' ', '') == '1':
+					circular = '\'Yes\''
+				elif pSplit[1].strip().replace(' ', '') == '0':
+					circular = '\'No\''
 				else:
 					return 'No', pName
 			else:
@@ -2803,6 +2811,7 @@ class BatchTab:
 			parameters.append('\'Yes\'')
 			parameters.append(inputRaster)
 			parameters.append(outputRaster)
+			parameters.append(circular)
 		except:
 			return 'No', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'missing parameter')
 		return 'Yes', parameters

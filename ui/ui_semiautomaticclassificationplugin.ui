@@ -3352,7 +3352,7 @@ p, li { white-space: pre-wrap; }
                      <x>0</x>
                      <y>0</y>
                      <width>417</width>
-                     <height>165</height>
+                     <height>169</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -13573,8 +13573,8 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>459</width>
-                     <height>196</height>
+                     <width>923</width>
+                     <height>413</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -13865,8 +13865,8 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>764</width>
-                     <height>390</height>
+                     <width>923</width>
+                     <height>413</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -15578,8 +15578,8 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>634</width>
-                     <height>327</height>
+                     <width>923</width>
+                     <height>413</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -16743,8 +16743,8 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>385</width>
-                     <height>193</height>
+                     <width>923</width>
+                     <height>413</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -17087,8 +17087,8 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>444</width>
-                     <height>167</height>
+                     <width>923</width>
+                     <height>413</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -17390,8 +17390,8 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>456</width>
-                     <height>229</height>
+                     <width>923</width>
+                     <height>413</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -17799,8 +17799,8 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>387</width>
-                     <height>196</height>
+                     <width>923</width>
+                     <height>413</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -20085,6 +20085,26 @@ p, li { white-space: pre-wrap; }
                 <string>Classification dilation</string>
                </attribute>
                <layout class="QGridLayout" name="gridLayout_207">
+                <item row="0" column="0">
+                 <layout class="QHBoxLayout" name="horizontalLayout_45">
+                  <item>
+                   <widget class="QLabel" name="label_204">
+                    <property name="styleSheet">
+                     <string notr="true">background-color : #656565; color : white</string>
+                    </property>
+                    <property name="frameShape">
+                     <enum>QFrame::Panel</enum>
+                    </property>
+                    <property name="frameShadow">
+                     <enum>QFrame::Sunken</enum>
+                    </property>
+                    <property name="text">
+                     <string> Classification dilation</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
                 <item row="1" column="0">
                  <layout class="QGridLayout" name="gridLayout_206">
                   <item row="3" column="2">
@@ -20222,6 +20242,16 @@ p, li { white-space: pre-wrap; }
                      </widget>
                     </item>
                     <item>
+                     <widget class="QCheckBox" name="circular_structure_checkBox_2">
+                      <property name="toolTip">
+                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If checked, neighbor pixels are calculated inside a circle of radius equal to the distance in pixels&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                      </property>
+                      <property name="text">
+                       <string>Circular</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
                      <spacer name="horizontalSpacer_42">
                       <property name="orientation">
                        <enum>Qt::Horizontal</enum>
@@ -20233,60 +20263,6 @@ p, li { white-space: pre-wrap; }
                        </size>
                       </property>
                      </spacer>
-                    </item>
-                    <item>
-                     <widget class="QLabel" name="label_154">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="minimumSize">
-                       <size>
-                        <width>229</width>
-                        <height>0</height>
-                       </size>
-                      </property>
-                      <property name="frameShadow">
-                       <enum>QFrame::Sunken</enum>
-                      </property>
-                      <property name="text">
-                       <string>Pixel connection</string>
-                      </property>
-                      <property name="alignment">
-                       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QComboBox" name="dilation_connection_combo">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                        <horstretch>1</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="maximumSize">
-                       <size>
-                        <width>80</width>
-                        <height>16777215</height>
-                       </size>
-                      </property>
-                      <property name="toolTip">
-                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pixel connection&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                      </property>
-                      <item>
-                       <property name="text">
-                        <string>4</string>
-                       </property>
-                      </item>
-                      <item>
-                       <property name="text">
-                        <string>8</string>
-                       </property>
-                      </item>
-                     </widget>
                     </item>
                    </layout>
                   </item>
@@ -20424,26 +20400,6 @@ p, li { white-space: pre-wrap; }
                     </property>
                     <property name="toolButtonStyle">
                      <enum>Qt::ToolButtonTextBesideIcon</enum>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </item>
-                <item row="0" column="0">
-                 <layout class="QHBoxLayout" name="horizontalLayout_45">
-                  <item>
-                   <widget class="QLabel" name="label_204">
-                    <property name="styleSheet">
-                     <string notr="true">background-color : #656565; color : white</string>
-                    </property>
-                    <property name="frameShape">
-                     <enum>QFrame::Panel</enum>
-                    </property>
-                    <property name="frameShadow">
-                     <enum>QFrame::Sunken</enum>
-                    </property>
-                    <property name="text">
-                     <string> Classification dilation</string>
                     </property>
                    </widget>
                   </item>

@@ -3876,8 +3876,6 @@ class Utils:
 		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'structure ' + str(structure))
 		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'functionVariableList ' + str(functionVariableList[0]))
 		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'rasterSCPArrayfunctionBand' + str(rasterSCPArrayfunctionBand[0,0,0]))
-		sizeJ = int(structure.shape[0]/2)
-		sizeI = int(structure.shape[1]/2)
 		# calculate
 		if 'nansum' in functionVariableList[0]:
 			try:
@@ -3957,15 +3955,25 @@ class Utils:
 		# logger
 		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'o ' + str(o) )
 		return o
-			
+		
 	# raster dilation
 	def rasterDilation(self, gdalBandList, rasterSCPArrayfunctionBand, columnNumber, rowNumber, pixelStartColumn, pixelStartRow, outputArrayFile, functionBandArgument, functionVariableList, outputBandNumber):
-		A = rasterSCPArrayfunctionBand[::, ::, 0]
-		B = functionBandArgument
+		structure = functionBandArgument
+		# logger
+		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'structure ' + str(structure))
+		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'functionVariableList ' + str(functionVariableList[0]))
+		A = cfg.np.nan_to_num(rasterSCPArrayfunctionBand[:,:,0])
+		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'A' + str(A))
+		# calculate
 		# value dictionary
 		C={}
 		for i in functionVariableList:
-			C['arr_'+ str(i)] = cfg.signalSCP.convolve2d(cfg.np.where(A==i, 1,0), B, 'same')
+			try:
+				C['arr_'+ str(i)] = (cfg.signalSCP.oaconvolve(A==i, structure, mode='same') > 0.999)
+			except:
+				# if scipy version < 1.4
+				C['arr_'+ str(i)] = (cfg.signalSCP.fftconvolve(A==i, structure, mode='same') > 0.999)
+		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'C[arr_' + str(C['arr_'+ str(i)]))
 		# core
 		D = cfg.np.ones(A.shape)
 		for v in functionVariableList:
@@ -3980,6 +3988,7 @@ class Utils:
 			cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 		# logger
 		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'o ' + str(o) )
+		o[::, ::][cfg.np.isnan(rasterSCPArrayfunctionBand[:, :, 0])] = cfg.np.nan	
 		return o
 		
 	# calculate raster with stats
@@ -9434,3 +9443,12 @@ class Utils:
 				cfg.ui.CPU_spinBox.setValue(int((threads+1)/2))
 		except:
 			cfg.ui.CPU_spinBox.setValue(1)
+			
+	# create a circular structure
+	def createCircularStructure(self, radius):
+		circle = cfg.np.zeros([radius*2+1, radius*2+1])
+		for x in range(0, radius*2+1):
+			for y in range(0, radius*2+1):
+				if (x - radius)**2 + (y - radius)**2 <= radius**2:
+					circle[x,y] = 1
+		return circle

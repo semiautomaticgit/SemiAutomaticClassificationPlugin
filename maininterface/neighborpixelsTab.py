@@ -159,7 +159,7 @@ class NeighborPixels:
 						if circularStructure == 'No':
 							structure = cfg.np.ones((size*2+1,size*2+1))
 						else:
-							structure = self.createCircularStructure(size)
+							structure = cfg.utls.createCircularStructure(size)
 				else:
 					try:
 						structure = self.openStructure(structure)
@@ -197,15 +197,6 @@ class NeighborPixels:
 				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'Error raster not found')
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode())
-		
-	# create a circular structure
-	def createCircularStructure(self, radius):
-		circle = cfg.np.zeros([radius*2+1, radius*2+1])
-		for x in range(0, radius*2+1):
-			for y in range(0, radius*2+1):
-				if (x - radius)**2 + (y - radius)**2 <= radius**2:
-					circle[x,y] = 1
-		return circle
 			
 	# open structure file
 	def openStructure(self, structure):
