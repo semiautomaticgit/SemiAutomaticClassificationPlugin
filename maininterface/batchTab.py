@@ -106,13 +106,13 @@ class BatchTab:
 		# variables between ! !
 		variables = {}
 		rexpression = ''
-		varList = [cfg.workingDirNm, cfg.startForDirNm, cfg.DirNm, cfg.directoryName, cfg.endForDirNm, cfg.startForFileNm, cfg.FileNm, cfg.FileDirNm, cfg.endForFileNm, cfg.startForBandSetNm, cfg.bandSetNm, cfg.endForBandSetNm]
+		varList = [cfg.workingDirNm,cfg.tempDirNm, cfg.startForDirNm, cfg.DirNm, cfg.directoryName, cfg.endForDirNm, cfg.startForFileNm, cfg.FileNm, cfg.FileDirNm, cfg.endForFileNm, cfg.startForBandSetNm, cfg.bandSetNm, cfg.endForBandSetNm]
 		cfg.ui.batch_label.setText(cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Checking ...'))
 		cfg.QtWidgetsSCP.qApp.processEvents()
 		for traiL in vexpression.split('\n'):
 			if len(traiL.strip()) > 0 and traiL.strip()[0] == '!' and traiL.replace(' ', '').split('=')[0].replace('!', '') not in varList:
 				try:
-					variables[traiL.replace(' ', '').split('=')[0].strip()] = traiL.replace(' ', '').split('=')[1].strip()
+					variables[traiL.replace(' ', '').split('=')[0].strip()] = traiL.split('=')[1].strip()
 				except:
 					rexpression = rexpression + traiL + '\n'
 					for variableVal in variables:
