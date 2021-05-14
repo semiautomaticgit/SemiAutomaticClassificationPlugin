@@ -1873,6 +1873,7 @@ class BatchTab:
 		namePrefix = 'None'
 		statPerc = 'None'
 		circular = 'None'
+		virtual = 'None'
 		parameters = []
 		for p in paramList:
 			pSplit = p.split(':', 1)
@@ -1970,6 +1971,7 @@ class BatchTab:
 			parameters.append(statPerc)
 			parameters.append(namePrefix)
 			parameters.append(circular)
+			parameters.append(virtual)
 		except:
 			return 'No', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'missing parameter')
 		return 'Yes', parameters

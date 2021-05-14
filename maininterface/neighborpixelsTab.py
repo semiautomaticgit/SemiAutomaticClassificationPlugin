@@ -176,9 +176,7 @@ class NeighborPixels:
 						additionalLayer = 3
 						if virtual == 'Yes':
 							outputRaster = o + '/' + outputName + cfg.utls.fileNameNoExt(bndSetSources[y]) + '.vrt'
-							#outputRaster = tPMD
 						else:
-							#tPMD = cfg.utls.createTempRasterPath('vrt')
 							outputRaster = o + '/' + outputName + cfg.utls.fileNameNoExt(bndSetSources[y]) + '.tif'
 						# process calculation
 						u = cfg.utls.multiProcessRaster(rasterPath = input, functionBand = 'No', functionRaster = cfg.utls.rasterNeighbor, outputRasterList = [outputRaster], functionBandArgument = structure, functionVariable = functionList, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Neighbor pixels'), virtualRaster = virtual, compress = cfg.rasterCompression, outputNoDataValue = nd, boundarySize = structure.shape[0]+1, additionalLayer = additionalLayer)
