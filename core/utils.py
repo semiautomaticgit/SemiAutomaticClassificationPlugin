@@ -3793,11 +3793,9 @@ class Utils:
 		# logger
 		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'functionVariableList ' + str(functionVariableList) )
 		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'functionBandArgument ' + str(functionBandArgument) )
-		o = eval(functionVariableList)
-		a = cfg.np.copy(o)
-		for i in functionBandArgument:
-			# create condition
-			o[a==int(i[0])] = int(i[1])
+		a = eval(functionVariableList)
+		o = cfg.np.searchsorted(functionBandArgument, a.ravel(), side = 'right').reshape(rasterSCPArrayfunctionBand.shape[0], rasterSCPArrayfunctionBand.shape[1]).astype(cfg.np.float32)
+		o[cfg.np.isnan(rasterSCPArrayfunctionBand[:,:,0])] = cfg.np.nan
 		# logger
 		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'o ' + str(o) )
 		return o

@@ -181,25 +181,38 @@ class BandCombination:
 				cfg.mx.msgErr9()		
 				return 'No'
 			# expression builder
+			check = 'No'
 			t = 0
 			while t < 100:
 				t = t + 1
 				rndVarList = []
-				for cmbI in range(0, len(cmb[0])):
-					rndVarList.append(int(999 * cfg.np.random.random()))
-				n = 1
-				cmbntns = {}
+				# first try fixed list
+				if t == 1:
+					coT = 333
+					for cmbI in range(0, len(cmb[0])):
+						rndVarList.append(coT)
+						coT = coT + 1
+				# random list
+				else:
+					for cmbI in range(0, len(cmb[0])):
+						rndVarList.append(int(999 * cfg.np.random.random()))
 				newValueList = []
-				reclassList = []
+				reclassDict = {}
 				for i in cmb:
 					if nD not in i:
 						newVl = cfg.np.multiply(rndVarList, i).sum()
+						reclassDict[newVl] = i
 						newValueList.append(newVl)
-						reclassList.append([newVl, n])
-						cmbntns[n] = i
-						n = n + 1
 				uniqueValList = cfg.np.unique(newValueList)
 				if int(uniqueValList.shape[0]) == len(newValueList):
+					n = 1
+					reclassList = []
+					cmbntns = {}	
+					for newVl in sorted(reclassDict.keys()):
+						i = reclassDict[newVl]
+						reclassList.append(newVl)
+						cmbntns[n] = i
+						n = n + 1
 					check = 'Yes'
 					break
 			if check == 'No':
