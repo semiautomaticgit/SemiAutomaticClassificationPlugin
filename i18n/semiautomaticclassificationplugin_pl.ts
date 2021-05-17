@@ -5112,7 +5112,7 @@ ROI</source>
         <translation>Klasyfikacja</translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="403"/>
+        <location filename="../maininterface/accuracy.py" line="416"/>
         <source>ErrMatrixCode</source>
         <translation>BłądKoduMacierzy</translation>
     </message>
@@ -5122,22 +5122,22 @@ ROI</source>
         <translation>Odniesienie</translation>
     </message>
     <message>
-        <location filename="../maininterface/landcoverchange.py" line="339"/>
+        <location filename="../maininterface/landcoverchange.py" line="342"/>
         <source>PixelSum</source>
         <translation>PodsPiks</translation>
     </message>
     <message>
-        <location filename="../maininterface/landcoverchange.py" line="373"/>
+        <location filename="../maininterface/landcoverchange.py" line="376"/>
         <source>Total</source>
         <translation>Całkowicie</translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="541"/>
+        <location filename="../maininterface/accuracy.py" line="554"/>
         <source>Overall accuracy [%] = </source>
         <translation>Ogólna dokładność [%] = </translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="544"/>
+        <location filename="../maininterface/accuracy.py" line="557"/>
         <source>Kappa hat classification = </source>
         <translation type="unfinished"></translation>
     </message>
@@ -5257,12 +5257,12 @@ ROI</source>
         <translation>Zapisz zmiany rastra wyjściowego z pokryciem terenu</translation>
     </message>
     <message>
-        <location filename="../maininterface/landcoverchange.py" line="339"/>
+        <location filename="../maininterface/landcoverchange.py" line="342"/>
         <source>ReferenceClass</source>
         <translation>OdniesienieKlasyf</translation>
     </message>
     <message>
-        <location filename="../maininterface/landcoverchange.py" line="356"/>
+        <location filename="../maininterface/landcoverchange.py" line="359"/>
         <source>NewClass</source>
         <translation>NowaKlasyf</translation>
     </message>
@@ -5959,7 +5959,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/landcoverchange.py" line="339"/>
+        <location filename="../maininterface/landcoverchange.py" line="342"/>
         <source>CrossClassCode</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6244,12 +6244,12 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="467"/>
+        <location filename="../maininterface/accuracy.py" line="480"/>
         <source>Wi</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="490"/>
+        <location filename="../maininterface/accuracy.py" line="503"/>
         <source>SE area</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6259,67 +6259,67 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="403"/>
+        <location filename="../maininterface/accuracy.py" line="416"/>
         <source>Classified</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="440"/>
+        <location filename="../maininterface/accuracy.py" line="453"/>
         <source>ERROR MATRIX (pixel count)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="484"/>
+        <location filename="../maininterface/accuracy.py" line="497"/>
         <source>Area</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="489"/>
+        <location filename="../maininterface/accuracy.py" line="502"/>
         <source>SE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="491"/>
+        <location filename="../maininterface/accuracy.py" line="504"/>
         <source>95% CI area</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="516"/>
+        <location filename="../maininterface/accuracy.py" line="529"/>
         <source>PA  [%]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="517"/>
+        <location filename="../maininterface/accuracy.py" line="530"/>
         <source>UA  [%]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="518"/>
+        <location filename="../maininterface/accuracy.py" line="531"/>
         <source>Kappa hat</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="553"/>
+        <location filename="../maininterface/accuracy.py" line="566"/>
         <source>PA = producer&apos;s accuracy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="555"/>
+        <location filename="../maininterface/accuracy.py" line="568"/>
         <source>UA = user&apos;s accuracy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="549"/>
+        <location filename="../maininterface/accuracy.py" line="562"/>
         <source>SE = standard error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="551"/>
+        <location filename="../maininterface/accuracy.py" line="564"/>
         <source>CI = confidence interval</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/accuracy.py" line="463"/>
+        <location filename="../maininterface/accuracy.py" line="476"/>
         <source>AREA BASED ERROR MATRIX</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6639,7 +6639,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/landcoverchange.py" line="354"/>
+        <location filename="../maininterface/landcoverchange.py" line="357"/>
         <source>LAND COVER CHANGE MATRIX [</source>
         <translation type="unfinished"></translation>
     </message>

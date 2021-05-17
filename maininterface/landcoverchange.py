@@ -222,33 +222,36 @@ class LandCoverChange:
 					while t < 100:
 						t = t + 1
 						rndVarList = []
-						for cmbI in range(0, len(cmb[0])):
-							rndVarList.append(int(999 * cfg.np.random.random()))
-						n = 1
-						col = []
-						row = []
-						cmbntns = {}
+						# first try fixed list
+						if t == 1:
+							coT = 333
+							for cmbI in range(0, len(cmb[0])):
+								rndVarList.append(coT)
+								coT = coT + 1
+						# random list
+						else:
+							for cmbI in range(0, len(cmb[0])):
+								rndVarList.append(int(999 * cfg.np.random.random()))
 						newValueList = []
-						reclassList = []
+						reclassDict = {}
 						for i in cmb:
-							if cfg.unchngMaskCheck is False and str(i[0]) == str(i[1]):
-								newVl = cfg.np.multiply(rndVarList, i).sum()
-								newValueList.append(newVl)
-								reclassList.append([newVl, 0])
-								cmbntns[n] = [i[1], i[0]]
-								col.append(i[1])
-								row.append(i[0])
-								n = n + 1
-							else:
-								newVl = cfg.np.multiply(rndVarList, i).sum()
-								newValueList.append(newVl)
-								reclassList.append([newVl, n])
-								cmbntns[n] = [i[1], i[0]]
-								col.append(i[1])
-								row.append(i[0])
-								n = n + 1
+							newVl = cfg.np.multiply(rndVarList, i).sum()
+							reclassDict[newVl] = i
+							newValueList.append(newVl)
 						uniqueValList = cfg.np.unique(newValueList)
 						if int(uniqueValList.shape[0]) == len(newValueList):
+							n = 1
+							col = []
+							row = []
+							reclassList = []
+							cmbntns = {}	
+							for newVl in sorted(reclassDict.keys()):
+								i = reclassDict[newVl]
+								reclassList.append(newVl)
+								cmbntns[n] = [i[1], i[0]]
+								col.append(i[1])
+								row.append(i[0])
+								n = n + 1
 							check = 'Yes'
 							break
 					if check == 'No':
