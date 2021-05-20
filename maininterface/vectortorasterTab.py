@@ -98,8 +98,8 @@ class VectorToRasterTab:
 				extentR = 'Yes'
 			else:
 				extentR = None
-			# convert vector layer to raster		
-			check = cfg.utls.vectorToRaster(fd, vectorSource, referenceRasterName, rstrOut, referenceRasterPath, conversionType, 'GTiff', burnValues, extent = extentR)
+			# convert vector layer to raster
+			check = cfg.utls.vectorToRaster(fd, vectorSource, referenceRasterName, rstrOut, referenceRasterPath, conversionType, 'GTiff', burnValues, extent = extentR, compress = cfg.rasterCompression,  compressFormat = 'DEFLATE')
 			cfg.uiUtls.updateBar(100)
 			# add raster to layers
 			if cfg.osSCP.path.isfile(rstrOut):

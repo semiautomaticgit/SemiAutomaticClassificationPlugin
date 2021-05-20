@@ -3352,7 +3352,7 @@ p, li { white-space: pre-wrap; }
                      <x>0</x>
                      <y>0</y>
                      <width>417</width>
-                     <height>169</height>
+                     <height>165</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -13573,8 +13573,8 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>923</width>
-                     <height>413</height>
+                     <width>459</width>
+                     <height>196</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -13865,8 +13865,8 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>923</width>
-                     <height>413</height>
+                     <width>764</width>
+                     <height>390</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -15578,8 +15578,8 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>923</width>
-                     <height>413</height>
+                     <width>634</width>
+                     <height>327</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -19871,6 +19871,16 @@ p, li { white-space: pre-wrap; }
                      </widget>
                     </item>
                     <item>
+                     <widget class="QCheckBox" name="circular_structure_checkBox_3">
+                      <property name="toolTip">
+                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If checked, neighbor pixels are calculated inside a circle of radius equal to the distance in pixels&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                      </property>
+                      <property name="text">
+                       <string>Circular</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
                      <spacer name="horizontalSpacer_38">
                       <property name="orientation">
                        <enum>Qt::Horizontal</enum>
@@ -19882,60 +19892,6 @@ p, li { white-space: pre-wrap; }
                        </size>
                       </property>
                      </spacer>
-                    </item>
-                    <item>
-                     <widget class="QLabel" name="label_150">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="minimumSize">
-                       <size>
-                        <width>229</width>
-                        <height>0</height>
-                       </size>
-                      </property>
-                      <property name="frameShadow">
-                       <enum>QFrame::Sunken</enum>
-                      </property>
-                      <property name="text">
-                       <string>Pixel connection</string>
-                      </property>
-                      <property name="alignment">
-                       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QComboBox" name="erosion_connection_combo">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                        <horstretch>1</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="maximumSize">
-                       <size>
-                        <width>80</width>
-                        <height>16777215</height>
-                       </size>
-                      </property>
-                      <property name="toolTip">
-                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pixel connection&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                      </property>
-                      <item>
-                       <property name="text">
-                        <string>4</string>
-                       </property>
-                      </item>
-                      <item>
-                       <property name="text">
-                        <string>8</string>
-                       </property>
-                      </item>
-                     </widget>
                     </item>
                    </layout>
                   </item>

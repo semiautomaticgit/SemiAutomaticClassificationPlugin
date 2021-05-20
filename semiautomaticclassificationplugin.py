@@ -45,6 +45,7 @@ import urllib
 import requests
 import ssl
 import smtplib
+import gc
 from http.cookiejar import CookieJar
 import itertools
 import zipfile
@@ -223,6 +224,7 @@ class SemiAutomaticClassificationPlugin:
 			cfg.sslSCP = ssl
 			cfg.smtplibSCP = smtplib
 			cfg.CookieJarSCP = CookieJar
+			cfg.gcSCP = gc
 			cfg.reSCP = re
 			cfg.ETSCP = ET
 			cfg.minidomSCP = minidom

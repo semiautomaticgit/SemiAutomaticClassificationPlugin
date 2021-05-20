@@ -103,11 +103,18 @@ class CrossClassification:
 				# if not reference shapefile
 				if l.type() != 0:
 					# check projections
-					newRstrProj = cfg.utls.getCrs(iClass)
-					refRstrProj = cfg.utls.getCrs(l)
-					if refRstrProj != newRstrProj:
+					rCrs = cfg.utls.getCrsGDAL(cfg.utls.layerSource(l))
+					rEPSG = cfg.osrSCP.SpatialReference()
+					rEPSG.ImportFromWkt(rCrs)
+					eCrs = cfg.utls.getCrsGDAL(cfg.utls.layerSource(iClass))
+					EPSG = cfg.osrSCP.SpatialReference()
+					EPSG.ImportFromWkt(eCrs)
+					if EPSG.IsSame(rEPSG) != 1:
+						tPMD = cfg.utls.createTempRasterPath('vrt')
+						cfg.utls.createWarpedVrt(cfg.utls.layerSource(iClass), tPMD, str(rCrs))
 						cfg.mx.msg9()
-						return 'No'
+						remiClass2 = cfg.utls.addRasterLayer(tPMD)
+						iClass = remiClass2
 				else:
 					# vector EPSG
 					if 'Polygon?crs=' in str(cfg.utls.layerSource(l)) or 'memory?geometry=' in str(cfg.utls.layerSource(l)):
@@ -140,7 +147,14 @@ class CrossClassification:
 								# remove temp layers
 								try:
 									cfg.utls.removeLayerByLayer(reml)
+								except:
+									pass
+								try:
 									cfg.utls.removeLayerByLayer(remiClass)
+								except:
+									pass
+								try:
+									cfg.utls.removeLayerByLayer(remiClass2)
 								except:
 									pass
 								# logger
@@ -288,10 +302,9 @@ class CrossClassification:
 				# check projections
 				left, right, top, bottom, cRPX, cRPY, rP, un = cfg.utls.imageGeoTransform(vrtCheck)					
 				# calculation
-				o = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.crossRasters, outputRasterList = [crossRstPath], nodataValue = nD,  functionBandArgument = reclassList, functionVariable = e, progressMessage = 'cross classification ', outputNoDataValue = 0,  virtualRaster = vrtR, compress = cfg.rasterCompression, dataType = 'UInt16')
-				cfg.uiUtls.updateBar(60)
 				cfg.parallelArrayDict = {}
-				o = cfg.utls.multiProcessRaster(rasterPath = crossRstPath, functionBand = 'No', functionRaster = cfg.utls.rasterUniqueValuesWithSum, nodataValue = 0, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Unique values'))
+				o = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.crossRasters, outputRasterList = [crossRstPath], nodataValue = nD,  functionBandArgument = reclassList, functionVariable = e, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Cross classification'), outputNoDataValue = 0,  virtualRaster = vrtR, compress = cfg.rasterCompression, dataType = 'UInt16')
+				cfg.uiUtls.updateBar(60)
 				if o == 'No':
 					if batch == 'No':
 						# enable map canvas render
@@ -301,10 +314,16 @@ class CrossClassification:
 					# remove temp layers
 					try:
 						cfg.utls.removeLayerByLayer(reml)
+					except:
+						pass
+					try:
 						cfg.utls.removeLayerByLayer(remiClass)
-					except Exception as err:
-						# logger
-						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+					except:
+						pass
+					try:
+						cfg.utls.removeLayerByLayer(remiClass2)
+					except:
+						pass
 					# logger
 					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'Error')
 					return 'No'
@@ -316,8 +335,8 @@ class CrossClassification:
 				for x in sorted(cfg.parallelArrayDict):
 					try:
 						for ar in cfg.parallelArrayDict[x]:
-							values = cfg.np.append(values, ar[0, ::])
-							sumVal = cfg.np.append(sumVal, ar[1, ::])
+							values = cfg.np.append(values, ar[1][0, ::])
+							sumVal = cfg.np.append(sumVal, ar[1][1, ::])
 					except:
 						if batch == 'No':
 							cfg.utls.finishSound()
@@ -338,8 +357,11 @@ class CrossClassification:
 						reclRasterBandUniqueVal[values[v]] = sumVal[v]
 				rasterBandUniqueVal = {}
 				for v in range(0, len(values)):
-					cmbX = cmbntns[values[v]]
-					rasterBandUniqueVal[(cmbX[0], cmbX[1])] = [reclRasterBandUniqueVal[values[v]], values[v]]
+					try:
+						cmbX = cmbntns[values[v]]
+						rasterBandUniqueVal[(cmbX[0], cmbX[1])] = [reclRasterBandUniqueVal[values[v]], values[v]]
+					except:
+						pass
 				cfg.uiUtls.updateBar(80)
 				col2 = list(set(col))
 				row2 = list(set(row))
@@ -353,10 +375,16 @@ class CrossClassification:
 					# remove temp layers
 					try:
 						cfg.utls.removeLayerByLayer(reml)
+					except:
+						pass
+					try:
 						cfg.utls.removeLayerByLayer(remiClass)
-					except Exception as err:
-						# logger
-						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+					except:
+						pass
+					try:
+						cfg.utls.removeLayerByLayer(remiClass2)
+					except:
+						pass
 					# logger
 					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 					return 'No'
@@ -414,6 +442,19 @@ class CrossClassification:
 					# logger
 					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 				cfg.uiUtls.updateBar(100)
+				# remove temp layers
+				try:
+					cfg.utls.removeLayerByLayer(reml)
+				except:
+					pass
+				try:
+					cfg.utls.removeLayerByLayer(remiClass)
+				except:
+					pass
+				try:
+					cfg.utls.removeLayerByLayer(remiClass2)
+				except:
+					pass
 				if batch == 'No':
 					# enable map canvas render
 					cfg.cnvs.setRenderFlag(True)
@@ -421,13 +462,6 @@ class CrossClassification:
 					cfg.utls.sendSMTPMessage(None, str(__name__))
 					cfg.ui.toolBox_cross_classification.setCurrentIndex(1)
 					cfg.uiUtls.removeProgressBar()
-				else:
-					# remove temp layers
-					try:
-						cfg.utls.removeLayerByLayer(reml)
-						cfg.utls.removeLayerByLayer(remiClass)
-					except:
-						pass
 				# logger
 				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'finished')
 			else:

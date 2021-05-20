@@ -198,9 +198,13 @@ class ClipMultipleRasters:
 				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' rasters to be clipped' + str(rT))
 				if len(rT) == 0:
 					cfg.mx.msgWar15()
+					if batch == 'No':
+						cfg.uiUtls.removeProgressBar()
 					return 'No'
 			else:
 				cfg.mx.msgWar15()
+				if batch == 'No':
+					cfg.uiUtls.removeProgressBar()
 				return 'No'
 		else:
 			bi = cfg.utls.selectLayerbyName(cfg.bandSetsList[bandSetNumber][8], 'Yes')
@@ -220,6 +224,15 @@ class ClipMultipleRasters:
 			for l in rT:
 				f = oD + '/' + outputName + '_' + cfg.utls.fileNameNoExt(l) + '.tif'
 				bbList = [l]
+				pCrs = cfg.utls.getQGISCrs()
+				rEPSG = cfg.osrSCP.SpatialReference()
+				rEPSG.ImportFromWkt(pCrs.toWkt())
+				eCrs = cfg.utls.getCrsGDAL(l)
+				EPSG = cfg.osrSCP.SpatialReference()
+				EPSG.ImportFromWkt(eCrs)
+				if EPSG.IsSame(rEPSG) != 1:
+					UX, UY  = cfg.utls.projectPointCoordinatesOGR(float(UX), float(UY), rEPSG, EPSG)
+					LX, LY = cfg.utls.projectPointCoordinatesOGR(float(LX), float(LY), rEPSG, EPSG)
 				bandNumberList = [1]
 				vrtCheck = cfg.utls.createTempVirtualRaster(bbList, bandNumberList, 'Yes', 'Yes', 0, 'No', 'Yes', [float(UX), float(UY), float(LX), float(LY)])
 				cfg.utls.GDALCopyRaster(vrtCheck, f, 'GTiff', cfg.rasterCompression, 'LZW')
@@ -300,7 +313,7 @@ class ClipMultipleRasters:
 				for v in values:
 					check = cfg.utls.vectorToRaster(cfg.emptyFN, vect, cfg.emptyFN, tRxs, l, None, 'GTiff', 1, vectorField + '=' + str(v))
 					if check != 'No':
-						outList = cfg.utls.clipRasterByRaster(bbList, tRxs, oD, 'GTiff', noDt, outputNameRoot = outputName + vectorField + '_' + str(v) + '_')
+						outList = cfg.utls.clipRasterByRaster(bbList, tRxs, oD, 'GTiff', noDt, outputNameRoot = outputName + vectorField + '_' + str(v) + '_', compress = cfg.rasterCompression)
 						try:
 							cfg.osSCP.remove(tRxs)
 						except:
@@ -323,7 +336,7 @@ class ClipMultipleRasters:
 			else:
 				check = cfg.utls.vectorToRaster(cfg.emptyFN, vect, cfg.emptyFN, tRxs, l, None, 'GTiff', 1)
 				if check != 'No':
-					outList = cfg.utls.clipRasterByRaster(bbList, tRxs, oD, 'GTiff', noDt, outputNameRoot = outputName + '_' )
+					outList = cfg.utls.clipRasterByRaster(bbList, tRxs, oD, 'GTiff', noDt, outputNameRoot = outputName + '_', compress = cfg.rasterCompression)
 					try:
 						cfg.osSCP.remove(tRxs)
 					except:

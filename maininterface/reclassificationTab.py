@@ -58,7 +58,7 @@ class ReclassificationTab:
 				# logger
 				cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 				return 'No'
-			list = self.getValuesTable()
+			listC = self.getValuesTable()
 			tW = cfg.ui.reclass_values_tableWidget
 			c = tW.rowCount()
 		else:
@@ -66,11 +66,11 @@ class ReclassificationTab:
 				classificationPath = rasterInput
 			else:
 				return 'No'
-			list = []
+			listC = []
 			values = valueString.split(',')
 			for v in values:
 				val = v.split('_')
-				list.append([val[0], val[1]])
+				listC.append([val[0], val[1]])
 			c = 1
 		if c > 0:
 			if batch == 'No':
@@ -92,7 +92,7 @@ class ReclassificationTab:
 					cfg.cnvs.setRenderFlag(False)
 				cfg.uiUtls.updateBar(10)
 				cfg.utls.makeDirectory(cfg.osSCP.path.dirname(out))
-				reclassList = self.createReclassificationStringFromList(list)
+				reclassList = self.createReclassificationStringFromList(listC)
 				o = cfg.utls.multiProcessRaster(rasterPath = classificationPath, functionBand = 'No', functionRaster = cfg.utls.reclassifyRaster, outputRasterList = [out], nodataValue = cfg.NoDataVal,  functionBandArgument = reclassList, functionVariable = cfg.variableName, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Reclassify'), virtualRaster = vrtR, compress = cfg.rasterCompression)
 				if cfg.osSCP.path.isfile(out):
 					r =cfg.utls.addRasterLayer(out)
@@ -210,10 +210,10 @@ class ReclassificationTab:
 			cfg.uiUtls.removeProgressBar()
 			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' values calculated')
 			
-	def createValueList(self, list, incremental = 'No'):
+	def createValueList(self, listC, incremental = 'No'):
 		unique = []
 		if incremental == 'No':
-			for i in sorted(list):
+			for i in sorted(listC):
 				g = str(i).split('.0')
 				try:
 					t = g[1]
@@ -223,7 +223,7 @@ class ReclassificationTab:
 				unique.append([p, p])
 		else:
 			v = 1
-			for i in sorted(list):
+			for i in sorted(listC):
 				g = str(i).split('.0')
 				try:
 					t = g[1]
@@ -254,16 +254,16 @@ class ReclassificationTab:
 	def getValuesTable(self):
 		tW = cfg.ui.reclass_values_tableWidget
 		c = tW.rowCount()
-		list = []
+		listC = []
 		for row in range(0, c):
 			old = tW.item(row, 0).text()
 			new = tW.item(row, 1).text()
-			list.append([old, new])
-		return list
+			listC.append([old, new])
+		return listC
 			
-	def createReclassificationStringFromList(self, list):
+	def createReclassificationStringFromList(self, listC):
 		reclassList = []
-		for i in list:
+		for i in listC:
 			try:
 				cond = float(i[0])
 			except:

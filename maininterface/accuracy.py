@@ -108,11 +108,18 @@ class Accuracy:
 				# if not reference shapefile
 				if l.type() != 0:
 					# check projections
-					newRstrProj = cfg.utls.getCrs(iClass)
-					refRstrProj = cfg.utls.getCrs(l)
-					if refRstrProj != newRstrProj:
+					rCrs = cfg.utls.getCrsGDAL(cfg.utls.layerSource(l))
+					rEPSG = cfg.osrSCP.SpatialReference()
+					rEPSG.ImportFromWkt(rCrs)
+					eCrs = cfg.utls.getCrsGDAL(cfg.utls.layerSource(iClass))
+					EPSG = cfg.osrSCP.SpatialReference()
+					EPSG.ImportFromWkt(eCrs)
+					if EPSG.IsSame(rEPSG) != 1:
+						tPMD = cfg.utls.createTempRasterPath('vrt')
+						cfg.utls.createWarpedVrt(cfg.utls.layerSource(iClass), tPMD, str(rCrs))
 						cfg.mx.msg9()
-						return 'No'
+						remiClass2 = cfg.utls.addRasterLayer(tPMD)
+						iClass = remiClass2
 				else:
 					# vector EPSG
 					ql = cfg.utls.layerSource(l)
@@ -192,7 +199,6 @@ class Accuracy:
 						referenceRaster = cfg.utls.layerSource(l)
 					else:
 						referenceRaster = reference
-						
 				qllllllll = cfg.utls.layerSource(iClass)
 				# combination finder
 				cfg.parallelArrayDict = {}
@@ -327,7 +333,7 @@ class Accuracy:
 						for newVl in sorted(reclassDict.keys()):
 							i = reclassDict[newVl]
 							reclassList.append(newVl)
-							cmbntns[n] = [i[1], i[0]]
+							cmbntns['combination_' + str(i[0]) + '_'+ str(i[1])] = n
 							col.append(i[1])
 							row.append(i[0])
 							n = n + 1
@@ -347,9 +353,8 @@ class Accuracy:
 				bList = [referenceRaster, qllllllll]
 				bandNumberList = [1, 1]
 				vrtCheck = cfg.utls.createTempVirtualRaster(bList, bandNumberList, 'Yes', 'Yes', 0, 'No', 'No')
-				o = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.crossRasters, outputRasterList = [errorRstPath],  functionBandArgument = reclassList, functionVariable = e, progressMessage = 'accuracy ', compress = cfg.rasterCompression,  nodataValue = NoDataValue, outputNoDataValue = -10, virtualRaster = vrtR, dataType = 'Int32')
 				cfg.parallelArrayDict = {}
-				o = cfg.utls.multiProcessRaster(rasterPath = errorRstPath, functionBand = 'No', functionRaster = cfg.utls.rasterUniqueValuesWithSum, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Unique values'))
+				o = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.crossRasters, outputRasterList = [errorRstPath],  functionBandArgument = reclassList, functionVariable = e, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Accuracy'), compress = cfg.rasterCompression,  nodataValue = NoDataValue, outputNoDataValue = -10, virtualRaster = vrtR, dataType = 'Int32')
 				# check projections
 				left, right, top, bottom, cRPX, cRPY, rP, un = cfg.utls.imageGeoTransform(errorRstPath)			
 				if o == 'No':
@@ -369,8 +374,8 @@ class Accuracy:
 				for x in sorted(cfg.parallelArrayDict):
 					try:
 						for ar in cfg.parallelArrayDict[x]:
-							values = cfg.np.append(values, ar[0, ::])
-							sumVal = cfg.np.append(sumVal, ar[1, ::])
+							values = cfg.np.append(values, ar[1][0, ::])
+							sumVal = cfg.np.append(sumVal, ar[1][1, ::])
 					except:
 						if batch == 'No':
 							cfg.utls.finishSound()
@@ -569,7 +574,7 @@ class Accuracy:
 				l.close()
 				# add raster to layers
 				rstr = cfg.utls.addRasterLayer(errorRstPath)
-				cfg.utls.rasterSymbolGeneric(rstr, 'NoData')	
+				cfg.utls.rasterSymbolGeneric(rstr, 'NoData', rasterUniqueValueList = sorted(rasterBandUniqueVal.keys()))	
 				try:
 					f = open(tblOut)
 					if cfg.osSCP.path.isfile(tblOut):
@@ -581,6 +586,19 @@ class Accuracy:
 					# logger
 					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 				cfg.uiUtls.updateBar(100)
+				# remove temp layers
+				try:
+					cfg.utls.removeLayerByLayer(reml)
+				except:
+					pass
+				try:
+					cfg.utls.removeLayerByLayer(remiClass)
+				except:
+					pass
+				try:
+					cfg.utls.removeLayerByLayer(remiClass2)
+				except:
+					pass
 				if batch == 'No':
 					# enable map canvas render
 					cfg.cnvs.setRenderFlag(True)
@@ -588,13 +606,6 @@ class Accuracy:
 					cfg.utls.sendSMTPMessage(None, str(__name__))
 					cfg.ui.toolBox_accuracy.setCurrentIndex(1)
 					cfg.uiUtls.removeProgressBar()
-				else:
-					# remove temp layers
-					try:
-						cfg.utls.removeLayerByLayer(reml)
-						cfg.utls.removeLayerByLayer(remiClass)
-					except:
-						pass
 				# logger
 				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'finished')
 			else:

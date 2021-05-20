@@ -2731,11 +2731,12 @@ class BatchTab:
 					cfg.ui.erosion_threshold_spinBox.setValue(val)
 				except:
 					return 'No', pName
-			# code field
-			elif pName == 'pixel_connection':
-				id = cfg.ui.erosion_connection_combo.findText(pSplit[1].strip().strip().replace('\'', ''))
-				if id >= 0:
-					cfg.ui.erosion_connection_combo.setCurrentIndex(id)
+			# circular checkbox (1 checked or 0 unchecked)
+			elif pName == 'circular':
+				if pSplit[1].strip().replace(' ', '') == '1':
+					circular = '\'Yes\''
+				elif pSplit[1].strip().replace(' ', '') == '0':
+					circular = '\'No\''
 				else:
 					return 'No', pName
 			else:

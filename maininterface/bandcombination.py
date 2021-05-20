@@ -133,113 +133,20 @@ class BandCombination:
 							cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' Warning')
 							return 'No'
 			cfg.uiUtls.updateBar(40)
-			bandsUniqueVal = []
-			bList = []
-			bandNumberList = []
-			for b in range(0, len(cfg.bndSetLst)):
-				bList.append(cfg.bndSetLst[b])
-				bandNumberList.append(1)
-			# create virtual raster					
-			vrtCheck = cfg.utls.createTempVirtualRaster(bList, bandNumberList, 'Yes', 'Yes', 0, 'No', 'Yes')
+			# reference raster
+			referenceR = cfg.bndSetLst[0]
 			# No data value
-			nD = cfg.utls.imageNoDataValue(cfg.bndSetLst[0])
+			nD = cfg.utls.imageNoDataValue(referenceR)
 			if nD is None:
 				nD = NoDataVal
 			cfg.parallelArrayDict = {}
-			o = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.rasterUniqueValues, nodataValue = nD, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Unique values'), deleteArray = 'No')
-			# calculate unique values
-			for x in sorted(cfg.parallelArrayDict):
-				try:
-					for ar in cfg.parallelArrayDict[x]:
-						try:
-							if ar is not None:
-								values = cfg.np.append(values, ar, axis = 0)
-						except:
-							values = ar
-				except:
-					if batch == 'No':
-						cfg.utls.finishSound()
-						cfg.utls.sendSMTPMessage(None, str(__name__))
-						# enable map canvas render
-						cfg.cnvs.setRenderFlag(True)
-						cfg.uiUtls.removeProgressBar()
-					# logger
-					cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR values')
-					cfg.mx.msgErr9()		
-					return 'No'
-			try:
-				cmb = cfg.np.unique(values, axis = 0).tolist()
-			except:
-				if batch == 'No':
-					cfg.utls.finishSound()
-					cfg.utls.sendSMTPMessage(None, str(__name__))
-					# enable map canvas render
-					cfg.cnvs.setRenderFlag(True)
-					cfg.uiUtls.removeProgressBar()
-				# logger
-				cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR values')
-				cfg.mx.msgErr9()		
-				return 'No'
-			# expression builder
-			check = 'No'
-			t = 0
-			while t < 100:
-				t = t + 1
-				rndVarList = []
-				# first try fixed list
-				if t == 1:
-					coT = 333
-					for cmbI in range(0, len(cmb[0])):
-						rndVarList.append(coT)
-						coT = coT + 1
-				# random list
-				else:
-					for cmbI in range(0, len(cmb[0])):
-						rndVarList.append(int(999 * cfg.np.random.random()))
-				newValueList = []
-				reclassDict = {}
-				for i in cmb:
-					if nD not in i:
-						newVl = cfg.np.multiply(rndVarList, i).sum()
-						reclassDict[newVl] = i
-						newValueList.append(newVl)
-				uniqueValList = cfg.np.unique(newValueList)
-				if int(uniqueValList.shape[0]) == len(newValueList):
-					n = 1
-					reclassList = []
-					cmbntns = {}	
-					for newVl in sorted(reclassDict.keys()):
-						i = reclassDict[newVl]
-						reclassList.append(newVl)
-						cmbntns[n] = i
-						n = n + 1
-					check = 'Yes'
-					break
-			if check == 'No':
-				if batch == 'No':
-					# enable map canvas render
-					cfg.cnvs.setRenderFlag(True)
-					cfg.uiUtls.removeProgressBar()
-				return 'No'
-			e = ''
-			for rE in range(0, len(rndVarList)):
-				e = e + 'rasterSCPArrayfunctionBand[::, ::, ' + str(rE) + '] * ' + str(rndVarList[rE]) + ' + '
-			e = e.rstrip(' + ')
-			# check projections
-			left, right, top, bottom, cRPX, cRPY, rP, un = cfg.utls.imageGeoTransform(vrtCheck)
-			# calculation
-			o = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.crossRasters, outputRasterList = [combRstPath], nodataValue = nD, functionBandArgument = reclassList, functionVariable = e, progressMessage = 'band combination ', dataType = 'UInt16', outputNoDataValue = 0, virtualRaster = vrtR, compress = cfg.rasterCompression)
-			cfg.uiUtls.updateBar(60)
-			cfg.parallelArrayDict = {}
-			o = cfg.utls.multiProcessRaster(rasterPath = combRstPath, functionBand = 'No', functionRaster = cfg.utls.rasterUniqueValuesWithSum, nodataValue = 0, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Unique values'), deleteArray = 'No')
+			o = cfg.utls.multiProcessRaster(rasterPath = referenceR, functionBand = 'No', functionRaster = cfg.utls.rasterUniqueValuesWithSum, nodataValue = nD, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Unique values step ') + '0')
 			# calculate unique values
 			values = cfg.np.array([])
-			sumVal = cfg.np.array([])
 			for x in sorted(cfg.parallelArrayDict):
 				try:
 					for ar in cfg.parallelArrayDict[x]:
 						values = cfg.np.append(values, ar[0, ::])
-						sumVal = cfg.np.append(sumVal, ar[1, ::])
 				except:
 					if batch == 'No':
 						cfg.utls.finishSound()
@@ -251,17 +158,157 @@ class BandCombination:
 					cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR values')
 					cfg.mx.msgErr9()		
 					return 'No'
-			reclRasterBandUniqueVal = {}
-			values = values.astype(int)
-			for v in range(0, len(values)):
+			rasterBandUniqueVal = cfg.np.unique(values).tolist()
+			refRasterBandUniqueVal = sorted(rasterBandUniqueVal)
+			try:
+				refRasterBandUniqueVal.remove(nD)
+			except:
+				pass
+			tempRasters = []
+			# iteration
+			for b in range(1, len(cfg.bndSetLst)):
+				bList = [referenceR, cfg.bndSetLst[b]]
+				bListNum = [1, 1]
+				bandsUniqueVal = []
+				bandsUniqueVal.append(refRasterBandUniqueVal)
+				cfg.parallelArrayDict = {}
+				o = cfg.utls.multiProcessRaster(rasterPath = cfg.bndSetLst[b], functionBand = 'No', functionRaster = cfg.utls.rasterUniqueValuesWithSum, nodataValue = nD, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Unique values step ') + str(b) + '/' + str(len(cfg.bndSetLst)-1))
+				# calculate unique values
+				values = cfg.np.array([])
+				for x in sorted(cfg.parallelArrayDict):
+					try:
+						for ar in cfg.parallelArrayDict[x]:
+							values = cfg.np.append(values, ar[0, ::])
+					except:
+						if batch == 'No':
+							cfg.utls.finishSound()
+							cfg.utls.sendSMTPMessage(None, str(__name__))
+							# enable map canvas render
+							cfg.cnvs.setRenderFlag(True)
+							cfg.uiUtls.removeProgressBar()			
+						# logger
+						cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR values')
+						cfg.mx.msgErr9()		
+						return 'No'
+				rasterBandUniqueVal = cfg.np.unique(values).tolist()
+				newRasterBandUniqueVal = sorted(rasterBandUniqueVal)
 				try:
-					reclRasterBandUniqueVal[values[v]] = reclRasterBandUniqueVal[values[v]] + sumVal[v]
+					newRasterBandUniqueVal.remove(nD)
 				except:
-					reclRasterBandUniqueVal[values[v]] = sumVal[v]
-			rasterBandUniqueVal = {}
-			for v in range(0, len(values)):
-				cmbX = cmbntns[values[v]]
-				rasterBandUniqueVal[tuple(cmbX)] = [reclRasterBandUniqueVal[values[v]], values[v]]
+					pass
+				bandsUniqueVal.append(newRasterBandUniqueVal)
+				try:
+					cmb = list(cfg.itertoolsSCP.product(*bandsUniqueVal))
+					testCmb = cmb[0]
+				except Exception as err:
+					if batch == 'No':
+						cfg.uiUtls.removeProgressBar()
+					cfg.mx.msgErr63()
+					# logger
+					if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					return 'No'
+				# expression builder
+				check = 'No'
+				t = 0
+				while t < 100:
+					t = t + 1
+					rndVarList = []
+					# first try fixed list
+					if t == 1:
+						coT = 333
+						for cmbI in range(0, len(cmb[0])):
+							rndVarList.append(coT)
+							coT = coT + 1
+					# random list
+					else:
+						for cmbI in range(0, len(cmb[0])):
+							rndVarList.append(int(999 * cfg.np.random.random()))
+					newValueList = []
+					reclassDict = {}
+					for i in cmb:
+						if nD not in i:
+							newVl = cfg.np.multiply(rndVarList, i).sum()
+							reclassDict[newVl] = i
+							newValueList.append(newVl)
+					uniqueValList = cfg.np.unique(newValueList)
+					if int(uniqueValList.shape[0]) == len(newValueList):
+						n = 1
+						reclassList = []
+						cmbntns = {}	
+						for newVl in sorted(reclassDict.keys()):
+							i = reclassDict[newVl]
+							reclassList.append(newVl)
+							try:
+								listCB = []
+								for bc in oldCmbntns[int(i[0])]:
+									listCB.append(bc)
+								listCB.append(i[1])
+								cmbntns[n] = listCB
+							except:
+								cmbntns[n] = [i[0], i[1]]
+							n = n + 1
+						check = 'Yes'
+						break
+				if check == 'No':
+					if batch == 'No':
+						# enable map canvas render
+						cfg.cnvs.setRenderFlag(True)
+						cfg.uiUtls.removeProgressBar()
+					return 'No'
+				oldCmbntns = cmbntns.copy()
+				e = ''
+				for rE in range(0, len(rndVarList)):
+					e = e + 'rasterSCPArrayfunctionBand[::, ::, ' + str(rE) + '] * ' + str(rndVarList[rE]) + ' + '
+				e = e.rstrip(' + ')
+				vrtCheck = cfg.utls.createTempVirtualRaster(bList, bListNum, 'Yes', 'Yes', 0, 'No', 'Yes')
+				# last iteration
+				if b == len(cfg.bndSetLst)-1:
+					crossRstPath = combRstPath
+				else:
+					if vrtR == 'No':
+						crossRstPath = cfg.utls.createTempRasterPath('tif')
+					else:
+						crossRstPath = cfg.utls.createTempRasterPath('vrt')
+					tempRasters.append(crossRstPath)
+				# check projections
+				left, right, top, bottom, cRPX, cRPY, rP, un = cfg.utls.imageGeoTransform(vrtCheck)
+				# calculation
+				cfg.parallelArrayDict = {}
+				o = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.crossRasters, outputRasterList = [crossRstPath], nodataValue = nD,  functionBandArgument = reclassList, functionVariable = e, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Cross classification step ') + str(b) + '/' + str(len(cfg.bndSetLst)-1), outputNoDataValue = 0,  virtualRaster = vrtR, compress = cfg.rasterCompression, dataType = 'UInt16')
+				# calculate unique values
+				values = cfg.np.array([])
+				sumVal = cfg.np.array([])
+				for x in sorted(cfg.parallelArrayDict):
+					try:
+						for ar in cfg.parallelArrayDict[x]:
+							values = cfg.np.append(values, ar[1][0, ::])
+							sumVal = cfg.np.append(sumVal, ar[1][1, ::])
+					except:
+						if batch == 'No':
+							cfg.utls.finishSound()
+							cfg.utls.sendSMTPMessage(None, str(__name__))
+							# enable map canvas render
+							cfg.cnvs.setRenderFlag(True)
+							cfg.uiUtls.removeProgressBar()			
+						# logger
+						cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR values')
+						cfg.mx.msgErr9()		
+						return 'No'
+				reclRasterBandUniqueVal = {}
+				values = values.astype(int)
+				for v in range(0, len(values)):
+					try:
+						reclRasterBandUniqueVal[values[v]] = reclRasterBandUniqueVal[values[v]] + sumVal[v]
+					except:
+						reclRasterBandUniqueVal[values[v]] = sumVal[v]
+				rasterBandUniqueVal = {}
+				for v in range(0, len(values)):
+					cmbX = cmbntns[values[v]]
+					rasterBandUniqueVal[tuple(cmbX)] = [reclRasterBandUniqueVal[values[v]], values[v]]
+				referenceR = crossRstPath
+				refRasterBandUniqueVal = list(set(values))
+			# remove temporary rasters
+			tempRasters
 			# logger
 			cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'cross raster output: ' + str(combRstPath))
 			cfg.uiUtls.updateBar(80)

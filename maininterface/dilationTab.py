@@ -138,7 +138,10 @@ class DilationRaster:
 					if cfg.osSCP.path.isfile(outputRaster):
 						oR = cfg.utls.addRasterLayer(outputRaster)
 					if r != 'No':
-						cfg.utls.copyRenderer(r, oR)
+						try:
+							cfg.utls.copyRenderer(r, oR)
+						except:
+							pass
 					if batch == 'No':
 						cfg.utls.finishSound()
 						cfg.utls.sendSMTPMessage(None, str(__name__))
