@@ -2481,17 +2481,17 @@ class Utils:
 						pass
 					# set metadata xml
 					xml = '''
-					<SimpleSource>
+					<ComplexSource>
 					  <SourceFilename relativeToVRT='%i'>%s</SourceFilename>
 					  <SourceBand>%i</SourceBand>
 					  <SourceProperties RasterXSize='%i' RasterYSize='%i' DataType=%s BlockXSize='%i' BlockYSize='%i' />
 					  <SrcRect xOff='%i' yOff='%i' xSize='%i' ySize='%i' />
 					  <DstRect xOff='%i' yOff='%i' xSize='%i' ySize='%i' />
 					  <NODATA>%i</NODATA>
-					</SimpleSource>
+					</ComplexSource>
 					'''
 					source = xml % (relativeToVRT, source_path, bandNumber, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, 'Float32', x_block, y_block, xoffX, xoffY, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, offX, offY, rX2, rY2, noData)
-					band.SetMetadataItem('SimpleSource', source, 'new_vrt_sources')
+					band.SetMetadataItem('ComplexSource', source, 'new_vrt_sources')
 					if NoDataVal == 'Yes':
 						band.SetNoDataValue(noData)	
 					elif NoDataVal != 'No':
@@ -2580,20 +2580,20 @@ class Utils:
 							pass
 						# set metadata xml
 						xml = '''
-						<SimpleSource>
+						<ComplexSource>
 						  <SourceFilename relativeToVRT='%i'>%s</SourceFilename>
 						  <SourceBand>%i</SourceBand>
 						  <SourceProperties RasterXSize='%i' RasterYSize='%i' DataType=%s BlockXSize='%i' BlockYSize='%i' />
 						  <SrcRect xOff='%i' yOff='%i' xSize='%i' ySize='%i' />
 						  <DstRect xOff='%i' yOff='%i' xSize='%i' ySize='%i' />
 						  <NODATA>%i</NODATA>
-						</SimpleSource>
+						</ComplexSource>
 						'''
 						if aster == 'No':
 							source = xml % (relativeToVRT, source_path, bandNumber, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, 'Float32', x_block, y_block, xoffX, xoffY, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, offX, offY, rX2, rY2, noData)
 						else:
 							source = xml % (relativeToVRT, source_path, bandNumber, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, 'Float32', x_block, y_block, xoffX, xoffY, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, xoffX, xoffY, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, noData)
-						band.SetMetadataItem('SimpleSource', source, 'new_vrt_sources')
+						band.SetMetadataItem('ComplexSource', source, 'new_vrt_sources')
 						if NoDataVal == 'Yes':
 							band.SetNoDataValue(noData)	
 						elif NoDataVal != 'No':
@@ -2910,6 +2910,26 @@ class Utils:
 				bottomR = bottom
 			extra = '-tr ' + str(pX) + ' ' + str(pY) + ' -te ' + str(leftR) + ' ' + str(bottomR) + ' ' + str(rightR) + ' ' + str(topR)
 		cfg.utls.GDALReprojectRaster(input = rasterPath, output = outputPath, outFormat = 'VRT', s_srs = None, t_srs = outputWkt, additionalParams = extra)
+		# workaround to gdalwarp issue ignoring scale and offset
+		try:
+			oR = cfg.gdalSCP.Open(rasterPath, cfg.gdalSCP.GA_Update)
+			iRB = oR.GetRasterBand(1)
+			offset = iRB.GetOffset()
+			scale = iRB.GetScale()
+			iRB = None
+			oR = None
+			if scale != 1 or offset != 0:
+				oR = cfg.gdalSCP.Open(outputPath, cfg.gdalSCP.GA_Update)
+				bO = oR.GetRasterBand(1)
+				bO.SetScale(scale)
+				bO.SetOffset(offset)
+				bO = None
+				oR = None
+				# logger
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' scale' + str(scale) + ' offset' + str(offset))
+		except Exception as err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 		return outputPath
 	
 	# calculate raster block ranges
