@@ -6220,7 +6220,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/batchTab.py" line="3677"/>
+        <location filename="../maininterface/batchTab.py" line="3679"/>
         <source>missing parameter</source>
         <translation type="unfinished"></translation>
     </message>

@@ -1975,7 +1975,7 @@ class BatchTab:
 		except:
 			return 'No', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'missing parameter')
 		return 'Yes', parameters
-
+	
 	# batch band calc
 	def performBandCalc(self, paramList):
 		extentRaster = 'None'
@@ -2100,6 +2100,8 @@ class BatchTab:
 			parameters.append(scaleValue)
 			parameters.append(offsetValue)
 			parameters.append(align)
+			if extentSameAs == '\'Yes\'':
+				extentIntersection = '\'No\''
 			parameters.append(extentIntersection)
 			parameters.append(extentSameAs)
 			parameters.append('\'No\'')
@@ -2107,7 +2109,7 @@ class BatchTab:
 		except:
 			return 'No', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'missing parameter')
 		return 'Yes', parameters
-																									
+		
 	# batch clip rasters
 	def performClipRasters(self, paramList):
 		shapefilePath = 'None'

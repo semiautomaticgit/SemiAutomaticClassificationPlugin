@@ -6224,7 +6224,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/batchTab.py" line="3677"/>
+        <location filename="../maininterface/batchTab.py" line="3679"/>
         <source>missing parameter</source>
         <translation type="unfinished"></translation>
     </message>
