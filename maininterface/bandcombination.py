@@ -48,7 +48,7 @@ class BandCombination:
 		self.bandSetCombination()
 	
 	# cross classification calculation
-	def bandSetCombination(self, batch = 'No', bandSet = None, rasterOutput = None):
+	def bandSetCombination(self, batch = 'No', bandSetNumber = None, rasterOutput = None):
 		if batch == 'No':
 			combRstPath = cfg.utls.getSaveFileName(None, cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Save band combination raster output'), '', 'TIF file (*.tif);;VRT file (*.vrt)')
 		else:
@@ -62,9 +62,9 @@ class BandCombination:
 				pass
 			else:
 				combRstPath = combRstPath + '.tif'
-			if bandSet is None:
+			if bandSetNumber is None:
 				bandSet = cfg.ui.band_set_comb_spinBox.value()
-			bandSetNumber = bandSet - 1
+				bandSetNumber = bandSet - 1
 			if batch == 'No':
 				cfg.uiUtls.addProgressBar()
 			# create list of rasters
@@ -205,7 +205,7 @@ class BandCombination:
 						cfg.uiUtls.removeProgressBar()
 					cfg.mx.msgErr63()
 					# logger
-					if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 					return 'No'
 				# expression builder
 				check = 'No'
@@ -342,10 +342,10 @@ class BandCombination:
 					eM = f.read()
 					cfg.ui.band_set_comb_textBrowser.setText(eM)
 				# logger
-				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " cross matrix calculated")
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' cross matrix calculated')
 			except Exception as err:
 				# logger
-				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 			cfg.uiUtls.updateBar(100)
 			if batch == 'No':
 				# enable map canvas render
@@ -355,5 +355,5 @@ class BandCombination:
 				cfg.ui.toolBox_band_set_combination.setCurrentIndex(1)
 				cfg.uiUtls.removeProgressBar()
 			# logger
-			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "finished")
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'finished')
 	
