@@ -207,6 +207,14 @@ class LandCoverChange:
 					cfg.mx.msgErr9()		
 					return 'No'
 				bandsUniqueVal = [refRasterBandUniqueVal, newRasterBandUniqueVal]
+				if 0 in refRasterBandUniqueVal:
+					k0 = 1
+				else:
+					k0 = 0
+				if 0 in newRasterBandUniqueVal:
+					k1 = 1
+				else:
+					k1 = 0
 				try:
 					cmb = list(cfg.itertoolsSCP.product(*bandsUniqueVal))
 					testCmb = cmb[0]
@@ -223,6 +231,7 @@ class LandCoverChange:
 				while t < 100:
 					t = t + 1
 					rndVarList = []
+					calcDataType = cfg.np.uint32
 					# first try fixed list
 					if t == 1:
 						coT = 333
@@ -236,9 +245,11 @@ class LandCoverChange:
 					newValueList = []
 					reclassDict = {}
 					for i in cmb:
-						newVl = cfg.np.multiply(rndVarList, i).sum()
+						newVl = (i[0] + k0) * (rndVarList[0]) + (i[1] + k1) * (rndVarList[1])
 						reclassDict[newVl] = i
 						newValueList.append(newVl)
+						if i[0] < 0 or i[1] < 0 :
+							calcDataType = cfg.np.int32
 					uniqueValList = cfg.np.unique(newValueList)
 					if int(uniqueValList.shape[0]) == len(newValueList):
 						n = 1
@@ -261,16 +272,13 @@ class LandCoverChange:
 						cfg.cnvs.setRenderFlag(True)
 						cfg.uiUtls.removeProgressBar()
 					return 'No'
-				e = ''
-				for rE in range(0, len(rndVarList)):
-					e = e + 'rasterSCPArrayfunctionBand[::, ::, ' + str(rE) + '] * ' + str(rndVarList[rE]) + ' + '
-				e = e.rstrip(' + ')			
+				e = '(rasterSCPArrayfunctionBand[::, ::, 0] + ' + str(k0) +' ) * ' + str(rndVarList[0]) + ' + (rasterSCPArrayfunctionBand[::, ::, 1] + ' + str(k1) +' ) * ' + str(rndVarList[1])	
 				# calculation
 				bList = [refRstrSrc, newRstrSrc]
 				bandNumberList = [1, 1]
 				vrtCheck = cfg.utls.createTempVirtualRaster(bList, bandNumberList, 'Yes', 'Yes', 0, 'No', 'No')
 				cfg.parallelArrayDict = {}
-				o = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.crossRasters, outputRasterList = [chngRstPath],  functionBandArgument = reclassList, functionVariable = e, progressMessage =cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Land cover change'), virtualRaster = vrtR, compress = cfg.rasterCompression, outputNoDataValue = -10, dataType = 'Int32')
+				o = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.crossRasters, outputRasterList = [chngRstPath],  functionBandArgument = reclassList, functionVariable = e, progressMessage =cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Land cover change'), virtualRaster = vrtR, compress = cfg.rasterCompression, outputNoDataValue = cfg.NoDataValUInt32, dataType = 'UInt32', calcDataType = calcDataType)
 				# check projections
 				left, right, top, bottom, cRPX, cRPY, rP, un = cfg.utls.imageGeoTransform(chngRstPath)			
 				if o == 'No':

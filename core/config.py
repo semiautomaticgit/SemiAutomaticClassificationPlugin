@@ -162,6 +162,8 @@ algBandWeigths = {}
 # set classification path
 clssPth = None
 arrayUnitMemory = 0.000016
+arrayUnitMemory8 = 0.000010
+arrayUnitMemory4 = 0.000006
 tableColString = 'ID'
 ROITabEdited = 'No'
 SigTabEdited = 'No'
@@ -625,6 +627,7 @@ splitBndNm = 'splitBand_'
 spectralDistNm = 'SpectralDistanceBandSets_'
 reflectanceRasterNm = 'reflectance_temp'
 NoDataVal = -32768
+NoDataValUInt32 = 4294967295
 unclassifiedVal = -1000
 maxLikeNoDataVal = -999999999900000
 maxValDt = 999999999900000
@@ -787,7 +790,7 @@ functionNames.append([[' remove_band_from_bandset', 'cfg.batchT.performRemoveBan
 functionNames.append([[' remove_bandset', 'cfg.batchT.performRemoveBandSet',  'cfg.bst.removeBandSetTab', ['band_set : 1', 'unload_bands : 0']]])
 functionNames.append([[' select_bandset', 'cfg.batchT.performBandSetSelection',  'cfg.bst.selectBandSetTab', ['band_set : 1']]])
 functionNames.append([['Band calculation']])
-functionNames.append([[' band_calc', 'cfg.batchT.performBandCalc',  'cfg.bCalc.calculate', ['expression : \'\'', 'output_raster_path : \'\'', 'extent_same_as_raster_name : \'\'', 'align : 1', 'extent_intersection : 1', 'input_nodata_as_value : 0', 'use_value_nodata : 0', 'output_nodata_value : -32768', 'data_type : \'Float32\'', 'scale_value : 1',  'offset_value : 0', 'band_set : 1']]])
+functionNames.append([[' band_calc', 'cfg.batchT.performBandCalc',  'cfg.bCalc.calculate', ['expression : \'\'', 'output_raster_path : \'\'', 'extent_same_as_raster_name : \'\'', 'align : 1', 'extent_intersection : 1', 'input_nodata_as_value : 0', 'use_value_nodata : 0', 'calculation_data_type : \'Float32\'', 'output_nodata_value : -32768',  'data_type : \'Float32\'', 'scale_value : 1',  'offset_value : 0', 'band_set : 1']]])
 functionNames.append([['Preprocessing']])
 functionNames.append([[' aster_conversion', 'cfg.batchT.performASTERConversion', 'cfg.ASTERT.ASTER', ['input_raster_path : \'\'', 'celsius_temperature : 0', 'apply_dos1 : 0', 'use_nodata : 1', 'nodata_value : 0', 'create_bandset : 1', 'output_dir : \'\'', 'band_set : 1']]])
 functionNames.append([[' clip_multiple_rasters', 'cfg.batchT.performClipRasters',  'cfg.clipMulti.clipRasters', ['band_set : 1', 'output_dir : \'\'', 'use_vector : 0', 'vector_path : \'\'', 'use_vector_field : 0', 'vector_field : \'\'', 'ul_x : \'\'', 'ul_y : \'\'', 'lr_x : \'\'', 'lr_y : \'\'', 'nodata_value : 0', 'output_name_prefix : \'clip\'']]])

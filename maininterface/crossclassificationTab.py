@@ -213,6 +213,7 @@ class CrossClassification:
 				bListNum = [1, 1]
 				vrtCheck = cfg.utls.createTempVirtualRaster(bList, bListNum, 'Yes', 'Yes', 0, 'No', 'Yes')
 				bandsUniqueVal = []
+				k = []
 				for b in bList:
 					cfg.parallelArrayDict = {}
 					o = cfg.utls.multiProcessRaster(rasterPath = b, functionBand = 'No', functionRaster = cfg.utls.rasterUniqueValuesWithSum, nodataValue = nD, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Unique values'))
@@ -240,6 +241,10 @@ class CrossClassification:
 					except:
 						pass
 					bandsUniqueVal.append(refRasterBandUniqueVal)
+					if 0 in refRasterBandUniqueVal:
+						k.append(1)
+					else:
+						k.append(0)
 				try:
 					cmb = list(cfg.itertoolsSCP.product(*bandsUniqueVal))
 					testCmb = cmb[0]
@@ -256,6 +261,7 @@ class CrossClassification:
 				while t < 100:
 					t = t + 1
 					rndVarList = []
+					calcDataType = cfg.np.uint32
 					# first try fixed list
 					if t == 1:
 						coT = 333
@@ -270,9 +276,11 @@ class CrossClassification:
 					reclassDict = {}
 					for i in cmb:
 						if nD not in i:
-							newVl = cfg.np.multiply(rndVarList, i).sum()
+							newVl = (i[0] + k[0]) * (rndVarList[0]) + (i[1] + k[1]) * (rndVarList[1])
 							reclassDict[newVl] = i
 							newValueList.append(newVl)
+							if i[0] < 0 or i[1] < 0 :
+								calcDataType = cfg.np.int32
 					uniqueValList = cfg.np.unique(newValueList)
 					if int(uniqueValList.shape[0]) == len(newValueList):
 						n = 1
@@ -295,15 +303,12 @@ class CrossClassification:
 						cfg.cnvs.setRenderFlag(True)
 						cfg.uiUtls.removeProgressBar()
 					return 'No'
-				e = ''
-				for rE in range(0, len(rndVarList)):
-					e = e + 'rasterSCPArrayfunctionBand[::, ::, ' + str(rE) + '] * ' + str(rndVarList[rE]) + ' + '
-				e = e.rstrip(' + ')
+				e = '(rasterSCPArrayfunctionBand[::, ::, 0] + ' + str(k[0]) +' ) * ' + str(rndVarList[0]) + ' + (rasterSCPArrayfunctionBand[::, ::, 1] + ' + str(k[1]) +' ) * ' + str(rndVarList[1])
 				# check projections
 				left, right, top, bottom, cRPX, cRPY, rP, un = cfg.utls.imageGeoTransform(vrtCheck)					
 				# calculation
 				cfg.parallelArrayDict = {}
-				o = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.crossRasters, outputRasterList = [crossRstPath], nodataValue = nD,  functionBandArgument = reclassList, functionVariable = e, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Cross classification'), outputNoDataValue = 0,  virtualRaster = vrtR, compress = cfg.rasterCompression, dataType = 'UInt16')
+				o = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.crossRasters, outputRasterList = [crossRstPath], nodataValue = nD,  functionBandArgument = reclassList, functionVariable = e, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Cross classification'), outputNoDataValue = cfg.NoDataValUInt32,  virtualRaster = vrtR, compress = cfg.rasterCompression, dataType = 'UInt32', calcDataType = calcDataType)
 				cfg.uiUtls.updateBar(60)
 				if o == 'No':
 					if batch == 'No':

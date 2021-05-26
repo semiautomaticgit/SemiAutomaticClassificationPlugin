@@ -1990,6 +1990,7 @@ class BatchTab:
 		scaleValue = '\'1\''
 		offsetValue = '\'0\''
 		dataType = '\'Float32\''
+		calcDataType = 'None'
 		parameters = []
 		for p in paramList:
 			pSplit = p.split(':', 1)
@@ -2082,6 +2083,13 @@ class BatchTab:
 					dataType = '\'' + g + '\''
 				else:
 					return 'No', pName
+			# calculation data type prefix inside ' '
+			elif pName == 'calculation_data_type':
+				g = pSplit[1].strip().replace('\'', '')
+				if len(g) > 0:
+					calcDataType = '\'' + g + '\''
+				else:
+					return 'No', pName
 			else:
 				if len(pName.strip()) > 0:
 					return 'No', pName
@@ -2106,6 +2114,7 @@ class BatchTab:
 			parameters.append(extentSameAs)
 			parameters.append('\'No\'')
 			parameters.append(bandset)
+			parameters.append(calcDataType)
 		except:
 			return 'No', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'missing parameter')
 		return 'Yes', parameters

@@ -509,7 +509,7 @@ class BandCalcTab:
 			cfg.bCalc.calculate(None, 'No', e)
 		
 	# calculate
-	def calculate(self, outFile = None, batch = 'No', expressionString = None, extentRaster = None, extentList = None, inputNoDataAsValue = None, useNoDataValue = None,  outputNoData = None, rasterDataType = None, useScale = None, useOffset = None, align = None, extentIntersection = None, extentSameAs = None, quiet = 'No', bandSetNumber = None):
+	def calculate(self, outFile = None, batch = 'No', expressionString = None, extentRaster = None, extentList = None, inputNoDataAsValue = None, useNoDataValue = None,  outputNoData = None, rasterDataType = None, useScale = None, useOffset = None, align = None, extentIntersection = None, extentSameAs = None, quiet = 'No', bandSetNumber = None, calcDataType = None):
 		if bandSetNumber is None:
 			bandSetNumber = cfg.bndSetNumber
 		if bandSetNumber >= len(cfg.bandSetsList):
@@ -990,6 +990,25 @@ class BandCalcTab:
 								outputNoData = cfg.ui.nodata_spinBox_4.value()
 							if rasterDataType is None:
 								rasterDataType = cfg.rasterBandCalcType
+							# calc data type
+							if calcDataType is None:
+								calcDataType = cfg.ui.calc_type_combo.currentText()
+							if calcDataType == 'Float64':
+								calcDataType = cfg.np.float64
+							elif calcDataType == 'Float32':
+								calcDataType = cfg.np.float32
+							elif calcDataType == 'Int32':
+								calcDataType = cfg.np.int32
+							elif calcDataType == 'UInt32':
+								calcDataType = cfg.np.uint32
+							elif calcDataType == 'Int16':
+								calcDataType = cfg.np.int16
+							elif calcDataType == 'UInt16':
+								calcDataType = cfg.np.uint16
+							elif calcDataType == 'Byte':
+								calcDataType = cfg.np.byte
+							else:
+								calcDataType = cfg.np.float32
 							if extentList is None:
 								if (extentIntersection is None and cfg.ui.intersection_checkBox.isChecked() is True) or extentIntersection == 'Yes':
 									tPMD = cfg.utls.createTempVirtualRaster(bList, bandNumberList, 'Yes', 'Yes', 0, 'No', 'Yes')
@@ -1091,7 +1110,7 @@ class BandCalcTab:
 								tPMD = cfg.utls.createTempVirtualRaster(bList, bandNumberList, 'Yes', 'Yes', 0, 'No', 'No', [float(tLX), float(tLY), float(lRX), float(lRY), 'Yes'])
 							cfg.utls.makeDirectory(cfg.osSCP.path.dirname(out))
 							# process calculation
-							o = cfg.utls.multiProcessRaster(rasterPath = tPMD, functionBand = 'No', functionRaster = cfg.utls.bandCalculation, outputRasterList = [out], nodataValue = useNoDataValue,  functionBandArgument = e, functionVariable = variableList, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Calculation ') + str(e), skipReplaceNoData = skipReplaceNoDT, virtualRaster = vrtR, compress = cfg.rasterCompression, compressFormat = 'LZW', outputNoDataValue = outputNoData, dataType = rasterDataType, scale = useScale, offset = useOffset)
+							o = cfg.utls.multiProcessRaster(rasterPath = tPMD, functionBand = 'No', functionRaster = cfg.utls.bandCalculation, outputRasterList = [out], nodataValue = useNoDataValue,  functionBandArgument = e, functionVariable = variableList, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Calculation ') + str(e), skipReplaceNoData = skipReplaceNoDT, virtualRaster = vrtR, compress = cfg.rasterCompression, compressFormat = 'LZW', outputNoDataValue = outputNoData, dataType = rasterDataType, scale = useScale, offset = useOffset, calcDataType = calcDataType)
 							if o != 'No':
 								if quiet == 'No':
 									r =cfg.utls.addRasterLayer(out)

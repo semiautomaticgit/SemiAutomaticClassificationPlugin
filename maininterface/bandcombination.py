@@ -95,6 +95,11 @@ class BandCombination:
 				# logger
 				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' Warning')
 				return 'No'
+			# name of combination field in output table
+			combName = ''
+			for rbName in cfg.bandSetsList[bandSetNumber][3]:
+				combName = combName + rbName[0:16] + ','
+			combName = combName.rstrip(',')
 			cfg.uiUtls.updateBar(10)
 			cfg.utls.makeDirectory(cfg.osSCP.path.dirname(combRstPath))
 			NoDataVal = cfg.NoDataVal
@@ -158,7 +163,7 @@ class BandCombination:
 					cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR values')
 					cfg.mx.msgErr9()		
 					return 'No'
-			rasterBandUniqueVal = cfg.np.unique(values).tolist()
+			rasterBandUniqueVal = cfg.np.unique(values).astype(int).tolist()
 			refRasterBandUniqueVal = sorted(rasterBandUniqueVal)
 			try:
 				refRasterBandUniqueVal.remove(nD)
@@ -190,12 +195,20 @@ class BandCombination:
 						cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR values')
 						cfg.mx.msgErr9()		
 						return 'No'
-				rasterBandUniqueVal = cfg.np.unique(values).tolist()
+				rasterBandUniqueVal = cfg.np.unique(values).astype(int).tolist()
 				newRasterBandUniqueVal = sorted(rasterBandUniqueVal)
 				try:
 					newRasterBandUniqueVal.remove(nD)
 				except:
 					pass
+				if 0 in refRasterBandUniqueVal:
+					k0 = 1
+				else:
+					k0 = 0
+				if 0 in newRasterBandUniqueVal:
+					k1 = 1
+				else:
+					k1 = 0
 				bandsUniqueVal.append(newRasterBandUniqueVal)
 				try:
 					cmb = list(cfg.itertoolsSCP.product(*bandsUniqueVal))
@@ -213,6 +226,7 @@ class BandCombination:
 				while t < 100:
 					t = t + 1
 					rndVarList = []
+					calcDataType = cfg.np.uint32
 					# first try fixed list
 					if t == 1:
 						coT = 333
@@ -227,9 +241,11 @@ class BandCombination:
 					reclassDict = {}
 					for i in cmb:
 						if nD not in i:
-							newVl = cfg.np.multiply(rndVarList, i).sum()
+							newVl = (i[0] + k0) * (rndVarList[0]) + (i[1] + k1) * (rndVarList[1])
 							reclassDict[newVl] = i
 							newValueList.append(newVl)
+							if i[0] < 0 or i[1] < 0 :
+								calcDataType = cfg.np.int32
 					uniqueValList = cfg.np.unique(newValueList)
 					if int(uniqueValList.shape[0]) == len(newValueList):
 						n = 1
@@ -240,7 +256,7 @@ class BandCombination:
 							reclassList.append(newVl)
 							try:
 								listCB = []
-								for bc in oldCmbntns[int(i[0])]:
+								for bc in oldCmbntns[i[0]]:
 									listCB.append(bc)
 								listCB.append(i[1])
 								cmbntns[n] = listCB
@@ -256,10 +272,9 @@ class BandCombination:
 						cfg.uiUtls.removeProgressBar()
 					return 'No'
 				oldCmbntns = cmbntns.copy()
-				e = ''
-				for rE in range(0, len(rndVarList)):
-					e = e + 'rasterSCPArrayfunctionBand[::, ::, ' + str(rE) + '] * ' + str(rndVarList[rE]) + ' + '
-				e = e.rstrip(' + ')
+				e = '(rasterSCPArrayfunctionBand[::, ::, 0] + ' + str(k0) +' ) * ' + str(rndVarList[0]) + ' + (rasterSCPArrayfunctionBand[::, ::, 1] + ' + str(k1) +' ) * ' + str(rndVarList[1])
+				# logger
+				if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' e: ' + str(e))
 				vrtCheck = cfg.utls.createTempVirtualRaster(bList, bListNum, 'Yes', 'Yes', 0, 'No', 'Yes')
 				# last iteration
 				if b == len(cfg.bndSetLst)-1:
@@ -274,7 +289,7 @@ class BandCombination:
 				left, right, top, bottom, cRPX, cRPY, rP, un = cfg.utls.imageGeoTransform(vrtCheck)
 				# calculation
 				cfg.parallelArrayDict = {}
-				o = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.crossRasters, outputRasterList = [crossRstPath], nodataValue = nD,  functionBandArgument = reclassList, functionVariable = e, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Cross classification step ') + str(b) + '/' + str(len(cfg.bndSetLst)-1), outputNoDataValue = 0,  virtualRaster = vrtR, compress = cfg.rasterCompression, dataType = 'UInt16')
+				o = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.crossRasters, outputRasterList = [crossRstPath], nodataValue = nD,  functionBandArgument = reclassList, functionVariable = e, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Cross classification step ') + str(b) + '/' + str(len(cfg.bndSetLst)-1), outputNoDataValue = cfg.NoDataValUInt32,  virtualRaster = vrtR, compress = cfg.rasterCompression, dataType = 'UInt32', calcDataType = calcDataType)
 				# calculate unique values
 				values = cfg.np.array([])
 				sumVal = cfg.np.array([])
@@ -320,7 +335,7 @@ class BandCombination:
 				# logger
 				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 				return 'No'
-			t = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'RasterValue') + '\t' + cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Combination') + '\t' + cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'PixelSum') + '\t' + cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Area [' + un + '^2]') + str('\n')
+			t = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'RasterValue') + '\t' + combName + '\t' + cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'PixelSum') + '\t' + cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Area [' + un + '^2]') + str('\n')
 			l.write(t)
 			for c in cmbntns:
 				try:

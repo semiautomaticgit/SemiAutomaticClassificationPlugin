@@ -1577,7 +1577,7 @@ class Utils:
 		for x in sorted(cfg.parallelArrayDict):
 			try:
 				for dic in cfg.parallelArrayDict[x]:
-					outFile, rStat, ar, ROIsize = dic
+					rStat, ar, ROIsize = dic[1]
 					ROIsizes.append(ROIsize)
 			except:
 				pass
@@ -2061,35 +2061,6 @@ class Utils:
 		sortedList = sorted(list, key=lambda list: (list[0], list[1]))
 		return sortedList
 			
-	# calculate block size
-	def calculateBlockSize(self, bandNumber):
-		mem = cfg.RAMValue
-		b = int((mem / (cfg.arrayUnitMemory * bandNumber ))**.5)
-		# set system memory max
-		if cfg.sysSCP64bit == 'No' and b > 2500:
-			b = 2500
-		# check memory
-		try:
-			a = cfg.np.zeros((b, b, bandNumber), dtype = cfg.np.float32)
-		except:
-			for i in reversed(list(range(128, mem, int(mem/10)))):
-				try:
-					b = int((i / (cfg.arrayUnitMemory * bandNumber ))**.5)
-					# set system memory max
-					if cfg.sysSCP64bit == 'No' and b > 2500:
-						b = 2500
-					a = cfg.np.zeros((b, b, bandNumber), dtype = cfg.np.float32)
-					size = a.nbytes / 1048576
-					cfg.ui.RAM_spinBox.setValue(size * bandNumber)
-					cfg.mx.msgWar11()
-					break
-				except Exception as err:
-					# logger
-					cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
-		# logger
-		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "block = " + str(b))
-		return b
-	
 	# check band set and create band set list
 	def checkBandSet(self, bandSetNumber = None):
 		if bandSetNumber is None:
@@ -3770,7 +3741,7 @@ class Utils:
 		count = cfg.np.count_nonzero(~cfg.np.isnan(o))
 		o = None
 		oR = None
-		return [outputRaster, [min, max, mean, stdDev], array, count]
+		return [outputRaster, [[min, max, mean, stdDev], array, count]]
 			
 	# calculate raster unique values with sum
 	def rasterUniqueValuesWithSum(self, gdalBandList, rasterSCPArrayfunctionBand, columnNumber, rowNumber, pixelStartColumn, pixelStartRow, outputArrayFile, functionBandArgumentNoData, functionVariableList, outputBandNumber):
@@ -3831,16 +3802,21 @@ class Utils:
 		return o
 			
 	# cross raster
-	def crossRasters(self, gdalBandList, rasterSCPArrayfunctionBand, columnNumber, rowNumber, pixelStartColumn, pixelStartRow, outputArrayFile, functionBandArgument, functionVariableList, outputBandNumber):
+	def crossRasters(self, gdalBandList, rasterSCPArrayfunctionBand, nodataMask, rowNumber, pixelStartColumn, pixelStartRow, outputArrayFile, functionBandArgument, functionVariableList, outputBandNumber):
 		# logger
 		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'functionVariableList ' + str(functionVariableList) )
 		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'functionBandArgument ' + str(functionBandArgument) )
 		a = eval(functionVariableList)
-		o = cfg.np.searchsorted(functionBandArgument, a.ravel(), side = 'right').reshape(rasterSCPArrayfunctionBand.shape[0], rasterSCPArrayfunctionBand.shape[1]).astype(cfg.np.float32)
-		o[cfg.np.isnan(rasterSCPArrayfunctionBand[:,:,0])] = cfg.np.nan
+		o = cfg.np.searchsorted(functionBandArgument, a.ravel(), side = 'right').reshape(rasterSCPArrayfunctionBand.shape[0], rasterSCPArrayfunctionBand.shape[1])
+		try:
+			o[cfg.np.isnan(rasterSCPArrayfunctionBand[:,:,0])] = cfg.np.nan
+			stats = cfg.np.array(cfg.np.unique(o[~cfg.np.isnan(o)], return_counts=True))
+		except:
+			if nodataMask is not None:
+				o[::, ::][nodataMask[::, ::] != 0] = nodataMask[::, ::][nodataMask[::, ::] != 0]
+				stats = cfg.np.array(cfg.np.unique(o[nodataMask[::, ::] == 0], return_counts=True))
 		# logger
 		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'o ' + str(o) )
-		stats = cfg.np.array(cfg.np.unique(o[~cfg.np.isnan(o)], return_counts=True))
 		return [o, stats]
 		
 	# band calculation
@@ -4621,6 +4597,7 @@ class Utils:
 		roY = writerLog[11]
 		vBX = writerLog[12]
 		vBY = writerLog[13]
+		calcDataType = writerLog[14]
 		cfg.logFile = cfg.tmpDir + '/log_' + wrtProc
 		# GDAL config
 		try:
@@ -4737,16 +4714,19 @@ class Utils:
 						# logger
 						cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'compress ' + str(compress) )
 						cfg.utls.createRasterFromReferenceMultiprocess(raster, 1, outputReferenceRasterList, nodataValue, 'GTiff', cfg.rasterDataType, compress, compressFormat, geotransform = geotransform, xSize = bSX, ySize = bSY)
-					array = cfg.np.zeros((bSY, bSX, len(gdalBandList)), dtype=cfg.np.float32)
+					array = cfg.np.zeros((bSY, bSX, len(gdalBandList)), dtype=calcDataType)
+					nodataMask = None
 					for b in range(0, len(gdalBandList)):
 						sclB = 1.0
 						offsB = 0.0
 						# logger
 						cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' nodataValue ' + str(nodataValue) )
+						'''
 						if nodataValue is None:
 							ndv = None
 						else:
 							ndv = nodataValue
+						'''
 						# logger
 						cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'read band ' + str(b) )
 						# read
@@ -4800,10 +4780,7 @@ class Utils:
 								else:
 									offsB = 0
 								ndvBand = gdalBandList[b].GetNoDataValue()
-								# logger
-								cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'ndvBand ' + str(ndvBand) )
 								ndvBand = ndvBand * sclB + offsB
-								
 							except:
 								ndvBand = None
 						# logger
@@ -4812,37 +4789,63 @@ class Utils:
 							if functionBandArgument == cfg.multiAddFactorsVar:
 								multiAdd = functionVariable
 								a = cfg.utls.arrayMultiplicativeAdditiveFactors(a, multiAdd[0][b], multiAdd[1][b])
-							array[::, ::, b] = a
+							array[::, ::, b] = a.astype(calcDataType)
 							# logger
 							cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'array[0, 0, b] ' + str(array[0, 0, b] ) )
 						else:
 							procError = 'Error array none'
-						a = None
 						# set nodata value
-						if ndvBand is not None:
+						if calcDataType == np.float32 or calcDataType == np.float64:
+							if ndvBand is not None:
+								try:
+									array[::, ::, b][array[::, ::, b] == ndvBand] = cfg.np.nan
+								except:
+									pass
+							if skipReplaceNoData is not None:
+								try:
+									array[::, ::, b][cfg.np.isnan(array[::, ::, b])] = ndvBand
+								except:
+									pass
+							'''
+							if ndv is not None:
+								try:
+									array[::, ::, b][array[::, ::, b] == ndv] = cfg.np.nan
+								except:
+									pass
+							'''
+						else:
 							try:
-								array[::, ::, b][array[::, ::, b] == ndvBand] = cfg.np.nan
+								nodataMask[0, 0]
 							except:
+								nodataMask = cfg.np.zeros((bSY, bSX), dtype=calcDataType)
+							if skipReplaceNoData is not None:
 								pass
-						if skipReplaceNoData is not None:
-							try:
-								array[::, ::, b][cfg.np.isnan(array[::, ::, b])] = ndvBand
-							except:
-								pass
-						if ndv is not None:
-							try:
-								array[::, ::, b][array[::, ::, b] == ndv] = cfg.np.nan
-							except:
-								pass
+							elif ndvBand is not None:
+								try:
+									nodataMask[::, ::][a[::, ::] == ndvBand] = outputNoData
+								except:
+									pass
+							'''
+							if ndv is not None:
+								try:
+									nodataMask[::, ::][a[::, ::, b] == ndv] = outputNoData
+								except:
+									pass
+							'''
+							# logger
+							cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'ndvBand ' + str(ndvBand))
+							cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'a[::, ::, b] ' + str(a[::, ::]))
+							cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'nodataMask[::, ::] ' + str(nodataMask[::, ::]))
 						# logger
 						cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'skipReplaceNoData ' + str(skipReplaceNoData))
 						#if functionBand is not None and functionBand != 'No':
 						#	functionBand(b+1, array[::, ::, b].reshape(bSY, bSX), bSX, bSY, x, y, outputArrayFile, functionBandArgument, functionVariable)
 							# logger
 						#	cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'functionBand ' + str(functionBand))
+					a = None
 					# logger
 					try:
-						cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'array ' + str(array[0,0,0]))
+						cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'array ' + str(array))
 					except:
 						pass
 					# logger
@@ -4853,14 +4856,14 @@ class Utils:
 						if functionBand == 'No':
 							# logger
 							cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'outputBandNumber ' + str(outputBandNumber))
-							oo = functionRaster(gdalBandList, array, bSX, bSY, x, y, outputArrayFile, functionBandArgument, functionVariable, outputBandNumber)
+							oo = functionRaster(gdalBandList, array, nodataMask, bSY, x, y, outputArrayFile, functionBandArgument, functionVariable, outputBandNumber)
 							# logger
 							cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'oo ' + str(oo))
 							if isinstance(oo, list):
 								ooS = oo[1]
 								oo = oo[0]
 							if wrtOut is None:
-								o.append(oo)
+								o.append([oo, ooS])
 							# logger
 							cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'functionBand No functionRaster ' + str(functionRaster))
 							if type(oo) is not cfg.np.ndarray:
@@ -4936,6 +4939,8 @@ class Utils:
 							cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'wrtFile ' + str(wrtFile) + ' writeOut' + str(writeOut))
 						except Exception as err:
 							procError = err
+							# logger
+							cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'Error ' + str(err))
 							check = check + 1
 					else:
 						check = 2
@@ -4959,13 +4964,21 @@ class Utils:
 		return o, ''
 		
 	# process a raster with block size
-	def multiProcessRaster(self, rasterPath, signatureList = None, functionBand = None, functionRaster = None, algorithmName = None, outputRasterList = None, outputAlgorithmRaster = None, outputClassificationRaster = None, classificationOptions = None, nodataValue = None, macroclassCheck = 'No', functionBandArgument = None, functionVariable = None, progressMessage = "", skipReplaceNoData = None, threadNumber = None, parallel = None, deleteArray = None, skipSingleBand = None, outputBandNumber = None, virtualRaster = 'No', compress = 'No', compressFormat = 'LZW', outputNoDataValue = None, dataType = None, scale = None, offset = None, parallelWritingCheck = None, boundarySize = None, additionalLayer = None):
+	def multiProcessRaster(self, rasterPath, signatureList = None, functionBand = None, functionRaster = None, algorithmName = None, outputRasterList = None, outputAlgorithmRaster = None, outputClassificationRaster = None, classificationOptions = None, nodataValue = None, macroclassCheck = 'No', functionBandArgument = None, functionVariable = None, progressMessage = "", skipReplaceNoData = None, threadNumber = None, parallel = None, deleteArray = None, skipSingleBand = None, outputBandNumber = None, virtualRaster = 'No', compress = 'No', compressFormat = 'LZW', outputNoDataValue = None, dataType = None, scale = None, offset = None, parallelWritingCheck = None, boundarySize = None, additionalLayer = None, calcDataType = None):
 		# logger
 		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'start processRaster')
 		if outputNoDataValue is None:
 			outputNoDataValue = cfg.NoDataVal
 		if dataType is None:
 			dataType = cfg.rasterDataType
+		unitMemory = cfg.arrayUnitMemory
+		# calculation data type
+		if calcDataType is None:
+			calcDataType = cfg.np.float32
+		if calcDataType == cfg.np.uint32 or calcDataType == cfg.np.int32:
+			unitMemory = cfg.arrayUnitMemory8
+		elif calcDataType == cfg.np.uint16 or calcDataType == cfg.np.int16:
+			unitMemory = cfg.arrayUnitMemory4
 		gdalRaster = cfg.gdalSCP.Open(rasterPath, cfg.gdalSCP.GA_ReadOnly)
 		if additionalLayer is None:
 			additionalLayer = 1
@@ -4992,7 +5005,7 @@ class Utils:
 		yBlock = block[1]
 		if yBlock == rY:
 			yBlock = block[0]
-		singleBlockSize = rX * yBlock * cfg.arrayUnitMemory * (bandNumber + additionalLayer)
+		singleBlockSize = rX * yBlock * unitMemory * (bandNumber + additionalLayer)
 		RAMBlocks = int(cfg.RAMValue/(singleBlockSize * threadNumber))
 		if RAMBlocks == 0:
 			RAMBlocks = 1
@@ -5111,7 +5124,7 @@ class Utils:
 				roY = min(vY)
 				if cfg.actionCheck == 'Yes':
 					pOut = ''
-					wrtP = [p, outputRasterList, cfg.tmpDir, parallelWritingCheck, pMQ, memVal, compress, compressFormat, dataType, boundarySize, x, roY, bSX, vBY]
+					wrtP = [p, outputRasterList, cfg.tmpDir, parallelWritingCheck, pMQ, memVal, compress, compressFormat, dataType, boundarySize, x, roY, bSX, vBY, calcDataType]
 					c = cfg.pool.apply_async(self.processRasterDev, args=(rasterPath, signatureList, functionBand, functionRaster, algorithmName, pOut, outputAlgorithmRaster, outputClassificationRaster, sections, classificationOptions, nodataValue, macroclassCheck, functionBandArgument, functionVariable, progressMessage, skipReplaceNoData, singleBandNumber, outputBandNumber, outputNoDataValue, scale, offset, wrtP))
 					results.append([c, p])
 					cfg.QtWidgetsSCP.qApp.processEvents()
@@ -5201,7 +5214,7 @@ class Utils:
 							fArg = functionBandArgument[p]
 							fVar = functionVariable[p]
 							otpLst = None
-						wrtP = [p, otpLst, cfg.tmpDir, parallelWritingCheck, pMQ, memVal, compress, compressFormat, dataType, boundarySize, 0, 0, rX, rY]
+						wrtP = [p, otpLst, cfg.tmpDir, parallelWritingCheck, pMQ, memVal, compress, compressFormat, dataType, boundarySize, 0, 0, rX, rY, calcDataType]
 						if skipSingleBand is None:
 							singleBand = p
 						else:
