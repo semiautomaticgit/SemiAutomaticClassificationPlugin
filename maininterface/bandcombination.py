@@ -151,7 +151,7 @@ class BandCombination:
 			for x in sorted(cfg.parallelArrayDict):
 				try:
 					for ar in cfg.parallelArrayDict[x]:
-						values = cfg.np.append(values, ar[0, ::])
+						values = cfg.np.append(values, ar[0][0, ::])
 				except:
 					if batch == 'No':
 						cfg.utls.finishSound()
@@ -183,7 +183,7 @@ class BandCombination:
 				for x in sorted(cfg.parallelArrayDict):
 					try:
 						for ar in cfg.parallelArrayDict[x]:
-							values = cfg.np.append(values, ar[0, ::])
+							values = cfg.np.append(values, ar[0][0, ::])
 					except:
 						if batch == 'No':
 							cfg.utls.finishSound()

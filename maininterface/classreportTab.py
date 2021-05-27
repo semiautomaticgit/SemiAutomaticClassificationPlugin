@@ -101,8 +101,8 @@ class ClassReportTab:
 				for x in sorted(cfg.parallelArrayDict):
 					try:
 						for ar in cfg.parallelArrayDict[x]:
-							values = cfg.np.append(values, ar[0, ::])
-							sumVal = cfg.np.append(sumVal, ar[1, ::])
+							values = cfg.np.append(values, ar[0][0, ::])
+							sumVal = cfg.np.append(sumVal, ar[0][1, ::])
 					except:
 						if batch == 'No':
 							cfg.utls.finishSound()

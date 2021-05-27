@@ -125,8 +125,8 @@ class PcaTab:
 		for x in sorted(cfg.parallelArrayDict):
 			try:
 				for ar in cfg.parallelArrayDict[x]:
-					for arX in ar:
-						cfg.rasterClassSignature[arX] = ar[arX]
+					for arX in ar[0]:
+						cfg.rasterClassSignature[arX] = ar[0][arX]
 			except:
 				if batch == 'No':
 					# enable map canvas render
@@ -162,19 +162,19 @@ class PcaTab:
 		for x in sorted(cfg.parallelArrayDict):
 			try:
 				for ar in cfg.parallelArrayDict[x]:
-					for arX in ar:
+					for arX in ar[0]:
 						for i in argumentList:
 							if 'COV_BAND_' + str(i[0]) + '-' + str(i[1]) == arX:
 								try:
-									cfg.rasterClassSignature['COV_BAND_' + str(i[0]) + '-' + str(i[1])] = cfg.rasterClassSignature['COV_BAND_' + str(i[0]) + '-' + str(i[1])] + ar[arX]
+									cfg.rasterClassSignature['COV_BAND_' + str(i[0]) + '-' + str(i[1])] = cfg.rasterClassSignature['COV_BAND_' + str(i[0]) + '-' + str(i[1])] + ar[0][arX]
 								except:
-									cfg.rasterClassSignature['COV_BAND_' + str(i[0]) + '-' + str(i[1])] = ar[arX]
+									cfg.rasterClassSignature['COV_BAND_' + str(i[0]) + '-' + str(i[1])] = ar[0][arX]
 						for i in range(0, numberOfBands):
 							if 'COV_BAND_' + str(i) + '-' + str(i) == arX:
 								try:
-									cfg.rasterClassSignature['COV_BAND_' + str(i) + '-' + str(i)] = cfg.rasterClassSignature['COV_BAND_' + str(i) + '-' + str(i)] + ar[arX]
+									cfg.rasterClassSignature['COV_BAND_' + str(i) + '-' + str(i)] = cfg.rasterClassSignature['COV_BAND_' + str(i) + '-' + str(i)] + ar[0][arX]
 								except:
-									cfg.rasterClassSignature['COV_BAND_' + str(i) + '-' + str(i)] = ar[arX]
+									cfg.rasterClassSignature['COV_BAND_' + str(i) + '-' + str(i)] = ar[0][arX]
 			except:
 				if batch == 'No':
 					# enable map canvas render

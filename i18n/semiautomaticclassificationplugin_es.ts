@@ -6915,7 +6915,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../dock/scpdock.py" line="2835"/>
+        <location filename="../dock/scpdock.py" line="2834"/>
         <source>Region growing</source>
         <translation type="unfinished"></translation>
     </message>

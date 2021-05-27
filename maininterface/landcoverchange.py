@@ -137,7 +137,7 @@ class LandCoverChange:
 				for x in sorted(cfg.parallelArrayDict):
 					try:
 						for ar in cfg.parallelArrayDict[x]:
-							valuesA = cfg.np.append(valuesA, ar[0, ::])
+							valuesA = cfg.np.append(valuesA, ar[0][0, ::])
 					except:
 						if batch == 'No':
 							cfg.utls.finishSound()
@@ -180,7 +180,7 @@ class LandCoverChange:
 				for x in sorted(cfg.parallelArrayDict):
 					try:
 						for ar in cfg.parallelArrayDict[x]:
-							valuesB = cfg.np.append(valuesB, ar[0, ::])
+							valuesB = cfg.np.append(valuesB, ar[0][0, ::])
 					except:
 						if batch == 'No':
 							cfg.utls.finishSound()

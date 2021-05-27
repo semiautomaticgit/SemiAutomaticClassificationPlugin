@@ -217,7 +217,7 @@ class Accuracy:
 				for x in sorted(cfg.parallelArrayDict):
 					try:
 						for ar in cfg.parallelArrayDict[x]:
-							valuesA = cfg.np.append(valuesA, ar[0, ::])
+							valuesA = cfg.np.append(valuesA, ar[0][0, ::])
 					except:
 						if batch == 'No':
 							cfg.utls.finishSound()
@@ -262,8 +262,8 @@ class Accuracy:
 				for x in sorted(cfg.parallelArrayDict):
 					try:
 						for ar in cfg.parallelArrayDict[x]:
-							valuesB = cfg.np.append(valuesB, ar[0, ::])
-							sumVal = cfg.np.append(sumVal, ar[1, ::])
+							valuesB = cfg.np.append(valuesB, ar[0][0, ::])
+							sumVal = cfg.np.append(sumVal, ar[0][1, ::])
 					except:
 						if batch == 'No':
 							cfg.utls.finishSound()

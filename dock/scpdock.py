@@ -2724,7 +2724,6 @@ class SCPDock:
 			tN = cfg.subsTmpROI + dT
 			# crs
 			pCrs = cfg.utls.getQGISCrs()
-			#cfg.parallelArrayDict = {}
 			# band set
 			if cfg.bandSetsList[bandSetNumber][0] == 'Yes':
 				try:

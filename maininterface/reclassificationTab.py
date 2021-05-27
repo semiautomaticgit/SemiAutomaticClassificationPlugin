@@ -152,7 +152,7 @@ class ReclassificationTab:
 			for x in sorted(cfg.parallelArrayDict):
 				try:
 					for ar in cfg.parallelArrayDict[x]:
-						values = cfg.np.append(values, ar[0, ::])
+						values = cfg.np.append(values, ar[0][0, ::])
 				except:
 					pass
 			values = cfg.np.unique(values).tolist()
@@ -199,7 +199,7 @@ class ReclassificationTab:
 			for x in sorted(cfg.parallelArrayDict):
 				try:
 					for ar in cfg.parallelArrayDict[x]:
-						values = cfg.np.append(values, ar[0, ::])
+						values = cfg.np.append(values, ar[0][0, ::])
 				except:
 					pass
 			values = cfg.np.unique(values).tolist()

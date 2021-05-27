@@ -367,20 +367,20 @@ class ClusteringTab:
 						try:
 							for ar in cfg.parallelArrayDict[x]:
 								try:
-									for xK in ar:
+									for xK in ar[0]:
 										for xB in range(0, len(bL)):		
 											if 'MINIMUM_BAND_' + str(xB) == xK:
 												try:
-													if cfg.rasterClustering[xK] > ar[xK]:
-														cfg.rasterClustering[xK] = ar[xK]
+													if cfg.rasterClustering[xK] > ar[0][xK]:
+														cfg.rasterClustering[xK] = ar[0][xK]
 												except:
-													cfg.rasterClustering[xK] = ar[xK]
+													cfg.rasterClustering[xK] = ar[0][xK]
 											if 'MAXIMUM_BAND_' + str(xB) == xK:
 												try:
-													if cfg.rasterClustering[xK] < ar[xK]:
-														cfg.rasterClustering[xK] = ar[xK]
+													if cfg.rasterClustering[xK] < ar[0][xK]:
+														cfg.rasterClustering[xK] = ar[0][xK]
 												except:
-													cfg.rasterClustering[xK] = ar[xK]
+													cfg.rasterClustering[xK] = ar[0][xK]
 								except:
 									pass
 						except:
@@ -545,24 +545,24 @@ class ClusteringTab:
 				try:
 					for ar in cfg.parallelArrayDict[x]:
 						try:
-							for xK in ar:
+							for xK in ar[0]:
 								for c in classes:
 									for xB in range(0, len(bL)):
 										if 'SUM_BAND_' + str(xB) + '_c_' + str(c[0]) == xK:
 											try:
-												cfg.rasterClustering[xK] = ar[xK] + cfg.rasterClustering[xK]
+												cfg.rasterClustering[xK] = ar[0][xK] + cfg.rasterClustering[xK]
 											except:
-												cfg.rasterClustering[xK] = ar[xK]
+												cfg.rasterClustering[xK] = ar[0][xK]
 										if 'COUNT_BAND_' + str(xB) + '_c_' + str(c[0]) == xK:
 											try:
-												cfg.rasterClustering[xK] = ar[xK] + cfg.rasterClustering[xK]
+												cfg.rasterClustering[xK] = ar[0][xK] + cfg.rasterClustering[xK]
 											except:
-												cfg.rasterClustering[xK] = ar[xK]
+												cfg.rasterClustering[xK] = ar[0][xK]
 									if 'SUM_DIST_' + str(c[0]) == xK:
 										try:
-											cfg.rasterClustering[xK] = ar[xK] + cfg.rasterClustering[xK]
+											cfg.rasterClustering[xK] = ar[0][xK] + cfg.rasterClustering[xK]
 										except:
-											cfg.rasterClustering[xK] = ar[xK]
+											cfg.rasterClustering[xK] = ar[0][xK]
 						except:
 							pass
 				except:
@@ -606,14 +606,14 @@ class ClusteringTab:
 				try:
 					for ar in cfg.parallelArrayDict[x]:
 						try:
-							for xK in ar:
+							for xK in ar[0]:
 								for c in classes:
 									for xB in range(0, len(bL)):		
 										if 'VAR_BAND_' + str(xB) + '_c_' + str(c[0]) == xK:
 											try:
-												cfg.rasterClustering[xK] = ar[xK] + cfg.rasterClustering[xK]
+												cfg.rasterClustering[xK] = ar[0][xK] + cfg.rasterClustering[xK]
 											except:
-												cfg.rasterClustering[xK] = ar[xK]
+												cfg.rasterClustering[xK] = ar[0][xK]
 						except:
 							pass
 				except:
@@ -945,20 +945,20 @@ class ClusteringTab:
 						try:
 							for ar in cfg.parallelArrayDict[x]:
 								try:
-									for xK in ar:
+									for xK in ar[0]:
 										for xB in range(0, len(bL)):		
 											if 'MINIMUM_BAND_' + str(xB) == xK:
 												try:
-													if cfg.rasterClustering[xK] > ar[xK]:
-														cfg.rasterClustering[xK] = ar[xK]
+													if cfg.rasterClustering[xK] > ar[0][xK]:
+														cfg.rasterClustering[xK] = ar[0][xK]
 												except:
-													cfg.rasterClustering[xK] = ar[xK]
+													cfg.rasterClustering[xK] = ar[0][xK]
 											if 'MAXIMUM_BAND_' + str(xB) == xK:
 												try:
-													if cfg.rasterClustering[xK] < ar[xK]:
-														cfg.rasterClustering[xK] = ar[xK]
+													if cfg.rasterClustering[xK] < ar[0][xK]:
+														cfg.rasterClustering[xK] = ar[0][xK]
 												except:
-													cfg.rasterClustering[xK] = ar[xK]
+													cfg.rasterClustering[xK] = ar[0][xK]
 								except:
 									pass
 						except:
@@ -1119,19 +1119,19 @@ class ClusteringTab:
 				try:
 					for ar in cfg.parallelArrayDict[x]:
 						try:
-							for xK in ar:
+							for xK in ar[0]:
 								for c in classes:
 									for xB in range(0, len(bL)):		
 										if 'SUM_BAND_' + str(xB) + '_c_' + str(c[0]) == xK:
 											try:
-												cfg.rasterClustering[xK] = ar[xK] + cfg.rasterClustering[xK]
+												cfg.rasterClustering[xK] = ar[0][xK] + cfg.rasterClustering[xK]
 											except:
-												cfg.rasterClustering[xK] = ar[xK]
+												cfg.rasterClustering[xK] = ar[0][xK]
 										if 'COUNT_BAND_' + str(xB) + '_c_' + str(c[0]) == xK:
 											try:
-												cfg.rasterClustering[xK] = ar[xK] + cfg.rasterClustering[xK]
+												cfg.rasterClustering[xK] = ar[0][xK] + cfg.rasterClustering[xK]
 											except:
-												cfg.rasterClustering[xK] = ar[xK]
+												cfg.rasterClustering[xK] = ar[0][xK]
 						except:
 							pass
 				except:

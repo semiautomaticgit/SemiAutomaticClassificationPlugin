@@ -750,7 +750,7 @@ class Utils:
 			for x in sorted(cfg.parallelArrayDict):
 				try:
 					for ar in cfg.parallelArrayDict[x]:
-						values = cfg.np.append(values, ar[0, ::])
+						values = cfg.np.append(values, ar[0][0, ::])
 				except:
 					pass
 			rasterBandUniqueVal = cfg.np.unique(values).tolist()
@@ -2028,8 +2028,8 @@ class Utils:
 			DNm = 0
 			try:
 				for ar in cfg.parallelArrayDict[x]:
-					values = ar[0, ::]
-					count = ar[1, ::]
+					values = ar[0][0, ::]
+					count = ar[0][1, ::]
 					val = zip(values, count)
 					uniqueVal = cfg.counterSCP(dict(val))
 					oldUniqueVal = cfg.counterSCP(rasterBandUniqueVal)
