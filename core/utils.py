@@ -3896,17 +3896,17 @@ class Utils:
 		# calculate
 		if 'nansum' in functionVariableList[0]:
 			try:
-				o = cfg.signalSCP.oaconvolve(cfg.np.nan_to_num(rasterSCPArrayfunctionBand[:,:,0]), structure, mode='same')
+				o = cfg.np.round(cfg.signalSCP.oaconvolve(cfg.np.nan_to_num(rasterSCPArrayfunctionBand[:,:,0]), structure, mode='same'), 6)
 			except:
 				# if scipy version < 1.4
-				o = cfg.signalSCP.fftconvolve(cfg.np.nan_to_num(rasterSCPArrayfunctionBand[:,:,0]), structure, mode='same')
+				o = cfg.np.round(cfg.signalSCP.fftconvolve(cfg.np.nan_to_num(rasterSCPArrayfunctionBand[:,:,0]), structure, mode='same'), 6)
 			o[::, ::][cfg.np.isnan(rasterSCPArrayfunctionBand[:, :, 0])] = cfg.np.nan	
 		elif 'nanmean' in functionVariableList[0]:
 			try:
-				o = cfg.signalSCP.oaconvolve(cfg.np.nan_to_num(rasterSCPArrayfunctionBand[:,:,0]), structure, mode='same') / cfg.signalSCP.oaconvolve(~cfg.np.isnan(rasterSCPArrayfunctionBand[:,:,0]), structure, mode='same')
+				o = cfg.np.round(cfg.signalSCP.oaconvolve(cfg.np.nan_to_num(rasterSCPArrayfunctionBand[:,:,0]), structure, mode='same') / cfg.signalSCP.oaconvolve(~cfg.np.isnan(rasterSCPArrayfunctionBand[:,:,0]), structure, mode='same'), 6)
 			except:
 				# if scipy version < 1.4
-				o = cfg.signalSCP.fftconvolve(cfg.np.nan_to_num(rasterSCPArrayfunctionBand[:,:,0]), structure, mode='same') / cfg.signalSCP.fftconvolve(~cfg.np.isnan(rasterSCPArrayfunctionBand[:,:,0]), structure, mode='same')
+				o = cfg.np.round(cfg.signalSCP.fftconvolve(cfg.np.nan_to_num(rasterSCPArrayfunctionBand[:,:,0]), structure, mode='same') / cfg.signalSCP.fftconvolve(~cfg.np.isnan(rasterSCPArrayfunctionBand[:,:,0]), structure, mode='same'), 6)
 			o[::, ::][cfg.np.isnan(rasterSCPArrayfunctionBand[:, :, 0])] = cfg.np.nan	
 		elif 'nanmax' in functionVariableList[0]:
 			o = cfg.maximum_filterSCP(rasterSCPArrayfunctionBand[:,:,0], footprint=structure, mode='constant', cval=cfg.np.nan)
@@ -3916,10 +3916,10 @@ class Utils:
 			o = cfg.median_filterSCP(rasterSCPArrayfunctionBand[:,:,0], footprint=structure, mode='constant', cval=cfg.np.nan)
 		elif 'count' in functionVariableList[0]:
 			try:
-				o = cfg.signalSCP.oaconvolve(~cfg.np.isnan(rasterSCPArrayfunctionBand[:,:,0]), structure, mode='same')
+				o = cfg.np.round(cfg.signalSCP.oaconvolve(~cfg.np.isnan(rasterSCPArrayfunctionBand[:,:,0]), structure, mode='same'), 6)
 			except:
 				# if scipy version < 1.4
-				o = cfg.signalSCP.fftconvolve(~cfg.np.isnan(rasterSCPArrayfunctionBand[:,:,0]), structure, mode='same')
+				o = cfg.np.round(cfg.signalSCP.fftconvolve(~cfg.np.isnan(rasterSCPArrayfunctionBand[:,:,0]), structure, mode='same'), 6)
 			o[::, ::][cfg.np.isnan(rasterSCPArrayfunctionBand[:, :, 0])] = cfg.np.nan	
 		elif 'std' in functionVariableList[0]:
 			o = cfg.generic_filterSCP(rasterSCPArrayfunctionBand[:,:,0], cfg.np.std, footprint=structure, mode='constant', cval=cfg.np.nan)

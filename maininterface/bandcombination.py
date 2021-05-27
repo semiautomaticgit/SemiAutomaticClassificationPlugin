@@ -88,7 +88,7 @@ class BandCombination:
 				return 'No'
 			if ckB != 'Yes':
 				pass
-			if len(cfg.bndSetLst) == 0:
+			if len(cfg.bndSetLst) <= 1:
 				if batch == 'No':
 					cfg.uiUtls.removeProgressBar()
 				cfg.mx.msgWar28()
