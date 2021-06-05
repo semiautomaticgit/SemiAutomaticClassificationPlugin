@@ -2896,22 +2896,21 @@ class Utils:
 			scale = iRB.GetScale()
 			iRB = None
 			oR = None
-			if scale is not None and offset is not None:
-				if scale != 1 or offset != 0:
-					oR = cfg.gdalSCP.Open(outputPath, cfg.gdalSCP.GA_Update)
-					bO = oR.GetRasterBand(1)
-					try:
-						bO.SetScale(int(scale))
-					except:
-						pass
-					try:
-						bO.SetOffset(int(offset))
-					except:
-						pass
-					bO = None
-					oR = None
-					# logger
-					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' scale' + str(scale) + ' offset' + str(offset))
+			if scale != 1 or offset != 0:
+				oR = cfg.gdalSCP.Open(outputPath, cfg.gdalSCP.GA_Update)
+				bO = oR.GetRasterBand(1)
+				try:
+					bO.SetScale(scale)
+				except:
+					pass
+				try:
+					bO.SetOffset(offset)
+				except:
+					pass
+				bO = None
+				oR = None
+				# logger
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' scale' + str(scale) + ' offset' + str(offset))
 		except Exception as err:
 			# logger
 			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
