@@ -460,6 +460,9 @@ gdalPath = ''
 # python path setting
 regPythonPathSettings = 'SemiAutomaticClassificationPlugin/PythonPathSettings'
 PythonPathSettings = ''
+# python modules path setting
+regPythonModulesPathSettings = 'SemiAutomaticClassificationPlugin/PythonModulesPathSettings'
+PythonModulesPathSettings = ''
 # smtp server
 regSMTPCheck = 'SemiAutomaticClassificationPlugin/SMTPCheckStart'
 SMTPCheck = '2'

@@ -621,3 +621,10 @@ class Settings:
 		# logger
 		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'python path changed to: ' + str(cfg.PythonPathSettings))
 		
+	# Python setting
+	def PythonModulePathSettingChange(self):
+		cfg.PythonModulesPathSettings = cfg.ui.python_path_lineEdit_2.text()
+		cfg.utls.setQGISRegSetting(cfg.regPythonModulesPathSettings, cfg.PythonModulesPathSettings)
+		# logger
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'python modules path changed to: ' + str(cfg.PythonModulesPathSettings))
+		

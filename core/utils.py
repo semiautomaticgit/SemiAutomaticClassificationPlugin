@@ -2450,6 +2450,8 @@ class Utils:
 						source_path = source_path
 					except:
 						pass
+					if relativeToVRT == 1:
+						source_path = cfg.utls.fileName(source_path)
 					# set metadata xml
 					xml = '''
 					<ComplexSource>
@@ -2549,6 +2551,8 @@ class Utils:
 							source_path = source_path
 						except:
 							pass
+						if relativeToVRT == 1:
+							source_path = cfg.utls.fileName(source_path)
 						# set metadata xml
 						xml = '''
 						<ComplexSource>
@@ -2681,7 +2685,10 @@ class Utils:
 				rY1 = rY2
 			try:
 				# check path
-				source_path = inputRasterList[b].replace('//', '/')
+				if relativeToVRT == 1:
+					source_path = cfg.utls.fileName(inputRasterList[b])
+				else:
+					source_path = inputRasterList[b].replace('//', '/')
 				# set metadata xml
 				xml = '''
 				<ComplexSource>
@@ -2889,15 +2896,22 @@ class Utils:
 			scale = iRB.GetScale()
 			iRB = None
 			oR = None
-			if scale != 1 or offset != 0:
-				oR = cfg.gdalSCP.Open(outputPath, cfg.gdalSCP.GA_Update)
-				bO = oR.GetRasterBand(1)
-				bO.SetScale(scale)
-				bO.SetOffset(offset)
-				bO = None
-				oR = None
-				# logger
-				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' scale' + str(scale) + ' offset' + str(offset))
+			if scale is not None and offset is not None:
+				if scale != 1 or offset != 0:
+					oR = cfg.gdalSCP.Open(outputPath, cfg.gdalSCP.GA_Update)
+					bO = oR.GetRasterBand(1)
+					try:
+						bO.SetScale(int(scale))
+					except:
+						pass
+					try:
+						bO.SetOffset(int(offset))
+					except:
+						pass
+					bO = None
+					oR = None
+					# logger
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' scale' + str(scale) + ' offset' + str(offset))
 		except Exception as err:
 			# logger
 			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
@@ -5030,7 +5044,13 @@ class Utils:
 		singleBandNumber = None
 		cfg.remainingTime = 0
 		totBlocks = len(lX) * len(lY)
-		manager = cfg.MultiManagerSCP()
+		try:
+			manager = cfg.MultiManagerSCP()
+		# in case of errors
+		except Exception as err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+			return 'No'
 		# progress queue
 		pMQ = manager.Queue()
 		results = []
@@ -5305,7 +5325,7 @@ class Utils:
 					fCount = fCount + 1
 					cfg.tmpList.append(oTR)
 					cfg.shutilSCP.move(tR, oTR)
-				cfg.utls.createVirtualRaster2(inputRasterList = cfg.tmpList, output = outputRasterList[0], NoDataValue = 'Yes', dataType = dataType)
+				cfg.utls.createVirtualRaster2(inputRasterList = cfg.tmpList, output = outputRasterList[0], NoDataValue = 'Yes', relativeToVRT = 1, dataType = dataType)
 			else:
 				vrtFile = cfg.utls.createTempRasterPath('vrt')	
 				try:
