@@ -2652,7 +2652,7 @@ class Utils:
 			offs = gBand2.GetOffset()
 			scl = gBand2.GetScale()
 			noData = gBand2.GetNoDataValue()
-			if noData is None:
+			if NoDataValue != 'No' or noData is None:
 				try:
 					noData = int(NoDataValue)
 				except:
