@@ -146,12 +146,12 @@ class ASTERTab:
 		convInputList2 = []
 		# temperature
 		tempInputList = []
+		pSize = ''
+		pSize2 = ''
 		for i in range(0, c):
 			if cfg.actionCheck == 'Yes':
 				iBand = l.item(i,0).text()
 				iBandN = iBand[-2:]
-				pSize = ''
-				pSize2 = ''
 				#  aster bands
 				for sb in rDSub:
 					inputRaster = None
