@@ -306,7 +306,7 @@ class Accuracy:
 						cfg.uiUtls.removeProgressBar()
 					cfg.mx.msgErr63()
 					# logger
-					if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 					return 'No'
 				# expression builder
 				check = 'No'

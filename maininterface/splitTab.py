@@ -108,7 +108,7 @@ class SplitTab:
 						except Exception as err:
 							cfg.shutilSCP.copy(r, o + '/' + cfg.utls.fileName(r))
 							# logger
-							if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+							cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 					else:
 						cfg.shutilSCP.copy(r, o + '/' + cfg.utls.fileName(r))
 					cfg.utls.addRasterLayer(o + '/' + cfg.utls.fileName(r))

@@ -5485,12 +5485,12 @@ Do you want to add the required fields to this shapefile?</source>
         <translation>Guardar ráster</translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7259"/>
+        <location filename="../core/utils.py" line="7263"/>
         <source>Build overviews</source>
         <translation>Construir vistas generales</translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7259"/>
+        <location filename="../core/utils.py" line="7263"/>
         <source>Do you want to build the external overviews of bands?</source>
         <translation>¿Quieres construir vistas generales externas?</translation>
     </message>
@@ -6105,7 +6105,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished">Sentinel-3</translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="9347"/>
+        <location filename="../core/utils.py" line="9351"/>
         <source>SCP: completed process</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6190,7 +6190,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/bandcombination.py" line="339"/>
+        <location filename="../maininterface/bandcombination.py" line="286"/>
         <source>RasterValue</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6515,27 +6515,27 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="6153"/>
+        <location filename="../core/utils.py" line="6157"/>
         <source>Calculating signature</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7527"/>
+        <location filename="../core/utils.py" line="7531"/>
         <source>Writing file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="5454"/>
+        <location filename="../core/utils.py" line="5458"/>
         <source>Conversion to vector</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7208"/>
+        <location filename="../core/utils.py" line="7212"/>
         <source>Sieve</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7338"/>
+        <location filename="../core/utils.py" line="7342"/>
         <source>Building overviews</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6575,12 +6575,12 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="8794"/>
+        <location filename="../core/utils.py" line="8798"/>
         <source>Remove rows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="8794"/>
+        <location filename="../core/utils.py" line="8798"/>
         <source>Are you sure you want to remove highlighted rows from the table?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6935,18 +6935,18 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/bandcombination.py" line="181"/>
-        <source>Unique values step </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../maininterface/bandcombination.py" line="293"/>
-        <source>Cross classification step </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../maininterface/erosionTab.py" line="136"/>
         <source>Erosion step </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../maininterface/bandcombination.py" line="147"/>
+        <source>Unique values </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../maininterface/bandcombination.py" line="243"/>
+        <source>Cross classification </source>
         <translation type="unfinished"></translation>
     </message>
 </context>

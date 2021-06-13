@@ -344,9 +344,9 @@ class ClassRandomForestTab:
 			cfg.uiUtls.updateBar(0, cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Random forest classification'))
 			tempOut = cfg.utls.createTempRasterPath('tif')
 			outTxt = self.processGPTRandomForest(xmlFile, tR, tempOut, treeCount, numberTrainingSamples, trainingVect, featBandList, evalClassifier, evalFeaturePowerSet, minPowerSize, maxPowerSize, classPath)
-			if outTxt == 'No':	
+			if outTxt == 'No':
 				# logger
-				if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' error: cancel')
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR: cancel')
 				if batch == 'No':
 					cfg.utls.finishSound()
 					cfg.utls.sendSMTPMessage(None, str(__name__))
@@ -361,7 +361,7 @@ class ClassRandomForestTab:
 				except Exception as err:
 					cfg.mx.msgErr38(rstrOut)
 					# logger
-					if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 					if batch == 'No':
 						cfg.utls.finishSound()
 						cfg.utls.sendSMTPMessage(None, str(__name__))
@@ -385,7 +385,7 @@ class ClassRandomForestTab:
 					cfg.utls.GDALCopyRaster(iL[1], rstrOut.rstrip('.tif') + '_conf.tif', 'GTiff', cfg.rasterCompression, 'LZW')
 				except Exception as err:
 					# logger
-					if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 			else:
 				cfg.shutilSCP.copy(iL[1], rstrOut.rstrip('.tif') + '_conf.tif')
 			if evalClassifier == 'true':

@@ -3273,7 +3273,7 @@ class Utils:
 						cfg.shutilSCP.copy(oM[cc], e)
 						cfg.osSCP.remove(oM[cc])
 						# logger
-						if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 				else:
 					cfg.shutilSCP.move(oM[cc], e)
 			# logger
@@ -3761,15 +3761,18 @@ class Utils:
 		o = cfg.np.array(cfg.np.unique(rasterSCPArrayfunctionBand[~cfg.np.isnan(rasterSCPArrayfunctionBand)], return_counts=True))
 		return o
 			
-	# calculate raster unique values
-	def rasterUniqueValues(self, gdalBandList, rasterSCPArrayfunctionBand, columnNumber, rowNumber, pixelStartColumn, pixelStartRow, outputArrayFile, functionBandArgumentNoData, functionVariableList, outputBandNumber):
-		c = cfg.np.unique(rasterSCPArrayfunctionBand, axis=0)
-		o = c[~cfg.np.isnan(c).any(axis=2)]
-		if o.shape[0] > 0:
-			c = cfg.np.unique(o, axis = 0)
-		else:
-			c = None
-		return c
+	# calculate raster unique values 
+	def rasterUniqueValues(self, gdalBandList, rasterSCPArrayfunctionBand, nodataMask, rowNumber, pixelStartColumn, pixelStartRow, outputArrayFile, functionBandArgumentNoData, functionVariableList, outputBandNumber):
+		a = rasterSCPArrayfunctionBand[:,:,0].ravel()
+		for i in range(1, rasterSCPArrayfunctionBand.shape[2]):
+			a = cfg.np.vstack((a,rasterSCPArrayfunctionBand[:,:,i].ravel()))
+		a = a.T
+		a = a[~cfg.np.isnan(a).any(axis=1)]
+		# adapted from Jaime answer at https://stackoverflow.com/questions/16970982/find-unique-rows-in-numpy-array
+		b = a.view(cfg.np.dtype((cfg.np.void, a.dtype.itemsize * a.shape[1])))
+		ff, indexA = cfg.np.unique(b, return_index=True, return_counts=False)
+		#o = cfg.np.column_stack((a[indexA], cc))
+		return a[indexA]
 		
 	# reclassify raster
 	def reclassifyRaster(self, gdalBandList, rasterSCPArrayfunctionBand, columnNumber, rowNumber, pixelStartColumn, pixelStartRow, outputArrayFile, functionBandArgument, functionVariableList, outputBandNumber):
@@ -4661,6 +4664,7 @@ class Utils:
 		# logger
 		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'wrtFile, compress, roX, roY, vBX, vBY ' + str([wrtFile, compress, roX, roY, vBX, vBY]) )
 		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'dataType ' + str(dataType) )
+		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'calcDataType ' + str(calcDataType) )
 		# output
 		o = []
 		ooS = None
@@ -4730,8 +4734,8 @@ class Utils:
 					array = cfg.np.zeros((bSY, bSX, len(gdalBandList)), dtype=calcDataType)
 					nodataMask = None
 					for b in range(0, len(gdalBandList)):
-						sclB = 1.0
-						offsB = 0.0
+						sclB = 1
+						offsB = 0
 						# logger
 						cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' nodataValue ' + str(nodataValue) )
 						'''
@@ -4773,9 +4777,9 @@ class Utils:
 							offsB = b0.GetOffset()
 							sclB = b0.GetScale()
 							if sclB is not None:
-								sclB = float(sclB)
+								sclB = sclB
 							if offsB is not None:
-								offsB = float(offsB)
+								offsB = offsB
 							ndvBand = b0.GetNoDataValue() 
 							# logger
 							cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'ndvBand ' + str(ndvBand) )
@@ -4785,11 +4789,11 @@ class Utils:
 								offsB = gdalBandList[b].GetOffset()
 								sclB = gdalBandList[b].GetScale()
 								if sclB is not None:
-									sclB = float(sclB)
+									sclB = sclB
 								else:
 									sclB = 1
 								if offsB is not None:
-									offsB = float(offsB)
+									offsB = offsB
 								else:
 									offsB = 0
 								ndvBand = gdalBandList[b].GetNoDataValue()
@@ -7759,7 +7763,7 @@ class Utils:
 				fieldValues.append(f.GetField(str(fieldName)))
 		except Exception as err:
 			# logger
-			if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 			return 'No'
 		l.ResetReading()
 		l = None
