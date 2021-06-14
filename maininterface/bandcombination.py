@@ -138,10 +138,13 @@ class BandCombination:
 							cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' Warning')
 							return 'No'
 			cfg.uiUtls.updateBar(40)
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' nData: ' + str(nData))
 			# No data value
 			nD = NoDataVal
 			vrtCheck = cfg.utls.createTempVirtualRaster(cfg.bndSetLst, bListNum, 'Yes', 'Yes', 0, 'No', 'Yes')
 			calcDataType = cfg.np.int32
+			calcNodata = cfg.NoDataValInt32
 			cfg.parallelArrayDict = {}
 			o = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.rasterUniqueValues, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Unique values '), calcDataType = calcDataType)
 			# calculate unique values
@@ -174,6 +177,7 @@ class BandCombination:
 			maxV = cfg.np.nanmax(cmbArr, axis=0)
 			if cfg.np.sum(cmbArr<=0) < 1:
 				calcDataType = cfg.np.uint32
+				calcNodata = cfg.NoDataValUInt32
 				addC = 0
 			else:
 				addC = - cfg.np.nanmin(cmbArr)
@@ -183,15 +187,30 @@ class BandCombination:
 			if maxDig < 0:
 				maxDig = 2
 			t = 0
-			while t < 2000:
+			while t < 5000:
 				t = t + 1
 				rndVarList = []
 				sumA = cfg.np.zeros(cmbArr.shape, dtype=calcDataType)
 				for cmbI in range(0, len(cmb[0])):
-					constV = int(10**(maxDig-cmbI))
-					if constV < 0:
-						constV = 100
-					rndVar = int(3 * constV * cfg.np.random.random())
+					if t < 1000:
+						expR = int(cfg.np.random.random()*10)+1
+						if expR > maxDig:
+							expR = maxDig
+						constV = int(10**(expR))
+					elif t < 2000:
+						constV = int(10**(maxDig-cmbI))
+					elif t < 3000:
+						constV = int(10**(maxDig-(len(cmb[0])-cmbI)))
+					elif t < 4000:
+						constV = int(10**(maxDig))
+					else:
+						expR = int(cfg.np.random.random()*10)+1
+						if expR > 8:
+							expR = 8
+						constV = int(10**(expR))
+					if constV < 1:
+						constV = 3
+					rndVar = int(constV * cfg.np.random.random())
 					if rndVar == 0:
 						rndVar = 1
 					rndVarList.append(rndVar)
@@ -217,7 +236,10 @@ class BandCombination:
 			for i in cmb:
 				newVl = 0
 				for rE in range(0, len(rndVarList)):
-					if nData[rE] not in i:
+					if nData[rE] in i:
+						newVl = 0
+						break
+					else:
 						newVl = newVl + (i[rE] + 1) * (rndVarList[rE])
 				if newVl > 0:
 					reclassDict[newVl] = i
@@ -238,7 +260,7 @@ class BandCombination:
 			left, right, top, bottom, cRPX, cRPY, rP, un = cfg.utls.imageGeoTransform(vrtCheck)
 			# calculation
 			cfg.parallelArrayDict = {}
-			o = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.crossRasters, outputRasterList = [combRstPath], functionBandArgument = reclassList, functionVariable = e, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Cross classification '), outputNoDataValue = 0,  virtualRaster = vrtR, compress = cfg.rasterCompression, dataType = 'UInt32', calcDataType = calcDataType)
+			o = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.crossRasters, outputRasterList = [combRstPath], functionBandArgument = reclassList, functionVariable = e, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Cross classification '),  nodataValue = cfg.NoDataValInt32, outputNoDataValue = cfg.NoDataValInt32, virtualRaster = vrtR, compress = cfg.rasterCompression, dataType = 'UInt32', calcDataType = calcDataType)
 			# calculate unique values
 			values = cfg.np.array([])
 			sumVal = cfg.np.array([])

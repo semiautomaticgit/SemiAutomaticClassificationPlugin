@@ -630,6 +630,7 @@ splitBndNm = 'splitBand_'
 spectralDistNm = 'SpectralDistanceBandSets_'
 reflectanceRasterNm = 'reflectance_temp'
 NoDataVal = -32768
+NoDataValInt32 = 2147483647
 NoDataValUInt32 = 4294967295
 NoDataValUInt64 = 2**64-1
 unclassifiedVal = -1000

@@ -5213,12 +5213,12 @@ ROI</source>
         <translation>Zapisz raster</translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7263"/>
+        <location filename="../core/utils.py" line="7276"/>
         <source>Build overviews</source>
         <translation>Zbuduj podglądy</translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7263"/>
+        <location filename="../core/utils.py" line="7276"/>
         <source>Do you want to build the external overviews of bands?</source>
         <translation>Czy na pewno zbudować zewnętrzne podglądy na kanały?</translation>
     </message>
@@ -6105,7 +6105,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished">Sentinel-3</translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="9351"/>
+        <location filename="../core/utils.py" line="9364"/>
         <source>SCP: completed process</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6190,7 +6190,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/bandcombination.py" line="286"/>
+        <location filename="../maininterface/bandcombination.py" line="308"/>
         <source>RasterValue</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6515,27 +6515,27 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="6157"/>
+        <location filename="../core/utils.py" line="6170"/>
         <source>Calculating signature</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7531"/>
+        <location filename="../core/utils.py" line="7544"/>
         <source>Writing file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="5458"/>
+        <location filename="../core/utils.py" line="5470"/>
         <source>Conversion to vector</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7212"/>
+        <location filename="../core/utils.py" line="7225"/>
         <source>Sieve</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7342"/>
+        <location filename="../core/utils.py" line="7355"/>
         <source>Building overviews</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6575,12 +6575,12 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="8798"/>
+        <location filename="../core/utils.py" line="8811"/>
         <source>Remove rows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="8798"/>
+        <location filename="../core/utils.py" line="8811"/>
         <source>Are you sure you want to remove highlighted rows from the table?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6605,7 +6605,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="2027"/>
+        <location filename="../core/utils.py" line="2032"/>
         <source>DOS1 calculation</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6940,12 +6940,12 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/bandcombination.py" line="147"/>
+        <location filename="../maininterface/bandcombination.py" line="150"/>
         <source>Unique values </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/bandcombination.py" line="243"/>
+        <location filename="../maininterface/bandcombination.py" line="265"/>
         <source>Cross classification </source>
         <translation type="unfinished"></translation>
     </message>

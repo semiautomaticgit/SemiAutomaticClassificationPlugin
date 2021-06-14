@@ -773,7 +773,12 @@ class Utils:
 		# The band of classLayer
 		classLyrBnd = 1
 		# Create the renderer
-		lyrRndr = cfg.qgisCoreSCP.QgsPalettedRasterRenderer(rasterLayer.dataProvider(), classLyrBnd, cL)
+		try:
+			lyrRndr = cfg.qgisCoreSCP.QgsPalettedRasterRenderer(rasterLayer.dataProvider(), classLyrBnd, cL)
+		except Exception as err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+			return 'No'
 		# Apply the renderer to rasterLayer
 		rasterLayer.setRenderer(lyrRndr)
 		# refresh legend
@@ -782,7 +787,7 @@ class Utils:
 		rasterLayer.triggerRepaint()
 		cfg.utls.refreshLayerSymbology(rasterLayer)
 		# logger
-		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), "symbology")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'symbology')
 
 	# Define scatter raster symbology
 	def rasterScatterSymbol(self, valueColorList):
@@ -2705,7 +2710,10 @@ class Utils:
 				if NoDataValue == 'Yes':
 					band.SetNoDataValue(noData)	
 				elif NoDataValue != 'No':
-					band.SetNoDataValue(NoDataValue)
+					try:
+						band.SetNoDataValue(NoDataValue)
+					except:
+						band.SetNoDataValue(noData)	
 				x = x + 1
 			except Exception as err:
 				# logger
@@ -3822,15 +3830,18 @@ class Utils:
 		# logger
 		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'functionVariableList ' + str(functionVariableList) )
 		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'functionBandArgument ' + str(functionBandArgument) )
+		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'nodataMask ' + str(nodataMask) )
 		a = eval(functionVariableList)
 		o = cfg.np.searchsorted(functionBandArgument, a.ravel(), side = 'right').reshape(rasterSCPArrayfunctionBand.shape[0], rasterSCPArrayfunctionBand.shape[1])
-		try:
-			o[cfg.np.isnan(rasterSCPArrayfunctionBand[:,:,0])] = cfg.np.nan
-			stats = cfg.np.array(cfg.np.unique(o[~cfg.np.isnan(o)], return_counts=True))
-		except:
-			if nodataMask is not None:
-				o[::, ::][nodataMask[::, ::] != 0] = nodataMask[::, ::][nodataMask[::, ::] != 0]
-				stats = cfg.np.array(cfg.np.unique(o[nodataMask[::, ::] == 0], return_counts=True))
+		if nodataMask is not None:
+			o[::, ::][nodataMask[::, ::] != 0] = nodataMask[::, ::][nodataMask[::, ::] != 0]
+			stats = cfg.np.array(cfg.np.unique(o[nodataMask[::, ::] == 0], return_counts=True))
+		else:
+			try:
+				o[cfg.np.isnan(rasterSCPArrayfunctionBand[:,:,0])] = cfg.np.nan
+				stats = cfg.np.array(cfg.np.unique(o[~cfg.np.isnan(o)], return_counts=True))
+			except:
+				stats = None
 		# logger
 		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'o ' + str(o) )
 		return [o, stats]
@@ -4665,6 +4676,8 @@ class Utils:
 		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'wrtFile, compress, roX, roY, vBX, vBY ' + str([wrtFile, compress, roX, roY, vBX, vBY]) )
 		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'dataType ' + str(dataType) )
 		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'calcDataType ' + str(calcDataType) )
+		# logger
+		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' nodataValue ' + str(nodataValue) )
 		# output
 		o = []
 		ooS = None
@@ -4736,8 +4749,6 @@ class Utils:
 					for b in range(0, len(gdalBandList)):
 						sclB = 1
 						offsB = 0
-						# logger
-						cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' nodataValue ' + str(nodataValue) )
 						'''
 						if nodataValue is None:
 							ndv = None
@@ -4851,8 +4862,9 @@ class Utils:
 							'''
 							# logger
 							cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'ndvBand ' + str(ndvBand))
-							cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'a[::, ::, b] ' + str(a[::, ::]))
-							cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'nodataMask[::, ::] ' + str(nodataMask[::, ::]))
+							cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'outputNoData ' + str(outputNoData))
+							cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'a[0,0] ' + str(a[0, 0]))
+							cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'nodataMask[0, 0] ' + str(nodataMask[0, 0]))
 						# logger
 						cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'skipReplaceNoData ' + str(skipReplaceNoData))
 						#if functionBand is not None and functionBand != 'No':
@@ -5328,17 +5340,17 @@ class Utils:
 					fCount = fCount + 1
 					cfg.tmpList.append(oTR)
 					cfg.shutilSCP.move(tR, oTR)
-				cfg.utls.createVirtualRaster2(inputRasterList = cfg.tmpList, output = outputRasterList[0], NoDataValue = 'Yes', relativeToVRT = 1, dataType = dataType)
+				cfg.utls.createVirtualRaster2(inputRasterList = cfg.tmpList, output = outputRasterList[0], NoDataValue = outputNoDataValue, relativeToVRT = 1, dataType = dataType)
 			else:
 				vrtFile = cfg.utls.createTempRasterPath('vrt')	
 				try:
-					cfg.utls.createVirtualRaster2(inputRasterList = tmpRastList, output = vrtFile, NoDataValue = 'Yes', dataType = dataType)
+					cfg.utls.createVirtualRaster2(inputRasterList = tmpRastList, output = vrtFile, NoDataValue = outputNoDataValue, dataType = dataType)
 					gcopy = cfg.utls.GDALCopyRaster(vrtFile, outputRasterList[0], 'GTiff', compress, compressFormat, additionalParams = '-ot ' + str(dataType) + parScaleOffset)
 					# logger
 					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'gcopy ' + gcopy)
 				except:
 					try:
-						cfg.utls.createVirtualRaster2(inputRasterList = tmpRastList, output = vrtFile, NoDataValue = 'Yes', dataType = dataType)
+						cfg.utls.createVirtualRaster2(inputRasterList = tmpRastList, output = vrtFile, NoDataValue = outputNoDataValue, dataType = dataType)
 						gcopy = cfg.utls.GDALCopyRaster(vrtFile, outputRasterList[0], 'GTiff', compress, compressFormat, additionalParams = '-ot ' + str(dataType) + parScaleOffset)
 						# logger
 						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'gcopy ' + gcopy)
@@ -5619,6 +5631,7 @@ class Utils:
 		# logger
 		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'dataArray shape write ' + str(dataArray.shape) + ' type ' + str(dataArray.dtype) )
 		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' scale ' + str(scale) )
+		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' nodataValue ' + str(nodataValue) )
 		try:
 			# it seems a GDAL issue that if scale is float the datatype is converted to Float32
 			if scale is not None or offset is not None:
