@@ -631,6 +631,7 @@ spectralDistNm = 'SpectralDistanceBandSets_'
 reflectanceRasterNm = 'reflectance_temp'
 NoDataVal = -32768
 NoDataValInt32 = 2147483647
+NoDataValFloat32 = -3.4028235e+38
 NoDataValUInt32 = 4294967295
 NoDataValUInt64 = 2**64-1
 unclassifiedVal = -1000

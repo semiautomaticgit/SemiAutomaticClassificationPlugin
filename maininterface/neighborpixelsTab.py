@@ -172,14 +172,13 @@ class NeighborPixels:
 				for y in range(0, len(bndSetSources)):
 					if cfg.actionCheck == 'Yes':
 						input = bndSetSources[y]
-						nd = cfg.utls.imageNoDataValue(input)
 						additionalLayer = 3
 						if virtual == 'Yes':
 							outputRaster = o + '/' + outputName + cfg.utls.fileNameNoExt(bndSetSources[y]) + '.vrt'
 						else:
 							outputRaster = o + '/' + outputName + cfg.utls.fileNameNoExt(bndSetSources[y]) + '.tif'
 						# process calculation
-						u = cfg.utls.multiProcessRaster(rasterPath = input, functionBand = 'No', functionRaster = cfg.utls.rasterNeighbor, outputRasterList = [outputRaster], functionBandArgument = structure, functionVariable = functionList, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Neighbor pixels'), virtualRaster = virtual, compress = cfg.rasterCompression, outputNoDataValue = nd, boundarySize = structure.shape[0]+1, additionalLayer = additionalLayer)
+						u = cfg.utls.multiProcessRaster(rasterPath = input, functionBand = 'No', functionRaster = cfg.utls.rasterNeighbor, outputRasterList = [outputRaster], functionBandArgument = structure, functionVariable = functionList, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Neighbor pixels'), virtualRaster = virtual, compress = cfg.rasterCompression, outputNoDataValue = cfg.NoDataValFloat32, boundarySize = structure.shape[0]+1, additionalLayer = additionalLayer)
 					if cfg.osSCP.path.isfile(outputRaster):
 						oR =cfg.utls.addRasterLayer(outputRaster)
 				if batch == 'No':

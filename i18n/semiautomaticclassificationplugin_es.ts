@@ -6920,7 +6920,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/neighborpixelsTab.py" line="182"/>
+        <location filename="../maininterface/neighborpixelsTab.py" line="181"/>
         <source>Neighbor pixels</source>
         <translation type="unfinished"></translation>
     </message>
