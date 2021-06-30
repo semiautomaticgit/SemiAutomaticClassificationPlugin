@@ -5449,7 +5449,7 @@ class Utils:
 			if cfg.actionCheck == 'Yes':
 				vRasterPath = tmpRastList[p]
 				tVect = cfg.utls.createTempRasterPath('gpkg', name = str(p))
-				wrtP = [p, cfg.tmpDir]
+				wrtP = [p, cfg.tmpDir, cfg.gdalDLLPath]
 				c = cfg.pool.apply_async(cfg.utls.rasterToVectorMulti, args=(vRasterPath, tVect, field, wrtP))
 				results.append([c, p])
 		while cfg.actionCheck == 'Yes':
@@ -5503,6 +5503,14 @@ class Utils:
 		import time
 		import datetime
 		import random
+		wrtProc = str(writerLog[0])
+		cfg.tmpDir = writerLog[1]
+		GDALDLLPath = writerLog[2]
+		for d in GDALDLLPath.split(';'):
+			try:
+				os.add_dll_directory(d)
+			except:
+				pass
 		import numpy as np
 		from osgeo import gdal
 		from osgeo import ogr
@@ -5525,8 +5533,6 @@ class Utils:
 			cfg.gdalSCP.SetConfigOption('VSI_CACHE', 'FALSE')
 		except:
 			pass
-		wrtProc = str(writerLog[0])
-		cfg.tmpDir = writerLog[1]
 		cfg.logFile = cfg.tmpDir + '/log_' + wrtProc
 		# logger
 		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " process: " + str(wrtProc))
@@ -7276,7 +7282,7 @@ class Utils:
 						cfg.pool = cfg.poolSCP(processes=1)
 						p = 0
 						memVal = str(int(cfg.RAMValue * 0.8)*1000000)
-						wrtP = [p, cfg.tmpDir, memVal]
+						wrtP = [p, cfg.tmpDir, memVal, cfg.gdalDLLPath]
 						results = []
 						c = cfg.pool.apply_async(self.buildOverviewsGDAL, args=(i, wrtP))
 						results.append([c, p])
@@ -7321,7 +7327,7 @@ class Utils:
 					cfg.pool = cfg.poolSCP(processes=1)
 					p = 0
 					memVal = str(int(cfg.RAMValue * 0.8)*1000000)
-					wrtP = [p, cfg.tmpDir, memVal]
+					wrtP = [p, cfg.tmpDir, memVal, cfg.gdalDLLPath]
 					results = []
 					c = cfg.pool.apply_async(self.buildOverviewsGDAL, args=(i, wrtP))
 					results.append([c, p])
@@ -7369,6 +7375,15 @@ class Utils:
 		import inspect
 		import time
 		import datetime
+		wrtProc = str(writerLog[0])
+		cfg.tmpDir = writerLog[1]
+		memory = writerLog[2]
+		GDALDLLPath = writerLog[3]
+		for d in GDALDLLPath.split(';'):
+			try:
+				os.add_dll_directory(d)
+			except:
+				pass
 		import numpy as np
 		from osgeo import gdal
 		from osgeo import ogr
@@ -7380,9 +7395,6 @@ class Utils:
 		cfg.osrSCP = osr
 		from .utils import Utils
 		cfg.utls = Utils()
-		wrtProc = str(writerLog[0])
-		cfg.tmpDir = writerLog[1]
-		memory = writerLog[2]
 		# GDAL config
 		try:
 			cfg.gdalSCP.SetConfigOption('GDAL_DISABLE_READDIR_ON_OPEN', 'TRUE')
@@ -7494,7 +7506,7 @@ class Utils:
 		# progress queue
 		pMQ = manager.Queue()
 		memVal = str(int(cfg.RAMValue)*1000000)
-		wrtP = [p, cfg.tmpDir, memVal, pMQ]
+		wrtP = [p, cfg.tmpDir, memVal, pMQ, cfg.gdalDLLPath]
 		results = []
 		c = cfg.pool.apply_async(self.gdalTranslate, args=(input, output, a, wrtP))
 		results.append([c, p])
@@ -7549,6 +7561,17 @@ class Utils:
 		import inspect
 		import time
 		import datetime
+		wrtProc = str(writerLog[0])
+		cfg.tmpDir = writerLog[1]
+		memory = writerLog[2]
+		global progressQueue
+		progressQueue = writerLog[3]
+		GDALDLLPath = writerLog[4]
+		for d in GDALDLLPath.split(';'):
+			try:
+				os.add_dll_directory(d)
+			except:
+				pass
 		from osgeo import gdal
 		from osgeo import ogr
 		from osgeo import osr
@@ -7561,11 +7584,6 @@ class Utils:
 		cfg.osrSCP = osr
 		from .utils import Utils
 		cfg.utls = Utils()
-		wrtProc = str(writerLog[0])
-		cfg.tmpDir = writerLog[1]
-		memory = writerLog[2]
-		global progressQueue
-		progressQueue = writerLog[3]
 		# GDAL config
 		try:
 			cfg.gdalSCP.SetConfigOption('GDAL_DISABLE_READDIR_ON_OPEN', 'TRUE')
