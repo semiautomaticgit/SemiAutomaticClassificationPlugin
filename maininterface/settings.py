@@ -39,8 +39,13 @@ cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 class Settings:
 
 	def __init__(self):	
-		pass
+		self.getGDALDLLPath()
 		
+	# Get GDAL DLL Path
+	def getGDALDLLPath(self):
+		if cfg.gdalDLLPath is None:
+			cfg.gdalDLLPath = cfg.osSCP.environ['PATH']
+			
 	# Change ROI color
 	def changeROIColor(self):
 		c = cfg.QtWidgetsSCP.QColorDialog.getColor()

@@ -5213,12 +5213,12 @@ ROI</source>
         <translation>Zapisz raster</translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7276"/>
+        <location filename="../core/utils.py" line="7288"/>
         <source>Build overviews</source>
         <translation>Zbuduj podglądy</translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7276"/>
+        <location filename="../core/utils.py" line="7288"/>
         <source>Do you want to build the external overviews of bands?</source>
         <translation>Czy na pewno zbudować zewnętrzne podglądy na kanały?</translation>
     </message>
@@ -5293,57 +5293,57 @@ ROI</source>
         <translation>Zapisz listę punktów w pliku</translation>
     </message>
     <message>
-        <location filename="../maininterface/settings.py" line="251"/>
+        <location filename="../maininterface/settings.py" line="256"/>
         <source>Transparency </source>
         <translation>Przezroczystość</translation>
     </message>
     <message>
-        <location filename="../maininterface/settings.py" line="64"/>
+        <location filename="../maininterface/settings.py" line="69"/>
         <source>Save Log file</source>
         <translation>Zapisz Plik zdarzeń</translation>
     </message>
     <message>
-        <location filename="../maininterface/settings.py" line="191"/>
+        <location filename="../maininterface/settings.py" line="196"/>
         <source>Reset field names</source>
         <translation>Wyczyść nazwy pól</translation>
     </message>
     <message>
-        <location filename="../maininterface/settings.py" line="191"/>
+        <location filename="../maininterface/settings.py" line="196"/>
         <source>Are you sure you want to reset field names?</source>
         <translation>Czy na pewno wyczyścić nazwy pól?</translation>
     </message>
     <message>
-        <location filename="../maininterface/settings.py" line="202"/>
+        <location filename="../maininterface/settings.py" line="207"/>
         <source>Reset variable name</source>
         <translation>Wyczyść nazwę zmiennej</translation>
     </message>
     <message>
-        <location filename="../maininterface/settings.py" line="202"/>
+        <location filename="../maininterface/settings.py" line="207"/>
         <source>Are you sure you want to reset variable name?</source>
         <translation>Czy na pewno wyczyścić nazwę zmiennej?</translation>
     </message>
     <message>
-        <location filename="../maininterface/settings.py" line="210"/>
+        <location filename="../maininterface/settings.py" line="215"/>
         <source>Reset group name</source>
         <translation>Wyczyść nazwę grupy</translation>
     </message>
     <message>
-        <location filename="../maininterface/settings.py" line="210"/>
+        <location filename="../maininterface/settings.py" line="215"/>
         <source>Are you sure you want to reset group name?</source>
         <translation>Czy na pewno wyczyścić nazwę grupy?</translation>
     </message>
     <message>
-        <location filename="../maininterface/settings.py" line="218"/>
+        <location filename="../maininterface/settings.py" line="223"/>
         <source>Change temporary directory</source>
         <translation>Zmień tymczasowy katalog</translation>
     </message>
     <message>
-        <location filename="../maininterface/settings.py" line="218"/>
+        <location filename="../maininterface/settings.py" line="223"/>
         <source>Are you sure you want to change the temporary directory?</source>
         <translation>Czy na pewno zmienić tymczasowy katalog?</translation>
     </message>
     <message>
-        <location filename="../maininterface/settings.py" line="236"/>
+        <location filename="../maininterface/settings.py" line="241"/>
         <source>Are you sure you want to reset the temporary directory?</source>
         <translation>Czy na pewno wyczyścić katalog tymczasowy?</translation>
     </message>
@@ -5735,7 +5735,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation>Wybierz plik XML</translation>
     </message>
     <message>
-        <location filename="../maininterface/settings.py" line="236"/>
+        <location filename="../maininterface/settings.py" line="241"/>
         <source>Reset temporary directory</source>
         <translation>Wyczyść folder tymczasowy</translation>
     </message>
@@ -6105,7 +6105,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished">Sentinel-3</translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="9364"/>
+        <location filename="../core/utils.py" line="9376"/>
         <source>SCP: completed process</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6515,27 +6515,27 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="6170"/>
+        <location filename="../core/utils.py" line="6182"/>
         <source>Calculating signature</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7544"/>
+        <location filename="../core/utils.py" line="7556"/>
         <source>Writing file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="5470"/>
+        <location filename="../core/utils.py" line="5482"/>
         <source>Conversion to vector</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7225"/>
+        <location filename="../core/utils.py" line="7237"/>
         <source>Sieve</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7355"/>
+        <location filename="../core/utils.py" line="7367"/>
         <source>Building overviews</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6575,12 +6575,12 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="8811"/>
+        <location filename="../core/utils.py" line="8823"/>
         <source>Remove rows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="8811"/>
+        <location filename="../core/utils.py" line="8823"/>
         <source>Are you sure you want to remove highlighted rows from the table?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6700,7 +6700,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/settings.py" line="387"/>
+        <location filename="../maininterface/settings.py" line="392"/>
         <source>Test</source>
         <translation type="unfinished"></translation>
     </message>

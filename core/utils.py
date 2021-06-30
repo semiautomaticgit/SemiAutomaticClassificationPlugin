@@ -4384,6 +4384,15 @@ class Utils:
 		import time
 		import datetime
 		import random
+		wrtProc = str(writerLog[0])
+		cfg.tmpDir = writerLog[1]
+		memory = writerLog[2]
+		GDALDLLPath = writerLog[3]
+		for d in GDALDLLPath.split(';'):
+			try:
+				os.add_dll_directory(d)
+			except:
+				pass
 		import numpy as np
 		try:
 			from scipy.ndimage import label
@@ -4417,9 +4426,6 @@ class Utils:
 		cfg.osrSCP = osr
 		from .utils import Utils
 		cfg.utls = Utils()
-		wrtProc = str(writerLog[0])
-		cfg.tmpDir = writerLog[1]
-		memory = writerLog[2]
 		cfg.logFile = cfg.tmpDir + '/log_' + wrtProc
 		# GDAL config
 		try:
@@ -4529,7 +4535,7 @@ class Utils:
 					fArg = functionBandArgument[p]
 					fVar = functionVariable[p]
 					bList = bandNumberList[p]
-					wrtP = [p, cfg.tmpDir, memVal, compress, compressFormat]
+					wrtP = [p, cfg.tmpDir, memVal, compress, compressFormat, cfg.gdalDLLPath]
 					c = cfg.pool.apply_async(cfg.utls.multiProcessNoBlocksDev, args=(rasterPath, signatureList, bList, functionRaster, algorithmName, pOut, outputAlgorithmRaster, outputClassificationRaster, previewSize, previewPoint, nodataValue, macroclassCheck, fArg, fVar, progressMessage, skipReplaceNoData, outputBandNumber, wrtP))
 					results.append([c, p])
 			# update progress
@@ -4570,6 +4576,27 @@ class Utils:
 		import time
 		import datetime
 		import random
+		wrtProc = str(writerLog[0])
+		wrtOut = writerLog[1]
+		cfg.tmpDir = writerLog[2]
+		parallelWritingCheck = writerLog[3]
+		progressQueue = writerLog[4]
+		memory = writerLog[5]
+		compress = writerLog[6]
+		compressFormat = writerLog[7]
+		dataType = writerLog[8]
+		boundarySize = writerLog[9]
+		roX = writerLog[10]
+		roY = writerLog[11]
+		vBX = writerLog[12]
+		vBY = writerLog[13]
+		calcDataType = writerLog[14]
+		GDALDLLPath = writerLog[15]
+		for d in GDALDLLPath.split(';'):
+			try:
+				os.add_dll_directory(d)
+			except:
+				pass
 		import numpy as np
 		# garbage collector for memory issue
 		import gc
@@ -4610,21 +4637,6 @@ class Utils:
 		cfg.osrSCP = osr
 		from .utils import Utils
 		cfg.utls = Utils()
-		wrtProc = str(writerLog[0])
-		wrtOut = writerLog[1]
-		cfg.tmpDir = writerLog[2]
-		parallelWritingCheck = writerLog[3]
-		progressQueue = writerLog[4]
-		memory = writerLog[5]
-		compress = writerLog[6]
-		compressFormat = writerLog[7]
-		dataType = writerLog[8]
-		boundarySize = writerLog[9]
-		roX = writerLog[10]
-		roY = writerLog[11]
-		vBX = writerLog[12]
-		vBY = writerLog[13]
-		calcDataType = writerLog[14]
 		cfg.logFile = cfg.tmpDir + '/log_' + wrtProc
 		# GDAL config
 		try:
@@ -5159,7 +5171,7 @@ class Utils:
 				roY = min(vY)
 				if cfg.actionCheck == 'Yes':
 					pOut = ''
-					wrtP = [p, outputRasterList, cfg.tmpDir, parallelWritingCheck, pMQ, memVal, compress, compressFormat, dataType, boundarySize, x, roY, bSX, vBY, calcDataType]
+					wrtP = [p, outputRasterList, cfg.tmpDir, parallelWritingCheck, pMQ, memVal, compress, compressFormat, dataType, boundarySize, x, roY, bSX, vBY, calcDataType, cfg.gdalDLLPath]
 					c = cfg.pool.apply_async(self.processRasterDev, args=(rasterPath, signatureList, functionBand, functionRaster, algorithmName, pOut, outputAlgorithmRaster, outputClassificationRaster, sections, classificationOptions, nodataValue, macroclassCheck, functionBandArgument, functionVariable, progressMessage, skipReplaceNoData, singleBandNumber, outputBandNumber, outputNoDataValue, scale, offset, wrtP))
 					results.append([c, p])
 					cfg.QtWidgetsSCP.qApp.processEvents()
@@ -5249,7 +5261,7 @@ class Utils:
 							fArg = functionBandArgument[p]
 							fVar = functionVariable[p]
 							otpLst = None
-						wrtP = [p, otpLst, cfg.tmpDir, parallelWritingCheck, pMQ, memVal, compress, compressFormat, dataType, boundarySize, 0, 0, rX, rY, calcDataType]
+						wrtP = [p, otpLst, cfg.tmpDir, parallelWritingCheck, pMQ, memVal, compress, compressFormat, dataType, boundarySize, 0, 0, rX, rY, calcDataType, cfg.gdalDLLPath]
 						if skipSingleBand is None:
 							singleBand = p
 						else:
@@ -7411,7 +7423,7 @@ class Utils:
 					cfg.gdalPath = ''
 					# logger
 					cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' getGDALForMac: ERROR')
-				
+		
 	# Get GDAL version
 	def getGDALVersion(self):
 		v = cfg.gdalSCP.VersionInfo('RELEASE_NAME').split('.')

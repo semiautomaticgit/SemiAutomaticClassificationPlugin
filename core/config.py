@@ -33,6 +33,7 @@
 '''
 
 ''' Init '''
+gdalDLLPath = None
 iface = None
 cnvs = None
 mainAction = None
