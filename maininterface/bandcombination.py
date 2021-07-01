@@ -170,7 +170,15 @@ class BandCombination:
 			# adapted from Jaime answer at https://stackoverflow.com/questions/16970982/find-unique-rows-in-numpy-array
 			bVV = values.view(cfg.np.dtype((cfg.np.void, values.dtype.itemsize * values.shape[1])))
 			ff, indexA = cfg.np.unique(bVV, return_index=True, return_counts=False)
-			cmb = values[indexA].tolist()
+			cmb = []
+			for cmV in values[indexA].tolist():
+				useV = 'Yes'
+				for rnData in nData:
+					if int(rnData) in cmV:
+						useV = 'No'
+						break
+				if useV == 'Yes':
+					cmb.append(cmV)
 			cmbArr = cfg.np.array(cmb)
 			# logger
 			cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' len(cmb): ' + str(len(cmb)))
@@ -181,6 +189,8 @@ class BandCombination:
 				addC = 0
 			else:
 				addC = - cfg.np.nanmin(cmbArr)
+			# logger
+			cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' addC: ' + str(addC))
 			# expression builder
 			check = 'No'
 			maxDig = 10-len(str(cfg.np.sum(maxV)))
@@ -216,9 +226,10 @@ class BandCombination:
 					rndVarList.append(rndVar)
 					sumA[:, cmbI] = (cmbArr[:, cmbI] + addC) * rndVar
 				sumT = cfg.np.sum(sumA, axis=1)
+				cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' (sumT) ' + str(sumT))
 				uniqueS = cfg.np.unique(sumT, return_index=False, return_counts=False)
 				# logger
-				cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' rndVarList: ' + str(rndVarList))
+				cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' rndVarList: ' + str(rndVarList) + ' uniqueS.shape[0] ' + str(uniqueS.shape[0]))
 				if uniqueS.shape[0] == len(cmb) and cfg.np.sum(uniqueS<0) < 1:
 					check = 'Yes'
 					break

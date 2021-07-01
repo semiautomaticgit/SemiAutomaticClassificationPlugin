@@ -6186,7 +6186,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/bandcombination.py" line="308"/>
+        <location filename="../maininterface/bandcombination.py" line="319"/>
         <source>RasterValue</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6941,7 +6941,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/bandcombination.py" line="265"/>
+        <location filename="../maininterface/bandcombination.py" line="276"/>
         <source>Cross classification </source>
         <translation type="unfinished"></translation>
     </message>
