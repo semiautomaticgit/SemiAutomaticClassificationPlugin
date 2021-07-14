@@ -44,7 +44,7 @@ class Settings:
 	# Get GDAL DLL Path
 	def getGDALDLLPath(self):
 		if cfg.gdalDLLPath is None:
-			cfg.gdalDLLPath = cfg.osSCP.environ['PATH']
+			cfg.gdalDLLPath = cfg.osSCP.environ['PATH'].replace('\\', '/')
 			
 	# Change ROI color
 	def changeROIColor(self):
@@ -304,7 +304,7 @@ class Settings:
 		# pool
 		cfg.pool = cfg.poolSCP(processes=1)
 		p = 0
-		wrtP = [p]
+		wrtP = [[p, cfg.gdalDLLPath]]
 		results = []
 		c = cfg.pool.apply_async(self.importTest, args=(wrtP))
 		results.append([c, p])
@@ -317,7 +317,13 @@ class Settings:
 		return res
 	
 	# test multiprocess import
-	def importTest(self, raster):
+	def importTest(self, writerLog):
+		import os
+		for d in writerLog[1].split(';'):
+			try:
+				os.add_dll_directory(d)
+			except:
+				pass
 		try:
 			from osgeo import gdal
 			gdal.Translate

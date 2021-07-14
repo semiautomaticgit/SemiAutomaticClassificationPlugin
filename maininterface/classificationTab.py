@@ -123,6 +123,8 @@ class ClassificationTab:
 	# perform classification
 	def runClassification(self, batch = 'No', outputClassification = None, bandSetNumber = None, algorithmFilesCheck = None, reportCheck = None, vectorConversion = None, algorithmName = None, useMacroclass = None, useLcs = None, useLcsAlgorithm = None, LCSLeaveUnclassified = None, maskCheckBox = None, maskPath = None):
 		sL = cfg.classTab.getSignatureList(bandSetNumber, algorithmName)
+		# for multiprocess
+		sLMP = cfg.classTab.getSignatureList(bandSetNumber, algorithmName, color = 'No')
 		if self.trainSigCheck == 'Yes':
 			if bandSetNumber is None:
 				bandSetNumber = cfg.bndSetNumber
@@ -201,7 +203,7 @@ class ClassificationTab:
 					classificationOptions = [useLcs, useLcsAlgorithm, LCSLeaveUnclassified, cfg.algBandWeigths, cfg.algThrshld]
 					# logger
 					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' classification set: ' + str([algorithmName, img, sL, cfg.clssPth, useMacroclass, algRasterPath, 0, None, cfg.rasterCompression, bandSetNumber, classificationOptions]))
-					ok, cOut, mOut, opOut = self.runAlgorithm(algorithmName, img, sL, cfg.clssPth, useMacroclass, algRasterPath, 0, None, cfg.rasterCompression, bandSetNumber, classificationOptions)
+					ok, cOut, mOut, opOut = self.runAlgorithm(algorithmName, img, sLMP, cfg.clssPth, useMacroclass, algRasterPath, 0, None, cfg.rasterCompression, bandSetNumber, classificationOptions)
 					if ok == 'Yes':
 						c = cfg.utls.addRasterLayer(cfg.clssPth)
 						cfg.utls.moveLayerTop(c)
@@ -272,7 +274,7 @@ class ClassificationTab:
 	# apply symbology to classification			
 	def applyClassSymbology(self, classificationRaster, macroclassCheck, qmlFile, signatureList = None):
 		# qml symbology
-		if qmlFile == "":
+		if qmlFile == '':
 			if macroclassCheck == 'Yes':
 				signatureList = cfg.SCPD.createMCIDList()
 				if len(signatureList) == 0:
@@ -283,7 +285,7 @@ class ClassificationTab:
 				self.applyQmlStyle(classificationRaster, qmlFile)
 			except Exception as err:
 				# logger
-				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 							
 	# apply symbology to classification vector	
 	def applyClassSymbologyVector(self, classificationVector, macroclassCheck, qmlFile, signatureList = None):
@@ -316,7 +318,7 @@ class ClassificationTab:
 		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'classification symbology applied with qml: ' + str(stylePath))
 			
 	# calculate signatures for checked ROIs
-	def getSignatureList(self, bandSetNumber = None, algorithmName = None):
+	def getSignatureList(self, bandSetNumber = None, algorithmName = None, color = None):
 		if bandSetNumber is None:
 			bandSetNumber = cfg.bndSetNumber
 		if bandSetNumber >= len(cfg.bandSetsList):
@@ -343,7 +345,10 @@ class ClassificationTab:
 				s.append(cfg.signList['CLASSINFO_' + str(i)])
 				s.append(cfg.signList['VALUES_' + str(i)])
 				s.append(cfg.signList['WAVELENGTH_' + str(i)])
-				s.append(cfg.signList['COLOR_' + str(i)])
+				if color is None:
+					s.append(cfg.signList['COLOR_' + str(i)])
+				else:
+					s.append(None)
 				s.append(cfg.signList['COVMATRIX_' + str(i)])
 				s.append(cfg.signList['LCS_MIN_' + str(i)])
 				s.append(cfg.signList['LCS_MAX_' + str(i)])
@@ -402,6 +407,8 @@ class ClassificationTab:
 			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'point (X,Y) = (%s,%s)' % (cfg.pntPrvw.x() , cfg.pntPrvw.y()))
 			# signature list
 			sL = cfg.classTab.getSignatureList()
+			# for multiprocess
+			sLMP = cfg.classTab.getSignatureList(color = 'No')
 			# input image
 			if cfg.actionCheck == 'Yes' and  self.trainSigCheck == 'Yes':
 				# check band set
@@ -434,7 +441,7 @@ class ClassificationTab:
 						tPMA = None		
 					# logger
 					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' classification set: ' + str([cfg.algName, cfg.bandSetsList[bandSetNumber][8], sL, pP, cfg.macroclassCheck, tPMA, int(cfg.prvwSz), point, compress, bandSetNumber, classificationOptions]))
-					ok, cOut, mOut, opOut = self.runAlgorithm(cfg.algName, cfg.bandSetsList[bandSetNumber][8], sL, pP, cfg.macroclassCheck, tPMA, int(cfg.prvwSz), point, compress, bandSetNumber, classificationOptions)
+					ok, cOut, mOut, opOut = self.runAlgorithm(cfg.algName, cfg.bandSetsList[bandSetNumber][8], sLMP, pP, cfg.macroclassCheck, tPMA, int(cfg.prvwSz), point, compress, bandSetNumber, classificationOptions)
 					if ok == 'Yes':
 						if algorithmRaster == 'No':
 							r = cfg.utls.addRasterLayer(cOut)

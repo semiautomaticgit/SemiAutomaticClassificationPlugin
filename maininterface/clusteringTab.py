@@ -398,6 +398,7 @@ class ClusteringTab:
 					signatureList = []
 					kN = 1
 					classes = []
+					classesMP = []
 					for p in range(0, k):
 						sig = []
 						signature = []
@@ -424,6 +425,7 @@ class ClusteringTab:
 						s.append(0)
 						signatureList.append(s)
 						classes.append([kN, c])
+						classesMP.append([kN, None])
 						kN = kN + 1
 				else:
 					# random seeds
@@ -432,6 +434,7 @@ class ClusteringTab:
 					signatureList = []
 					kN = 1
 					classes = []
+					classesMP = []
 					for p in range(0, len(points)):
 						sig = cfg.utls.calculatePixelSignature(cfg.qgisCoreSCP.QgsPointXY(points[p][0], points[p][1]), cfg.bandSetsList[bandSetNumber][8], bandSetNumber, 'Pixel', 'No')
 						signatures1.append(sig)
@@ -454,6 +457,7 @@ class ClusteringTab:
 						s.append(0)
 						signatureList.append(s)
 						classes.append([kN, c])
+						classesMP.append([kN, None])
 						kN = kN + 1
 			except:
 				# seed signatures
@@ -466,6 +470,7 @@ class ClusteringTab:
 				signatures1 = k_or_sigs
 				signatureList = []
 				classes = []
+				classesMP = []
 				for p in range(0, k):
 					sig = signatures1[p][0]
 					signature = []
@@ -486,9 +491,14 @@ class ClusteringTab:
 					s.append(0)
 					signatureList.append(s)
 					classes.append([signatures1[p][1], signatures1[p][2]])
+					classesMP.append([signatures1[p][1], None])
 			# process calculation
 			classificationOptions = ['No', 'No', 'No', cfg.algBandWeigths, cfg.algThrshld]
-			o = cfg.utls.multiProcessRaster(rasterPath = rD, signatureList = signatureList, functionBand = 'Yes', functionRaster = cfg.utls.classificationMultiprocess, algorithmName = algorithmName, nodataValue = -999, macroclassCheck = 'No',classificationOptions = classificationOptions, functionBandArgument = cfg.multiAddFactorsVar, functionVariable = cfg.bandSetsList[bandSetNumber][6], progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Classification iteration ') + str(iteration + 1).replace('-1', '*').replace('0', '*'), virtualRaster = 'Yes', compress =  'No')	
+			# for multiprocess
+			signatureListMP = signatureList.copy()
+			for smp in signatureListMP:
+				smp[6] = None
+			o = cfg.utls.multiProcessRaster(rasterPath = rD, signatureList = signatureListMP, functionBand = 'Yes', functionRaster = cfg.utls.classificationMultiprocess, algorithmName = algorithmName, nodataValue = -999, macroclassCheck = 'No',classificationOptions = classificationOptions, functionBandArgument = cfg.multiAddFactorsVar, functionVariable = cfg.bandSetsList[bandSetNumber][6], progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Classification iteration ') + str(iteration + 1).replace('-1', '*').replace('0', '*'), virtualRaster = 'Yes', compress =  'No')	
 			if o == 'No':
 				return 'No', None, None
 			# output rasters
@@ -527,7 +537,7 @@ class ClusteringTab:
 			try:
 				# values finder
 				cfg.parallelArrayDict = {}
-				o = cfg.utls.multiProcessRaster(rasterPath = tPMDV, functionBand = 'No', functionRaster = cfg.utls.rasterPixelCountISODATA, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Calculate raster values iteration ') + str(iteration + 1).replace('-1', '*').replace('0', '*'), nodataValue = nD, functionVariable = classes)
+				o = cfg.utls.multiProcessRaster(rasterPath = tPMDV, functionBand = 'No', functionRaster = cfg.utls.rasterPixelCountISODATA, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Calculate raster values iteration ') + str(iteration + 1).replace('-1', '*').replace('0', '*'), nodataValue = nD, functionVariable = classesMP)
 			except Exception as err:
 				# logger
 				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
@@ -976,6 +986,7 @@ class ClusteringTab:
 					signatureList = []
 					kN = 1
 					classes = []
+					classesMP = []
 					for p in range(0, k):
 						sig = []
 						signature = []
@@ -1005,6 +1016,7 @@ class ClusteringTab:
 						s.append(0)
 						signatureList.append(s)
 						classes.append([kN, c])
+						classesMP.append([kN, None])
 						kN = kN + 1
 				else:
 					# random seeds
@@ -1013,6 +1025,7 @@ class ClusteringTab:
 					signatureList = []
 					kN = 1
 					classes = []
+					classesMP = []
 					for p in range(0, len(points)):
 						sig = cfg.utls.calculatePixelSignature(cfg.qgisCoreSCP.QgsPointXY(points[p][0], points[p][1]), cfg.bandSetsList[bandSetNumber][8], bandSetNumber, "Pixel", 'No')
 						signatures1.append(sig)
@@ -1035,6 +1048,7 @@ class ClusteringTab:
 						s.append(0)
 						signatureList.append(s)
 						classes.append([kN, c])
+						classesMP.append([kN, None])
 						kN = kN + 1
 			except:
 				# seed signatures
@@ -1042,6 +1056,7 @@ class ClusteringTab:
 				signatures1 = k_or_sigs
 				signatureList = []
 				classes = []
+				classesMP = []
 				for p in range(0, k):
 					sig = signatures1[p][0]
 					signature = []
@@ -1062,9 +1077,14 @@ class ClusteringTab:
 					s.append(0)
 					signatureList.append(s)
 					classes.append([signatures1[p][1], signatures1[p][2]])
+					classesMP.append([signatures1[p][1], None])
 			# process calculation
 			classificationOptions = ['No', 'No', 'No', cfg.algBandWeigths, cfg.algThrshld]
-			o = cfg.utls.multiProcessRaster(rasterPath = rD, signatureList = signatureList, functionBand = 'Yes', functionRaster = cfg.utls.classificationMultiprocess, algorithmName = algorithmName, nodataValue = -999, macroclassCheck = 'No',classificationOptions = classificationOptions, functionBandArgument = cfg.multiAddFactorsVar, functionVariable = cfg.bandSetsList[bandSetNumber][6], progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Classification iteration') + str(iteration + 1).replace('-1', '*').replace('0', '*'), virtualRaster = 'Yes', compress = 'No')	
+			# for multiprocess
+			signatureListMP = signatureList.copy()
+			for smp in signatureListMP:
+				smp[6] = None
+			o = cfg.utls.multiProcessRaster(rasterPath = rD, signatureList = signatureListMP, functionBand = 'Yes', functionRaster = cfg.utls.classificationMultiprocess, algorithmName = algorithmName, nodataValue = -999, macroclassCheck = 'No',classificationOptions = classificationOptions, functionBandArgument = cfg.multiAddFactorsVar, functionVariable = cfg.bandSetsList[bandSetNumber][6], progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Classification iteration') + str(iteration + 1).replace('-1', '*').replace('0', '*'), virtualRaster = 'Yes', compress = 'No')	
 			if o == 'No':
 				return 'No', None, None, None
 			# output rasters
@@ -1100,7 +1120,7 @@ class ClusteringTab:
 			try:
 				# values finder
 				cfg.parallelArrayDict = {}
-				o = cfg.utls.multiProcessRaster(rasterPath = tPMDV, functionBand = 'No', functionRaster = cfg.utls.rasterPixelCountKmeans, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Calculate raster values iteration ') + str(iteration + 1).replace('-1', '*').replace('0', '*'), nodataValue = nD, functionVariable = classes)
+				o = cfg.utls.multiProcessRaster(rasterPath = tPMDV, functionBand = 'No', functionRaster = cfg.utls.rasterPixelCountKmeans, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Calculate raster values iteration ') + str(iteration + 1).replace('-1', '*').replace('0', '*'), nodataValue = nD, functionVariable = classesMP)
 			except Exception as err:
 				# logger
 				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))

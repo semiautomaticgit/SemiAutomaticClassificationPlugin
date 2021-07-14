@@ -4777,17 +4777,17 @@ ROI</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/classificationTab.py" line="709"/>
+        <location filename="../maininterface/classificationTab.py" line="716"/>
         <source>Select a mask shapefile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/classificationTab.py" line="133"/>
+        <location filename="../maininterface/classificationTab.py" line="135"/>
         <source>Save classification output</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/classificationTab.py" line="755"/>
+        <location filename="../maininterface/classificationTab.py" line="762"/>
         <source>Select a qml style</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5178,7 +5178,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished">ACP</translation>
     </message>
     <message>
-        <location filename="../maininterface/clusteringTab.py" line="1253"/>
+        <location filename="../maininterface/clusteringTab.py" line="1273"/>
         <source>Clustering</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5933,12 +5933,12 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/clusteringTab.py" line="1255"/>
+        <location filename="../maininterface/clusteringTab.py" line="1275"/>
         <source>Signature</source>
         <translation type="unfinished">Signature</translation>
     </message>
     <message>
-        <location filename="../maininterface/clusteringTab.py" line="1263"/>
+        <location filename="../maininterface/clusteringTab.py" line="1283"/>
         <source>C_ID_</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5963,17 +5963,17 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/clusteringTab.py" line="806"/>
+        <location filename="../maininterface/clusteringTab.py" line="816"/>
         <source> Calculating. Please wait ...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/clusteringTab.py" line="829"/>
+        <location filename="../maininterface/clusteringTab.py" line="839"/>
         <source> Calculating classification. Please wait ...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/clusteringTab.py" line="1255"/>
+        <location filename="../maininterface/clusteringTab.py" line="1275"/>
         <source>Distance</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6473,7 +6473,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/classificationTab.py" line="222"/>
+        <location filename="../maininterface/classificationTab.py" line="224"/>
         <source>Conversion to vector. Please wait ...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6663,17 +6663,17 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished">Soutenir SCP</translation>
     </message>
     <message>
-        <location filename="../maininterface/clusteringTab.py" line="1103"/>
+        <location filename="../maininterface/clusteringTab.py" line="1123"/>
         <source>Calculate raster values iteration </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/clusteringTab.py" line="491"/>
+        <location filename="../maininterface/clusteringTab.py" line="501"/>
         <source>Classification iteration </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/clusteringTab.py" line="1067"/>
+        <location filename="../maininterface/clusteringTab.py" line="1087"/>
         <source>Classification iteration</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6698,7 +6698,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/settings.py" line="392"/>
+        <location filename="../maininterface/settings.py" line="398"/>
         <source>Test</source>
         <translation type="unfinished"></translation>
     </message>
