@@ -4384,15 +4384,26 @@ class Utils:
 		import time
 		import datetime
 		import random
+		cfg.osSCP = os
+		cfg.sysSCP = sys
+		cfg.inspectSCP = inspect
+		cfg.datetimeSCP = datetime
+		cfg.randomSCP = random
 		wrtProc = str(writerLog[0])
 		cfg.tmpDir = writerLog[1]
 		memory = writerLog[2]
-		GDALDLLPath = writerLog[3]
+		compress = writerLog[3]
+		compressFormat = writerLog[4]
+		GDALDLLPath = writerLog[5]
+		from .utils import Utils
+		cfg.utls = Utils()
+		cfg.logFile = cfg.tmpDir + '/log_' + wrtProc
 		for d in GDALDLLPath.split(';'):
 			try:
 				os.add_dll_directory(d)
-			except:
-				pass
+			except Exception as err:
+				# logger
+				cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'error ' + str(err) )
 		import numpy as np
 		try:
 			from scipy.ndimage import label
@@ -4415,18 +4426,10 @@ class Utils:
 		from osgeo import gdal
 		from osgeo import ogr
 		from osgeo import osr
-		cfg.osSCP = os
-		cfg.sysSCP = sys
-		cfg.inspectSCP = inspect
-		cfg.datetimeSCP = datetime
-		cfg.np = np
-		cfg.randomSCP = random
 		cfg.gdalSCP = gdal
 		cfg.ogrSCP = ogr
 		cfg.osrSCP = osr
-		from .utils import Utils
-		cfg.utls = Utils()
-		cfg.logFile = cfg.tmpDir + '/log_' + wrtProc
+		cfg.np = np
 		# GDAL config
 		try:
 			cfg.gdalSCP.SetConfigOption('GDAL_DISABLE_READDIR_ON_OPEN', 'TRUE')
