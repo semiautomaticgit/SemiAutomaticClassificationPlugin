@@ -283,9 +283,9 @@ class LandsatTab:
 						e = self.landsat8reflectance(sat, str(nm[len(nm) - 1]), REFLECTANCE_MULT, REFLECTANCE_ADD, RADIANCE_MULT, RADIANCE_ADD, RADIANCE_MAXIMUM, REFLECTANCE_MAXIMUM)
 						# band list
 						if int(nm[len(nm) - 1]) in [1, 2, 3, 4, 5, 6, 7]:
-							bandSetList.append(int(nm[len(nm) - 1]) - 1)
+							bandSetList.append(int(nm[len(nm) - 1]))
 							bandSetNameList.append(oNm)
-							if int(nm[len(nm) - 1]) < 5:
+							if int(nm[len(nm) - 1]) < 5 and int(nm[len(nm) - 1]) > 1:
 								bandPansharpDict[int(nm[len(nm) - 1])] = outputRaster
 								panRasterList.append(panRaster)
 							convInputList.append([inputRaster, e, outputRaster])
