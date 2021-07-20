@@ -3753,10 +3753,6 @@ class Utils:
 		scale = gdalBandList[0]
 		offset = gdalBandList[1]
 		outputNoData = gdalBandList[2]
-		# logger
-		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'or1 ' + str(o))
-		# logger
-		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'or2 ' + str(o))
 		cfg.utls.writeRasterBlock(oR, int(outputBandNumber), o, pixelStartColumn, pixelStartRow,  scale = scale, offset = offset, outputNoData = outputNoData)
 		o = None
 		oR = None
