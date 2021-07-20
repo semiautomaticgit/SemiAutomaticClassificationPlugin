@@ -38,7 +38,7 @@ cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 class LandsatTab:
 
 	def __init__(self):
-		pass
+		self.nodataCalc = cfg.NoDataValUInt16 * 0.00001
 		
 	# landsat input
 	def inputLandsat(self):
@@ -282,7 +282,7 @@ class LandsatTab:
 					elif str(nm[len(nm) - 8: len(nm) - 1]) != '6_VCID_' and nm[len(nm) - 1].isdigit():
 						e = self.landsat8reflectance(sat, str(nm[len(nm) - 1]), REFLECTANCE_MULT, REFLECTANCE_ADD, RADIANCE_MULT, RADIANCE_ADD, RADIANCE_MAXIMUM, REFLECTANCE_MAXIMUM)
 						# band list
-						if int(nm[len(nm) - 1]) in [2, 3, 4, 5, 6, 7]:
+						if int(nm[len(nm) - 1]) in [1, 2, 3, 4, 5, 6, 7]:
 							bandSetList.append(int(nm[len(nm) - 1]) - 1)
 							bandSetNameList.append(oNm)
 							if int(nm[len(nm) - 1]) < 5:
@@ -340,9 +340,9 @@ class LandsatTab:
 			# open input with GDAL
 			rD = cfg.gdalSCP.Open(tPMDN, cfg.gdalSCP.GA_ReadOnly)
 			# output rasters
-			cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, 'GTiff', cfg.rasterDataType, 0,  None, compress = cfg.rasterCompression, compressFormat = 'LZW')
+			cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataValUInt16, 'GTiff', 'UInt16', 0,  None, compress = cfg.rasterCompression, compressFormat = 'DEFLATE')
 			rD = None
-			o = cfg.utls.multiProcessRaster(rasterPath = tPMDN, functionBand = 'No', functionRaster = cfg.utls.calculateRaster, outputRasterList = oM, nodataValue = NoData, functionBandArgument = argumentList, functionVariable = variableList, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Conversion'), parallel = cfg.parallelRaster)
+			o = cfg.utls.multiProcessRaster(rasterPath = tPMDN, functionBand = 'No', functionRaster = cfg.utls.calculateRaster, outputRasterList = oM, nodataValue = NoData, functionBandArgument = argumentList, functionVariable = variableList, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Conversion'), parallel = cfg.parallelRaster, outputNoDataValue = cfg.NoDataValUInt16, scale = 0.00001, offset = 0)
 			if cfg.actionCheck == 'Yes':
 				for t in range(0, len(outputRasterList)):
 					cfg.shutilSCP.move(oM[t], outputRasterList[t])
@@ -398,6 +398,7 @@ class LandsatTab:
 				argumentList = panList[1].replace('LDNm', str(LDNmList[0]))
 			else:
 				argumentList = panList[1]
+			# band conversion
 			o = cfg.utls.multiProcessRaster(rasterPath = panList[0], functionBand = 'No', functionRaster = cfg.utls.bandCalculation, outputRasterList = [panList[2]], nodataValue = NoData,  functionBandArgument = argumentList, functionVariable = [['"raster"', '"raster"']], progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Conversion'), compress = cfg.rasterCompression, compressFormat = 'DEFLATE -co PREDICTOR=2 -co ZLEVEL=1')
 			if cfg.osSCP.path.isfile(panList[2]):
 				cfg.utls.addRasterLayer(panList[2])
@@ -490,7 +491,7 @@ class LandsatTab:
 		if cfg.ui.DOS1_checkBox.isChecked() is False or str(sat).lower() in ['surface reflectance', 'surface_reflectance', 'surfacereflectance']:
 			m = float(REFLECTANCE_MULT_BAND)
 			a = float(REFLECTANCE_ADD_BAND)
-			e = 'cfg.np.clip( cfg.np.where("raster" == ' + str(nD) + ', ' + str(cfg.NoDataVal) + ', ( "raster" *' + str('%.16f' % m) + '+ (' + str('%.16f' % a) + ')) / (' + str(self.sA) + ') ), 0, 1)'
+			e = 'cfg.np.where("raster" == ' + str(nD) + ', ' + str(self.nodataCalc) + ', cfg.np.clip( ( "raster" *' + str('%.16f' % m) + '+ (' + str('%.16f' % a) + ')) / (' + str(self.sA) + ') , 0, 1) )'
 		# DOS atmospheric correction
 		else:
 			# Esun calculation (see http://grass.osgeo.org/grass65/manuals/i.landsat.toar.html)
@@ -504,7 +505,7 @@ class LandsatTab:
 			# path radiance Lp = ML* DNm + AL  – 0.01* ESUNλ * cosθs / (π * d^2)
 			Lp = str(m) + ' * LDNm + ' + str(a - 0.01 * eS * self.sA / (cfg.np.pi * self.eSD * self.eSD))
 			# land surface reflectance ρ = [π * (Lλ - Lp) * d^2]/ (ESUNλ * cosθs)
-			e = 'cfg.np.clip(( cfg.np.where("raster" == ' + str(nD) + ', ' + str(cfg.NoDataVal) + ', ("raster" *' + str('%.16f' % m) + '+ (' + str('%.16f' % a) + '))) - (' + str(Lp) + ' ) )* ' + str('%.16f' % cfg.np.pi) + ' * ' + str('%.16f' % self.eSD) + ' * ' + str('%.16f' % self.eSD) + ' / ( ' + str('%.16f' % eS)+ ' * ' + str(self.sA) + ' ), 0, 1)'
+			e = ' cfg.np.where( "raster" == ' + str(nD) + ', ' + str(self.nodataCalc) + ', cfg.np.clip( ( ("raster" *' + str('%.16f' % m) + ' + (' + str('%.16f' % a) + ') - (' + str(Lp) + ' ) ) * ' + str('%.16f' % cfg.np.pi) + ' * ' + str('%.16f' % self.eSD) + ' * ' + str('%.16f' % self.eSD) + ') / ( ' + str('%.16f' % eS)+ ' * ' + str(self.sA) + ' ), 0, 1) )'
 		return e
 				
 	# landsat conversion of surface reflectance products
@@ -519,7 +520,7 @@ class LandsatTab:
 		# reflectance
 		m = float(REFLECTANCE_MULT_BAND)
 		a = float(REFLECTANCE_ADD_BAND)
-		e = 'cfg.np.clip(cfg.np.where("raster" == ' + str(nD) + ', ' + str(cfg.NoDataVal) + ', ( "raster" *' + str('%.16f' % m) + '+ (' + str('%.16f' % a) + ')) ), 0, 1)'
+		e = 'cfg.np.where("raster" == ' + str(nD) + ', ' + str(self.nodataCalc) + ', cfg.np.clip( "raster" *' + str('%.16f' % m) + ' + (' + str('%.16f' % a) + '), 0, 1) )'
 		return e
 						
 	# landsat 1 to 7 conversion to Reflectance
@@ -565,17 +566,17 @@ class LandsatTab:
 			return 'No'
 		# TOA reflectance
 		if cfg.ui.DOS1_checkBox.isChecked() is False:
-			e = 'cfg.np.clip(cfg.np.where("raster" == ' + str(nD) + ', ' + str(cfg.NoDataVal) + ', ( ( "raster" *' + str('%.16f' % m) + '+ (' + str('%.16f' % a) + ')) * ' + str('%.16f' % cfg.np.pi) + ' * ' + str('%.16f' % self.eSD) + ' * ' + str('%.16f' % self.eSD) + ') / ( ' + str('%.16f' % eS)+ ' * (' + str(self.sA) + ') ) ), 0, 1)'
+			e = 'cfg.np.where("raster" == ' + str(nD) + ', ' + str(self.nodataCalc) + ', cfg.np.clip( ( "raster" *' + str('%.16f' % m) + '+ (' + str('%.16f' % a) + ') * ' + str('%.16f' % cfg.np.pi) + ' * ' + str('%.16f' % self.eSD) + ' * ' + str('%.16f' % self.eSD) + ') / ( ' + str('%.16f' % eS)+ ' * (' + str(self.sA) + ') ) ), 0, 1)'
 		# DOS atmospheric correction
 		elif cfg.ui.DOS1_checkBox.isChecked() is True:
 			# No data value
 			if cfg.ui.nodata_checkBox_2.isChecked() is True:
 				nD = cfg.ui.nodata_spinBox_3.value()
-			e = 'cfg.np.where("raster" == ' + str(nD) + ', ' + str(cfg.NoDataVal) + ', ("raster" *' + str('%.16f' % m) + '+ (' + str('%.16f' % a) + ')) )'
+			e = '("raster" *' + str('%.16f' % m) + '+ (' + str('%.16f' % a) + '))'
 			# path radiance Lp = ML* DNm + AL  – 0.01* ESUNλ * cosθs / (π * d^2)
 			Lp = str(m) + ' * LDNm + ' + str(a - 0.01 * eS * self.sA / (cfg.np.pi * self.eSD * self.eSD))
 			# land surface reflectance ρ = [π * (Lλ - Lp) * d^2]/ (ESUNλ * cosθs)
-			e = 'cfg.np.clip(( ' + e + ' - (' + str(Lp) + ') ) * ' + str('%.16f' % cfg.np.pi) + ' * ' + str('%.16f' % self.eSD) + ' * ' + str('%.16f' % self.eSD) + ' / ( ' + str('%.16f' % eS)+ ' * (' + str(self.sA) + ') ), 0, 1)'
+			e = 'cfg.np.where("raster" == ' + str(nD) + ', ' + str(self.nodataCalc) + ', cfg.np.clip( ( (' + e + ' - (' + str(Lp) + ') ) * ' + str('%.16f' % cfg.np.pi) + ' * ' + str('%.16f' % self.eSD) + ' * ' + str('%.16f' % self.eSD) + ' ) / ( ' + str('%.16f' % eS)+ ' * (' + str(self.sA) + ') ), 0, 1) )'
 		return e
 		
 	# landsat 4,5, or 7 temperature

@@ -124,14 +124,20 @@ class ClassReportTab:
 				sumTot = sum(rasterBandUniqueVal.values())
 				# save combination to table
 				l = open(cfg.reportPth, 'w')
-				t = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Class') + '	' + cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'PixelSum') + '	' + cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Percentage %') + '	' + cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Area [' + un + '^2]') + str('\n')
+				if 'degree' not in un:
+					t = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Class') + '	' + cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'PixelSum') + '	' + cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Percentage %') + '	' + cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Area [' + un + '^2]') + str('\n')
+				else:
+					t = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Class') + '	' + cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'PixelSum') + '	' + cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Percentage %') + str('\n')
 				l.write(t)
 				for i in sorted(rasterBandUniqueVal):
 					if str(i) == 'nan':
 						pass
 					else:
 						p = (float(rasterBandUniqueVal[i]) /float(sumTot)) * 100
-						t = str(i) + '	' + str(rasterBandUniqueVal[i]) + '	' + str(p) + '	' + str(rasterBandUniqueVal[i] * cRPX * cRPY) + str('\n')
+						if 'degree' not in un:
+							t = str(i).rstrip('.0') + '	' + str(rasterBandUniqueVal[i]).rstrip('.0') + '	' + str(p) + '	' + str(rasterBandUniqueVal[i] * cRPX * cRPY) + str('\n')
+						else:
+							t = str(i).rstrip('.0') + '	' + str(rasterBandUniqueVal[i]).rstrip('.0') + '	' + str(p) + str('\n')
 						l.write(t)
 				l.close()
 				cfg.uiUtls.updateBar(80)

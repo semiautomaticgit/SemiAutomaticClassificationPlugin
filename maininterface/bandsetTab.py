@@ -109,9 +109,9 @@ class BandsetTab:
 			bl = ['01', '02', '3N', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14']
 		# Landsat center wavelength calculated from http://landsat.usgs.gov/band_designations_landsat_satellites.php
 		elif satelliteName == cfg.satLandsat8:
-			wl = [0.48, 0.56, 0.655, 0.865, 1.61, 2.2]
+			wl = [0.44, 0.48, 0.56, 0.655, 0.865, 1.61, 2.2]
 			id = cfg.ui.unit_combo.findText(cfg.wlMicro)
-			bl = ['02', '03', '04', '05', '06', '07']
+			bl = ['01', '02', '03', '04', '05', '06', '07']
 		elif satelliteName == cfg.satLandsat7:
 			wl = [0.485, 0.56, 0.66, 0.835, 1.65, 2.22]
 			id = cfg.ui.unit_combo.findText(cfg.wlMicro)

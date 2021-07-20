@@ -5485,12 +5485,12 @@ Do you want to add the required fields to this shapefile?</source>
         <translation>Guardar ráster</translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7297"/>
+        <location filename="../core/utils.py" line="7320"/>
         <source>Build overviews</source>
         <translation>Construir vistas generales</translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7297"/>
+        <location filename="../core/utils.py" line="7320"/>
         <source>Do you want to build the external overviews of bands?</source>
         <translation>¿Quieres construir vistas generales externas?</translation>
     </message>
@@ -5520,7 +5520,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation>Clase</translation>
     </message>
     <message>
-        <location filename="../maininterface/classreportTab.py" line="127"/>
+        <location filename="../maininterface/classreportTab.py" line="130"/>
         <source>Percentage %</source>
         <translation>Porcentaje %</translation>
     </message>
@@ -6105,7 +6105,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished">Sentinel-3</translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="9397"/>
+        <location filename="../core/utils.py" line="9420"/>
         <source>SCP: completed process</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6515,27 +6515,27 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="6191"/>
+        <location filename="../core/utils.py" line="6214"/>
         <source>Calculating signature</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7571"/>
+        <location filename="../core/utils.py" line="7594"/>
         <source>Writing file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="5485"/>
+        <location filename="../core/utils.py" line="5508"/>
         <source>Conversion to vector</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7246"/>
+        <location filename="../core/utils.py" line="7269"/>
         <source>Sieve</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7376"/>
+        <location filename="../core/utils.py" line="7399"/>
         <source>Building overviews</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6575,12 +6575,12 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="8844"/>
+        <location filename="../core/utils.py" line="8867"/>
         <source>Remove rows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="8844"/>
+        <location filename="../core/utils.py" line="8867"/>
         <source>Are you sure you want to remove highlighted rows from the table?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6620,7 +6620,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/landsatTab.py" line="436"/>
+        <location filename="../maininterface/landsatTab.py" line="437"/>
         <source>Pansharpening</source>
         <translation type="unfinished"></translation>
     </message>

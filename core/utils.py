@@ -3017,9 +3017,13 @@ class Utils:
 		b = None
 		
 	# write an array to band
-	def writeRasterBlock(self, gdalRaster, bandNumber, dataArray, pixelStartColumn, pixelStartRow, nodataValue=None):
+	def writeRasterBlock(self, gdalRaster, bandNumber, dataArray, pixelStartColumn, pixelStartRow, nodataValue =  None, scale = None, offset = None, outputNoData = None):
 		b = gdalRaster.GetRasterBand(bandNumber)
 		y, x = dataArray.shape
+		if scale is not None or offset is not None:
+			dataArray = cfg.np.subtract(dataArray/scale, offset/scale)
+			b.SetScale(scale)
+			b.SetOffset(offset)
 		#b.WriteRaster(pixelStartColumn, pixelStartRow, x, y, dataArray.tostring())
 		b.WriteArray(dataArray, pixelStartColumn, pixelStartRow)
 		if nodataValue is not None:
@@ -3107,7 +3111,7 @@ class Utils:
 		return outputRasterList
 		
 	# create raster from another raster
-	def createRasterFromReference(self, gdalRasterRef, bandNumber, outputRasterList, nodataValue = None, driver = 'GTiff', format = 'Float32', previewSize = 0, previewPoint = None, compress = 'No', compressFormat = 'DEFLATE21', projection = None, geotransform = None, constantValue = None):
+	def createRasterFromReference(self, gdalRasterRef, bandNumber, outputRasterList, nodataValue = None, driver = 'GTiff', format = 'Float32', previewSize = 0, previewPoint = None, compress = 'No', compressFormat = 'DEFLATE21', projection = None, geotransform = None, constantValue = None, scale = None, offset = None):
 		oRL = []
 		if format == 'Float64':
 			format = cfg.gdalSCP.GDT_Float64
@@ -3117,6 +3121,8 @@ class Utils:
 			format = cfg.gdalSCP.GDT_Int32
 		elif format == 'Int16':
 			format = cfg.gdalSCP.GDT_Int16
+		elif format == 'UInt16':
+			format = cfg.gdalSCP.GDT_UInt16
 		elif format == 'Byte':
 			format = cfg.gdalSCP.GDT_Byte
 		for o in outputRasterList:
@@ -3179,6 +3185,16 @@ class Utils:
 				for x in range(1, bandNumber+1):
 					b = oR.GetRasterBand(x)
 					b.Fill(constantValue)
+					b = None
+			if scale is not None:
+				for x in range(1, bandNumber+1):
+					b = oR.GetRasterBand(x)	
+					b.SetScale(scale)
+					b = None
+			if offset is not None:
+				for x in range(1, bandNumber+1):
+					b = oR.GetRasterBand(x)
+					b.SetOffset(offset)
 					b = None
 		# logger
 		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'raster ' + str(outputRasterList))
@@ -3722,7 +3738,7 @@ class Utils:
 			f = f.replace(i , ' rasterSCPArrayfunctionBand[::, ::,' + str(b) + '] ')
 			b = b + 1
 		# replace numpy operators
-		f = cfg.utls.replaceNumpyOperators(f)	
+		f = cfg.utls.replaceNumpyOperators(f)
 		# logger
 		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'f ' + str(f))
 		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'rasterSCPArrayfunctionBand shape' + str(rasterSCPArrayfunctionBand.shape))
@@ -3734,7 +3750,14 @@ class Utils:
 		o = eval(f)
 		# output raster
 		oR = cfg.gdalSCP.Open(outputRaster, cfg.gdalSCP.GA_Update)
-		cfg.utls.writeRasterBlock(oR, int(outputBandNumber), o, pixelStartColumn, pixelStartRow)
+		scale = gdalBandList[0]
+		offset = gdalBandList[1]
+		outputNoData = gdalBandList[2]
+		# logger
+		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'or1 ' + str(o))
+		# logger
+		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'or2 ' + str(o))
+		cfg.utls.writeRasterBlock(oR, int(outputBandNumber), o, pixelStartColumn, pixelStartRow,  scale = scale, offset = offset, outputNoData = outputNoData)
 		o = None
 		oR = None
 		return outputRaster
@@ -4900,7 +4923,7 @@ class Utils:
 						if functionBand == 'No':
 							# logger
 							cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'outputBandNumber ' + str(outputBandNumber))
-							oo = functionRaster(gdalBandList, array, nodataMask, bSY, x, y, outputArrayFile, functionBandArgument, functionVariable, outputBandNumber)
+							oo = functionRaster([scl, offs, outputNoData], array, nodataMask, bSY, x, y, outputArrayFile, functionBandArgument, functionVariable, outputBandNumber)
 							# logger
 							cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'oo ' + str(oo))
 							if isinstance(oo, list):

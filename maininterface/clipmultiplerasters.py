@@ -231,10 +231,10 @@ class ClipMultipleRasters:
 				EPSG = cfg.osrSCP.SpatialReference()
 				EPSG.ImportFromWkt(eCrs)
 				if EPSG.IsSame(rEPSG) != 1:
-					UX, UY  = cfg.utls.projectPointCoordinatesOGR(float(UX), float(UY), rEPSG, EPSG)
-					LX, LY = cfg.utls.projectPointCoordinatesOGR(float(LX), float(LY), rEPSG, EPSG)
+					UX1, UY1 = cfg.utls.projectPointCoordinatesOGR(float(UX), float(UY), rEPSG, EPSG)
+					LX1, LY1 = cfg.utls.projectPointCoordinatesOGR(float(LX), float(LY), rEPSG, EPSG)
 				bandNumberList = [1]
-				vrtCheck = cfg.utls.createTempVirtualRaster(bbList, bandNumberList, 'Yes', 'Yes', 0, 'No', 'Yes', [float(UX), float(UY), float(LX), float(LY)])
+				vrtCheck = cfg.utls.createTempVirtualRaster(bbList, bandNumberList, 'Yes', 'Yes', 0, 'No', 'Yes', [float(UX1), float(UY1), float(LX1), float(LY1)])
 				cfg.utls.GDALCopyRaster(vrtCheck, f, 'GTiff', cfg.rasterCompression, 'LZW')
 				cfg.utls.addRasterLayer(f)
 				# logger

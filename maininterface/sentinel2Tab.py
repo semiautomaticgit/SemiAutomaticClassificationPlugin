@@ -39,7 +39,7 @@ cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 class Sentinel2Tab:
 
 	def __init__(self):
-		pass
+		self.nodataCalc = cfg.NoDataValUInt16 * 0.00001
 		
 	# Sentinel-2 input
 	def inputSentinel(self):
@@ -242,7 +242,7 @@ class Sentinel2Tab:
 					ESUN = float(l.item(i,2).text())
 					if cfg.ui.DOS1_checkBox_S2.isChecked() is False or (cfg.ui.DOS1_checkBox_S2.isChecked() is True and '2A' in productType):
 						# calculate reflectance = DN / quantVal
-						e = 'cfg.np.clip(cfg.np.where(raster == ' + str(nD) + ', ' + str(cfg.NoDataVal) + ', ( raster /' + str(quantificationValue) + ') ), 0, 1)'
+						e = 'cfg.np.where(raster == ' + str(nD) + ', ' + str(self.nodataCalc) + ', cfg.np.clip( ( raster /' + str(quantificationValue) + ') , 0, 1))'
 						functionList.append(e)
 						variableList.append(['raster'])
 						DOScheck = 'No'
@@ -252,7 +252,7 @@ class Sentinel2Tab:
 						# radiance = reflectance * ESUNλ * cosθs / (π * d^2) = DN * radC  * ESUNλ * cosθs / (π * d^2)
 						# path radiance Lp = (LDNm * radC - 0.01) * ESUNλ * cosθs / (π * d^2)
 						# land surface reflectance ρ = [π * (Lλ - Lp) * d^2]/ (ESUNλ * cosθs) = DN * radC - (LDNm * radC - 0.01)
-						e = 'cfg.np.clip(cfg.np.where(raster == ' + str(nD) + ', ' + str(cfg.NoDataVal) + ', ( raster * ' + str("%.16f" % radC) + ' - (- 0.01 + ' + str('%.16f' % radC) + ' * LDNm)) ), 0, 1)'
+						e = 'cfg.np.where(raster == ' + str(nD) + ', ' + str(self.nodataCalc) + ', cfg.np.clip( ( raster * ' + str("%.16f" % radC) + ' - (- 0.01 + ' + str('%.16f' % radC) + ' * LDNm) ), 0, 1) )'
 						functionList.append(e)
 						variableList.append(["raster"])
 						DOScheck = 'Yes'
@@ -317,7 +317,7 @@ class Sentinel2Tab:
 			# open input with GDAL
 			rD = cfg.gdalSCP.Open(inputRaster, cfg.gdalSCP.GA_ReadOnly)
 			# output rasters
-			cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, 'GTiff', cfg.rasterDataType, 0,  None, compress = 'Yes', compressFormat = 'LZW')
+			cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataValUInt16, 'GTiff', 'UInt16', 0,  None, compress = cfg.rasterCompression, compressFormat = 'DEFLATE')
 			rD = None
 			if DOS1Check == 'No':
 				argumentList = functionList
@@ -328,7 +328,7 @@ class Sentinel2Tab:
 				for t in range(0, len(outputRasterList)):
 					e = functionList[t].replace('LDNm', str(LDNmList[t]))
 					argumentList.append(e)
-			o = cfg.utls.multiProcessRaster(rasterPath = inputRaster, functionBand = 'No', functionRaster = cfg.utls.calculateRaster, outputRasterList = oM, nodataValue = NoData, functionBandArgument = argumentList, functionVariable = variableList, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Conversion'), parallel = cfg.parallelRaster)
+			o = cfg.utls.multiProcessRaster(rasterPath = inputRaster, functionBand = 'No', functionRaster = cfg.utls.calculateRaster, outputRasterList = oM, nodataValue = NoData, functionBandArgument = argumentList, functionVariable = variableList, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Conversion'), parallel = cfg.parallelRaster, outputNoDataValue = cfg.NoDataValUInt16, scale = 0.00001, offset = 0)
 			if cfg.actionCheck == 'Yes':
 				for t in range(0, len(outputRasterList)):
 					cfg.shutilSCP.move(oM[t], outputRasterList[t])
