@@ -233,6 +233,11 @@ class ClipMultipleRasters:
 				if EPSG.IsSame(rEPSG) != 1:
 					UX1, UY1 = cfg.utls.projectPointCoordinatesOGR(float(UX), float(UY), rEPSG, EPSG)
 					LX1, LY1 = cfg.utls.projectPointCoordinatesOGR(float(LX), float(LY), rEPSG, EPSG)
+				else:
+					UX1 = UX
+					UY1 = UY
+					LX1 = LX
+					LY1 = LY
 				bandNumberList = [1]
 				vrtCheck = cfg.utls.createTempVirtualRaster(bbList, bandNumberList, 'Yes', 'Yes', 0, 'No', 'Yes', [float(UX1), float(UY1), float(LX1), float(LY1)])
 				cfg.utls.GDALCopyRaster(vrtCheck, f, 'GTiff', cfg.rasterCompression, 'LZW')
