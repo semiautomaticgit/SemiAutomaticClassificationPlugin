@@ -48,10 +48,10 @@ class ClassReportTab:
 		else:
 			r = rasterOutput
 		if r is not False:
-			if r.lower().endswith(".csv"):
+			if r.lower().endswith('.csv'):
 				pass
 			else:
-				r = r + ".csv"
+				r = r + '.csv'
 			cfg.reportPth = cfg.utls.createTempRasterPath('csv')
 			try:
 				clssRstrSrc = str(classificationPath)
@@ -135,9 +135,9 @@ class ClassReportTab:
 					else:
 						p = (float(rasterBandUniqueVal[i]) /float(sumTot)) * 100
 						if 'degree' not in un:
-							t = str(i).rstrip('.0') + '	' + str(rasterBandUniqueVal[i]).rstrip('.0') + '	' + str(p) + '	' + str(rasterBandUniqueVal[i] * cRPX * cRPY) + str('\n')
+							t = cfg.reSCP.sub(r'\.0$', '', str(i)) + '	' + cfg.reSCP.sub(r'\.0$', '', str(rasterBandUniqueVal[i])) + '	' + str(p) + '	' + cfg.reSCP.sub(r'\.0$', '', str(rasterBandUniqueVal[i] * cRPX * cRPY)) + str('\n')
 						else:
-							t = str(i).rstrip('.0') + '	' + str(rasterBandUniqueVal[i]).rstrip('.0') + '	' + str(p) + str('\n')
+							t = cfg.reSCP.sub(r'\.0$', '', str(i)) + '	' + cfg.reSCP.sub(r'\.0$', '', str(rasterBandUniqueVal[i])) + '	' + str(p) + str('\n')
 						l.write(t)
 				l.close()
 				cfg.uiUtls.updateBar(80)
@@ -149,17 +149,17 @@ class ClassReportTab:
 						cfg.ui.report_textBrowser.setText(str(reportTxt))
 				except Exception as err:
 					# logger
-					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 					if batch == 'No':
 						cfg.uiUtls.removeProgressBar()
-				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " report calculated")
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' report calculated')
 				try:
 					cfg.shutilSCP.copy(cfg.reportPth, r)
 					# logger
-					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " report saved")
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' report saved')
 				except Exception as err:
 					# logger
-					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 				if batch == 'No':
 					cfg.uiUtls.removeProgressBar()
 					cfg.utls.finishSound()

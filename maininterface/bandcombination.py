@@ -321,7 +321,7 @@ class BandCombination:
 					v = tuple(cmbntns[c])
 					if rasterBandUniqueVal[v] > 0:
 						area = str(rasterBandUniqueVal[v] * cRPX * cRPY)
-						cList = str(c) + '\t' + ','.join([str(l) for l in cmbntns[c]]) + '\t' + str(rasterBandUniqueVal[v]).rstrip('.0') + '\t' + area + str('\n')
+						cList = str(c) + '\t' + ','.join([str(l) for l in cmbntns[c]]) + '\t' + cfg.reSCP.sub(r'\.0$', '', str(rasterBandUniqueVal[v])) + '\t' + area + str('\n')
 						l.write(cList)
 				except Exception as err:
 					pass

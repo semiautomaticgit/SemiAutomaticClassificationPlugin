@@ -603,7 +603,7 @@ class BandCalcTab:
 							if eN is None and len(check) == 1:
 								out = cfg.osSCP.path.dirname(outF) + '/' + n
 							elif eN is None and len(check) > 1:
-								out = cfg.osSCP.path.dirname(outF) + '/' + n.replace('.tif', '') + '_' + str(it) + '.tif'
+								out = cfg.osSCP.path.dirname(outF) + '/' + cfg.reSCP.sub(r'\.tif$', '', str(n)) + '_' + str(it) + '.tif'
 							else:
 								out = cfg.osSCP.path.dirname(outF) + '/' + n
 						elif n.lower().endswith('.vrt'):
@@ -611,7 +611,7 @@ class BandCalcTab:
 							if eN is None and len(check) == 1:
 								out = cfg.osSCP.path.dirname(outF) + '/' + n
 							elif eN is None and len(check) > 1:
-								out = cfg.osSCP.path.dirname(outF) + '/' + n.replace('.vrt', '') + '_' + str(it) + '.vrt'
+								out = cfg.osSCP.path.dirname(outF) + '/' + cfg.reSCP.sub(r'\.vrt$', '', str(n)) + '_' + str(it) + '.vrt'
 							else:
 								out = cfg.osSCP.path.dirname(outF) + '/' + n
 						else:

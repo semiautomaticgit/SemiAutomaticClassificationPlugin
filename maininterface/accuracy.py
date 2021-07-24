@@ -286,9 +286,10 @@ class Accuracy:
 				pixelTotal = {} 
 				totPixelClass = 0
 				for i in sorted(reclRasterBandUniqueVal):
-					newRasterBandUniqueVal.append(i)
-					pixelTotal[i] = reclRasterBandUniqueVal[i]
-					totPixelClass = totPixelClass + reclRasterBandUniqueVal[i]
+					if NoDataValue != i:
+						newRasterBandUniqueVal.append(i)
+						pixelTotal[i] = reclRasterBandUniqueVal[i]
+						totPixelClass = totPixelClass + reclRasterBandUniqueVal[i]
 				bandsUniqueVal = [refRasterBandUniqueVal, newRasterBandUniqueVal]
 				if 0 in refRasterBandUniqueVal:
 					k0 = 1

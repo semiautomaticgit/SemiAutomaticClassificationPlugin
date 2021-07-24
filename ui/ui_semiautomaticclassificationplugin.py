@@ -1311,7 +1311,7 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.gridLayout_175.addLayout(self.gridLayout_174, 0, 0, 1, 1)
         self.toolBox_4.addItem(self.page_6, "")
         self.page_9 = QtWidgets.QWidget()
-        self.page_9.setGeometry(QtCore.QRect(0, 0, 417, 169))
+        self.page_9.setGeometry(QtCore.QRect(0, 0, 417, 165))
         self.page_9.setObjectName("page_9")
         self.gridLayout_181 = QtWidgets.QGridLayout(self.page_9)
         self.gridLayout_181.setObjectName("gridLayout_181")
@@ -5288,7 +5288,7 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.gridLayout_330.addLayout(self.horizontalLayout_34, 0, 1, 1, 1)
         self.toolBox_band_set_combination.addItem(self.page_29, "")
         self.page_30 = QtWidgets.QWidget()
-        self.page_30.setGeometry(QtCore.QRect(0, 0, 90, 90))
+        self.page_30.setGeometry(QtCore.QRect(0, 0, 98, 90))
         self.page_30.setObjectName("page_30")
         self.gridLayout_334 = QtWidgets.QGridLayout(self.page_30)
         self.gridLayout_334.setObjectName("gridLayout_334")
@@ -5316,7 +5316,7 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.toolBox_PCA.setStyleSheet("")
         self.toolBox_PCA.setObjectName("toolBox_PCA")
         self.page_16 = QtWidgets.QWidget()
-        self.page_16.setGeometry(QtCore.QRect(0, 0, 535, 213))
+        self.page_16.setGeometry(QtCore.QRect(0, 0, 459, 196))
         self.page_16.setObjectName("page_16")
         self.gridLayout_182 = QtWidgets.QGridLayout(self.page_16)
         self.gridLayout_182.setObjectName("gridLayout_182")
@@ -5401,7 +5401,7 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.gridLayout_182.addLayout(self.gridLayout_173, 1, 0, 1, 1)
         self.toolBox_PCA.addItem(self.page_16, "")
         self.page_17 = QtWidgets.QWidget()
-        self.page_17.setGeometry(QtCore.QRect(0, 0, 90, 90))
+        self.page_17.setGeometry(QtCore.QRect(0, 0, 98, 90))
         self.page_17.setObjectName("page_17")
         self.gridLayout_200 = QtWidgets.QGridLayout(self.page_17)
         self.gridLayout_200.setObjectName("gridLayout_200")
@@ -5429,7 +5429,7 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.toolBox_kmeans.setStyleSheet("")
         self.toolBox_kmeans.setObjectName("toolBox_kmeans")
         self.page_18 = QtWidgets.QWidget()
-        self.page_18.setGeometry(QtCore.QRect(0, 0, 764, 407))
+        self.page_18.setGeometry(QtCore.QRect(0, 0, 764, 390))
         self.page_18.setObjectName("page_18")
         self.gridLayout_152 = QtWidgets.QGridLayout(self.page_18)
         self.gridLayout_152.setObjectName("gridLayout_152")
@@ -5674,7 +5674,7 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.gridLayout_152.addLayout(self.gridLayout_231, 3, 0, 1, 1)
         self.toolBox_kmeans.addItem(self.page_18, "")
         self.page_23 = QtWidgets.QWidget()
-        self.page_23.setGeometry(QtCore.QRect(0, 0, 90, 90))
+        self.page_23.setGeometry(QtCore.QRect(0, 0, 98, 90))
         self.page_23.setObjectName("page_23")
         self.gridLayout_235 = QtWidgets.QGridLayout(self.page_23)
         self.gridLayout_235.setObjectName("gridLayout_235")
@@ -6086,7 +6086,7 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.toolBox_random_forest.setStyleSheet("")
         self.toolBox_random_forest.setObjectName("toolBox_random_forest")
         self.page_21 = QtWidgets.QWidget()
-        self.page_21.setGeometry(QtCore.QRect(0, 0, 634, 346))
+        self.page_21.setGeometry(QtCore.QRect(0, 0, 634, 327))
         self.page_21.setObjectName("page_21")
         self.gridLayout_287 = QtWidgets.QGridLayout(self.page_21)
         self.gridLayout_287.setObjectName("gridLayout_287")
@@ -6349,7 +6349,7 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.gridLayout_287.addLayout(self.gridLayout_283, 3, 0, 1, 1)
         self.toolBox_random_forest.addItem(self.page_21, "")
         self.page_25 = QtWidgets.QWidget()
-        self.page_25.setGeometry(QtCore.QRect(0, 0, 90, 90))
+        self.page_25.setGeometry(QtCore.QRect(0, 0, 98, 90))
         self.page_25.setObjectName("page_25")
         self.gridLayout_293 = QtWidgets.QGridLayout(self.page_25)
         self.gridLayout_293.setObjectName("gridLayout_293")
@@ -6526,7 +6526,7 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.gridLayout_36.addLayout(self.gridLayout_25, 1, 0, 1, 1)
         self.toolBox_accuracy.addItem(self.page_10, "")
         self.page_11 = QtWidgets.QWidget()
-        self.page_11.setGeometry(QtCore.QRect(0, 0, 90, 90))
+        self.page_11.setGeometry(QtCore.QRect(0, 0, 98, 90))
         self.page_11.setObjectName("page_11")
         self.gridLayout_35 = QtWidgets.QGridLayout(self.page_11)
         self.gridLayout_35.setObjectName("gridLayout_35")
@@ -6553,7 +6553,7 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.toolBox_landCoverChange = QtWidgets.QToolBox(self.tab_landCoverChange)
         self.toolBox_landCoverChange.setObjectName("toolBox_landCoverChange")
         self.page_12 = QtWidgets.QWidget()
-        self.page_12.setGeometry(QtCore.QRect(0, 0, 374, 214))
+        self.page_12.setGeometry(QtCore.QRect(0, 0, 385, 193))
         self.page_12.setObjectName("page_12")
         self.gridLayout_186 = QtWidgets.QGridLayout(self.page_12)
         self.gridLayout_186.setObjectName("gridLayout_186")
@@ -6662,7 +6662,7 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.gridLayout_186.addLayout(self.gridLayout_45, 1, 0, 1, 1)
         self.toolBox_landCoverChange.addItem(self.page_12, "")
         self.page_13 = QtWidgets.QWidget()
-        self.page_13.setGeometry(QtCore.QRect(0, 0, 90, 90))
+        self.page_13.setGeometry(QtCore.QRect(0, 0, 98, 90))
         self.page_13.setObjectName("page_13")
         self.gridLayout_185 = QtWidgets.QGridLayout(self.page_13)
         self.gridLayout_185.setObjectName("gridLayout_185")
@@ -6690,7 +6690,7 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.toolBox_class_report.setStyleSheet("")
         self.toolBox_class_report.setObjectName("toolBox_class_report")
         self.page_14 = QtWidgets.QWidget()
-        self.page_14.setGeometry(QtCore.QRect(0, 0, 433, 186))
+        self.page_14.setGeometry(QtCore.QRect(0, 0, 444, 167))
         self.page_14.setObjectName("page_14")
         self.gridLayout_48 = QtWidgets.QGridLayout(self.page_14)
         self.gridLayout_48.setObjectName("gridLayout_48")
@@ -6783,7 +6783,7 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.gridLayout_48.addLayout(self.horizontalLayout_37, 0, 1, 1, 1)
         self.toolBox_class_report.addItem(self.page_14, "")
         self.page_15 = QtWidgets.QWidget()
-        self.page_15.setGeometry(QtCore.QRect(0, 0, 90, 90))
+        self.page_15.setGeometry(QtCore.QRect(0, 0, 98, 90))
         self.page_15.setObjectName("page_15")
         self.gridLayout_188 = QtWidgets.QGridLayout(self.page_15)
         self.gridLayout_188.setObjectName("gridLayout_188")
@@ -6810,7 +6810,7 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.toolBox_cross_classification = QtWidgets.QToolBox(self.tab_cross_classification)
         self.toolBox_cross_classification.setObjectName("toolBox_cross_classification")
         self.page_19 = QtWidgets.QWidget()
-        self.page_19.setGeometry(QtCore.QRect(0, 0, 445, 250))
+        self.page_19.setGeometry(QtCore.QRect(0, 0, 456, 229))
         self.page_19.setObjectName("page_19")
         self.gridLayout_192 = QtWidgets.QGridLayout(self.page_19)
         self.gridLayout_192.setObjectName("gridLayout_192")
@@ -6946,7 +6946,7 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.gridLayout_192.addLayout(self.gridLayout_251, 2, 0, 1, 1)
         self.toolBox_cross_classification.addItem(self.page_19, "")
         self.page_22 = QtWidgets.QWidget()
-        self.page_22.setGeometry(QtCore.QRect(0, 0, 90, 90))
+        self.page_22.setGeometry(QtCore.QRect(0, 0, 98, 90))
         self.page_22.setObjectName("page_22")
         self.gridLayout_252 = QtWidgets.QGridLayout(self.page_22)
         self.gridLayout_252.setObjectName("gridLayout_252")
@@ -6974,7 +6974,7 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.toolBox_class_signature.setStyleSheet("")
         self.toolBox_class_signature.setObjectName("toolBox_class_signature")
         self.page_20 = QtWidgets.QWidget()
-        self.page_20.setGeometry(QtCore.QRect(0, 0, 376, 215))
+        self.page_20.setGeometry(QtCore.QRect(0, 0, 387, 196))
         self.page_20.setObjectName("page_20")
         self.gridLayout_209 = QtWidgets.QGridLayout(self.page_20)
         self.gridLayout_209.setObjectName("gridLayout_209")
@@ -7079,7 +7079,7 @@ class Ui_SemiAutomaticClassificationPlugin(object):
         self.gridLayout_209.addLayout(self.gridLayout_256, 2, 0, 1, 1)
         self.toolBox_class_signature.addItem(self.page_20, "")
         self.page_24 = QtWidgets.QWidget()
-        self.page_24.setGeometry(QtCore.QRect(0, 0, 90, 90))
+        self.page_24.setGeometry(QtCore.QRect(0, 0, 98, 90))
         self.page_24.setObjectName("page_24")
         self.gridLayout_258 = QtWidgets.QGridLayout(self.page_24)
         self.gridLayout_258.setObjectName("gridLayout_258")
@@ -10962,14 +10962,14 @@ class Ui_SemiAutomaticClassificationPlugin(object):
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Droid Sans\';\">It provides several tools for the download of free images, the preprocessing, the postprocessing, and the raster calculation.</span></p>\n"
 "<p align=\"justify\" style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Droid Sans\';\">For more information and tutorials visit the official site </span><span style=\" font-family:\'Droid Sans\'; font-weight:600;\">From GIS to Remote Sensing.</span></p>\n"
 "<p align=\"center\" style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><img src=\":/plugins/semiautomaticclassificationplugin/icons/fromGIStoRS.png\" /><a href=\"https://fromgistors.blogspot.com/p/semi-automatic-classification-plugin.html?spref=sacp\"><span style=\" font-family:\'Droid Sans\'; font-size:24pt; text-decoration: underline; color:#0000ff;\">From GIS to Remote Sensing</span></a></p>\n"
-"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Droid Sans\'; font-size:9pt;\"><br />Please join the </span><a href=\"https://www.facebook.com/groups/SemiAutomaticClassificationPlugin\"><span style=\" font-family:\'Droid Sans\'; font-size:9pt; text-decoration: underline; color:#0057ae;\">Semi-Automatic Classification Plugin group on Facebook</span></a></p>\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Droid Sans\'; font-size:9pt;\"><br />Please join the </span><a href=\"https://www.facebook.com/groups/SemiAutomaticClassificationPlugin\"><span style=\" font-family:\'Droid Sans\'; font-size:9pt; text-decoration: underline; color:#0057ae;\">Semi-Automatic Classification Plugin group on Facebook</span></a><span style=\" font-size:9pt;\"> or </span><a href=\"https://github.com/semiautomaticgit/SemiAutomaticClassificationPlugin/discussions\"><span style=\" font-size:9pt; text-decoration: underline; color:#0000ff;\">GitHub discussions</span></a></p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:9pt;\"><br /></p>\n"
 "<p align=\"justify\" style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Droid Sans\'; font-style:italic;\">This plugin requires the installation of GDAL, OGR, Numpy, SciPy, and Matplotlib (already bundled with QGIS).</span></p>\n"
 "<p align=\"justify\" style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Droid Sans\'; font-style:italic;\">Some tools require the additional installation of: ESA SNAP</span></p>\n"
 "<hr />\n"
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Droid Sans\'; font-size:8pt;\"><br />The Semi-Automatic Classification Plugin is developed by Luca Congedo.</span></p>\n"
-"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Droid Sans\'; font-size:9pt;\">Translators:</span></p>\n"
-"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Droid Sans\'; font-size:9pt;\">Language: Author<br /></span></p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Droid Sans\'; font-size:8pt;\">Translators:</span></p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Droid Sans\'; font-size:8pt;\">Language: Author<br /></span></p>\n"
 "<p align=\"justify\" style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Droid Sans\'; font-size:8pt;\">Semi-Automatic Classification Plugin is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, version 3 of the License.</span></p>\n"
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Droid Sans\'; font-size:8pt;\">Semi-Automatic Classification Plugin is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</span></p>\n"
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Droid Sans\'; font-size:8pt;\">See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with Semi-Automatic Classification Plugin. If not, see &lt;</span><a href=\"http://www.gnu.org/licenses/\"><span style=\" font-family:\'Droid Sans\'; font-size:8pt; text-decoration: underline; color:#0000ff;\">http://www.gnu.org/licenses/</span></a><span style=\" font-family:\'Droid Sans\'; font-size:8pt;\">&gt;.</span></p></body></html>"))

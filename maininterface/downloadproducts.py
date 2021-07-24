@@ -473,7 +473,7 @@ class DownloadProducts:
 						
 	# display image in label
 	def previewInLabel(self, imagePath):
-		tmpImage = imagePath.replace('.jp2', '.png')
+		tmpImage = cfg.reSCP.sub(r'\.jp2$', '.png', str(imagePath)) 
 		if imagePath.endswith('.jp2') and not cfg.osSCP.path.isfile(tmpImage):
 			cfg.utls.getGDALForMac()
 			# georeference thumbnail
@@ -1226,7 +1226,7 @@ class DownloadProducts:
 		if preview == 'Yes' and cfg.osSCP.path.isfile(imOut):
 			self.previewInLabel(imOut)
 			return imOut
-		if cfg.osSCP.path.isfile(imOut  + '.vrt') or cfg.osSCP.path.isfile(imOut.replace('.jp2', '.png')  + '.vrt'):
+		if cfg.osSCP.path.isfile(imOut  + '.vrt') or cfg.osSCP.path.isfile(cfg.reSCP.sub(r'\.jp2$', '.png', str(imOut)) + '.vrt' ):
 			l = cfg.utls.selectLayerbyName(imgID)
 			if l is not None:		
 				cfg.utls.setLayerVisible(l, True)
@@ -1248,7 +1248,7 @@ class DownloadProducts:
 				max_lon = str(tW.item(i, 9).text())
 				self.onflyGeorefImage(imOut, imOut + '.vrt', min_lon, max_lon, min_lat, max_lat)
 				if cfg.osSCP.path.isfile(imOut + '.vrt'):
-					r =cfg.utls.addRasterLayer(imOut + '.vrt', imgID.replace('.vrt',''))
+					r =cfg.utls.addRasterLayer(imOut + '.vrt', cfg.reSCP.sub(r'\.vrt$', '', str(imgID)))
 		# logger
 		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' granules displayed')
 					
