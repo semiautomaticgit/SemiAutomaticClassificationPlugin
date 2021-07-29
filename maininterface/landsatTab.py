@@ -489,8 +489,13 @@ class LandsatTab:
 			nD = cfg.NoDataVal
 		# TOA reflectance with correction for sun angle
 		if cfg.ui.DOS1_checkBox.isChecked() is False or str(sat).lower() in ['surface reflectance', 'surface_reflectance', 'surfacereflectance']:
-			m = float(REFLECTANCE_MULT_BAND)
-			a = float(REFLECTANCE_ADD_BAND)
+			try:
+				m = float(REFLECTANCE_MULT_BAND)
+				a = float(REFLECTANCE_ADD_BAND)
+			except Exception as err:
+				# logger
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+				return 'No'
 			e = 'cfg.np.where("raster" == ' + str(nD) + ', ' + str(self.nodataCalc) + ', cfg.np.clip( ( "raster" *' + str('%.16f' % m) + '+ (' + str('%.16f' % a) + ')) / (' + str(self.sA) + ') , 0, 1) )'
 		# DOS atmospheric correction
 		else:
@@ -500,8 +505,13 @@ class LandsatTab:
 			eS = (cfg.np.pi * self.eSD * self.eSD) * radM / refM
 			# calculate DOS1 corrected reflectance
 			# radiance calculation
-			m = float(RADIANCE_MULT_BAND)
-			a = float(RADIANCE_ADD_BAND)
+			try:
+				m = float(RADIANCE_MULT_BAND)
+				a = float(RADIANCE_ADD_BAND)
+			except Exception as err:
+				# logger
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+				return 'No'
 			# path radiance Lp = ML* DNm + AL  – 0.01* ESUNλ * cosθs / (π * d^2)
 			Lp = str(m) + ' * LDNm + ' + str(a - 0.01 * eS * self.sA / (cfg.np.pi * self.eSD * self.eSD))
 			# land surface reflectance ρ = [π * (Lλ - Lp) * d^2]/ (ESUNλ * cosθs)
@@ -518,8 +528,13 @@ class LandsatTab:
 		else:
 			nD = cfg.NoDataVal
 		# reflectance
-		m = float(REFLECTANCE_MULT_BAND)
-		a = float(REFLECTANCE_ADD_BAND)
+		try:
+			m = float(REFLECTANCE_MULT_BAND)
+			a = float(REFLECTANCE_ADD_BAND)
+		except Exception as err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+			return 'No'
 		e = 'cfg.np.where("raster" == ' + str(nD) + ', ' + str(self.nodataCalc) + ', cfg.np.clip( "raster" *' + str('%.16f' % m) + ' + (' + str('%.16f' % a) + '), 0, 1) )'
 		return e
 						
@@ -566,7 +581,7 @@ class LandsatTab:
 			return 'No'
 		# TOA reflectance
 		if cfg.ui.DOS1_checkBox.isChecked() is False:
-			e = 'cfg.np.where("raster" == ' + str(nD) + ', ' + str(self.nodataCalc) + ', cfg.np.clip( ( "raster" *' + str('%.16f' % m) + '+ (' + str('%.16f' % a) + ') * ' + str('%.16f' % cfg.np.pi) + ' * ' + str('%.16f' % self.eSD) + ' * ' + str('%.16f' % self.eSD) + ') / ( ' + str('%.16f' % eS)+ ' * (' + str(self.sA) + ') ) ), 0, 1)'
+			e = 'cfg.np.where("raster" == ' + str(nD) + ', ' + str(self.nodataCalc) + ', cfg.np.clip( ( "raster" *' + str('%.16f' % m) + '+ (' + str('%.16f' % a) + ') * ' + str('%.16f' % cfg.np.pi) + ' * ' + str('%.16f' % self.eSD) + ' * ' + str('%.16f' % self.eSD) + ') / ( ' + str('%.16f' % eS)+ ' * (' + str(self.sA) + ') ) , 0, 1))'
 		# DOS atmospheric correction
 		elif cfg.ui.DOS1_checkBox.isChecked() is True:
 			# No data value
@@ -607,8 +622,13 @@ class LandsatTab:
 		if cfg.ui.celsius_checkBox.isChecked() is True:
 			cs = 273.15
 		# At-Satellite Brightness Temperature
-		m = float(RADIANCE_MULT_BAND)
-		a = float(RADIANCE_ADD_BAND)
+		try:
+			m = float(RADIANCE_MULT_BAND)
+			a = float(RADIANCE_ADD_BAND)
+		except Exception as err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+			return 'No'
 		e = 'cfg.np.where("raster" == ' + str(nD) + ', ' + str(cfg.NoDataVal) + ',  ((' + str('%.16f' % k2) + ') / ( ln( (' + str('%.16f' % k1) + ' / ( "raster" * ' + str('%.16f' % m) + '+ (' + str('%.16f' % a) + ')) ) + 1)) - ' + str(cs) + ') )'
 		return e
 			
@@ -623,10 +643,15 @@ class LandsatTab:
 		cs = 0
 		if cfg.ui.celsius_checkBox.isChecked() is True:
 			cs = 273.15
-		m = float(RADIANCE_MULT_BAND)
-		a = float(RADIANCE_ADD_BAND)
-		k1 = float(K1_CONSTANT_BAND)
-		k2 = float(K2_CONSTANT_BAND)
+		try:
+			m = float(RADIANCE_MULT_BAND)
+			a = float(RADIANCE_ADD_BAND)
+			k1 = float(K1_CONSTANT_BAND)
+			k2 = float(K2_CONSTANT_BAND)
+		except Exception as err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+			return 'No'
 		e = 'cfg.np.where("raster" == ' + str(nD) + ', ' + str(cfg.NoDataVal) + ',  ((' + str('%.16f' % k2) + ') / ( ln( (' + str('%.16f' % k1) + ' / ( "raster" *' + str('%.16f' % m) + '+ (' + str('%.16f' % a) + ')) ) + 1)) - ' + str(cs) + ') )'
 		return e
 	

@@ -3747,7 +3747,12 @@ class Utils:
 		except:
 			pass
 		# perform operation
-		o = eval(f)
+		try:
+			o = eval(f)
+		except Exception as err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+			return 'No' 
 		# output raster
 		oR = cfg.gdalSCP.Open(outputRaster, cfg.gdalSCP.GA_Update)
 		scale = gdalBandList[0]
