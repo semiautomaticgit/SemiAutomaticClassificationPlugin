@@ -23,40 +23,23 @@ bibliography: paper.bib
 
 The `Semi-Automatic Classification Plugin` is a Python plugin for the software QGIS [@QGIS] developed with the overall objective to facilitate land cover monitoring by people whose main field is not strictly remote sensing, but that could benefit from remote sensing analysis.
 The `Semi-Automatic Classification Plugin` provides a set of intertwined tools and a user interface for easing and automating the phases of land cover classification, from the download of remote sensing images, to the preprocessing (i.e. tools for preparing the data to the analysis or other calculations), the processing (i.e. tools for performing the classification of land cover or perform analysis), and postprocessing (i.e. tools for assessing the classification accuracy, refining the classification, or integrating additional data).
-The processing of remote sensing data can be computationally intensive, therefore most of the developed tools use [Python multiprocessing](https://docs.python.org/3/library/multiprocessing.html) to exploit the system CPU and RAM by splitting the work among multiple threads.
+The processing of remote sensing data can be computationally intensive, therefore most of the developed tools use [Python multiprocessing](https://docs.python.org/3/library/multiprocessing.html) to exploit the system CPU and RAM by splitting the work among multiple subprocesses.
 The aim of this paper is to describe the main characteristics of the `Semi-Automatic Classification Plugin` for the land cover classification of remote sensing images.
 
 # Statement of need
 
-Land cover is defined as the material at the Earth’s surface, such as soil, vegetation, water, asphalt, etc. [@Fisher:2005]; during the last decades, remote sensing has been been widely used for land cover monitoring and assessing environmental changes [@Rogan:2004].
-
-Remote sensing is the measurement, by a sensor, of the energy that is emanated from the Earth’s surface.
-The source of the measured energy can be the Sun (i.e. passive remote sensing, when the sensors measure the energy reflected by the Earth’s surface), or the sensor platform (i.e. active remote sensing, when the sensors emit the energy and measure the energy reflected by the Earth’s surface) such as radar sensors which work in the microwave range [@Richards:2006].
-
-Sensors can be installed on board of airplanes or satellites, measuring the electromagnetic radiation (i.e. radiance) at specific ranges of wavelength (also called bands).
-The result of the sensor measurements are converted into a digital image, having different characteristics (resolutions) depending on the sensor [@Richards:2006]:
-
-* Spatial resolution (also referred to as Instantaneous field of view), usually corresponding to pixel size measured in meters;
-* Spectral resolution, is the number of the spectral bands located in the electromagnetic spectrum; usually, each band corresponds to an image raster;
-* Radiometric resolution, is the number of binary digits representing the range of brightness values, usually measured as bit number.
-
-During the last few years, the availability of satellite images has increased and become affordable, especially because of the free access to the Landsat data (a set of satellites developed by the National Aeronautics and Space Administration of USA, since the early 1970’s) [@USGS:2019], and the European satellites Sentinel-2 launched in 2015 [@ESA:2018].
-The free availability of these data extended their use in various fields such as urban planning, agriculture, environmental monitoring, etc. [@Pesaresi:2016; @Weiss:2020; @Nink:2019].
-
-For land cover analysis, it useful to define the reflectance as the ratio of reflected versus total incident energy [@Richards:2006]; each material at the ground is characterized by a spectral signature, which is the reflectance as a function of wavelength.
-Therefore, it is possible to classify land cover using the spectral signatures of materials, through classification algorithms that label image pixels, allowing for the creation of thematic maps.
-
+Remote sensing is the measurement, by a sensor installed on board of airplanes or satellites, of the energy that is emanated from the Earth’s surface [@Richards:2006].
+Remote sensing images are spatial data and require the use of a Geographic Information System (GIS) for visualization and processing. 
+The free availability of satellite data (such as Landsat [@USGS:2019], and Sentinel-2 [@ESA:2018]) extended the use of remote sensing in various fields such as urban planning, agriculture, environmental monitoring, etc. [@Rogan:2004; @Pesaresi:2016; @Weiss:2020; @Nink:2019].
+Land cover is defined as the material at the Earth’s surface, such as soil, vegetation, water, asphalt, etc. [@Fisher:2005].
 A supervised classification (also known as semi-automatic classification) is an image processing technique that aims at classifying land cover by training an algorithm with samples of material spectral signatures.
-There are several semi-automatic classification algorithms that in general require a priori knowledge of material spectral signatures, through the identification in the image of training pixels and calculation of the corresponding spectral signatures [@Richards:2006].
-Based on the training pixels (i.e. spectral signatures) the algorithm classifies the whole remote sensing image through a mathematical model.
 
-Remote sensing images are spatial data and require the use of a Geographic Information System (GIS) for visualization and processing.
 The development of open source GIS and processing software can foster environmental monitoring, which can be performed with no cost for software and remote sensing images considering the free data availability.
 QGIS is an open source GIS software which provides several tools for data visualization and analysis; it is mainly written in C++ code, but it also allows to extend the functions thereof through API and plugins written in Python [@QGIS].
 QGIS has a large repository of plugins that improve data analysis and also provide access to several image processing tools included in other open source programs such as GRASS [@GRASS], GDAL [@GDAL], and Orfeo Toolbox [@OTB].
 These programs allow for the processing of satellite images, nevertheless their use can be difficult for people interested in land cover classifications but specialized in fields other than remote sensing, because of the several steps required for image processing. 
 
-The `Semi-Automatic Classification Plugin` aims to provide a complete suite of tools for processing remote sensing data, easing the phases related to the download, the preprocessing of images, and the postprocessing of classifications.
+The `Semi-Automatic Classification Plugin` aims to provide a complete suite of tools for processing remote sensing data, easing the phases related to the download, the preprocessing of images, and the postprocessing of classifications, with built-in algorithms developed in Python and third party algorithms for specific functions (e.g. Sentinel-1 preprocessing through ESA SNAP [@SNAP]).
 
 Several tutorials about the `Semi-Automatic Classification Plugin` are freely available on the [official website](https://fromgistors.blogspot.com/search/label/Tutorial), and the [user manual](https://semiautomaticclassificationmanual.readthedocs.io) is being translated into several languages by the user community.
 
