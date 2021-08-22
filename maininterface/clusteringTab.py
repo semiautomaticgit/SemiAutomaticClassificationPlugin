@@ -598,7 +598,7 @@ class ClusteringTab:
 			try:
 				# values finder
 				cfg.parallelArrayDict = {}
-				o = cfg.utls.multiProcessRaster(rasterPath = tPMDV, functionBand = 'No', functionRaster = cfg.utls.rasterStandardDeviationISODATA, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Calculate raster values iteration ') + str(iteration + 1).replace('-1', '*').replace('0', '*'), nodataValue = nD, functionVariable = [classes, cfg.rasterClustering])
+				o = cfg.utls.multiProcessRaster(rasterPath = tPMDV, functionBand = 'No', functionRaster = cfg.utls.rasterStandardDeviationISODATA, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Calculate raster values iteration ') + str(iteration + 1).replace('-1', '*').replace('0', '*'), nodataValue = nD, functionVariable = [classesMP, cfg.rasterClustering])
 			except Exception as err:
 				# logger
 				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))

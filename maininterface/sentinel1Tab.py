@@ -405,7 +405,7 @@ class Sentinel1Tab:
 		# reprojection
 		if reproject == 'Yes':
 			tPMD2 = cfg.utls.createTempRasterPath('tif')
-			cfg.utls.GDALReprojectRaster(input = oM, output = tPMD2, outFormat = 'GTiff', s_srs = None, t_srs = 'EPSG:' + str(rEPSG), rasterDataType = 'Float32', noDataVal = nD)
+			cfg.utls.GDALReprojectRaster(input = oM, output = tPMD2, outFormat = 'GTiff', s_srs = None, t_srs = str(rEPSG.ExportToWkt()), rasterDataType = 'Float32', noDataVal = nD)
 			# remove temp
 			try:
 				cfg.osSCP.remove(oM)
