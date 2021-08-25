@@ -123,6 +123,8 @@ class ClassificationTab:
 	# perform classification
 	def runClassification(self, batch = 'No', outputClassification = None, bandSetNumber = None, algorithmFilesCheck = None, reportCheck = None, vectorConversion = None, algorithmName = None, useMacroclass = None, useLcs = None, useLcsAlgorithm = None, LCSLeaveUnclassified = None, maskCheckBox = None, maskPath = None):
 		sL = cfg.classTab.getSignatureList(bandSetNumber, algorithmName)
+		# for multiprocess
+		sLMP = cfg.classTab.getSignatureList(bandSetNumber, algorithmName, color = 'No')
 		if self.trainSigCheck == 'Yes':
 			if bandSetNumber is None:
 				bandSetNumber = cfg.bndSetNumber
@@ -130,7 +132,7 @@ class ClassificationTab:
 				cfg.mx.msgWar25(bandSetNumber + 1)
 				return 'No'	
 			if batch == 'No':
-				clssOut = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Save classification output'), '', '*.tif', 'tif')
+				clssOut = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Save classification output'), '', 'TIF file (*.tif);;VRT file (*.vrt)')
 			else:
 				clssOut = outputClassification
 			if clssOut is not False:
@@ -201,7 +203,7 @@ class ClassificationTab:
 					classificationOptions = [useLcs, useLcsAlgorithm, LCSLeaveUnclassified, cfg.algBandWeigths, cfg.algThrshld]
 					# logger
 					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' classification set: ' + str([algorithmName, img, sL, cfg.clssPth, useMacroclass, algRasterPath, 0, None, cfg.rasterCompression, bandSetNumber, classificationOptions]))
-					ok, cOut, mOut, opOut = self.runAlgorithm(algorithmName, img, sL, cfg.clssPth, useMacroclass, algRasterPath, 0, None, cfg.rasterCompression, bandSetNumber, classificationOptions)
+					ok, cOut, mOut, opOut = self.runAlgorithm(algorithmName, img, sLMP, cfg.clssPth, useMacroclass, algRasterPath, 0, None, cfg.rasterCompression, bandSetNumber, classificationOptions)
 					if ok == 'Yes':
 						c = cfg.utls.addRasterLayer(cfg.clssPth)
 						cfg.utls.moveLayerTop(c)
@@ -233,7 +235,7 @@ class ClassificationTab:
 							if cfg.ui.LC_signature_checkBox.isChecked() is True:
 								useLcs = 'Yes'
 						try:
-							c = cfg.utls.addRasterLayer(algRasterPath)
+							c = cfg.utls.addRasterLayer(mOut)
 							if useLcs == 'Yes':
 								cfg.utls.rasterSymbolLCSAlgorithmRaster(c)
 							for r in opOut:
@@ -272,7 +274,7 @@ class ClassificationTab:
 	# apply symbology to classification			
 	def applyClassSymbology(self, classificationRaster, macroclassCheck, qmlFile, signatureList = None):
 		# qml symbology
-		if qmlFile == "":
+		if qmlFile == '':
 			if macroclassCheck == 'Yes':
 				signatureList = cfg.SCPD.createMCIDList()
 				if len(signatureList) == 0:
@@ -283,7 +285,7 @@ class ClassificationTab:
 				self.applyQmlStyle(classificationRaster, qmlFile)
 			except Exception as err:
 				# logger
-				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 							
 	# apply symbology to classification vector	
 	def applyClassSymbologyVector(self, classificationVector, macroclassCheck, qmlFile, signatureList = None):
@@ -316,7 +318,7 @@ class ClassificationTab:
 		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'classification symbology applied with qml: ' + str(stylePath))
 			
 	# calculate signatures for checked ROIs
-	def getSignatureList(self, bandSetNumber = None, algorithmName = None):
+	def getSignatureList(self, bandSetNumber = None, algorithmName = None, color = None):
 		if bandSetNumber is None:
 			bandSetNumber = cfg.bndSetNumber
 		if bandSetNumber >= len(cfg.bandSetsList):
@@ -343,7 +345,10 @@ class ClassificationTab:
 				s.append(cfg.signList['CLASSINFO_' + str(i)])
 				s.append(cfg.signList['VALUES_' + str(i)])
 				s.append(cfg.signList['WAVELENGTH_' + str(i)])
-				s.append(cfg.signList['COLOR_' + str(i)])
+				if color is None:
+					s.append(cfg.signList['COLOR_' + str(i)])
+				else:
+					s.append(None)
 				s.append(cfg.signList['COVMATRIX_' + str(i)])
 				s.append(cfg.signList['LCS_MIN_' + str(i)])
 				s.append(cfg.signList['LCS_MAX_' + str(i)])
@@ -402,6 +407,8 @@ class ClassificationTab:
 			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'point (X,Y) = (%s,%s)' % (cfg.pntPrvw.x() , cfg.pntPrvw.y()))
 			# signature list
 			sL = cfg.classTab.getSignatureList()
+			# for multiprocess
+			sLMP = cfg.classTab.getSignatureList(color = 'No')
 			# input image
 			if cfg.actionCheck == 'Yes' and  self.trainSigCheck == 'Yes':
 				# check band set
@@ -434,7 +441,7 @@ class ClassificationTab:
 						tPMA = None		
 					# logger
 					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' classification set: ' + str([cfg.algName, cfg.bandSetsList[bandSetNumber][8], sL, pP, cfg.macroclassCheck, tPMA, int(cfg.prvwSz), point, compress, bandSetNumber, classificationOptions]))
-					ok, cOut, mOut, opOut = self.runAlgorithm(cfg.algName, cfg.bandSetsList[bandSetNumber][8], sL, pP, cfg.macroclassCheck, tPMA, int(cfg.prvwSz), point, compress, bandSetNumber, classificationOptions)
+					ok, cOut, mOut, opOut = self.runAlgorithm(cfg.algName, cfg.bandSetsList[bandSetNumber][8], sLMP, pP, cfg.macroclassCheck, tPMA, int(cfg.prvwSz), point, compress, bandSetNumber, classificationOptions)
 					if ok == 'Yes':
 						if algorithmRaster == 'No':
 							r = cfg.utls.addRasterLayer(cOut)
@@ -572,12 +579,27 @@ class ClassificationTab:
 			return 'No', None, None, None
 		# output rasters
 		outputClasses, outputAlgs, outSigDict = o
-		tPMDC = cfg.utls.createTempRasterPath('vrt')
-		cfg.utls.createVirtualRaster2(inputRasterList = outputClasses, output = tPMDC, NoDataValue = 'Yes')
+		# virtual raster
+		vrtR = 'No'
+		if outputRasterPath.lower().endswith('.vrt'):
+			vrtR = 'Yes'
+			tmpList = []
+			dirPath = cfg.osSCP.path.dirname(outputRasterPath)
+			fCount = 1
+			for tR in outputClasses:
+				oTR = dirPath + '/' + cfg.utls.fileNameNoExt(outputRasterPath) + '_%02d' % (fCount,) + '.tif'
+				fCount = fCount + 1
+				tmpList.append(oTR)
+				cfg.shutilSCP.move(tR, oTR)
+			cfg.utls.createVirtualRaster2(inputRasterList = tmpList, output = outputRasterPath, NoDataValue = 'Yes')
+			cOut = outputRasterPath
+		else:
+			tPMDC = cfg.utls.createTempRasterPath('vrt')
+			cfg.utls.createVirtualRaster2(inputRasterList = outputClasses, output = tPMDC, NoDataValue = 'Yes')
 		# mosaic rasters
 		if 	previewSize > 0:
 			cOut = tPMDC
-		else:
+		elif vrtR == 'No':
 			gcopy = cfg.utls.GDALCopyRaster(tPMDC, outputRasterPath, 'GTiff', compress, 'DEFLATE -co PREDICTOR=2 -co ZLEVEL=1', additionalParams = '-ot  Int16')
 			cOut = outputRasterPath
 			for oC in outputClasses:
@@ -587,27 +609,54 @@ class ClassificationTab:
 					pass
 		opOut = []
 		if algRasterPath is not None:
-			tPMDA = cfg.utls.createTempRasterPath('vrt')
-			cfg.utls.createVirtualRaster2(inputRasterList = outputAlgs, output = tPMDA, NoDataValue = 'Yes')
-			gcopy = cfg.utls.GDALCopyRaster(tPMDA, algRasterPath, 'GTiff', compress, 'LZW')
-			for oA in outputAlgs:
-				try:
-					cfg.osSCP.remove(oA)
-				except:
-					pass
-			rOBaseNm = cfg.osSCP.path.dirname(outputRasterPath)
+			if vrtR == 'Yes':
+				tmpList = []
+				dirPath = cfg.osSCP.path.dirname(algRasterPath)
+				fCount = 1
+				for tR in outputAlgs:
+					oTR = dirPath + '/' + cfg.utls.fileNameNoExt(algRasterPath) + '_%02d' % (fCount,) + '.tif'
+					algRasterPath = dirPath + '/' + cfg.utls.fileNameNoExt(algRasterPath) + '.vrt'
+					fCount = fCount + 1
+					tmpList.append(oTR)
+					cfg.shutilSCP.move(tR, oTR)
+				cfg.utls.createVirtualRaster2(inputRasterList = tmpList, output = algRasterPath, NoDataValue = 'Yes')
+			else:
+				tPMDA = cfg.utls.createTempRasterPath('vrt')
+				cfg.utls.createVirtualRaster2(inputRasterList = outputAlgs, output = tPMDA, NoDataValue = 'Yes')
+				gcopy = cfg.utls.GDALCopyRaster(tPMDA, algRasterPath, 'GTiff', compress, 'LZW')
+				for oA in outputAlgs:
+					try:
+						cfg.osSCP.remove(oA)
+					except:
+						pass
+				rOBaseNm = cfg.osSCP.path.dirname(outputRasterPath)
 			for s in range(0, len(signatureList)):
 				sLR = str(signatureList[s][0]) + '_' + str(signatureList[s][2])
-				try:
-					tPMDS = cfg.utls.createTempRasterPath('vrt')
-					cfg.utls.createVirtualRaster2(inputRasterList = outSigDict[sLR], output = tPMDS, NoDataValue = 'Yes')
+				if vrtR == 'Yes':
+					tmpList = []
 					# base name
 					nm = cfg.utls.fileNameNoExt(outputRasterPath)
-					opO = rOBaseNm + '/' + nm + '_' + cfg.sigRasterNm + '_' + sLR + '.tif'
-					gcopy = cfg.utls.GDALCopyRaster(tPMDS, opO, 'GTiff', compress, 'LZW')
+					opO = cfg.osSCP.path.dirname(outputRasterPath) + '/' + nm + '_' + cfg.sigRasterNm + '_' + sLR + '.vrt'
+					dirPath = cfg.osSCP.path.dirname(opO)
+					fCount = 1
+					for tR in outSigDict[sLR]:
+						oTR = dirPath + '/' + cfg.utls.fileNameNoExt(opO) + '_%02d' % (fCount,) + '.tif'
+						fCount = fCount + 1
+						tmpList.append(oTR)
+						cfg.shutilSCP.move(tR, oTR)
+					cfg.utls.createVirtualRaster2(inputRasterList = tmpList, output = opO, NoDataValue = 'Yes')
 					opOut.append(opO)
-				except:
-					pass
+				else:
+					try:
+						tPMDS = cfg.utls.createTempRasterPath('vrt')
+						cfg.utls.createVirtualRaster2(inputRasterList = outSigDict[sLR], output = tPMDS, NoDataValue = 'Yes')
+						# base name
+						nm = cfg.utls.fileNameNoExt(outputRasterPath)
+						opO = rOBaseNm + '/' + nm + '_' + cfg.sigRasterNm + '_' + sLR + '.tif'
+						gcopy = cfg.utls.GDALCopyRaster(tPMDS, opO, 'GTiff', compress, 'LZW')
+						opOut.append(opO)
+					except:
+						pass
 		else:
 			for oA in outputAlgs:
 				try:

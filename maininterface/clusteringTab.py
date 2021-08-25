@@ -128,7 +128,7 @@ class ClusteringTab:
 			cfg.mx.msgWar25(bandSetNumber + 1)
 			return 'No'
 		if batch == 'No':
-			clssOut = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Save clustering output'), '', '*.tif', 'tif')
+			clssOut = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Save clustering output'), '', 'TIF file (*.tif)')
 		else:
 			clssOut = outputFile
 		if clssOut is not False:
@@ -177,6 +177,7 @@ class ClusteringTab:
 				tPMD = cfg.utls.createTempRasterPath('vrt')
 				cfg.utls.createVirtualRaster(inputRasterList = bL, output = tPMD, quiet = 'Yes')
 			if len(bL) > 0:
+				cfg.utls.makeDirectory(cfg.osSCP.path.dirname(clssOut))
 				k_or_sigs = cfg.ui.kmeans_classes_spinBox.value()				
 				if cfg.ui.kmean_siglist_radioButton.isChecked() is True:					
 					sL = cfg.classTab.getSignatureList()					
@@ -265,7 +266,7 @@ class ClusteringTab:
 				except Exception as err:
 					cfg.shutilSCP.copy(r, outputFile)
 					# logger
-					if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 				try:
 					cfg.osSCP.remove(r)
 				except:
@@ -350,7 +351,7 @@ class ClusteringTab:
 						o = cfg.utls.multiProcessRaster(rasterPath = rD, functionBand = 'No', functionRaster = cfg.utls.rasterMinimumMaximum, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Calculate raster values iteration ') + str(iteration + 1).replace('-1', '*').replace('0', '*'), nodataValue = nD)
 					except Exception as err:
 						# logger
-						if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 					if o == 'No':
 						if batch == 'No':
 							# enable map canvas render
@@ -366,20 +367,20 @@ class ClusteringTab:
 						try:
 							for ar in cfg.parallelArrayDict[x]:
 								try:
-									for xK in ar:
+									for xK in ar[0]:
 										for xB in range(0, len(bL)):		
 											if 'MINIMUM_BAND_' + str(xB) == xK:
 												try:
-													if cfg.rasterClustering[xK] > ar[xK]:
-														cfg.rasterClustering[xK] = ar[xK]
+													if cfg.rasterClustering[xK] > ar[0][xK]:
+														cfg.rasterClustering[xK] = ar[0][xK]
 												except:
-													cfg.rasterClustering[xK] = ar[xK]
+													cfg.rasterClustering[xK] = ar[0][xK]
 											if 'MAXIMUM_BAND_' + str(xB) == xK:
 												try:
-													if cfg.rasterClustering[xK] < ar[xK]:
-														cfg.rasterClustering[xK] = ar[xK]
+													if cfg.rasterClustering[xK] < ar[0][xK]:
+														cfg.rasterClustering[xK] = ar[0][xK]
 												except:
-													cfg.rasterClustering[xK] = ar[xK]
+													cfg.rasterClustering[xK] = ar[0][xK]
 								except:
 									pass
 						except:
@@ -397,6 +398,7 @@ class ClusteringTab:
 					signatureList = []
 					kN = 1
 					classes = []
+					classesMP = []
 					for p in range(0, k):
 						sig = []
 						signature = []
@@ -423,6 +425,7 @@ class ClusteringTab:
 						s.append(0)
 						signatureList.append(s)
 						classes.append([kN, c])
+						classesMP.append([kN, None])
 						kN = kN + 1
 				else:
 					# random seeds
@@ -431,6 +434,7 @@ class ClusteringTab:
 					signatureList = []
 					kN = 1
 					classes = []
+					classesMP = []
 					for p in range(0, len(points)):
 						sig = cfg.utls.calculatePixelSignature(cfg.qgisCoreSCP.QgsPointXY(points[p][0], points[p][1]), cfg.bandSetsList[bandSetNumber][8], bandSetNumber, 'Pixel', 'No')
 						signatures1.append(sig)
@@ -453,6 +457,7 @@ class ClusteringTab:
 						s.append(0)
 						signatureList.append(s)
 						classes.append([kN, c])
+						classesMP.append([kN, None])
 						kN = kN + 1
 			except:
 				# seed signatures
@@ -465,6 +470,7 @@ class ClusteringTab:
 				signatures1 = k_or_sigs
 				signatureList = []
 				classes = []
+				classesMP = []
 				for p in range(0, k):
 					sig = signatures1[p][0]
 					signature = []
@@ -485,9 +491,14 @@ class ClusteringTab:
 					s.append(0)
 					signatureList.append(s)
 					classes.append([signatures1[p][1], signatures1[p][2]])
+					classesMP.append([signatures1[p][1], None])
 			# process calculation
 			classificationOptions = ['No', 'No', 'No', cfg.algBandWeigths, cfg.algThrshld]
-			o = cfg.utls.multiProcessRaster(rasterPath = rD, signatureList = signatureList, functionBand = 'Yes', functionRaster = cfg.utls.classificationMultiprocess, algorithmName = algorithmName, nodataValue = -999, macroclassCheck = 'No',classificationOptions = classificationOptions, functionBandArgument = cfg.multiAddFactorsVar, functionVariable = cfg.bandSetsList[bandSetNumber][6], progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Classification iteration ') + str(iteration + 1).replace('-1', '*').replace('0', '*'), virtualRaster = 'Yes', compress =  'No')	
+			# for multiprocess
+			signatureListMP = signatureList.copy()
+			for smp in signatureListMP:
+				smp[6] = None
+			o = cfg.utls.multiProcessRaster(rasterPath = rD, signatureList = signatureListMP, functionBand = 'Yes', functionRaster = cfg.utls.classificationMultiprocess, algorithmName = algorithmName, nodataValue = -999, macroclassCheck = 'No',classificationOptions = classificationOptions, functionBandArgument = cfg.multiAddFactorsVar, functionVariable = cfg.bandSetsList[bandSetNumber][6], progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Classification iteration ') + str(iteration + 1).replace('-1', '*').replace('0', '*'), virtualRaster = 'Yes', compress =  'No')	
 			if o == 'No':
 				return 'No', None, None
 			# output rasters
@@ -526,10 +537,10 @@ class ClusteringTab:
 			try:
 				# values finder
 				cfg.parallelArrayDict = {}
-				o = cfg.utls.multiProcessRaster(rasterPath = tPMDV, functionBand = 'No', functionRaster = cfg.utls.rasterPixelCountISODATA, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Calculate raster values iteration ') + str(iteration + 1).replace('-1', '*').replace('0', '*'), nodataValue = nD, functionVariable = classes)
+				o = cfg.utls.multiProcessRaster(rasterPath = tPMDV, functionBand = 'No', functionRaster = cfg.utls.rasterPixelCountISODATA, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Calculate raster values iteration ') + str(iteration + 1).replace('-1', '*').replace('0', '*'), nodataValue = nD, functionVariable = classesMP)
 			except Exception as err:
 				# logger
-				if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 			if o == 'No':
 				if batch == 'No':
 					# enable map canvas render
@@ -544,24 +555,24 @@ class ClusteringTab:
 				try:
 					for ar in cfg.parallelArrayDict[x]:
 						try:
-							for xK in ar:
+							for xK in ar[0]:
 								for c in classes:
 									for xB in range(0, len(bL)):
 										if 'SUM_BAND_' + str(xB) + '_c_' + str(c[0]) == xK:
 											try:
-												cfg.rasterClustering[xK] = ar[xK] + cfg.rasterClustering[xK]
+												cfg.rasterClustering[xK] = ar[0][xK] + cfg.rasterClustering[xK]
 											except:
-												cfg.rasterClustering[xK] = ar[xK]
+												cfg.rasterClustering[xK] = ar[0][xK]
 										if 'COUNT_BAND_' + str(xB) + '_c_' + str(c[0]) == xK:
 											try:
-												cfg.rasterClustering[xK] = ar[xK] + cfg.rasterClustering[xK]
+												cfg.rasterClustering[xK] = ar[0][xK] + cfg.rasterClustering[xK]
 											except:
-												cfg.rasterClustering[xK] = ar[xK]
+												cfg.rasterClustering[xK] = ar[0][xK]
 									if 'SUM_DIST_' + str(c[0]) == xK:
 										try:
-											cfg.rasterClustering[xK] = ar[xK] + cfg.rasterClustering[xK]
+											cfg.rasterClustering[xK] = ar[0][xK] + cfg.rasterClustering[xK]
 										except:
-											cfg.rasterClustering[xK] = ar[xK]
+											cfg.rasterClustering[xK] = ar[0][xK]
 						except:
 							pass
 				except:
@@ -587,10 +598,10 @@ class ClusteringTab:
 			try:
 				# values finder
 				cfg.parallelArrayDict = {}
-				o = cfg.utls.multiProcessRaster(rasterPath = tPMDV, functionBand = 'No', functionRaster = cfg.utls.rasterStandardDeviationISODATA, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Calculate raster values iteration ') + str(iteration + 1).replace('-1', '*').replace('0', '*'), nodataValue = nD, functionVariable = [classes, cfg.rasterClustering])
+				o = cfg.utls.multiProcessRaster(rasterPath = tPMDV, functionBand = 'No', functionRaster = cfg.utls.rasterStandardDeviationISODATA, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Calculate raster values iteration ') + str(iteration + 1).replace('-1', '*').replace('0', '*'), nodataValue = nD, functionVariable = [classesMP, cfg.rasterClustering])
 			except Exception as err:
 				# logger
-				if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 			if o == 'No':
 				if batch == 'No':
 					# enable map canvas render
@@ -605,14 +616,14 @@ class ClusteringTab:
 				try:
 					for ar in cfg.parallelArrayDict[x]:
 						try:
-							for xK in ar:
+							for xK in ar[0]:
 								for c in classes:
 									for xB in range(0, len(bL)):		
 										if 'VAR_BAND_' + str(xB) + '_c_' + str(c[0]) == xK:
 											try:
-												cfg.rasterClustering[xK] = ar[xK] + cfg.rasterClustering[xK]
+												cfg.rasterClustering[xK] = ar[0][xK] + cfg.rasterClustering[xK]
 											except:
-												cfg.rasterClustering[xK] = ar[xK]
+												cfg.rasterClustering[xK] = ar[0][xK]
 						except:
 							pass
 				except:
@@ -840,7 +851,7 @@ class ClusteringTab:
 				except Exception as err:
 					cfg.shutilSCP.copy(r, outputFile)
 					# logger
-					if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 				try:
 					cfg.osSCP.remove(r)
 				except:
@@ -928,7 +939,7 @@ class ClusteringTab:
 						o = cfg.utls.multiProcessRaster(rasterPath = rD, functionBand = 'No', functionRaster = cfg.utls.rasterMinimumMaximum, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Calculate raster values iteration ') + str(iteration + 1).replace('-1', '*').replace('0', '*'), nodataValue = nD)
 					except Exception as err:
 						# logger
-						if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 					if o == 'No':
 						if batch == 'No':
 							# enable map canvas render
@@ -944,20 +955,20 @@ class ClusteringTab:
 						try:
 							for ar in cfg.parallelArrayDict[x]:
 								try:
-									for xK in ar:
+									for xK in ar[0]:
 										for xB in range(0, len(bL)):		
 											if 'MINIMUM_BAND_' + str(xB) == xK:
 												try:
-													if cfg.rasterClustering[xK] > ar[xK]:
-														cfg.rasterClustering[xK] = ar[xK]
+													if cfg.rasterClustering[xK] > ar[0][xK]:
+														cfg.rasterClustering[xK] = ar[0][xK]
 												except:
-													cfg.rasterClustering[xK] = ar[xK]
+													cfg.rasterClustering[xK] = ar[0][xK]
 											if 'MAXIMUM_BAND_' + str(xB) == xK:
 												try:
-													if cfg.rasterClustering[xK] < ar[xK]:
-														cfg.rasterClustering[xK] = ar[xK]
+													if cfg.rasterClustering[xK] < ar[0][xK]:
+														cfg.rasterClustering[xK] = ar[0][xK]
 												except:
-													cfg.rasterClustering[xK] = ar[xK]
+													cfg.rasterClustering[xK] = ar[0][xK]
 								except:
 									pass
 						except:
@@ -975,6 +986,7 @@ class ClusteringTab:
 					signatureList = []
 					kN = 1
 					classes = []
+					classesMP = []
 					for p in range(0, k):
 						sig = []
 						signature = []
@@ -1004,6 +1016,7 @@ class ClusteringTab:
 						s.append(0)
 						signatureList.append(s)
 						classes.append([kN, c])
+						classesMP.append([kN, None])
 						kN = kN + 1
 				else:
 					# random seeds
@@ -1012,6 +1025,7 @@ class ClusteringTab:
 					signatureList = []
 					kN = 1
 					classes = []
+					classesMP = []
 					for p in range(0, len(points)):
 						sig = cfg.utls.calculatePixelSignature(cfg.qgisCoreSCP.QgsPointXY(points[p][0], points[p][1]), cfg.bandSetsList[bandSetNumber][8], bandSetNumber, "Pixel", 'No')
 						signatures1.append(sig)
@@ -1034,6 +1048,7 @@ class ClusteringTab:
 						s.append(0)
 						signatureList.append(s)
 						classes.append([kN, c])
+						classesMP.append([kN, None])
 						kN = kN + 1
 			except:
 				# seed signatures
@@ -1041,6 +1056,7 @@ class ClusteringTab:
 				signatures1 = k_or_sigs
 				signatureList = []
 				classes = []
+				classesMP = []
 				for p in range(0, k):
 					sig = signatures1[p][0]
 					signature = []
@@ -1061,9 +1077,14 @@ class ClusteringTab:
 					s.append(0)
 					signatureList.append(s)
 					classes.append([signatures1[p][1], signatures1[p][2]])
+					classesMP.append([signatures1[p][1], None])
 			# process calculation
 			classificationOptions = ['No', 'No', 'No', cfg.algBandWeigths, cfg.algThrshld]
-			o = cfg.utls.multiProcessRaster(rasterPath = rD, signatureList = signatureList, functionBand = 'Yes', functionRaster = cfg.utls.classificationMultiprocess, algorithmName = algorithmName, nodataValue = -999, macroclassCheck = 'No',classificationOptions = classificationOptions, functionBandArgument = cfg.multiAddFactorsVar, functionVariable = cfg.bandSetsList[bandSetNumber][6], progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Classification iteration') + str(iteration + 1).replace('-1', '*').replace('0', '*'), virtualRaster = 'Yes', compress = 'No')	
+			# for multiprocess
+			signatureListMP = signatureList.copy()
+			for smp in signatureListMP:
+				smp[6] = None
+			o = cfg.utls.multiProcessRaster(rasterPath = rD, signatureList = signatureListMP, functionBand = 'Yes', functionRaster = cfg.utls.classificationMultiprocess, algorithmName = algorithmName, nodataValue = -999, macroclassCheck = 'No',classificationOptions = classificationOptions, functionBandArgument = cfg.multiAddFactorsVar, functionVariable = cfg.bandSetsList[bandSetNumber][6], progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Classification iteration') + str(iteration + 1).replace('-1', '*').replace('0', '*'), virtualRaster = 'Yes', compress = 'No')	
 			if o == 'No':
 				return 'No', None, None, None
 			# output rasters
@@ -1099,10 +1120,10 @@ class ClusteringTab:
 			try:
 				# values finder
 				cfg.parallelArrayDict = {}
-				o = cfg.utls.multiProcessRaster(rasterPath = tPMDV, functionBand = 'No', functionRaster = cfg.utls.rasterPixelCountKmeans, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Calculate raster values iteration ') + str(iteration + 1).replace('-1', '*').replace('0', '*'), nodataValue = nD, functionVariable = classes)
+				o = cfg.utls.multiProcessRaster(rasterPath = tPMDV, functionBand = 'No', functionRaster = cfg.utls.rasterPixelCountKmeans, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Calculate raster values iteration ') + str(iteration + 1).replace('-1', '*').replace('0', '*'), nodataValue = nD, functionVariable = classesMP)
 			except Exception as err:
 				# logger
-				if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 			if o == 'No':
 				if batch == 'No':
 					# enable map canvas render
@@ -1118,19 +1139,19 @@ class ClusteringTab:
 				try:
 					for ar in cfg.parallelArrayDict[x]:
 						try:
-							for xK in ar:
+							for xK in ar[0]:
 								for c in classes:
 									for xB in range(0, len(bL)):		
 										if 'SUM_BAND_' + str(xB) + '_c_' + str(c[0]) == xK:
 											try:
-												cfg.rasterClustering[xK] = ar[xK] + cfg.rasterClustering[xK]
+												cfg.rasterClustering[xK] = ar[0][xK] + cfg.rasterClustering[xK]
 											except:
-												cfg.rasterClustering[xK] = ar[xK]
+												cfg.rasterClustering[xK] = ar[0][xK]
 										if 'COUNT_BAND_' + str(xB) + '_c_' + str(c[0]) == xK:
 											try:
-												cfg.rasterClustering[xK] = ar[xK] + cfg.rasterClustering[xK]
+												cfg.rasterClustering[xK] = ar[0][xK] + cfg.rasterClustering[xK]
 											except:
-												cfg.rasterClustering[xK] = ar[xK]
+												cfg.rasterClustering[xK] = ar[0][xK]
 						except:
 							pass
 				except:
@@ -1237,7 +1258,7 @@ class ClusteringTab:
 				cfg.mx.msgWar14()
 		except Exception as err:
 			# logger
-			if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 					
 	# display parameters
 	def displayParameters(self, signatureList, distances = None, outputDirectory = None, outputFileName = None):

@@ -64,11 +64,15 @@ class CrossClassification:
 			rstrCheck = 'No'
 			cfg.mx.msgErr26()
 		if batch == 'No':
-			crossRstPath = cfg.utls.getSaveFileName(None, cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Save cross classification raster output'), '', '*.tif', 'tif')
+			crossRstPath = cfg.utls.getSaveFileName(None, cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Save cross classification raster output'), '', 'TIF file (*.tif);;VRT file (*.vrt)')
 		else:
 			crossRstPath = rasterOutput
+		# virtual raster
+		vrtR = 'No'
 		if crossRstPath is not False:
-			if crossRstPath.lower().endswith('.tif'):
+			if crossRstPath.lower().endswith('.vrt'):
+				vrtR = 'Yes'
+			elif crossRstPath.lower().endswith('.tif'):
 				pass
 			else:
 				crossRstPath = crossRstPath + '.tif'
@@ -95,41 +99,62 @@ class CrossClassification:
 			# date time for temp name
 			dT = cfg.utls.getTime()
 			if iClass is not None and l is not None:
+				cfg.utls.makeDirectory(cfg.osSCP.path.dirname(crossRstPath))
 				# if not reference shapefile
 				if l.type() != 0:
 					# check projections
-					newRstrProj = cfg.utls.getCrs(iClass)
-					refRstrProj = cfg.utls.getCrs(l)
-					if refRstrProj != newRstrProj:
+					rCrs = cfg.utls.getCrsGDAL(cfg.utls.layerSource(l))
+					rEPSG = cfg.osrSCP.SpatialReference()
+					rEPSG.ImportFromWkt(rCrs)
+					eCrs = cfg.utls.getCrsGDAL(cfg.utls.layerSource(iClass))
+					EPSG = cfg.osrSCP.SpatialReference()
+					EPSG.ImportFromWkt(eCrs)
+					if EPSG.IsSame(rEPSG) != 1:
+						tPMD = cfg.utls.createTempRasterPath('vrt')
+						cfg.utls.createWarpedVrt(cfg.utls.layerSource(iClass), tPMD, str(rCrs))
 						cfg.mx.msg9()
-						return 'No'
+						remiClass2 = cfg.utls.addRasterLayer(tPMD)
+						iClass = remiClass2
 				else:
 					# vector EPSG
 					if 'Polygon?crs=' in str(cfg.utls.layerSource(l)) or 'memory?geometry=' in str(cfg.utls.layerSource(l)):
 						# temp shapefile
 						tSHP = cfg.utls.createTempRasterPath('gpkg')
 						l = cfg.utls.saveMemoryLayerToShapefile(l, tSHP, format = 'GPKG')
-						vEPSG = cfg.utls.getEPSGVector(tSHP)
+						vCrs = cfg.utls.getCrsGDAL(tSHP)
+						vEPSG = cfg.osrSCP.SpatialReference()
+						vEPSG.ImportFromWkt(vCrs)
 					else:
 						ql = cfg.utls.layerSource(l)
-						vEPSG = cfg.utls.getEPSGVector(ql)
+						vCrs = cfg.utls.getCrsGDAL(ql)
+						vEPSG = cfg.osrSCP.SpatialReference()
+						vEPSG.ImportFromWkt(vCrs)
 					# in case of reprojection
 					qll = cfg.utls.layerSource(l)
 					reprjShapefile = cfg.tmpDir + '/' + dT + cfg.utls.fileName(qll)
 					qlll = cfg.utls.layerSource(iClass)
-					rEPSG = cfg.utls.getEPSGRaster(qlll)
-					if vEPSG != rEPSG:
+					rCrs = cfg.utls.getCrsGDAL(qlll)
+					rEPSG = cfg.osrSCP.SpatialReference()
+					rEPSG.ImportFromWkt(rCrs)
+					if vEPSG.IsSame(rEPSG) != 1:
 						if cfg.osSCP.path.isfile(reprjShapefile):
 							pass
 						else:
 							try:
 								qllll = cfg.utls.layerSource(l)
-								cfg.utls.repojectShapefile(qllll, int(vEPSG), reprjShapefile, int(rEPSG))
+								cfg.utls.repojectShapefile(qllll, vEPSG, reprjShapefile, rEPSG)
 							except Exception as err:
 								# remove temp layers
 								try:
 									cfg.utls.removeLayerByLayer(reml)
+								except:
+									pass
+								try:
 									cfg.utls.removeLayerByLayer(remiClass)
+								except:
+									pass
+								try:
+									cfg.utls.removeLayerByLayer(remiClass2)
 								except:
 									pass
 								# logger
@@ -188,6 +213,7 @@ class CrossClassification:
 				bListNum = [1, 1]
 				vrtCheck = cfg.utls.createTempVirtualRaster(bList, bListNum, 'Yes', 'Yes', 0, 'No', 'Yes')
 				bandsUniqueVal = []
+				k = []
 				for b in bList:
 					cfg.parallelArrayDict = {}
 					o = cfg.utls.multiProcessRaster(rasterPath = b, functionBand = 'No', functionRaster = cfg.utls.rasterUniqueValuesWithSum, nodataValue = nD, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Unique values'))
@@ -196,7 +222,7 @@ class CrossClassification:
 					for x in sorted(cfg.parallelArrayDict):
 						try:
 							for ar in cfg.parallelArrayDict[x]:
-								values = cfg.np.append(values, ar[0, ::])
+								values = cfg.np.append(values, ar[0][0, ::])
 						except:
 							if batch == 'No':
 								cfg.utls.finishSound()
@@ -215,6 +241,10 @@ class CrossClassification:
 					except:
 						pass
 					bandsUniqueVal.append(refRasterBandUniqueVal)
+					if 0 in refRasterBandUniqueVal:
+						k.append(1)
+					else:
+						k.append(0)
 				try:
 					cmb = list(cfg.itertoolsSCP.product(*bandsUniqueVal))
 					testCmb = cmb[0]
@@ -223,7 +253,7 @@ class CrossClassification:
 						cfg.uiUtls.removeProgressBar()
 					cfg.mx.msgErr63()
 					# logger
-					if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 					return 'No'
 				# expression builder
 				check = 'No'
@@ -231,25 +261,40 @@ class CrossClassification:
 				while t < 100:
 					t = t + 1
 					rndVarList = []
-					for cmbI in range(0, len(cmb[0])):
-						rndVarList.append(int(999 * cfg.np.random.random()))
-					n = 1
-					col = []
-					row = []
-					cmbntns = {}
+					calcDataType = cfg.np.uint32
+					# first try fixed list
+					if t == 1:
+						coT = 333
+						for cmbI in range(0, len(cmb[0])):
+							rndVarList.append(coT)
+							coT = coT + 1
+					# random list
+					else:
+						for cmbI in range(0, len(cmb[0])):
+							rndVarList.append(int(999 * cfg.np.random.random()))
 					newValueList = []
-					reclassList = []
+					reclassDict = {}
 					for i in cmb:
 						if nD not in i:
-							newVl = cfg.np.multiply(rndVarList, i).sum()
+							newVl = (i[0] + k[0]) * (rndVarList[0]) + (i[1] + k[1]) * (rndVarList[1])
+							reclassDict[newVl] = i
 							newValueList.append(newVl)
-							reclassList.append([newVl, n])
+							if i[0] < 0 or i[1] < 0 :
+								calcDataType = cfg.np.int32
+					uniqueValList = cfg.np.unique(newValueList)
+					if int(uniqueValList.shape[0]) == len(newValueList):
+						n = 1
+						col = []
+						row = []
+						reclassList = []
+						cmbntns = {}	
+						for newVl in sorted(reclassDict.keys()):
+							i = reclassDict[newVl]
+							reclassList.append(newVl)
 							cmbntns[n] = [i[1], i[0]]
 							col.append(i[1])
 							row.append(i[0])
 							n = n + 1
-					uniqueValList = cfg.np.unique(newValueList)
-					if int(uniqueValList.shape[0]) == len(newValueList):
 						check = 'Yes'
 						break
 				if check == 'No':
@@ -258,17 +303,13 @@ class CrossClassification:
 						cfg.cnvs.setRenderFlag(True)
 						cfg.uiUtls.removeProgressBar()
 					return 'No'
-				e = ''
-				for rE in range(0, len(rndVarList)):
-					e = e + 'rasterSCPArrayfunctionBand[::, ::, ' + str(rE) + '] * ' + str(rndVarList[rE]) + ' + '
-				e = e.rstrip(' + ')
+				e = '(rasterSCPArrayfunctionBand[::, ::, 0] + ' + str(k[0]) +' ) * ' + str(rndVarList[0]) + ' + (rasterSCPArrayfunctionBand[::, ::, 1] + ' + str(k[1]) +' ) * ' + str(rndVarList[1])
 				# check projections
 				left, right, top, bottom, cRPX, cRPY, rP, un = cfg.utls.imageGeoTransform(vrtCheck)					
 				# calculation
-				o = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.crossRasters, outputRasterList = [crossRstPath], nodataValue = nD,  functionBandArgument = reclassList, functionVariable = e, progressMessage = 'cross classification ', compress = cfg.rasterCompression, outputNoDataValue = 0, compressFormat = 'DEFLATE -co PREDICTOR=2 -co ZLEVEL=1', dataType = 'UInt16')
-				cfg.uiUtls.updateBar(60)
 				cfg.parallelArrayDict = {}
-				o = cfg.utls.multiProcessRaster(rasterPath = crossRstPath, functionBand = 'No', functionRaster = cfg.utls.rasterUniqueValuesWithSum, nodataValue = nD, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Unique values'))
+				o = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.crossRasters, outputRasterList = [crossRstPath], nodataValue = nD,  functionBandArgument = reclassList, functionVariable = e, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Cross classification'), outputNoDataValue = cfg.NoDataValUInt32,  virtualRaster = vrtR, compress = cfg.rasterCompression, dataType = 'UInt32', calcDataType = calcDataType)
+				cfg.uiUtls.updateBar(60)
 				if o == 'No':
 					if batch == 'No':
 						# enable map canvas render
@@ -278,10 +319,16 @@ class CrossClassification:
 					# remove temp layers
 					try:
 						cfg.utls.removeLayerByLayer(reml)
+					except:
+						pass
+					try:
 						cfg.utls.removeLayerByLayer(remiClass)
-					except Exception as err:
-						# logger
-						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+					except:
+						pass
+					try:
+						cfg.utls.removeLayerByLayer(remiClass2)
+					except:
+						pass
 					# logger
 					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'Error')
 					return 'No'
@@ -293,8 +340,8 @@ class CrossClassification:
 				for x in sorted(cfg.parallelArrayDict):
 					try:
 						for ar in cfg.parallelArrayDict[x]:
-							values = cfg.np.append(values, ar[0, ::])
-							sumVal = cfg.np.append(sumVal, ar[1, ::])
+							values = cfg.np.append(values, ar[1][0, ::])
+							sumVal = cfg.np.append(sumVal, ar[1][1, ::])
 					except:
 						if batch == 'No':
 							cfg.utls.finishSound()
@@ -315,8 +362,11 @@ class CrossClassification:
 						reclRasterBandUniqueVal[values[v]] = sumVal[v]
 				rasterBandUniqueVal = {}
 				for v in range(0, len(values)):
-					cmbX = cmbntns[values[v]]
-					rasterBandUniqueVal[(cmbX[0], cmbX[1])] = [reclRasterBandUniqueVal[values[v]], values[v]]
+					try:
+						cmbX = cmbntns[values[v]]
+						rasterBandUniqueVal[(cmbX[0], cmbX[1])] = [reclRasterBandUniqueVal[values[v]], values[v]]
+					except:
+						pass
 				cfg.uiUtls.updateBar(80)
 				col2 = list(set(col))
 				row2 = list(set(row))
@@ -330,10 +380,16 @@ class CrossClassification:
 					# remove temp layers
 					try:
 						cfg.utls.removeLayerByLayer(reml)
+					except:
+						pass
+					try:
 						cfg.utls.removeLayerByLayer(remiClass)
-					except Exception as err:
-						# logger
-						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+					except:
+						pass
+					try:
+						cfg.utls.removeLayerByLayer(remiClass2)
+					except:
+						pass
 					# logger
 					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 					return 'No'
@@ -391,6 +447,19 @@ class CrossClassification:
 					# logger
 					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 				cfg.uiUtls.updateBar(100)
+				# remove temp layers
+				try:
+					cfg.utls.removeLayerByLayer(reml)
+				except:
+					pass
+				try:
+					cfg.utls.removeLayerByLayer(remiClass)
+				except:
+					pass
+				try:
+					cfg.utls.removeLayerByLayer(remiClass2)
+				except:
+					pass
 				if batch == 'No':
 					# enable map canvas render
 					cfg.cnvs.setRenderFlag(True)
@@ -398,13 +467,6 @@ class CrossClassification:
 					cfg.utls.sendSMTPMessage(None, str(__name__))
 					cfg.ui.toolBox_cross_classification.setCurrentIndex(1)
 					cfg.uiUtls.removeProgressBar()
-				else:
-					# remove temp layers
-					try:
-						cfg.utls.removeLayerByLayer(reml)
-						cfg.utls.removeLayerByLayer(remiClass)
-					except:
-						pass
 				# logger
 				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'finished')
 			else:

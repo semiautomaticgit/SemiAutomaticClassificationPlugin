@@ -39,8 +39,13 @@ cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 class Settings:
 
 	def __init__(self):	
-		pass
+		self.getGDALDLLPath()
 		
+	# Get GDAL DLL Path
+	def getGDALDLLPath(self):
+		if cfg.gdalDLLPath is None:
+			cfg.gdalDLLPath = cfg.osSCP.environ['PATH'].replace('\\', '/')
+			
 	# Change ROI color
 	def changeROIColor(self):
 		c = cfg.QtWidgetsSCP.QColorDialog.getColor()
@@ -299,7 +304,7 @@ class Settings:
 		# pool
 		cfg.pool = cfg.poolSCP(processes=1)
 		p = 0
-		wrtP = [p]
+		wrtP = [[p, cfg.gdalDLLPath]]
 		results = []
 		c = cfg.pool.apply_async(self.importTest, args=(wrtP))
 		results.append([c, p])
@@ -312,7 +317,13 @@ class Settings:
 		return res
 	
 	# test multiprocess import
-	def importTest(self, raster):
+	def importTest(self, writerLog):
+		import os
+		for d in writerLog[1].split(';'):
+			try:
+				os.add_dll_directory(d)
+			except:
+				pass
 		try:
 			from osgeo import gdal
 			gdal.Translate
@@ -620,4 +631,11 @@ class Settings:
 		cfg.multiPSCP.set_executable(cfg.PythonPathSettings)
 		# logger
 		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'python path changed to: ' + str(cfg.PythonPathSettings))
+		
+	# Python setting
+	def PythonModulePathSettingChange(self):
+		cfg.PythonModulesPathSettings = cfg.ui.python_path_lineEdit_2.text()
+		cfg.utls.setQGISRegSetting(cfg.regPythonModulesPathSettings, cfg.PythonModulesPathSettings)
+		# logger
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'python modules path changed to: ' + str(cfg.PythonModulesPathSettings))
 		

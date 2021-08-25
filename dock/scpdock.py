@@ -299,6 +299,7 @@ class SCPDock:
 		dT = cfg.utls.getTime()
 		cfg.inptDir = cfg.tmpDir + '/' + name + dT
 		oDir = cfg.utls.makeDirectory(cfg.inptDir)
+		nm = ''
 		# unzip to temp dir
 		try:
 			with cfg.zipfileSCP.ZipFile(shapeFilePath) as zOpen:
@@ -319,7 +320,9 @@ class SCPDock:
 			return 'No'
 		# try to remove SCP input
 		try:
-			cfg.utls.removeLayer(name)
+			# issue in QGIS 3.18
+			#cfg.utls.removeLayer(name)
+			pass
 		except:
 			pass
 		# convert to geopackage
@@ -330,6 +333,11 @@ class SCPDock:
 				nm = nm2
 			except:
 				pass
+		if not cfg.osSCP.path.isfile(cfg.inptDir + '/' + nm):
+			cfg.mx.msgErr59()
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'Error training input')
+			return 'No'
 		try:
 			tSS = cfg.utls.addVectorLayer(cfg.inptDir + '/' + nm)
 		except:
@@ -435,7 +443,13 @@ class SCPDock:
 			return 'No'
 		tSS = cfg.shpLay
 		# create memory layer
-		provider = tSS.dataProvider()
+		try:
+			provider = tSS.dataProvider()
+		except Exception as err:
+			cfg.mx.msgErr59()
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'Error training input')
+			return 'No'
 		fields = provider.fields().toList()
 		pCrs = cfg.utls.getCrs(tSS)
 		mL = cfg.qgisCoreSCP.QgsVectorLayer('MultiPolygon?crs=' + str(pCrs.toWkt()), cfg.trnLay, 'memory')
@@ -599,7 +613,7 @@ class SCPDock:
 			return 'No'
 		# try to remove SCP input
 		try:
-			cfg.utls.removeLayer(cfg.trnLay)
+			cfg.utls.removeLayerByLayer(cfg.shpLay)
 		except:
 			pass
 		# create memory layer
@@ -722,12 +736,12 @@ class SCPDock:
 					cfg.signList['SAM_THRESHOLD_' + str(b)] = 0
 			cfg.SCPD.ROIListTableTree(cfg.shpLay, cfg.uidc.signature_list_treeWidget)
 			# logger
-			if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' opened signature ' + str(len(cfg.signIDs)))
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' opened signature ' + str(len(cfg.signIDs)))
 		except Exception as err:
 			cfg.SCPD.ROIListTableTree(cfg.shpLay, cfg.uidc.signature_list_treeWidget)
 			cfg.mx.msgErr16()
 			# logger
-			if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 			
 	# export signature to file
 	def exportSignatureFile(self):
@@ -1624,7 +1638,7 @@ class SCPDock:
 			t.blockSignals(False)
 		except Exception as err:
 			# logger
-			if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 		
 ##################################
 	''' Interface functions '''
@@ -1666,17 +1680,15 @@ class SCPDock:
 	def showHideROI(self):
 		try:
 			if cfg.show_ROI_radioButton.isChecked():
-				l = cfg.utls.selectLayerbyName(cfg.trnLay)
-				if l is not None:
-					cfg.utls.setLayerVisible(l, True)
-				cfg.utls.moveLayerTop(l)
+				if cfg.shpLay is not None:
+					cfg.utls.setLayerVisible(cfg.shpLay, True)
+				cfg.utls.moveLayerTop(cfg.shpLay)
 				cfg.rbbrBndPol.show()
 				# ROI point
 				self.vx.show()
 			else:
-				l = cfg.utls.selectLayerbyName(cfg.trnLay)
-				if l is not None:
-					cfg.utls.setLayerVisible(l, False)
+				if cfg.shpLay is not None:
+					cfg.utls.setLayerVisible(cfg.shpLay, False)
 				cfg.rbbrBndPol.hide()
 				# ROI point
 				self.vx.hide()
@@ -2335,7 +2347,14 @@ class SCPDock:
 			except Exception as err:
 				# logger
 				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
-				cfg.shpLay.startEditing()	
+				try:
+					cfg.shpLay.startEditing()
+				except Exception as err:
+					# logger
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+					if progressbar == 'Yes':
+						cfg.uiUtls.removeProgressBar()
+					return 0
 				cfg.shpLay.dataProvider().deleteFeatures([self.ROILastID])
 				cfg.shpLay.commitChanges()
 				cfg.shpLay.dataProvider().createSpatialIndex()
@@ -2705,7 +2724,6 @@ class SCPDock:
 			tN = cfg.subsTmpROI + dT
 			# crs
 			pCrs = cfg.utls.getQGISCrs()
-			#cfg.parallelArrayDict = {}
 			# band set
 			if cfg.bandSetsList[bandSetNumber][0] == 'Yes':
 				try:

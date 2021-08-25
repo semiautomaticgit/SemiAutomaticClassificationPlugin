@@ -50,11 +50,11 @@ class ErosionRaster:
 		try:
 			# class value list
 			valueList = cfg.utls.textToValueList(cfg.ui.erosion_classes_lineEdit.text())
-			cfg.ui.erosion_classes_lineEdit.setStyleSheet("color : green")
+			cfg.ui.erosion_classes_lineEdit.setStyleSheet('color : green')
 			# logger
-			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode())
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode())
 		except Exception as err:
-			cfg.ui.erosion_classes_lineEdit.setStyleSheet("color : red")
+			cfg.ui.erosion_classes_lineEdit.setStyleSheet('color : red')
 			valueList = []
 			# logger
 			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
@@ -65,16 +65,20 @@ class ErosionRaster:
 		self.erosionClassification()
 		
 	# erosion classification
-	def erosionClassification(self, batch = 'No', rasterInput = None, rasterOutput = None):
+	def erosionClassification(self, batch = 'No', rasterInput = None, rasterOutput = None,circularStructure = None):
 		# class value list
 		valueList = self.checkValueList()
 		if len(valueList) > 0:
 			if batch == 'No':
-				outputRaster = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Save output'), '', '*.tif', 'tif')
+				outputRaster = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Save output'), '', 'TIF file (*.tif);;VRT file (*.vrt)')
 			else:
 				outputRaster = rasterOutput
+			# virtual raster
+			vrtR = 'No'
 			if outputRaster is not False:
-				if outputRaster.lower().endswith('.tif'):
+				if outputRaster.lower().endswith('.vrt'):
+					vrtR = 'Yes'
+				elif outputRaster.lower().endswith('.tif'):
 					pass
 				else:
 					outputRaster = outputRaster + '.tif'
@@ -96,35 +100,48 @@ class ErosionRaster:
 					if rSource is None:
 						cfg.mx.msg4()
 						# logger
-						cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " None raster")
+						cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' None raster')
 						if batch == 'No':
 							cfg.uiUtls.removeProgressBar()
 							cfg.cnvs.setRenderFlag(True)
 						return 'No'
 					cfg.uiUtls.updateBar(10)
+					cfg.utls.makeDirectory(cfg.osSCP.path.dirname(outputRaster))
 					input = rSource
 					nd = cfg.utls.imageNoDataValue(input)
 					dType = cfg.utls.getRasterDataTypeName(input)
 					size =  cfg.ui.erosion_threshold_spinBox.value()
-					connect = cfg.ui.erosion_connection_combo.currentText()
-					struct = cfg.utls.create3x3Window(connect)
-					tempRasterList = []
+					if circularStructure is None:
+						if cfg.ui.circular_structure_checkBox_3.isChecked():
+							circularStructure = 'Yes'
+						else:
+							circularStructure = 'No'
+					if circularStructure == 'No':
+						structure = cfg.np.ones((3,3))
+					else:
+						structure = cfg.utls.createCircularStructure(1)
+					# iterate
 					for s in range(0, size):
-						tPMD = cfg.utls.createTempRasterPath('vrt')
-						tempRasterList.append(tPMD)
+						# last iteration
+						if s == size-1:
+							tPMD = outputRaster
+							vrtRR = vrtR
+						else:
+							vrtRR = 'Yes'
+							if vrtR == 'No':
+								tPMD = cfg.utls.createTempRasterPath('tif')
+							else:
+								tPMD = cfg.utls.createTempRasterPath('vrt')
 						# process calculation
-						o = cfg.utls.multiProcessRaster(rasterPath = input, functionBand = 'No', functionRaster = cfg.utls.rasterErosion, outputRasterList = [tPMD], functionBandArgument = struct, functionVariable = valueList, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Erosion '), virtualRaster = 'Yes', compress = 'No', outputNoDataValue = nd, dataType = dType, boundarySize = 3)
+						o = cfg.utls.multiProcessRaster(rasterPath = input, functionBand = 'No', functionRaster = cfg.utls.rasterErosion, outputRasterList = [tPMD], functionBandArgument = structure, functionVariable = valueList, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Erosion step ') + str(s+1) + '/' + str(size), virtualRaster = vrtR, compress = 'No', outputNoDataValue = nd, dataType = dType, boundarySize = 3, additionalLayer = 5)
 						input = tPMD
-					# copy raster
-					try:
-						cfg.utls.GDALCopyRaster(tPMD, outputRaster, 'GTiff', cfg.rasterCompression, 'LZW')
-					except Exception as err:
-						# logger
-						if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 					if cfg.osSCP.path.isfile(outputRaster):
 						oR =cfg.utls.addRasterLayer(outputRaster)
 					if r != 'No':
-						cfg.utls.copyRenderer(r, oR)
+						try:
+							cfg.utls.copyRenderer(r, oR)
+						except:
+							pass
 					if batch == 'No':
 						cfg.utls.finishSound()
 						cfg.utls.sendSMTPMessage(None, str(__name__))

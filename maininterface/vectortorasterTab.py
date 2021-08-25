@@ -89,6 +89,7 @@ class VectorToRasterTab:
 			else:
 				burnValues = cfg.ui.constant_value_spinBox.value()
 			cfg.uiUtls.updateBar(10)
+			cfg.utls.makeDirectory(cfg.osSCP.path.dirname(rstrOut))
 			if cfg.ui.conversion_type_combo.currentText() == cfg.centerOfPixels:
 				conversionType = None
 			else:
@@ -97,15 +98,15 @@ class VectorToRasterTab:
 				extentR = 'Yes'
 			else:
 				extentR = None
-			# convert vector layer to raster		
-			check = cfg.utls.vectorToRaster(fd, vectorSource, referenceRasterName, rstrOut, referenceRasterPath, conversionType, 'GTiff', burnValues, extent = extentR)
+			# convert vector layer to raster
+			check = cfg.utls.vectorToRaster(fd, vectorSource, referenceRasterName, rstrOut, referenceRasterPath, conversionType, 'GTiff', burnValues, extent = extentR, compress = cfg.rasterCompression,  compressFormat = 'DEFLATE')
 			cfg.uiUtls.updateBar(100)
 			# add raster to layers
 			if cfg.osSCP.path.isfile(rstrOut):
 				rstr = cfg.utls.addRasterLayer(rstrOut)
 			else:
 				return 'No'
-			cfg.utls.rasterSymbolSingleBandGray(rstr)
+			#cfg.utls.rasterSymbolSingleBandGray(rstr)
 			if batch == 'No':
 				# enable map canvas render
 				cfg.cnvs.setRenderFlag(True)

@@ -92,7 +92,9 @@ class ClassSignatureTab:
 				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " Warning")
 				return 'No'
 			cfg.uiUtls.updateBar(10)
-			rEPSG = cfg.utls.getEPSGRaster(cfg.bndSetLst[0])				
+			rCrs = cfg.utls.getCrsGDAL(cfg.bndSetLst[0])
+			rEPSG = cfg.osrSCP.SpatialReference()
+			rEPSG.ImportFromWkt(rCrs)		
 			if rEPSG is None:
 				if batch == 'No':
 					cfg.uiUtls.removeProgressBar()
@@ -103,13 +105,18 @@ class ClassSignatureTab:
 			cfg.uiUtls.updateBar(20)
 			# No data value
 			NoDataVal = cfg.NoDataVal
-			EPSG = cfg.utls.getEPSGRaster(inputClassification)
-			if str(EPSG) != str(rEPSG):
+			eCrs = cfg.utls.getCrsGDAL(inputClassification)
+			EPSG = cfg.osrSCP.SpatialReference()
+			EPSG.ImportFromWkt(eCrs)
+			if EPSG.IsSame(rEPSG) != 1:
 				nD = cfg.utls.imageNoDataValue(inputClassification)
 				if nD is None:
 					nD = NoDataVal
-				tPMD = cfg.utls.createTempRasterPath('tif')
-				cfg.utls.GDALReprojectRaster(inputClassification, tPMD, "GTiff", None, "EPSG:" + str(rEPSG), "-ot Float32 -dstnodata " + str(nD))
+				#tPMD = cfg.utls.createTempRasterPath('tif')
+				#cfg.utls.GDALReprojectRaster(inputClassification, tPMD, "GTiff", None, "EPSG:" + str(rEPSG), "-ot Float32 -dstnodata " + str(nD))
+				tPMD = cfg.utls.createTempRasterPath('vrt')
+				cfg.utls.createWarpedVrt(inputClassification, tPMD, str(rCrs))
+				cfg.mx.msg9()
 				if cfg.osSCP.path.isfile(tPMD):
 					inputClassification = tPMD
 				else:
@@ -140,7 +147,7 @@ class ClassSignatureTab:
 			for x in sorted(cfg.parallelArrayDict):
 				try:
 					for ar in cfg.parallelArrayDict[x]:
-						values = cfg.np.append(values, ar[0, ::])
+						values = cfg.np.append(values, ar[0][0, ::])
 				except:
 					if batch == 'No':
 						cfg.utls.finishSound()
@@ -163,29 +170,29 @@ class ClassSignatureTab:
 			for x in sorted(cfg.parallelArrayDict):
 				try:
 					for ar in cfg.parallelArrayDict[x]:
-						for arX in ar:
+						for arX in ar[0]:
 							for i in range(0, len(bList) - 1):
 								for c in classes:
 									if 'COUNT_BAND_' + str(i) + '_c_' + str(c) == arX:
 										try:
-											cfg.rasterClassSignature['COUNT_BAND_' + str(i) + '_c_' + str(c)] = cfg.rasterClassSignature['COUNT_BAND_' + str(i) + '_c_' + str(c)] + ar[arX]
+											cfg.rasterClassSignature['COUNT_BAND_' + str(i) + '_c_' + str(c)] = cfg.rasterClassSignature['COUNT_BAND_' + str(i) + '_c_' + str(c)] + ar[0][arX]
 										except:
-											cfg.rasterClassSignature['COUNT_BAND_' + str(i) + '_c_' + str(c)] = ar[arX]
+											cfg.rasterClassSignature['COUNT_BAND_' + str(i) + '_c_' + str(c)] = ar[0][arX]
 									elif 'SUM_BAND_' + str(i) + '_c_' + str(c) == arX:
 										try:
-											cfg.rasterClassSignature['SUM_BAND_' + str(i) + '_c_' + str(c)] = cfg.rasterClassSignature['SUM_BAND_' + str(i) + '_c_' + str(c)] + ar[arX]
+											cfg.rasterClassSignature['SUM_BAND_' + str(i) + '_c_' + str(c)] = cfg.rasterClassSignature['SUM_BAND_' + str(i) + '_c_' + str(c)] + ar[0][arX]
 										except:
-											cfg.rasterClassSignature['SUM_BAND_' + str(i) + '_c_' + str(c)] = ar[arX]
+											cfg.rasterClassSignature['SUM_BAND_' + str(i) + '_c_' + str(c)] = ar[0][arX]
 									elif 'MINIMUM_BAND_' + str(i) + '_c_' + str(c) == arX:
 										try:
-											cfg.rasterClassSignature['MINIMUM_BAND_' + str(i) + '_c_' + str(c)] = min(ar[arX], cfg.rasterClassSignature['MINIMUM_BAND_' + str(i) + '_c_' + str(c)])
+											cfg.rasterClassSignature['MINIMUM_BAND_' + str(i) + '_c_' + str(c)] = min(ar[0][arX], cfg.rasterClassSignature['MINIMUM_BAND_' + str(i) + '_c_' + str(c)])
 										except:
-											cfg.rasterClassSignature['MINIMUM_BAND_' + str(i) + '_c_' + str(c)] = ar[arX]
+											cfg.rasterClassSignature['MINIMUM_BAND_' + str(i) + '_c_' + str(c)] = ar[0][arX]
 									elif 'MAXIMUM_BAND_' + str(i) + '_c_' + str(c) == arX:
 										try:
-											cfg.rasterClassSignature['MAXIMUM_BAND_' + str(i) + '_c_' + str(c)] = max(ar[arX], cfg.rasterClassSignature['MAXIMUM_BAND_' + str(i) + '_c_' + str(c)])
+											cfg.rasterClassSignature['MAXIMUM_BAND_' + str(i) + '_c_' + str(c)] = max(ar[0][arX], cfg.rasterClassSignature['MAXIMUM_BAND_' + str(i) + '_c_' + str(c)])
 										except:
-											cfg.rasterClassSignature['MAXIMUM_BAND_' + str(i) + '_c_' + str(c)] = ar[arX]
+											cfg.rasterClassSignature['MAXIMUM_BAND_' + str(i) + '_c_' + str(c)] = ar[0][arX]
 				except Exception as err:
 					# logger
 					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
@@ -210,21 +217,21 @@ class ClassSignatureTab:
 			for x in sorted(cfg.parallelArrayDict):
 				try:
 					for ar in cfg.parallelArrayDict[x]:
-						for arX in ar:
+						for arX in ar[0]:
 							for i in varList:
 								for c in classes:
 									if 'COV_BAND_' + str(i[0]) + '-' + str(i[1]) + '_c_' + str(c) == arX:
 										try:
-											cfg.rasterClassSignature['COV_BAND_' + str(i[0]) + '-' + str(i[1]) + '_c_' + str(c)] = cfg.rasterClassSignature['COV_BAND_' + str(i[0]) + '-' + str(i[1]) + '_c_' + str(c)] + ar[arX]
+											cfg.rasterClassSignature['COV_BAND_' + str(i[0]) + '-' + str(i[1]) + '_c_' + str(c)] = cfg.rasterClassSignature['COV_BAND_' + str(i[0]) + '-' + str(i[1]) + '_c_' + str(c)] + ar[0][arX]
 										except:
-											cfg.rasterClassSignature['COV_BAND_' + str(i[0]) + '-' + str(i[1]) + '_c_' + str(c)] = ar[arX]
+											cfg.rasterClassSignature['COV_BAND_' + str(i[0]) + '-' + str(i[1]) + '_c_' + str(c)] = ar[0][arX]
 							for f in range(0, len(bList) - 1):
 								for c in classes:
 									if 'VAR_BAND_' + str(f) + '_c_' + str(c) == arX:
 										try:
-											cfg.rasterClassSignature['VAR_BAND_' + str(f) + '_c_' + str(c)] = cfg.rasterClassSignature['VAR_BAND_' + str(f) + '_c_' + str(c)] + ar[arX]
+											cfg.rasterClassSignature['VAR_BAND_' + str(f) + '_c_' + str(c)] = cfg.rasterClassSignature['VAR_BAND_' + str(f) + '_c_' + str(c)] + ar[0][arX]
 										except:
-											cfg.rasterClassSignature['VAR_BAND_' + str(f) + '_c_' + str(c)] = ar[arX]
+											cfg.rasterClassSignature['VAR_BAND_' + str(f) + '_c_' + str(c)] = ar[0][arX]
 				except Exception as err:
 					# logger
 					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))

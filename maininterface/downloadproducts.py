@@ -473,7 +473,7 @@ class DownloadProducts:
 						
 	# display image in label
 	def previewInLabel(self, imagePath):
-		tmpImage = imagePath.replace('.jp2', '.png')
+		tmpImage = cfg.reSCP.sub(r'\.jp2$', '.png', str(imagePath)) 
 		if imagePath.endswith('.jp2') and not cfg.osSCP.path.isfile(tmpImage):
 			cfg.utls.getGDALForMac()
 			# georeference thumbnail
@@ -503,7 +503,11 @@ class DownloadProducts:
 	def tableClick(self):
 		tW = cfg.ui.download_images_tableWidget
 		i = tW.currentRow()
-		if i >= 0:
+		ids = []
+		for tI in tW.selectedIndexes():
+			ids.append(tI.row())
+		idT = set(ids)
+		if i >= 0 and not len(idT) > 1:
 			cfg.uiUtls.addProgressBar()
 			progress = 10
 			sat = str(tW.item(i, 0).text())
@@ -985,7 +989,7 @@ class DownloadProducts:
 					return imOut
 				self.onflyGeorefImage(cfg.tmpDir + '//' + imgID, cfg.tmpDir + '//' + imgID + '.vrt', min_lon, max_lon, min_lat, max_lat)
 			else:
-				cfg.mx.msgErr40()
+				cfg.mx.msgErr40bis()
 
 	# download images
 	def downloadSentinel3Images(self, outputDirectory, exporter = 'No'):
@@ -1201,7 +1205,7 @@ class DownloadProducts:
 			if check == 'Yes':
 				return output
 			else:
-				cfg.mx.msgErr40()
+				cfg.mx.msgErr40bis()
 				return 'No'
 
 	# display granule preview	
@@ -1222,7 +1226,7 @@ class DownloadProducts:
 		if preview == 'Yes' and cfg.osSCP.path.isfile(imOut):
 			self.previewInLabel(imOut)
 			return imOut
-		if cfg.osSCP.path.isfile(imOut  + '.vrt') or cfg.osSCP.path.isfile(imOut.replace('.jp2', '.png')  + '.vrt'):
+		if cfg.osSCP.path.isfile(imOut  + '.vrt') or cfg.osSCP.path.isfile(cfg.reSCP.sub(r'\.jp2$', '.png', str(imOut)) + '.vrt' ):
 			l = cfg.utls.selectLayerbyName(imgID)
 			if l is not None:		
 				cfg.utls.setLayerVisible(l, True)
@@ -1244,7 +1248,7 @@ class DownloadProducts:
 				max_lon = str(tW.item(i, 9).text())
 				self.onflyGeorefImage(imOut, imOut + '.vrt', min_lon, max_lon, min_lat, max_lat)
 				if cfg.osSCP.path.isfile(imOut + '.vrt'):
-					r =cfg.utls.addRasterLayer(imOut + '.vrt', imgID.replace('.vrt',''))
+					r =cfg.utls.addRasterLayer(imOut + '.vrt', cfg.reSCP.sub(r'\.vrt$', '', str(imgID)))
 		# logger
 		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' granules displayed')
 					
@@ -1990,7 +1994,7 @@ class DownloadProducts:
 					return imOut
 				self.onflyGeorefImage(cfg.tmpDir + '//' + imgID, cfg.tmpDir + '//' + imgID + '.vrt', min_lon, max_lon, min_lat, max_lat)
 			else:
-				cfg.mx.msgErr40()
+				cfg.mx.msgErr40bis()
 			
 	# georef image on the fly based on UL and LR
 	def onflyGeorefImage(self, inputImage, outputVRT, min_lon, max_lon, min_lat, max_lat):
@@ -2304,7 +2308,7 @@ class DownloadProducts:
 					return imOut
 				self.onflyGeorefImage(cfg.tmpDir + '//' + imgID, cfg.tmpDir + '//' + imgID + '.vrt', min_lon, max_lon, min_lat, max_lat)
 			else:
-				cfg.mx.msgErr40()
+				cfg.mx.msgErr40bis()
 	
 	# download images
 	def downloadSentinel1Images(self, outputDirectory, exporter = 'No'):
@@ -2334,7 +2338,10 @@ class DownloadProducts:
 						pass
 					else:
 						# add info to name
-						imgName = imgName.replace('.zip', '') + '_s' + orbit[0] + '_' + relativeOrbit + '_' + sliceNumber + '_' + acquisitionDate[0:10] 
+						try:
+							imgName = imgName.replace('.zip', '') + '_s' + orbit[0] + '_' + relativeOrbit + '_' + sliceNumber + '_' + acquisitionDate[0:10]
+						except:
+							imgName = imgName.replace('.zip', '')
 						outDirList.append(outputDirectory + '//' + imgName)
 						progress = progress + progressStep
 						if exporter == 'No':
@@ -2428,7 +2435,7 @@ class DownloadProducts:
 			if check == 'Yes':
 				return output
 			else:
-				cfg.mx.msgErr40()
+				cfg.mx.msgErr40bis()
 				return 'No'
 			
 ### ASTER

@@ -2,7 +2,7 @@
 name=Semi-Automatic Classification Plugin
 qgisMinimumVersion=3.00
 description=The Semi-Automatic Classification Plugin (SCP) allows for the supervised classification of remote sensing images, providing tools for the download, the preprocessing and postprocessing of images.
-version=7.8.0
+version=7.9.6
 about=Developed by Luca Congedo, the Semi-Automatic Classification Plugin (SCP) allows for the supervised classification of remote sensing images, providing tools for the download, the preprocessing and postprocessing of images. Search and download is available for ASTER, GOES, Landsat, MODIS, Sentinel-1, Sentinel-2, and Sentinel-3 images. Several algorithms are available for the land cover classification. This plugin requires the installation of GDAL, OGR, Numpy, SciPy, and Matplotlib. Some tools require also the installation of SNAP (ESA Sentinel Application Platform). For more information please visit https://fromgistors.blogspot.com .
 
 author=Luca Congedo
@@ -14,6 +14,165 @@ icon=semiautomaticclassificationplugin.png
 ; start of optional metadata
 changelog=
 
+	7.9.6
+	-fixed Sentinel-1 preprocessing reprojection issue
+	-fixed clustering ISODATA issue
+	
+	7.9.5
+	-fixed Landsat processing error 
+	
+	7.9.4
+	-fixed accuracy overall metrics
+	-various bugfixing
+	
+	7.9.3
+	-fixed clip multiple rasters
+	
+	7.9.2
+	-fixed scale value 0.0001 for Landsat and Sentinel-2
+	
+	7.9.1
+	-fixed Landsat 8 band 1 band set
+	
+	7.9.0
+	-preprocessing of Landsat and Sentinel-2 bands are now converted to UInt16 with scale 0.00001 to reduce file size
+	-added Landsat 8 band 1 processing
+	-fixed clip multiple rasters by coordinates
+	-fixed Classification report for degree unit
+	
+	7.8.36
+	-fixed multiple ROI creation multiprocess
+	
+	7.8.35
+	-fixed Classification and clustering issue with multiprocess
+	
+	7.8.34
+	-fixed Band combination NoData issue
+	
+	7.8.33
+	-other fixes to issue importing GDAL with Python > 3.8
+	
+	7.8.32
+	-fixed issue importing GDAL with Python > 3.8
+	
+	7.8.31
+	-tool Neighbor pixels fixed nodata value
+	
+	7.8.30
+	-improved Band combination
+	
+	7.8.29
+	-improved Band combination
+	
+	7.8.28
+	-fixed virtual raster NoData issue
+	
+	7.8.27
+	-fixed ASTER preprocessing regression
+	
+	7.8.26
+	-added setting option for additional Python path of dependencies
+	-fixed ASTER conversion for thermal bands only list
+	-fixed virtual raster relative path
+	-fixed virtual raster warp scale and offset
+	
+	7.8.25
+	-fixed regression of several tools
+	
+	7.8.24
+	-fixed ROI creation issue
+	-in Band calc added option of selection calculation data type
+	-improved Band combination and cross classification tools
+	
+	7.8.23
+	-fixed scale and offset reprojecting with gdalwarp
+	
+	7.8.22
+	-optimized cross classification
+	-optimized band combination
+	-optimized classification erosion
+	-fixed regression in Accuracy
+	-fixed vector to raster compression
+	-in several tools allow different projections of input
+	
+	7.8.21
+	-fixed regression in Accuracy and Land cover change
+	
+	7.8.20
+	-improved Cross classification and Band combination performance
+	
+	7.8.19
+	-in Classification dilatation replaced pixel connection option with circle
+	-improved Classification dilatation performance
+	-add Batch variable !temp_dir! for temporary directory of SPC
+	
+	7.8.18
+	-improved peformance in tool Neigbor pixels
+	
+	7.8.17
+	-in tool Neigbor pixels added option for circular matrix (default square)
+	-fixed projection issues in several tools
+	-fixed search of Sentinel products if not available
+	
+	7.8.16
+	-minor fixes to messagebar and batch checking
+	
+	7.8.15
+	-fixed write raster function for data type
+	
+	7.8.14
+	-fixed Batch variables with spaces
+	
+	7.8.13
+	-fixed Band calc check expression for spaces
+	-fixed Mosaic tool batch
+	-added output directory creation for several tools
+	-added Batch option to remove all the band sets
+	-added Batch option to unload bands from QGIS when removing band from band sets or removing band sets
+	
+	7.8.12
+	-in Mosaic tool added option for virtual raster output
+	
+	7.8.11
+	-fixed clip multiple raster issue
+	
+	7.8.10
+	-fixed minor issue layer id
+	
+	7.8.9
+	-improved division of raster sections for multiprocessing 
+	
+	7.8.8
+	-fixed clip multiple raster for multiband rasters
+	-fixed band calc for multiband rasters
+	
+	7.8.7
+	-improved the multiprocessing performance
+	-added option for virtual raster output in several tools
+	-improved reprojection if required in several tools
+	
+	7.8.6
+	-fixed issue band combination
+	-fixed issue cross classification
+	-updated smtp to use TLS on port 587
+	
+	7.8.5
+	-fixed issue with conversion to raster
+	
+	7.8.4
+	-fixed scale in raster output
+	
+	7.8.3
+	-fixed reclassification output format
+	
+	7.8.2
+	-zonal stat raster also saves a csv with values
+	
+	7.8.1
+	-fixed issue with QGIS 3.18 while removing training input during project save
+	-fixed issue with refreshLayerLegend
+	-fixed issue with Random Forest using classification file
+	
 	7.8.0
 	-new tool for analysis of neighbor pixel with convolution matrix
 	-improved performance with multiprocessing calculations

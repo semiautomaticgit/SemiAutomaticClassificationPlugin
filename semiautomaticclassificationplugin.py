@@ -32,8 +32,23 @@
 
 '''
 
+
+global PluginCheck
+PluginCheck = 'Yes'
 import os
 import sys
+try:
+	from .core import config as cfg
+except:
+	PluginCheck = 'No'
+# try importing different path
+from PyQt5.QtCore import QSettings
+rK = QSettings()
+mPythonSettings = rK.value(cfg.regPythonModulesPathSettings, str(cfg.PythonModulesPathSettings))
+if len(mPythonSettings) > 0:
+	for ppS in mPythonSettings.split(';'):
+		if len(ppS) > 0:
+			sys.path.insert(1, ppS)
 import platform
 import inspect
 import shutil
@@ -45,6 +60,7 @@ import urllib
 import requests
 import ssl
 import smtplib
+import gc
 from http.cookiejar import CookieJar
 import itertools
 import zipfile
@@ -89,12 +105,6 @@ from .ui.semiautomaticclassificationplugindialog import DockClassDialog
 # Import plugin version
 from .__init__ import version as semiautomaticclassVersion
 
-global PluginCheck
-PluginCheck = 'Yes'
-try:
-	from .core import config as cfg
-except:
-	PluginCheck = 'No'
 	
 # required by other modules
 cfg.QObjectSCP = QObject
@@ -223,6 +233,7 @@ class SemiAutomaticClassificationPlugin:
 			cfg.sslSCP = ssl
 			cfg.smtplibSCP = smtplib
 			cfg.CookieJarSCP = CookieJar
+			cfg.gcSCP = gc
 			cfg.reSCP = re
 			cfg.ETSCP = ET
 			cfg.minidomSCP = minidom
@@ -438,6 +449,7 @@ class SemiAutomaticClassificationPlugin:
 		cfg.threads = int(cfg.utls.readRegistryKeys(cfg.regThreadsValue, str(cfg.threads)))
 		cfg.gdalPath = cfg.utls.readRegistryKeys(cfg.regGDALPathSettings, str(cfg.gdalPath))
 		cfg.PythonPathSettings = cfg.utls.readRegistryKeys(cfg.regPythonPathSettings, str(cfg.PythonPathSettings))
+		cfg.PythonModulesPathSettings = cfg.utls.readRegistryKeys(cfg.regPythonModulesPathSettings, str(cfg.PythonModulesPathSettings))
 		cfg.tmpDir = cfg.utls.readRegistryKeys(cfg.regTmpDir, cfg.tmpDir)
 		cfg.fldID_class = cfg.utls.readRegistryKeys(cfg.regIDFieldName, cfg.fldID_class)
 		cfg.fldMacroID_class = cfg.utls.readRegistryKeys(cfg.regMacroIDFieldName, cfg.fldMacroID_class)
@@ -1398,6 +1410,8 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.CPU_spinBox.valueChanged.connect(cfg.sets.threadSettingChange)
 			# connect the Python path line
 			cfg.ui.python_path_lineEdit.textChanged.connect(cfg.sets.PythonPathSettingChange)
+			# connect the Python modules path line
+			cfg.ui.python_path_lineEdit_2.textChanged.connect(cfg.sets.PythonModulePathSettingChange)
 			# connect the GDAL path line
 			cfg.ui.gdal_path_lineEdit.textChanged.connect(cfg.sets.GDALPathSettingChange)
 			# connect to change color button
@@ -1441,7 +1455,14 @@ class SemiAutomaticClassificationPlugin:
 				cfg.SCPD.saveMemToSHP(cfg.shpLay)
 				cfg.utls.zipDirectoryInFile(cfg.scpFlPath, cfg.inptDir)
 			cfg.downProd.saveDownloadTable()
-		
+			try:
+				scpPath = cfg.utls.readProjectVariable('trainingLayer', '')
+				name = cfg.utls.fileNameNoExt(scpPath)
+				duplicateID = cfg.utls.layerID(name, cfg.shpLay.id())
+				cfg.qgisCoreSCP.QgsProject.instance().removeMapLayer(duplicateID)
+			except:
+				pass
+				
 	# reset all variables and interface
 	def resetSCP(self):
 		# logger
@@ -1525,6 +1546,7 @@ class SemiAutomaticClassificationPlugin:
 		# gdal path
 		cfg.ui.gdal_path_lineEdit.setText(cfg.gdalPath)
 		cfg.ui.python_path_lineEdit.setText(cfg.PythonPathSettings)
+		cfg.ui.python_path_lineEdit_2.setText(cfg.PythonModulesPathSettings)
 		# set signature calculation checkbox state
 		try:
 			cfg.uidc.rapid_ROI_checkBox.setCheckState(int(cfg.rpdROICheck))

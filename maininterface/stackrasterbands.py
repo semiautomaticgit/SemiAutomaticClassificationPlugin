@@ -61,10 +61,10 @@ class StackRasterBands:
 						cfg.uiUtls.removeProgressBar()
 					cfg.mx.msgWar28()
 					# logger
-					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " Warning")
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' Warning')
 					return 'No'
 				if outputFile is None:
-					rstrOut = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Save raster"), "", "*.tif", "tif")
+					rstrOut = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Save raster'), '', '*.tif', 'tif')
 					if rstrOut is False:
 						if batch == 'No':
 							cfg.uiUtls.removeProgressBar()
@@ -77,13 +77,14 @@ class StackRasterBands:
 				cfg.uiUtls.removeProgressBar()
 			return 'No'
 		if rstrOut is not False:
-			if rstrOut.lower().endswith(".tif"):
+			if rstrOut.lower().endswith('.tif'):
 				pass
 			else:
-				rstrOut = rstrOut + ".tif"
+				rstrOut = rstrOut + '.tif'
 			if outputFile is None:
 				cfg.uiUtls.addProgressBar()
 			cfg.uiUtls.updateBar(10)
+			cfg.utls.makeDirectory(cfg.osSCP.path.dirname(outputFile))
 			st = cfg.utls.mergeRasterBands(cfg.bndSetLst, rstrOut, compress = 'Yes')
 			if cfg.osSCP.path.isfile(rstrOut):
 				cfg.cnvs.setRenderFlag(False)

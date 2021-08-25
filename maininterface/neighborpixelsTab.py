@@ -53,7 +53,7 @@ class NeighborPixels:
 		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), str(m))
 		
 	# classification neighbor
-	def classNeighbor(self, batch = 'No', bandSetNumber = None, outputDirectory = None, size = None, structure = None, statName = None, statPerc = None, outputName = None):
+	def classNeighbor(self, batch = 'No', bandSetNumber = None, outputDirectory = None, size = None, structure = None, statName = None, statPerc = None, outputName = None, circularStructure = None, virtual = None):
 			if bandSetNumber is None:
 				bandSet = cfg.ui.band_set_comb_spinBox_15.value()
 				bandSetNumber = bandSet - 1
@@ -65,6 +65,10 @@ class NeighborPixels:
 			else:
 				o = outputDirectory
 			if len(o) > 0:
+				cfg.utls.makeDirectory(o)
+				if virtual is None:
+					if cfg.ui.neighbor_virtual_checkBox.isChecked() is True:
+						virtual = 'Yes'
 				if outputName is None:
 					outputName = cfg.ui.neighbor_output_name_lineEdit.text()
 					if len(outputName) > 0:
@@ -86,8 +90,16 @@ class NeighborPixels:
 					ckB = cfg.utls.checkBandSet(bandSetNumber)
 					bndSetSources = cfg.bndSetLst
 				else:
-					r = cfg.utls.selectLayerbyName(cfg.bandSetsList[bandSetNumber][8], 'Yes')
-					iR = cfg.utls.layerSource(r)
+					try:
+						r = cfg.utls.selectLayerbyName(cfg.bandSetsList[bandSetNumber][8], 'Yes')
+						iR = cfg.utls.layerSource(r)
+					except:
+						if batch == 'No':
+							cfg.uiUtls.removeProgressBar()
+						cfg.mx.msgWar28()
+						# logger
+						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' Warning')
+						return 'No'
 					iBC = cfg.utls.getNumberBandRaster(iR)
 					for i in range(1, iBC+1):
 						bndNumberList.append(i)
@@ -106,6 +118,11 @@ class NeighborPixels:
 					size =  cfg.ui.class_neighbor_threshold_spinBox.value()
 				if statName is None:
 					statName =  cfg.ui.statistic_name_combobox_2.currentText()
+				if circularStructure is None:
+					if cfg.ui.circular_structure_checkBox.isChecked():
+						circularStructure = 'Yes'
+					else:
+						circularStructure = 'No'
 				for i in cfg.statisticList:
 					if i[0].lower() == statName.lower():
 						statNp = i[1]
@@ -124,7 +141,7 @@ class NeighborPixels:
 					ee = statNp.replace('array', 'A')
 					try:
 						statPerc = int(statPerc)
-						ee = ee.replace(cfg.statPerc, str(statPerc) + ', axis=2')
+						ee = ee.replace(cfg.statPerc, str(statPerc))
 					except:
 						pass
 				else:
@@ -136,40 +153,34 @@ class NeighborPixels:
 							structure = self.openStructure(cfg.ui.label_287.text())
 						except Exception as err:
 							# logger
-							if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+							cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 							return 'No'
 					else:
-						structure = cfg.np.ones((size*2+1,size*2+1))
+						if circularStructure == 'No':
+							structure = cfg.np.ones((size*2+1,size*2+1))
+						else:
+							structure = cfg.utls.createCircularStructure(size)
 				else:
 					try:
 						structure = self.openStructure(structure)
 					except Exception as err:
 						# logger
-						if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 						return 'No'
-				if 'nansum' in ee:
-					additionalLayer = 2
-				else:
-					additionalLayer = structure.shape[0]*structure.shape[1]*0.8
 				# logger
 				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'structure ' + str(structure))
 				for y in range(0, len(bndSetSources)):
 					if cfg.actionCheck == 'Yes':
 						input = bndSetSources[y]
-						nd = cfg.utls.imageNoDataValue(input)
-						dType = cfg.utls.getRasterDataTypeName(input)
-						tPMD = cfg.utls.createTempRasterPath('vrt')
+						additionalLayer = 3
+						if virtual == 'Yes':
+							outputRaster = o + '/' + outputName + cfg.utls.fileNameNoExt(bndSetSources[y]) + '.vrt'
+						else:
+							outputRaster = o + '/' + outputName + cfg.utls.fileNameNoExt(bndSetSources[y]) + '.tif'
 						# process calculation
-						u = cfg.utls.multiProcessRaster(rasterPath = input, functionBand = 'No', functionRaster = cfg.utls.rasterNeighbor, outputRasterList = [tPMD], functionBandArgument = structure, functionVariable = functionList, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Neighbor pixels'), virtualRaster = 'Yes', compress = 'No', outputNoDataValue = nd, dataType = dType, boundarySize = structure.shape[0]+1, additionalLayer = additionalLayer)
-						outputRaster = o + '/' + outputName + cfg.utls.fileNameNoExt(bndSetSources[y]) + '.tif'
-						# copy raster
-						try:
-							cfg.utls.GDALCopyRaster(tPMD, outputRaster, 'GTiff', cfg.rasterCompression, 'LZW')
-						except Exception as err:
-							# logger
-							if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
-						if cfg.osSCP.path.isfile(outputRaster):
-							oR =cfg.utls.addRasterLayer(outputRaster)
+						u = cfg.utls.multiProcessRaster(rasterPath = input, functionBand = 'No', functionRaster = cfg.utls.rasterNeighbor, outputRasterList = [outputRaster], functionBandArgument = structure, functionVariable = functionList, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Neighbor pixels'), virtualRaster = virtual, compress = cfg.rasterCompression, outputNoDataValue = cfg.NoDataValFloat32, boundarySize = structure.shape[0]+1, additionalLayer = additionalLayer)
+					if cfg.osSCP.path.isfile(outputRaster):
+						oR =cfg.utls.addRasterLayer(outputRaster)
 				if batch == 'No':
 					cfg.utls.finishSound()
 					cfg.utls.sendSMTPMessage(None, str(__name__))
@@ -179,12 +190,11 @@ class NeighborPixels:
 				if batch == 'No':
 					cfg.uiUtls.removeProgressBar()
 					cfg.cnvs.setRenderFlag(True)
-				cfg.mx.msgErr9()
 				# logger
 				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'Error raster not found')
 			# logger
 			cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode())
-		
+			
 	# open structure file
 	def openStructure(self, structure):
 		text = open(structure, 'r')

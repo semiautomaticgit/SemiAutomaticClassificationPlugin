@@ -117,7 +117,8 @@ class ReprojectRasterBands:
 		self.reprojectRasters('No', None, alignRaster, sameExtent, EPSG, xResolution, yResolution, resPixelSize, resample, type, noData, outName, bandSet)
 		
 	# reproject multiple rasters
-	def reprojectRasters(self, batch = 'No', outputDirectory = None, alignRasterPath = None, sameExtent = 'No', EPSGCode = None, xResolution = None, yResolution = None, resamplePixelFactor = None, resamplingMethod = None, outputType = None, noDataValue = None, outputName = None, bandSetNumber = None):
+	def reprojectRasters(self, batch = 'No', outputDirectory = None, alignRasterPath = None, sameExtent = 'No', EPSGCode = None, xResolution = None, yResolution = None, resamplePixelFactor = None, resamplingMethod = None, outputType = None, noDataValue = None, outputName = None, bandSetNumber = None, outFormat = 'GTiff'):
+		EPSG = None
 		if bandSetNumber is None:
 			bandSet = cfg.ui.band_set_comb_spinBox_14.value()
 			bandSetNumber = bandSet - 1
@@ -153,6 +154,7 @@ class ReprojectRasterBands:
 						outputName = cfg.reprojNm
 				else:
 					return 'No'
+				cfg.utls.makeDirectory(oD)
 				if alignRasterPath is not None:
 					# raster extent and pixel size	
 					try:
@@ -160,7 +162,7 @@ class ReprojectRasterBands:
 						# check projections
 						rPSys =cfg.osrSCP.SpatialReference(wkt=rP)
 						rPSys.AutoIdentifyEPSG()
-						EPSG = int(rPSys.GetAuthorityCode(None))
+						EPSG = 'No'
 					except Exception as err:
 						# logger
 						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))	
@@ -181,7 +183,7 @@ class ReprojectRasterBands:
 			lC = cfg.utls.selectLayerbyName(l, 'Yes')
 			bLS = cfg.utls.layerSource(lC)
 			# calculate minimal extent
-			if alignRasterPath is not None and sameExtent == 'No':
+			if alignRasterPath is not None:
 				# raster extent and pixel size
 				try:
 					leftS, rightS, topS, bottomS, pXS, pYS, rPS, unitS = cfg.utls.imageGeoTransform(bLS)
@@ -191,26 +193,29 @@ class ReprojectRasterBands:
 				# Error latitude or longitude exceeded limits
 				except Exception as err:
 					# logger
-					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 					cfg.mx.msgErr61(lC)
 					return 'No'
-				# minimum extent
-				if leftSP < left:
-					leftR = left - int(2 + (left - leftSP) / pX) * pX
+				if sameExtent == 'No':
+					# minimum extent
+					if leftSP < left:
+						leftR = left - int(2 + (left - leftSP) / pX) * pX
+					else:
+						leftR = left + int((leftSP- left) / pX - 2) * pX
+					if rightSP > right:
+						rightR = right + int(2 + (rightSP - right) / pX) * pX
+					else:
+						rightR = right - int((right - rightSP) / pX - 2) * pX
+					if topSP > top:
+						topR = top + int(2 + (topSP - top) / pY) * pY
+					else:
+						topR = top - int((top - topSP) / pY - 2) * pY
+					if bottomSP > bottom:
+						bottomR = bottom + int((bottomSP - bottom) / pY - 2) * pY
+					else:
+						bottomR = bottom - int(2 + (bottom - bottomSP) / pY) * pY
 				else:
-					leftR = left + int((leftSP- left) / pX - 2) * pX
-				if rightSP > right:
-					rightR = right + int(2 + (rightSP - right) / pX) * pX
-				else:
-					rightR = right - int((right - rightSP) / pX - 2) * pX
-				if topSP > top:
-					topR = top + int(2 + (topSP - top) / pY) * pY
-				else:
-					topR = top - int((top - topSP) / pY - 2) * pY
-				if bottomSP > bottom:
-					bottomR = bottom + int((bottomSP - bottom) / pY - 2) * pY
-				else:
-					bottomR = bottom - int(2 + (bottom - bottomSP) / pY) * pY
+					leftR, rightR, topR, bottomR, pXR, pYR, rPR, unitR = cfg.utls.imageGeoTransform(alignRasterPath)
 				extra = '-tr ' + str(pX) + ' ' + str(pY) + ' -te ' + str(leftR) + ' ' + str(bottomR) + ' ' + str(rightR) + ' ' + str(topR)
 			# use EPSG
 			elif EPSGCode is not None:
@@ -228,14 +233,24 @@ class ReprojectRasterBands:
 						cfg.uiUtls.removeProgressBar()
 						cfg.utls.finishSound()
 						cfg.utls.sendSMTPMessage(None, str(__name__))
-						return 'No'
-				try:
-					extra = '-tr ' + str(float(xResolution)) + ' ' + str(float(yResolution))
-				except:
-					pass
+						return 'No'			
+				if sameExtent == 'No':
+					try:
+						extra = '-tr ' + str(float(xResolution)) + ' ' + str(float(yResolution))
+					except:
+						pass
+				else:
+					leftR, rightR, topR, bottomR, pXR, pYR, rPR, unitR = cfg.utls.imageGeoTransform(alignRasterPath)	
+					try:
+						extra = '-tr ' + str(float(xResolution)) + ' ' + str(float(yResolution)) + ' -te ' + str(leftR) + ' ' + str(bottomR) + ' ' + str(rightR) + ' ' + str(topR)
+					except:
+						pass
 			# resample
 			else:
-				EPSG = None
+				if EPSG == 'No':
+					pass
+				else:
+					EPSG = None
 				# raster extent and pixel size
 				try:
 					leftS, rightS, topS, bottomS, pXS, pYS, rPS, unitS = cfg.utls.imageGeoTransform(bLS)
@@ -252,7 +267,17 @@ class ReprojectRasterBands:
 						return 'No'
 				pX = pXS * resamplePixelFactor
 				pY = pYS * resamplePixelFactor
-				extra = '-tr ' + str(pX) + ' ' + str(pY)
+				if sameExtent == 'No':
+					try:
+						extra = '-tr ' + str(pX) + ' ' + str(pY)
+					except:
+						pass
+				else:
+					leftR, rightR, topR, bottomR, pXR, pYR, rPR, unitR = cfg.utls.imageGeoTransform(alignRasterPath)	
+					try:
+						extra = '-tr ' + str(pX) + ' ' + str(pY) + ' -te ' + str(leftR) + ' ' + str(bottomR) + ' ' + str(rightR) + ' ' + str(topR)
+					except:
+						pass
 			if str(l).lower().endswith('.tif'):
 				pass
 			else:
@@ -260,18 +285,21 @@ class ReprojectRasterBands:
 			f = oD + '/' + outputName + '_'  + cfg.utls.fileName(l)
 			tRxs = cfg.utls.createTempRasterPath('tif')
 			if EPSG is not None:
-				outEPSG = 'EPSG:' + str(EPSG)
+				if EPSG == 'No':
+					outEPSG = rP
+				else:
+					outEPSG = 'EPSG:' + str(EPSG)
 			else:
 				outEPSG = None
 			if resamplingMethod is None:
 				resamplingMethod = 'near'
-			cfg.utls.GDALReprojectRaster(input = bLS, output = tRxs, outFormat = 'GTiff', s_srs = None, t_srs = outEPSG, additionalParams = extra, resampleMethod = resamplingMethod, rasterDataType = outputType, noDataVal = noDataValue)
+			cfg.utls.GDALReprojectRaster(input = bLS, output = tRxs, outFormat = outFormat, s_srs = None, t_srs = outEPSG, additionalParams = extra, resampleMethod = resamplingMethod, rasterDataType = outputType, noDataVal = noDataValue)
 			try:
 				cfg.shutilSCP.move(tRxs, f)
 				outList.append(f)
 			except Exception as err:
 				# logger
-				if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 			cfg.uiUtls.updateBar(prog)
 			n = n + 1
 		try:
@@ -279,7 +307,7 @@ class ReprojectRasterBands:
 				cfg.utls.addRasterLayer(oU)
 		except Exception as err:
 			# logger
-			if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 		# logger
 		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' rasters reprojected' )
 		if batch == 'No':

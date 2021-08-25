@@ -97,46 +97,65 @@ class ZonalStatRasterTab:
 				pass
 			else:
 				zonalRstPath = zonalRstPath + '.tif'
+			cfg.utls.makeDirectory(cfg.osSCP.path.dirname(zonalRstPath))
 			if iClass is not None and l is not None:
 				if batch == 'No':
 					cfg.uiUtls.addProgressBar()
 				# if not reference shapefile
 				if l.type() != cfg.qgisCoreSCP.QgsMapLayer.VectorLayer:
 					# check projections
-					newRstrProj = cfg.utls.getCrs(iClass)
-					refRstrProj = cfg.utls.getCrs(l)
-					if refRstrProj != newRstrProj:
+					rCrs = cfg.utls.getCrsGDAL(cfg.utls.layerSource(l))
+					rEPSG = cfg.osrSCP.SpatialReference()
+					rEPSG.ImportFromWkt(rCrs)
+					eCrs = cfg.utls.getCrsGDAL(cfg.utls.layerSource(iClass))
+					EPSG = cfg.osrSCP.SpatialReference()
+					EPSG.ImportFromWkt(eCrs)
+					if EPSG.IsSame(rEPSG) != 1:
+						tPMD = cfg.utls.createTempRasterPath('vrt')
+						cfg.utls.createWarpedVrt(cfg.utls.layerSource(iClass), tPMD, str(rCrs))
 						cfg.mx.msg9()
-						return 'No'
+						remiClass2 = cfg.utls.addRasterLayer(tPMD)
+						iClass = remiClass2
+						inputRaster = tPMD
 				else:
 					# vector EPSG
 					if 'Polygon?crs=' in str(cfg.utls.layerSource(l))  or 'memory?geometry=' in str(cfg.utls.layerSource(l)):
 						# temp shapefile
 						tSHP = cfg.utls.createTempRasterPath('gpkg')
 						l = cfg.utls.saveMemoryLayerToShapefile(l, tSHP, format = 'GPKG')
-						vEPSG = cfg.utls.getEPSGVector(tSHP)
+						vCrs = cfg.utls.getCrsGDAL(tSHP)
+						vEPSG = cfg.osrSCP.SpatialReference()
+						vEPSG.ImportFromWkt(vCrs)
 					else:
 						ql = cfg.utls.layerSource(l)
-						vEPSG = cfg.utls.getEPSGVector(ql)
+						vCrs = cfg.utls.getCrsGDAL(ql)
+						vEPSG = cfg.osrSCP.SpatialReference()
+						vEPSG.ImportFromWkt(vCrs)
 					dT = cfg.utls.getTime()
 					# in case of reprojection
 					qll = cfg.utls.layerSource(l)
 					reprjShapefile = cfg.tmpDir + '/' + dT + cfg.utls.fileName(qll)
 					qlll = cfg.utls.layerSource(iClass)
-					rEPSG = cfg.utls.getEPSGRaster(qlll)
-					if vEPSG != rEPSG:
+					rCrs = cfg.utls.getCrsGDAL(qlll)
+					rEPSG = cfg.osrSCP.SpatialReference()
+					rEPSG.ImportFromWkt(rCrs)
+					if vEPSG.IsSame(rEPSG) != 1:
 						if cfg.osSCP.path.isfile(reprjShapefile):
 							pass
 						else:
 							try:
 								qllll = cfg.utls.layerSource(l)
-								cfg.utls.repojectShapefile(qllll, int(vEPSG), reprjShapefile, int(rEPSG))
+								cfg.utls.repojectShapefile(qllll, vEPSG, reprjShapefile, rEPSG)
 							except Exception as err:
 								# remove temp layers
 								try:
 									cfg.utls.removeLayerByLayer(reml)
 								except:
 									pass
+								try:
+									cfg.utls.removeLayerByLayer(remiClass2)
+								except:
+									pass	
 								# logger
 								cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 								cfg.mx.msgErr9()
@@ -172,7 +191,16 @@ class ZonalStatRasterTab:
 							cfg.uiUtls.removeProgressBar()						
 						# logger
 						cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR vector')
-						cfg.mx.msgErr9()		
+						cfg.mx.msgErr9()	
+						# remove temp layers
+						try:
+							cfg.utls.removeLayerByLayer(reml)
+						except:
+							pass
+						try:
+							cfg.utls.removeLayerByLayer(remiClass2)
+						except:
+							pass	
 						return 'No'	
 					referenceRaster = tRC
 				# if reference raster
@@ -197,7 +225,7 @@ class ZonalStatRasterTab:
 				for x in sorted(cfg.parallelArrayDict):
 					try:
 						for ar in cfg.parallelArrayDict[x]:
-							values = cfg.np.append(values, ar[0, ::])
+							values = cfg.np.append(values, ar[0][0, ::])
 					except:
 						if batch == 'No':
 							cfg.utls.finishSound()
@@ -207,7 +235,16 @@ class ZonalStatRasterTab:
 							cfg.uiUtls.removeProgressBar()			
 						# logger
 						cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR values')
-						cfg.mx.msgErr9()		
+						cfg.mx.msgErr9()	
+						# remove temp layers
+						try:
+							cfg.utls.removeLayerByLayer(reml)
+						except:
+							pass
+						try:
+							cfg.utls.removeLayerByLayer(remiClass2)
+						except:
+							pass	
 						return 'No'
 				rasterBandUniqueVal = cfg.np.unique(values).tolist()
 				classes = sorted(rasterBandUniqueVal)
@@ -247,6 +284,13 @@ class ZonalStatRasterTab:
 				# calculation statistic
 				o = cfg.utls.multiProcessNoBlocks(rasterPath = vrtCheck, bandNumberList = bandNumberList, functionRaster = cfg.utls.noBlocksCalculation, nodataValue = nD, functionBandArgument = functionList, functionVariable = variableList, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Raster statistics'))
 				cfg.uiUtls.updateBar(60)
+				# write report
+				colStat = statName
+				if statPerc is not None:
+					colStat = statName + statPerc
+				l = open(zonalRstPath[:-4] + '_report.csv', 'w')
+				t = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Class') + '	' + colStat + str('\n')
+				l.write(t)
 				# get values
 				for c in classes:
 					if c != nD:
@@ -266,6 +310,15 @@ class ZonalStatRasterTab:
 							except Exception as err:
 								# logger
 								cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+								# remove temp layers
+								try:
+									cfg.utls.removeLayerByLayer(reml)
+								except:
+									pass
+								try:
+									cfg.utls.removeLayerByLayer(remiClass2)
+								except:
+									pass	
 								if batch == 'No':
 									cfg.utls.finishSound()
 									cfg.utls.sendSMTPMessage(None, str(__name__))
@@ -282,7 +335,16 @@ class ZonalStatRasterTab:
 								oMR = cfg.utls.createRasterFromReference(rDD, 1, oM, cfg.NoDataVal, 'GTiff', cfg.rasterDataType, 0, None, cfg.rasterCompression, 'LZW', constantValue = value)
 							except Exception as err:
 								# logger
-								cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+								cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+								# remove temp layers
+								try:
+									cfg.utls.removeLayerByLayer(reml)
+								except:
+									pass
+								try:
+									cfg.utls.removeLayerByLayer(remiClass2)
+								except:
+									pass	
 								if batch == 'No':
 									cfg.utls.finishSound()
 									cfg.utls.sendSMTPMessage(None, str(__name__))
@@ -295,13 +357,25 @@ class ZonalStatRasterTab:
 								oMR[b] = None
 							# add raster to layers
 							rstr = cfg.utls.addRasterLayer(outRaster)
+							t = str(c) + '	' + str(value) + str('\n')
+							l.write(t)
+				l.close()
 				rDD = None
 				# remove temp
 				try:
 					cfg.osSCP.remove(tRC)
 				except:
 					pass
-				cfg.uiUtls.updateBar(100)
+				cfg.uiUtls.updateBar(100)	
+				# remove temp layers
+				try:
+					cfg.utls.removeLayerByLayer(reml)
+				except:
+					pass
+				try:
+					cfg.utls.removeLayerByLayer(remiClass2)
+				except:
+					pass	
 				if batch == 'No':
 					# enable map canvas render
 					cfg.cnvs.setRenderFlag(True)

@@ -92,74 +92,127 @@ class ClassRandomForestTab:
 		'''
 		refID = 'Read'
 		b = 0
-		for b in range(0, len(vectorList)):
-			nodeID = 'Import-Vector' + str(b)
+		if len(vectorList) > 0:
+			for b in range(0, len(vectorList)):
+				nodeID = 'Import-Vector' + str(b)
+				xml = '''
+				<node id="%s">
+				 <operator>Import-Vector</operator>
+				 <sources>
+				   <sourceProduct refid="%s"/>
+				 </sources>
+				 <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+				   <vectorFile>%s</vectorFile>
+				   <separateShapes>false</separateShapes>
+				 </parameters>
+				</node>
+				'''
+				importVector = importVector + xml % (nodeID, refID, vectorList[b])
+				refID = 'Import-Vector' + str(b)
+			# add random forest
 			xml = '''
-			<node id="%s">
-			 <operator>Import-Vector</operator>
-			 <sources>
-			   <sourceProduct refid="%s"/>
-			 </sources>
-			 <parameters class="com.bc.ceres.binding.dom.XppDomElement">
-			   <vectorFile>%s</vectorFile>
-			   <separateShapes>false</separateShapes>
-			 </parameters>
-			</node>
-			'''
-			importVector = importVector + xml % (nodeID, refID, vectorList[b])
-			refID = 'Import-Vector' + str(b)
-		# add random forest
-		xml = '''
-		<node id="Random-Forest-Classifier">
-			<operator>Random-Forest-Classifier</operator>
-			<sources>
-			  <sourceProduct refid="%s"/>
-			</sources>
-			<parameters class="com.bc.ceres.binding.dom.XppDomElement">
-			  <treeCount>$treeCount</treeCount>
-			  <numTrainSamples>$numTrainSamples</numTrainSamples>
-			  <savedClassifierName>$classifierName</savedClassifierName>
-			  <doLoadClassifier>$loadClassifier</doLoadClassifier>
-			  <doClassValQuantization>false</doClassValQuantization>
-			  <minClassValue>0.0</minClassValue>
-			  <classValStepSize>5.0</classValStepSize>
-			  <classLevels>101</classLevels>
-			  <trainOnRaster>false</trainOnRaster>
-			  <trainingBands/>
-			  <trainingVectors>${trainingVectors}</trainingVectors>
-			  <featureBands>${featureBands}</featureBands>
-			  <labelSource>VectorNodeName</labelSource>
-			  <evaluateClassifier>$evaluateClassifier</evaluateClassifier>
-			  <evaluateFeaturePowerSet>$evaluateFeaturePowerSet</evaluateFeaturePowerSet>
-			  <minPowerSetSize>$minPowerSetSize</minPowerSetSize>
-			  <maxPowerSetSize>$maxPowerSetSize</maxPowerSetSize>
-			</parameters>
-		  </node>
-		  <node id="Write">
-			<operator>Write</operator>
-			<sources>
-			  <sourceProduct refid="Random-Forest-Classifier"/>
-			</sources>
-			<parameters class="com.bc.ceres.binding.dom.XppDomElement">
-			  <file>$output</file>
-			  <formatName>GeoTIFF-BigTIFF</formatName>
-			</parameters>
-		  </node>
-		  <applicationData id="Presentation">
-			<Description/>
-			<node id="Read">
-					<displayPosition x="10.0" y="160.0"/>
-			</node>
 			<node id="Random-Forest-Classifier">
-			  <displayPosition x="100.0" y="160.0"/>
-			</node>
-			<node id="Write">
-					<displayPosition x="300.0" y="160.0"/>
-			</node>
-		  </applicationData>
-		</graph>
-		'''
-		importVector = importVector + xml % ('Import-Vector' + str(b))
+				<operator>Random-Forest-Classifier</operator>
+				<sources>
+				  <sourceProduct refid="%s"/>
+				</sources>
+				<parameters class="com.bc.ceres.binding.dom.XppDomElement">
+				  <treeCount>$treeCount</treeCount>
+				  <numTrainSamples>$numTrainSamples</numTrainSamples>
+				  <savedClassifierName>$classifierName</savedClassifierName>
+				  <doLoadClassifier>$loadClassifier</doLoadClassifier>
+				  <doClassValQuantization>false</doClassValQuantization>
+				  <minClassValue>0.0</minClassValue>
+				  <classValStepSize>5.0</classValStepSize>
+				  <classLevels>101</classLevels>
+				  <trainOnRaster>false</trainOnRaster>
+				  <trainingBands/>
+				  <trainingVectors>${trainingVectors}</trainingVectors>
+				  <featureBands>${featureBands}</featureBands>
+				  <labelSource>VectorNodeName</labelSource>
+				  <evaluateClassifier>$evaluateClassifier</evaluateClassifier>
+				  <evaluateFeaturePowerSet>$evaluateFeaturePowerSet</evaluateFeaturePowerSet>
+				  <minPowerSetSize>$minPowerSetSize</minPowerSetSize>
+				  <maxPowerSetSize>$maxPowerSetSize</maxPowerSetSize>
+				</parameters>
+			  </node>
+			  <node id="Write">
+				<operator>Write</operator>
+				<sources>
+				  <sourceProduct refid="Random-Forest-Classifier"/>
+				</sources>
+				<parameters class="com.bc.ceres.binding.dom.XppDomElement">
+				  <file>$output</file>
+				  <formatName>GeoTIFF-BigTIFF</formatName>
+				</parameters>
+			  </node>
+			  <applicationData id="Presentation">
+				<Description/>
+				<node id="Read">
+						<displayPosition x="10.0" y="160.0"/>
+				</node>
+				<node id="Random-Forest-Classifier">
+				  <displayPosition x="100.0" y="160.0"/>
+				</node>
+				<node id="Write">
+						<displayPosition x="300.0" y="160.0"/>
+				</node>
+			  </applicationData>
+			</graph>
+			'''
+			importVector = importVector + xml % ('Import-Vector' + str(b))
+		else:
+			xml = '''
+			<node id="Random-Forest-Classifier">
+				<operator>Random-Forest-Classifier</operator>
+				<sources>
+				  <sourceProduct refid="Read"/>
+				</sources>
+				<parameters class="com.bc.ceres.binding.dom.XppDomElement">
+				  <treeCount>$treeCount</treeCount>
+				  <numTrainSamples>$numTrainSamples</numTrainSamples>
+				  <savedClassifierName>$classifierName</savedClassifierName>
+				  <doLoadClassifier>$loadClassifier</doLoadClassifier>
+				  <doClassValQuantization>false</doClassValQuantization>
+				  <minClassValue>0.0</minClassValue>
+				  <classValStepSize>5.0</classValStepSize>
+				  <classLevels>101</classLevels>
+				  <trainOnRaster>false</trainOnRaster>
+				  <trainingBands/>
+				  <trainingVectors>false</trainingVectors>
+				  <featureBands>${featureBands}</featureBands>
+				  <labelSource>VectorNodeName</labelSource>
+				  <evaluateClassifier>$evaluateClassifier</evaluateClassifier>
+				  <evaluateFeaturePowerSet>$evaluateFeaturePowerSet</evaluateFeaturePowerSet>
+				  <minPowerSetSize>$minPowerSetSize</minPowerSetSize>
+				  <maxPowerSetSize>$maxPowerSetSize</maxPowerSetSize>
+				</parameters>
+			  </node>
+			  <node id="Write">
+				<operator>Write</operator>
+				<sources>
+				  <sourceProduct refid="Random-Forest-Classifier"/>
+				</sources>
+				<parameters class="com.bc.ceres.binding.dom.XppDomElement">
+				  <file>$output</file>
+				  <formatName>GeoTIFF-BigTIFF</formatName>
+				</parameters>
+			  </node>
+			  <applicationData id="Presentation">
+				<Description/>
+				<node id="Read">
+						<displayPosition x="10.0" y="160.0"/>
+				</node>
+				<node id="Random-Forest-Classifier">
+				  <displayPosition x="100.0" y="160.0"/>
+				</node>
+				<node id="Write">
+						<displayPosition x="300.0" y="160.0"/>
+				</node>
+			  </applicationData>
+			</graph>
+			'''
+			importVector = importVector + xml
 		tXml = cfg.utls.createTempRasterPath('xml')
 		with open(tXml, 'w') as f:
 			f.write(importVector)
@@ -238,6 +291,7 @@ class ClassRandomForestTab:
 				return 'No'
 		else:
 			rstrOut = outputFile
+		cfg.utls.makeDirectory(cfg.osSCP.path.dirname(rstrOut))
 		# disable map canvas render for speed
 		if batch == 'No':
 			cfg.cnvs.setRenderFlag(False)
@@ -290,9 +344,9 @@ class ClassRandomForestTab:
 			cfg.uiUtls.updateBar(0, cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Random forest classification'))
 			tempOut = cfg.utls.createTempRasterPath('tif')
 			outTxt = self.processGPTRandomForest(xmlFile, tR, tempOut, treeCount, numberTrainingSamples, trainingVect, featBandList, evalClassifier, evalFeaturePowerSet, minPowerSize, maxPowerSize, classPath)
-			if outTxt == 'No':	
+			if outTxt == 'No':
 				# logger
-				if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' error: cancel')
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR: cancel')
 				if batch == 'No':
 					cfg.utls.finishSound()
 					cfg.utls.sendSMTPMessage(None, str(__name__))
@@ -307,7 +361,7 @@ class ClassRandomForestTab:
 				except Exception as err:
 					cfg.mx.msgErr38(rstrOut)
 					# logger
-					if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 					if batch == 'No':
 						cfg.utls.finishSound()
 						cfg.utls.sendSMTPMessage(None, str(__name__))
@@ -324,19 +378,19 @@ class ClassRandomForestTab:
 					cfg.uiUtls.removeProgressBar()
 				return 'No'
 			# reclassification
-			o = cfg.utls.multiProcessRaster(rasterPath = iL[0], functionBand = 'No', functionRaster = cfg.utls.reclassifyRaster, outputRasterList = [rstrOut], nodataValue = cfg.NoDataVal,  functionBandArgument = reclassList, functionVariable = cfg.variableName, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Reclassify'), compress = cfg.rasterCompression, compressFormat = 'DEFLATE -co PREDICTOR=2 -co ZLEVEL=1', dataType = 'UInt16')
+			o = cfg.utls.multiProcessRaster(rasterPath = iL[0], functionBand = 'No', functionRaster = cfg.utls.reclassifyRaster, outputRasterList = [rstrOut], nodataValue = cfg.NoDataVal,  functionBandArgument = reclassList, functionVariable = cfg.variableName, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Reclassify'), compress = cfg.rasterCompression, dataType = 'UInt16')
 			# copy confidence raster
 			if cfg.rasterCompression != 'No':
 				try:
-					cfg.utls.GDALCopyRaster(iL[1], rstrOut.rstrip('.tif') + '_conf.tif', 'GTiff', cfg.rasterCompression, 'LZW')
+					cfg.utls.GDALCopyRaster(iL[1], cfg.reSCP.sub(r'\.tif$', '', str(rstrOut)) + '_conf.tif', 'GTiff', cfg.rasterCompression, 'LZW')
 				except Exception as err:
 					# logger
-					if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 			else:
-				cfg.shutilSCP.copy(iL[1], rstrOut.rstrip('.tif') + '_conf.tif')
+				cfg.shutilSCP.copy(iL[1], cfg.reSCP.sub(r'\.tif$', '', str(rstrOut)) + '_conf.tif')
 			if evalClassifier == 'true':
 				try:
-					cfg.shutilSCP.copy(outTxt, rstrOut.rstrip('.tif') + '_val.txt')
+					cfg.shutilSCP.copy(outTxt, cfg.reSCP.sub(r'\.tif$', '', str(rstrOut)) + '_val.txt')
 				except Exception as err:
 					# logger
 					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
@@ -359,18 +413,18 @@ class ClassRandomForestTab:
 				pass
 			if cfg.actionCheck == 'Yes':
 				# load raster bands
-				v = cfg.utls.addRasterLayer(rstrOut.rstrip('.tif') + '_conf.tif')
+				v = cfg.utls.addRasterLayer(cfg.reSCP.sub(r'\.tif$', '', str(rstrOut)) + '_conf.tif')
 				r = cfg.utls.addRasterLayer(rstrOut)
 				# apply symbology
-				cfg.utls.rasterSymbolSingleBandGray(v)
+				#cfg.utls.rasterSymbolSingleBandGray(v)
 				sL = cfg.classTab.getSignatureList(bandSetNumber)
 				cfg.classTab.applyClassSymbology(r, macroclass, cfg.qmlFl, sL)
 				# save qml file
-				cfg.utls.saveQmlStyle(r, rstrOut.rstrip('.tif') + '.qml')
+				cfg.utls.saveQmlStyle(r, cfg.reSCP.sub(r'\.tif$', '', str(rstrOut)) + '.qml')
 			if saveClassifier == 'Yes':
 				try:
-					cfg.shutilSCP.copy(outTxt.rstrip('.txt') + '.class', rstrOut.rstrip('.tif') + '.class')
-					cfg.shutilSCP.copy(outTxt.rstrip('.txt') + '.xml', rstrOut.rstrip('.tif') + '.xml')
+					cfg.shutilSCP.copy(cfg.reSCP.sub(r'\.txt$', '', str(outTxt)) + '.class', cfg.reSCP.sub(r'\.tif$', '', str(rstrOut)) + '.class')
+					cfg.shutilSCP.copy(cfg.reSCP.sub(r'\.txt$', '', str(outTxt)) + '.xml', cfg.reSCP.sub(r'\.tif$', '', str(rstrOut)) + '.xml')
 				except Exception as err:
 					# logger
 					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
@@ -389,6 +443,7 @@ class ClassRandomForestTab:
 		if len(classifierPath) > 0:
 			loadClassifier = 'true'
 			classifierName = cfg.utls.fileNameNoExt(classifierPath)
+			cfg.utls.makeDirectory(cfg.tmpDir + '/auxdata/classifiers/RandomForest/')
 			xml = cfg.tmpDir + '/auxdata/classifiers/RandomForest/' + classifierName + '.xml'
 			cl = cfg.tmpDir + '/auxdata/classifiers/RandomForest/' + classifierName + '.class'
 			# copy files

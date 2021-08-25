@@ -44,14 +44,14 @@ class ClassReportTab:
 	# calculate classification report
 	def calculateClassificationReport(self, classificationPath, NoDataValue = None,  batch = 'No', rasterOutput = None):
 		if batch == 'No':
-			r = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Save classification report"), "", "*.csv", "csv")
+			r = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Save classification report'), '', '*.csv', 'csv')
 		else:
 			r = rasterOutput
 		if r is not False:
-			if r.lower().endswith(".csv"):
+			if r.lower().endswith('.csv'):
 				pass
 			else:
-				r = r + ".csv"
+				r = r + '.csv'
 			cfg.reportPth = cfg.utls.createTempRasterPath('csv')
 			try:
 				clssRstrSrc = str(classificationPath)
@@ -67,6 +67,7 @@ class ClassReportTab:
 				if batch == 'No':
 					cfg.uiUtls.addProgressBar()
 				cfg.uiUtls.updateBar(10)
+				cfg.utls.makeDirectory(cfg.osSCP.path.dirname(r))
 				# open input with GDAL
 				if cfg.osSCP.path.isfile(clssRstrSrc):
 					rD = cfg.gdalSCP.Open(clssRstrSrc, cfg.gdalSCP.GA_ReadOnly)
@@ -79,7 +80,7 @@ class ClassReportTab:
 				# check projections
 				cRP = rD.GetProjection()
 				cRSR = cfg.osrSCP.SpatialReference(wkt=cRP)
-				un = cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Unknown")
+				un = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Unknown')
 				if cRSR.IsProjected:
 					un = cRSR.GetAttrValue('unit')
 				else:
@@ -100,8 +101,8 @@ class ClassReportTab:
 				for x in sorted(cfg.parallelArrayDict):
 					try:
 						for ar in cfg.parallelArrayDict[x]:
-							values = cfg.np.append(values, ar[0, ::])
-							sumVal = cfg.np.append(sumVal, ar[1, ::])
+							values = cfg.np.append(values, ar[0][0, ::])
+							sumVal = cfg.np.append(sumVal, ar[0][1, ::])
 					except:
 						if batch == 'No':
 							cfg.utls.finishSound()
@@ -123,14 +124,20 @@ class ClassReportTab:
 				sumTot = sum(rasterBandUniqueVal.values())
 				# save combination to table
 				l = open(cfg.reportPth, 'w')
-				t = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Class') + '	' + cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'PixelSum') + '	' + cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Percentage %') + '	' + cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Area [' + un + '^2]') + str('\n')
+				if 'degree' not in un:
+					t = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Class') + '	' + cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'PixelSum') + '	' + cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Percentage %') + '	' + cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Area [' + un + '^2]') + str('\n')
+				else:
+					t = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Class') + '	' + cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'PixelSum') + '	' + cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Percentage %') + str('\n')
 				l.write(t)
 				for i in sorted(rasterBandUniqueVal):
 					if str(i) == 'nan':
 						pass
 					else:
 						p = (float(rasterBandUniqueVal[i]) /float(sumTot)) * 100
-						t = str(i) + '	' + str(rasterBandUniqueVal[i]) + '	' + str(p) + '	' + str(rasterBandUniqueVal[i] * cRPX * cRPY) + str('\n')
+						if 'degree' not in un:
+							t = cfg.reSCP.sub(r'\.0$', '', str(i)) + '	' + cfg.reSCP.sub(r'\.0$', '', str(rasterBandUniqueVal[i])) + '	' + str(p) + '	' + cfg.reSCP.sub(r'\.0$', '', str(rasterBandUniqueVal[i] * cRPX * cRPY)) + str('\n')
+						else:
+							t = cfg.reSCP.sub(r'\.0$', '', str(i)) + '	' + cfg.reSCP.sub(r'\.0$', '', str(rasterBandUniqueVal[i])) + '	' + str(p) + str('\n')
 						l.write(t)
 				l.close()
 				cfg.uiUtls.updateBar(80)
@@ -142,17 +149,17 @@ class ClassReportTab:
 						cfg.ui.report_textBrowser.setText(str(reportTxt))
 				except Exception as err:
 					# logger
-					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 					if batch == 'No':
 						cfg.uiUtls.removeProgressBar()
-				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " report calculated")
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' report calculated')
 				try:
 					cfg.shutilSCP.copy(cfg.reportPth, r)
 					# logger
-					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " report saved")
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' report saved')
 				except Exception as err:
 					# logger
-					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 				if batch == 'No':
 					cfg.uiUtls.removeProgressBar()
 					cfg.utls.finishSound()

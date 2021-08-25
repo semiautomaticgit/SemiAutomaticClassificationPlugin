@@ -141,7 +141,7 @@ class BandCalcTab:
 	# create decision rule expression
 	def decisionRulesExpression(self):
 		# logger
-		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode())
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode())
 		tW = cfg.ui.decision_rules_tableWidget
 		NoDataValue = cfg.ui.nodata_spinBox_13.value()
 		c = tW.rowCount()
@@ -247,13 +247,14 @@ class BandCalcTab:
 				l.removeRow(i)
 			else:
 				break
-			
 		b = l.rowCount()
+		z = 0
 		for bN in nameList:
 			# Add band to table
 			l.insertRow(b)
-			cfg.utls.addTableItem(l, cfg.variableOutName + str(b + 1), b, 0, 'No')
+			cfg.utls.addTableItem(l, cfg.variableOutName + str(z + 1), b, 0, 'No')
 			cfg.utls.addTableItem(l, bN[0].replace('"', ''), b, 1, 'No')
+			z = z + 1
 			b = b + 1
 		l.blockSignals(False)
 		# logger
@@ -508,7 +509,7 @@ class BandCalcTab:
 			cfg.bCalc.calculate(None, 'No', e)
 		
 	# calculate
-	def calculate(self, outFile = None, batch = 'No', expressionString = None, extentRaster = None, extentList = None, inputNoDataAsValue = None, useNoDataValue = None,  outputNoData = None, rasterDataType = None, useScale = None, useOffset = None, align = None, extentIntersection = None, extentSameAs = None, quiet = 'No', bandSetNumber = None):
+	def calculate(self, outFile = None, batch = 'No', expressionString = None, extentRaster = None, extentList = None, inputNoDataAsValue = None, useNoDataValue = None,  outputNoData = None, rasterDataType = None, useScale = None, useOffset = None, align = None, extentIntersection = None, extentSameAs = None, quiet = 'No', bandSetNumber = None, calcDataType = None):
 		if bandSetNumber is None:
 			bandSetNumber = cfg.bndSetNumber
 		if bandSetNumber >= len(cfg.bandSetsList):
@@ -572,6 +573,7 @@ class BandCalcTab:
 					e = eM[0]
 					eN = eM[1]
 					ePath = eM[2]
+					eVrt = eM[3]
 					if batch == 'No':
 						cfg.uiUtls.updateBar(mainMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Band calc') + ' [' + str(it) + '/' + str(nCh) + '] ' + e, message = '')
 					# do not replace expression
@@ -583,7 +585,10 @@ class BandCalcTab:
 					except:
 						eNBS = None
 					# virtual raster
-					vrtR = 'No'
+					if eVrt == 'Yes':
+						vrtR = 'Yes'
+					else:
+						vrtR = 'No'
 					dCheck = 'Yes'
 					if dCheck == 'Yes':
 						if eN is None:
@@ -598,7 +603,7 @@ class BandCalcTab:
 							if eN is None and len(check) == 1:
 								out = cfg.osSCP.path.dirname(outF) + '/' + n
 							elif eN is None and len(check) > 1:
-								out = cfg.osSCP.path.dirname(outF) + '/' + n.replace('.tif', '') + '_' + str(it) + '.tif'
+								out = cfg.osSCP.path.dirname(outF) + '/' + cfg.reSCP.sub(r'\.tif$', '', str(n)) + '_' + str(it) + '.tif'
 							else:
 								out = cfg.osSCP.path.dirname(outF) + '/' + n
 						elif n.lower().endswith('.vrt'):
@@ -606,7 +611,7 @@ class BandCalcTab:
 							if eN is None and len(check) == 1:
 								out = cfg.osSCP.path.dirname(outF) + '/' + n
 							elif eN is None and len(check) > 1:
-								out = cfg.osSCP.path.dirname(outF) + '/' + n.replace('.vrt', '') + '_' + str(it) + '.vrt'
+								out = cfg.osSCP.path.dirname(outF) + '/' + cfg.reSCP.sub(r'\.vrt$', '', str(n)) + '_' + str(it) + '.vrt'
 							else:
 								out = cfg.osSCP.path.dirname(outF) + '/' + n
 						else:
@@ -793,6 +798,7 @@ class BandCalcTab:
 							variableList = []
 							# band list
 							bList = []
+							refCRS = None
 							bandNumberList = []
 							for b in range(0, c):
 								try:
@@ -802,7 +808,7 @@ class BandCalcTab:
 									cfg.mx.msg4()
 									self.rasterBandName(bandSetNumber)
 									# logger
-									cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err) + " bandset" + str(bandSetNumberX+1) + " band" + str(bandNumX+1) + " layer " + str(cfg.bandSetsList[bandSetNumberX][3][bandNumX]))
+									cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err) + ' bandset' + str(bandSetNumberX+1) + ' band' + str(bandNumX+1) + ' layer ' + str(cfg.bandSetsList[bandSetNumberX][3][bandNumX]))
 									if outFile is None:
 										cfg.uiUtls.removeProgressBar()
 										cfg.cnvs.setRenderFlag(True)
@@ -814,7 +820,8 @@ class BandCalcTab:
 										bandNumber = bN.split('#b')
 										if cfg.bandSetsList[bandSetNumber][0] == 'Yes':
 											try:
-												bPath = cfg.bndSetLst[int(bandNumber[1]) - 1]
+												rPath = cfg.bndSetLst[int(bandNumber[1]) - 1]
+												bPath, refCRS = cfg.bCalc.checkProjectionRaster(rPath, referenceCRS = refCRS, extentRaster = extentRaster, extentIntersection = extentIntersection, extentSameAs = extentSameAs)
 												bandNumberList.append(1)
 												bList.append(bPath)
 											except Exception as err:
@@ -848,7 +855,7 @@ class BandCalcTab:
 										if cfg.bandSetsList[bandSetNumberX][0] == 'Yes':
 											i = cfg.utls.selectLayerbyName(cfg.bandSetsList[bandSetNumberX][3][bandNumX], 'Yes')
 											try:
-												bPath = cfg.utls.layerSource(i)
+												rPath = cfg.utls.layerSource(i)
 											except Exception as err:
 												cfg.mx.msg4()
 												self.rasterBandName(bandSetNumber)
@@ -858,6 +865,7 @@ class BandCalcTab:
 													cfg.uiUtls.removeProgressBar()
 													cfg.cnvs.setRenderFlag(True)
 													return 'No'
+											bPath, refCRS = cfg.bCalc.checkProjectionRaster(rPath, referenceCRS = refCRS, extentRaster = extentRaster, extentIntersection = extentIntersection, extentSameAs = extentSameAs)
 											bandNumberList.append(1)
 											bList.append(bPath)
 										else:
@@ -873,7 +881,7 @@ class BandCalcTab:
 													cfg.uiUtls.removeProgressBar()
 													cfg.cnvs.setRenderFlag(True)
 													return 'No'
-											bandNumberList.append(int(bandNumX))
+											bandNumberList.append(int(bandNumX)+1)
 											bList.append(bPath)
 									# spectral range bands
 									elif cfg.variableBlueName in bN or cfg.variableRedName in bN or cfg.variableNIRName in bN or cfg.variableGreenName in bN or cfg.variableSWIR1Name in bN or cfg.variableSWIR2Name in bN :
@@ -897,9 +905,10 @@ class BandCalcTab:
 												return 'No'
 										if cfg.bandSetsList[bandSetNumber][0] == 'Yes':
 											try:
-												bPath = cfg.bndSetLst[int(bandNumber[1]) - 1]
+												rPath = cfg.bndSetLst[int(bandNumber[1]) - 1]
 											except:
 												return 'No'
+											bPath, refCRS = cfg.bCalc.checkProjectionRaster(rPath, referenceCRS = refCRS, extentRaster = extentRaster, extentIntersection = extentIntersection, extentSameAs = extentSameAs)
 											bandNumberList.append(1)
 											bList.append(bPath)
 										else:
@@ -920,7 +929,7 @@ class BandCalcTab:
 									else:
 										i = cfg.utls.selectLayerbyName(bN, 'Yes')
 										try:
-											bPath = cfg.utls.layerSource(i)
+											rPath = cfg.utls.layerSource(i)
 										except Exception as err:
 											cfg.mx.msg4()
 											self.rasterBandName(bandSetNumber)
@@ -930,6 +939,7 @@ class BandCalcTab:
 												cfg.uiUtls.removeProgressBar()
 												cfg.cnvs.setRenderFlag(True)
 												return 'No'
+										bPath, refCRS = cfg.bCalc.checkProjectionRaster(rPath, referenceCRS = refCRS, extentRaster = extentRaster, extentIntersection = extentIntersection, extentSameAs = extentSameAs)
 										bandNumberList.append(1)
 										bList.append(bPath)
 							try:
@@ -980,6 +990,25 @@ class BandCalcTab:
 								outputNoData = cfg.ui.nodata_spinBox_4.value()
 							if rasterDataType is None:
 								rasterDataType = cfg.rasterBandCalcType
+							# calc data type
+							if calcDataType is None:
+								calcDataType = cfg.ui.calc_type_combo.currentText()
+							if calcDataType == 'Float64':
+								calcDataType = cfg.np.float64
+							elif calcDataType == 'Float32':
+								calcDataType = cfg.np.float32
+							elif calcDataType == 'Int32':
+								calcDataType = cfg.np.int32
+							elif calcDataType == 'UInt32':
+								calcDataType = cfg.np.uint32
+							elif calcDataType == 'Int16':
+								calcDataType = cfg.np.int16
+							elif calcDataType == 'UInt16':
+								calcDataType = cfg.np.uint16
+							elif calcDataType == 'Byte':
+								calcDataType = cfg.np.byte
+							else:
+								calcDataType = cfg.np.float32
 							if extentList is None:
 								if (extentIntersection is None and cfg.ui.intersection_checkBox.isChecked() is True) or extentIntersection == 'Yes':
 									tPMD = cfg.utls.createTempVirtualRaster(bList, bandNumberList, 'Yes', 'Yes', 0, 'No', 'Yes')
@@ -1023,12 +1052,12 @@ class BandCalcTab:
 													lRY = lRPoint.y()
 											except Exception as err:
 												# logger
-												cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+												cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 												cfg.uiUtls.removeProgressBar()
 												cfg.cnvs.setRenderFlag(True)
 												return 'No'
-									elif extRaster == cfg.pixelExtent:
-										tLX, tLY, lRX, lRY = extentList[0], extentList[1], extentList[2], extentList[3]
+									#elif extRaster == cfg.pixelExtent:
+									#	tLX, tLY, lRX, lRY = extentList[0], extentList[1], extentList[2], extentList[3]
 									else:
 										tLX, tLY, lRX, lRY, pSX, pSY = cfg.utls.imageInformationSize(extRaster)
 										if align is None:
@@ -1037,7 +1066,7 @@ class BandCalcTab:
 												# add extent raster to virtual raster list
 												i = cfg.utls.selectLayerbyName(extRaster, 'Yes')
 												try:
-													bPath = cfg.utls.layerSource(i)
+													rPath = cfg.utls.layerSource(i)
 												except Exception as err:
 													cfg.mx.msg4()
 													self.rasterBandName(bandSetNumber)
@@ -1047,6 +1076,7 @@ class BandCalcTab:
 														cfg.uiUtls.removeProgressBar()
 														cfg.cnvs.setRenderFlag(True)
 														return 'No'
+												bPath, refCRS = cfg.bCalc.checkProjectionRaster(rPath, referenceCRS = refCRS, extentRaster = extentRaster, extentIntersection = extentIntersection, extentSameAs = extentSameAs)
 												bandNumberList.append(1)
 												bList.append(bPath)
 										elif align == 'Yes':
@@ -1054,7 +1084,7 @@ class BandCalcTab:
 											# add extent raster to virtual raster list
 											i = cfg.utls.selectLayerbyName(extRaster, 'Yes')
 											try:
-												bPath = cfg.utls.layerSource(i)
+												rPath = cfg.utls.layerSource(i)
 											except Exception as err:
 												cfg.mx.msg4()
 												self.rasterBandName(bandSetNumber)
@@ -1064,6 +1094,7 @@ class BandCalcTab:
 													cfg.uiUtls.removeProgressBar()
 													cfg.cnvs.setRenderFlag(True)
 													return 'No'
+											bPath, refCRS = cfg.bCalc.checkProjectionRaster(rPath, referenceCRS = refCRS, extentRaster = extentRaster, extentIntersection = extentIntersection, extentSameAs = extentSameAs)
 											bandNumberList.append(1)
 											bList.append(bPath)
 									if tLX is None:
@@ -1077,16 +1108,18 @@ class BandCalcTab:
 							else:
 								tLX, tLY, lRX, lRY = extentList[0], extentList[1], extentList[2], extentList[3]
 								tPMD = cfg.utls.createTempVirtualRaster(bList, bandNumberList, 'Yes', 'Yes', 0, 'No', 'No', [float(tLX), float(tLY), float(lRX), float(lRY), 'Yes'])
+							cfg.utls.makeDirectory(cfg.osSCP.path.dirname(out))
 							# process calculation
-							o = cfg.utls.multiProcessRaster(rasterPath = tPMD, functionBand = 'No', functionRaster = cfg.utls.bandCalculation, outputRasterList = [out], nodataValue = useNoDataValue,  functionBandArgument = e, functionVariable = variableList, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Calculation ') + str(e), skipReplaceNoData = skipReplaceNoDT, virtualRaster = vrtR, compress = cfg.rasterCompression, compressFormat = 'LZW', outputNoDataValue = outputNoData, dataType = rasterDataType, scale = useScale, offset = useOffset)
+							o = cfg.utls.multiProcessRaster(rasterPath = tPMD, functionBand = 'No', functionRaster = cfg.utls.bandCalculation, outputRasterList = [out], nodataValue = useNoDataValue,  functionBandArgument = e, functionVariable = variableList, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Calculation ') + str(e), skipReplaceNoData = skipReplaceNoDT, virtualRaster = vrtR, compress = cfg.rasterCompression, compressFormat = 'LZW', outputNoDataValue = outputNoData, dataType = rasterDataType, scale = useScale, offset = useOffset, calcDataType = calcDataType)
 							if o != 'No':
 								if quiet == 'No':
 									r =cfg.utls.addRasterLayer(out)
 									try:
-										cfg.utls.rasterSymbolSingleBandGray(r)
+										#cfg.utls.rasterSymbolSingleBandGray(r)
+										pass
 									except Exception as err:
 										# logger
-										if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+										cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 									if eNBS is not None:
 										try:
 											if eNBS == '#':
@@ -1105,8 +1138,40 @@ class BandCalcTab:
 					cfg.uiUtls.removeProgressBar()
 				else:
 					self.rasterBandName(bandSetNumber)
-				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " band calculation ended")
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' band calculation ended')
 				
+	# check projection and reproject
+	def checkProjectionRaster(self, inputRaster, referenceCRS = None, extentRaster = None, extentIntersection = None, extentSameAs = None):
+		bPath = None
+		if (extentIntersection is None and cfg.ui.intersection_checkBox.isChecked() is True) or extentIntersection == 'Yes':
+			pass
+		elif (extentSameAs is None and cfg.ui.extent_checkBox.isChecked() is True) or extentSameAs == 'Yes':
+			if extentRaster is None:
+				extRaster = cfg.ui.raster_extent_combo.currentText()
+			else:
+				extRaster = extentRaster
+			if extRaster == cfg.mapExtent:
+				pCrs = cfg.utls.getQGISCrs()
+				referenceCRS = pCrs.toWkt().replace(' ', '')
+			else:
+				i = cfg.utls.selectLayerbyName(extRaster, 'Yes')
+				bPath = cfg.utls.layerSource(i)
+				referenceCRS = cfg.utls.getCrsGDAL(bPath)
+		eCrs = cfg.utls.getCrsGDAL(inputRaster)
+		if referenceCRS is None:
+			return [inputRaster, eCrs]
+		else:
+			rEPSG = cfg.osrSCP.SpatialReference()
+			rEPSG.ImportFromWkt(referenceCRS)
+			EPSG = cfg.osrSCP.SpatialReference()
+			EPSG.ImportFromWkt(eCrs)
+			if EPSG.IsSame(rEPSG) != 1:
+				tVRT = cfg.utls.createTempRasterPath('vrt')
+				cfg.utls.createWarpedVrt(rasterPath = inputRaster, outputPath = tVRT, outputWkt = referenceCRS, alignRasterPath = bPath, sameExtent = 'No')
+				return [tVRT, referenceCRS]
+			else:
+				return [inputRaster, referenceCRS]
+	
 	# text changed
 	def textChanged(self):
 		if cfg.bandCalcIndex == 0:
@@ -1346,30 +1411,56 @@ class BandCalcTab:
 							except:
 								pass
 							if findB == 'Yes':
-								try:
-									f = f.replace(cfg.variableRedName, cfg.bandSetsList[b-1][3][int(cfg.REDBand) - 1])
-								except:
-									pass
-								try:
-									f = f.replace(cfg.variableNIRName, cfg.bandSetsList[b-1][3][int(cfg.NIRBand) - 1])	
-								except:
-									pass
-								try:
-									f = f.replace(cfg.variableBlueName, cfg.bandSetsList[b-1][3][int(cfg.BLUEBand) - 1])
-								except:
-									pass
-								try:
-									f = f.replace(cfg.variableGreenName, cfg.bandSetsList[b-1][3][int(cfg.GREENBand) - 1])
-								except:
-									pass
-								try:
-									f = f.replace(cfg.variableSWIR1Name, cfg.bandSetsList[b-1][3][int(cfg.SWIR1Band) - 1])
-								except:
-									pass
-								try:
-									f = f.replace(cfg.variableSWIR2Name, cfg.bandSetsList[b-1][3][int(cfg.SWIR2Band) - 1])
-								except:
-									pass
+								if cfg.bandSetsList[b-1][0] == 'Yes':
+									try:
+										f = f.replace(cfg.variableRedName, cfg.bandSetsList[b-1][3][int(cfg.REDBand) - 1])
+									except:
+										pass
+									try:
+										f = f.replace(cfg.variableNIRName, cfg.bandSetsList[b-1][3][int(cfg.NIRBand) - 1])	
+									except:
+										pass
+									try:
+										f = f.replace(cfg.variableBlueName, cfg.bandSetsList[b-1][3][int(cfg.BLUEBand) - 1])
+									except:
+										pass
+									try:
+										f = f.replace(cfg.variableGreenName, cfg.bandSetsList[b-1][3][int(cfg.GREENBand) - 1])
+									except:
+										pass
+									try:
+										f = f.replace(cfg.variableSWIR1Name, cfg.bandSetsList[b-1][3][int(cfg.SWIR1Band) - 1])
+									except:
+										pass
+									try:
+										f = f.replace(cfg.variableSWIR2Name, cfg.bandSetsList[b-1][3][int(cfg.SWIR2Band) - 1])
+									except:
+										pass
+								else:
+									try:
+										f = f.replace(cfg.variableRedName, cfg.variableBandsetName + '#b' + str(cfg.REDBand))
+									except:
+										pass
+									try:
+										f = f.replace(cfg.variableNIRName, cfg.variableBandsetName + '#b' + str(cfg.NIRBand))
+									except:
+										pass
+									try:
+										f = f.replace(cfg.variableBlueName, cfg.variableBandsetName + '#b' + str(cfg.BLUEBand))
+									except:
+										pass
+									try:
+										f = f.replace(cfg.variableGreenName, cfg.variableBandsetName + '#b' + str(cfg.GREENBand))
+									except:
+										pass
+									try:
+										f = f.replace(cfg.variableSWIR1Name, cfg.variableBandsetName + '#b' + str(cfg.SWIR1Band))
+									except:
+										pass
+									try:
+										f = f.replace(cfg.variableSWIR2Name, cfg.variableBandsetName + '#b' + str(cfg.SWIR2Band))
+									except:
+										pass
 								# replace previous output names
 								#for r in nmList:
 								#	f = f.replace(r[0], r[1])
@@ -1446,13 +1537,18 @@ class BandCalcTab:
 				# logger
 				cfg.utls.logCondition(str(__name__) + "-" + (cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode(), str(nameList))
 				# replace NoData values
-				f = cfg.utls.replaceOperatorNames(f, nameList)	
+				f = cfg.utls.replaceOperatorNames(f, nameList)
+				vrt = 'No'
 				if nm is not None:
 					try:
 						nm, bsN = nm.split('%')
 						nm = nm.strip()
 					except:
 						pass
+					if nm.lower().endswith('.vrt'):
+						vrt = 'Yes'
+					if nm.lower().endswith('.tif') or nm.lower().endswith('.vrt'):
+						nm = nm[:-4]
 					outNameList.append(['"' + str(nm) + '"', '"' + str(nm) + '"'])
 				oldF = f
 				check = 'Yes'
@@ -1489,7 +1585,7 @@ class BandCalcTab:
 						n2 = nm + '%' + bsN
 					else:
 						n2 = nm
-					ex.append([oldF, n2, nPath])
+					ex.append([oldF, n2, nPath, vrt])
 		if checkO == 'No':
 			cfg.ui.plainTextEdit_calc.setStyleSheet('color : red')
 			if cfg.bandCalcIndex == 0:

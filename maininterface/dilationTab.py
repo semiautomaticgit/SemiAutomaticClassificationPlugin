@@ -65,16 +65,20 @@ class DilationRaster:
 		self.dilationClassification()
 		
 	# dilation classification
-	def dilationClassification(self, batch = 'No', rasterInput = None, rasterOutput = None):
+	def dilationClassification(self, batch = 'No', rasterInput = None, rasterOutput = None, circularStructure = None):
 		# class value list
 		valueList = self.checkValueList()
 		if len(valueList) > 0:
 			if batch == 'No':
-				outputRaster = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Save output'), '', '*.tif', 'tif')
+				outputRaster = cfg.utls.getSaveFileName(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Save output'), '', 'TIF file (*.tif);;VRT file (*.vrt)')
 			else:
 				outputRaster = rasterOutput
+			# virtual raster
+			vrtR = 'No'
 			if outputRaster is not False:
-				if outputRaster.lower().endswith('.tif'):
+				if outputRaster.lower().endswith('.vrt'):
+					vrtR = 'Yes'
+				elif outputRaster.lower().endswith('.tif'):
 					pass
 				else:
 					outputRaster = outputRaster + '.tif'
@@ -102,29 +106,42 @@ class DilationRaster:
 							cfg.cnvs.setRenderFlag(True)
 						return 'No'
 					cfg.uiUtls.updateBar(10)
+					cfg.utls.makeDirectory(cfg.osSCP.path.dirname(outputRaster))
 					input = rSource
 					nd = cfg.utls.imageNoDataValue(input)
 					dType = cfg.utls.getRasterDataTypeName(input)
 					size =  cfg.ui.dilation_threshold_spinBox.value()
-					connect = cfg.ui.dilation_connection_combo.currentText()
-					struct = cfg.utls.create3x3Window(connect)
-					tempRasterList = []
-					for s in range(0, size):
+					if circularStructure is None:
+						if cfg.ui.circular_structure_checkBox_2.isChecked():
+							circularStructure = 'Yes'
+						else:
+							circularStructure = 'No'
+					if circularStructure == 'No':
+						structure = cfg.np.ones((size*2+1,size*2+1))
+					else:
+						structure = cfg.utls.createCircularStructure(size)
+					additionalLayer = 3
+					if vrtR == 'Yes':
+						tPMD = outputRaster
+					else:
 						tPMD = cfg.utls.createTempRasterPath('vrt')
-						tempRasterList.append(tPMD)
-						# process calculation
-						o = cfg.utls.multiProcessRaster(rasterPath = input, functionBand = 'No', functionRaster = cfg.utls.rasterDilation, outputRasterList = [tPMD], functionBandArgument = struct, functionVariable = valueList, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Dilation '), virtualRaster = 'Yes', compress = 'No', outputNoDataValue = nd, dataType = dType, boundarySize = 3)
-						input = tPMD
-					# copy raster
-					try:
-						cfg.utls.GDALCopyRaster(tPMD, outputRaster, 'GTiff', cfg.rasterCompression, 'LZW')
-					except Exception as err:
-						# logger
-						if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+					# process calculation
+					o = cfg.utls.multiProcessRaster(rasterPath = input, functionBand = 'No', functionRaster = cfg.utls.rasterDilation, outputRasterList = [tPMD], functionBandArgument = structure, functionVariable = valueList, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Dilation '), virtualRaster = 'Yes', compress = cfg.rasterCompression, outputNoDataValue = nd, dataType = dType, boundarySize = structure.shape[0]+1, additionalLayer = additionalLayer)
+					input = tPMD
+					if vrtR != 'Yes':
+						# copy raster
+						try:
+							cfg.utls.GDALCopyRaster(tPMD, outputRaster, 'GTiff', cfg.rasterCompression, 'LZW')
+						except Exception as err:
+							# logger
+							cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 					if cfg.osSCP.path.isfile(outputRaster):
 						oR = cfg.utls.addRasterLayer(outputRaster)
 					if r != 'No':
-						cfg.utls.copyRenderer(r, oR)
+						try:
+							cfg.utls.copyRenderer(r, oR)
+						except:
+							pass
 					if batch == 'No':
 						cfg.utls.finishSound()
 						cfg.utls.sendSMTPMessage(None, str(__name__))

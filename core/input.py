@@ -518,7 +518,7 @@ class Input:
 			cfg.ui.SCP_tabs.blockSignals(False)
 			t.blockSignals(False)
 			# logger
-			if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 		
 	# top tree	
 	def topTree(self):
@@ -556,7 +556,7 @@ class Input:
 			t.blockSignals(False)
 		except Exception as err:
 			# logger
-			if cfg.logSetVal == 'Yes': cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 		
 	# welcome text
 	def welcomeText(self, inputUrl = None, inputUrl2 = None):
