@@ -41,5 +41,9 @@ If you find some issue that you are willing to fix, code contributions are welco
 
 This plugin is distributed under a GNU General Public License version 3.
 
-## Cite the code
+## How to cite 
+Congedo, Luca, (2021). Semi-Automatic Classification Plugin: A Python tool for the download and processing of remote sensing images in QGIS. Journal of Open Source Software, 6(64), 3172, https://doi.org/10.21105/joss.03172
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.03172/status.svg)](https://doi.org/10.21105/joss.03172)
+
+## Code on Zenodo
 [![DOI](https://zenodo.org/badge/18038317.svg)](https://zenodo.org/badge/latestdoi/18038317)
