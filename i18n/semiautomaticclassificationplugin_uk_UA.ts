@@ -23,22 +23,22 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="436"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="461"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Input file path&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="446"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="471"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span &gt;Open a training input&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="413"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="438"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span &gt;Create a new training input&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="619"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="644"/>
         <source>Plot</source>
         <translation type="unfinished"></translation>
     </message>
@@ -48,183 +48,183 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="820"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="845"/>
         <source>MC ID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="788"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="813"/>
         <source>C ID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="636"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="661"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add highlighted items to scatter plot&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="642"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="667"/>
         <source>...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="672"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="697"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Import spectral signatures &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="979"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1004"/>
         <source>Import library</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="695"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="720"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Export highlighted spectral signatures&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="577"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="602"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Delete highlighted items&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="554"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="579"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Calculate signatures for highlighted items&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="531"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="556"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Merge highlighted spectral signatures obtaining the average signature&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="613"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="638"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Add highlighted signatures to spectral signature plot&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1021"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1046"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Display a vegetation index value with the cursor&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1024"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1049"/>
         <source>Display</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1034"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1059"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select a vegetation index&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1038"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1063"/>
         <source>NDVI</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1043"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1068"/>
         <source>EVI</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1048"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1073"/>
         <source>Custom</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1056"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1081"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Custom expression (e.g. bandset#b4 / bandset#b3 )&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="852"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="877"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The class name of the ROI signature&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="855"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="880"/>
         <source>C 1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="757"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="782"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The macroclass ID of the ROI signature&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="865"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="890"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The macroclass name of the ROI signature&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="868"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="893"/>
         <source>MC 1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="833"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="858"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The class ID of the ROI signature&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="882"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="907"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Undo ROI save&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="960"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="985"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add ROI spectral signature to signature list&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="973"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="998"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Save temporary ROI to training input&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1109"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1134"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Automatically refresh the temporary ROI, as the parameters change&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1086"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1111"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Band number&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1073"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1098"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Calculate temporary ROI only on one band&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1122"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1147"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Automatically calculate signature plot of temporary ROI&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="944"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="969"/>
         <source>Autosave</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1076"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1101"/>
         <source>Rapid ROI b.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="963"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="988"/>
         <source>Signature</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="941"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="966"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Automatically save training input when a ROI is saved in it&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1125"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1150"/>
         <source>Auto-plot</source>
         <translation type="unfinished"></translation>
     </message>
@@ -269,7 +269,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="439"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="464"/>
         <source>Training input</source>
         <translation type="unfinished"></translation>
     </message>
@@ -294,48 +294,53 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1112"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1137"/>
         <source>A&amp;uto-refresh ROI</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1011"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="1036"/>
         <source> ROI options</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="721"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="746"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Filter&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="724"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="749"/>
         <source>Filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="466"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="491"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Remove training input&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="504"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="529"/>
         <source> ROI &amp; Signature list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="744"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="769"/>
         <source>C Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="801"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="826"/>
         <source>MC Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="905"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="930"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Redo ROI save&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class.ui" line="393"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;How to cite&lt;/span&gt;:&lt;/p&gt;&lt;p&gt;Congedo, Luca, (2021). Semi-Automatic Classification Plugin: A Python tool for the download and processing of remote sensing images in QGIS. Journal of Open Source Software, 6(64), 3172, &lt;a href=&quot;https://doi.org/10.21105/joss.03172&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;https://doi.org/10.21105/joss.03172&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3876,7 +3881,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="23744"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="23747"/>
         <source>Help</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4557,6 +4562,9 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:9pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p align=&quot;justify&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-style:italic;&quot;&gt;This plugin requires the installation of GDAL, OGR, Numpy, SciPy, and Matplotlib (already bundled with QGIS).&lt;/span&gt;&lt;/p&gt;
 &lt;p align=&quot;justify&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-style:italic;&quot;&gt;Some tools require the additional installation of: ESA SNAP&lt;/span&gt;&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;How to cite:&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;;&quot;&gt;Congedo, Luca, (2021). Semi-Automatic Classification Plugin: A Python tool for the download and processing of remote sensing images in QGIS. Journal of Open Source Software, 6(64), 3172, &lt;/span&gt;&lt;a href=&quot;https://doi.org/10.21105/joss.03172&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;https://doi.org/10.21105/joss.03172&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;hr /&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:8pt;&quot;&gt;&lt;br /&gt;The Semi-Automatic Classification Plugin is developed by Luca Congedo.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Droid Sans&apos;; font-size:8pt;&quot;&gt;Translators:&lt;/span&gt;&lt;/p&gt;
