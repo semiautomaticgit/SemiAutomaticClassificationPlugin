@@ -1238,7 +1238,7 @@ class DownloadProducts:
 				check = cfg.utls.downloadFile(url, imOut, None, progress)
 			else:
 				check = self.downloadFileSentinel2(url, imOut, progress)
-			if check == 'Yes':
+			if check != 'No':
 				if preview == 'Yes':
 					self.previewInLabel(imOut)
 					return imOut
@@ -1302,11 +1302,13 @@ class DownloadProducts:
 		maxResultNum = resultNum
 		if maxResultNum > 100:
 			maxResultNum = 100
+		page = 0
 		for startR in range(0, resultNum, maxResultNum):
+			page = page + 1
 			if NoRect == 'Yes':
-				url = 'https://finder.creodias.eu/resto/api/collections/Sentinel2/search.json?cloudCover=[0%2C' + str(maxCloudCover) + ']&maxRecords=' + str(maxResultNum) + '&page=' + str(startR+1) + '&sortParam=startDate&sortOrder=descending&status=all&dataset=ESA-DATASET' + '&productIdentifier=%25' + imgQuery + '%25&startDate=' + str(dateFrom) + 'T00%3A00%3A00Z&completionDate=' + str(dateTo) + 'T23%3A59%3A59Z'
+				url = 'https://finder.creodias.eu/resto/api/collections/Sentinel2/search.json?cloudCover=[0%2C' + str(maxCloudCover) + ']&maxRecords=' + str(maxResultNum) + '&page=' + str(page) + '&sortParam=startDate&sortOrder=descending&status=all&dataset=ESA-DATASET' + '&productIdentifier=%25' + imgQuery + '%25&startDate=' + str(dateFrom) + 'T00%3A00%3A00Z&completionDate=' + str(dateTo) + 'T23%3A59%3A59Z'
 			else:
-				url = 'https://finder.creodias.eu/resto/api/collections/Sentinel2/search.json?cloudCover=[0%2C' + str(maxCloudCover) + ']&maxRecords=' + str(maxResultNum) + '&page=' + str(startR+1) + '&sortParam=startDate&sortOrder=descending&status=all&dataset=ESA-DATASET' + '&productIdentifier=%25' + imgQuery + '%25&startDate=' + str(dateFrom) + 'T00%3A00%3A00Z&completionDate=' + str(dateTo) + 'T23%3A59%3A59Z&geometry=POLYGON((' + cfg.ui.UX_lineEdit_3.text() + '%20' + cfg.ui.UY_lineEdit_3.text() + ',' + cfg.ui.UX_lineEdit_3.text() + '%20' + cfg.ui.LY_lineEdit_3.text() + ',' + cfg.ui.LX_lineEdit_3.text() + '%20' + cfg.ui.LY_lineEdit_3.text() + ',' + cfg.ui.LX_lineEdit_3.text() + '%20' + cfg.ui.UY_lineEdit_3.text() + ',' + cfg.ui.UX_lineEdit_3.text() + '%20' + cfg.ui.UY_lineEdit_3.text() + '))'
+				url = 'https://finder.creodias.eu/resto/api/collections/Sentinel2/search.json?cloudCover=[0%2C' + str(maxCloudCover) + ']&maxRecords=' + str(maxResultNum) + '&page=' + str(page) + '&sortParam=startDate&sortOrder=descending&status=all&dataset=ESA-DATASET' + '&productIdentifier=%25' + imgQuery + '%25&startDate=' + str(dateFrom) + 'T00%3A00%3A00Z&completionDate=' + str(dateTo) + 'T23%3A59%3A59Z&geometry=POLYGON((' + cfg.ui.UX_lineEdit_3.text() + '%20' + cfg.ui.UY_lineEdit_3.text() + ',' + cfg.ui.UX_lineEdit_3.text() + '%20' + cfg.ui.LY_lineEdit_3.text() + ',' + cfg.ui.LX_lineEdit_3.text() + '%20' + cfg.ui.LY_lineEdit_3.text() + ',' + cfg.ui.LX_lineEdit_3.text() + '%20' + cfg.ui.UY_lineEdit_3.text() + ',' + cfg.ui.UX_lineEdit_3.text() + '%20' + cfg.ui.UY_lineEdit_3.text() + '))'
 			jsonT = cfg.utls.createTempRasterPath('json')
 			check = cfg.utls.downloadFile(url, jsonT)
 			if check != 'Yes':

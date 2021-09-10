@@ -5543,7 +5543,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation>Guardar salida</translation>
     </message>
     <message>
-        <location filename="../maininterface/downloadproducts.py" line="2965"/>
+        <location filename="../maininterface/downloadproducts.py" line="2967"/>
         <source>Searching ...</source>
         <translation>Buscando ...</translation>
     </message>
@@ -6578,7 +6578,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/downloadproducts.py" line="3015"/>
+        <location filename="../maininterface/downloadproducts.py" line="3017"/>
         <source>Downloading</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6593,7 +6593,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/downloadproducts.py" line="3060"/>
+        <location filename="../maininterface/downloadproducts.py" line="3062"/>
         <source>Processing</source>
         <translation type="unfinished">Procesado</translation>
     </message>
