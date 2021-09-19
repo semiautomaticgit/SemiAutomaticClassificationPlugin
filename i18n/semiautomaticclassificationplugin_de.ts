@@ -5369,7 +5369,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/crossclassificationTab.py" line="413"/>
+        <location filename="../maininterface/crossclassificationTab.py" line="464"/>
         <source>Classification</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5984,7 +5984,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/crossclassificationTab.py" line="411"/>
+        <location filename="../maininterface/crossclassificationTab.py" line="462"/>
         <source>CROSS MATRIX [</source>
         <translation type="unfinished"></translation>
     </message>

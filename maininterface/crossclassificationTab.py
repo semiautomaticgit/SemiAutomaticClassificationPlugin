@@ -395,6 +395,9 @@ class CrossClassification:
 					return 'No'
 				t = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'CrossClassCode') + '	' + cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Classification') + '	' + cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Reference') + '	' + cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'PixelSum') + '	' + cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Area [' + un + '^2]') + str('\n')
 				l.write(t)
+				rSumX = 0
+				rSumY = 0
+				rSumTot = 0
 				for c in cols:
 					cList = cList + str(c) + '\t'
 					for r in rows:
@@ -404,8 +407,47 @@ class CrossClassification:
 							t = str(rasterBandUniqueVal[v][1]) + '\t' + str(c) + '\t' + str(r) + '\t' + str(rasterBandUniqueVal[v][0]) + '\t' + area + str('\n')
 							l.write(t)
 							crossClass[rows.index(r), cols.index(c)] = rasterBandUniqueVal[v][0] * cRPX * cRPY
+							rSumX = rSumX + c * rasterBandUniqueVal[v][0]
+							rSumY = rSumY + r * rasterBandUniqueVal[v][0]
+							rSumTot = rSumTot + rasterBandUniqueVal[v][0]
 						except:
 							crossClass[rows.index(r), cols.index(c)] = 0
+				# calculate R
+				rXMean = rSumX / rSumTot
+				rYMean = rSumY / rSumTot
+				# linear regression y = b0 + b1 x + E
+				Sxy = 0
+				Sxx = 0
+				Syy = 0
+				for c in cols:
+					for r in rows:
+						try:
+							v = (c, r)
+							Sxx = Sxx + rasterBandUniqueVal[v][0] * (c - rXMean)**2
+							Syy = Syy + rasterBandUniqueVal[v][0] * (r - rYMean)**2
+							Sxy = Sxy + (c - rXMean) * (r - rYMean) * rasterBandUniqueVal[v][0]
+						except:
+							pass
+				try:
+					rCoeff = Sxy / (Sxx * Syy)**0.5
+					rCoeff2 = rCoeff**2
+					slope = Sxy / Sxx
+					intercept = rYMean - slope * rXMean
+					VAR_Y = (Syy - slope * Sxy) / (rSumTot-2)
+					VAR_slope = VAR_Y / Sxx
+					VAR_intercept = VAR_Y * ( 1/rSumTot + rXMean**2 / Sxx)
+					conf_slope = 2 * (VAR_slope)**0.5
+					conf_intercept = 2 * (VAR_intercept)**0.5
+				except:
+					rCoeff = ''
+					rCoeff2 = ''
+					slope = ''
+					intercept = ''
+					VAR_Y = ''
+					VAR_slope = ''
+					conf_slope = ''
+					VAR_intercept = ''
+					conf_intercept = ''
 				# save combination to table
 				l.write(str('\n'))
 				tStr = '\t' + '> ' + cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'CROSS MATRIX [') + str(un) + '^2]' + '\n'
@@ -431,6 +473,16 @@ class CrossClassification:
 				totMat = int(crossClass.sum())
 				lL = lL + '\t' + str(totMat) + str('\n')
 				l.write(lL)
+				# write linear regression
+				l.write(str('\n'))
+				l.write('Linear regression Y = B0 + B1*X' + '\n')
+				l.write('Coeff. det. R^2' + '\t' + str(rCoeff2) + '\n')
+				l.write('Coeff. correlation r' + '\t' + str(rCoeff) + '\n')
+				l.write('B1' + '\t' + str(slope) + ' ± ' + str(conf_slope) + ' \n')
+				l.write('B0' + '\t' + str(intercept) + ' ± ' + str(conf_intercept) + '\n')
+				l.write('Variance Y' + '\t' + str(VAR_Y) + '\n')
+				l.write('Variance B1' + '\t' + str(VAR_slope) + '\n')
+				l.write('Variance B0' + '\t' + str(VAR_intercept) + '\n')
 				l.close()
 				# add raster to layers
 				rastUniqueVal = cfg.np.unique(values).tolist()

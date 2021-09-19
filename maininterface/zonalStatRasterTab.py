@@ -287,7 +287,7 @@ class ZonalStatRasterTab:
 				# write report
 				colStat = statName
 				if statPerc is not None:
-					colStat = statName + statPerc
+					colStat = statName + str(statPerc)
 				l = open(zonalRstPath[:-4] + '_report.csv', 'w')
 				t = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Class') + '	' + colStat + str('\n')
 				l.write(t)
