@@ -774,6 +774,7 @@ usgs_C7p = '/spectralsignature/usgs_spectral_library/vegetation.csv'
 
 ''' Batch '''
 workingDirNm = '!working_dir!'
+processSettingsNm = '!process_settings!'
 tempRasterNm = '!temp_raster_'
 tempDirNm = '!temp_dir!'
 startForDirNm = '!for_directory_in!'
@@ -837,6 +838,7 @@ functionNames.append([[' reclassification', 'cfg.batchT.performReclassification'
 functionNames.append([[' zonal_stat_raster', 'cfg.batchT.performZonalStatRaster',  'cfg.znlSttRstT.zonalStatRaster', ['input_raster_path : \'\'', 'reference_file_path : \'\'', 'use_nodata : 0', 'nodata_value : 0', 'vector_field_name : \'\'', 'statistic : \'sum\'', 'stat_value : 50', 'output_raster_path : \'\'']]])
 functionNames.append([['Variables']])
 functionNames.append([[workingDirNm, 'cfg.batchT.workingDirectory', '', ['\'\'']]])
+functionNames.append([[processSettingsNm, 'cfg.batchT.processSettings', 'cfg.sets.setProcessSetting', ['threads : 2', 'ram : 512']]])
 functionNames.append([[startForDirNm, '', '', ['\'\'']]])
 functionNames.append([[DirNm, '', '', []]])
 functionNames.append([[directoryName, '', '', []]])

@@ -135,7 +135,7 @@ class ClassReportTab:
 					else:
 						p = (float(rasterBandUniqueVal[i]) /float(sumTot)) * 100
 						if 'degree' not in un:
-							t = cfg.reSCP.sub(r'\.0$', '', str(i)) + '	' + cfg.reSCP.sub(r'\.0$', '', str(rasterBandUniqueVal[i])) + '	' + str(p) + '	' + cfg.reSCP.sub(r'\.0$', '', str(rasterBandUniqueVal[i] * cRPX * cRPY)) + str('\n')
+							t = cfg.reSCP.sub(r'\.0$', '', str(i)) + '	' + cfg.reSCP.sub(r'\.0$', '', str(rasterBandUniqueVal[i])) + '	' + str(p) + '	' + cfg.reSCP.sub(r'\.0$', '', str(round(rasterBandUniqueVal[i] * cRPX * cRPY, 5))) + str('\n')
 						else:
 							t = cfg.reSCP.sub(r'\.0$', '', str(i)) + '	' + cfg.reSCP.sub(r'\.0$', '', str(rasterBandUniqueVal[i])) + '	' + str(p) + str('\n')
 						l.write(t)

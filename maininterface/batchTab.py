@@ -517,6 +517,35 @@ class BatchTab:
 			return 'No', 'workingDirectory'
 		return 'Yes', parameters
 		
+	# batch process settings
+	def processSettings(self, paramList):
+		threads = 'None'
+		ram = 'None'
+		parameters = []
+		for p in paramList:
+			pSplit = p.split(':', 1)
+			pName = pSplit[0].lower().replace(' ', '')
+			if pName == 'threads':
+				try:
+					threads = str(int(pSplit[1].strip().replace(' ', '')))
+				except:
+					return 'No', pName
+			elif pName == 'ram':
+				try:
+					ram = str(int(pSplit[1].strip().replace(' ', '')))
+				except:
+					return 'No', pName
+			else:
+				if len(pName.strip()) > 0:
+					return 'No', pName
+		# append parameters
+		try:
+			parameters.append(threads)
+			parameters.append(ram)
+		except:
+			return 'No', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'missing parameter')
+		return 'Yes', parameters
+		
 	# batch add raster
 	def performAddRaster(self, paramList):
 		file = 'None'
@@ -2258,6 +2287,7 @@ class BatchTab:
 		outputNoData = 'None'
 		dataType = 'None'
 		sameExtent = '\'No\''
+		resampling_methods = ['nearest_neighbour', 'near', 'average', 'average', 'sum', 'sum', 'maximum', 'max', 'minimum', 'min', 'mode', 'mode', 'median', 'med', 'first_quartile', 'q1', 'third_quartile', 'q3']
 		parameters = []
 		for p in paramList:
 			pSplit = p.split(':', 1)
@@ -2276,13 +2306,31 @@ class BatchTab:
 			elif pName == 'output_name_prefix':
 				g = pSplit[1].strip().replace('\'', '')
 				if len(g) > 0:
-					outName = '\'' + g[0] + '\''
+					outName = '\'' + g + '\''
 				else:
 					return 'No', pName
 			# resampling method inside ' '
 			elif pName == 'resampling_method':
 				g = pSplit[1].strip().replace('\'', '')
 				if g in resampling_methods:
+					if g == 'nearest_neighbour':
+						g = 'near'
+					elif g == 'average':
+						g = 'average'
+					elif g == 'sum':
+						g = 'sum'
+					elif g == 'maximum':
+						g = 'max'
+					elif g == 'minimum':
+						g = 'min'
+					elif g == 'mode':
+						g = 'mode'
+					elif g == 'median':
+						g = 'med'
+					elif g == 'first_quartile':
+						g = 'q1'
+					elif g == 'third_quartile':
+						g = 'q3'
 					resamplingMethod = '\'' + g + '\''
 				else:
 					return 'No', pName
@@ -2290,7 +2338,10 @@ class BatchTab:
 			elif pName == 'data_type':
 				g = pSplit[1].strip().replace('\'', '')
 				if len(g) > 0:
-					dataType = '\'' + g + '\''
+					if g.lower() == 'auto':
+						dataType = 'None'
+					else:
+						dataType = '\'' + g + '\''
 				else:
 					return 'No', pName
 			# band set number

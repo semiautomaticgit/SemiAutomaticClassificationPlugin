@@ -2443,7 +2443,7 @@ class Utils:
 								offY = 0
 					except:
 						pass
-					vRast.AddBand(cfg.gdalSCP.GDT_Float32)
+					vRast.AddBand(gBand2.DataType)
 					bandNumber = bandNumberList[x]
 					band = vRast.GetRasterBand(x + 1)
 					bsize = band.GetBlockSize()
@@ -2537,8 +2537,8 @@ class Utils:
 								offY = 0
 					except:
 						pass
+					vRast.AddBand(gBand2.DataType)
 					gBand2 = None
-					vRast.AddBand(cfg.gdalSCP.GDT_Float32)
 					try:
 						errorCheck = 'Yes'
 						if bandNumberList == 'No':
@@ -2982,7 +2982,9 @@ class Utils:
 		
 		
 	# read a block of band as array
-	def readArrayBlock(self, gdalBand, pixelStartColumn, pixelStartRow, blockColumns, blockRow):
+	def readArrayBlock(self, gdalBand, pixelStartColumn, pixelStartRow, blockColumns, blockRow, calcDataType = None):
+		if calcDataType is None:
+			calcDataType = cfg.np.float32
 		try:
 			o = gdalBand.GetOffset()
 			s = gdalBand.GetScale()
@@ -2993,8 +2995,12 @@ class Utils:
 		except:
 			o = 0.0
 			s = 1.0
+		# logger
+		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 's ' + str(s)+ ' o ' + str(o))
 		try:
-			a = gdalBand.ReadAsArray(pixelStartColumn, pixelStartRow, blockColumns, blockRow)*s+o
+			a = gdalBand.ReadAsArray(pixelStartColumn, pixelStartRow, blockColumns, blockRow) * cfg.np.asarray(s).astype(calcDataType) + cfg.np.asarray(o).astype(calcDataType)
+			# logger
+			cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'a ' + str(a[0,0]))
 		except:
 			return None
 		return a
@@ -3789,15 +3795,26 @@ class Utils:
 		return [outputRaster, [[min, max, mean, stdDev], array, count]]
 			
 	# calculate raster unique values with sum
-	def rasterUniqueValuesWithSum(self, gdalBandList, rasterSCPArrayfunctionBand, columnNumber, rowNumber, pixelStartColumn, pixelStartRow, outputArrayFile, functionBandArgumentNoData, functionVariableList, outputBandNumber):
-		o = cfg.np.array(cfg.np.unique(rasterSCPArrayfunctionBand[~cfg.np.isnan(rasterSCPArrayfunctionBand)], return_counts=True))
+	def rasterUniqueValuesWithSum(self, gdalBandList, rasterSCPArrayfunctionBand, nodataMask, rowNumber, pixelStartColumn, pixelStartRow, outputArrayFile, functionBandArgumentNoData, functionVariableList, outputBandNumber):
+		try:
+			outputNoData = gdalBandList[2]
+			b = rasterSCPArrayfunctionBand[nodataMask != outputNoData]
+			o = cfg.np.array(cfg.np.unique(b[~cfg.np.isnan(b)], return_counts=True))
+		except:
+			o = cfg.np.array(cfg.np.unique(rasterSCPArrayfunctionBand[~cfg.np.isnan(rasterSCPArrayfunctionBand)], return_counts=True))
 		return o
 			
 	# calculate raster unique values 
 	def rasterUniqueValues(self, gdalBandList, rasterSCPArrayfunctionBand, nodataMask, rowNumber, pixelStartColumn, pixelStartRow, outputArrayFile, functionBandArgumentNoData, functionVariableList, outputBandNumber):
-		a = rasterSCPArrayfunctionBand[:,:,0].ravel()
-		for i in range(1, rasterSCPArrayfunctionBand.shape[2]):
-			a = cfg.np.vstack((a,rasterSCPArrayfunctionBand[:,:,i].ravel()))
+		outputNoData = gdalBandList[2]
+		try:
+			a = rasterSCPArrayfunctionBand[:,:,0][nodataMask != outputNoData].ravel()
+			for i in range(1, rasterSCPArrayfunctionBand.shape[2]):
+				a = cfg.np.vstack((a,rasterSCPArrayfunctionBand[:,:,i][nodataMask != outputNoData].ravel()))
+		except:
+			a = rasterSCPArrayfunctionBand[:,:,0].ravel()
+			for i in range(1, rasterSCPArrayfunctionBand.shape[2]):
+				a = cfg.np.vstack((a,rasterSCPArrayfunctionBand[:,:,i].ravel()))
 		a = a.T
 		a = a[~cfg.np.isnan(a).any(axis=1)]
 		# adapted from Jaime answer at https://stackoverflow.com/questions/16970982/find-unique-rows-in-numpy-array
@@ -3871,7 +3888,7 @@ class Utils:
 		return [o, stats]
 		
 	# band calculation
-	def bandCalculation(self, gdalBandList, rasterSCPArrayfunctionBand, columnNumber, rowNumber, pixelStartColumn, pixelStartRow, outputArrayFile, functionBandArgument, functionVariableList, outputBandNumber):
+	def bandCalculation(self, gdalBandList, rasterSCPArrayfunctionBand, nodataMask, rowNumber, pixelStartColumn, pixelStartRow, outputArrayFile, functionBandArgument, functionVariableList, outputBandNumber):
 		f = functionBandArgument
 		# logger
 		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'f ' + str(f) )
@@ -3900,9 +3917,8 @@ class Utils:
 		if not isinstance(o, cfg.np.ndarray):
 			return 'No'
 		# check nan
-		#oo = cfg.np.nan_to_num(o) * 1.0
-		#oo[cfg.np.isnan(o)] = cfg.np.nan
-		#o = oo
+		if nodataMask is not None:
+			o[::, ::][nodataMask[::, ::] != 0] = nodataMask[::, ::][nodataMask[::, ::] != 0]
 		return o
 								
 	# multiple where scatter raster calculation 
@@ -4788,6 +4804,7 @@ class Utils:
 					for b in range(0, len(gdalBandList)):
 						sclB = 1
 						offsB = 0
+						ndvBand = None
 						'''
 						if nodataValue is None:
 							ndv = None
@@ -4801,9 +4818,9 @@ class Utils:
 							pCount = 0
 							while True:
 								pCount = pCount + 1
-								a = cfg.utls.readArrayBlock(gdalBandList[b], x, y, bSX, bSY)
+								a = cfg.utls.readArrayBlock(gdalBandList[b], x, y, bSX, bSY, calcDataType)
 								time.sleep(0.1)
-								a2 = cfg.utls.readArrayBlock(gdalBandList[b], x, y, bSX, bSY)
+								a2 = cfg.utls.readArrayBlock(gdalBandList[b], x, y, bSX, bSY, calcDataType)
 								checkA = cfg.np.allclose(a, a2, equal_nan=True)
 								# logger
 								cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'checkA ' + str(checkA) )
@@ -4814,10 +4831,13 @@ class Utils:
 									break
 							a2 = None
 						else:
-							a = cfg.utls.readArrayBlock(gdalBandList[b], x, y, bSX, bSY)
+							a = cfg.utls.readArrayBlock(gdalBandList[b], x, y, bSX, bSY, calcDataType)
+						# logger
+						cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'a[0, 0] ' + str(a[0, 0] ) )
 						try:
 							# logger
 							cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'a ' + str(a[0,0]) )
+							cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'a.dtype ' + str(a.dtype) )
 						except:
 							pass
 						# logger
@@ -4851,6 +4871,11 @@ class Utils:
 							except:
 								ndvBand = None
 						# logger
+						cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'ndvBand ' + str(ndvBand))
+						if ndvBand is not None:
+							# adapt NoData to dtype
+							ndvBand = cfg.np.asarray(ndvBand).astype(a.dtype).astype(calcDataType)
+						# logger
 						cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'ndvBand ' + str(ndvBand) + ' sclB ' + str(sclB)+ ' offsB ' + str(offsB))
 						if a is not None:
 							if functionBandArgument == cfg.multiAddFactorsVar:
@@ -4858,7 +4883,9 @@ class Utils:
 								a = cfg.utls.arrayMultiplicativeAdditiveFactors(a, multiAdd[0][b], multiAdd[1][b])
 							array[::, ::, b] = a.astype(calcDataType)
 							# logger
+							cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'a[0, 0] ' + str(a[0, 0] ) )
 							cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'array[0, 0, b] ' + str(array[0, 0, b] ) )
+							cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'ndvBand ' + str(ndvBand.astype(calcDataType)) )
 						else:
 							procError = 'Error array none'
 						# set nodata value
@@ -4873,37 +4900,22 @@ class Utils:
 									array[::, ::, b][cfg.np.isnan(array[::, ::, b])] = ndvBand
 								except:
 									pass
-							'''
-							if ndv is not None:
-								try:
-									array[::, ::, b][array[::, ::, b] == ndv] = cfg.np.nan
-								except:
-									pass
-							'''
-						else:
+						try:
+							nodataMask[0, 0]
+						except:
+							nodataMask = cfg.np.zeros((bSY, bSX), dtype=calcDataType)
+						if skipReplaceNoData is not None:
+							pass
+						elif ndvBand is not None:
 							try:
-								nodataMask[0, 0]
+								nodataMask[::, ::][array[::, ::, b] == ndvBand] = outputNoData
 							except:
-								nodataMask = cfg.np.zeros((bSY, bSX), dtype=calcDataType)
-							if skipReplaceNoData is not None:
 								pass
-							elif ndvBand is not None:
-								try:
-									nodataMask[::, ::][a[::, ::] == ndvBand] = outputNoData
-								except:
-									pass
-							'''
-							if ndv is not None:
-								try:
-									nodataMask[::, ::][a[::, ::, b] == ndv] = outputNoData
-								except:
-									pass
-							'''
-							# logger
-							cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'ndvBand ' + str(ndvBand))
-							cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'outputNoData ' + str(outputNoData))
-							cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'a[0,0] ' + str(a[0, 0]))
-							cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'nodataMask[0, 0] ' + str(nodataMask[0, 0]))
+						# logger
+						cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'outputNoData ' + str(outputNoData))
+						cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'a[0,0] ' + str(a[0, 0]))
+						cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'nodataMask[0, 0] ' + str(nodataMask))
+						cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'array ' + str(array[::, ::, 0]))
 						# logger
 						cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'skipReplaceNoData ' + str(skipReplaceNoData))
 						#if functionBand is not None and functionBand != 'No':
@@ -4984,7 +4996,7 @@ class Utils:
 									writeOut = cfg.utls.writeRasterNew(wrtFile, x-roX, y-roY, bSX, bSY, oo, outputNoData, scl, offs, dataType)
 									oR = cfg.gdalSCP.Open(wrtFile, cfg.gdalSCP.GA_ReadOnly)
 									bO = oR.GetRasterBand(1)
-									oo2 = cfg.utls.readArrayBlock(bO, x-roX, y-roY, bSX, bSY)
+									oo2 = cfg.utls.readArrayBlock(bO, x-roX, y-roY, bSX, bSY, calcDataType)
 									bO = None
 									oR = None
 									checkOO = cfg.np.allclose(oo, oo2, equal_nan=True)

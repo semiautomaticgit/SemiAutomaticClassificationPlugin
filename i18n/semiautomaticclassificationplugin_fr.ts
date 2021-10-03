@@ -5701,7 +5701,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="9421"/>
+        <location filename="../core/utils.py" line="9433"/>
         <source>SCP: completed process</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5821,7 +5821,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/bandcombination.py" line="319"/>
+        <location filename="../maininterface/bandcombination.py" line="321"/>
         <source>RasterValue</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5901,12 +5901,12 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7321"/>
+        <location filename="../core/utils.py" line="7333"/>
         <source>Build overviews</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7321"/>
+        <location filename="../core/utils.py" line="7333"/>
         <source>Do you want to build the external overviews of bands?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5926,7 +5926,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/batchTab.py" line="3688"/>
+        <location filename="../maininterface/batchTab.py" line="3739"/>
         <source>missing parameter</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6136,7 +6136,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/settings.py" line="256"/>
+        <location filename="../maininterface/settings.py" line="267"/>
         <source>Transparency </source>
         <translation type="unfinished"></translation>
     </message>
@@ -6146,52 +6146,52 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/settings.py" line="196"/>
+        <location filename="../maininterface/settings.py" line="207"/>
         <source>Reset field names</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/settings.py" line="196"/>
+        <location filename="../maininterface/settings.py" line="207"/>
         <source>Are you sure you want to reset field names?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/settings.py" line="207"/>
+        <location filename="../maininterface/settings.py" line="218"/>
         <source>Reset variable name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/settings.py" line="207"/>
+        <location filename="../maininterface/settings.py" line="218"/>
         <source>Are you sure you want to reset variable name?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/settings.py" line="215"/>
+        <location filename="../maininterface/settings.py" line="226"/>
         <source>Reset group name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/settings.py" line="215"/>
+        <location filename="../maininterface/settings.py" line="226"/>
         <source>Are you sure you want to reset group name?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/settings.py" line="223"/>
+        <location filename="../maininterface/settings.py" line="234"/>
         <source>Change temporary directory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/settings.py" line="223"/>
+        <location filename="../maininterface/settings.py" line="234"/>
         <source>Are you sure you want to change the temporary directory?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/settings.py" line="241"/>
+        <location filename="../maininterface/settings.py" line="252"/>
         <source>Reset temporary directory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/settings.py" line="241"/>
+        <location filename="../maininterface/settings.py" line="252"/>
         <source>Are you sure you want to reset the temporary directory?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6521,27 +6521,27 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="6215"/>
+        <location filename="../core/utils.py" line="6227"/>
         <source>Calculating signature</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7595"/>
+        <location filename="../core/utils.py" line="7607"/>
         <source>Writing file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="5509"/>
+        <location filename="../core/utils.py" line="5521"/>
         <source>Conversion to vector</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7270"/>
+        <location filename="../core/utils.py" line="7282"/>
         <source>Sieve</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7400"/>
+        <location filename="../core/utils.py" line="7412"/>
         <source>Building overviews</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6581,12 +6581,12 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="8868"/>
+        <location filename="../core/utils.py" line="8880"/>
         <source>Remove rows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="8868"/>
+        <location filename="../core/utils.py" line="8880"/>
         <source>Are you sure you want to remove highlighted rows from the table?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6706,7 +6706,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/settings.py" line="398"/>
+        <location filename="../maininterface/settings.py" line="409"/>
         <source>Test</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6951,7 +6951,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/bandcombination.py" line="276"/>
+        <location filename="../maininterface/bandcombination.py" line="278"/>
         <source>Cross classification </source>
         <translation type="unfinished"></translation>
     </message>

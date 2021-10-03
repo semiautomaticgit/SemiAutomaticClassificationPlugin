@@ -186,9 +186,9 @@ class BandCombination:
 			if cfg.np.sum(cmbArr<=0) < 1:
 				calcDataType = cfg.np.uint32
 				calcNodata = cfg.NoDataValUInt32
-				addC = 0
+				addC = 1
 			else:
-				addC = - cfg.np.nanmin(cmbArr)
+				addC = 0 - cfg.np.nanmin(cmbArr)
 			# logger
 			cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' addC: ' + str(addC))
 			# expression builder
@@ -223,10 +223,12 @@ class BandCombination:
 					rndVar = int(constV * cfg.np.random.random())
 					if rndVar == 0:
 						rndVar = 1
+					# avoid too large numbers
+					while cfg.np.sum(rndVar * (cfg.np.array(maxV, dtype=cfg.np.float32) + addC)) > calcNodata:
+						rndVar = int(rndVar/2)
 					rndVarList.append(rndVar)
 					sumA[:, cmbI] = (cmbArr[:, cmbI] + addC) * rndVar
 				sumT = cfg.np.sum(sumA, axis=1)
-				cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' (sumT) ' + str(sumT))
 				uniqueS = cfg.np.unique(sumT, return_index=False, return_counts=False)
 				# logger
 				cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' rndVarList: ' + str(rndVarList) + ' uniqueS.shape[0] ' + str(uniqueS.shape[0]))
@@ -251,7 +253,7 @@ class BandCombination:
 						newVl = 0
 						break
 					else:
-						newVl = newVl + (i[rE] + 1) * (rndVarList[rE])
+						newVl = newVl + (i[rE] + addC) * (rndVarList[rE])
 				if newVl > 0:
 					reclassDict[newVl] = i
 			n = 1
@@ -263,7 +265,7 @@ class BandCombination:
 				n = n + 1
 			e = ''
 			for rE in range(0, len(rndVarList)):
-				e = e + '(rasterSCPArrayfunctionBand[::, ::, ' + str(rE) + '] + 1) * ' + str(rndVarList[rE]) + ' + '
+				e = e + '(rasterSCPArrayfunctionBand[::, ::, ' + str(rE) + '] + ' + str(addC) + ') * ' + str(rndVarList[rE]) + ' + '
 			e = e.rstrip(' + ')
 			# logger
 			cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' e: ' + str(e))
@@ -320,7 +322,7 @@ class BandCombination:
 				try:
 					v = tuple(cmbntns[c])
 					if rasterBandUniqueVal[v] > 0:
-						area = str(rasterBandUniqueVal[v] * cRPX * cRPY)
+						area = str(round(rasterBandUniqueVal[v] * cRPX * cRPY, 5))
 						cList = str(c) + '\t' + ','.join([str(l) for l in cmbntns[c]]) + '\t' + cfg.reSCP.sub(r'\.0$', '', str(rasterBandUniqueVal[v])) + '\t' + area + str('\n')
 						l.write(cList)
 				except Exception as err:

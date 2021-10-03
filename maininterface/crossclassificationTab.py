@@ -403,7 +403,7 @@ class CrossClassification:
 					for r in rows:
 						try:
 							v = (c, r)
-							area = str(rasterBandUniqueVal[v][0] * cRPX * cRPY)
+							area = str(round(rasterBandUniqueVal[v][0] * cRPX * cRPY, 5))
 							t = str(rasterBandUniqueVal[v][1]) + '\t' + str(c) + '\t' + str(r) + '\t' + str(rasterBandUniqueVal[v][0]) + '\t' + area + str('\n')
 							l.write(t)
 							crossClass[rows.index(r), cols.index(c)] = rasterBandUniqueVal[v][0] * cRPX * cRPY

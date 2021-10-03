@@ -184,6 +184,17 @@ class Settings:
 		# logger
 		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'ram value changed to: ' + str(cfg.RAMValue))
 		
+	# set processing setting
+	def setProcessSetting(self, threads = None, ram = None):
+		if threads is not None:
+			cfg.threads = threads
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'threads value changed to: ' + str(cfg.threads))
+		if ram is not None:
+			cfg.RAMValue = ram
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'ram value changed to: ' + str(cfg.RAMValue))
+		
 	# thread setting
 	def threadSettingChange(self):
 		cfg.threads = cfg.ui.CPU_spinBox.value()
