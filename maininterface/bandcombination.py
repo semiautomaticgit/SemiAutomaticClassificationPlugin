@@ -168,17 +168,31 @@ class BandCombination:
 					cfg.mx.msgErr9()		
 					return 'No'
 			# adapted from Jaime answer at https://stackoverflow.com/questions/16970982/find-unique-rows-in-numpy-array
-			bVV = values.view(cfg.np.dtype((cfg.np.void, values.dtype.itemsize * values.shape[1])))
-			ff, indexA = cfg.np.unique(bVV, return_index=True, return_counts=False)
+			try:
+				bVV = values.view(cfg.np.dtype((cfg.np.void, values.dtype.itemsize * values.shape[1])))
+				ff, indexA = cfg.np.unique(bVV, return_index=True, return_counts=False)
+			except:
+				if batch == 'No':
+					cfg.utls.finishSound()
+					cfg.utls.sendSMTPMessage(None, str(__name__))
+					# enable map canvas render
+					cfg.cnvs.setRenderFlag(True)
+					cfg.uiUtls.removeProgressBar()			
+				# logger
+				cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR values')		
+				return 'No'
 			cmb = []
 			for cmV in values[indexA].tolist():
+				'''
 				useV = 'Yes'
-				for rnData in nData:
-					if int(rnData) in cmV:
+				for rnData in range(0, len(cmV)):
+					if cfg.np.array(nData[rnData]) == cfg.np.array(cmV[rnData]):
 						useV = 'No'
 						break
 				if useV == 'Yes':
 					cmb.append(cmV)
+				'''
+				cmb.append(cmV)
 			cmbArr = cfg.np.array(cmb)
 			# logger
 			cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' len(cmb): ' + str(len(cmb)))
@@ -249,9 +263,10 @@ class BandCombination:
 			for i in cmb:
 				newVl = 0
 				for rE in range(0, len(rndVarList)):
-					if nData[rE] in i:
-						newVl = 0
-						break
+					for rnData in range(0, len(i)):
+						if cfg.np.array(nData[rnData]) == cfg.np.array(i[rnData]):
+							newVl = 0
+							break
 					else:
 						newVl = newVl + (i[rE] + addC) * (rndVarList[rE])
 				if newVl > 0:
@@ -273,7 +288,7 @@ class BandCombination:
 			left, right, top, bottom, cRPX, cRPY, rP, un = cfg.utls.imageGeoTransform(vrtCheck)
 			# calculation
 			cfg.parallelArrayDict = {}
-			o = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.crossRasters, outputRasterList = [combRstPath], functionBandArgument = reclassList, functionVariable = e, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Cross classification '),  nodataValue = cfg.NoDataValInt32, outputNoDataValue = cfg.NoDataValInt32, virtualRaster = vrtR, compress = cfg.rasterCompression, dataType = 'UInt32', calcDataType = calcDataType)
+			o = cfg.utls.multiProcessRaster(rasterPath = vrtCheck, functionBand = 'No', functionRaster = cfg.utls.crossRasters, outputRasterList = [combRstPath], functionBandArgument = reclassList, functionVariable = e, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Band combination '),  nodataValue = cfg.NoDataValInt32, outputNoDataValue = cfg.NoDataValInt32, virtualRaster = vrtR, compress = cfg.rasterCompression, dataType = 'UInt32', calcDataType = calcDataType)
 			# calculate unique values
 			values = cfg.np.array([])
 			sumVal = cfg.np.array([])

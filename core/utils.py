@@ -399,6 +399,19 @@ class Utils:
 			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err) + ' url:' + str(url))
 			return err
 		
+	# download virtual images
+	def downloadVirtualImages(self, url, outputPath, fileName = None, progress = None, extentList = None):
+		try:
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' url:' + str(url))
+			cfg.uiUtls.updateBar(progress, url, cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Downloading'))
+			cfg.QtWidgetsSCP.qApp.processEvents()
+			output = cfg.utls.createVirtualRaster3(['/vsicurl/' + url], outputPath, None, 'Yes', 0,  'No', extentList)
+			return 'Yes'
+		except Exception as err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err) + ' url:' + str(url))
+			return err
+		
 	# connect with password
 	def USGSLogin(self, user, password, topLevelUrl):
 		cfg.utls.logCondition(str(__name__) + "-" + str(cfg.inspectSCP.stack()[0][3])+ " " + cfg.utls.lineOfCode())
@@ -2259,7 +2272,7 @@ class Utils:
 		return output
 				
 	# create virtual raster with Python
-	def createVirtualRaster(self, inputRasterList, output, bandNumberList = 'No', quiet = 'No', NoDataVal = 'No', relativeToVRT = 0, projection = 'No', intersection = 'Yes', boxCoordList = None, xyResList = None, aster = 'No'):
+	def createVirtualRaster(self, inputRasterList, output, bandNumberList = 'No', quiet = 'No', NoDataVal = 'No', relativeToVRT = 0, projection = 'No', intersection = 'Yes', boxCoordList = None, xyResList = None, aster = 'No', dataType = None):
 		# create virtual raster
 		drv = cfg.gdalSCP.GetDriverByName('vrt')
 		rXList = []
@@ -2403,6 +2416,30 @@ class Utils:
 					noData = gBand2.GetNoDataValue()
 					if noData is None or str(noData) == 'nan':
 						noData = cfg.NoDataVal
+						
+					gFormat = gBand2.DataType
+					if gFormat == cfg.gdalSCP.GDT_Float64:
+						gDataType = 'Float64'
+					elif gFormat == cfg.gdalSCP.GDT_Float32:
+						gDataType =  'Float32'
+					elif gFormat == cfg.gdalSCP.GDT_Int32:
+						gDataType = 'Int32'
+					elif gFormat == cfg.gdalSCP.GDT_UInt32:
+						gDataType = 'UInt32'
+					elif gFormat == cfg.gdalSCP.GDT_Int16:
+						gDataType = 'Int16'
+					elif gFormat == cfg.gdalSCP.GDT_UInt16:
+						gDataType = 'UInt16'
+					elif gFormat == cfg.gdalSCP.GDT_Byte:
+						gDataType = 'Byte'
+					if dataType is not None:
+						try:
+							format = eval('cfg.gdalSCP.GDT_' + dataType)
+						except:
+							format = gFormat
+					else:
+						format = gFormat
+				
 					gt = gdalRaster2.GetGeoTransform()
 					pX =  abs(gt[1])
 					pY = abs(gt[5])
@@ -2468,7 +2505,7 @@ class Utils:
 					  <NODATA>%i</NODATA>
 					</ComplexSource>
 					'''
-					source = xml % (relativeToVRT, source_path, bandNumber, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, 'Float32', x_block, y_block, xoffX, xoffY, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, offX, offY, rX2, rY2, noData)
+					source = xml % (relativeToVRT, source_path, bandNumber, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, format, x_block, y_block, xoffX, xoffY, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, offX, offY, rX2, rY2, noData)
 					band.SetMetadataItem('ComplexSource', source, 'new_vrt_sources')
 					if NoDataVal == 'Yes':
 						band.SetNoDataValue(noData)	
@@ -2497,6 +2534,30 @@ class Utils:
 					noData = gBand2.GetNoDataValue()
 					if noData is None:
 						noData = cfg.NoDataVal
+						
+					gFormat = gBand2.DataType
+					if gFormat == cfg.gdalSCP.GDT_Float64:
+						gDataType = 'Float64'
+					elif gFormat == cfg.gdalSCP.GDT_Float32:
+						gDataType =  'Float32'
+					elif gFormat == cfg.gdalSCP.GDT_Int32:
+						gDataType = 'Int32'
+					elif gFormat == cfg.gdalSCP.GDT_UInt32:
+						gDataType = 'UInt32'
+					elif gFormat == cfg.gdalSCP.GDT_Int16:
+						gDataType = 'Int16'
+					elif gFormat == cfg.gdalSCP.GDT_UInt16:
+						gDataType = 'UInt16'
+					elif gFormat == cfg.gdalSCP.GDT_Byte:
+						gDataType = 'Byte'
+					if dataType is not None:
+						try:
+							format = eval('cfg.gdalSCP.GDT_' + dataType)
+						except:
+							format = gFormat
+					else:
+						format = gFormat
+						
 					gt = gdalRaster2.GetGeoTransform()
 					pX =  abs(gt[1])
 					pY = abs(gt[5])
@@ -2570,9 +2631,9 @@ class Utils:
 						</ComplexSource>
 						'''
 						if aster == 'No':
-							source = xml % (relativeToVRT, source_path, bandNumber, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, 'Float32', x_block, y_block, xoffX, xoffY, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, offX, offY, rX2, rY2, noData)
+							source = xml % (relativeToVRT, source_path, bandNumber, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, format, x_block, y_block, xoffX, xoffY, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, offX, offY, rX2, rY2, noData)
 						else:
-							source = xml % (relativeToVRT, source_path, bandNumber, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, 'Float32', x_block, y_block, xoffX, xoffY, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, xoffX, xoffY, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, noData)
+							source = xml % (relativeToVRT, source_path, bandNumber, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, format, x_block, y_block, xoffX, xoffY, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, xoffX, xoffY, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, noData)
 						band.SetMetadataItem('ComplexSource', source, 'new_vrt_sources')
 						if NoDataVal == 'Yes':
 							band.SetNoDataValue(noData)	
@@ -2730,7 +2791,7 @@ class Utils:
 		return str(output)
 		
 	# simplified virtual raster creation
-	def createVirtualRaster3(self, inputRasterList, output, bandNumberList = None, NoDataValue = 'No', relativeToVRT = 0, intersection = 'No', extentList = None):
+	def createVirtualRaster3(self, inputRasterList, output, bandNumberList = None, NoDataValue = 'No', relativeToVRT = 0, intersection = 'No', extentList = None, dataType = None):
 		lefts = []
 		rights = []
 		tops = []
@@ -2759,7 +2820,12 @@ class Utils:
 		pXSize = min(pXSizes)
 		pYSize = min(pYSizes)
 		if extentList is not None:
-			iLeft, iRight, iTop, iBottom = extentList
+			eLeft, eRight, eTop, eBottom = extentList
+			rPSC = cfg.osrSCP.SpatialReference()
+			rPSC.ImportFromEPSG(4326)
+			rPS = cfg.osrSCP.SpatialReference(wkt=rP)
+			iLeft, iTop  = cfg.utls.projectPointCoordinatesOGR(eLeft, eTop, rPSC, rPS)
+			iRight, iBottom = cfg.utls.projectPointCoordinatesOGR(eRight, eBottom, rPSC, rPS)
 		# create virtual raster
 		drv = cfg.gdalSCP.GetDriverByName('vrt')
 		# number of x pixels
@@ -2780,7 +2846,10 @@ class Utils:
 			gBand2 = gdalRaster2.GetRasterBand(bandNumber) 
 			noData = gBand2.GetNoDataValue()
 			if noData is None:
-				noData = NoDataValue
+				if NoDataValue == 'Yes':
+					noData = 0
+				else:
+					noData = NoDataValue
 			gt = gdalRaster2.GetGeoTransform()
 			pX =  abs(gt[1])
 			pY = abs(gt[5])
@@ -2798,28 +2867,50 @@ class Utils:
 			offY = abs(int(round((iTop - top) / pYSize)))
 			xoffX = 0
 			xoffY = 0
+			gFormat = gBand2.DataType
+			if gFormat == cfg.gdalSCP.GDT_Float64:
+				gDataType = 'Float64'
+			elif gFormat == cfg.gdalSCP.GDT_Float32:
+				gDataType =  'Float32'
+			elif gFormat == cfg.gdalSCP.GDT_Int32:
+				gDataType = 'Int32'
+			elif gFormat == cfg.gdalSCP.GDT_UInt32:
+				gDataType = 'UInt32'
+			elif gFormat == cfg.gdalSCP.GDT_Int16:
+				gDataType = 'Int16'
+			elif gFormat == cfg.gdalSCP.GDT_UInt16:
+				gDataType = 'UInt16'
+			elif gFormat == cfg.gdalSCP.GDT_Byte:
+				gDataType = 'Byte'
+			if dataType is not None:
+				try:
+					format = eval('cfg.gdalSCP.GDT_' + dataType)
+				except:
+					format = gFormat
+			else:
+				format = gFormat
+			vRast.AddBand(format)
 			gBand2 = None
-			vRast.AddBand(cfg.gdalSCP.GDT_Float32)
 			try:
 				band = vRast.GetRasterBand(x + 1)
 				bsize = band.GetBlockSize()
 				x_block = bsize[0]
 				y_block = bsize[1]
 				# check path
-				source_path = inputRasterList[b].replace("//", "/")
+				source_path = inputRasterList[b]
 				# set metadata xml
 				xml = '''
-				<SimpleSource>
+				<ComplexSource>
 				  <SourceFilename relativeToVRT="%i">%s</SourceFilename>
 				  <SourceBand>%i</SourceBand>
 				  <SourceProperties RasterXSize="%i" RasterYSize="%i" DataType=%s BlockXSize="%i" BlockYSize="%i" />
 				  <SrcRect xOff="%i" yOff="%i" xSize="%i" ySize="%i" />
 				  <DstRect xOff="%i" yOff="%i" xSize="%i" ySize="%i" />
 				  <NODATA>%i</NODATA>
-				</SimpleSource>
+				</ComplexSource>
 				'''
-				source = xml % (relativeToVRT, source_path, bandNumber, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, "Float32", x_block, y_block, xoffX, xoffY, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, offX, offY, rX2, rY2, noData)
-				band.SetMetadataItem("SimpleSource", source, "new_vrt_sources")
+				source = xml % (relativeToVRT, source_path, bandNumber, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, gDataType, x_block, y_block, offX, offY, gdalRaster2.RasterXSize, gdalRaster2.RasterYSize, xoffX, xoffY, rX2, rY2, noData)
+				band.SetMetadataItem('ComplexSource', source, 'new_vrt_sources')
 				if NoDataValue == 'Yes':
 					band.SetNoDataValue(noData)	
 				elif NoDataValue != 'No':
@@ -3119,18 +3210,6 @@ class Utils:
 	# create raster from another raster
 	def createRasterFromReference(self, gdalRasterRef, bandNumber, outputRasterList, nodataValue = None, driver = 'GTiff', format = 'Float32', previewSize = 0, previewPoint = None, compress = 'No', compressFormat = 'DEFLATE21', projection = None, geotransform = None, constantValue = None, scale = None, offset = None):
 		oRL = []
-		if format == 'Float64':
-			format = cfg.gdalSCP.GDT_Float64
-		elif format == 'Float32':
-			format = cfg.gdalSCP.GDT_Float32
-		elif format == 'Int32':
-			format = cfg.gdalSCP.GDT_Int32
-		elif format == 'Int16':
-			format = cfg.gdalSCP.GDT_Int16
-		elif format == 'UInt16':
-			format = cfg.gdalSCP.GDT_UInt16
-		elif format == 'Byte':
-			format = cfg.gdalSCP.GDT_Byte
 		for o in outputRasterList:
 			if driver == 'GTiff':
 				if o.lower().endswith('.tif'):
@@ -3149,6 +3228,22 @@ class Utils:
 			tD = cfg.gdalSCP.GetDriverByName(driver)
 			c = gdalRasterRef.RasterXSize
 			r = gdalRasterRef.RasterYSize
+			gBand2 = gdalRasterRef.GetRasterBand(1)
+			ndVal = gBand2.GetNoDataValue() 
+			if format is None:
+				format = gBand2.DataType
+			elif format == 'Float64':
+				format = cfg.gdalSCP.GDT_Float64
+			elif format == 'Float32':
+				format = cfg.gdalSCP.GDT_Float32
+			elif format == 'Int32':
+				format = cfg.gdalSCP.GDT_Int32
+			elif format == 'Int16':
+				format = cfg.gdalSCP.GDT_Int16
+			elif format == 'UInt16':
+				format = cfg.gdalSCP.GDT_UInt16
+			elif format == 'Byte':
+				format = cfg.gdalSCP.GDT_Byte
 			if previewSize > 0:
 				tLX = rGT[0]
 				tLY = rGT[3]
@@ -3186,6 +3281,12 @@ class Utils:
 					b = oR.GetRasterBand(x)
 					b.SetNoDataValue(nodataValue)
 					b.Fill(nodataValue)
+					b = None
+			else:
+				for x in range(1, bandNumber+1):
+					b = oR.GetRasterBand(x)
+					b.SetNoDataValue(ndVal)
+					b.Fill(ndVal)
 					b = None
 			if constantValue is not None:
 				for x in range(1, bandNumber+1):
@@ -3227,7 +3328,7 @@ class Utils:
 			return 'No'
 		
 	# clip raster with another raster
-	def clipRasterByRaster(self, rasterClippedList, rasterClipping, outputRasterDir = None, outFormat = 'GTiff', nodataVal = None, progressMessage = 'Clip', stats = None, parallelWritingCheck = None, outputNameRoot = None, compress = 'No', compressFormat = 'LZW'):
+	def clipRasterByRaster(self, rasterClippedList, rasterClipping, outputRasterDir = None, outFormat = 'GTiff', nodataVal = None, progressMessage = 'Clip', stats = None, parallelWritingCheck = None, outputNameRoot = None, compress = 'No', compressFormat = 'LZW', dataType = None):
 		tPMD = cfg.utls.createTempRasterPath('vrt')
 		bList = rasterClippedList.copy()
 		bList.append(rasterClipping)
@@ -3261,7 +3362,7 @@ class Utils:
 				functionList.append(e)
 				variableList.append(varList)
 			oM = cfg.utls.createTempRasterList(bC-1)
-			oMR = cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataVal, 'GTiff', cfg.rasterDataType, compress = compress, compressFormat = compressFormat)			
+			oMR = cfg.utls.createRasterFromReference(rD, 1, oM, None, 'GTiff', dataType, compress = compress, compressFormat = compressFormat)			
 			# close GDAL rasters
 			for b in range(0, len(oMR)):
 				oMR[b] = None
@@ -3290,11 +3391,11 @@ class Utils:
 				else:
 					t = outputNameRoot
 				e = outputRasterDir.rstrip('/') + '/' + t + d
-				outList.append(e)
 				if str(e).lower().endswith('.tif'):
 					pass
 				else:
 					e = e + '.tif'
+				outList.append(e)
 				if cfg.rasterCompression != 'No':
 					try:
 						cfg.utls.GDALCopyRaster(oM[cc], e, 'GTiff', cfg.rasterCompression, 'LZW')
@@ -4911,6 +5012,23 @@ class Utils:
 								nodataMask[::, ::][array[::, ::, b] == ndvBand] = outputNoData
 							except:
 								pass
+						if skipReplaceNoData is not None:
+							pass
+						else:
+							try:
+								nodataMask[::, ::][cfg.np.isnan(array[::, ::, b])] = outputNoData
+							except:
+								pass
+						if skipReplaceNoData is not None:
+							pass
+						elif nodataValue is not None:
+							nodataValue = cfg.np.asarray(nodataValue).astype(a.dtype).astype(calcDataType)
+							# logger
+							cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'nodataValue ' + str(nodataValue))
+							try:
+								nodataMask[::, ::][array[::, ::, b] == nodataValue] = outputNoData
+							except:
+								pass
 						# logger
 						cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'outputNoData ' + str(outputNoData))
 						cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'a[0,0] ' + str(a[0, 0]))
@@ -6185,7 +6303,7 @@ class Utils:
 			check = cfg.utls.vectorToRaster(cfg.emptyFN, tLP, cfg.emptyFN, tRxs, bandList[0], None, 'GTiff', 1)
 			if check == 'No':
 				return 'No'
-			bX = cfg.utls.clipRasterByRaster(bandList, tRxs, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Calculating signature'), stats = 'Yes')
+			bX = cfg.utls.clipRasterByRaster(bandList, tRxs, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Calculating signature'), stats = 'Yes', dataType = 'Float32')
 		else:
 			rS = cfg.utls.selectLayerbyName(cfg.bandSetsList[bandSetNumber][8], 'Yes')
 			check = cfg.utls.vectorToRaster(cfg.emptyFN, tLP, cfg.emptyFN, tRxs, rS.source(), None, 'GTiff', 1)
@@ -7769,20 +7887,26 @@ class Utils:
 					# logger
 					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' Warning')
 					return 'No'
-		tPMD1 = cfg.utls.createTempRasterPath('vrt')
-		# create virtual raster					
-		vrtCheck = cfg.utls.createVirtualRaster(bandList, tPMD1, 'No', 'Yes', 'Yes', 0)
-		if cfg.osSCP.path.isfile(tPMD1):
-			if compress == 'No':
-				cfg.utls.GDALCopyRaster(tPMD1, output, 'GTiff', compress)
-			else:
-				cfg.utls.GDALCopyRaster(tPMD1, output, 'GTiff', compress, compressFormat, additionalParams)
-			cfg.osSCP.remove(tPMD1)
+		if outFormat == 'vrt':
+			# create virtual raster					
+			vrtCheck = cfg.utls.createVirtualRaster(bandList, output, 'No', 'Yes', 'Yes', 0)
 			# logger
 			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' image: ' + str(output))
 		else:
-			# logger
-			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' Error no image ')
+			tPMD1 = cfg.utls.createTempRasterPath('vrt')
+			# create virtual raster					
+			vrtCheck = cfg.utls.createVirtualRaster(bandList, tPMD1, 'No', 'Yes', 'Yes', 0)
+			if cfg.osSCP.path.isfile(tPMD1):
+				if compress == 'No':
+					cfg.utls.GDALCopyRaster(tPMD1, output, 'GTiff', compress)
+				else:
+					cfg.utls.GDALCopyRaster(tPMD1, output, 'GTiff', compress, compressFormat, additionalParams)
+				cfg.osSCP.remove(tPMD1)
+				# logger
+				cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' image: ' + str(output))
+			else:
+				# logger
+				cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' Error no image ')
 			
 	# Subset an image, given an origin point and a subset width
 	def subsetImage(self, imageName, XCoord, YCoord, Width, Height, output = None, outFormat = 'GTiff', virtual = 'No'):

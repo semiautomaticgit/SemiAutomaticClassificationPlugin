@@ -249,23 +249,45 @@ class BandsetTab:
 			bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
 		tW = eval('cfg.ui.tableWidget__' + cfg.bndSetTabList[bandSetNumber])
 		satellite = None
-		if date is None:
-			date = ''
 		if batch == 'No':
 			files = cfg.utls.getOpenFileNames(None , cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Select a raster'), '', 'Raster (*.*)')
 		else:
 			cfg.utls.clearTable(tW)
 			fileList = fileListString.split(',')
 			files = []
-			if len(fileList) == 2 and cfg.QDirSCP(fileList[0].strip("'")).exists():
+			# directory
+			if len(fileList) <= 2 and cfg.QDirSCP(fileList[0].strip("'")).exists():
 				dirF = fileList[0].strip("'").rstrip('/')
-				filter = fileList[1].strip("'").strip()
+				try:
+					filter = fileList[1].strip("'").strip()
+				except:
+					filter = ''
 				for r, d, f in cfg.osSCP.walk(dirF):
 					for x in f:
 						if filter in x:
 							files.append(cfg.osSCP.path.join(r, x))
 				files = sorted(files)
-			else:				
+				if date is not None:
+					if date.lower() == 'auto':
+						# date from directory name
+						try:
+							dStr = cfg.datetimeSCP.datetime.strptime(dirF[-10:], '%Y-%m-%d')
+							date = dirF[-10:]
+						except:
+							try:
+								dirPart = dirF.split('_')
+								for dP in dirPart:
+									dPP = dP.lower().split('t')[0]
+									try:
+										dStr = cfg.datetimeSCP.datetime.strptime(dPP, '%Y%m%d')
+										dPPS = dStr.strftime('%Y-%m-%d')
+										date = dPPS
+										break
+									except:
+										pass
+							except:
+								pass
+			else:
 				for f in fileList:
 					files.append(f.strip())
 			try:
@@ -286,6 +308,8 @@ class BandsetTab:
 				additiveFactor = additiveFactorString.split(',')
 			except:
 				additiveFactor = None
+			if date is None:
+				date = ''
 		cfg.BandTabEdited = 'No'
 		tW.blockSignals(True)
 		# count table rows
@@ -301,11 +325,7 @@ class BandsetTab:
 			if iBC > 1:
 				r =cfg.utls.addRasterLayer(files[0])
 				cfg.utls.clearTable(tW)
-				cfg.QtWidgetsSCP.qApp.processEvents()
-				cfg.ipt.checkRefreshRasterLayer()
-				# load project image name in combo
-				id = cfg.ui.image_raster_name_combo.findText(r.name())
-				cfg.ui.image_raster_name_combo.setCurrentIndex(id)
+				self.rasterToBandName(r.name(), date = date, bandSetNumber = bandSetNumber)
 				return 'Yes'
 		# check if single raster
 		if c > 0 and cfg.bandSetsList[bandSetNumber][0] == 'No':
@@ -316,7 +336,7 @@ class BandsetTab:
 				iBC = cfg.utls.getNumberBandRaster(i)
 			except Exception as err:
 				# logger
-				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err) + 'file' + str(i))
 				cfg.mx.msgErr25()
 				iBC = None
 				check = 'No'
@@ -1173,7 +1193,7 @@ class BandsetTab:
 		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " raster band name checklist created")
 		
 	# Set raster to single band names for wavelength definition
-	def rasterToBandName(self, rasterName, bandset = 'No', bandSetNumber = None):		
+	def rasterToBandName(self, rasterName, date = '', bandSetNumber = None):		
 		if bandSetNumber is None:
 			bandSetNumber = cfg.ui.Band_set_tabWidget.currentIndex()
 		tW = eval('cfg.ui.tableWidget__' + cfg.bndSetTabList[bandSetNumber])
@@ -1197,7 +1217,7 @@ class BandsetTab:
 			cfg.utls.addTableItem(tW, '0', c, 4)
 			cfg.utls.addTableItem(tW, cfg.ui.unit_combo.currentText(), c, 4)
 			cfg.utls.addTableItem(tW, rasterName, c, 5)
-			cfg.utls.addTableItem(tW, '', c, 6)
+			cfg.utls.addTableItem(tW, date, c, 6)
 		self.readBandSet('Yes')
 		tW.blockSignals(False)
 		cfg.BandTabEdited = 'Yes'
@@ -1265,6 +1285,41 @@ class BandsetTab:
 				pass
 		# logger
 		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " all bands clicked")
+		
+	# sort band sets by date
+	def sortByDate(self):
+		bandSetDateDict = {}
+		for i in range(0, len(cfg.bandSetsList)):
+			try:
+				date = cfg.datetimeSCP.datetime.strptime(str(cfg.bandSetsList[i][9]), '%Y-%m-%d')
+				bandSetDateDict[i] = date
+			except:
+				bandSetDateDict[i] = cfg.datetimeSCP.datetime.strptime('2050-01-01', '%Y-%m-%d')
+		n = 0
+		for i in sorted(bandSetDateDict, key = bandSetDateDict.get):
+			tW = eval('cfg.ui.tableWidget__' + cfg.bndSetTabList[n])
+			cfg.BandTabEdited = 'No'
+			cfg.utls.clearTable(tW)
+			bndSet = cfg.bandSetsList[i][3] 
+			bndSetWvLn = cfg.bandSetsList[i][4]
+			unit = str(cfg.bst.unitNameConversion(cfg.bandSetsList[i][5], 'Yes'))
+			bndSetMultiFactorsList, bndSetAddFactorsList = cfg.bandSetsList[i][6]
+			imgName = cfg.bandSetsList[i][8]
+			date = cfg.bandSetsList[i][9]
+			for x in range(0, len(bndSet)):
+				c = tW.rowCount()
+				# add list items to table
+				tW.setRowCount(c + 1)
+				cfg.utls.addTableItem(tW, bndSet[x], c, 0, 'No')
+				cfg.utls.addTableItem(tW, str(bndSetWvLn[x]), c, 1)
+				cfg.utls.addTableItem(tW, str(bndSetMultiFactorsList[x]), c, 2)
+				cfg.utls.addTableItem(tW, str(bndSetAddFactorsList[x]), c, 3)
+				cfg.utls.addTableItem(tW, str(unit), c, 4)
+				cfg.utls.addTableItem(tW, str(imgName), c, 5)
+				cfg.utls.addTableItem(tW, date, c, 6)
+			n = n + 1
+			cfg.BandTabEdited = 'Yes'
+		self.readBandSet('Yes')
 		
 	# create virtual raster
 	def virtualRasterBandSet(self, outFile = None, bandSetNumber = None):		

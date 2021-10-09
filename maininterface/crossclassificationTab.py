@@ -275,12 +275,11 @@ class CrossClassification:
 					newValueList = []
 					reclassDict = {}
 					for i in cmb:
-						if nD not in i:
-							newVl = (i[0] + k[0]) * (rndVarList[0]) + (i[1] + k[1]) * (rndVarList[1])
-							reclassDict[newVl] = i
-							newValueList.append(newVl)
-							if i[0] < 0 or i[1] < 0 :
-								calcDataType = cfg.np.int32
+						newVl = (i[0] + k[0]) * (rndVarList[0]) + (i[1] + k[1]) * (rndVarList[1])
+						reclassDict[newVl] = i
+						newValueList.append(newVl)
+						if i[0] < 0 or i[1] < 0 :
+							calcDataType = cfg.np.int32
 					uniqueValList = cfg.np.unique(newValueList)
 					if int(uniqueValList.shape[0]) == len(newValueList):
 						n = 1
@@ -399,12 +398,12 @@ class CrossClassification:
 				rSumY = 0
 				rSumTot = 0
 				for c in cols:
-					cList = cList + str(c) + '\t'
+					cList = cList + str(int(c)) + '\t'
 					for r in rows:
 						try:
 							v = (c, r)
 							area = str(round(rasterBandUniqueVal[v][0] * cRPX * cRPY, 5))
-							t = str(rasterBandUniqueVal[v][1]) + '\t' + str(c) + '\t' + str(r) + '\t' + str(rasterBandUniqueVal[v][0]) + '\t' + area + str('\n')
+							t = str(rasterBandUniqueVal[v][1]) + '\t' + str(int(c)) + '\t' + str(int(r)) + '\t' + str(int(rasterBandUniqueVal[v][0])) + '\t' + area + str('\n')
 							l.write(t)
 							crossClass[rows.index(r), cols.index(c)] = rasterBandUniqueVal[v][0] * cRPX * cRPY
 							rSumX = rSumX + c * rasterBandUniqueVal[v][0]
@@ -463,7 +462,7 @@ class CrossClassification:
 				# write matrix
 				ix = 0
 				for j in tM:
-					tMR = str(rows[ix]) + '\t' + j.rstrip('\n') + '\t' + str(int(crossClass[ix, :].sum())) + str('\n')
+					tMR = str(int(rows[ix])) + '\t' + j.rstrip('\n') + '\t' + str(int(crossClass[ix, :].sum())) + str('\n')
 					l.write(tMR)
 					ix = ix + 1
 				# last line

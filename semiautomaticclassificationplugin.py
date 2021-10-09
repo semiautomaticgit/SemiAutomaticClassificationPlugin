@@ -539,6 +539,7 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.point_tableWidget.verticalHeader().setDefaultSectionSize(24)
 			cfg.ui.log_tableWidget.verticalHeader().setDefaultSectionSize(24)
 			cfg.utls.setColumnWidthList(cfg.ui.log_tableWidget, [[0, 100], [1, 200], [2, 800]])
+			cfg.utls.setColumnWidthList(cfg.ui.band_set_list_tableWidget, [[0, 100], [1, 600], [2, 40]])
 			# spectral signature plot list
 			cfg.utls.insertTableColumn(cfg.uisp.signature_list_plot_tableWidget, 6, cfg.tableColString, None, 'Yes')
 			cfg.utls.sortTableColumn(cfg.uisp.signature_list_plot_tableWidget, 3)
@@ -788,6 +789,7 @@ class SemiAutomaticClassificationPlugin:
 			cfg.ui.remove_bandset_toolButton.clicked.connect(cfg.bstLT.removeBandSetFromTable)
 			cfg.ui.move_up_toolButton_4.clicked.connect(cfg.bstLT.moveUpBandset)
 			cfg.ui.move_down_toolButton_4.clicked.connect(cfg.bstLT.moveDownBandset)
+			cfg.ui.sort_by_date.clicked.connect(cfg.bst.sortByDate)
 			# connect to double click
 			cfg.ui.band_set_list_tableWidget.doubleClicked.connect(cfg.bstLT.doubleClick)
 			cfg.ui.export_bandset_List_toolButton.clicked.connect(cfg.bstLT.exportList)

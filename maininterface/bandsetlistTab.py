@@ -58,6 +58,8 @@ class BandSetListTab:
 			cfg.utls.addTableItem(tW, i + 1, i, 0, foreground = co, bold = bo)
 			bands = str(cfg.bandSetsList[i][3]).replace("[", "").replace("]", "").replace("'", "")
 			cfg.utls.addTableItem(tW, bands, i, 1, foreground = co, tooltip = bands, bold = bo)
+			date = str(cfg.bandSetsList[i][9])
+			cfg.utls.addTableItem(tW, date, i, 2, foreground = co, tooltip = bands, bold = bo)
 		tW.blockSignals(False)
 		self.tableEdited = 'Yes'
 		
@@ -151,7 +153,7 @@ class BandSetListTab:
 		tW.blockSignals(False)
 		# logger
 		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " Bands moved")
-				
+			
 	# move down selected
 	def moveDownBandset(self):
 		tW = cfg.ui.band_set_list_tableWidget

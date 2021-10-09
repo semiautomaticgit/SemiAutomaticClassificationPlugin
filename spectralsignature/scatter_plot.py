@@ -395,14 +395,14 @@ class Scatter_Plot:
 			cfg.uiscp.Scatter_Widget_2.sigCanvas.draw()
 		except Exception as err:
 			# logger
-			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " ERROR exception: " + str(err))
+			cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 			return None
 		cfg.uiUtls.addProgressBar()
 		bX = cfg.scatterBandX
 		bY = cfg.scatterBandY
 		# Set labels
-		cfg.uiscp.Scatter_Widget_2.sigCanvas.ax.set_xlabel(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Band" + " " +  str(bX)))
-		cfg.uiscp.Scatter_Widget_2.sigCanvas.ax.set_ylabel(cfg.QtWidgetsSCP.QApplication.translate("semiautomaticclassificationplugin", "Band" + " " + str(bY)))
+		cfg.uiscp.Scatter_Widget_2.sigCanvas.ax.set_xlabel(cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Band' + ' ' +  str(bX)))
+		cfg.uiscp.Scatter_Widget_2.sigCanvas.ax.set_ylabel(cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Band' + ' ' + str(bY)))
 		r = tW.rowCount()
 		xMins = []
 		xMaxs = []
@@ -414,9 +414,9 @@ class Scatter_Plot:
 				if i in colorMap:
 					pal = cfg.mplpltSCP.get_cmap(cfg.uiscp.colormap_comboBox.currentText())
 					pal.set_under('w', 0.0)
-					cfg.scatterPlotList["COLORMAP_" + str(i)] = pal
+					cfg.scatterPlotList['COLORMAP_' + str(i)] = pal
 				else:
-					if cfg.scatterPlotList["COLORMAP_" + str(i)] is None:
+					if cfg.scatterPlotList['COLORMAP_' + str(i)] is None:
 						# color
 						c = str(tW.item(b, 5).background().color().toRgb().name())
 						hue = tW.item(b, 5).background().color().hue()
@@ -436,25 +436,25 @@ class Scatter_Plot:
 						cD.setHsv(hue, saturation, newVal)
 						pal = cfg.mplcolorsSCP.LinearSegmentedColormap.from_list('color',[cD.toRgb().name(), c, cL.toRgb().name()])
 						pal.set_under('w', 0.0)
-						cfg.scatterPlotList["COLORMAP_" + str(i)] = pal
+						cfg.scatterPlotList['COLORMAP_' + str(i)] = pal
 					else:
-						pal = cfg.scatterPlotList["COLORMAP_" + str(i)]
+						pal = cfg.scatterPlotList['COLORMAP_' + str(i)]
 				try:
-					h = cfg.scatterPlotList["HISTOGRAM_" + str(i) + "_" + str([bX, bY])]
+					h = cfg.scatterPlotList['HISTOGRAM_' + str(i) + '_' + str([bX, bY])]
 					if h != 'No':
-						p = cfg.uiscp.Scatter_Widget_2.sigCanvas.ax.imshow(h[0].T, origin='low', interpolation='none', extent=[h[1][0], h[1][-1], h[2][0], h[2][-1]], cmap=pal, vmin = 0.001)
+						p = cfg.uiscp.Scatter_Widget_2.sigCanvas.ax.imshow(h[0].T, origin='lower', interpolation='none', extent=[h[1][0], h[1][-1], h[2][0], h[2][-1]], cmap=pal, vmin = 0.001)
 					else:
 						cfg.uiUtls.removeProgressBar()
 						return 'No'
 				except:
 					if str(i) == cfg.sctrROIID:
 						try:
-							h = cfg.sctrROIID_h["HISTOGRAM_" + str(i) + "_" + str([bX, bY])]
+							h = cfg.sctrROIID_h['HISTOGRAM_' + str(i) + '_' + str([bX, bY])]
 						except:
 							cfg.uiUtls.removeProgressBar()
 							return 'No'
 						if h != 'No':
-							p = cfg.uiscp.Scatter_Widget_2.sigCanvas.ax.imshow(h[0].T, origin='low', interpolation='none', extent=[h[1][0], h[1][-1], h[2][0], h[2][-1]], cmap=pal, vmin = 0.001)
+							p = cfg.uiscp.Scatter_Widget_2.sigCanvas.ax.imshow(h[0].T, origin='lower', interpolation='none', extent=[h[1][0], h[1][-1], h[2][0], h[2][-1]], cmap=pal, vmin = 0.001)
 						else:
 							cfg.uiUtls.removeProgressBar()
 							return 'No'
@@ -488,7 +488,7 @@ class Scatter_Plot:
 		# Draw the plot
 		cfg.scaPlT.fitPlotToAxes('Yes')
 		# logger
-		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), " scatter plot created")
+		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' scatter plot created')
 		cfg.uiUtls.removeProgressBar()
 		
 	# remove scatter plot from list

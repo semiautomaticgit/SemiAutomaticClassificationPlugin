@@ -329,12 +329,11 @@ class Accuracy:
 					newValueList = []
 					reclassDict = {}
 					for i in cmb:
-						if NoDataValue not in i:
-							newVl = (i[0] + k0) * (rndVarList[0]) + (i[1] + k1) * (rndVarList[1])
-							reclassDict[newVl] = i
-							newValueList.append(newVl)
-							if i[0] < 0 or i[1] < 0 :
-								calcDataType = cfg.np.int32
+						newVl = (i[0] + k0) * (rndVarList[0]) + (i[1] + k1) * (rndVarList[1])
+						reclassDict[newVl] = i
+						newValueList.append(newVl)
+						if i[0] < 0 or i[1] < 0 :
+							calcDataType = cfg.np.int32
 					uniqueValList = cfg.np.unique(newValueList)
 					if int(uniqueValList.shape[0]) == len(newValueList):
 						n = 1
@@ -433,7 +432,7 @@ class Accuracy:
 					for r in total:
 						try:
 							v = cmbntns['combination_' + str(c) + '_'+ str(r)]
-							t = str(v) + '\t' + str(int(c)) + '\t' + str(int(r)) + '\t' + str(rasterBandUniqueVal[v]) + str('\n')
+							t = str(v) + '\t' + str(int(c)) + '\t' + str(int(r)) + '\t' + str(int(rasterBandUniqueVal[v])) + str('\n')
 							l.write(t)
 							errMatrix[total.index(r), total.index(c)] = rasterBandUniqueVal[v]
 							errMatrixUnbias[total.index(r), total.index(c)] = rasterBandUniqueVal[v]

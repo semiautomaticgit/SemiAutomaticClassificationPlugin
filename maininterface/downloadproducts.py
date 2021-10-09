@@ -571,6 +571,18 @@ class DownloadProducts:
 	def downloadLandsatImages(self, outputDirectory, exporter = 'No'):
 		cfg.uiUtls.addProgressBar(mainMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Downloading'), message = '')
 		tW = cfg.ui.download_images_tableWidget
+		if cfg.ui.virtual_download_checkBox.isChecked():
+			virtualDownload = 'vrt'
+		else:
+			virtualDownload = None
+		try:
+			iLeft = float(cfg.ui.UX_lineEdit_3.text())
+			iTop = float(cfg.ui.UY_lineEdit_3.text())
+			iRight = float(cfg.ui.LX_lineEdit_3.text())
+			iBottom = float(cfg.ui.LY_lineEdit_3.text())
+			extentList = [iLeft, iRight, iTop, iBottom]
+		except:
+			extentList = None
 		c = tW.rowCount()
 		progressStep = 100 / c
 		progressStep2 = progressStep/12
@@ -632,18 +644,18 @@ class DownloadProducts:
 										if checkBand is True:
 											# Landsat 7 bands 6
 											if NASAcollection == cfg.NASALandsat7Collection and i == 6:
-												cfg.utls.downloadFile( urlL + 'B6_VCID_1.TIF', outDir + '//' + imgID  + '_' + acquisitionDate[0:10] + '_B6_VCID_1.TIF', imgID + '_B6_VCID_1.TIF', progress)
+												self.downloadDispatcher( urlL + 'B6_VCID_1.TIF', outDir + '//' + imgID  + '_' + acquisitionDate[0:10] + '_B6_VCID_1.TIF', imgID + '_B6_VCID_1.TIF', progress, extentList, virtualDownload)
 												if cfg.osSCP.path.isfile(outDir + '//' + imgID  + '_' + acquisitionDate[0:10] + '_B6_VCID_1.TIF'):
 													imgList.append(outDir + '//' + imgID  + '_' + acquisitionDate[0:10] + '_B6_VCID_1.TIF')
 													# logger
 													cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' image downloaded ' + imgID + '_B6_VCID_1.TIF')
-												cfg.utls.downloadFile( urlL + 'B6_VCID_2.TIF', outDir + '//' + imgID  + '_' + acquisitionDate[0:10] + '_B6_VCID_1.TIF', imgID + '_B6_VCID_2.TIF', progress)
+												self.downloadDispatcher( urlL + 'B6_VCID_2.TIF', outDir + '//' + imgID  + '_' + acquisitionDate[0:10] + '_B6_VCID_1.TIF', imgID + '_B6_VCID_2.TIF', progress, extentList, virtualDownload)
 												if cfg.osSCP.path.isfile(outDir + '//' + imgID  + '_' + acquisitionDate[0:10] + '_B6_VCID_2.TIF'):
 													imgList.append(outDir + '//' + imgID  + '_' + acquisitionDate[0:10] + '_B6_VCID_2.TIF')
 													# logger
 													cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' image downloaded ' + imgID + '_B6_VCID_2.TIF')
 											else:
-												cfg.utls.downloadFile( urlL + 'B' + str(i) + '.TIF', outDir + '//' + imgID  + '_' + acquisitionDate[0:10] + '_B' + str(i) + '.TIF', imgID + '_B' + str(i) + '.TIF', progress)
+												self.downloadDispatcher(urlL + 'B' + str(i) + '.TIF', outDir + '//' + imgID  + '_' + acquisitionDate[0:10] + '_B' + str(i) + '.TIF', imgID + '_B' + str(i) + '.TIF', progress, extentList, virtualDownload)
 												if cfg.osSCP.path.isfile(outDir + '//' + imgID  + '_' + acquisitionDate[0:10] + '_B' + str(i) + '.TIF'):
 													imgList.append(outDir + '//' + imgID  + '_' + acquisitionDate[0:10] + '_B' + str(i) + '.TIF')
 													# logger
@@ -657,7 +669,7 @@ class DownloadProducts:
 									if exporter == 'Yes':
 										links.append(urlL + 'BQA.TIF')
 									else:
-										cfg.utls.downloadFile( urlL + 'BQA.TIF', outDir + '//' + imgID  + '_' + acquisitionDate[0:10] + '_BQA.TIF', imgID + '_BQA.TIF', progress)
+										self.downloadDispatcher( urlL + 'BQA.TIF', outDir + '//' + imgID  + '_' + acquisitionDate[0:10] + '_BQA.TIF', imgID + '_BQA.TIF', progress, extentList, virtualDownload)
 										if cfg.osSCP.path.isfile(outDir + '//' + imgID + '_' + acquisitionDate[0:10] + '_BQA.TIF'):
 											imgList.append(outDir + '//' + imgID + '_' + acquisitionDate[0:10] + '_BQA.TIF')
 											# logger
@@ -724,6 +736,13 @@ class DownloadProducts:
 				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 				return 'No'
 					
+	# select the download type
+	def downloadDispatcher(self, url, outputPath, fileName = None, progress = None, extentList = None, downloadType = None):
+		if downloadType is None:
+			cfg.utls.downloadFile(url, outputPath, fileName, progress)
+		elif downloadType == 'vrt':
+			cfg.utls.downloadVirtualImages(url, outputPath, fileName, progress, extentList)
+			
 	# export links
 	def exportLinks(self):
 		tW = cfg.ui.download_images_tableWidget
@@ -1955,7 +1974,19 @@ class DownloadProducts:
 					outCopyFile = outputDirectory + '//' + imgName2[0:-7]  + '_' + acquisitionDate[0:10] + '//' + imgName2[0:-7] + '_B' + bandNumber
 				if exporter == 'No':
 					if checkDownload == 'Yes':
-						check = cfg.utls.downloadFile(urlL[1], outFile, None, progress)
+						if cfg.ui.virtual_download_checkBox.isChecked():
+							virtualDownload = 'vrt'
+						else:
+							virtualDownload = None
+						try:
+							iLeft = float(cfg.ui.UX_lineEdit_3.text())
+							iTop = float(cfg.ui.UY_lineEdit_3.text())
+							iRight = float(cfg.ui.LX_lineEdit_3.text())
+							iBottom = float(cfg.ui.LY_lineEdit_3.text())
+							extentList = [iLeft, iRight, iTop, iBottom]
+						except:
+							extentList = None
+						self.downloadDispatcher(urlL[1], outFile, None, progress, extentList, virtualDownload)
 					else:
 						check = self.downloadFileSentinel2(urlL[0], outFile, progress)
 					if cfg.osSCP.path.isfile(outFile):
