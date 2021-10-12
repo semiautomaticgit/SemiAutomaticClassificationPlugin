@@ -498,7 +498,7 @@ class ClusteringTab:
 			signatureListMP = signatureList.copy()
 			for smp in signatureListMP:
 				smp[6] = None
-			o = cfg.utls.multiProcessRaster(rasterPath = rD, signatureList = signatureListMP, functionBand = 'Yes', functionRaster = cfg.utls.classificationMultiprocess, algorithmName = algorithmName, nodataValue = -999, macroclassCheck = 'No',classificationOptions = classificationOptions, functionBandArgument = cfg.multiAddFactorsVar, functionVariable = cfg.bandSetsList[bandSetNumber][6], progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Classification iteration ') + str(iteration + 1).replace('-1', '*').replace('0', '*'), virtualRaster = 'Yes', compress =  'No')	
+			o = cfg.utls.multiProcessRaster(rasterPath = rD, signatureList = signatureListMP, functionBand = 'Yes', functionRaster = cfg.utls.classificationMultiprocess, algorithmName = algorithmName, outputNoDataValue = -999, macroclassCheck = 'No',classificationOptions = classificationOptions, functionBandArgument = cfg.multiAddFactorsVar, functionVariable = cfg.bandSetsList[bandSetNumber][6], progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Classification iteration ') + str(iteration + 1).replace('-1', '*').replace('0', '*'), virtualRaster = 'Yes', compress =  'No')	
 			if o == 'No':
 				return 'No', None, None
 			# output rasters
@@ -1084,7 +1084,7 @@ class ClusteringTab:
 			signatureListMP = signatureList.copy()
 			for smp in signatureListMP:
 				smp[6] = None
-			o = cfg.utls.multiProcessRaster(rasterPath = rD, signatureList = signatureListMP, functionBand = 'Yes', functionRaster = cfg.utls.classificationMultiprocess, algorithmName = algorithmName, nodataValue = -999, macroclassCheck = 'No',classificationOptions = classificationOptions, functionBandArgument = cfg.multiAddFactorsVar, functionVariable = cfg.bandSetsList[bandSetNumber][6], progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Classification iteration') + str(iteration + 1).replace('-1', '*').replace('0', '*'), virtualRaster = 'Yes', compress = 'No')	
+			o = cfg.utls.multiProcessRaster(rasterPath = rD, signatureList = signatureListMP, functionBand = 'Yes', functionRaster = cfg.utls.classificationMultiprocess, algorithmName = algorithmName, outputNoDataValue = -999, macroclassCheck = 'No',classificationOptions = classificationOptions, functionBandArgument = cfg.multiAddFactorsVar, functionVariable = cfg.bandSetsList[bandSetNumber][6], progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Classification iteration') + str(iteration + 1).replace('-1', '*').replace('0', '*'), virtualRaster = 'Yes', compress = 'No')	
 			if o == 'No':
 				return 'No', None, None, None
 			# output rasters

@@ -2020,6 +2020,7 @@ class BatchTab:
 		offsetValue = '\'0\''
 		dataType = '\'Float32\''
 		calcDataType = 'None'
+		useNodataMask = 'None'
 		parameters = []
 		for p in paramList:
 			pSplit = p.split(':', 1)
@@ -2087,6 +2088,12 @@ class BatchTab:
 					useValueNoData = str(int(eval(pSplit[1].strip().replace(' ', ''))))
 				except:
 					return 'No', pName
+			# nodata mask value (int value)
+			elif pName == 'nodata_mask':
+				try:
+					useNodataMask = str(int(eval(pSplit[1].strip().replace(' ', ''))))
+				except:
+					return 'No', pName
 			# nodata value (int value)
 			elif pName == 'output_nodata_value':
 				try:
@@ -2144,6 +2151,7 @@ class BatchTab:
 			parameters.append('\'No\'')
 			parameters.append(bandset)
 			parameters.append(calcDataType)
+			parameters.append(useNodataMask)
 		except:
 			return 'No', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'missing parameter')
 		return 'Yes', parameters

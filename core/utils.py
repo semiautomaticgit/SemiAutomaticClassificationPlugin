@@ -911,7 +911,7 @@ class Utils:
 		return oRL, outputRasterList
 		
 	# perform classification
-	def classificationMultiprocess(self, bandListNumber, signatureList, algorithmName, rasterArray, landCoverSignature, LCSClassAlgorithm,LCSLeaveUnclassified, algBandWeigths, outputGdalRasterList, outputAlgorithmRaster, outputClassificationRaster, nodataValue, macroclassCheck, algThrshld):
+	def classificationMultiprocess(self, bandListNumber, signatureList, algorithmName, rasterArray, landCoverSignature, LCSClassAlgorithm,LCSLeaveUnclassified, algBandWeigths, outputGdalRasterList, outputAlgorithmRaster, outputClassificationRaster, nodataValue, macroclassCheck, algThrshld, nodataMask):
 		sigArrayList = self.createArrayFromSignature(bandListNumber, signatureList)
 		# logger
 		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'sigArrayList ' + str(sigArrayList))
@@ -1096,6 +1096,8 @@ class Utils:
 						else:
 							return 'No'
 					classArrayWrite = cfg.np.where(classArrayLCS == nodataValue, 0, classArrayLCS)
+					if nodataMask is not None:
+						classArray[::, ::][nodataMask[::, ::] != 0] = nodataMask[::, ::][nodataMask[::, ::] != 0]
 					# classification raster
 					cfg.utls.writeArrayBlock(rDC, 1, classArrayWrite, 0, 0, nodataValue)
 					n = n + 1
@@ -1145,6 +1147,8 @@ class Utils:
 						e = None
 					clA = None
 					classArray[classArray == cfg.unclassifiedVal] = 0
+					if nodataMask is not None:
+						classArray[::, ::][nodataMask[::, ::] != 0] = nodataMask[::, ::][nodataMask[::, ::] != 0]
 					# classification raster
 					self.writeArrayBlock(rDC, 1, classArray, 0, 0, nodataValue)
 					n = n + 1
@@ -1187,6 +1191,8 @@ class Utils:
 						e = None
 					clA = None
 					classArray[classArray == cfg.unclassifiedVal] = 0
+					if nodataMask is not None:
+						classArray[::, ::][nodataMask[::, ::] != 0] = nodataMask[::, ::][nodataMask[::, ::] != 0]
 					# classification raster
 					self.writeArrayBlock(rDC, 1, classArray, 0, 0, nodataValue)
 					n = n + 1
@@ -1227,6 +1233,8 @@ class Utils:
 						e = None
 					clA = None
 					classArray[classArray == cfg.unclassifiedVal] = 0
+					if nodataMask is not None:
+						classArray[::, ::][nodataMask[::, ::] != 0] = nodataMask[::, ::][nodataMask[::, ::] != 0]
 					# classification raster
 					self.writeArrayBlock(rDC, 1, classArray, 0, 0, nodataValue)
 					n = n + 1
@@ -2672,16 +2680,21 @@ class Utils:
 			bottoms.append(bottom)
 			pXSizes.append(pX)
 			pYSizes.append(pY)
-		if intersection == 'No':
-			iLeft = min(lefts)
-			iTop = max(tops)
-			iRight = max(rights)
-			iBottom = min(bottoms)
-		else:
-			iLeft = max(lefts)
-			iTop = min(tops)
-			iRight = min(rights)
-			iBottom = max(bottoms)
+		try:
+			if intersection == 'No':
+				iLeft = min(lefts)
+				iTop = max(tops)
+				iRight = max(rights)
+				iBottom = min(bottoms)
+			else:
+				iLeft = max(lefts)
+				iTop = min(tops)
+				iRight = min(rights)
+				iBottom = max(bottoms)
+		except Exception as err:
+			# logger
+			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+			return None
 		pXSize = min(pXSizes)
 		pYSize = min(pYSizes)
 		# create virtual raster
@@ -3086,10 +3099,12 @@ class Utils:
 		except:
 			o = 0.0
 			s = 1.0
+		o = cfg.np.asarray(o).astype(calcDataType)
+		s = cfg.np.asarray(s).astype(calcDataType)
 		# logger
 		cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 's ' + str(s)+ ' o ' + str(o))
 		try:
-			a = gdalBand.ReadAsArray(pixelStartColumn, pixelStartRow, blockColumns, blockRow) * cfg.np.asarray(s).astype(calcDataType) + cfg.np.asarray(o).astype(calcDataType)
+			a = cfg.np.asarray(gdalBand.ReadAsArray(pixelStartColumn, pixelStartRow, blockColumns, blockRow) * s + o).astype(calcDataType)
 			# logger
 			cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'a ' + str(a[0,0]))
 		except:
@@ -3109,7 +3124,11 @@ class Utils:
 		dataArray = dataArray[:y, :x]
 		b.WriteArray(dataArray, pixelStartColumn, pixelStartRow)
 		if nodataValue is not None:
-			b.SetNoDataValue(nodataValue)
+			try:
+				b.SetNoDataValue(nodataValue)
+			except Exception as err:
+				# logger
+				cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'Error ' + str(err))
 		b.FlushCache()
 		b = None
 		
@@ -4736,6 +4755,7 @@ class Utils:
 		vBY = writerLog[13]
 		calcDataType = writerLog[14]
 		GDALDLLPath = writerLog[15]
+		useNoDataMask = writerLog[16]
 		for d in GDALDLLPath.split(';'):
 			try:
 				os.add_dll_directory(d)
@@ -4951,10 +4971,10 @@ class Utils:
 								sclB = sclB
 							if offsB is not None:
 								offsB = offsB
-							ndvBand = b0.GetNoDataValue() 
-							# logger
-							cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'ndvBand ' + str(ndvBand) )
-							ndvBand = ndvBand * sclB + offsB
+							offsB = cfg.np.asarray(offsB).astype(a.dtype)
+							sclB = cfg.np.asarray(sclB).astype(a.dtype)
+							ndvBand = b0.GetNoDataValue()
+							ndvBand = cfg.np.asarray(ndvBand * sclB + offsB).astype(a.dtype)
 						except:
 							try:
 								offsB = gdalBandList[b].GetOffset()
@@ -4967,15 +4987,17 @@ class Utils:
 									offsB = offsB
 								else:
 									offsB = 0
+								offsB = cfg.np.asarray(offsB).astype(a.dtype)
+								sclB = cfg.np.asarray(sclB).astype(a.dtype)
 								ndvBand = gdalBandList[b].GetNoDataValue()
-								ndvBand = ndvBand * sclB + offsB
+								ndvBand = cfg.np.asarray(ndvBand * sclB + offsB).astype(a.dtype)
 							except:
 								ndvBand = None
 						# logger
 						cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'ndvBand ' + str(ndvBand))
 						if ndvBand is not None:
 							# adapt NoData to dtype
-							ndvBand = cfg.np.asarray(ndvBand).astype(a.dtype).astype(calcDataType)
+							ndvBand = cfg.np.asarray(ndvBand).astype(calcDataType)
 						# logger
 						cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'ndvBand ' + str(ndvBand) + ' sclB ' + str(sclB)+ ' offsB ' + str(offsB))
 						if a is not None:
@@ -4986,7 +5008,6 @@ class Utils:
 							# logger
 							cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'a[0, 0] ' + str(a[0, 0] ) )
 							cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'array[0, 0, b] ' + str(array[0, 0, b] ) )
-							cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'ndvBand ' + str(ndvBand.astype(calcDataType)) )
 						else:
 							procError = 'Error array none'
 						# set nodata value
@@ -5001,34 +5022,35 @@ class Utils:
 									array[::, ::, b][cfg.np.isnan(array[::, ::, b])] = ndvBand
 								except:
 									pass
-						try:
-							nodataMask[0, 0]
-						except:
-							nodataMask = cfg.np.zeros((bSY, bSX), dtype=calcDataType)
-						if skipReplaceNoData is not None:
-							pass
-						elif ndvBand is not None:
+						if useNoDataMask == 'Yes':
 							try:
-								nodataMask[::, ::][array[::, ::, b] == ndvBand] = outputNoData
+								nodataMask[0, 0]
 							except:
+								nodataMask = cfg.np.zeros((bSY, bSX), dtype=calcDataType)
+							if skipReplaceNoData is not None:
 								pass
-						if skipReplaceNoData is not None:
-							pass
-						else:
-							try:
-								nodataMask[::, ::][cfg.np.isnan(array[::, ::, b])] = outputNoData
-							except:
+							elif ndvBand is not None:
+								try:
+									nodataMask[::, ::][array[::, ::, b] == ndvBand] = outputNoData
+								except:
+									pass
+							if skipReplaceNoData is not None:
 								pass
-						if skipReplaceNoData is not None:
-							pass
-						elif nodataValue is not None:
-							nodataValue = cfg.np.asarray(nodataValue).astype(a.dtype).astype(calcDataType)
-							# logger
-							cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'nodataValue ' + str(nodataValue))
-							try:
-								nodataMask[::, ::][array[::, ::, b] == nodataValue] = outputNoData
-							except:
+							else:
+								try:
+									nodataMask[::, ::][cfg.np.isnan(array[::, ::, b])] = outputNoData
+								except:
+									pass
+							if skipReplaceNoData is not None:
 								pass
+							elif nodataValue is not None:
+								nodataValue = cfg.np.asarray(nodataValue).astype(a.dtype).astype(calcDataType)
+								# logger
+								cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'nodataValue ' + str(nodataValue))
+								try:
+									nodataMask[::, ::][array[::, ::, b] == nodataValue] = outputNoData
+								except:
+									pass
 						# logger
 						cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'outputNoData ' + str(outputNoData))
 						cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'a[0,0] ' + str(a[0, 0]))
@@ -5072,7 +5094,7 @@ class Utils:
 							# logger
 							cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'outputSigRasterList ' + str(outputSigRasterList))
 							landCoverSignature, LCSClassAlgorithm, LCSLeaveUnclassified, algBandWeigths, algThrshld = classificationOptions
-							oo = functionRaster(len(gdalBandList), signatureList, algorithmName, array, landCoverSignature, LCSClassAlgorithm,LCSLeaveUnclassified, algBandWeigths, outputSigRasterList, outAlg, outClass, nodataValue, macroclassCheck, algThrshld)
+							oo = functionRaster(len(gdalBandList), signatureList, algorithmName, array, landCoverSignature, LCSClassAlgorithm,LCSLeaveUnclassified, algBandWeigths, outputSigRasterList, outAlg, outClass, outputNoData, macroclassCheck, algThrshld, nodataMask)
 							# logger
 							cfg.utls.logToFile(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'oo ' + str(oo))
 							o = [outClasses, outAlgs, outSigDict]
@@ -5162,7 +5184,7 @@ class Utils:
 		return o, ''
 		
 	# process a raster with block size
-	def multiProcessRaster(self, rasterPath, signatureList = None, functionBand = None, functionRaster = None, algorithmName = None, outputRasterList = None, outputAlgorithmRaster = None, outputClassificationRaster = None, classificationOptions = None, nodataValue = None, macroclassCheck = 'No', functionBandArgument = None, functionVariable = None, progressMessage = "", skipReplaceNoData = None, threadNumber = None, parallel = None, deleteArray = None, skipSingleBand = None, outputBandNumber = None, virtualRaster = 'No', compress = 'No', compressFormat = 'LZW', outputNoDataValue = None, dataType = None, scale = None, offset = None, parallelWritingCheck = None, boundarySize = None, additionalLayer = None, calcDataType = None):
+	def multiProcessRaster(self, rasterPath, signatureList = None, functionBand = None, functionRaster = None, algorithmName = None, outputRasterList = None, outputAlgorithmRaster = None, outputClassificationRaster = None, classificationOptions = None, nodataValue = None, macroclassCheck = 'No', functionBandArgument = None, functionVariable = None, progressMessage = "", skipReplaceNoData = None, threadNumber = None, parallel = None, deleteArray = None, skipSingleBand = None, outputBandNumber = None, virtualRaster = 'No', compress = 'No', compressFormat = 'LZW', outputNoDataValue = None, dataType = None, scale = None, offset = None, parallelWritingCheck = None, boundarySize = None, additionalLayer = None, calcDataType = None, nodataMask = None):
 		# logger
 		cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'start processRaster')
 		if outputNoDataValue is None:
@@ -5170,6 +5192,9 @@ class Utils:
 		if dataType is None:
 			dataType = cfg.rasterDataType
 		unitMemory = cfg.arrayUnitMemory
+		# nodata mask
+		if nodataMask is None:
+			nodataMask = 'Yes'
 		# calculation data type
 		if calcDataType is None:
 			calcDataType = cfg.np.float32
@@ -5328,7 +5353,7 @@ class Utils:
 				roY = min(vY)
 				if cfg.actionCheck == 'Yes':
 					pOut = ''
-					wrtP = [p, outputRasterList, cfg.tmpDir, parallelWritingCheck, pMQ, memVal, compress, compressFormat, dataType, boundarySize, x, roY, bSX, vBY, calcDataType, cfg.gdalDLLPath]
+					wrtP = [p, outputRasterList, cfg.tmpDir, parallelWritingCheck, pMQ, memVal, compress, compressFormat, dataType, boundarySize, x, roY, bSX, vBY, calcDataType, cfg.gdalDLLPath, nodataMask]
 					c = cfg.pool.apply_async(self.processRasterDev, args=(rasterPath, signatureList, functionBand, functionRaster, algorithmName, pOut, outputAlgorithmRaster, outputClassificationRaster, sections, classificationOptions, nodataValue, macroclassCheck, functionBandArgument, functionVariable, progressMessage, skipReplaceNoData, singleBandNumber, outputBandNumber, outputNoDataValue, scale, offset, wrtP))
 					results.append([c, p])
 					cfg.QtWidgetsSCP.qApp.processEvents()
@@ -5418,7 +5443,7 @@ class Utils:
 							fArg = functionBandArgument[p]
 							fVar = functionVariable[p]
 							otpLst = None
-						wrtP = [p, otpLst, cfg.tmpDir, parallelWritingCheck, pMQ, memVal, compress, compressFormat, dataType, boundarySize, 0, 0, rX, rY, calcDataType, cfg.gdalDLLPath]
+						wrtP = [p, otpLst, cfg.tmpDir, parallelWritingCheck, pMQ, memVal, compress, compressFormat, dataType, boundarySize, 0, 0, rX, rY, calcDataType, cfg.gdalDLLPath, nodataMask]
 						if skipSingleBand is None:
 							singleBand = p
 						else:
@@ -6467,10 +6492,13 @@ class Utils:
 
 	# show hide input image
 	def showHideInputImage(self):
-		if cfg.bandSetsList[cfg.bndSetNumber][0] == 'Yes':
-			i = cfg.tmpVrtDict[cfg.bndSetNumber]
-		else:
-			i = cfg.utls.selectLayerbyName(cfg.bandSetsList[cfg.bndSetNumber][8], 'Yes')
+		try:
+			if cfg.bandSetsList[cfg.bndSetNumber][0] == 'Yes':
+				i = cfg.tmpVrtDict[cfg.bndSetNumber]
+			else:
+				i = cfg.utls.selectLayerbyName(cfg.bandSetsList[cfg.bndSetNumber][8], 'Yes')
+		except:
+			pass
 		try:
 			if i is not None:
 				if cfg.inputImageRadio.isChecked():

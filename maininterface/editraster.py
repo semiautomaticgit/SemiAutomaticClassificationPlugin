@@ -223,7 +223,10 @@ class EditRaster:
 		except:
 			o = 0
 			s = 1
-		self.a1 =  iRB.ReadAsArray(self.pixelStartColumn, self.pixelStartRow, columnNum1, rowNum1)*s+o
+		a = iRB.ReadAsArray(self.pixelStartColumn, self.pixelStartRow, columnNum1, rowNum1)
+		off = o
+		sca = s
+		self.a1 =  a
 		iRB2 = rD2.GetRasterBand(1)	
 		try:
 			o = iRB2.GetOffset()
@@ -235,7 +238,8 @@ class EditRaster:
 		except:
 			o = 0
 			s = 1
-		a2 =  iRB2.ReadAsArray(startColumn2, startRow2, columnNum1, rowNum1)*s+o
+		b = iRB2.ReadAsArray(startColumn2, startRow2, columnNum1, rowNum1)
+		a2 =  b*s+o
 		# expression
 		if cfg.ui.use_expression_checkBox.isChecked() is True:
 			expression = ' ' + cfg.ui.expression_lineEdit.text() + ' '
@@ -246,10 +250,10 @@ class EditRaster:
 				dataArray = eval(e)
 		else:
 			value = editValue
-			dataArray = cfg.np.where(a2 >0 , value, self.a1)
+			dataArray = cfg.np.where(a2 >0 , value, self.a1*sca+off)
 		iRB = None
 		iRB2 = None
-		self.writeArrayBlock(rD, 1, dataArray, self.pixelStartColumn, self.pixelStartRow)
+		self.writeArrayBlock(rD, 1, dataArray/sca-off, self.pixelStartColumn, self.pixelStartRow)
 		rD = None
 		rD2 = None
 

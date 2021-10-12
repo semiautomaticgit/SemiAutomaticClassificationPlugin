@@ -509,7 +509,7 @@ class BandCalcTab:
 			cfg.bCalc.calculate(None, 'No', e)
 		
 	# calculate
-	def calculate(self, outFile = None, batch = 'No', expressionString = None, extentRaster = None, extentList = None, inputNoDataAsValue = None, useNoDataValue = None,  outputNoData = None, rasterDataType = None, useScale = None, useOffset = None, align = None, extentIntersection = None, extentSameAs = None, quiet = 'No', bandSetNumber = None, calcDataType = None):
+	def calculate(self, outFile = None, batch = 'No', expressionString = None, extentRaster = None, extentList = None, inputNoDataAsValue = None, useNoDataValue = None,  outputNoData = None, rasterDataType = None, useScale = None, useOffset = None, align = None, extentIntersection = None, extentSameAs = None, quiet = 'No', bandSetNumber = None, calcDataType = None, nodataMask = None):
 		if bandSetNumber is None:
 			bandSetNumber = cfg.bndSetNumber
 		if bandSetNumber >= len(cfg.bandSetsList):
@@ -969,6 +969,11 @@ class BandCalcTab:
 									skipReplaceNoDT = 1
 								else:
 									skipReplaceNoDT = None
+							if nodataMask is None:
+								if cfg.ui.nodata_mask_checkBox.isChecked() is True:
+									nodataMask = 'Yes'
+								else:
+									nodataMask = 'No'
 							if useScale is None:
 								if cfg.ui.set_scale_checkBox.isChecked() is True:
 									useScale = cfg.ui.scale_doubleSpinBox.value()
@@ -1110,7 +1115,7 @@ class BandCalcTab:
 								tPMD = cfg.utls.createTempVirtualRaster(bList, bandNumberList, 'Yes', 'Yes', 0, 'No', 'No', [float(tLX), float(tLY), float(lRX), float(lRY), 'Yes'])
 							cfg.utls.makeDirectory(cfg.osSCP.path.dirname(out))
 							# process calculation
-							o = cfg.utls.multiProcessRaster(rasterPath = tPMD, functionBand = 'No', functionRaster = cfg.utls.bandCalculation, outputRasterList = [out], nodataValue = useNoDataValue,  functionBandArgument = e, functionVariable = variableList, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Calculation ') + str(e), skipReplaceNoData = skipReplaceNoDT, virtualRaster = vrtR, compress = cfg.rasterCompression, compressFormat = 'LZW', outputNoDataValue = outputNoData, dataType = rasterDataType, scale = useScale, offset = useOffset, calcDataType = calcDataType)
+							o = cfg.utls.multiProcessRaster(rasterPath = tPMD, functionBand = 'No', functionRaster = cfg.utls.bandCalculation, outputRasterList = [out], nodataValue = useNoDataValue,  functionBandArgument = e, functionVariable = variableList, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Calculation ') + str(e), skipReplaceNoData = skipReplaceNoDT, virtualRaster = vrtR, compress = cfg.rasterCompression, compressFormat = 'LZW', outputNoDataValue = outputNoData, dataType = rasterDataType, scale = useScale, offset = useOffset, calcDataType = calcDataType, nodataMask = nodataMask)
 							if o != 'No':
 								if quiet == 'No':
 									r =cfg.utls.addRasterLayer(out)
