@@ -9548,6 +9548,7 @@ class Utils:
 					msg = 'From: SCP\nTo: \nSubject: ' + subject + '\n\n' + message + '\n\n---\nSemi-Automatic Classification Plugin\nhttps://fromgistors.blogspot.com/p/semi-automatic-classification-plugin.html'
 					s.sendmail(cfg.SMTPUser, tolist, msg)
 					s.quit()
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' subject:' + str(subject) + ' message:' + str(message))
 			except Exception as err:
 				# logger
 				cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))

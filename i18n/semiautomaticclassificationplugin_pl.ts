@@ -6038,7 +6038,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="1640"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="1650"/>
         <source>Please, restart QGIS for executing the Semi-Automatic Classification Plugin</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6268,7 +6268,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/batchTab.py" line="3747"/>
+        <location filename="../maininterface/batchTab.py" line="3776"/>
         <source>missing parameter</source>
         <translation type="unfinished"></translation>
     </message>

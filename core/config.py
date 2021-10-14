@@ -852,6 +852,8 @@ functionNames.append([[bandSetNm, '', '', []]])
 functionNames.append([[endForBandSetNm, '', '', []]])
 functionNames.append([[tempRasterNm + '1!', '', '', []]])
 functionNames.append([[tempDirNm, '', '', []]])
+functionNames.append([['Notifications']])
+functionNames.append([[' send_notification', 'cfg.batchT.performSendNotification',  'cfg.utls.sendSMTPMessage', ['subject : \'\'', 'message : \'\'']]])
 
 ''' Scatter plot '''
 scatterColorMap = ['rainbow', 'gist_rainbow', 'jet', 'afmhot', 'bwr', 'gnuplot', 'gnuplot2', 'BrBG', 'coolwarm', 'PiYG', 'PRGn', 'PuOr', 'RdBu', 'RdGy', 'RdYlBu', 'RdYlGn', 'Spectral', 'seismic', 'ocean', 'terrain', 'Blues', 'BuGn', 'BuPu', 'GnBu', 'Greens', 'Greys', 'Oranges', 'OrRd', 'PuBu', 'PuBuGn', 'PuRd', 'Purples', 'RdPu', 'Reds', 'YlGn', 'YlGnBu', 'YlOrBr', 'YlOrRd']

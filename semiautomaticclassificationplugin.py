@@ -317,7 +317,7 @@ class SemiAutomaticClassificationPlugin:
 			cfg.RGBLT = RGBListTab()
 			cfg.bstLT = BandSetListTab()
 			cfg.bCalc = BandCalcTab()
-			cfg.batchT= BatchTab()
+			cfg.batchT = BatchTab()
 			cfg.clipMulti = ClipMultipleRasters()
 			cfg.stackRstr = StackRasterBands()
 			cfg.mosaicBS = MosaicBandSets()
@@ -1599,6 +1599,16 @@ class SemiAutomaticClassificationPlugin:
 		cfg.bCalc.rasterBandName()
 		cfg.SCPD.openInput()
 		cfg.bstLT.BandSetListTable()
+		# allow automatic batch
+		batchPath = cfg.plgnDir + '/batch.txt'
+		if cfg.osSCP.path.isfile(batchPath):
+			try:
+				text = open(batchPath, 'r').read()
+				cfg.ui.plainTextEdit_batch.setPlainText(text)
+				cfg.batchT.runButton()
+			except Exception as err:
+				# logger
+				cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 		
 	# read project variables
 	def projectLoaded(self):

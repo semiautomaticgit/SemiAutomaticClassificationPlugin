@@ -1737,6 +1737,35 @@ class BatchTab:
 		parameters.append('\'Yes\'')
 		parameters.append(bandset)
 		return 'Yes', parameters
+		
+	# batch send notification
+	def performSendNotification(self, paramList):
+		parameters = []
+		for p in paramList:
+			pSplit = p.split(':', 1)
+			pName = pSplit[0].lower().replace(' ', '')
+			if pName == 'subject':
+				pSplitX = pSplit[1].strip()
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
+				subject = '\'' + g[0] + '\''
+				if len(cfg.utls.fileName(g[0])) > 0:
+					pass
+				else:
+					return 'No', pName
+			elif pName == 'message':
+				pSplitX = pSplit[1].strip()
+				g = cfg.reSCP.findall('[\'](.*?)[\']',pSplitX.replace('\\', '/'))
+				message = '\'' + g[0] + '\''
+				if len(cfg.utls.fileName(g[0])) > 0:
+					pass
+				else:
+					return 'No', pName
+			else:
+				if len(pName.strip()) > 0:
+					return 'No', pName
+		parameters.append(subject)
+		parameters.append(message)
+		return 'Yes', parameters
 									
 	# batch band combination
 	def performBandCombination(self, paramList):
