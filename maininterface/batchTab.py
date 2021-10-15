@@ -29,7 +29,7 @@
  * Semi-Automatic Classification Plugin. If not, see <http://www.gnu.org/licenses/>. 
  * 
 **************************************************************************************************************************/
-
+f
 '''
 
 cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
@@ -118,6 +118,13 @@ class BatchTab:
 					for variableVal in variables:
 						rexpression = rexpression.replace(variableVal, variables[variableVal])
 			else:
+				# replace variables in variables
+				variablesCopy = variables.copy()
+				for variableValC in variables:
+					for variableVal in variables:
+						if variableVal != variableValC:
+							variablesCopy[variableValC] = str(variablesCopy[variableValC]).replace(str(variableVal), str(variables[variableVal]))
+				variables = variablesCopy.copy()
 				rexpression = rexpression + traiL + '\n'
 				for variableVal in variables:
 					rexpression = rexpression.replace(variableVal, variables[variableVal])
@@ -342,7 +349,7 @@ class BatchTab:
 		fLine = fexpression.rstrip().split('\n')
 		ef = []
 		for line in fLine:
-			if len(line) > 0:
+			if len(line) > 0 and line[0] != '#':
 				ef.append(line)
 		lnmb = 0
 		for nf in ef:

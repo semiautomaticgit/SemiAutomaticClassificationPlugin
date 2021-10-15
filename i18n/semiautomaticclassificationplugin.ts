@@ -5524,12 +5524,12 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/batchTab.py" line="431"/>
+        <location filename="../maininterface/batchTab.py" line="438"/>
         <source>Select a batch file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/batchTab.py" line="438"/>
+        <location filename="../maininterface/batchTab.py" line="445"/>
         <source>Save the batch to file</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6064,7 +6064,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/batchTab.py" line="373"/>
+        <location filename="../maininterface/batchTab.py" line="380"/>
         <source>Check OK</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6264,7 +6264,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/batchTab.py" line="3776"/>
+        <location filename="../maininterface/batchTab.py" line="3783"/>
         <source>missing parameter</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6584,7 +6584,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/batchTab.py" line="367"/>
+        <location filename="../maininterface/batchTab.py" line="374"/>
         <source>Error line </source>
         <translation type="unfinished"></translation>
     </message>

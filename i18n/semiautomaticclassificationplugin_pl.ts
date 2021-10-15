@@ -5678,12 +5678,12 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation>Wybierz raster</translation>
     </message>
     <message>
-        <location filename="../maininterface/batchTab.py" line="431"/>
+        <location filename="../maininterface/batchTab.py" line="438"/>
         <source>Select a batch file</source>
         <translation>Wybierz plik wsadowy</translation>
     </message>
     <message>
-        <location filename="../maininterface/batchTab.py" line="438"/>
+        <location filename="../maininterface/batchTab.py" line="445"/>
         <source>Save the batch to file</source>
         <translation>Zapisz do pliku wsadowego</translation>
     </message>
@@ -6068,7 +6068,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/batchTab.py" line="373"/>
+        <location filename="../maininterface/batchTab.py" line="380"/>
         <source>Check OK</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6268,7 +6268,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/batchTab.py" line="3776"/>
+        <location filename="../maininterface/batchTab.py" line="3783"/>
         <source>missing parameter</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6588,7 +6588,7 @@ Chcesz dodać wymagane pola do tego shapefile?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../maininterface/batchTab.py" line="367"/>
+        <location filename="../maininterface/batchTab.py" line="374"/>
         <source>Error line </source>
         <translation type="unfinished"></translation>
     </message>

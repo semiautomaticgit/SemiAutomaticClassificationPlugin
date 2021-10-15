@@ -774,7 +774,6 @@ usgs_C7p = '/spectralsignature/usgs_spectral_library/vegetation.csv'
 
 ''' Batch '''
 workingDirNm = '!working_dir!'
-processSettingsNm = '!process_settings!'
 tempRasterNm = '!temp_raster_'
 tempDirNm = '!temp_dir!'
 startForDirNm = '!for_directory_in!'
@@ -837,22 +836,22 @@ functionNames.append([[' land_cover_change', 'cfg.batchT.performLandCoverChange'
 functionNames.append([[' reclassification', 'cfg.batchT.performReclassification', 'cfg.reclassification.reclassify', ['input_raster_path : \'\'', 'value_list : \'oldVal_newVal,oldVal_newVal\'', 'use_signature_list_code : 1', 'code_field : \'MC_ID\'', 'output_raster_path : \'\'']]])
 functionNames.append([[' zonal_stat_raster', 'cfg.batchT.performZonalStatRaster',  'cfg.znlSttRstT.zonalStatRaster', ['input_raster_path : \'\'', 'reference_file_path : \'\'', 'use_nodata : 0', 'nodata_value : 0', 'vector_field_name : \'\'', 'statistic : \'sum\'', 'stat_value : 50', 'output_raster_path : \'\'']]])
 functionNames.append([['Variables']])
-functionNames.append([[workingDirNm, 'cfg.batchT.workingDirectory', '', ['\'\'']]])
-functionNames.append([[processSettingsNm, 'cfg.batchT.processSettings', 'cfg.sets.setProcessSetting', ['threads : 2', 'ram : 512']]])
-functionNames.append([[startForDirNm, '', '', ['\'\'']]])
-functionNames.append([[DirNm, '', '', []]])
-functionNames.append([[directoryName, '', '', []]])
-functionNames.append([[endForDirNm, '', '', []]])
-functionNames.append([[startForFileNm, '', '', ['\'\'']]])
-functionNames.append([[FileNm, '', '', []]])
-functionNames.append([[FileDirNm, '', '', []]])
-functionNames.append([[endForFileNm, '', '', []]])
-functionNames.append([[startForBandSetNm, '', '', ['\'\'']]])
-functionNames.append([[bandSetNm, '', '', []]])
-functionNames.append([[endForBandSetNm, '', '', []]])
-functionNames.append([[tempRasterNm + '1!', '', '', []]])
-functionNames.append([[tempDirNm, '', '', []]])
-functionNames.append([['Notifications']])
+functionNames.append([[' ' + workingDirNm, 'cfg.batchT.workingDirectory', '', ['\'\'']]])
+functionNames.append([[' ' + startForDirNm, '', '', ['\'\'']]])
+functionNames.append([[' ' + DirNm, '', '', []]])
+functionNames.append([[' ' + directoryName, '', '', []]])
+functionNames.append([[' ' + endForDirNm, '', '', []]])
+functionNames.append([[' ' + startForFileNm, '', '', ['\'\'']]])
+functionNames.append([[' ' + FileNm, '', '', []]])
+functionNames.append([[' ' + FileDirNm, '', '', []]])
+functionNames.append([[' ' + endForFileNm, '', '', []]])
+functionNames.append([[' ' + startForBandSetNm, '', '', ['\'\'']]])
+functionNames.append([[' ' + bandSetNm, '', '', []]])
+functionNames.append([[' ' + endForBandSetNm, '', '', []]])
+functionNames.append([[' ' + tempRasterNm + '1!', '', '', []]])
+functionNames.append([[' ' + tempDirNm, '', '', []]])
+functionNames.append([['Functions']])
+functionNames.append([[' process_settings', 'cfg.batchT.processSettings', 'cfg.sets.setProcessSetting', ['threads : 2', 'ram : 512']]])
 functionNames.append([[' send_notification', 'cfg.batchT.performSendNotification',  'cfg.utls.sendSMTPMessage', ['subject : \'\'', 'message : \'\'']]])
 
 ''' Scatter plot '''
