@@ -13547,7 +13547,7 @@ distance</string>
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>90</width>
+                     <width>98</width>
                      <height>90</height>
                     </rect>
                    </property>
@@ -13846,7 +13846,7 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>90</width>
+                     <width>98</width>
                      <height>90</height>
                     </rect>
                    </property>
@@ -14541,7 +14541,7 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>90</width>
+                     <width>98</width>
                      <height>90</height>
                     </rect>
                    </property>
@@ -16279,7 +16279,7 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>90</width>
+                     <width>98</width>
                      <height>90</height>
                     </rect>
                    </property>
@@ -16720,7 +16720,7 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>90</width>
+                     <width>98</width>
                      <height>90</height>
                     </rect>
                    </property>
@@ -16781,8 +16781,8 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>385</width>
-                     <height>193</height>
+                     <width>723</width>
+                     <height>351</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -17068,7 +17068,7 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>90</width>
+                     <width>98</width>
                      <height>90</height>
                     </rect>
                    </property>
@@ -17125,8 +17125,8 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>444</width>
-                     <height>167</height>
+                     <width>723</width>
+                     <height>351</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -17374,7 +17374,7 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>90</width>
+                     <width>98</width>
                      <height>90</height>
                     </rect>
                    </property>
@@ -17428,8 +17428,8 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>456</width>
-                     <height>229</height>
+                     <width>723</width>
+                     <height>351</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -17645,6 +17645,16 @@ p, li { white-space: pre-wrap; }
                         </property>
                        </widget>
                       </item>
+                      <item row="5" column="0">
+                       <widget class="QCheckBox" name="regression_raster_checkBox">
+                        <property name="toolTip">
+                         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If checked, calculate linear regression and create rasters using the values of regression coefficients&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                        </property>
+                        <property name="text">
+                         <string>Calculate linear regression</string>
+                        </property>
+                       </widget>
+                      </item>
                      </layout>
                     </item>
                     <item row="2" column="0">
@@ -17773,7 +17783,7 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>90</width>
+                     <width>98</width>
                      <height>90</height>
                     </rect>
                    </property>
@@ -18118,7 +18128,7 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>90</width>
+                     <width>98</width>
                      <height>90</height>
                     </rect>
                    </property>

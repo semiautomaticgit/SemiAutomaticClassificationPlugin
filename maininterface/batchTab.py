@@ -3260,6 +3260,8 @@ class BatchTab:
 	# batch cross classification
 	def performCrossClassification(self, paramList):
 		shapefileField = 'None'
+		NoDataValue = 'None'
+		useNodata = 'No'
 		parameters = []
 		for p in paramList:
 			pSplit = p.split(':', 1)
@@ -3306,20 +3308,31 @@ class BatchTab:
 			elif pName == 'use_nodata':
 				if pSplit[1].strip().replace(' ', '') == '1':
 					cfg.ui.nodata_checkBox_6.setCheckState(2)
+					useNodata = 'Yes'
 				elif pSplit[1].strip().replace(' ', '') == '0':
 					cfg.ui.nodata_checkBox_6.setCheckState(0)
+					useNodata = 'No'
 				else:
 					return 'No', pName
 			# nodata value (int value)
 			elif pName == 'nodata_value':
 				try:
-					val = int(eval(pSplit[1].strip().replace(' ', '')))
-					cfg.ui.nodata_spinBox_7.setValue(val)
+					NoDataValue = int(eval(pSplit[1].strip().replace(' ', '')))
 				except:
+					return 'No', pName
+			# raster from regression checkbox (1 checked or 0 unchecked)
+			elif pName == 'regression':
+				if pSplit[1].strip().replace(' ', '') == '1':
+					regression = '\'Yes\''
+				elif pSplit[1].strip().replace(' ', '') == '0':
+					regression = '\'No\''
+				else:
 					return 'No', pName
 			else:
 				if len(pName.strip()) > 0:
 					return 'No', pName
+		if useNodata == 'No':
+			NoDataValue = 'None'
 		# append parameters
 		try:
 			# batch
@@ -3328,6 +3341,8 @@ class BatchTab:
 			parameters.append('\'Yes\'')
 			parameters.append(shapefileField)
 			parameters.append(outputRaster)
+			parameters.append(NoDataValue)
+			parameters.append(regression)
 		except:
 			return 'No', cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'missing parameter')
 		return 'Yes', parameters

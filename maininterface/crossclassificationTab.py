@@ -54,7 +54,7 @@ class CrossClassification:
 		cfg.utls.logCondition(str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'classification name: ' + str(self.clssfctnNm))
 	
 	# cross classification calculation
-	def crossClassification(self, classification, reference, batch = 'No', shapefileField = None, rasterOutput = None,  NoDataValue = None):
+	def crossClassification(self, classification, reference, batch = 'No', shapefileField = None, rasterOutput = None,  NoDataValue = None, regressionRaster = 'No'):
 		# check if numpy is updated
 		try:
 			cfg.np.count_nonzero([1,1,0])
@@ -96,6 +96,10 @@ class CrossClassification:
 						return 'No'
 				except:
 					return 'No'
+			# regression
+			if batch == 'No':
+				if cfg.ui.regression_raster_checkBox.isChecked() is True:
+					regressionRaster = 'Yes'
 			# date time for temp name
 			dT = cfg.utls.getTime()
 			if iClass is not None and l is not None:
@@ -411,42 +415,43 @@ class CrossClassification:
 							rSumTot = rSumTot + rasterBandUniqueVal[v][0]
 						except:
 							crossClass[rows.index(r), cols.index(c)] = 0
-				# calculate R
-				rXMean = rSumX / rSumTot
-				rYMean = rSumY / rSumTot
-				# linear regression y = b0 + b1 x + E
-				Sxy = 0
-				Sxx = 0
-				Syy = 0
-				for c in cols:
-					for r in rows:
-						try:
-							v = (c, r)
-							Sxx = Sxx + rasterBandUniqueVal[v][0] * (c - rXMean)**2
-							Syy = Syy + rasterBandUniqueVal[v][0] * (r - rYMean)**2
-							Sxy = Sxy + (c - rXMean) * (r - rYMean) * rasterBandUniqueVal[v][0]
-						except:
-							pass
-				try:
-					rCoeff = Sxy / (Sxx * Syy)**0.5
-					rCoeff2 = rCoeff**2
-					slope = Sxy / Sxx
-					intercept = rYMean - slope * rXMean
-					VAR_Y = (Syy - slope * Sxy) / (rSumTot-2)
-					VAR_slope = VAR_Y / Sxx
-					VAR_intercept = VAR_Y * ( 1/rSumTot + rXMean**2 / Sxx)
-					conf_slope = 2 * (VAR_slope)**0.5
-					conf_intercept = 2 * (VAR_intercept)**0.5
-				except:
-					rCoeff = ''
-					rCoeff2 = ''
-					slope = ''
-					intercept = ''
-					VAR_Y = ''
-					VAR_slope = ''
-					conf_slope = ''
-					VAR_intercept = ''
-					conf_intercept = ''
+				# calculate regression
+				if regressionRaster == 'Yes':
+					rXMean = rSumX / rSumTot
+					rYMean = rSumY / rSumTot
+					# linear regression y = b0 + b1 x + E
+					Sxy = 0
+					Sxx = 0
+					Syy = 0
+					for c in cols:
+						for r in rows:
+							try:
+								v = (c, r)
+								Sxx = Sxx + rasterBandUniqueVal[v][0] * (c - rXMean)**2
+								Syy = Syy + rasterBandUniqueVal[v][0] * (r - rYMean)**2
+								Sxy = Sxy + (c - rXMean) * (r - rYMean) * rasterBandUniqueVal[v][0]
+							except:
+								pass
+					try:
+						rCoeff = Sxy / (Sxx * Syy)**0.5
+						rCoeff2 = rCoeff**2
+						slope = Sxy / Sxx
+						intercept = rYMean - slope * rXMean
+						VAR_Y = (Syy - slope * Sxy) / (rSumTot-2)
+						VAR_slope = VAR_Y / Sxx
+						VAR_intercept = VAR_Y * ( 1/rSumTot + rXMean**2 / Sxx)
+						conf_slope = 2 * (VAR_slope)**0.5
+						conf_intercept = 2 * (VAR_intercept)**0.5
+					except:
+						rCoeff = ''
+						rCoeff2 = ''
+						slope = ''
+						intercept = ''
+						VAR_Y = ''
+						VAR_slope = ''
+						conf_slope = ''
+						VAR_intercept = ''
+						conf_intercept = ''
 				# save combination to table
 				l.write(str('\n'))
 				tStr = '\t' + '> ' + cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'CROSS MATRIX [') + str(un) + '^2]' + '\n'
@@ -473,15 +478,16 @@ class CrossClassification:
 				lL = lL + '\t' + str(totMat) + str('\n')
 				l.write(lL)
 				# write linear regression
-				l.write(str('\n'))
-				l.write('Linear regression Y = B0 + B1*X' + '\n')
-				l.write('Coeff. det. R^2' + '\t' + str(rCoeff2) + '\n')
-				l.write('Coeff. correlation r' + '\t' + str(rCoeff) + '\n')
-				l.write('B1' + '\t' + str(slope) + ' ± ' + str(conf_slope) + ' \n')
-				l.write('B0' + '\t' + str(intercept) + ' ± ' + str(conf_intercept) + '\n')
-				l.write('Variance Y' + '\t' + str(VAR_Y) + '\n')
-				l.write('Variance B1' + '\t' + str(VAR_slope) + '\n')
-				l.write('Variance B0' + '\t' + str(VAR_intercept) + '\n')
+				if regressionRaster == 'Yes':
+					l.write(str('\n'))
+					l.write('Linear regression Y = B0 + B1*X' + '\n')
+					l.write('Coeff. det. R^2' + '\t' + str(rCoeff2) + '\n')
+					l.write('Coeff. correlation r' + '\t' + str(rCoeff) + '\n')
+					l.write('B1' + '\t' + str(slope) + ' ± ' + str(conf_slope) + ' \n')
+					l.write('B0' + '\t' + str(intercept) + ' ± ' + str(conf_intercept) + '\n')
+					l.write('Variance Y' + '\t' + str(VAR_Y) + '\n')
+					l.write('Variance B1' + '\t' + str(VAR_slope) + '\n')
+					l.write('Variance B0' + '\t' + str(VAR_intercept) + '\n')
 				l.close()
 				# add raster to layers
 				rastUniqueVal = cfg.np.unique(values).tolist()
@@ -497,6 +503,38 @@ class CrossClassification:
 				except Exception as err:
 					# logger
 					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+				if regressionRaster == 'Yes':
+					# logger
+					cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' regression raster')
+					# output rasters
+					outRasterB0 = cfg.osSCP.path.dirname(crossRstPath) + '/' + cfg.utls.fileNameNoExt(crossRstPath) + '_b0.tif'
+					oM = []
+					oM.append(outRasterB0)
+					try:
+						rDD = cfg.gdalSCP.Open(vrtCheck, cfg.gdalSCP.GA_ReadOnly)
+						oMR = cfg.utls.createRasterFromReference(rDD, 1, oM, cfg.NoDataVal, 'GTiff', 'Float32', 0, None, cfg.rasterCompression, 'LZW', constantValue = slope)
+						# close GDAL rasters
+						for b in range(0, len(oMR)):
+							oMR[b] = None
+						# add raster to layers
+						rstr = cfg.utls.addRasterLayer(outRasterB0)
+					except Exception as err:
+						# logger
+						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
+					outRasterB1 = cfg.osSCP.path.dirname(crossRstPath) + '/' + cfg.utls.fileNameNoExt(crossRstPath) + '_b1.tif'
+					oM = []
+					oM.append(outRasterB1)
+					try:
+						oMR = cfg.utls.createRasterFromReference(rDD, 1, oM, cfg.NoDataVal, 'GTiff', 'Float32', 0, None, cfg.rasterCompression, 'LZW', constantValue = intercept)
+						# close GDAL rasters
+						for b in range(0, len(oMR)):
+							oMR[b] = None
+						# add raster to layers
+						rstr = cfg.utls.addRasterLayer(outRasterB1)
+						rDD = None
+					except Exception as err:
+						# logger
+						cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
 				cfg.uiUtls.updateBar(100)
 				# remove temp layers
 				try:
