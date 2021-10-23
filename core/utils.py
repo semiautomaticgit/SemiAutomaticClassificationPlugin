@@ -1403,7 +1403,6 @@ class Utils:
 		except Exception as err:
 			# logger
 			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
-			cfg.mx.msgErr28()
 			return 0
 				
 	# land cover signature
@@ -1428,7 +1427,6 @@ class Utils:
 		except Exception as err:
 			# logger
 			cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), ' ERROR exception: ' + str(err))
-			cfg.mx.msgErr28()
 			return 0
 	
 ##################################

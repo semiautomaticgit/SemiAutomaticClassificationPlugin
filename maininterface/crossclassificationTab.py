@@ -512,7 +512,7 @@ class CrossClassification:
 					oM.append(outRasterB0)
 					try:
 						rDD = cfg.gdalSCP.Open(vrtCheck, cfg.gdalSCP.GA_ReadOnly)
-						oMR = cfg.utls.createRasterFromReference(rDD, 1, oM, cfg.NoDataVal, 'GTiff', 'Float32', 0, None, cfg.rasterCompression, 'LZW', constantValue = slope)
+						oMR = cfg.utls.createRasterFromReference(rDD, 1, oM, cfg.NoDataVal, 'GTiff', 'Float32', 0, None, cfg.rasterCompression, 'LZW', constantValue = intercept)
 						# close GDAL rasters
 						for b in range(0, len(oMR)):
 							oMR[b] = None
@@ -525,7 +525,7 @@ class CrossClassification:
 					oM = []
 					oM.append(outRasterB1)
 					try:
-						oMR = cfg.utls.createRasterFromReference(rDD, 1, oM, cfg.NoDataVal, 'GTiff', 'Float32', 0, None, cfg.rasterCompression, 'LZW', constantValue = intercept)
+						oMR = cfg.utls.createRasterFromReference(rDD, 1, oM, cfg.NoDataVal, 'GTiff', 'Float32', 0, None, cfg.rasterCompression, 'LZW', constantValue = slope)
 						# close GDAL rasters
 						for b in range(0, len(oMR)):
 							oMR[b] = None
