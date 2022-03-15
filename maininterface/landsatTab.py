@@ -273,7 +273,7 @@ class LandsatTab:
 					elif str(nm[len(nm) - 8: len(nm) - 1]) == '6_VCID_' and nm[len(nm) - 1].isdigit():
 						e = self.landsat457Temperature(sat, RADIANCE_MULT, RADIANCE_ADD)
 						temperatureList.append([inputRaster, e, outputRaster])
-				elif str(sat).lower() in ['landsat8', 'landsat_8']:
+				elif str(sat).lower() in ['landsat8', 'landsat_8', 'landsat9', 'landsat_9']:
 					# landsat thermal bands
 					if nm[len(nm) - 2: len(nm) - 0] in ['10', '11']:
 						e = self.landsat8Temperature(RADIANCE_MULT, RADIANCE_ADD, K1_CONSTANT, K2_CONSTANT)
@@ -432,7 +432,7 @@ class LandsatTab:
 					cfg.utls.logCondition(str(__name__) + '-' + (cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'WARNING: unable to load raster' + str(outR))
 		# create band set
 		if cfg.ui.create_bandset_checkBox.isChecked() is True:
-			if str(sat).lower() in ['landsat8', 'landsat_8', 'landsat_8_sr']:
+			if str(sat).lower() in ['landsat8', 'landsat_8', 'landsat_8_sr', 'landsat9', 'landsat_9', 'landsat_9_sr']:
 				satName = cfg.satLandsat8
 			elif str(sat).lower() in ['landsat_7','landsat_7_sr', 'landsat7']:
 				satName = cfg.satLandsat7
@@ -464,7 +464,7 @@ class LandsatTab:
 	# pansharpening expressions
 	def pansharpeningExpressions(self, satellite):
 		e = []
-		if satellite in ['landsat8', 'landsat_8']:
+		if satellite in ['landsat8', 'landsat_8', 'landsat9', 'landsat_9']:
 			# Intensity (SCP weights)
 			for oR in ['"blue"', '"green"', '"red"']:
 				o = oR + '* "pan" / ((0.42* "blue" + 0.98 * "green" + 0.6 * "red") / 2)'
@@ -581,7 +581,7 @@ class LandsatTab:
 			return 'No'
 		# TOA reflectance
 		if cfg.ui.DOS1_checkBox.isChecked() is False:
-			e = 'cfg.np.where("raster" == ' + str(nD) + ', ' + str(self.nodataCalc) + ', cfg.np.clip( ( "raster" *' + str('%.16f' % m) + '+ (' + str('%.16f' % a) + ') * ' + str('%.16f' % cfg.np.pi) + ' * ' + str('%.16f' % self.eSD) + ' * ' + str('%.16f' % self.eSD) + ') / ( ' + str('%.16f' % eS)+ ' * (' + str(self.sA) + ') ) , 0, 1))'
+			e = 'cfg.np.where("raster" == ' + str(nD) + ', ' + str(self.nodataCalc) + ', cfg.np.clip( (( "raster" *' + str('%.16f' % m) + '+ (' + str('%.16f' % a) + ')) * ' + str('%.16f' % cfg.np.pi) + ' * ' + str('%.16f' % self.eSD) + ' * ' + str('%.16f' % self.eSD) + ') / ( ' + str('%.16f' % eS)+ ' * (' + str(self.sA) + ') ) , 0, 1))'
 		# DOS atmospheric correction
 		elif cfg.ui.DOS1_checkBox.isChecked() is True:
 			# No data value
@@ -774,7 +774,7 @@ class LandsatTab:
 						elif str(nm[len(nm) - 8: len(nm) - 1]) == '6_VCID_' and nm[len(nm) - 1].isdigit():
 							dBs['BAND_6_VCID_{0}'.format(nm[len(nm) - 1])] = str(f)
 							bandNames.append(f)
-					elif str(sat).lower() in ['landsat_8', 'landsat8']:
+					elif str(sat).lower() in ['landsat_8', 'landsat8', 'landsat_9', 'landsat9']:
 						# for bands > 9
 						if nm[len(nm) - 2: len(nm) - 0] in ['10', '11']:
 							dBs['BAND_' + nm[len(nm) - 2: len(nm) - 0]] = str(f)
@@ -969,7 +969,7 @@ class LandsatTab:
 		
 	def editedSatellite(self):
 		sat = cfg.ui.satellite_lineEdit.text()
-		if str(sat).lower() in ['landsat_1', 'landsat1','landsat_2', 'landsat2','landsat_3', 'landsat3','landsat_4', 'landsat4', 'landsat_5', 'landsat5', 'landsat_7', 'landsat7', 'landsat_8', 'landsat8', 'landsat_1_sr', 'landsat_2_sr', 'landsat_3_sr', 'landsat_4_sr', 'landsat_5_sr', 'landsat_7_sr', 'landsat_8_sr']:
+		if str(sat).lower() in ['landsat_1', 'landsat1','landsat_2', 'landsat2','landsat_3', 'landsat3','landsat_4', 'landsat4', 'landsat_5', 'landsat5', 'landsat_7', 'landsat7', 'landsat_8', 'landsat8', 'landsat_9', 'landsat9', 'landsat_1_sr', 'landsat_2_sr', 'landsat_3_sr', 'landsat_4_sr', 'landsat_5_sr', 'landsat_7_sr', 'landsat_8_sr']:
 			cfg.ui.satellite_lineEdit.setStyleSheet('color : black')
 		else:
 			cfg.ui.satellite_lineEdit.setStyleSheet('color : red')
