@@ -425,7 +425,7 @@ class SemiAutomaticClassificationPlugin:
 							break
 			# GDAL config
 			try:
-				cfg.gdalSCP.SetConfigOption('GDAL_NUM_THREADS', str(cfg.threads))
+				#cfg.gdalSCP.SetConfigOption('GDAL_NUM_THREADS', str(cfg.threads))
 				cfg.gdalSCP.SetCacheMax(int(cfg.RAMValue * 0.3 * 1000000))
 				cfg.gdalSCP.SetConfigOption('GDAL_DISABLE_READDIR_ON_OPEN', 'TRUE')
 				cfg.gdalSCP.SetConfigOption('GDAL_CACHEMAX', '4')

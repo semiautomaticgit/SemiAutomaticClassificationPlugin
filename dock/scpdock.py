@@ -2523,7 +2523,10 @@ class SCPDock:
 		except:
 			pass
 		clr = cfg.QtGuiSCP.QColor(cfg.ROIClrVal)
-		rT = 255 - cfg.ROITrnspVal * 255 // 100
+		try:
+			rT = 255 - int(cfg.ROITrnspVal) * 255 / 100
+		except:
+			rT = 100
 		clr.setAlpha(rT)
 		f = cfg.utls.getFeaturebyID(sourceLayer, ID)
 		cfg.rbbrBndPol = cfg.qgisGuiSCP.QgsHighlight(cfg.cnvs, f.geometry(), sourceLayer)

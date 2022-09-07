@@ -39,7 +39,7 @@ cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 class Sentinel2Tab:
 
 	def __init__(self):
-		self.nodataCalc = cfg.NoDataValUInt16 * 0.0001
+		self.nodataCalc = cfg.NoDataValFloat32
 		
 	# Sentinel-2 input
 	def inputSentinel(self):
@@ -317,7 +317,7 @@ class Sentinel2Tab:
 			# open input with GDAL
 			rD = cfg.gdalSCP.Open(inputRaster, cfg.gdalSCP.GA_ReadOnly)
 			# output rasters
-			cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataValUInt16, 'GTiff', 'UInt16', 0,  None, compress = cfg.rasterCompression, compressFormat = 'DEFLATE')
+			cfg.utls.createRasterFromReference(rD, 1, oM, cfg.NoDataValFloat32, 'GTiff', 'Float32', 0,  None, compress = cfg.rasterCompression, compressFormat = 'DEFLATE')
 			rD = None
 			if DOS1Check == 'No':
 				argumentList = functionList
@@ -328,7 +328,7 @@ class Sentinel2Tab:
 				for t in range(0, len(outputRasterList)):
 					e = functionList[t].replace('LDNm', str(LDNmList[t]))
 					argumentList.append(e)
-			o = cfg.utls.multiProcessRaster(rasterPath = inputRaster, functionBand = 'No', functionRaster = cfg.utls.calculateRaster, outputRasterList = oM, nodataValue = NoData, functionBandArgument = argumentList, functionVariable = variableList, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Conversion'), parallel = cfg.parallelRaster, outputNoDataValue = cfg.NoDataValUInt16, scale = 0.0001, offset = 0)
+			o = cfg.utls.multiProcessRaster(rasterPath = inputRaster, functionBand = 'No', functionRaster = cfg.utls.calculateRaster, outputRasterList = oM, nodataValue = NoData, functionBandArgument = argumentList, functionVariable = variableList, progressMessage = cfg.QtWidgetsSCP.QApplication.translate('semiautomaticclassificationplugin', 'Conversion'), parallel = cfg.parallelRaster)
 			if cfg.actionCheck == 'Yes':
 				for t in range(0, len(outputRasterList)):
 					cfg.shutilSCP.move(oM[t], outputRasterList[t])

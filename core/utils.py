@@ -3248,19 +3248,22 @@ class Utils:
 			gBand2 = gdalRasterRef.GetRasterBand(1)
 			ndVal = gBand2.GetNoDataValue() 
 			if format is None:
-				format = gBand2.DataType
+				format_x = gBand2.DataType
 			elif format == 'Float64':
-				format = cfg.gdalSCP.GDT_Float64
+				format_x = cfg.gdalSCP.GDT_Float64
 			elif format == 'Float32':
-				format = cfg.gdalSCP.GDT_Float32
+				format_x = cfg.gdalSCP.GDT_Float32
 			elif format == 'Int32':
-				format = cfg.gdalSCP.GDT_Int32
+				format_x = cfg.gdalSCP.GDT_Int32
 			elif format == 'Int16':
-				format = cfg.gdalSCP.GDT_Int16
+				format_x = cfg.gdalSCP.GDT_Int16
 			elif format == 'UInt16':
-				format = cfg.gdalSCP.GDT_UInt16
+				format_x = cfg.gdalSCP.GDT_UInt16
 			elif format == 'Byte':
-				format = cfg.gdalSCP.GDT_Byte
+				format_x = cfg.gdalSCP.GDT_Byte
+			else:
+				format_x = cfg.gdalSCP.GDT_Float32
+			cfg.mx.msgBox("format_x", str(format_x))
 			if previewSize > 0:
 				tLX = rGT[0]
 				tLY = rGT[3]
@@ -3280,11 +3283,11 @@ class Utils:
 					r = previewSize
 				rGT = (lX, rGT[1], rGT[2], tY,  rGT[4],  rGT[5])
 			if compress == 'No':
-				oR = tD.Create(o, c, r, bandNumber, format)
+				oR = tD.Create(o, c, r, bandNumber, format_x)
 			elif compress == 'DEFLATE21':
-				oR = tD.Create(o, c, r, bandNumber, format, options = ['COMPRESS=DEFLATE', 'PREDICTOR=2', 'ZLEVEL=1'])
+				oR = tD.Create(o, c, r, bandNumber, format_x, options = ['COMPRESS=DEFLATE', 'PREDICTOR=2', 'ZLEVEL=1'])
 			else:
-				oR = tD.Create(o, c, r, bandNumber, format, ['COMPRESS=' + compressFormat])
+				oR = tD.Create(o, c, r, bandNumber, format_x, ['COMPRESS=' + compressFormat])
 			if oR is None:
 				# logger
 				cfg.utls.logCondition(str(__name__) + '-' + str(cfg.inspectSCP.stack()[0][3])+ ' ' + cfg.utls.lineOfCode(), 'Error GDAL raster')
