@@ -3263,7 +3263,6 @@ class Utils:
 				format_x = cfg.gdalSCP.GDT_Byte
 			else:
 				format_x = cfg.gdalSCP.GDT_Float32
-			cfg.mx.msgBox("format_x", str(format_x))
 			if previewSize > 0:
 				tLX = rGT[0]
 				tLY = rGT[3]
