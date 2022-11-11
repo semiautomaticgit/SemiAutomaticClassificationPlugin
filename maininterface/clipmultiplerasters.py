@@ -222,7 +222,7 @@ class ClipMultipleRasters:
 		# using coordinates
 		if uS == 0 and len(UX) > 0 and len(UY) > 0 and len(LX) > 0 and len(LY) > 0:
 			for l in rT:
-				f = oD + '/' + outputName + '_' + cfg.utls.fileNameNoExt(l) + '.tif'
+				f = oD + '/' + outputName.replace('.jp2', '') + '_' + cfg.utls.fileNameNoExt(l) + '.tif'
 				bbList = [l]
 				pCrs = cfg.utls.getQGISCrs()
 				rEPSG = cfg.osrSCP.SpatialReference()
