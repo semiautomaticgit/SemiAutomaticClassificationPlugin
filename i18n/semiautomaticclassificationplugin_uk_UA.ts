@@ -5524,12 +5524,12 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7479"/>
+        <location filename="../core/utils.py" line="7475"/>
         <source>Build overviews</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7479"/>
+        <location filename="../core/utils.py" line="7475"/>
         <source>Do you want to build the external overviews of bands?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6144,7 +6144,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="9585"/>
+        <location filename="../core/utils.py" line="9581"/>
         <source>SCP: completed process</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6554,27 +6554,27 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="6370"/>
+        <location filename="../core/utils.py" line="6366"/>
         <source>Calculating signature</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7753"/>
+        <location filename="../core/utils.py" line="7749"/>
         <source>Writing file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="5664"/>
+        <location filename="../core/utils.py" line="5660"/>
         <source>Conversion to vector</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7428"/>
+        <location filename="../core/utils.py" line="7424"/>
         <source>Sieve</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7558"/>
+        <location filename="../core/utils.py" line="7554"/>
         <source>Building overviews</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6614,12 +6614,12 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="9032"/>
+        <location filename="../core/utils.py" line="9028"/>
         <source>Remove rows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="9032"/>
+        <location filename="../core/utils.py" line="9028"/>
         <source>Are you sure you want to remove highlighted rows from the table?</source>
         <translation type="unfinished"></translation>
     </message>

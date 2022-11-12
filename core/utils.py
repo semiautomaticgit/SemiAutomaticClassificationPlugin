@@ -3404,16 +3404,12 @@ class Utils:
 		else:
 			outList = []
 			for cc in range(0, len(oM)):
-				d = cfg.utls.fileName(rasterClippedList[cc])
+				d = cfg.utls.fileNameNoExt(rasterClippedList[cc])
 				if outputNameRoot is None:
 					t = ''
 				else:
 					t = outputNameRoot
-				e = outputRasterDir.rstrip('/') + '/' + t + d
-				if str(e).lower().endswith('.tif'):
-					pass
-				else:
-					e = e + '.tif'
+				e = outputRasterDir.rstrip('/') + '/' + t + d + '.tif'
 				outList.append(e)
 				if cfg.rasterCompression != 'No':
 					try:

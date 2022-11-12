@@ -4384,31 +4384,6 @@ distance</source>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Import vector&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
-    <message encoding="UTF-8">
-        <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="3941"/>
-        <source>Set threshold = σ *</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message encoding="UTF-8">
-        <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="4300"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set automatic threshold σ&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message encoding="UTF-8">
-        <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="4268"/>
-        <source>σ *</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message encoding="UTF-8">
-        <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="5128"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;(© &lt;a href=&quot;http://www.openstreetmap.org/copyright&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;OpenStreetMap&lt;/span&gt;&lt;/a&gt; contributors. The cartography is licensed as CC BY-SA. &lt;a href=&quot;https://operations.osmfoundation.org/policies/tiles/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Tile Usage Policy&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message encoding="UTF-8">
-        <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="21227"/>
-        <source>√</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="3282"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;USGS Spectral Library Version 7 downloaded from &lt;a href=&quot;https://crustal.usgs.gov/speclab/QueryAll07a.php&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;https://crustal.usgs.gov/speclab/QueryAll07a.php&lt;/span&gt;&lt;/a&gt;.&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Reference&lt;/span&gt;: Kokaly, R.F., Clark, R.N., Swayze, G.A., Livo, K.E., Hoefen, T.M., Pearson, N.C., Wise, R.A., Benzel, W.M., Lowers, H.A., Driscoll, R.L., and Klein, A.J., 2017, USGS Spectral Library Version 7: U.S. Geological Survey Data Series 1035, 61 p., https://doi.org/10.3133/ds1035.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
@@ -4609,6 +4584,31 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="17654"/>
         <source>Calculate linear regression</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message encoding="UTF-8">
+        <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="3941"/>
+        <source>Set threshold = σ *</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message encoding="UTF-8">
+        <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="4300"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set automatic threshold σ&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message encoding="UTF-8">
+        <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="4268"/>
+        <source>σ *</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message encoding="UTF-8">
+        <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="5128"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;(© &lt;a href=&quot;http://www.openstreetmap.org/copyright&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;OpenStreetMap&lt;/span&gt;&lt;/a&gt; contributors. The cartography is licensed as CC BY-SA. &lt;a href=&quot;https://operations.osmfoundation.org/policies/tiles/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Tile Usage Policy&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message encoding="UTF-8">
+        <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="21227"/>
+        <source>√</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -5143,7 +5143,7 @@ Do you want to add the required fields to this shapefile?</source>
     <message>
         <location filename="../core/input.py" line="507"/>
         <source>Download products</source>
-        <translation type="unfinished">Télécharger de produits</translation>
+        <translation type="unfinished">Télécharger des produits</translation>
     </message>
     <message>
         <location filename="../core/input.py" line="507"/>
@@ -5736,7 +5736,7 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="9585"/>
+        <location filename="../core/utils.py" line="9581"/>
         <source>SCP: completed process</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5936,12 +5936,12 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7479"/>
+        <location filename="../core/utils.py" line="7475"/>
         <source>Build overviews</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7479"/>
+        <location filename="../core/utils.py" line="7475"/>
         <source>Do you want to build the external overviews of bands?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6556,27 +6556,27 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="6370"/>
+        <location filename="../core/utils.py" line="6366"/>
         <source>Calculating signature</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7753"/>
+        <location filename="../core/utils.py" line="7749"/>
         <source>Writing file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="5664"/>
+        <location filename="../core/utils.py" line="5660"/>
         <source>Conversion to vector</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7428"/>
+        <location filename="../core/utils.py" line="7424"/>
         <source>Sieve</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="7558"/>
+        <location filename="../core/utils.py" line="7554"/>
         <source>Building overviews</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6616,12 +6616,12 @@ Do you want to add the required fields to this shapefile?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="9032"/>
+        <location filename="../core/utils.py" line="9028"/>
         <source>Remove rows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="9032"/>
+        <location filename="../core/utils.py" line="9028"/>
         <source>Are you sure you want to remove highlighted rows from the table?</source>
         <translation type="unfinished"></translation>
     </message>
