@@ -43,7 +43,7 @@ class SCPDock:
 		cfg.uidc.undo_save_Button.setEnabled(False)
 		cfg.uidc.redo_save_Button.setEnabled(False)
 		# rubber band
-		cfg.rbbrBnd = cfg.qgisGuiSCP.QgsRubberBand(cfg.cnvs, False)
+		cfg.rbbrBnd = cfg.qgisGuiSCP.QgsRubberBand(cfg.cnvs, cfg.qgisCoreSCP.QgsWkbTypes.LineGeometry)
 		cfg.rbbrBnd.setColor(cfg.QtGuiSCP.QColor(0,255,255))
 		cfg.rbbrBnd.setWidth(2)
 		cfg.mrctrVrtc = []
@@ -2543,7 +2543,7 @@ class SCPDock:
 	# clear canvas
 	def clearCanvas(self):
 		cfg.lastVrt = []
-		cfg.rbbrBnd.reset(True)
+		cfg.rbbrBnd.reset()
 		for m in cfg.mrctrVrtc:
 		    cfg.cnvs.scene().removeItem(m)
 		    del m
@@ -2555,7 +2555,7 @@ class SCPDock:
 		
 	# clear ROI point canvas
 	def clearROICanvas(self):
-		cfg.rbbrBnd.reset(True)
+		cfg.rbbrBnd.reset()
 		for m in self.ROIVrtc:
 		    cfg.cnvs.scene().removeItem(m)
 		    del m

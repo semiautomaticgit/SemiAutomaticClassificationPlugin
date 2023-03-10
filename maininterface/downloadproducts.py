@@ -41,7 +41,7 @@ class DownloadProducts:
 	def __init__(self):
 		# check all bands
 		self.checkAll = 'No'
-		self.rbbrBndPol = cfg.qgisGuiSCP.QgsRubberBand(cfg.cnvs, 2)
+		self.rbbrBndPol = cfg.qgisGuiSCP.QgsRubberBand(cfg.cnvs, cfg.qgisCoreSCP.QgsWkbTypes.LineGeometry)
 		cfg.ui.dateEdit_to.setDate(cfg.QDateSCP.currentDate())
 		cfg.ui.dateEdit_from.setDate(cfg.QDateSCP.currentDate().addDays(-365))
 		
@@ -99,7 +99,7 @@ class DownloadProducts:
 		
 	# clear canvas
 	def clearCanvasPoly(self):
-		self.rbbrBndPol.reset(True)
+		self.rbbrBndPol.reset()
 		cfg.cnvs.refresh()
 
 	# Activate pointer

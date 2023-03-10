@@ -47,7 +47,7 @@ class ClipMultipleRasters:
 			self.clearCanvasPoly()
 		except:
 			pass
-		self.rbbrBndPol = cfg.qgisGuiSCP.QgsRubberBand(cfg.cnvs, 2)
+		self.rbbrBndPol = cfg.qgisGuiSCP.QgsRubberBand(cfg.cnvs, cfg.qgisCoreSCP.QgsWkbTypes.LineGeometry)
 		pointF = cfg.QtCoreSCP.QPointF()
 		polF = cfg.QtGuiSCP.QPolygonF()
 		pointF.setX(pointUL.x())
@@ -74,7 +74,7 @@ class ClipMultipleRasters:
 		
 	# clear canvas
 	def clearCanvasPoly(self):
-		self.rbbrBndPol.reset(True)
+		self.rbbrBndPol.reset()
 		cfg.cnvs.refresh()	
 		
 	# clip multiple rasters action
