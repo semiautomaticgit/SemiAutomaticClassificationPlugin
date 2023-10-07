@@ -1,34 +1,26 @@
 <RCC>
   <qresource prefix="/plugins/semiautomaticclassificationplugin">
-    <file>icons/semiautomaticclassificationplugin_goes_tool.svg</file>
-    <file>icons/semiautomaticclassificationplugin_kmeans_tool.svg</file>
+    <file>icons/semiautomaticclassificationplugin_order_by_date.svg</file>
     <file>icons/semiautomaticclassificationplugin_cross_classification.svg</file>
-    <file>icons/semiautomaticclassificationplugin_zonal_stat_raster_tool.svg</file>
     <file>icons/semiautomaticclassificationplugin_import_spectral_library.svg</file>
     <file>icons/semiautomaticclassificationplugin_select_all.svg</file>
     <file>icons/semiautomaticclassificationplugin_add_sign_tool.svg</file>
     <file>icons/semiautomaticclassificationplugin_download_image_preview.svg</file>
-    <file>icons/semiautomaticclassificationplugin_delete_signature.svg</file>
     <file>icons/semiautomaticclassificationplugin_clip_tool.svg</file>
     <file>icons/semiautomaticclassificationplugin_cloud_masking_tool.svg</file>
     <file>icons/semiautomaticclassificationplugin_classification_dilation.svg</file>
     <file>icons/semiautomaticclassificationplugin_class_tool.svg</file>
-    <file>icons/semiautomaticclassificationplugin_class_signature_tool.svg</file>
     <file>icons/semiautomaticclassificationplugin_calculate_spectral_distances.svg</file>
     <file>icons/semiautomaticclassificationplugin_batch.svg</file>
-    <file>icons/semiautomaticclassificationplugin_batch_check.svg</file>
     <file>icons/semiautomaticclassificationplugin_bandset_tool.svg</file>
-    <file>icons/semiautomaticclassificationplugin_bandcalc_rules.svg</file>
     <file>icons/semiautomaticclassificationplugin_bandcalc_tool.svg</file>
     <file>icons/semiautomaticclassificationplugin_bandcalc_expression.svg</file>
     <file>icons/semiautomaticclassificationplugin_band_processing.svg</file>
     <file>icons/semiautomaticclassificationplugin_band_combination_tool.svg</file>
-    <file>icons/semiautomaticclassificationplugin_aster_tool.svg</file>
     <file>icons/semiautomaticclassificationplugin_add_bandset_tool.svg</file>
     <file>icons/semiautomaticclassificationplugin_add.svg</file>
     <file>icons/semiautomaticclassificationplugin_accuracy_tool.svg</file>
     <file>icons/guide.svg</file>
-    <file>icons/semiautomaticclassificationplugin_undo_edit_raster.svg</file>
     <file>icons/semiautomaticclassificationplugin_enter.svg</file>
     <file>icons/semiautomaticclassificationplugin_kml_add.svg</file>
     <file>icons/semiautomaticclassificationplugin.svg</file>
@@ -37,29 +29,24 @@
     <file>icons/semiautomaticclassificationplugin_zoom_to_Image.svg</file>
     <file>icons/semiautomaticclassificationplugin_roi_single.svg</file>
     <file>icons/semiautomaticclassificationplugin_roi_redo.svg</file>
-    <file>icons/semiautomaticclassificationplugin_remove_temp.svg</file>
     <file>icons/semiautomaticclassificationplugin_preview.svg</file>
     <file>icons/semiautomaticclassificationplugin_preview_redo.svg</file>
     <file>icons/semiautomaticclassificationplugin_manual_ROI.svg</file>
-    <file>icons/semiautomaticclassificationplugin_edit_raster.svg</file>
     <file>icons/semiautomaticclassificationplugin_classification.svg</file>
     <file>icons/semiautomaticclassificationplugin_bandset_std_dev_stretch_tool.svg</file>
     <file>icons/semiautomaticclassificationplugin_bandset_cumulative_stretch_tool.svg</file>
     <file>icons/semiautomaticclassificationplugin_post_process.svg</file>
     <file>icons/semiautomaticclassificationplugin_home.svg</file>
     <file>icons/semiautomaticclassificationplugin_download_login.svg</file>
-    <file>icons/semiautomaticclassificationplugin_download_options.svg</file>
     <file>icons/semiautomaticclassificationplugin_download_search.svg</file>
     <file>icons/semiautomaticclassificationplugin_classification_erosion.svg</file>
     <file>icons/semiautomaticclassificationplugin_classification_sieve.svg</file>
-    <file>icons/semiautomaticclassificationplugin_scatter_edit_polygon.svg</file>
     <file>icons/semiautomaticclassificationplugin_fit_plot.svg</file>
     <file>icons/semiautomaticclassificationplugin_pointer_tool.svg</file>
     <file>icons/semiautomaticclassificationplugin_move_down.svg</file>
     <file>icons/semiautomaticclassificationplugin_order_by_name.svg</file>
     <file>icons/semiautomaticclassificationplugin_osm_add.svg</file>
     <file>icons/semiautomaticclassificationplugin_pca_tool.svg</file>
-    <file>icons/semiautomaticclassificationplugin_plus.svg</file>
     <file>icons/semiautomaticclassificationplugin_move_up.svg</file>
     <file>icons/semiautomaticclassificationplugin_reload.svg</file>
     <file>icons/semiautomaticclassificationplugin_import.svg</file>
@@ -74,58 +61,39 @@
     <file>icons/semiautomaticclassificationplugin_remove.svg</file>
     <file>icons/semiautomaticclassificationplugin_open_file.svg</file>
     <file>icons/semiautomaticclassificationplugin_export_spectral_library.svg</file>
-    <file>icons/semiautomaticclassificationplugin_LCS_threshold_set_tool.svg</file>
-    <file>icons/semiautomaticclassificationplugin_LCS_threshold_tool.svg</file>
     <file>icons/semiautomaticclassificationplugin_download_arrow.svg</file>
-    <file>icons/semiautomaticclassificationplugin_class_signature_tool.svg</file>
     <file>icons/semiautomaticclassificationplugin_spectral_distance.svg</file>
     <file>icons/semiautomaticclassificationplugin_split_raster.svg</file>
     <file>icons/semiautomaticclassificationplugin_stack_raster.svg</file>
     <file>icons/semiautomaticclassificationplugin_threshold_tool.svg</file>
     <file>icons/semiautomaticclassificationplugin_training_input.svg</file>
-    <file>icons/semiautomaticclassificationplugin_undo_edit_raster.svg</file>
-    <file>icons/semiautomaticclassificationplugin_undo_lcs_threshold.svg</file>
     <file>icons/semiautomaticclassificationplugin_undo_save_roi.svg</file>
     <file>icons/semiautomaticclassificationplugin_vector_to_raster_tool.svg</file>
-    <file>icons/semiautomaticclassificationplugin_weight_tool.svg</file>
-    <file>icons/semiautomaticclassificationplugin_random_forest.svg</file>
     <file>icons/semiautomaticclassificationplugin_reclassification_tool.svg</file>
     <file>icons/semiautomaticclassificationplugin_docks.svg</file>
     <file>icons/semiautomaticclassificationplugin_neighbor_pixels.svg</file>
     <file>icons/semiautomaticclassificationplugin_class_to_vector_tool.svg</file>
     <file>icons/help.svg</file>
     <file>icons/semiautomaticclassificationplugin_report_tool.svg</file>
-    <file>icons/semiautomaticclassificationplugin_scatter_raster_display.svg</file>
-    <file>icons/semiautomaticclassificationplugin_scatter_raster_image.svg</file>
     <file>icons/semiautomaticclassificationplugin_scatter_raster_temp_ROI.svg</file>
-    <file>icons/semiautomaticclassificationplugin_scatter_reset_polygon.svg</file>
-    <file>icons/semiautomaticclassificationplugin_scatter_show_raster.svg</file>
     <file>icons/semiautomaticclassificationplugin_scatter_tool.svg</file>
     <file>icons/semiautomaticclassificationplugin_search_images.svg</file>
-    <file>icons/semiautomaticclassificationplugin_land_cover_change.svg</file>
     <file>icons/semiautomaticclassificationplugin_landsat8_tool.svg</file>
-    <file>icons/semiautomaticclassificationplugin_LCS_threshold_ROI_tool.svg</file>
     <file>icons/fromGIStoRS.png</file>
     <file>icons/semiautomaticclassificationplugin_roi_multiple.svg</file>
     <file>icons/semiautomaticclassificationplugin_roi_options.svg</file>
     <file>icons/semiautomaticclassificationplugin_roi_tool.svg</file>
-    <file>icons/semiautomaticclassificationplugin_sentinel_tool.svg</file>
-    <file>icons/semiautomaticclassificationplugin_sentinel1_tool.svg</file>
-    <file>icons/semiautomaticclassificationplugin_sentinel3_tool.svg</file>
+    <file>icons/semiautomaticclassificationplugin_options.svg</file>
     <file>icons/semiautomaticclassificationplugin_settings_tool.svg</file>
-    <file>icons/semiautomaticclassificationplugin_sign_edit_range.svg</file>
     <file>icons/semiautomaticclassificationplugin_sign_tool.svg</file>
     <file>icons/semiautomaticclassificationplugin_redo_save_roi.svg</file>
     <file>icons/semiautomaticclassificationplugin_threshold_tool.svg</file>
     <file>icons/semiautomaticclassificationplugin_save_plot_image.svg</file>
     <file>icons/semiautomaticclassificationplugin_save_roi.svg</file>
     <file>icons/semiautomaticclassificationplugin_merge_sign_tool.svg</file>
-    <file>icons/semiautomaticclassificationplugin_minus.svg</file>
-    <file>icons/semiautomaticclassificationplugin_modis_tool.svg</file>
     <file>icons/semiautomaticclassificationplugin_mosaic_tool.svg</file>
   </qresource>
   <qresource prefix="pointer">
-    <file>icons/pointer/LCS_pointer.svg</file>
     <file>icons/pointer/ROI_pointer.svg</file>
   </qresource>
 </RCC>

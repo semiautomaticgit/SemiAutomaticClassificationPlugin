@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
-
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
@@ -13,7 +11,7 @@
    height="34.133335"
    id="svg2985"
    version="1.1"
-   inkscape:version="0.92.1 r15371"
+   inkscape:version="1.0.2 (e86c870879, 2021-01-15)"
    sodipodi:docname="semiautomaticclassificationplugin_post_process.svg"
    inkscape:export-xdpi="67"
    inkscape:export-ydpi="67">
@@ -27,7 +25,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="3.9590209"
-     inkscape:cx="-102.91295"
+     inkscape:cx="8.4033843"
      inkscape:cy="7.1656834"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -36,11 +34,12 @@
      showguides="true"
      inkscape:snap-global="true"
      inkscape:window-width="1366"
-     inkscape:window-height="708"
+     inkscape:window-height="706"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
-     inkscape:guide-bbox="true">
+     inkscape:guide-bbox="true"
+     inkscape:document-rotation="0">
     <inkscape:grid
        type="xygrid"
        id="grid2997"
@@ -66,7 +65,7 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer">
     <ellipse
-       style="fill:#000f22;fill-opacity:1;stroke-width:1.29299533"
+       style="fill:#49646b;fill-opacity:1;stroke-width:1.29299533;stroke:#e6e6e6;stroke-opacity:1"
        id="path2997"
        inkscape:export-xdpi="67"
        inkscape:export-ydpi="67"
@@ -75,8 +74,8 @@
        rx="24"
        ry="21.333334" />
     <path
-       style="fill:#c2d0f6;fill-opacity:1;fill-rule:evenodd;stroke:#ffffff;stroke-width:0.65490001;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 12.949175,16 h 8.384158 v -3.197205 l 7.336139,5.11553 -7.336139,5.11553 v -3.197206 h -8.384158 z"
+       style="fill:#e6e6e6;fill-opacity:1;fill-rule:evenodd;stroke:#e6e6e6;stroke-width:0.930989;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 12.949175,14.13438 h 10.16044 V 8.802795 l 8.890386,8.530539 -8.890386,8.530539 v -5.331586 h -10.16044 z"
        id="rect3811"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccccccc" />

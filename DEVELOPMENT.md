@@ -1,20 +1,35 @@
 # Semi Automatic Classification Plugin (SCP)
 
-![SCP](semiautomaticclassificationplugin.png) The Semi-Automatic Classification Plugin (SCP) is a free open source plugin for QGIS that allows  for the supervised classification of remote sensing images, providing tools for the download, the preprocessing and postprocessing of images.
+![SCP](semiautomaticclassificationplugin.png) 
+The Semi-Automatic Classification
+Plugin (SCP) is a free open source plugin for QGIS that allows for the
+supervised classification of remote sensing images, providing tools for the
+download, the preprocessing and postprocessing of images.
 
-The overall objective of SCP is to provide a set of intertwined tools for raster processing in order to make an automatic workflow and ease the land cover classification, which could be performed also by people whose main field is not remote sensing.
+The overall objective of SCP is to provide a set of intertwined tools for
+raster processing in order to make an automatic workflow and ease the land
+cover classification, which could be performed also by people whose main field
+is not remote sensing.
 
-Search and download is available for ASTER, GOES, Landsat, MODIS, Sentinel-1, Sentinel-2, and Sentinel-3 images. Several algorithms are available for the land cover classification. This plugin requires the installation of GDAL, OGR, Numpy, SciPy, and Matplotlib. Some tools require also the installation of SNAP (ESA Sentinel Application Platform).
+Search and download is available for Landsat, Sentinel-2 images.
+Several algorithms are available for the land cover classification.
+This plugin requires the installation of Remotior Sensus, GDAL, OGR, Numpy, 
+SciPy, and Matplotlib.
 
 ## Contributing to the development
 
-These instructions will get you a copy of the plugin up and running on your local machine for development and testing purposes.
+These instructions will get you a copy of the plugin up and running 
+on your local machine for development and testing purposes.
 
-You do not need any of these steps if you are just interested in using the plugin. 
+You do not need any of these steps if you are just interested in using 
+the plugin. 
 
 ## Before contributing
 
-If you find a bug of if you want to add a new feature, create a new issue on GitHub to discuss it with the community. Other developers can provide valuable feedback that can improve and make your proposal or your fix even better. 
+If you find a bug of if you want to add a new feature, 
+create a new issue on GitHub to discuss it with the community.
+Other developers can provide valuable feedback that can improve 
+and make your proposal or your fix even better. 
 
 ### Prerequisites
 
@@ -29,13 +44,12 @@ import scipy;
 >>> print(scipy.__version__);
 1.0.0
 ```
-Do the same for `matplotlib` and `numpy`.
+Do the same for `remotior-sensus`, `matplotlib` and `numpy`.
 
-If necessary, install the required libraries, using `easy_install` or `pip`.
-Use `easy_install3` and `pip3` if you have both Python 2.x and 3.x.
+If necessary, install the required libraries using `pip3`.
 
 ```bash
-sudo easy_install3 scipy
+sudo pip3 install scipy
 ```
 
 ### Workflow overview
@@ -48,7 +62,7 @@ Clone your fork on your local computer. You can do it on the command line with:
 mkdir -p ~/dev
 git clone git@github.com:yourgithubusername/SemiAutomaticClassificationPlugin.git
 ```
-Your fork will called `origin`. Check that with: 
+Your fork will be called `origin`. Check that with: 
 
 ```bash
 cd SemiAutomaticClassificationPlugin
@@ -68,7 +82,8 @@ Create a new branch.
 git checkout -b mycontribution
 ```
 
-Make your changes. Compile and test your changes (more details about this on the next section).
+Make your changes.
+Compile and test your changes (more details about this on the next section).
 
 When you have done your edits, commit your local changes, with something like:
 
@@ -80,7 +95,8 @@ Push your changes back to your GitHub repository fork with:
 ```bash
 git push origin mycontribution
 ```
-You are now ready to issue your Pull Request. Go to your GitHub repository interface and make your Pull Request online.
+You are now ready to issue your Pull Request. 
+Go to your GitHub repository interface and make your Pull Request online.
 
 ### Compile and deploy on your local computer 
 
@@ -98,25 +114,29 @@ make package VERSION=mycontribution
 
 This will create a new archive `SemiAutomaticClassificationPlugin.zip`.
 
-In QGIS 3 you can install a plugin from the zip archive using the plugin manager interface.
+In QGIS 3 you can install a plugin from the zip archive using 
+the plugin manager interface.
 
-![Install SCP from zip archive](docs/install%20SCP%20from%20zip%20archive.png)
+![Install SCP from zip archive](docs/install_archive.png)
 
 ## Test the SCP
 
-Start QGIS 3 and check if the plugin is properly installed. If you are running QGIS in another computer or using another profile, install the plugin from the zip file.
-
-and install the plugin from the zip file created.
+Start QGIS 3 and check if the plugin is properly installed. 
+If you are running QGIS in another computer or using another profile, 
+install the plugin from the zip file.
 
 ### End user test
 
-Test your bug fixes or new features carefully. Make sure you did not break any existing code.
+Test your bug fixes or new features carefully. 
+Make sure you did not break any existing code.
 
-Do some screen captures of the new enhancements to publish if you want to issue a pull request.
+Do some screen captures of the new enhancements to publish if you want 
+to issue a pull request.
 
 ## Contributing
 
-If the code is working as you expect, follow the steps already mentioned to issue a pull request.
+If the code is working as you expect, follow the steps already mentioned
+to issue a pull request.
 
 1. Commit your local changes, with something like:
 
@@ -128,9 +148,12 @@ Push your changes to your GitHub repository with:
 ```bash
 git push origin mycontribution
 ```
-Go to your GitHub repository interface and make your Pull Request. Please be verbose on your comments.
+Go to your GitHub repository interface and make your Pull Request. 
+Please be verbose on your comments.
 
-After doing your Pull Request, make sure you are available to provide feedback to questions and comments to your contribution from other developers. In the absence of any feedback concerning your Pull Request, it will be closed. 
+After doing your Pull Request, make sure you are available to provide 
+feedback to questions and comments to your contribution from other developers. 
+In the absence of any feedback concerning your Pull Request, it will be closed. 
 
 ## Authors
 
@@ -140,4 +163,5 @@ See also the list of [contributors](https://github.com/semiautomaticgit/SemiAuto
 
 ## License
 
-This plugin is distributed under a GNU General Public License version 3. To contribute you must accept this license.
+This plugin is distributed under a GNU General Public License version 3.
+To contribute you must accept this license.

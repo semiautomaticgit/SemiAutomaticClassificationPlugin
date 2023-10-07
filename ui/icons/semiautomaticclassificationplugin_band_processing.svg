@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
-
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
@@ -13,7 +11,7 @@
    height="34.133335"
    id="svg2985"
    version="1.1"
-   inkscape:version="0.92.1 r15371"
+   inkscape:version="1.0.2 (e86c870879, 2021-01-15)"
    sodipodi:docname="semiautomaticclassificationplugin_band_processing.svg"
    inkscape:export-xdpi="67"
    inkscape:export-ydpi="67"
@@ -27,9 +25,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="7.9180418"
-     inkscape:cx="-37.166673"
-     inkscape:cy="3.3562631"
+     inkscape:zoom="5.5989011"
+     inkscape:cx="-6.5814791"
+     inkscape:cy="-2.3178001"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:grid-bbox="true"
@@ -37,12 +35,13 @@
      showguides="true"
      inkscape:snap-global="true"
      inkscape:window-width="1366"
-     inkscape:window-height="708"
+     inkscape:window-height="706"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
      inkscape:guide-bbox="true"
-     inkscape:lockguides="true">
+     inkscape:lockguides="true"
+     inkscape:document-rotation="0">
     <inkscape:grid
        type="xygrid"
        id="grid2997"
@@ -68,13 +67,13 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer">
     <path
-       style="fill:#000f22;fill-opacity:1;fill-rule:evenodd;stroke:#000f22;stroke-width:0.61396885;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       d="M -19.03124,22.1027 9,22 9.6550045,31.734267 33.134336,16.069564 7.5589918,0.5845862 8.2139965,10.318857 -19.817245,10.421562 Z"
+       style="fill:#49646b;fill-opacity:1;fill-rule:evenodd;stroke:#e6e6e6;stroke-width:0.93749995;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="M -16.875,21.692145 8.9430421,22.034503 9.4039401,31.777942 31.257293,16.487989 7.9290684,0.59890962 8.3899661,10.342353 -17.428076,10 Z"
        id="rect3811"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccccccc" />
     <rect
-       style="fill:#3771c8;fill-opacity:1;fill-rule:evenodd;stroke:#ffffff;stroke-width:1.12025321;stroke-linejoin:miter;stroke-miterlimit:2.5;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#3771c8;fill-opacity:1;fill-rule:evenodd;stroke:#ffffff;stroke-width:1.12025;stroke-linejoin:miter;stroke-miterlimit:2.5;stroke-dasharray:none;stroke-opacity:1"
        id="rect2993"
        width="8.0292196"
        height="6.356873"
@@ -96,11 +95,11 @@
        height="6.6647506"
        width="8.0292196"
        id="rect3767"
-       style="fill:#214478;fill-opacity:1;fill-rule:evenodd;stroke:#fff5f5;stroke-width:1.0375551;stroke-linejoin:miter;stroke-miterlimit:2.5;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#214478;fill-opacity:1;fill-rule:evenodd;stroke:#fff5f5;stroke-width:1.03756;stroke-linejoin:miter;stroke-miterlimit:2.5;stroke-dasharray:none;stroke-opacity:1"
        inkscape:transform-center-x="-2.4881651"
        inkscape:transform-center-y="20.859161" />
     <rect
-       style="fill:#00112b;fill-opacity:1;fill-rule:evenodd;stroke:#ffffff;stroke-width:0.97926646;stroke-linejoin:miter;stroke-miterlimit:2.5;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#00112b;fill-opacity:1;fill-rule:evenodd;stroke:#ffffff;stroke-width:0.979266;stroke-linejoin:miter;stroke-miterlimit:2.5;stroke-dasharray:none;stroke-opacity:1"
        id="rect3769"
        width="8.0292196"
        height="7.0163927"
@@ -116,11 +115,11 @@
        ry="2.8469048"
        rx="2.3818941"
        y="17.737324"
-       x="28.668718"
+       x="28.668716"
        height="7.2066555"
        width="8.0292196"
        id="rect3771"
-       style="fill:#cccccc;fill-opacity:1;fill-rule:evenodd;stroke:#ffffff;stroke-width:0.9563536;stroke-linejoin:miter;stroke-miterlimit:2.5;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#cccccc;fill-opacity:1;fill-rule:evenodd;stroke:#ffffff;stroke-width:0.956354;stroke-linejoin:miter;stroke-miterlimit:2.5;stroke-dasharray:none;stroke-opacity:1"
        inkscape:export-xdpi="67"
        inkscape:export-ydpi="67"
        inkscape:transform-center-x="-2.4242177"

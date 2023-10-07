@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
-
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
@@ -13,7 +11,7 @@
    height="34.133335"
    id="svg5320"
    version="1.1"
-   inkscape:version="0.92.1 r15371"
+   inkscape:version="1.0.2 (e86c870879, 2021-01-15)"
    sodipodi:docname="semiautomaticclassificationplugin_download_arrow.svg"
    inkscape:export-xdpi="67.5"
    inkscape:export-ydpi="67.5">
@@ -26,20 +24,21 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="7.9180417"
-     inkscape:cx="-18.867373"
-     inkscape:cy="10.498552"
-     inkscape:current-layer="layer3"
+     inkscape:zoom="11.197802"
+     inkscape:cx="7.6094086"
+     inkscape:cy="16.013151"
+     inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:grid-bbox="true"
      inkscape:document-units="px"
      showguides="true"
      inkscape:guide-bbox="true"
      inkscape:window-width="1366"
-     inkscape:window-height="708"
+     inkscape:window-height="706"
      inkscape:window-x="0"
      inkscape:window-y="0"
-     inkscape:window-maximized="1">
+     inkscape:window-maximized="1"
+     inkscape:document-rotation="0">
     <inkscape:grid
        type="xygrid"
        id="grid5346"
@@ -65,7 +64,7 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer">
     <path
-       style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#000f22;fill-opacity:1;fill-rule:nonzero;stroke-width:1.29299533;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate"
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#49646b;fill-opacity:1;fill-rule:nonzero;stroke-width:1.29299533;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate;stroke:#e5e5e5"
        d="m 13.7,0.16666667 c -1.092615,0 -1.966667,0.87405183 -1.966667,1.96666663 V 16.433333 H 4.2666667 c -2.1333337,0 11.7333333,16 11.7333333,16 L 17.066667,33.5 18.133333,32.433333 c 0,0 13.866668,-16 11.733334,-16 H 22.4 V 2.1333333 c 0,-1.0926148 -0.874051,-1.96666663 -1.966667,-1.96666663 z"
        id="rect5348"
        inkscape:connector-curvature="0" />
@@ -75,7 +74,7 @@
      id="layer3"
      inkscape:label="Livello">
     <ellipse
-       style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#00234c;fill-opacity:1;fill-rule:nonzero;stroke:#e5e5e5;stroke-width:1.33571243;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate"
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:#33454a;fill-opacity:1;fill-rule:nonzero;stroke:#e5e5e5;stroke-width:1.336;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;enable-background:accumulate"
        id="path5982"
        cx="25.599998"
        cy="27.733334"

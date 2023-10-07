@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
-
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
@@ -13,7 +11,7 @@
    height="34.133335"
    id="svg2985"
    version="1.1"
-   inkscape:version="0.92.1 r15371"
+   inkscape:version="1.0.2 (e86c870879, 2021-01-15)"
    sodipodi:docname="semiautomaticclassificationplugin_bandset_tool.svg"
    inkscape:export-xdpi="67"
    inkscape:export-ydpi="67"
@@ -27,19 +25,20 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="7.9180417"
-     inkscape:cx="-37.804529"
-     inkscape:cy="6.2341685"
+     inkscape:zoom="5.598901"
+     inkscape:cx="3.1062461"
+     inkscape:cy="12.258783"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:grid-bbox="true"
      inkscape:document-units="px"
      showguides="false"
      inkscape:window-width="1366"
-     inkscape:window-height="708"
+     inkscape:window-height="706"
      inkscape:window-x="0"
      inkscape:window-y="0"
-     inkscape:window-maximized="1">
+     inkscape:window-maximized="1"
+     inkscape:document-rotation="0">
     <inkscape:grid
        type="xygrid"
        id="grid3765"
@@ -87,7 +86,7 @@
        id="rect3767"
        style="fill:#214478;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.99683589;stroke-linejoin:miter;stroke-miterlimit:2.5;stroke-dasharray:none;stroke-opacity:1" />
     <rect
-       style="fill:#00112b;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.94480175;stroke-linejoin:miter;stroke-miterlimit:2.5;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#00245b;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.94480175;stroke-linejoin:miter;stroke-miterlimit:2.5;stroke-dasharray:none;stroke-opacity:1"
        id="rect3769"
        width="18.423388"
        height="16.792358"

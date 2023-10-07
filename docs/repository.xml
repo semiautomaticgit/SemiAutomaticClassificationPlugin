@@ -1,23 +1,23 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
 <plugins>
-    <pyqgis_plugin name="Semi-Automatic Classification Plugin - master" version="7.10.11" plugin_id="284">
+    <pyqgis_plugin name="Semi-Automatic Classification Plugin - master" version="8.0.0" plugin_id="284">
         <description><![CDATA[The Semi-Automatic Classification Plugin (SCP) allows for the supervised classification of remote sensing images, providing tools for the download, the preprocessing and postprocessing of images.]]></description>
-        <about><![CDATA[Developed by Luca Congedo, the Semi-Automatic Classification Plugin (SCP) allows for the supervised classification of remote sensing images, providing tools for the download, the preprocessing and postprocessing of images. Search and download is available for ASTER, GOES, Landsat, MODIS, Sentinel-1, Sentinel-2, and Sentinel-3 images. Several algorithms are available for the land cover classification. This plugin requires the installation of GDAL, OGR, Numpy, SciPy, and Matplotlib. Some tools require also the installation of SNAP (ESA Sentinel Application Platform). For more information please visit https://fromgistors.blogspot.com .]]></about>
-        <version>7.10.11</version>
+        <about><![CDATA[Developed by Luca Congedo, the Semi-Automatic Classification Plugin (SCP) allows for the supervised classification of remote sensing images, providing tools for the download, the preprocessing and postprocessing of images. Search and download is available for Landsat, Sentinel-2 images. Several algorithms are available for the land cover classification. This plugin requires the installation of Remotior Sensus, GDAL, OGR, Numpy, SciPy, and Matplotlib. For more information please visit https://fromgistors.blogspot.com .]]></about>
+        <version>8.0.0</version>
         <qgis_minimum_version>3.0.0</qgis_minimum_version>
         <qgis_maximum_version>3.99.0</qgis_maximum_version>
         <homepage><![CDATA[https://fromgistors.blogspot.com/p/semi-automatic-classification-plugin.html]]></homepage>
         <file_name>SemiAutomaticClassificationPlugin-master.zip</file_name>
-        <icon>https://1.bp.blogspot.com/-Vo3Oba6OQic/X58XMwoE98I/AAAAAAAAGGI/bKIZ-VcKzVgiBWMox37wYrgCKmZaNS41ACLcBGAsYHQ/s96/semiautomaticclassificationplugin.png</icon>
+        <icon>https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgScfQYBCTR7v-gAL1DeZIxvGuevGYvc5xTlal05-0CpJwgVex_7oMpcxaHtKTTsjONTaoBI7Bz_HbM6kQg6TZ3lTSPrGzRRgb3g3IyZGdNRaL4_VqmqToztTr3BZUCF5ib6E4SAhNzxd-nJj-_kDGpZnlYAC5Ly7ngGjxSnyz6Ow62stHV7vgIjmrXhFSF/s1600/semiautomaticclassificationplugin.png</icon>
         <author_name><![CDATA[Luca Congedo]]></author_name>
         <download_url>https://codeload.github.com/semiautomaticgit/SemiAutomaticClassificationPlugin/zip/master</download_url>
         <tracker><![CDATA[https://github.com/semiautomaticgit/SemiAutomaticClassificationPlugin/issues]]></tracker>
         <repository><![CDATA[https://github.com/semiautomaticgit/SemiAutomaticClassificationPlugin]]></repository>
-        <tags><![CDATA[Raster, Classification, Land Cover, Remote Sensing, Analysis, ASTER, GOES, Landsat, Sentinel, Supervised classification, Spectral signature, Mask, Clip, Accuracy, Landscape, Copernicus, Random Forest, SNAP, Processing]]></tags>
+        <tags><![CDATA[Raster, Classification, Land Cover, Remote Sensing, Analysis, Landsat, Sentinel, Supervised classification, Spectral signature, Mask, Clip, Accuracy, Landscape, Copernicus, Random Forest, Processing, Remotior Sensus]]></tags>
         <downloads>00</downloads>
         <average_vote>5</average_vote>
         <rating_votes>00</rating_votes>
-        <external_dependencies></external_dependencies>
+        <external_dependencies/>
         <server>False</server>
     </pyqgis_plugin>
 </plugins>

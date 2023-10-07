@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
-
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
@@ -13,7 +11,7 @@
    height="34.133335"
    id="svg2985"
    version="1.1"
-   inkscape:version="0.92.1 r15371"
+   inkscape:version="1.0.2 (e86c870879, 2021-01-15)"
    sodipodi:docname="semiautomaticclassificationplugin_class_tool.svg"
    inkscape:export-xdpi="67"
    inkscape:export-ydpi="67"
@@ -27,9 +25,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.9795104"
-     inkscape:cx="-254.06089"
-     inkscape:cy="71.607804"
+     inkscape:zoom="3.9590208"
+     inkscape:cx="-28.888374"
+     inkscape:cy="24.616745"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:grid-bbox="true"
@@ -37,11 +35,12 @@
      showguides="true"
      inkscape:snap-global="true"
      inkscape:window-width="1366"
-     inkscape:window-height="708"
+     inkscape:window-height="706"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
-     inkscape:guide-bbox="true">
+     inkscape:guide-bbox="true"
+     inkscape:document-rotation="0">
     <inkscape:grid
        type="xygrid"
        id="grid2997"
@@ -67,13 +66,13 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer">
     <path
-       style="fill:#000f22;fill-opacity:1;fill-rule:evenodd;stroke:#000f22;stroke-width:0.61396879;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       d="M 11.139852,15.403142 H 19 v -2.99738 l 6.87763,4.79581 L 19,21.997381 V 19 h -7.860148 z"
+       style="fill:#49646b;fill-opacity:1;fill-rule:evenodd;stroke:#e6e6e6;stroke-width:0.874138;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="M 9.941255,13.125 H 20 V 8.3786031 L 28.801403,15.972841 20,23.567077 V 18.820679 H 9.941255 Z"
        id="rect3811"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccccccc" />
     <path
-       style="fill:#000f22;fill-opacity:1"
+       style="fill:#49646b;fill-opacity:1;stroke:#e6e6e6;stroke-opacity:1;stroke-width:0.93749995;stroke-miterlimit:4;stroke-dasharray:none"
        d="M -18.40625,-13 C -19.297609,-13 -20,-12.480012 -20,-11.84375 v 47.6875 C -20,36.480012 -19.297609,37 -18.40625,37 h 36.8125 C 19.297609,37 20,36.480012 20,35.84375 v -1.9375 C 12.60091,30.630606 7.5,23.846517 7.5,16 7.5,8.1534828 12.60091,1.3693945 20,-1.90625 v -9.9375 C 20,-12.480012 19.297609,-13 18.40625,-13 Z"
        id="rect3792"
        inkscape:connector-curvature="0" />

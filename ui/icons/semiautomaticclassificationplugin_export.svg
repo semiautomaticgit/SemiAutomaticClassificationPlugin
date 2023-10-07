@@ -1,20 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
-
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="34.133335"
    height="34.133335"
    id="svg2985"
    version="1.1"
-   inkscape:version="0.92.1 r15371"
+   inkscape:version="1.0.2 (e86c870879, 2021-01-15)"
    sodipodi:docname="semiautomaticclassificationplugin_export.svg"
    inkscape:export-xdpi="67"
    inkscape:export-ydpi="67">
@@ -31,16 +28,6 @@
          offset="1"
          id="stop5975" />
     </linearGradient>
-    <linearGradient
-       y2="30"
-       x2="4"
-       y1="22"
-       x1="15"
-       gradientTransform="matrix(-0.92077375,-0.00142686,0.00140619,-0.93431014,32.507422,31.097017)"
-       gradientUnits="userSpaceOnUse"
-       id="linearGradient3028"
-       xlink:href="#linearGradient5971"
-       inkscape:collect="always" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -49,20 +36,21 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="7.9180417"
-     inkscape:cx="-29.474712"
-     inkscape:cy="15.55859"
+     inkscape:zoom="5.598901"
+     inkscape:cx="-5.4706447"
+     inkscape:cy="9.6358298"
      inkscape:current-layer="layer1"
-     showgrid="true"
+     showgrid="false"
      inkscape:grid-bbox="true"
      inkscape:document-units="px"
      showguides="true"
      inkscape:window-width="1366"
-     inkscape:window-height="708"
+     inkscape:window-height="706"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
-     inkscape:snap-global="true">
+     inkscape:snap-global="true"
+     inkscape:document-rotation="0">
     <inkscape:grid
        type="xygrid"
        id="grid3765"
@@ -88,17 +76,17 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer">
     <rect
-       style="fill:#d5ffd5;fill-opacity:1;fill-rule:evenodd;stroke:#454545;stroke-width:2.4000001;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="fill:#789ba2;fill-opacity:1;fill-rule:evenodd;stroke:#e6e6e6;stroke-width:2.4;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect3010"
        width="32"
        height="32"
-       x="1.0666667"
-       y="1.0666667"
+       x="1.4634253"
+       y="0.54066598"
        ry="6.0952382" />
     <path
-       style="fill:url(#linearGradient3028);fill-opacity:1;fill-rule:evenodd;stroke-width:1.06666672"
-       d="m 20.680881,31.312267 c 0.943173,0.0014 1.69883,-0.762965 1.700271,-1.720002 L 22.4,17.066667 l 6.445417,0.01003 C 30.686966,17.079508 18.738,3.0463091 18.738,3.0463091 L 17.818631,2.1105717 16.896452,3.0434555 c 0,0 -11.9911511,13.9961015 -10.1496018,13.9989555 l 6.4454158,0.01003 -0.01885,12.525597 c -0.0014,0.957038 0.751911,1.723802 1.695083,1.725265 l 5.812384,0.0091 z"
-       id="rect5348"
+       style="fill:#b41100;fill-opacity:1;fill-rule:evenodd;stroke:#e6e6e6;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 20.889284,31.20061 c 0.942103,0 1.695748,-0.753647 1.695748,-1.695747 V 17.174771 h 6.43809 c 1.839455,0 -10.117,-13.7959115 -10.117,-13.7959115 l -0.919727,-0.919728 -0.919728,0.919728 c 0,0 -11.9564562,13.7959115 -10.1170002,13.7959115 h 6.4380912 v 12.330092 c 0,0.9421 0.753645,1.695747 1.695748,1.695747 z"
+       id="rect5348-6"
        inkscape:connector-curvature="0" />
   </g>
 </svg>

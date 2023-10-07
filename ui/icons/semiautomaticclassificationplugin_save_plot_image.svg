@@ -1,48 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
-
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="34.133335"
    height="34.133335"
    id="svg2985"
    version="1.1"
-   inkscape:version="0.92.1 r15371"
+   inkscape:version="1.0.2 (e86c870879, 2021-01-15)"
    sodipodi:docname="semiautomaticclassificationplugin_save_plot_image.svg"
    inkscape:export-xdpi="67"
    inkscape:export-ydpi="67">
   <defs
-     id="defs2987">
-    <linearGradient
-       inkscape:collect="always"
-       id="linearGradient5971">
-      <stop
-         style="stop-color:#000080;stop-opacity:1;"
-         offset="0"
-         id="stop5973" />
-      <stop
-         style="stop-color:#000080;stop-opacity:0;"
-         offset="1"
-         id="stop5975" />
-    </linearGradient>
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient5971"
-       id="linearGradient3027"
-       gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.98385129,0,0,0.98385129,0.67245653,2.3088959)"
-       x1="15"
-       y1="22"
-       x2="4"
-       y2="30" />
-  </defs>
+     id="defs2987" />
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -51,7 +25,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="11.197802"
-     inkscape:cx="-16.881849"
+     inkscape:cx="14.719832"
      inkscape:cy="15.475208"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -59,11 +33,12 @@
      inkscape:document-units="px"
      showguides="true"
      inkscape:window-width="1366"
-     inkscape:window-height="708"
+     inkscape:window-height="706"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
-     inkscape:snap-global="true">
+     inkscape:snap-global="true"
+     inkscape:document-rotation="0">
     <inkscape:grid
        type="xygrid"
        id="grid3765"
@@ -89,7 +64,7 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer">
     <path
-       style="fill:url(#linearGradient3027);fill-opacity:1;fill-rule:evenodd;stroke-width:1.06666672"
+       style="fill:#49646b;fill-opacity:1;fill-rule:evenodd;stroke-width:1.06666672;stroke:#e6e6e6;stroke-opacity:1"
        d="m 13.308797,2.0629338 c -1.007786,0 -1.813977,0.8061901 -1.813977,1.813975 V 17.066667 H 4.6078613 c -1.9677024,0 10.8223647,14.757767 10.8223647,14.757767 l 0.983852,0.983852 0.983851,-0.983852 c 0,0 12.790067,-14.757767 10.822362,-14.757767 H 21.333333 V 3.8769088 c 0,-1.0077849 -0.806191,-1.813975 -1.813975,-1.813975 z"
        id="rect5348"
        inkscape:connector-curvature="0" />
