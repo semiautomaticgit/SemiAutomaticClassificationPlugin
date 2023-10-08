@@ -24,7 +24,10 @@
 Allows for setting signature thresholds.
 """
 
-from remotior_sensus.util import shared_tools
+try:
+    from remotior_sensus.util import shared_tools
+except Exception as error:
+    str(error)
 
 cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
