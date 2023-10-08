@@ -260,7 +260,6 @@ def find_images():
 
 # download image metadata
 def perform_query():
-    cfg.download_table = None
     product_name = cfg.dialog.ui.landsat_satellite_combo.currentText()
     date_from_qt = cfg.dialog.ui.dateEdit_from.date()
     date_to_qt = cfg.dialog.ui.dateEdit_to.date()
@@ -292,7 +291,12 @@ def perform_query():
     cfg.ui_utils.remove_progress_bar()
     if output.check:
         product_table = output.extra['product_table']
-        cfg.download_table = product_table
+        if cfg.download_table is None:
+            cfg.download_table = product_table
+        else:
+            cfg.download_table = cfg.rs.table_manager.stack_product_table(
+                product_list=[cfg.download_table, product_table]
+            )
     else:
         return False
     table = cfg.dialog.ui.download_images_tableWidget
