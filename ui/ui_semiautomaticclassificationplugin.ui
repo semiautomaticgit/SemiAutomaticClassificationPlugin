@@ -32,6 +32,9 @@
    <iconset resource="resources.qrc">
     <normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin.svg</normaloff>:/plugins/semiautomaticclassificationplugin/icons/semiautomaticclassificationplugin.svg</iconset>
   </property>
+  <property name="locale">
+   <locale language="English" country="UnitedStates"/>
+  </property>
   <property name="sizeGripEnabled">
    <bool>true</bool>
   </property>
@@ -158,7 +161,7 @@
          </column>
          <item>
           <property name="text">
-           <string>Band set</string>
+           <string notr="true">Band set</string>
           </property>
           <property name="font">
            <font>
@@ -173,7 +176,7 @@
          </item>
          <item>
           <property name="text">
-           <string>Download products</string>
+           <string notr="true">Download products</string>
           </property>
           <property name="font">
            <font>
@@ -188,7 +191,7 @@
          </item>
          <item>
           <property name="text">
-           <string>Basic tools</string>
+           <string notr="true">Basic tools</string>
           </property>
           <property name="font">
            <font>
@@ -202,7 +205,7 @@
           </property>
           <item>
            <property name="text">
-            <string>Export signatures</string>
+            <string notr="true">Export signatures</string>
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
@@ -211,7 +214,7 @@
           </item>
           <item>
            <property name="text">
-            <string>Import signatures</string>
+            <string notr="true">Import signatures</string>
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
@@ -220,7 +223,7 @@
           </item>
           <item>
            <property name="text">
-            <string>Multiple ROI creation</string>
+            <string notr="true">Multiple ROI creation</string>
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
@@ -229,7 +232,7 @@
           </item>
           <item>
            <property name="text">
-            <string>RGB composite</string>
+            <string notr="true">RGB composite</string>
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
@@ -238,7 +241,7 @@
           </item>
           <item>
            <property name="text">
-            <string>Signature threshold</string>
+            <string notr="true">Signature threshold</string>
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
@@ -248,7 +251,7 @@
          </item>
          <item>
           <property name="text">
-           <string>Preprocessing</string>
+           <string notr="true">Preprocessing</string>
           </property>
           <property name="font">
            <font>
@@ -262,7 +265,7 @@
           </property>
           <item>
            <property name="text">
-            <string>Clip raster bands</string>
+            <string notr="true">Clip raster bands</string>
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
@@ -271,7 +274,7 @@
           </item>
           <item>
            <property name="text">
-            <string>Image conversion</string>
+            <string notr="true">Image conversion</string>
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
@@ -280,7 +283,7 @@
           </item>
           <item>
            <property name="text">
-            <string>Masking bands</string>
+            <string notr="true">Masking bands</string>
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
@@ -289,7 +292,7 @@
           </item>
           <item>
            <property name="text">
-            <string>Mosaic band sets</string>
+            <string notr="true">Mosaic band sets</string>
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
@@ -298,7 +301,7 @@
           </item>
           <item>
            <property name="text">
-            <string>Reproject raster bands</string>
+            <string notr="true">Reproject raster bands</string>
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
@@ -307,7 +310,7 @@
           </item>
           <item>
            <property name="text">
-            <string>Split raster bands</string>
+            <string notr="true">Split raster bands</string>
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
@@ -316,7 +319,7 @@
           </item>
           <item>
            <property name="text">
-            <string>Stack raster bands</string>
+            <string notr="true">Stack raster bands</string>
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
@@ -325,7 +328,7 @@
           </item>
           <item>
            <property name="text">
-            <string>Vector to raster</string>
+            <string notr="true">Vector to raster</string>
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
@@ -335,7 +338,7 @@
          </item>
          <item>
           <property name="text">
-           <string>Band processing</string>
+           <string notr="true">Band processing</string>
           </property>
           <property name="font">
            <font>
@@ -349,7 +352,7 @@
           </property>
           <item>
            <property name="text">
-            <string>Classification</string>
+            <string notr="true">Classification</string>
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
@@ -358,7 +361,7 @@
           </item>
           <item>
            <property name="text">
-            <string>Combination</string>
+            <string notr="true">Combination</string>
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
@@ -367,7 +370,7 @@
           </item>
           <item>
            <property name="text">
-            <string>Dilation</string>
+            <string notr="true">Dilation</string>
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
@@ -376,7 +379,7 @@
           </item>
           <item>
            <property name="text">
-            <string>Erosion</string>
+            <string notr="true">Erosion</string>
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
@@ -385,7 +388,7 @@
           </item>
           <item>
            <property name="text">
-            <string>Sieve</string>
+            <string notr="true">Sieve</string>
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
@@ -394,7 +397,7 @@
           </item>
           <item>
            <property name="text">
-            <string>Neighbor</string>
+            <string notr="true">Neighbor</string>
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
@@ -403,7 +406,7 @@
           </item>
           <item>
            <property name="text">
-            <string>PCA</string>
+            <string notr="true">PCA</string>
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
@@ -413,7 +416,7 @@
          </item>
          <item>
           <property name="text">
-           <string>Postprocessing</string>
+           <string notr="true">Postprocessing</string>
           </property>
           <property name="font">
            <font>
@@ -427,7 +430,7 @@
           </property>
           <item>
            <property name="text">
-            <string>Accuracy</string>
+            <string notr="true">Accuracy</string>
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
@@ -436,7 +439,7 @@
           </item>
           <item>
            <property name="text">
-            <string>Classification report</string>
+            <string notr="true">Classification report</string>
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
@@ -445,7 +448,7 @@
           </item>
           <item>
            <property name="text">
-            <string>Classification to vector</string>
+            <string notr="true">Classification to vector</string>
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
@@ -454,7 +457,7 @@
           </item>
           <item>
            <property name="text">
-            <string>Cross classification</string>
+            <string notr="true">Cross classification</string>
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
@@ -463,7 +466,7 @@
           </item>
           <item>
            <property name="text">
-            <string>Reclassification</string>
+            <string notr="true">Reclassification</string>
            </property>
            <property name="icon">
             <iconset resource="resources.qrc">
@@ -473,7 +476,7 @@
          </item>
          <item>
           <property name="text">
-           <string>Band calc</string>
+           <string notr="true">Band calc</string>
           </property>
           <property name="font">
            <font>
@@ -488,7 +491,7 @@
          </item>
          <item>
           <property name="text">
-           <string>Script</string>
+           <string notr="true">Script</string>
           </property>
           <property name="font">
            <font>
@@ -503,7 +506,7 @@
          </item>
          <item>
           <property name="text">
-           <string>Settings</string>
+           <string notr="true">Settings</string>
           </property>
           <property name="font">
            <font>
@@ -517,23 +520,23 @@
           </property>
           <item>
            <property name="text">
-            <string>Debug</string>
+            <string notr="true">Debug</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Interface</string>
+            <string notr="true">Interface</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Processing setting</string>
+            <string notr="true">Processing setting</string>
            </property>
           </item>
          </item>
          <item>
           <property name="text">
-           <string>User manual</string>
+           <string notr="true">User manual</string>
           </property>
           <property name="icon">
            <iconset resource="resources.qrc">
@@ -542,7 +545,7 @@
          </item>
          <item>
           <property name="text">
-           <string>Help</string>
+           <string notr="true">Help</string>
           </property>
           <property name="icon">
            <iconset resource="resources.qrc">
@@ -551,7 +554,7 @@
          </item>
          <item>
           <property name="text">
-           <string>About</string>
+           <string notr="true">About</string>
           </property>
           <property name="font">
            <font>

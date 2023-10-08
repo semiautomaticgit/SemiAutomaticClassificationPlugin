@@ -38,7 +38,7 @@ first_install = signature_plot = spectral_signature_plotter = None
 scatter_plot = scatter_plotter = scp_processing_provider = None
 signature_importer = usgs_spectral_lib = multiple_roi = None
 smtp_notification = smtp_server = smtp_user = smtp_password = None
-smtp_recipients = None
+smtp_recipients = main_menu = None
 # welcome url
 first_reply = second_reply = second_url = None
 # QGIS proxy

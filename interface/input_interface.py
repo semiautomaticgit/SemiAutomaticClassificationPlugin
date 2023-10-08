@@ -495,41 +495,41 @@ def add_menu_item(menu, function, icon_name, name):
 # load SCP menu
 def load_menu():
     menu_bar = cfg.iface.mainWindow().menuBar()
-    main_menu = QMenu(cfg.iface.mainWindow())
-    main_menu.setObjectName('semiautomaticclassificationplugin')
-    main_menu.setTitle(cfg.translate('SCP'))
+    cfg.main_menu = QMenu(cfg.iface.mainWindow())
+    cfg.main_menu.setObjectName('semiautomaticclassificationplugin')
+    cfg.main_menu.setTitle(cfg.translate('SCP'))
     menu_bar.insertMenu(
-        cfg.iface.firstRightStandardMenu().menuAction(), main_menu
+        cfg.iface.firstRightStandardMenu().menuAction(), cfg.main_menu
     )
     function_dictionaries()
     for b in cfg.first_functions:
         add_menu_item(
-            main_menu, cfg.first_functions[b], cfg.first_icons[b],
+            cfg.main_menu, cfg.first_functions[b], cfg.first_icons[b],
             cfg.translate(b)
         )
     # Basic tools
-    basic_tools_menu = main_menu.addMenu(
+    basic_tools_menu = cfg.main_menu.addMenu(
         QIcon(
             ':/plugins/semiautomaticclassificationplugin/icons/'
             'semiautomaticclassificationplugin_roi_tool.svg'
         ), cfg.translate('Basic tools')
     )
     # Preprocessing
-    preprocessing_menu = main_menu.addMenu(
+    preprocessing_menu = cfg.main_menu.addMenu(
         QIcon(
             ':/plugins/semiautomaticclassificationplugin/icons/'
             'semiautomaticclassificationplugin_class_tool.svg'
         ), cfg.translate('Preprocessing')
     )
     # Band processing
-    band_processing_menu = main_menu.addMenu(
+    band_processing_menu = cfg.main_menu.addMenu(
         QIcon(
             ':/plugins/semiautomaticclassificationplugin/icons/'
             'semiautomaticclassificationplugin_band_processing.svg'
         ), cfg.translate('Band processing')
     )
     # Postprocessing
-    postprocessing_menu = main_menu.addMenu(
+    postprocessing_menu = cfg.main_menu.addMenu(
         QIcon(
             ':/plugins/semiautomaticclassificationplugin/icons/'
             'semiautomaticclassificationplugin_post_process.svg'
@@ -537,23 +537,23 @@ def load_menu():
     )
     for b in cfg.calc_functions:
         add_menu_item(
-            main_menu, cfg.calc_functions[b], cfg.calc_icons[b],
+            cfg.main_menu, cfg.calc_functions[b], cfg.calc_icons[b],
             cfg.translate(b)
         )
     # Spectral plot
     add_menu_item(
-        main_menu, spectral_plot_tab,
+        cfg.main_menu, spectral_plot_tab,
         'semiautomaticclassificationplugin_sign_tool.svg',
         cfg.translate('Spectral plot')
     )
     # Scatter plot
     add_menu_item(
-        main_menu, scatter_plot_tab,
+        cfg.main_menu, scatter_plot_tab,
         'semiautomaticclassificationplugin_scatter_tool.svg',
         cfg.translate('Scatter plot')
     )
     # Settings
-    settings_menu = main_menu.addMenu(
+    settings_menu = cfg.main_menu.addMenu(
         QIcon(
             ':/plugins/semiautomaticclassificationplugin/icons/'
             'semiautomaticclassificationplugin_settings_tool.svg'
@@ -561,7 +561,7 @@ def load_menu():
     )
     for b in cfg.other_functions:
         add_menu_item(
-            main_menu, cfg.other_functions[b], cfg.other_icons[b],
+            cfg.main_menu, cfg.other_functions[b], cfg.other_icons[b],
             cfg.translate(b)
         )
     for b in cfg.basic_tools_functions:
@@ -593,7 +593,8 @@ def load_menu():
         )
     # Show plugin
     add_menu_item(
-        main_menu, show_plugin, 'semiautomaticclassificationplugin_docks.svg',
+        cfg.main_menu, show_plugin,
+        'semiautomaticclassificationplugin_docks.svg',
         cfg.translate('Show plugin')
     )
 

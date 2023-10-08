@@ -135,6 +135,22 @@ class SemiAutomaticClassificationPlugin:
             cfg.iface = iface
             # reference to map canvas
             cfg.map_canvas = iface.mapCanvas()
+            # locale
+            locale_settings = QSettings().value('locale/userLocale')[0:2]
+            # locale
+            locale_path = ''
+            if QFileInfo(cfg.plugin_dir).exists():
+                locale_path = (
+                        '%s/i18n/semiautomaticclassificationplugin_%s.qm'
+                        % (cfg.plugin_dir, locale_settings)
+                )
+            if QFileInfo(locale_path).exists():
+                transl = QTranslator()
+                transl.load(locale_path)
+                if qVersion() > '4.3.3':
+                    QCoreApplication.installTranslator(transl)
+            cfg.ui_utils = UiUtils()
+            cfg.translate = cfg.ui_utils.translate
             try:
                 # create the dialog
                 cfg.dialog = SemiAutomaticClassificationPluginDialog()
@@ -165,8 +181,6 @@ class SemiAutomaticClassificationPlugin:
             # scatter plot dialog
             cfg.scatter_plot_dlg = ScatterPlotDialog()
             cfg.settings = settings
-            cfg.ui_utils = UiUtils()
-            cfg.translate = cfg.ui_utils.translate
             cfg.bst = bandset_tab
             cfg.signature_plot = spectral_signature_plot
             cfg.scatter_plot = scatter_plot
@@ -232,8 +246,6 @@ class SemiAutomaticClassificationPlugin:
                     QgsApplication.qgisUserDatabaseFilePath()
                 ).path(), str(__name__).split('.')[0])
                               )
-            # locale
-            locale_settings = QSettings().value('locale/userLocale')[0:2]
             registry_keys()
             # temporary directory
             cfg.temp_dir = get_temporary_directory()
@@ -269,18 +281,6 @@ class SemiAutomaticClassificationPlugin:
                 cfg.scatter_plotter = (
                     cfg.scatter_plot.ScatterPlot()
                 )
-                # locale
-                locale_path = ''
-                if QFileInfo(cfg.plugin_dir).exists():
-                    locale_path = (
-                            '%s/i18n/semiautomaticclassificationplugin_%s.qm'
-                            % (cfg.plugin_dir, locale_settings)
-                    )
-                if QFileInfo(locale_path).exists():
-                    transl = QTranslator()
-                    transl.load(locale_path)
-                    if qVersion() > '4.3.3':
-                        QCoreApplication.installTranslator(transl)
                 # info
                 sys_info = str(
                     'SCP %s; QGIS v. %s; L: %s; OS: %s; python: %s'
@@ -665,7 +665,18 @@ class SemiAutomaticClassificationPlugin:
         except Exception as err:
             str(err)
         try:
-            qgis_utils.iface.removeDockWidget(cfg.dock_class_dlg)
+            if cfg.dock_class_dlg is not None:
+                qgis_utils.iface.removeDockWidget(cfg.dock_class_dlg)
+            cfg.working_toolbar.deleteLater()
+            cfg.main_menu.deleteLater()
+            cfg.dialog.deleteLater()
+            QgsApplication.processingRegistry().removeProvider(
+                cfg.scp_processing_provider
+            )
+            """
+            if cfg.dialog is not None:
+                qgis_utils.iface.removeDockWidget(cfg.dialog)
+            """
         # remove temp files
         except Exception as err:
             str(err)
