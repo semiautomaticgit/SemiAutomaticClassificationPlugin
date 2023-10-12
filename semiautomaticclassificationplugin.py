@@ -85,7 +85,7 @@ except Exception as error:
             'Error. Please, install the required Python library '
             'remotior_sensus'
         ),
-        level=Qgis.Info
+        level=Qgis.Critical
     )
 
 try:
