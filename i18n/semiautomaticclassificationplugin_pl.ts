@@ -3917,22 +3917,22 @@ p, li { white-space: pre-wrap; }
         <translation>Czy na pewno chcesz dodać wybrane sygnatury do listy?</translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="684"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="683"/>
         <source>Please, restart QGIS for executing the Semi-Automatic Classification Plugin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="304"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="303"/>
         <source>Please restart QGIS for installing the Semi-Automatic Classification Plugin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="82"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="81"/>
         <source>Error. Please, install the required Python library remotior_sensus</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="456"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="455"/>
         <source>Transparency </source>
         <translation type="unfinished"></translation>
     </message>
@@ -3972,12 +3972,12 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="124"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="123"/>
         <source>Error. Python library not found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="264"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="263"/>
         <source>Error starting Remotior Sensus</source>
         <translation type="unfinished"></translation>
     </message>

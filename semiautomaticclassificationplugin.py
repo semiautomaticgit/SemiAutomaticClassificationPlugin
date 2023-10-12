@@ -73,7 +73,6 @@ from .ui.semiautomaticclassificationplugindialog import (
 global plugin_check
 try:
     import remotior_sensus
-
     plugin_check = True
 except Exception as error:
     str(error)
@@ -84,11 +83,11 @@ except Exception as error:
             'semiautomaticclassificationplugin',
             'Error. Please, install the required Python library '
             'remotior_sensus'
-        ),
-        level=Qgis.Critical
+        ), level=Qgis.Warning, duration=10
     )
 
 try:
+    multiprocessing.freeze_support()
     multiprocessing.set_start_method('spawn')
 except Exception as error:
     str(error)
