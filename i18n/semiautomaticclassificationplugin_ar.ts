@@ -3914,12 +3914,12 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="683"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="685"/>
         <source>Please, restart QGIS for executing the Semi-Automatic Classification Plugin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="303"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="305"/>
         <source>Please restart QGIS for installing the Semi-Automatic Classification Plugin</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3929,7 +3929,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="455"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="457"/>
         <source>Transparency </source>
         <translation type="unfinished"></translation>
     </message>

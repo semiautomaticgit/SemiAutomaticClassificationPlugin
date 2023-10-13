@@ -282,9 +282,11 @@ class SemiAutomaticClassificationPlugin:
                 )
                 # info
                 sys_info = str(
-                    'SCP %s; QGIS v. %s; L: %s; OS: %s; python: %s'
+                    'SCP %s; QGIS v. %s; L: %s; OS: %s; python: %s; '
+                    'remotior sensus: %s'
                     % (semiautomaticclass_version(), str(qgis_ver),
-                       locale_settings, cfg.system_platform, str(python_path))
+                       locale_settings, cfg.system_platform, str(python_path),
+                       str(remotior_sensus.__version__))
                 )
                 cfg.scp_processing_provider = SCPAlgorithmProvider()
                 cfg.logger.log.info(sys_info)

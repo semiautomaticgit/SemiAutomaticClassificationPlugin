@@ -86,7 +86,7 @@ class MaskingBands(AlgorithmTemplate):
         )
         self.addParameter(
             QgsProcessingParameterNumber(
-                name=self.VALUE,
+                name=self.VALUE_2,
                 description=self.translate('Output NoData value'),
                 defaultValue=-32768, optional=True
             )
@@ -145,11 +145,11 @@ class MaskingBands(AlgorithmTemplate):
             size = self.parameterAsInt(
                 parameters, self.VALUE, context
             )
-        if parameters[self.VALUE] is None:
+        if parameters[self.VALUE_2] is None:
             nodata = None
         else:
             nodata = self.parameterAsInt(
-                parameters, self.VALUE, context
+                parameters, self.VALUE_2, context
             )
         output_name = self.parameterAsString(
             parameters, self.TEXT, context
