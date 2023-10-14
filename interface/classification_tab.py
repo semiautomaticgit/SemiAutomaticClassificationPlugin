@@ -476,14 +476,20 @@ def run_classifier(save_classifier=None, preview_point=None):
             output_raster = output.path
             # add raster to layers
             raster = cfg.util_qgis.add_raster_layer(output_raster)
-            cfg.util_qgis.move_layer_to_top(raster)
-            # apply symbology
-            apply_class_symbology(raster, macroclass)
-            name = cfg.rs.files_directories.file_name(output_raster)
-            directory = cfg.rs.files_directories.parent_directory(output_raster)
-            cfg.util_qgis.save_qml_style(
-                raster, '%s/%s.qml' % (directory, name)
-            )
+            if raster is False:
+                cfg.logger.log.error('raster output not found')
+                cfg.mx.msg_err_1()
+            else:
+                cfg.util_qgis.move_layer_to_top(raster)
+                # apply symbology
+                apply_class_symbology(raster, macroclass)
+                name = cfg.rs.files_directories.file_name(output_raster)
+                directory = cfg.rs.files_directories.parent_directory(
+                    output_raster
+                )
+                cfg.util_qgis.save_qml_style(
+                    raster, '%s/%s.qml' % (directory, name)
+                )
     else:
         cfg.mx.msg_err_1()
     cfg.ui_utils.remove_progress_bar(smtp=str(__name__))
