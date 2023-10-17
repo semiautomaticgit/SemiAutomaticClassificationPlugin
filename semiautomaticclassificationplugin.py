@@ -130,6 +130,32 @@ class SemiAutomaticClassificationPlugin:
                             )
                 except Exception as err:
                     str(err)
+            elif cfg.system_platform == 'Darwin':
+                try:
+                    python_path = path.abspath(
+                        path.join(sys.exec_prefix, 'bin', 'python3')
+                    )
+                    if path.isfile(python_path):
+                        multiprocessing.set_executable(python_path)
+                    else:
+                        python_path = path.abspath(
+                            path.join(
+                                sys.exec_prefix, '../Resources/bin/python3'
+                            )
+                        )
+                        if path.isfile(python_path):
+                            multiprocessing.set_executable(python_path)
+                        else:
+                            qgis_utils.iface.messageBar().pushMessage(
+                                'Semi-Automatic Classification Plugin',
+                                QApplication.translate(
+                                    'semiautomaticclassificationplugin',
+                                    'Error. Python library not found'
+                                ),
+                                level=Qgis.Info
+                            )
+                except Exception as err:
+                    str(err)
             # reference to QGIS interface
             cfg.iface = iface
             # reference to map canvas

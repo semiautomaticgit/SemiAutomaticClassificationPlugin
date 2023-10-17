@@ -3879,27 +3879,27 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="123"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="149"/>
         <source>Error. Python library not found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="685"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="711"/>
         <source>Please, restart QGIS for executing the Semi-Automatic Classification Plugin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="263"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="289"/>
         <source>Error starting Remotior Sensus</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="305"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="331"/>
         <source>Please restart QGIS for installing the Semi-Automatic Classification Plugin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="457"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="483"/>
         <source>Transparency </source>
         <translation type="unfinished"></translation>
     </message>
