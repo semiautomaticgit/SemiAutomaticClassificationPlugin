@@ -34,7 +34,7 @@ def description():
 
 
 def version():
-    return 'Version 8.0.7 - Infinity'
+    return 'Version 8.0.8 - Infinity'
 
 
 def icon():

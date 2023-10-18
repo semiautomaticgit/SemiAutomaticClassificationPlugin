@@ -504,7 +504,9 @@ def create_preview(preview_point):
         return False
     cfg.preview_point = point
     output = run_classifier(preview_point=point)
-    if output.check:
+    if output is None:
+        return False
+    elif output.check:
         output_raster = output.path
         # move previous preview to group
         group = cfg.util_qgis.group_index(
