@@ -399,11 +399,6 @@ def edited_bandset(row, column):
             )
             bands = bandset_x.bands
             bands['path'][bands['band_number'] == row + 1] = path
-            root = cfg.bandset_catalog.get_root_directory(bandset_number)
-            absolute = cfg.utils.relative_to_absolute_path(
-                path=path, root=root
-            )
-            bands['absolute_path'][bands['band_number'] == row + 1] = absolute
         else:
             band_value = cfg.bandset_catalog.get_bandset(
                 bandset_number, attribute='path'
@@ -819,6 +814,7 @@ def bandset_tools(output_directory, batch=True):
             )
     if batch is False:
         cfg.ui_utils.remove_progress_bar(smtp=str(__name__))
+        cfg.mx.msg_inf_6()
 
 
 # perform bands filter
@@ -1063,4 +1059,13 @@ def explain_q_table_widget():
 
 # add color composite
 def add_composite():
-    cfg.utils.set_rgb_color_composite(composite='3-2-1')
+    table = cfg.dialog.ui.bandset_tableWidget
+    selected = table.selectedItems()
+    selected_list = []
+    for i in range(0, len(selected)):
+        selected_list.append(selected[i].row())
+    selected_list = list(set(selected_list))
+    for index in reversed(selected_list):
+        cfg.utils.set_rgb_color_composite(
+            composite='3-2-1', bandset_number=index + 1
+        )

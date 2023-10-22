@@ -582,7 +582,7 @@ def create_kml_from_map():
 
 
 # set RGB color composite
-def set_rgb_color_composite(composite=None):
+def set_rgb_color_composite(composite=None, bandset_number=None):
     if ((len(cfg.rgb_combo.currentText()) > 0
          and cfg.rgb_combo.currentText() != '-') or composite is not None):
         try:
@@ -592,15 +592,24 @@ def set_rgb_color_composite(composite=None):
                 'set_rgb_color_composite rgb: %s' % str(composite)
             )
             if composite is not None:
-                check = create_rgb_color_composite(composite)
+                check = create_rgb_color_composite(composite, bandset_number)
                 if check is True:
                     if composite not in cfg.project_registry[cfg.reg_rgb_list]:
                         cfg.project_registry[cfg.reg_rgb_list].append(
                             composite
                         )
-                        cfg.project_registry[cfg.reg_rgb_list] = list(
-                            set(cfg.project_registry[cfg.reg_rgb_list])
-                        )
+                        try:
+                            rgb_list = list(
+                                set(cfg.project_registry[cfg.reg_rgb_list])
+                            )
+                            rgb_list.remove('-')
+                            rgb_list.insert(0, '-')
+                        except Exception as err:
+                            str(err)
+                            rgb_list = list(
+                                set(cfg.project_registry[cfg.reg_rgb_list])
+                            )
+                        cfg.project_registry[cfg.reg_rgb_list] = rgb_list
                     cfg.rgb_composite.rgb_table_from_list(
                         cfg.project_registry[cfg.reg_rgb_list]
                     )
