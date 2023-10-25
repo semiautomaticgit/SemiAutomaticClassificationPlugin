@@ -66,7 +66,33 @@ class SCPAlgorithmProvider(QgsProcessingProvider):
         ]
 
     def load(self):
-        with QgsRuntimeProfiler.profile('SCP Provider'):
+        try:
+            with QgsRuntimeProfiler.profile('SCP Provider'):
+                group = self.name()
+                ProcessingConfig.settingIcons[group] = self.icon()
+                ProcessingConfig.setGroupIcon(self.name(), self.icon())
+                ProcessingConfig.addSetting(
+                    Setting(
+                        group, 'SCP_N_PROCESSES',
+                        self.translate('Number of parallel processes'), 2,
+                        valuetype=Setting.INT
+                    )
+                )
+                ProcessingConfig.addSetting(
+                    Setting(
+                        group, 'SCP_MEMORY',
+                        self.translate('Available RAM in MB'),
+                        2048, valuetype=Setting.INT
+                    )
+                )
+                ProcessingConfig.addSetting(
+                    Setting(group, 'SCP_ACTIVATE', 'Activate', True)
+                )
+                ProcessingConfig.readSettings()
+                self.refreshAlgorithms()
+            return True
+        except Exception as err:
+            str(err)
             group = self.name()
             ProcessingConfig.settingIcons[group] = self.icon()
             ProcessingConfig.setGroupIcon(self.name(), self.icon())
@@ -89,7 +115,7 @@ class SCPAlgorithmProvider(QgsProcessingProvider):
             )
             ProcessingConfig.readSettings()
             self.refreshAlgorithms()
-        return True
+            return True
 
     @staticmethod
     def unload():

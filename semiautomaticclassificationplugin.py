@@ -71,20 +71,86 @@ from .ui.semiautomaticclassificationplugindialog import (
 )
 
 global plugin_check
+lib_dir = None
 try:
     import remotior_sensus
     plugin_check = True
 except Exception as error:
     str(error)
-    plugin_check = False
-    # noinspection PyTypeChecker
-    qgis_utils.iface.messageBar().pushMessage(
-        'Semi-Automatic Classification Plugin', QApplication.translate(
-            'semiautomaticclassificationplugin',
-            'Error. Please, install the required Python library '
-            'remotior_sensus'
-        ), level=Qgis.Warning, duration=10
-    )
+    try:
+        lib_dir = ('%s/python/plugins/%s' % (
+                    QFileInfo(
+                        QgsApplication.qgisUserDatabaseFilePath()
+                    ).path(), str(__name__).split('.')[0])
+                   )
+        sys.path.append(lib_dir)
+        import remotior_sensus
+        assert remotior_sensus.__version__
+        plugin_check = True
+        # noinspection PyTypeChecker
+        qgis_utils.iface.messageBar().pushMessage(
+            'Semi-Automatic Classification Plugin', QApplication.translate(
+                'semiautomaticclassificationplugin',
+                'Warning. Python library remotior_sensus was not found and was'
+                ' automatically downloaded, but SCP may not work properly.'
+                'Please, install the required Python library '
+                'remotior_sensus following the user manual.'
+            ), level=Qgis.Warning, duration=10
+        )
+    except Exception as error:
+        str(error)
+        try:
+            # download library
+            import requests
+            import zipfile
+            response = requests.get(
+                'https://github.com/semiautomaticgit/remotior_sensus/archive'
+                '/refs/heads/master.zip'
+            )
+            with open(lib_dir + '/rs.zip', 'wb') as rs_zip:
+                rs_zip.write(response.content)
+            # extract library
+            with zipfile.ZipFile(lib_dir + '/rs.zip') as open_file:
+                for info in open_file.infolist():
+                    if info.filename.startswith(
+                            'remotior_sensus-master/src/remotior_sensus'
+                    ):
+                        file_path = '%s/remotior_sensus/%s' % (
+                            lib_dir, path.relpath(
+                                info.filename,
+                                'remotior_sensus-master/src/remotior_sensus'
+                            )
+                        )
+                        if info.is_dir():
+                            makedirs(file_path, exist_ok=True)
+                        else:
+                            try:
+                                with open_file.open(info.filename) as source:
+                                    with open(file_path, 'wb') as target:
+                                        target.write(source.read())
+                            except Exception as error:
+                                str(error)
+            sys.path.append(lib_dir)
+            import remotior_sensus
+            plugin_check = True
+            # noinspection PyTypeChecker
+            qgis_utils.iface.messageBar().pushMessage(
+                'Semi-Automatic Classification Plugin', QApplication.translate(
+                    'semiautomaticclassificationplugin',
+                    'Warning. Python library remotior_sensus was not found '
+                    'and was automatically downloaded, but SCP may not work '
+                    'properly. Please, install the required Python library '
+                    'remotior_sensus following the user manual.'
+                ), level=Qgis.Warning, duration=10
+            )
+        except Exception as error:
+            str(error)
+            plugin_check = False
+            # noinspection PyTypeChecker
+            qgis_utils.iface.messageBar().pushMessage(
+                'Semi-Automatic Classification Plugin', str(error),
+                level=Qgis.Warning, duration=10
+            )
 
 try:
     multiprocessing.freeze_support()
@@ -309,10 +375,10 @@ class SemiAutomaticClassificationPlugin:
                 # info
                 sys_info = str(
                     'SCP %s; QGIS v. %s; L: %s; OS: %s; python: %s; '
-                    'remotior sensus: %s'
+                    'remotior sensus: %s; environment: %s'
                     % (semiautomaticclass_version(), str(qgis_ver),
                        locale_settings, cfg.system_platform, str(python_path),
-                       str(remotior_sensus.__version__))
+                       str(remotior_sensus.__version__), str(lib_dir))
                 )
                 cfg.scp_processing_provider = SCPAlgorithmProvider()
                 cfg.logger.log.info(sys_info)
@@ -689,6 +755,15 @@ class SemiAutomaticClassificationPlugin:
         try:
             cfg.logger.log.debug('unload')
             cfg.rs.close()
+        except Exception as err:
+            str(err)
+        try:
+            rs_dir = ('%s/python/plugins/%s' % (
+                        QFileInfo(
+                            QgsApplication.qgisUserDatabaseFilePath()
+                        ).path(), str(__name__).split('.')[0])
+                      )
+            sys.path.remove(rs_dir)
         except Exception as err:
             str(err)
         try:

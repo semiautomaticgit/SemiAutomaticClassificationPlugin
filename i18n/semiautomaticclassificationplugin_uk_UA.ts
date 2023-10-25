@@ -3884,32 +3884,27 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>semiautomaticclassificationplugin</name>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="81"/>
-        <source>Error. Please, install the required Python library remotior_sensus</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="149"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="215"/>
         <source>Error. Python library not found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="711"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="786"/>
         <source>Please, restart QGIS for executing the Semi-Automatic Classification Plugin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="289"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="355"/>
         <source>Error starting Remotior Sensus</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="331"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="397"/>
         <source>Please restart QGIS for installing the Semi-Automatic Classification Plugin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="483"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="549"/>
         <source>Transparency </source>
         <translation type="unfinished"></translation>
     </message>
@@ -3986,6 +3981,16 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../spectral_signature/spectral_signature_plot.py" line="573"/>
         <source>Spectral angle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../semiautomaticclassificationplugin.py" line="91"/>
+        <source>Warning. Python library remotior_sensus was not found and was automatically downloaded, but SCP may not work properly.Please, install the required Python library remotior_sensus following the user manual.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../semiautomaticclassificationplugin.py" line="137"/>
+        <source>Warning. Python library remotior_sensus was not found and was automatically downloaded, but SCP may not work properly. Please, install the required Python library remotior_sensus following the user manual.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
