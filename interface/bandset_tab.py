@@ -779,11 +779,12 @@ def perform_bandset_tools():
 
 
 # perform bandset tools
-def bandset_tools(output_directory, batch=True):
+def bandset_tools(output_directory, bandset_number=None, batch=True):
     if batch is False:
         cfg.ui_utils.add_progress_bar()
     cfg.logger.log.info('bandset_tools: %s' % output_directory)
-    bandset_number = cfg.project_registry[cfg.reg_active_bandset_number]
+    if bandset_number is None:
+        bandset_number = cfg.project_registry[cfg.reg_active_bandset_number]
     name = cfg.bandset_catalog.get_name(bandset_number)
     if cfg.rs.configurations.action:
         if cfg.dialog.ui.band_calc_checkBox.isChecked() is True:
@@ -879,9 +880,7 @@ def band_set_to_table(bandset_number):
         cfg.dialog.ui.bandset_tableWidget.blockSignals(True)
         names = str(bandset_x.get_band_attributes('name')).replace(
             "'", ''
-        ).replace(
-            '[', ''
-        ).replace(']', '')
+        ).replace('[', '').replace(']', '')
         if names == 'None':
             names = ''
         cfg.util_qt.add_table_item(

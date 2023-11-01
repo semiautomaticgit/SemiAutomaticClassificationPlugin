@@ -692,7 +692,7 @@ def display_sentinel2(row, preview=False):
         image_id = '%s_p.jp2' % image_name
     url = str(table.item(row, 13).text())
     # image preview
-    image_output = '%s//%s' % (cfg.temp_dir, image_id)
+    image_output = '%s/%s' % (cfg.rs.configurations.temp.dir, image_id)
     if preview is True and cfg.utils.check_file(image_output):
         preview_in_label(image_output)
         return image_output
@@ -739,29 +739,33 @@ def display_nasa_images(row, preview=False):
     max_lon = str(table.item(row, 10).text())
     url = str(table.item(row, 13).text())
     # image preview
-    image_output = '%s//%s_thumb.jpg' % (cfg.temp_dir, image_id)
+    image_output = '%s/%s_thumb.jpg' % (
+        cfg.rs.configurations.temp.dir, image_id
+    )
     if preview is True and cfg.utils.check_file(image_output):
         preview_in_label(image_output)
         return image_output
-    elif cfg.utils.check_file('%s//%s.vrt' % (cfg.temp_dir, image_id)):
+    elif cfg.utils.check_file(
+            '%s/%s.vrt' % (cfg.rs.configurations.temp.dir, image_id)
+    ):
         layer = cfg.util_qgis.select_layer_by_name(image_id)
         if layer is not None:
             cfg.util_qgis.set_layer_visible(layer, True)
             cfg.util_qgis.move_layer_to_top(layer)
         else:
             r = cfg.util_qgis.add_raster_layer(
-                '%s//%s.vrt'
-                % (cfg.temp_dir, image_id)
+                '%s/%s.vrt' % (cfg.rs.configurations.temp.dir, image_id)
             )
             cfg.util_qgis.set_raster_color_composite(r, 1, 2, 3)
     else:
         download_nasa_thumbnail(
             image_id, min_lat, min_lon, max_lat, max_lon, url, sat, preview
         )
-        if cfg.utils.check_file('%s//%s.vrt' % (cfg.temp_dir, image_id)):
+        if cfg.utils.check_file(
+                '%s/%s.vrt' % (cfg.rs.configurations.temp.dir, image_id)
+        ):
             r = cfg.util_qgis.add_raster_layer(
-                '%s//%s.vrt'
-                % (cfg.temp_dir, image_id)
+                '%s//%s.vrt' % (cfg.rs.configurations.temp.dir, image_id)
             )
             cfg.util_qgis.set_raster_color_composite(r, 1, 2, 3)
 
@@ -901,7 +905,9 @@ def onthefly_georef_image(
 def download_nasa_thumbnail(
         image_id, min_lat, min_lon, max_lat, max_lon, url, sat, preview=False
 ):
-    image_output = '%s//%s_thumb.jpg' % (cfg.temp_dir, image_id)
+    image_output = '%s/%s_thumb.jpg' % (
+        cfg.rs.configurations.temp.dir, image_id
+    )
     check = False
     if (sat == cfg.rs.configurations.landsat_hls
             or sat == cfg.rs.configurations.sentinel2_hls):
@@ -913,6 +919,7 @@ def download_nasa_thumbnail(
             preview_in_label(image_output)
             return image_output
         onthefly_georef_image(
-            image_output, '%s//%s.vrt' % (cfg.temp_dir, image_id), min_lon,
+            image_output,
+            '%s/%s.vrt' % (cfg.rs.configurations.temp.dir, image_id), min_lon,
             max_lon, min_lat, max_lat
         )

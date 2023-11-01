@@ -136,10 +136,15 @@ def perform_conversion(output_path=None, load_in_qgis=False):
         else:
             cfg.mx.msg_err_1()
         if add_bandset is True:
+            bandset_number = None
             for bandset_number in range(
                     1, cfg.bandset_catalog.get_bandset_count() + 1
             ):
                 cfg.bst.band_set_to_table(bandset_number)
+            cfg.bst.bandset_tools(
+                output_directory=output_path,
+                bandset_number=bandset_number
+            )
         cfg.mx.msg_inf_6()
         cfg.ui_utils.remove_progress_bar(smtp=str(__name__))
 

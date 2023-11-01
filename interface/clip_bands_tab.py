@@ -238,7 +238,10 @@ def clip_bands():
                 # temporary layer
                 date_time = cfg.utils.get_time()
                 t_vector_name = cfg.temp_roi_name + date_time + '.shp'
-                t_vector = cfg.temp_dir + '/' + date_time + t_vector_name
+                t_vector = (
+                        cfg.rs.configurations.temp.dir + '/' + date_time
+                        + t_vector_name
+                )
                 # get layer crs
                 crs = cfg.util_gdal.get_crs_gdal(reference)
                 # create a temp shapefile with a field
@@ -380,7 +383,8 @@ def set_script():
             # temporary layer
             date_time = cfg.utils.get_time()
             t_vector_name = cfg.temp_roi_name + date_time + '.shp'
-            t_vector = cfg.temp_dir + '/' + date_time + t_vector_name
+            t_vector = (cfg.rs.configurations.temp.dir+ '/' + date_time
+                        + t_vector_name)
             # get layer crs
             crs = cfg.util_gdal.get_crs_gdal(reference)
             # create a temp shapefile with a field
