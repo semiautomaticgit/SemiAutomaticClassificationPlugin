@@ -44,46 +44,48 @@ def signature_thresholds_to_table():
                 ids = sig_table.signature_id.tolist()
                 row = 0
                 for signature_id in ids:
-                    signature_array = cfg.scp_training.signature_catalog.table[
-                        cfg.scp_training.signature_catalog.table[
-                            'signature_id'] == signature_id]
-                    macroclass_id = signature_array.macroclass_id[0]
-                    class_id = signature_array.class_id[0]
-                    class_name = signature_array.class_name[0]
-                    macroclass_name = (
-                        cfg.scp_training.signature_catalog.macroclasses[
-                            macroclass_id
-                        ]
-                    )
-                    min_dist_thr = signature_array.min_dist_thr[0]
-                    max_like_thr = signature_array.max_like_thr[0]
-                    spec_angle_thr = signature_array.spec_angle_thr[0]
-                    cfg.util_qt.insert_table_row(table, row)
-                    cfg.util_qt.add_table_item(
-                        table, int(macroclass_id), row, 0, False
-                    )
-                    cfg.util_qt.add_table_item(
-                        table, str(macroclass_name), row, 1, False
-                    )
-                    cfg.util_qt.add_table_item(
-                        table, int(class_id), row, 2, False
-                    )
-                    cfg.util_qt.add_table_item(
-                        table, str(class_name), row, 3, False
-                    )
-                    cfg.util_qt.add_table_item(
-                        table, str(min_dist_thr), row, 4
-                    )
-                    cfg.util_qt.add_table_item(
-                        table, str(max_like_thr), row, 5
-                    )
-                    cfg.util_qt.add_table_item(
-                        table, str(spec_angle_thr), row, 6
-                    )
-                    cfg.util_qt.add_table_item(
-                        table, str(signature_id), row, 7, False
-                    )
-                    row += 1
+                    if signature_id != 'N/A':
+                        signature_array = \
+                            cfg.scp_training.signature_catalog.table[
+                                cfg.scp_training.signature_catalog.table[
+                                    'signature_id'] == signature_id]
+                        macroclass_id = signature_array.macroclass_id[0]
+                        class_id = signature_array.class_id[0]
+                        class_name = signature_array.class_name[0]
+                        macroclass_name = (
+                            cfg.scp_training.signature_catalog.macroclasses[
+                                macroclass_id
+                            ]
+                        )
+                        min_dist_thr = signature_array.min_dist_thr[0]
+                        max_like_thr = signature_array.max_like_thr[0]
+                        spec_angle_thr = signature_array.spec_angle_thr[0]
+                        cfg.util_qt.insert_table_row(table, row)
+                        cfg.util_qt.add_table_item(
+                            table, int(macroclass_id), row, 0, False
+                        )
+                        cfg.util_qt.add_table_item(
+                            table, str(macroclass_name), row, 1, False
+                        )
+                        cfg.util_qt.add_table_item(
+                            table, int(class_id), row, 2, False
+                        )
+                        cfg.util_qt.add_table_item(
+                            table, str(class_name), row, 3, False
+                        )
+                        cfg.util_qt.add_table_item(
+                            table, str(min_dist_thr), row, 4
+                        )
+                        cfg.util_qt.add_table_item(
+                            table, str(max_like_thr), row, 5
+                        )
+                        cfg.util_qt.add_table_item(
+                            table, str(spec_angle_thr), row, 6
+                        )
+                        cfg.util_qt.add_table_item(
+                            table, str(signature_id), row, 7, False
+                        )
+                        row += 1
         table.blockSignals(False)
         cfg.util_qt.sort_table_column(table, 7)
 

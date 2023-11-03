@@ -490,6 +490,15 @@ def run_classifier(save_classifier=None, preview_point=None):
                 cfg.util_qgis.save_qml_style(
                     raster, '%s/%s.qml' % (directory, name)
                 )
+            if output.extra['algorithm_raster'] is not None:
+                # add raster to layers
+                cfg.util_qgis.add_raster_layer(
+                    output.extra['algorithm_raster']
+                )
+            if output.extra['signature_rasters'] is not None:
+                # add raster to layers
+                for s in output.extra['signature_rasters']:
+                    cfg.util_qgis.add_raster_layer(s)
     else:
         cfg.mx.msg_err_1()
     cfg.ui_utils.remove_progress_bar(smtp=str(__name__))

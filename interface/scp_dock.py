@@ -424,33 +424,35 @@ class TrainingVectorLayer:
             signatures = self.signature_catalog.table.signature_id.tolist()
         class_name_list = []
         for signature in signatures:
-            signature_array = self.signature_catalog.table[
-                self.signature_catalog.table['signature_id'] == signature]
-            macroclass_id = signature_array.macroclass_id[0]
-            class_id = signature_array.class_id[0]
-            class_name = signature_array.class_name[0]
-            class_name_list.append(class_name)
-            selected = signature_array.selected[0]
-            geometry_check = signature_array.geometry[0]
-            signature_check = signature_array.signature[0]
-            color = signature_array.color[0]
-            if signature_check == 1 and geometry_check == 1:
-                type_info = cfg.roi_and_signature_type
-            elif geometry_check == 1:
-                type_info = cfg.roi_type
-            elif signature_check == 1:
-                type_info = cfg.signature_type
-            else:
-                type_info = ''
-                cfg.logger.log.error('type_info empty')
-            # replace for checkbox state
-            if selected == 1:
-                selected = 2
-            self.add_class_tree_item(
-                macroclass_id=macroclass_id, class_id=class_id,
-                class_info=class_name, type_info=type_info,
-                signature_id=signature, color=color, checkbox_state=selected
-            )
+            if signature != 'N/A':
+                signature_array = self.signature_catalog.table[
+                    self.signature_catalog.table['signature_id'] == signature]
+                macroclass_id = signature_array.macroclass_id[0]
+                class_id = signature_array.class_id[0]
+                class_name = signature_array.class_name[0]
+                class_name_list.append(class_name)
+                selected = signature_array.selected[0]
+                geometry_check = signature_array.geometry[0]
+                signature_check = signature_array.signature[0]
+                color = signature_array.color[0]
+                if signature_check == 1 and geometry_check == 1:
+                    type_info = cfg.roi_and_signature_type
+                elif geometry_check == 1:
+                    type_info = cfg.roi_type
+                elif signature_check == 1:
+                    type_info = cfg.signature_type
+                else:
+                    type_info = ''
+                    cfg.logger.log.error('type_info empty')
+                # replace for checkbox state
+                if selected == 1:
+                    selected = 2
+                self.add_class_tree_item(
+                    macroclass_id=macroclass_id, class_id=class_id,
+                    class_info=class_name, type_info=type_info,
+                    signature_id=signature, color=color,
+                    checkbox_state=selected
+                )
         cfg.logger.log.debug('class_name_list: %s' % str(class_name_list))
         self.tree.show()
         self.tree.setSortingEnabled(True)
