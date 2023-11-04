@@ -150,12 +150,16 @@ def save_classifier_action():
 
 
 # perform classification
-def run_classifier(save_classifier=None, preview_point=None):
+def run_classifier(
+        save_classifier=None, preview_point=None,
+        classification_confidence=None
+):
     threshold = False
     signature_raster = False
     cross_validation = True
     find_best_estimator = False
-    classification_confidence = False
+    if classification_confidence is None:
+        classification_confidence = False
     input_normalization = load_classifier = class_weight = None
     rf_max_features = rf_number_trees = rf_min_samples_split = svm_c = None
     svm_gamma = svm_kernel = mlp_hidden_layer_sizes = None
@@ -490,15 +494,20 @@ def run_classifier(save_classifier=None, preview_point=None):
                 cfg.util_qgis.save_qml_style(
                     raster, '%s/%s.qml' % (directory, name)
                 )
-            if output.extra['algorithm_raster'] is not None:
+            if 'algorithm_raster' in output.extra:
+                if output.extra['algorithm_raster'] is not None:
+                    # add raster to layers
+                    cfg.util_qgis.add_raster_layer(
+                        output.extra['algorithm_raster']
+                    )
+            if 'signature_rasters' in output.extra:
                 # add raster to layers
-                cfg.util_qgis.add_raster_layer(
-                    output.extra['algorithm_raster']
-                )
-            if output.extra['signature_rasters'] is not None:
-                # add raster to layers
-                for s in output.extra['signature_rasters']:
-                    cfg.util_qgis.add_raster_layer(s)
+                try:
+                    for s in output.extra['signature_rasters']:
+                        if s is not None:
+                            cfg.util_qgis.add_raster_layer(s)
+                except Exception as err:
+                    str(err)
     else:
         cfg.mx.msg_err_1()
     cfg.ui_utils.remove_progress_bar(smtp=str(__name__))
@@ -506,17 +515,26 @@ def run_classifier(save_classifier=None, preview_point=None):
 
 
 # create classification preview
-def create_preview(preview_point):
+def create_preview(preview_point, classification_confidence=None):
     point = cfg.utils.check_point_in_image(point=preview_point)
     if point is False:
         cfg.mx.msg_war_3()
         return False
     cfg.preview_point = point
-    output = run_classifier(preview_point=point)
+    output = run_classifier(
+        preview_point=point,
+        classification_confidence=classification_confidence
+    )
     if output is None:
         return False
     elif output.check:
-        output_raster = output.path
+        if classification_confidence is None:
+            output_raster = output.path
+        else:
+            if 'algorithm_raster' in output.extra:
+                output_raster = output.extra['algorithm_raster']
+            else:
+                output_raster = None
         # move previous preview to group
         group = cfg.util_qgis.group_index(
             cfg.qgis_registry[cfg.reg_group_name]
@@ -539,7 +557,8 @@ def create_preview(preview_point):
         else:
             macroclass = False
         # apply symbology
-        apply_class_symbology(cfg.classification_preview, macroclass)
+        if classification_confidence is None:
+            apply_class_symbology(cfg.classification_preview, macroclass)
         # move to top
         cfg.util_qgis.move_layer_to_top(cfg.classification_preview)
         cfg.util_qgis.set_group_visible(group, False)
@@ -567,7 +586,7 @@ def pointer_left_click(point):
 
 # right click pointer
 def pointer_right_click(point):
-    create_preview(point)
+    create_preview(point, classification_confidence=True)
 
 
 # set script button
