@@ -28,12 +28,6 @@ from qgis.core import (
     QgsCoordinateReferenceSystem
 )
 
-# sound for Windows
-try:
-    import winsound
-except Exception as error:
-    str(error)
-
 cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
 

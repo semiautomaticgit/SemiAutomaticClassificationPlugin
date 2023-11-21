@@ -21,6 +21,8 @@
 # If not, see <https://www.gnu.org/licenses/>.
 
 
+import os
+import sys
 import ssl
 import smtplib
 
@@ -32,6 +34,11 @@ from PyQt5.QtWidgets import (
     QHBoxLayout, QVBoxLayout, QToolButton, QApplication
 )
 
+# sound for Windows
+try:
+    import winsound
+except Exception as error:
+    str(error)
 
 cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
@@ -261,6 +268,7 @@ class UiUtils:
                 subject=self.translate('Semi-Automatic Classification Plugin'),
                 message=self.translate('%s: process finished' % smtp)
             )
+        self.finish_sound()
 
     # translate
     @staticmethod
@@ -301,3 +309,25 @@ class UiUtils:
                     server.quit()
             except Exception as err:
                 str(err)
+
+    # finish sound
+    @staticmethod
+    def finish_sound():
+        if cfg.qgis_registry[cfg.reg_sound] == 2:
+            try:
+                beeps(800, 0.2)
+                beeps(600, 0.3)
+                beeps(700, 0.5)
+            except Exception as err:
+                str(err)
+
+
+# beep sound
+def beeps(frequency: int, duration: float):
+    if sys.platform.startswith('win'):
+        winsound.Beep(frequency, int(duration * 1000))
+    elif sys.platform.startswith('linux'):
+        os.system(
+            'play --no-show-progress --null --channels 1 synth %s sine %s'
+            % (str(duration), str(frequency))
+        )
