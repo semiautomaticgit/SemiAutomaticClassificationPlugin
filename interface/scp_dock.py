@@ -1232,7 +1232,7 @@ def calculate_signatures():
         )
         cfg.ui_utils.add_progress_bar()
         cfg.scp_training.calculate_signature_of_selected_signatures()
-        cfg.ui_utils.remove_progress_bar()
+        cfg.ui_utils.remove_progress_bar(sound=False)
         cfg.dock_class_dlg.ui.undo_save_Button.setEnabled(True)
         cfg.dock_class_dlg.ui.redo_save_Button.setEnabled(False)
         # create table tree
@@ -1249,7 +1249,11 @@ def merge_signatures():
     if len(selected) > 0:
         answer = cfg.util_qt.question_box(
             cfg.translate('Merge signatures'),
-            cfg.translate('Merge highlighted signatures?')
+            '%s MC ID: %s and C ID:%s?' % (
+                cfg.translate('Merge highlighted signatures into'),
+                cfg.project_registry[cfg.reg_roi_class_id],
+                cfg.project_registry[cfg.reg_roi_macroclass_id],
+            )
         )
         if answer is True:
             # save previous catalog file
@@ -1260,7 +1264,7 @@ def merge_signatures():
             )
             cfg.ui_utils.add_progress_bar()
             cfg.scp_training.merge_selected_signatures()
-            cfg.ui_utils.remove_progress_bar()
+            cfg.ui_utils.remove_progress_bar(sound=False)
             cfg.dock_class_dlg.ui.undo_save_Button.setEnabled(True)
             cfg.dock_class_dlg.ui.redo_save_Button.setEnabled(False)
             # create table tree
@@ -2019,7 +2023,7 @@ def save_roi_to_training(bandset_number=None):
             # save training input
             if cfg.project_registry[cfg.reg_save_training_input_check] == 2:
                 cfg.scp_training.save_signature_catalog()
-        cfg.ui_utils.remove_progress_bar()
+        cfg.ui_utils.remove_progress_bar(sound=False)
 
 
 # undo training modifications
@@ -2203,7 +2207,7 @@ def calculate_pixel_signature(point, bandset_number=None):
     except Exception as err:
         cfg.logger.log.error(str(err))
         cfg.mx.msg_err_6()
-        cfg.ui_utils.remove_progress_bar()
+        cfg.ui_utils.remove_progress_bar(sound=False)
         return False
     bandset = cfg.bandset_catalog.get(bandset_number)
     if bandset is None:
@@ -2229,7 +2233,7 @@ def calculate_pixel_signature(point, bandset_number=None):
     )
     (value_list, standard_deviation_list, wavelength_list,
      pixel_count) = signature_catalog.calculate_signature(roi_path)
-    cfg.ui_utils.remove_progress_bar()
+    cfg.ui_utils.remove_progress_bar(sound=False)
     plot_catalog = cfg.spectral_signature_plotter.plot_catalog
     signature_id = generate_signature_id()
     color_string = cfg.rs.shared_tools.random_color()
@@ -2274,7 +2278,7 @@ def create_region_growing_roi(point, bandset_number=None):
         except Exception as err:
             cfg.logger.log.error(str(err))
             cfg.mx.msg_err_6()
-            cfg.ui_utils.remove_progress_bar()
+            cfg.ui_utils.remove_progress_bar(sound=False)
             return False
         # create memory temp ROI
         region_crs = cfg.util_gdal.get_crs_gdal(region_path)
@@ -2324,7 +2328,7 @@ def create_region_growing_roi(point, bandset_number=None):
             temporary_roi_spectral_signature(bandset_number=bandset_number)
         cfg.dock_class_dlg.ui.button_Save_ROI.setEnabled(True)
         cfg.redo_ROI_Button.setEnabled(True)
-        cfg.ui_utils.remove_progress_bar()
+        cfg.ui_utils.remove_progress_bar(sound=False)
 
 
 # calculate temporary ROI spectral signature
@@ -2348,7 +2352,7 @@ def temporary_roi_spectral_signature(bandset_number=None, roi_path=None):
     # add signature to plot
     (value_list, standard_deviation_list, wavelength_list,
      pixel_count) = signature_catalog.calculate_signature(roi_path)
-    cfg.ui_utils.remove_progress_bar()
+    cfg.ui_utils.remove_progress_bar(sound=False)
     plot_catalog = cfg.spectral_signature_plotter.plot_catalog
     signature_id = generate_signature_id()
     color_string = cfg.rs.shared_tools.random_color()
@@ -2620,7 +2624,7 @@ def add_signature_to_spectral_plot(tab_index=0):
                     signature_catalog.export_signature_values_for_plot(
                         signature_id=_id, plot_catalog=plot_catalog
                     )
-            cfg.ui_utils.remove_progress_bar()
+            cfg.ui_utils.remove_progress_bar(sound=False)
             cfg.spectral_signature_plotter.signature_list_plot_table()
             cfg.input_interface.spectral_plot_tab()
             cfg.input_interface.select_spectral_plot_settings_tab(tab_index)

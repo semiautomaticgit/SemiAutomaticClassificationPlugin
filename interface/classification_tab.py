@@ -375,8 +375,12 @@ def run_classifier(
     # classification
     if preview_point is None:
         bandset = bandset_number
+        finish_sound = True
+        smtp = str(__name__)
     # classification preview
     else:
+        finish_sound = False
+        smtp = None
         cfg.logger.log.debug(
             'preview_point x: %s; y: %s'
             % (str(preview_point.x()),
@@ -455,27 +459,34 @@ def run_classifier(
             # load classifier
             load_classifier = cfg.classifier_preview
     # run classification
-    output = cfg.rs.band_classification(
-        input_bands=bandset, output_path=output_path,
-        spectral_signatures=signature_catalog,
-        macroclass=macroclass, algorithm_name=classifier_name,
-        bandset_catalog=cfg.bandset_catalog, threshold=threshold,
-        signature_raster=signature_raster, cross_validation=cross_validation,
-        input_normalization=input_normalization,
-        load_classifier=load_classifier, class_weight=class_weight,
-        find_best_estimator=find_best_estimator,
-        rf_max_features=rf_max_features, rf_number_trees=rf_number_trees,
-        rf_min_samples_split=rf_min_samples_split,
-        svm_c=svm_c, svm_gamma=svm_gamma, svm_kernel=svm_kernel,
-        mlp_training_portion=mlp_training_portion,
-        mlp_alpha=mlp_alpha, mlp_learning_rate_init=mlp_learning_rate_init,
-        mlp_max_iter=mlp_max_iter, mlp_batch_size=mlp_batch_size,
-        mlp_activation=mlp_activation,
-        mlp_hidden_layer_sizes=mlp_hidden_layer_sizes,
-        classification_confidence=classification_confidence,
-        only_fit=only_fit, save_classifier=save_classifier
-    )
-    if output.check:
+    try:
+        output = cfg.rs.band_classification(
+            input_bands=bandset, output_path=output_path,
+            spectral_signatures=signature_catalog,
+            macroclass=macroclass, algorithm_name=classifier_name,
+            bandset_catalog=cfg.bandset_catalog, threshold=threshold,
+            signature_raster=signature_raster,
+            cross_validation=cross_validation,
+            input_normalization=input_normalization,
+            load_classifier=load_classifier, class_weight=class_weight,
+            find_best_estimator=find_best_estimator,
+            rf_max_features=rf_max_features, rf_number_trees=rf_number_trees,
+            rf_min_samples_split=rf_min_samples_split,
+            svm_c=svm_c, svm_gamma=svm_gamma, svm_kernel=svm_kernel,
+            mlp_training_portion=mlp_training_portion,
+            mlp_alpha=mlp_alpha, mlp_learning_rate_init=mlp_learning_rate_init,
+            mlp_max_iter=mlp_max_iter, mlp_batch_size=mlp_batch_size,
+            mlp_activation=mlp_activation,
+            mlp_hidden_layer_sizes=mlp_hidden_layer_sizes,
+            classification_confidence=classification_confidence,
+            only_fit=only_fit, save_classifier=save_classifier
+        )
+    except Exception as err:
+        cfg.logger.log.error(str(err))
+        cfg.mx.msg_err_1()
+    if output is None:
+        cfg.mx.msg_err_1()
+    elif output.check:
         if save_classifier is not True and preview_point is None:
             output_raster = output.path
             # add raster to layers
@@ -510,7 +521,7 @@ def run_classifier(
                     str(err)
     else:
         cfg.mx.msg_err_1()
-    cfg.ui_utils.remove_progress_bar(smtp=str(__name__))
+    cfg.ui_utils.remove_progress_bar(smtp=smtp, sound=finish_sound)
     return output
 
 

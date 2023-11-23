@@ -116,7 +116,7 @@ class USGSSpectralLib:
                 check, output = cfg.rs.download_tools.download_file(
                     link, temp_path, timeout=2
                 )
-                cfg.ui_utils.remove_progress_bar()
+                cfg.ui_utils.remove_progress_bar(sound=False)
                 if check is True:
                     description = open(temp_path, 'r', errors='ignore')
                     description_html = description.read()
@@ -146,7 +146,7 @@ class USGSSpectralLib:
         except Exception as err:
             str(err)
             check = False
-        cfg.ui_utils.remove_progress_bar()
+        cfg.ui_utils.remove_progress_bar(sound=False)
         if check is False:
             cfg.mx.msg_err_5()
             return None, None, None

@@ -251,7 +251,7 @@ class UiUtils:
                         str(err)
 
     # remove progress bar and cancel button
-    def remove_progress_bar(self, smtp=None):
+    def remove_progress_bar(self, smtp=None, sound=None):
         UiUtils.remaining = ''
         try:
             cfg.iface.messageBar().popWidget(UiUtils.widget_bar)
@@ -268,7 +268,8 @@ class UiUtils:
                 subject=self.translate('Semi-Automatic Classification Plugin'),
                 message=self.translate('%s: process finished' % smtp)
             )
-        self.finish_sound()
+        if sound is not False:
+            self.finish_sound()
 
     # translate
     @staticmethod

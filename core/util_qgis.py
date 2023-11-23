@@ -226,9 +226,10 @@ def move_layer_to_top(layer):
     try:
         root = get_qgis_project().layerTreeRoot()
         layer = root.findLayer(layer.id())
+        parent = layer.parent()
         layer_clone = layer.clone()
         root.insertChildNode(0, layer_clone)
-        root.removeChildNode(layer)
+        parent.removeChildNode(layer)
     except Exception as err:
         str(err)
 
