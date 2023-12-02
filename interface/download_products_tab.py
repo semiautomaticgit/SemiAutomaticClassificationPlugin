@@ -288,7 +288,7 @@ def perform_query():
                          float(cfg.dialog.ui.LX_lineEdit_3.text()),
                          float(cfg.dialog.ui.LY_lineEdit_3.text())]
     )
-    cfg.ui_utils.remove_progress_bar()
+    cfg.ui_utils.remove_progress_bar(sound=False)
     if output.check:
         product_table = output.extra['product_table']
         if cfg.download_table is None:
@@ -506,7 +506,7 @@ def display_images():
                 display_nasa_images(image_id)
             progress = progress + progress_step
             cfg.ui_utils.update_bar(progress, cfg.translate('Downloading ...'))
-        cfg.ui_utils.remove_progress_bar()
+        cfg.ui_utils.remove_progress_bar(sound=False)
         cfg.map_canvas.setRenderFlag(True)
         cfg.map_canvas.refresh()
 
@@ -528,7 +528,7 @@ def table_click():
         elif (sat == cfg.rs.configurations.landsat_hls
               or sat == cfg.rs.configurations.sentinel2_hls):
             display_nasa_images(row, True)
-        cfg.ui_utils.remove_progress_bar()
+        cfg.ui_utils.remove_progress_bar(sound=False)
 
 
 """ Download """
