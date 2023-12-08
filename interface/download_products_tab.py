@@ -64,6 +64,30 @@ def remember_user_earthdata_checkbox():
         cfg.qgis_registry[cfg.reg_earthdata_pass] = ''
 
 
+# Copernicus data user
+def remember_user_copernicus():
+    if cfg.dialog.ui.remember_user_checkBox_5.isChecked():
+        user = cfg.dialog.ui.user_copernicus_lineEdit.text()
+        password = cfg.utils.encrypt_password(
+            cfg.dialog.ui.password_copernicus_lineEdit.text()
+        )
+        cfg.qgis_registry[cfg.reg_copernicus_user] = user
+        cfg.qgis_registry[cfg.reg_copernicus_pass] = password
+
+
+# Copernicus data user checkbox
+def remember_user_copernicus_checkbox():
+    if cfg.dialog.ui.remember_user_checkBox_5.isChecked():
+        cfg.mx.msg_box_warning(
+            cfg.translate('WARNING'),
+            cfg.translate('Password is stored unencrypted')
+        )
+        remember_user_copernicus()
+    else:
+        cfg.qgis_registry[cfg.reg_copernicus_user] = ''
+        cfg.qgis_registry[cfg.reg_copernicus_pass] = ''
+
+
 """ Interface """
 
 
@@ -267,6 +291,12 @@ def perform_query():
     date_to = date_to_qt.toPyDate().strftime('%Y-%m-%d')
     max_cloud_cover = int(cfg.dialog.ui.cloud_cover_spinBox.value())
     result_number = int(cfg.dialog.ui.result_number_spinBox_2.value())
+    copernicus_user = cfg.dialog.ui.user_copernicus_lineEdit.text()
+    if len(copernicus_user) == 0:
+        copernicus_user = None
+    copernicus_password = cfg.dialog.ui.password_copernicus_lineEdit.text()
+    if len(copernicus_password) == 0:
+        copernicus_password = None
     cfg.logger.log.info('perform_query product_name: %s' % product_name)
     try:
         QgsRectangle(
@@ -280,14 +310,40 @@ def perform_query():
         cfg.mx.msg_err_3()
         return False
     cfg.ui_utils.add_progress_bar()
-    output = cfg.rs.download_products.search(
-        product=product_name, date_from=date_from, date_to=date_to,
-        max_cloud_cover=max_cloud_cover, result_number=result_number,
-        coordinate_list=[float(cfg.dialog.ui.UX_lineEdit_3.text()),
-                         float(cfg.dialog.ui.UY_lineEdit_3.text()),
-                         float(cfg.dialog.ui.LX_lineEdit_3.text()),
-                         float(cfg.dialog.ui.LY_lineEdit_3.text())]
-    )
+    proxy_host = None
+    proxy_port = None
+    proxy_user = None
+    proxy_password = None
+    cfg.util_qgis.get_qgis_proxy_settings()
+    if str(cfg.proxy_enabled) == 'true' and len(cfg.proxy_host) > 0:
+        if len(cfg.proxy_user) > 0:
+            proxy_user = cfg.proxy_user
+            proxy_password = cfg.proxy_password
+            proxy_host = cfg.proxy_host
+            proxy_port = cfg.proxy_port
+        else:
+            proxy_host = cfg.proxy_host
+            proxy_port = cfg.proxy_port
+    try:
+        output = cfg.rs.download_products.search(
+            product=product_name, date_from=date_from, date_to=date_to,
+            max_cloud_cover=max_cloud_cover, result_number=result_number,
+            coordinate_list=[float(cfg.dialog.ui.UX_lineEdit_3.text()),
+                             float(cfg.dialog.ui.UY_lineEdit_3.text()),
+                             float(cfg.dialog.ui.LX_lineEdit_3.text()),
+                             float(cfg.dialog.ui.LY_lineEdit_3.text())],
+            proxy_host=proxy_host, proxy_port=proxy_port,
+            proxy_user=proxy_user, proxy_password=proxy_password,
+            copernicus_user=copernicus_user,
+            copernicus_password=copernicus_password
+        )
+    except Exception as err:
+        cfg.mx.msg_box_error(
+            cfg.translate('ERROR'), str(err)
+        )
+        cfg.logger.log.error(str(err))
+        cfg.ui_utils.remove_progress_bar(sound=False)
+        return False
     cfg.ui_utils.remove_progress_bar(sound=False)
     if output.check:
         product_table = output.extra['product_table']
@@ -606,7 +662,17 @@ def download_images(exporter=False):
             proxy_host = cfg.proxy_host
             proxy_port = cfg.proxy_port
     nasa_user = cfg.dialog.ui.user_earthdata_lineEdit.text()
+    if len(nasa_user) == 0:
+        nasa_user = None
     nasa_password = cfg.dialog.ui.password_earthdata_lineEdit.text()
+    if len(nasa_password) == 0:
+        nasa_password = None
+    copernicus_user = cfg.dialog.ui.user_copernicus_lineEdit.text()
+    if len(copernicus_user) == 0:
+        copernicus_user = None
+    copernicus_password = cfg.dialog.ui.password_copernicus_lineEdit.text()
+    if len(copernicus_password) == 0:
+        copernicus_password = None
     table = cfg.dialog.ui.download_images_tableWidget
     count = table.rowCount()
     if count > 0:
@@ -641,7 +707,9 @@ def download_images(exporter=False):
                 extent_coordinate_list=extent_coordinate_list,
                 proxy_host=proxy_host, proxy_port=proxy_port,
                 proxy_user=proxy_user, proxy_password=proxy_password,
-                nasa_user=nasa_user, nasa_password=nasa_password
+                nasa_user=nasa_user, nasa_password=nasa_password,
+                copernicus_user=copernicus_user,
+                copernicus_password=copernicus_password
             )
             if output.check:
                 if cfg.dialog.ui.preprocess_checkBox.isChecked():
@@ -684,6 +752,20 @@ def download_images(exporter=False):
 
 # display granule preview
 def display_sentinel2(row, preview=False):
+    proxy_host = None
+    proxy_port = None
+    proxy_user = None
+    proxy_password = None
+    cfg.util_qgis.get_qgis_proxy_settings()
+    if str(cfg.proxy_enabled) == 'true' and len(cfg.proxy_host) > 0:
+        if len(cfg.proxy_user) > 0:
+            proxy_user = cfg.proxy_user
+            proxy_password = cfg.proxy_password
+            proxy_host = cfg.proxy_host
+            proxy_port = cfg.proxy_port
+        else:
+            proxy_host = cfg.proxy_host
+            proxy_port = cfg.proxy_port
     table = cfg.dialog.ui.download_images_tableWidget
     image_name = str(table.item(row, 1).text())
     if image_name[0:4] == 'L1C_' or image_name[0:4] == 'L2A_':
@@ -707,8 +789,10 @@ def display_sentinel2(row, preview=False):
             cfg.util_qgis.add_raster_layer('%s.vrt' % image_output, image_name)
     else:
         if 'storage.googleapis.com' in url:
-            check, output = cfg.rs.download_tools.download_file(
-                url, image_output, timeout=2
+            check = cfg.rs.configurations.multiprocess.multi_download_file(
+                url_list=[url], output_path_list=[image_output], timeout=2,
+                proxy_host=proxy_host, proxy_port=proxy_port,
+                proxy_user=proxy_user, proxy_password=proxy_password
             )
             if check is not False:
                 if preview is True:
@@ -726,6 +810,47 @@ def display_sentinel2(row, preview=False):
                     cfg.util_qgis.add_raster_layer(
                         '%s.vrt' % image_output, image_name
                     )
+        elif 'copernicus' in url:
+            copernicus_user = cfg.dialog.ui.user_copernicus_lineEdit.text()
+            if len(copernicus_user) == 0:
+                copernicus_user = None
+            copernicus_password = (
+                cfg.dialog.ui.password_copernicus_lineEdit.text()
+            )
+            if len(copernicus_password) == 0:
+                copernicus_password = None
+            (access_token,
+             session_state) = cfg.rs.download_products.get_copernicus_token(
+                user=copernicus_user, password=copernicus_password
+            )
+            check = cfg.rs.configurations.multiprocess.multi_download_file(
+                url_list=[url], output_path_list=[image_output],
+                access_token=access_token, copernicus=True, timeout=2,
+                proxy_host=proxy_host, proxy_port=proxy_port,
+                proxy_user=proxy_user, proxy_password=proxy_password
+            )
+            if check is not False:
+                if preview is True:
+                    preview_in_label(image_output)
+                    return image_output
+                min_lat = str(table.item(row, 7).text())
+                min_lon = str(table.item(row, 8).text())
+                max_lat = str(table.item(row, 9).text())
+                max_lon = str(table.item(row, 10).text())
+                onthefly_georef_image(
+                    image_output, '%s.vrt' % image_output, min_lon, max_lon,
+                    min_lat, max_lat
+                )
+                if cfg.utils.check_file('%s.vrt' % image_output):
+                    cfg.util_qgis.add_raster_layer(
+                        '%s.vrt' % image_output, image_name
+                    )
+            if access_token is not None:
+                cfg.rs.download_products.delete_copernicus_token(
+                    access_token, session_state, proxy_host=proxy_host,
+                    proxy_port=proxy_port, proxy_user=proxy_user,
+                    proxy_password=proxy_password
+                )
 
 
 # display images

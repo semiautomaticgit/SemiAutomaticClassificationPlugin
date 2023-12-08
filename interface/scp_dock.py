@@ -876,6 +876,15 @@ class TrainingVectorLayer:
         if column == 0 or column == 1 or column == 2 or column == 3:
             if macroclass_id is not False:
                 item.setExpanded(not item.isExpanded())
+            elif column == 2:
+                expression = '"%s" = \'%s\' or ' % (
+                    cfg.rs.configurations.uid_field_name, signature_id
+                )
+                expression = expression[:-4]
+                cfg.logger.log.debug(
+                    'zoom to expression: %s' % (str(expression))
+                    )
+                zoom_to_roi_polygons(expression)
         # color column
         elif column == 4:
             color = cfg.util_qt.select_color()
@@ -1378,8 +1387,7 @@ def clear_selection_menu():
 # zoom to menu
 def zoom_to_menu():
     ids = cfg.scp_training.get_highlighted_ids(
-        select_all=False,
-        signatures=False
+        select_all=False, signatures=False
     )
     expression = ''
     for _id in ids:

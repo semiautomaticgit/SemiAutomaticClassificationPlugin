@@ -470,6 +470,9 @@ class SemiAutomaticClassificationPlugin:
             cfg.dialog.ui.password_earthdata_lineEdit.setEchoMode(
                 QLineEdit.Password
             )
+            cfg.dialog.ui.password_copernicus_lineEdit.setEchoMode(
+                QLineEdit.Password
+            )
             scatter = cfg.scatter_plot_dlg.ui.scatter_list_plot_tableWidget
             # scatter plot list
             cfg.util_qt.insert_table_column(
@@ -653,6 +656,21 @@ class SemiAutomaticClassificationPlugin:
                     )
             except Exception as err:
                 str(err)
+            try:
+                # set copernicus user and password
+                cfg.dialog.ui.user_copernicus_lineEdit.setText(
+                    cfg.qgis_registry[cfg.reg_copernicus_user]
+                )
+                if cfg.qgis_registry[cfg.reg_copernicus_pass] is not None:
+                    copernicus_pass = cfg.utils.decrypt_password(
+                        cfg.qgis_registry[
+                            cfg.reg_copernicus_pass].decode('UTF-8')
+                    )
+                    cfg.dialog.ui.password_copernicus_lineEdit.setText(
+                        copernicus_pass.decode('UTF-8')
+                    )
+            except Exception as err:
+                str(err)
             cfg.dialog.ui.dateEdit_to.setDate(QDate.currentDate())
             cfg.dialog.ui.dateEdit_from.setDate(
                 QDate.currentDate().addDays(-365)
@@ -747,6 +765,7 @@ class SemiAutomaticClassificationPlugin:
         try:
             for r in cfg.qgis_registry:
                 cfg.util_qt.write_registry_keys(r, cfg.qgis_registry[r])
+                print(r, cfg.qgis_registry[r])
         except Exception as err:
             try:
                 cfg.logger.log.error(str(err))
@@ -1113,6 +1132,15 @@ def connect_gui():
     )
     cfg.dialog.ui.password_earthdata_lineEdit.editingFinished.connect(
         cfg.download_products.remember_user_earthdata
+    )
+    cfg.dialog.ui.remember_user_checkBox_5.stateChanged.connect(
+        cfg.download_products.remember_user_copernicus_checkbox
+    )
+    cfg.dialog.ui.user_copernicus_lineEdit.editingFinished.connect(
+        cfg.download_products.remember_user_copernicus
+    )
+    cfg.dialog.ui.password_copernicus_lineEdit.editingFinished.connect(
+        cfg.download_products.remember_user_copernicus
     )
     cfg.dialog.ui.download_images_tableWidget.itemSelectionChanged.connect(
         cfg.download_products.table_click
