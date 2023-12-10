@@ -560,6 +560,13 @@ def display_images():
             elif (sat == cfg.rs.configurations.landsat_hls
                   or sat == cfg.rs.configurations.sentinel2_hls):
                 display_nasa_images(image_id)
+            elif (sat == cfg.rs.configurations.landsat_mpc
+                  or sat == cfg.rs.configurations.sentinel2_mpc
+                  or sat == cfg.rs.configurations.modis_09q1_mpc
+                  or sat == cfg.rs.configurations.modis_11a2_mpc
+                  or sat == cfg.rs.configurations.aster_l1t_mpc
+                  or sat == cfg.rs.configurations.cop_dem_glo_30_mpc):
+                display_mpc_images(image_id)
             progress = progress + progress_step
             cfg.ui_utils.update_bar(progress, cfg.translate('Downloading ...'))
         cfg.ui_utils.remove_progress_bar(sound=False)
@@ -584,6 +591,13 @@ def table_click():
         elif (sat == cfg.rs.configurations.landsat_hls
               or sat == cfg.rs.configurations.sentinel2_hls):
             display_nasa_images(row, True)
+        elif (sat == cfg.rs.configurations.landsat_mpc
+              or sat == cfg.rs.configurations.sentinel2_mpc
+              or sat == cfg.rs.configurations.modis_09q1_mpc
+              or sat == cfg.rs.configurations.modis_11a2_mpc
+              or sat == cfg.rs.configurations.aster_l1t_mpc
+              or sat == cfg.rs.configurations.cop_dem_glo_30_mpc):
+            display_mpc_images(row, True)
         cfg.ui_utils.remove_progress_bar(sound=False)
 
 
@@ -895,6 +909,48 @@ def display_nasa_images(row, preview=False):
             cfg.util_qgis.set_raster_color_composite(r, 1, 2, 3)
 
 
+# display images
+def display_mpc_images(row, preview=False):
+    table = cfg.dialog.ui.download_images_tableWidget
+    sat = str(table.item(row, 0).text())
+    image_id = str(table.item(row, 1).text())
+    min_lat = str(table.item(row, 7).text())
+    min_lon = str(table.item(row, 8).text())
+    max_lat = str(table.item(row, 9).text())
+    max_lon = str(table.item(row, 10).text())
+    url = str(table.item(row, 13).text())
+    # image preview
+    image_output = '%s/%s_thumb.jpg' % (
+        cfg.rs.configurations.temp.dir, image_id
+    )
+    if preview is True and cfg.utils.check_file(image_output):
+        preview_in_label(image_output)
+        return image_output
+    elif cfg.utils.check_file(
+            '%s/%s.vrt' % (cfg.rs.configurations.temp.dir, image_id)
+    ):
+        layer = cfg.util_qgis.select_layer_by_name(image_id)
+        if layer is not None:
+            cfg.util_qgis.set_layer_visible(layer, True)
+            cfg.util_qgis.move_layer_to_top(layer)
+        else:
+            r = cfg.util_qgis.add_raster_layer(
+                '%s/%s.vrt' % (cfg.rs.configurations.temp.dir, image_id)
+            )
+            cfg.util_qgis.set_raster_color_composite(r, 1, 2, 3)
+    else:
+        download_mpc_thumbnail(
+            image_id, min_lat, min_lon, max_lat, max_lon, url, sat, preview
+        )
+        if cfg.utils.check_file(
+                '%s/%s.vrt' % (cfg.rs.configurations.temp.dir, image_id)
+        ):
+            r = cfg.util_qgis.add_raster_layer(
+                '%s//%s.vrt' % (cfg.rs.configurations.temp.dir, image_id)
+            )
+            cfg.util_qgis.set_raster_color_composite(r, 1, 2, 3)
+
+
 # display image in label
 def preview_in_label(image_path):
     temp_image = sub(r'\.jp2$', '.png', str(image_path))
@@ -1036,8 +1092,70 @@ def download_nasa_thumbnail(
     check = False
     if (sat == cfg.rs.configurations.landsat_hls
             or sat == cfg.rs.configurations.sentinel2_hls):
+        proxy_host = None
+        proxy_port = None
+        proxy_user = None
+        proxy_password = None
+        cfg.util_qgis.get_qgis_proxy_settings()
+        if str(cfg.proxy_enabled) == 'true' and len(cfg.proxy_host) > 0:
+            if len(cfg.proxy_user) > 0:
+                proxy_user = cfg.proxy_user
+                proxy_password = cfg.proxy_password
+                proxy_host = cfg.proxy_host
+                proxy_port = cfg.proxy_port
+            else:
+                proxy_host = cfg.proxy_host
+                proxy_port = cfg.proxy_port
         check, output = cfg.rs.download_tools.download_file(
-            url, image_output, timeout=2
+            url, image_output, timeout=2,
+            proxy_host=proxy_host, proxy_port=proxy_port,
+            proxy_user=proxy_user, proxy_password=proxy_password
+        )
+    if check is True:
+        if preview is True:
+            preview_in_label(image_output)
+            return image_output
+        onthefly_georef_image(
+            image_output,
+            '%s/%s.vrt' % (cfg.rs.configurations.temp.dir, image_id), min_lon,
+            max_lon, min_lat, max_lat
+        )
+
+
+# download thumbnail
+def download_mpc_thumbnail(
+        image_id, min_lat, min_lon, max_lat, max_lon, url, sat, preview=False
+):
+    image_output = '%s/%s_thumb.jpg' % (
+        cfg.rs.configurations.temp.dir, image_id
+    )
+    check = False
+    if (
+            sat == cfg.rs.configurations.landsat_mpc
+            or sat == cfg.rs.configurations.sentinel2_mpc
+            or sat == cfg.rs.configurations.modis_09q1_mpc
+            or sat == cfg.rs.configurations.modis_11a2_mpc
+            or sat == cfg.rs.configurations.aster_l1t_mpc
+            or sat == cfg.rs.configurations.cop_dem_glo_30_mpc
+    ):
+        proxy_host = None
+        proxy_port = None
+        proxy_user = None
+        proxy_password = None
+        cfg.util_qgis.get_qgis_proxy_settings()
+        if str(cfg.proxy_enabled) == 'true' and len(cfg.proxy_host) > 0:
+            if len(cfg.proxy_user) > 0:
+                proxy_user = cfg.proxy_user
+                proxy_password = cfg.proxy_password
+                proxy_host = cfg.proxy_host
+                proxy_port = cfg.proxy_port
+            else:
+                proxy_host = cfg.proxy_host
+                proxy_port = cfg.proxy_port
+        check, output = cfg.rs.download_tools.download_file(
+            url, image_output, timeout=2,
+            proxy_host=proxy_host, proxy_port=proxy_port,
+            proxy_user=proxy_user, proxy_password=proxy_password
         )
     if check is True:
         if preview is True:

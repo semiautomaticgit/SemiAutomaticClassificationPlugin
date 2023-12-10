@@ -2778,6 +2778,11 @@ min-height: 18px;
                         <string>uid</string>
                        </property>
                       </column>
+                      <column>
+                       <property name="text">
+                        <string>ref_url</string>
+                       </property>
+                      </column>
                      </widget>
                     </item>
                     <item row="0" column="0">
@@ -2970,7 +2975,6 @@ min-height: 18px;
                   </item>
                  </layout>
                  <zorder>verticalSpacer_44</zorder>
-                 <zorder>layoutWidget</zorder>
                 </widget>
                </widget>
               </item>
@@ -8713,7 +8717,7 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>90</width>
+                     <width>98</width>
                      <height>90</height>
                     </rect>
                    </property>
@@ -10088,7 +10092,7 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>90</width>
+                     <width>98</width>
                      <height>90</height>
                     </rect>
                    </property>
@@ -12895,7 +12899,7 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>90</width>
+                     <width>98</width>
                      <height>90</height>
                     </rect>
                    </property>
@@ -13208,7 +13212,7 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>90</width>
+                     <width>98</width>
                      <height>90</height>
                     </rect>
                    </property>
@@ -13617,7 +13621,7 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>90</width>
+                     <width>98</width>
                      <height>90</height>
                     </rect>
                    </property>

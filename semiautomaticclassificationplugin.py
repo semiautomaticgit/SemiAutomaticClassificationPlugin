@@ -676,8 +676,15 @@ class SemiAutomaticClassificationPlugin:
                 QDate.currentDate().addDays(-365)
             )
             # add satellite list to combo
-            for product in cfg.rs.configurations.product_list:
-                cfg.dialog.ui.landsat_satellite_combo.addItem(product)
+            try:
+                for product \
+                        in cfg.rs.configurations.product_description.keys():
+                    cfg.dialog.ui.landsat_satellite_combo.addItem(product)
+            except Exception as err:
+                str(err)
+                # backward compatibility remotior sensus < 0.2
+                for product in cfg.rs.configurations.product_list:
+                    cfg.dialog.ui.landsat_satellite_combo.addItem(product)
             # add color list to combo
             cfg.scatter_plot.add_colormap_to_combo(cfg.scatter_color_map)
             cfg.usgs_spectral_lib.add_spectral_library_to_combo()
@@ -765,7 +772,6 @@ class SemiAutomaticClassificationPlugin:
         try:
             for r in cfg.qgis_registry:
                 cfg.util_qt.write_registry_keys(r, cfg.qgis_registry[r])
-                print(r, cfg.qgis_registry[r])
         except Exception as err:
             try:
                 cfg.logger.log.error(str(err))
