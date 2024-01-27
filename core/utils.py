@@ -30,8 +30,12 @@ import random
 import subprocess
 import time
 from pathlib import Path
-from packaging.version import parse
 import numpy as np
+
+try:
+    from packaging.version import parse
+except Exception as error:
+    str(error)
 
 from PyQt5.QtCore import Qt, QUrl, QByteArray
 from PyQt5.QtGui import QColor

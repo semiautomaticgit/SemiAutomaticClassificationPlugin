@@ -2596,22 +2596,25 @@ def import_vector():
             calculate_signature = True
         else:
             calculate_signature = False
-        cfg.ui_utils.add_progress_bar()
-        cfg.scp_training.save_temporary_signature_catalog()
-        signature_catalog = cfg.scp_training.signature_catalog_copy()
-        cfg.scp_training.set_signature_catalog(
-            signature_catalog=signature_catalog
-        )
-        cfg.scp_training.import_vector(
-            file_path=cfg.dialog.ui.select_shapefile_label.text(),
-            macroclass_field=macroclass_field,
-            macroclass_name_field=macroclass_name_field,
-            class_field=class_field, class_name_field=class_name_field,
-            calculate_signature=calculate_signature
-        )
-        cfg.dock_class_dlg.ui.undo_save_Button.setEnabled(True)
-        cfg.dock_class_dlg.ui.redo_save_Button.setEnabled(False)
-        cfg.ui_utils.remove_progress_bar()
+        if cfg.scp_training is None:
+            cfg.mx.msg_war_5()
+        else:
+            cfg.ui_utils.add_progress_bar()
+            cfg.scp_training.save_temporary_signature_catalog()
+            signature_catalog = cfg.scp_training.signature_catalog_copy()
+            cfg.scp_training.set_signature_catalog(
+                signature_catalog=signature_catalog
+            )
+            cfg.scp_training.import_vector(
+                file_path=cfg.dialog.ui.select_shapefile_label.text(),
+                macroclass_field=macroclass_field,
+                macroclass_name_field=macroclass_name_field,
+                class_field=class_field, class_name_field=class_name_field,
+                calculate_signature=calculate_signature
+            )
+            cfg.dock_class_dlg.ui.undo_save_Button.setEnabled(True)
+            cfg.dock_class_dlg.ui.redo_save_Button.setEnabled(False)
+            cfg.ui_utils.remove_progress_bar()
 
 
 """ Plot """

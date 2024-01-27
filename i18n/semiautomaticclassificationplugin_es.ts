@@ -3995,12 +3995,12 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="../semiautomaticclassificationplugin.py" line="91"/>
-        <source>Warning. Python library remotior_sensus was not found and was automatically downloaded, but SCP may not work properly.Please, install the required Python library remotior_sensus following the user manual.</source>
+        <source>Warning. Python library Remotior Sensus was not found and was automatically downloaded, but SCP may not work properly.Please, install the required Python library Remotior Sensus following the user manual.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../semiautomaticclassificationplugin.py" line="137"/>
-        <source>Warning. Python library remotior_sensus was not found and was automatically downloaded, but SCP may not work properly. Please, install the required Python library remotior_sensus following the user manual.</source>
+        <source>Warning. Python library Remotior Sensus was not found and was automatically downloaded, but SCP may not work properly. Please, install the required Python library Remotior Sensus following the user manual.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

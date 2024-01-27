@@ -91,11 +91,11 @@ except Exception as error:
         qgis_utils.iface.messageBar().pushMessage(
             'Semi-Automatic Classification Plugin', QApplication.translate(
                 'semiautomaticclassificationplugin',
-                'Warning. Python library remotior-sensus was not found and was'
+                'Warning. Python library Remotior Sensus was not found and was'
                 ' automatically downloaded, but SCP may not work properly.'
                 'Please, install the required Python library '
-                'remotior-sensus following the user manual.'
-            ), level=Qgis.Warning, duration=10
+                'Remotior Sensus following the user manual.'
+            ), level=Qgis.Info, duration=10
         )
     except Exception as error:
         str(error)
@@ -137,11 +137,11 @@ except Exception as error:
             qgis_utils.iface.messageBar().pushMessage(
                 'Semi-Automatic Classification Plugin', QApplication.translate(
                     'semiautomaticclassificationplugin',
-                    'Warning. Python library remotior-sensus was not found '
+                    'Warning. Python library Remotior Sensus was not found '
                     'and was automatically downloaded, but SCP may not work '
                     'properly. Please, install the required Python library '
-                    'remotior-sensus following the user manual.'
-                ), level=Qgis.Warning, duration=10
+                    'Remotior Sensus following the user manual.'
+                ), level=Qgis.Info, duration=10
             )
         except Exception as error:
             str(error)
