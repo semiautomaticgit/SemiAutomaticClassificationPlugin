@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2023 by Luca Congedo.
+# Copyright (C) 2012-2024 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -30,9 +30,12 @@ from shlex import split
 
 from PyQt5.QtCore import QPointF
 from PyQt5.QtGui import QPolygonF, QColor, QPixmap, QCursor
+from PyQt5.QtWidgets import QApplication
+# noinspection PyUnresolvedReferences
 from qgis.core import (
     QgsGeometry, QgsCoordinateReferenceSystem, QgsRectangle
 )
+# noinspection PyUnresolvedReferences
 from qgis.gui import QgsRubberBand
 
 cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
@@ -52,11 +55,14 @@ def remember_user_earthdata():
 
 
 # Earthdata user checkbox
+# noinspection PyTypeChecker
 def remember_user_earthdata_checkbox():
     if cfg.dialog.ui.remember_user_checkBox_3.isChecked():
         cfg.mx.msg_box_warning(
-            cfg.translate('WARNING'),
-            cfg.translate('Password is stored unencrypted')
+            QApplication.translate('semiautomaticclassificationplugin',
+                                   'Warning'),
+            QApplication.translate('semiautomaticclassificationplugin',
+                                   'Password is stored unencrypted')
         )
         remember_user_earthdata()
     else:
@@ -75,12 +81,15 @@ def remember_user_copernicus():
         cfg.qgis_registry[cfg.reg_copernicus_pass] = password
 
 
-# Copernicus data user checkbox
+# Copernicus service data user checkbox
+# noinspection PyTypeChecker
 def remember_user_copernicus_checkbox():
     if cfg.dialog.ui.remember_user_checkBox_5.isChecked():
         cfg.mx.msg_box_warning(
-            cfg.translate('WARNING'),
-            cfg.translate('Password is stored unencrypted')
+            QApplication.translate('semiautomaticclassificationplugin',
+                                   'Warning'),
+            QApplication.translate('semiautomaticclassificationplugin',
+                                   'Password is stored unencrypted')
         )
         remember_user_copernicus()
     else:
@@ -283,6 +292,7 @@ def find_images():
 
 
 # download image metadata
+# noinspection PyTypeChecker
 def perform_query():
     product_name = cfg.dialog.ui.landsat_satellite_combo.currentText()
     date_from_qt = cfg.dialog.ui.dateEdit_from.date()
@@ -339,7 +349,8 @@ def perform_query():
         )
     except Exception as err:
         cfg.mx.msg_box_error(
-            cfg.translate('ERROR'), str(err)
+            QApplication.translate('semiautomaticclassificationplugin',
+                                   'ERROR'), str(err)
         )
         cfg.logger.log.error(str(err))
         cfg.ui_utils.remove_progress_bar(sound=False)
@@ -378,10 +389,13 @@ def perform_query():
 
 
 # clear table
+# noinspection PyTypeChecker
 def clear_table():
     answer = cfg.util_qt.question_box(
-        cfg.translate('Clear the table'),
-        cfg.translate('Are you sure you want to clear the table?')
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Clear the table'),
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Are you sure you want to clear the table?')
     )
     if answer:
         cfg.util_qt.clear_table(cfg.dialog.ui.download_images_tableWidget)
@@ -406,12 +420,14 @@ def filter_table():
 
 
 # remove highlighted images from table
+# noinspection PyTypeChecker
 def remove_image_from_table():
     answer = cfg.util_qt.question_box(
-        cfg.translate('Remove rows'),
-        cfg.translate(
-            'Are you sure you want to remove highlighted rows '
-            'from the table?'
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Remove rows'),
+        QApplication.translate(
+            'semiautomaticclassificationplugin',
+            'Are you sure you want to remove highlighted rows from the table?'
         )
     )
     if answer is True:
@@ -453,20 +469,26 @@ def remove_image_from_table():
 
 
 # import table file
+# noinspection PyTypeChecker
 def import_table_text():
     file = cfg.util_qt.get_open_file(
-        None, cfg.translate('Select a text file of product table'), '',
-        'XML (*.xml)'
+        None, QApplication.translate(
+            'semiautomaticclassificationplugin',
+            'Select a text file of product table'),
+        '', 'XML (*.xml)'
     )
     if len(file) > 0:
         open_download_table(file)
 
 
 # export table
+# noinspection PyTypeChecker
 def export_table_to_text():
     if cfg.dialog.ui.download_images_tableWidget.rowCount() > 0:
         saved = cfg.util_qt.get_save_file_name(
-            None, cfg.translate('Export table to file'), '', '*.xml', 'xml'
+            None, QApplication.translate(
+                'semiautomaticclassificationplugin', 'Export table to file'),
+            '', '*.xml', 'xml'
         )
         if saved is not False:
             if not saved.lower().endswith('.xml'):
@@ -541,6 +563,7 @@ def open_download_table(file=None):
 
 
 # display images
+# noinspection PyTypeChecker
 def display_images():
     table = cfg.dialog.ui.download_images_tableWidget
     ids = []
@@ -568,13 +591,18 @@ def display_images():
                   or sat == cfg.rs.configurations.cop_dem_glo_30_mpc):
                 display_mpc_images(image_id)
             progress = progress + progress_step
-            cfg.ui_utils.update_bar(progress, cfg.translate('Downloading ...'))
+            cfg.ui_utils.update_bar(
+                progress, QApplication.translate(
+                    'semiautomaticclassificationplugin', 'Downloading ...'
+                )
+            )
         cfg.ui_utils.remove_progress_bar(sound=False)
         cfg.map_canvas.setRenderFlag(True)
         cfg.map_canvas.refresh()
 
 
 # table click
+# noinspection PyTypeChecker
 def table_click():
     table = cfg.dialog.ui.download_images_tableWidget
     row = table.currentRow()
@@ -584,7 +612,8 @@ def table_click():
     image_ids = set(selected_ids)
     if row >= 0 and not len(image_ids) > 1:
         cfg.ui_utils.add_progress_bar()
-        cfg.ui_utils.update_bar(10, cfg.translate('Downloading ...'))
+        cfg.ui_utils.update_bar(10, QApplication.translate(
+            'semiautomaticclassificationplugin', 'Downloading ...'))
         sat = str(table.item(row, 0).text())
         if sat == cfg.rs.configurations.sentinel2:
             display_sentinel2(row, True)
@@ -615,6 +644,7 @@ def export_links():
 
 
 # download images in table
+# noinspection PyTypeChecker
 def download_images(exporter=False):
     band_list = []
     if cfg.dialog.ui.checkBoxs_band_1.isChecked():
@@ -652,15 +682,15 @@ def download_images(exporter=False):
             top = float(cfg.dialog.ui.UY_lineEdit_3.text())
             right = float(cfg.dialog.ui.LX_lineEdit_3.text())
             bottom = float(cfg.dialog.ui.LY_lineEdit_3.text())
-            extent_coordinate_list = [left, top, right, bottom]
+            _extent_coordinate_list = [left, top, right, bottom]
             # TODO implement coordinate projection
-            extent_coordinate_list = None
+            _extent_coordinate_list = None
         except Exception as err:
             str(err)
-            extent_coordinate_list = None
+            _extent_coordinate_list = None
     else:
         virtual_download = False
-        extent_coordinate_list = None
+        _extent_coordinate_list = None
     proxy_host = None
     proxy_port = None
     proxy_user = None
@@ -691,7 +721,8 @@ def download_images(exporter=False):
     count = table.rowCount()
     if count > 0:
         output_path = cfg.util_qt.get_existing_directory(
-            None, cfg.translate(
+            None, QApplication.translate(
+                'semiautomaticclassificationplugin',
                 'Download the images in the table '
                 '(requires internet connection)'
             )
@@ -718,7 +749,7 @@ def download_images(exporter=False):
                 product_table=filtered, output_path=output_path,
                 exporter=exporter, band_list=band_list,
                 virtual_download=virtual_download,
-                extent_coordinate_list=extent_coordinate_list,
+                extent_coordinate_list=_extent_coordinate_list,
                 proxy_host=proxy_host, proxy_port=proxy_port,
                 proxy_user=proxy_user, proxy_password=proxy_password,
                 nasa_user=nasa_user, nasa_password=nasa_password,
@@ -758,7 +789,9 @@ def download_images(exporter=False):
                         if output.paths is not None:
                             for x_path in output.paths:
                                 cfg.util_qgis.add_raster_layer(x_path)
-            cfg.ui_utils.remove_progress_bar(smtp=str(__name__))
+            cfg.ui_utils.remove_progress_bar(
+                smtp=str(__name__), failed=not output.check
+            )
 
 
 """ Additional functions """
@@ -1152,11 +1185,13 @@ def download_mpc_thumbnail(
             else:
                 proxy_host = cfg.proxy_host
                 proxy_port = cfg.proxy_port
-        check, output = cfg.rs.download_tools.download_file(
+        downloaded_file = cfg.rs.download_tools.download_file(
             url, image_output, timeout=2,
             proxy_host=proxy_host, proxy_port=proxy_port,
             proxy_user=proxy_user, proxy_password=proxy_password
         )
+        if downloaded_file is not None:
+            check, output = downloaded_file
     if check is True:
         if preview is True:
             preview_in_label(image_output)

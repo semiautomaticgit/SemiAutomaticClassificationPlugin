@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2023 by Luca Congedo.
+# Copyright (C) 2012-2024 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -23,7 +23,7 @@
 
 This tool allows for managing RGB composites.
 """
-
+from PyQt5.QtWidgets import QApplication
 from itertools import permutations
 
 cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
@@ -111,11 +111,16 @@ def clear_table_action():
 
 
 # clear table
+# noinspection PyTypeChecker
 def clear_table(question=True):
     if question is True:
         answer = cfg.util_qt.question_box(
-            cfg.translate('Reset RGB composites'),
-            cfg.translate('Are you sure you want to clear the RGB list?')
+            QApplication.translate('semiautomaticclassificationplugin',
+                                   'Reset RGB composites'),
+            QApplication.translate(
+                'semiautomaticclassificationplugin',
+                'Are you sure you want to clear the RGB list?'
+            )
         )
     else:
         answer = True
@@ -197,11 +202,14 @@ def calculate_all_composites_action():
 
 
 # all RGB List 
+# noinspection PyTypeChecker
 def calculate_all_composites(question=True, bandset_number=None):
     if question is True:
         answer = cfg.util_qt.question_box(
-            cfg.translate('RGB composite'),
-            cfg.translate('Calculate all the RGB color composites?')
+            QApplication.translate('semiautomaticclassificationplugin',
+                                   'RGB composite'),
+            QApplication.translate('semiautomaticclassificationplugin',
+                                   'Calculate all the RGB color composites?')
         )
     else:
         answer = True
@@ -236,9 +244,12 @@ def calculate_all_composites(question=True, bandset_number=None):
 
 
 # export RGB list to file
+# noinspection PyTypeChecker
 def export_rgb_list():
     file = cfg.util_qt.get_save_file_name(
-        None, cfg.translate('Save the RGB list to file'), '', '*.csv', 'csv'
+        None, QApplication.translate('semiautomaticclassificationplugin',
+                                     'Save the RGB list to file'),
+        '', '*.csv', 'csv'
     )
     if file is not False:
         if file.lower().endswith('.csv'):
@@ -260,9 +271,12 @@ def export_rgb_list():
 
 
 # import RGB from file
+# noinspection PyTypeChecker
 def import_rgb_list_from_file():
     file = cfg.util_qt.get_open_file(
-        None, cfg.translate('Select a RGB list file'), '', 'CSV (*.csv)'
+        None, QApplication.translate('semiautomaticclassificationplugin',
+                                     'Select a RGB list file'),
+        '', 'CSV (*.csv)'
     )
     table = cfg.dialog.ui.RGB_tableWidget
     try:

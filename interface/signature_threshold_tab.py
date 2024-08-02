@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2023 by Luca Congedo.
+# Copyright (C) 2012-2024 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -23,6 +23,7 @@
 
 Allows for setting signature thresholds.
 """
+from PyQt5.QtWidgets import QApplication
 
 try:
     from remotior_sensus.util import shared_tools
@@ -91,10 +92,13 @@ def signature_thresholds_to_table():
 
 
 # reset thresholds
+# noinspection PyTypeChecker
 def reset_thresholds():
     answer = cfg.util_qt.question_box(
-        cfg.translate('Reset thresholds'),
-        cfg.translate('Are you sure you want to reset thresholds?')
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Reset thresholds'),
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Are you sure you want to reset thresholds?')
     )
     if answer is True:
         table = cfg.dialog.ui.signature_threshold_tableWidget

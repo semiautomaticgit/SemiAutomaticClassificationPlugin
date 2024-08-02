@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2023 by Luca Congedo.
+# Copyright (C) 2012-2024 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -23,14 +23,18 @@
 
 This tool allows for the classification report.
 """
+from PyQt5.QtWidgets import QApplication
 
 cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
 
 # calculate classification report if click on button
+# noinspection PyTypeChecker
 def calculate_classification_report():
     output_path = cfg.util_qt.get_save_file_name(
-        None, cfg.translate('Save classification report'), '', '*.csv', 'csv'
+        None, QApplication.translate('semiautomaticclassificationplugin',
+                                     'Save classification report'),
+        '', '*.csv', 'csv'
     )
     if output_path is not False:
         if not output_path.lower().endswith('.csv'):
@@ -64,7 +68,9 @@ def calculate_classification_report():
                 cfg.dialog.ui.toolBox_class_report.setCurrentIndex(1)
         else:
             cfg.mx.msg_err_1()
-        cfg.ui_utils.remove_progress_bar(smtp=str(__name__))
+        cfg.ui_utils.remove_progress_bar(
+            smtp=str(__name__), failed=not output.check
+        )
 
 
 # set script button

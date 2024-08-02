@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2023 by Luca Congedo.
+# Copyright (C) 2012-2024 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -21,16 +21,18 @@
 # If not, see <https://www.gnu.org/licenses/>.
 
 
-from PyQt5.QtWidgets import qApp
-
+from PyQt5.QtWidgets import qApp, QApplication
 cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
 
 # clear text
+# noinspection PyTypeChecker
 def clear_text():
     answer = cfg.util_qt.question_box(
-        cfg.translate('Clear script'),
-        cfg.translate('Are you sure you want to clear the script?')
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Clear script'),
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Are you sure you want to clear the script?')
     )
     if answer is True:
         cfg.dialog.ui.plainTextEdit_batch.setPlainText('')
@@ -44,9 +46,11 @@ def copy_text():
 
 
 # save script to file
+# noinspection PyTypeChecker
 def save_script():
     output_path = cfg.util_qt.get_save_file_name(
-        None, cfg.translate('Save script'), '',
+        None, QApplication.translate('semiautomaticclassificationplugin',
+                                     'Save script'), '',
         'Python file (*.py)'
     )
     if output_path is not False:

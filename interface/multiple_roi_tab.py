@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2023 by Luca Congedo.
+# Copyright (C) 2012-2024 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -25,8 +25,7 @@ This tool allows for the creation of multiple ROIs.
 """
 
 import numpy
-from PyQt5.QtWidgets import qApp
-
+from PyQt5.QtWidgets import qApp, QApplication
 cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
 
@@ -277,9 +276,12 @@ def create_roi_from_points():
 
 
 # export point list to file
+# noinspection PyUnresolvedReferences,PyTypeChecker
 def export_point_list():
     output_path = cfg.util_qt.get_save_file_name(
-        None, cfg.translate('Save the point list to file'), '', '*.csv', 'csv'
+        None, QApplication.translate('semiautomaticclassificationplugin',
+                                     'Save the point list to file'),
+        '', '*.csv', 'csv'
     )
     separator = ';'
     if output_path is not False:
@@ -325,10 +327,12 @@ def export_point_list():
 
 
 # import points from file
+# noinspection PyTypeChecker
 def import_points_csv():
     point_file = cfg.util_qt.get_open_file(
-        None, cfg.translate('Select a point list file'), '',
-        'CSV (*.csv);; Point SHP .shp (*.shp);; Point GPKG .shp (*.gpkg)'
+        None, QApplication.translate('semiautomaticclassificationplugin',
+                                     'Select a point list file'),
+        '', 'CSV (*.csv);; Point SHP .shp (*.shp);; Point GPKG .shp (*.gpkg)'
     )
     if len(point_file) > 0:
         if point_file.lower().endswith('.csv'):

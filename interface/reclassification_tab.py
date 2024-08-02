@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2023 by Luca Congedo.
+# Copyright (C) 2012-2024 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -23,7 +23,7 @@
 
 This tool allows for raster reclassification.
 """
-
+from PyQt5.QtWidgets import QApplication
 import numpy
 
 try:
@@ -42,16 +42,19 @@ def reclassify_action():
 
 
 # reclassify
+# noinspection PyTypeChecker
 def reclassify():
     reference_layer = cfg.dialog.ui.reclassification_name_combo.currentText()
     reference = cfg.util_qgis.get_file_path(reference_layer)
     value_list = get_values_table()
     if reference is not None and len(value_list) > 0:
         output_path = cfg.util_qt.get_save_file_name(
-            None, cfg.translate('Save raster output'), '',
-            'TIF file (*.tif);;VRT file (*.vrt)'
+            None, QApplication.translate('semiautomaticclassificationplugin',
+                                         'Save raster output'),
+            '', 'TIF file (*.tif);;VRT file (*.vrt)'
         )
         if output_path is not False:
+            failed = True
             if output_path.lower().endswith('.vrt'):
                 pass
             elif not output_path.lower().endswith('.tif'):
@@ -72,7 +75,10 @@ def reclassify():
                 cfg.utils.raster_symbol_generic(
                     raster, 'NoData', raster_unique_value_list=unique_values
                 )
-        cfg.ui_utils.remove_progress_bar(smtp=str(__name__))
+                failed = False
+            cfg.ui_utils.remove_progress_bar(
+                smtp=str(__name__), failed=failed
+            )
 
 
 def calculate_unique_values():
@@ -236,10 +242,12 @@ def edited_cell(row, column):
 
 
 # import reclass from file
+# noinspection PyTypeChecker
 def import_reclass():
     file = cfg.util_qt.get_open_file(
-        None, cfg.translate('Select a reclassification file'), '',
-        'CSV (*.csv)'
+        None, QApplication.translate('semiautomaticclassificationplugin',
+                                     'Select a reclassification file'),
+        '', 'CSV (*.csv)'
     )
     if len(file) > 0:
         import_reclass_file(file)
@@ -274,10 +282,12 @@ def import_reclass_file(file):
 
 
 # export reclass list to file
+# noinspection PyTypeChecker
 def export_reclass():
     list_file = cfg.util_qt.get_save_file_name(
-        None, cfg.translate('Save the reclassification list to file'), '',
-        '*.csv', 'csv'
+        None, QApplication.translate('semiautomaticclassificationplugin',
+                                     'Save the reclassification list to file'),
+        '', '*.csv', 'csv'
     )
     try:
         if list_file.lower().endswith('.csv'):

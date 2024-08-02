@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2023 by Luca Congedo.
+# Copyright (C) 2012-2024 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -27,7 +27,7 @@ This tool allows for band set definition.
 import numpy
 from PyQt5.QtWidgets import (
     QWidget, QGridLayout, QFrame, QAbstractItemView, QTableWidget,
-    QTableWidgetItem, QListWidgetItem
+    QTableWidgetItem, QListWidgetItem, QApplication
 )
 
 cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
@@ -91,6 +91,9 @@ def set_bandset_date():
     date = q_date.toPyDate().strftime('%Y-%m-%d')
     cfg.bandset_catalog.set_date(bandset_number=bandset_number, date=date)
     cfg.dialog.ui.bandset_date_lineEdit.setText(date)
+    if bandset_number == cfg.project_registry[cfg.reg_training_bandset_number]:
+        if cfg.scp_training is not None:
+            cfg.scp_training.update_bandset()
 
 
 # edit date
@@ -107,6 +110,9 @@ def edit_bandset_date():
     cfg.dialog.ui.bandset_date_lineEdit.blockSignals(True)
     cfg.dialog.ui.bandset_date_lineEdit.setText(str(date))
     cfg.dialog.ui.bandset_date_lineEdit.blockSignals(False)
+    if bandset_number == cfg.project_registry[cfg.reg_training_bandset_number]:
+        if cfg.scp_training is not None:
+            cfg.scp_training.update_bandset()
 
 
 # edit root directory
@@ -120,18 +126,23 @@ def edit_bandset_root():
 
 
 # add file to band set action
+# noinspection PyTypeChecker
 def add_file_to_band_set_action():
     files = cfg.util_qt.get_open_files(
-        None, cfg.translate('Select input raster'), '', 'Raster (*.*)'
+        None, QApplication.translate('semiautomaticclassificationplugin',
+                                     'Select input raster'),
+        '', 'Raster (*.*)'
     )
     add_file_to_band_set(files)
 
 
 # add file to band set action
+# noinspection PyTypeChecker
 def set_custom_wavelength_action():
     file = cfg.util_qt.get_open_file(
-        None, cfg.translate('Select csv file'), '',
-        'TXT file (*.txt);;CSV file (*.csv)'
+        None, QApplication.translate('semiautomaticclassificationplugin',
+                                     'Select csv file'),
+        '', 'TXT file (*.txt);;CSV file (*.csv)'
     )
     if len(file) > 0:
         with open(file, 'r') as f:
@@ -172,6 +183,7 @@ def add_bandset_tab_action():
 
 
 # add band set tab
+# noinspection PyTypeChecker
 def add_band_set_tab(position=None, create_bandset_in_catalog=True):
     cfg.logger.log.debug('add_band_set_tab position: %s' % str(position))
     if len(cfg.bandset_tabs) == 0:
@@ -217,15 +229,32 @@ def add_band_set_tab(position=None, create_bandset_in_catalog=True):
     table_w.setHorizontalHeaderItem(4, QTableWidgetItem())
     table_w.setHorizontalHeaderItem(5, QTableWidgetItem())
     table_w.setHorizontalHeaderItem(6, QTableWidgetItem())
-    table_w.horizontalHeaderItem(0).setText(cfg.translate('Band name'))
-    table_w.horizontalHeaderItem(1).setText(cfg.translate('Center wavelength'))
-    table_w.horizontalHeaderItem(2).setText(
-        cfg.translate('Multiplicative Factor')
+    table_w.horizontalHeaderItem(0).setText(
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Band name')
     )
-    table_w.horizontalHeaderItem(3).setText(cfg.translate('Additive Factor'))
-    table_w.horizontalHeaderItem(4).setText(cfg.translate('Wavelength unit'))
-    table_w.horizontalHeaderItem(5).setText(cfg.translate('Path'))
-    table_w.horizontalHeaderItem(6).setText(cfg.translate('Date'))
+    table_w.horizontalHeaderItem(1).setText(
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Center wavelength')
+    )
+    table_w.horizontalHeaderItem(2).setText(
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Multiplicative Factor')
+    )
+    table_w.horizontalHeaderItem(3).setText(
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Additive Factor')
+    )
+    table_w.horizontalHeaderItem(4).setText(
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Wavelength unit')
+    )
+    table_w.horizontalHeaderItem(5).setText(
+        QApplication.translate('semiautomaticclassificationplugin', 'Path')
+    )
+    table_w.horizontalHeaderItem(6).setText(
+        QApplication.translate('semiautomaticclassificationplugin', 'Date')
+    )
     table_w.verticalHeader().setDefaultSectionSize(24)
     table_w.horizontalHeader().setStretchLastSection(True)
     grid_layout.addWidget(table_w, 0, 0, 1, 1)
@@ -297,11 +326,16 @@ def clear_bandset_action():
 
 
 # clear the bandset
+# noinspection PyTypeChecker
 def clear_bandset(question=True, bandset_number=None):
     if question:
         answer = cfg.util_qt.question_box(
-            cfg.translate('Clear band set'),
-            cfg.translate('Are you sure you want to clear the band set?')
+            QApplication.translate('semiautomaticclassificationplugin',
+                                   'Clear band set'),
+            QApplication.translate(
+                'semiautomaticclassificationplugin',
+                'Are you sure you want to clear the band set?'
+            )
         )
     else:
         answer = True
@@ -358,6 +392,10 @@ def edited_bandset(row, column):
             bands = bandset_x.bands
             bands['multiplicative_factor'][
                 bands['band_number'] == row + 1] = value
+            if (bandset_number
+                    == cfg.project_registry[cfg.reg_training_bandset_number]):
+                if cfg.scp_training is not None:
+                    cfg.scp_training.update_bandset()
         except Exception as err:
             str(err)
             band_value = cfg.bandset_catalog.get_bandset(
@@ -375,6 +413,10 @@ def edited_bandset(row, column):
             )
             bands = bandset_x.bands
             bands['additive_factor'][bands['band_number'] == row + 1] = value
+            if (bandset_number
+                    == cfg.project_registry[cfg.reg_training_bandset_number]):
+                if cfg.scp_training is not None:
+                    cfg.scp_training.update_bandset()
         except Exception as err:
             str(err)
             band_value = cfg.bandset_catalog.get_bandset(
@@ -399,6 +441,10 @@ def edited_bandset(row, column):
             )
             bands = bandset_x.bands
             bands['path'][bands['band_number'] == row + 1] = path
+            if (bandset_number
+                    == cfg.project_registry[cfg.reg_training_bandset_number]):
+                if cfg.scp_training is not None:
+                    cfg.scp_training.update_bandset()
         else:
             band_value = cfg.bandset_catalog.get_bandset(
                 bandset_number, attribute='path'
@@ -417,6 +463,10 @@ def edited_bandset(row, column):
                 )
                 bands = bandset_x.bands
                 bands['date'][bands['band_number'] == row + 1] = value
+                if (bandset_number ==
+                        cfg.project_registry[cfg.reg_training_bandset_number]):
+                    if cfg.scp_training is not None:
+                        cfg.scp_training.update_bandset()
             band_value = cfg.bandset_catalog.get_bandset(
                 bandset_number, attribute='date'
             )
@@ -440,10 +490,13 @@ def edited_bandset(row, column):
 
 
 # delete bandset
+# noinspection PyTypeChecker
 def remove_bandsets():
     answer = cfg.util_qt.question_box(
-        cfg.translate('Remove band set'),
-        cfg.translate(
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Remove band set'),
+        QApplication.translate(
+            'semiautomaticclassificationplugin',
             'Are you sure you want to remove the selected band sets?'
         )
     )
@@ -475,20 +528,20 @@ def delete_bandset_tab(index):
     bandset = cfg.bandset_catalog.get_bandset(index + 1)
     if bandset is not None:
         cfg.bandset_catalog.remove_bandset(index + 1)
-    cfg.logger.log.debug(
-        'bandset_count: %s' % str(
-            cfg.bandset_catalog.get_bandset_count()
-        )
-    )
+    count = cfg.bandset_catalog.get_bandset_count()
+    cfg.logger.log.debug('bandset_count: %s' % str(count))
     cfg.dialog.ui.Band_set_tabWidget.removeTab(index)
     cfg.dialog.ui.bandset_number_spinBox.setMaximum(count)
     table.removeRow(index)
 
 
 # export bandset to file
+# noinspection PyTypeChecker
 def export_bandset():
     xml_file = cfg.util_qt.get_save_file_name(
-        None, cfg.translate('Save the bandset to file'), '', '*.xml', 'xml'
+        None, QApplication.translate('semiautomaticclassificationplugin',
+                                     'Save the bandset to file'),
+        '', '*.xml', 'xml'
     )
     if xml_file is not False:
         cfg.logger.log.info('export_bandset: %s' % xml_file)
@@ -501,9 +554,12 @@ def export_bandset():
 
 
 # import bandset from file
+# noinspection PyTypeChecker
 def import_bandset():
     xml_file = cfg.util_qt.get_open_file(
-        None, cfg.translate('Select a bandset file'), '', 'XML (*.xml)'
+        None, QApplication.translate('semiautomaticclassificationplugin',
+                                     'Select a bandset file'),
+        '', 'XML (*.xml)'
     )
     if len(xml_file) > 0:
         cfg.logger.log.info('import_bandset: %s' % xml_file)
@@ -665,14 +721,17 @@ def sort_bands_by_name():
 
 
 # remove selected band
+# noinspection PyTypeChecker
 def remove_band():
     bandset_number = cfg.project_registry[cfg.reg_active_bandset_number]
     table_w = eval(
         'cfg.dialog.ui.tableWidget__' + str(cfg.bandset_tabs[bandset_number])
     )
     answer = cfg.util_qt.question_box(
-        cfg.translate('Remove band'),
-        cfg.translate(
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Remove band'),
+        QApplication.translate(
+            'semiautomaticclassificationplugin',
             'Are you sure you want to remove the selected bands from band set?'
         )
     )
@@ -703,14 +762,15 @@ def sort_bandsets_by_date():
 
 
 # create virtual raster
+# noinspection PyTypeChecker
 def virtual_raster_bandset(output_path=None, bandset_number=None):
     if bandset_number is None:
         bandset_number = cfg.project_registry[cfg.reg_active_bandset_number]
     if output_path is None:
         vrt_file = cfg.util_qt.get_save_file_name(
-            None, cfg.translate(
-                'Save virtual raster'
-            ), '', '*.vrt', 'vrt'
+            None, QApplication.translate('semiautomaticclassificationplugin',
+                                         'Save virtual raster'
+                                         ), '', '*.vrt', 'vrt'
         )
     else:
         vrt_file = output_path
@@ -728,12 +788,14 @@ def virtual_raster_bandset(output_path=None, bandset_number=None):
 
 
 # stack bandset
+# noinspection PyTypeChecker
 def stack_bandset(output_path=None, bandset_number=None):
     if bandset_number is None:
         bandset_number = cfg.project_registry[cfg.reg_active_bandset_number]
     if output_path is None:
         tif_file = cfg.util_qt.get_save_file_name(
-            None, cfg.translate('Save raster'), '', '*.tif', 'tif'
+            None, QApplication.translate('semiautomaticclassificationplugin',
+                                         'Save raster'), '', '*.tif', 'tif'
         )
     else:
         tif_file = output_path
@@ -751,6 +813,7 @@ def stack_bandset(output_path=None, bandset_number=None):
 
 
 # button perform bandset tools
+# noinspection PyTypeChecker
 def perform_bandset_tools():
     if (cfg.dialog.ui.overview_raster_bandset_checkBox.isChecked() is False
             and cfg.dialog.ui.band_calc_checkBox.isChecked() is False
@@ -769,9 +832,7 @@ def perform_bandset_tools():
             bandset_number=cfg.project_registry[cfg.reg_active_bandset_number]
         )
     else:
-        directory = cfg.util_qt.get_existing_directory(
-            None, cfg.translate('Select a directory')
-        )
+        directory = cfg.util_qt.get_existing_directory()
         if directory is not False:
             cfg.ui_utils.add_progress_bar()
             bandset_tools(directory, batch=False)
@@ -930,6 +991,9 @@ def band_set_to_table(bandset_number):
             cfg.dialog.ui.root_dir_lineEdit.blockSignals(True)
             cfg.dialog.ui.root_dir_lineEdit.setText(root)
             cfg.dialog.ui.root_dir_lineEdit.blockSignals(False)
+    if bandset_number == cfg.project_registry[cfg.reg_training_bandset_number]:
+        if cfg.scp_training is not None:
+            cfg.scp_training.update_bandset()
 
 
 # change band set tab

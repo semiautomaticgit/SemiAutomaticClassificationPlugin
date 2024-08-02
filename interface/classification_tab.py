@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2023 by Luca Congedo.
+# Copyright (C) 2012-2024 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -28,6 +28,7 @@ from copy import deepcopy
 
 # import the PyQt libraries
 from PyQt5.QtGui import QIcon, QPixmap, QCursor
+from PyQt5.QtWidgets import QApplication
 
 cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
@@ -42,6 +43,7 @@ def macroclass_radio():
         cfg.dialog.ui.macroclass_radioButton.blockSignals(True)
         cfg.dialog.ui.macroclass_radioButton.setChecked(1)
         cfg.dialog.ui.macroclass_radioButton.blockSignals(False)
+    reset_preview()
 
 
 # set variable for class classification
@@ -54,6 +56,7 @@ def class_radio():
         cfg.dialog.ui.class_radioButton.blockSignals(True)
         cfg.dialog.ui.class_radioButton.setChecked(1)
         cfg.dialog.ui.class_radioButton.blockSignals(False)
+    reset_preview()
 
 
 # set variable for scaling
@@ -66,6 +69,7 @@ def z_scaling_radio():
         cfg.dialog.ui.z_score_radioButton.blockSignals(True)
         cfg.dialog.ui.z_score_radioButton.setChecked(1)
         cfg.dialog.ui.z_score_radioButton.blockSignals(False)
+    reset_preview()
 
 
 # set variable for scaling
@@ -74,10 +78,12 @@ def linear_scaling_radio():
         cfg.dialog.ui.z_score_radioButton.blockSignals(True)
         cfg.dialog.ui.z_score_radioButton.setChecked(0)
         cfg.dialog.ui.z_score_radioButton.blockSignals(False)
+
     else:
         cfg.dialog.ui.linear_scaling_radioButton.blockSignals(True)
         cfg.dialog.ui.linear_scaling_radioButton.setChecked(1)
         cfg.dialog.ui.linear_scaling_radioButton.blockSignals(False)
+    reset_preview()
 
 
 # changed tab
@@ -93,14 +99,20 @@ def changed_tab(index):
     for position in range(0, count):
         cfg.dialog.ui.toolBox_classification.setItemIcon(position, QIcon())
     cfg.dialog.ui.toolBox_classification.setItemIcon(index, icon)
+    reset_preview()
+
+
+def reset_preview():
     # reset classifier
     cfg.classifier_preview = None
 
 
 # load classifier
+# noinspection PyTypeChecker
 def open_classifier():
     file = cfg.util_qt.get_open_file(
-        None, cfg.translate('Select a classifier file'), '',
+        None, QApplication.translate('semiautomaticclassificationplugin',
+                                     'Select a classifier file'), '',
         'Classifier (*%s)' % cfg.rs.configurations.rsmo_suffix
     )
     if len(file) > 0:
@@ -150,6 +162,7 @@ def save_classifier_action():
 
 
 # perform classification
+# noinspection PyTypeChecker
 def run_classifier(
         save_classifier=None, preview_point=None,
         classification_confidence=None
@@ -170,13 +183,17 @@ def run_classifier(
     if preview_point is None:
         if save_classifier is True:
             output_path = cfg.util_qt.get_save_file_name(
-                None, cfg.translate('Save classifier'), '',
-                'Classifier file (*%s)' % cfg.rs.configurations.rsmo_suffix
+                None,
+                QApplication.translate('semiautomaticclassificationplugin',
+                                       'Save classifier'),
+                '', 'Classifier file (*%s)' % cfg.rs.configurations.rsmo_suffix
             )
         else:
             output_path = cfg.util_qt.get_save_file_name(
-                None, cfg.translate('Save classification'), '',
-                'TIF file (*.tif);;VRT file (*.vrt)'
+                None,
+                QApplication.translate('semiautomaticclassificationplugin',
+                                       'Save classification'),
+                '', 'TIF file (*.tif);;VRT file (*.vrt)'
             )
     else:
         # path for preview
@@ -186,7 +203,9 @@ def run_classifier(
     if output_path is False:
         return
     else:
-        if output_path.lower().endswith('.vrt'):
+        if (output_path.lower().endswith('.vrt')
+                or output_path.lower().endswith(
+                    cfg.rs.configurations.rsmo_suffix)):
             pass
         elif not output_path.lower().endswith('.tif'):
             output_path += '.tif'
@@ -383,8 +402,7 @@ def run_classifier(
         smtp = None
         cfg.logger.log.debug(
             'preview_point x: %s; y: %s'
-            % (str(preview_point.x()),
-               str(preview_point.y()))
+            % (str(preview_point.x()), str(preview_point.y()))
         )
         # subset bandset
         preview_size = cfg.project_registry[cfg.reg_preview_size]
@@ -422,39 +440,53 @@ def run_classifier(
             # calculate from training on the whole bandset
             if cfg.classifier_preview is None:
                 # run classification
-                fit_classifier = cfg.rs.band_classification(
-                    only_fit=True, save_classifier=True,
-                    input_bands=bandset_number, output_path=classifier_path,
-                    spectral_signatures=signature_catalog,
-                    macroclass=macroclass, algorithm_name=classifier_name,
-                    bandset_catalog=cfg.bandset_catalog, threshold=threshold,
-                    signature_raster=signature_raster,
-                    cross_validation=cross_validation,
-                    input_normalization=input_normalization,
-                    load_classifier=load_classifier, class_weight=class_weight,
-                    find_best_estimator=find_best_estimator,
-                    rf_max_features=rf_max_features,
-                    rf_number_trees=rf_number_trees,
-                    rf_min_samples_split=rf_min_samples_split,
-                    svm_c=svm_c, svm_gamma=svm_gamma, svm_kernel=svm_kernel,
-                    mlp_training_portion=mlp_training_portion,
-                    mlp_alpha=mlp_alpha,
-                    mlp_learning_rate_init=mlp_learning_rate_init,
-                    mlp_max_iter=mlp_max_iter, mlp_batch_size=mlp_batch_size,
-                    mlp_activation=mlp_activation,
-                    mlp_hidden_layer_sizes=mlp_hidden_layer_sizes,
-                    classification_confidence=classification_confidence
-                )
+                try:
+                    fit_classifier = cfg.rs.band_classification(
+                        only_fit=True, save_classifier=True,
+                        input_bands=bandset_number,
+                        output_path=classifier_path,
+                        spectral_signatures=signature_catalog,
+                        macroclass=macroclass, algorithm_name=classifier_name,
+                        bandset_catalog=cfg.bandset_catalog,
+                        threshold=threshold, signature_raster=signature_raster,
+                        cross_validation=cross_validation,
+                        input_normalization=input_normalization,
+                        load_classifier=load_classifier,
+                        class_weight=class_weight,
+                        find_best_estimator=find_best_estimator,
+                        rf_max_features=rf_max_features,
+                        rf_number_trees=rf_number_trees,
+                        rf_min_samples_split=rf_min_samples_split,
+                        svm_c=svm_c, svm_gamma=svm_gamma,
+                        svm_kernel=svm_kernel,
+                        mlp_training_portion=mlp_training_portion,
+                        mlp_alpha=mlp_alpha,
+                        mlp_learning_rate_init=mlp_learning_rate_init,
+                        mlp_max_iter=mlp_max_iter,
+                        mlp_batch_size=mlp_batch_size,
+                        mlp_activation=mlp_activation,
+                        mlp_hidden_layer_sizes=mlp_hidden_layer_sizes,
+                        classification_confidence=classification_confidence
+                    )
+                except Exception as err:
+                    cfg.logger.log.error(str(err))
+                    cfg.mx.msg_err_1()
+                    cfg.ui_utils.remove_progress_bar(
+                        smtp=smtp, sound=finish_sound, failed=True
+                        )
+                    return
                 if fit_classifier.check:
                     only_fit = False
                     save_classifier = False
                     cfg.classifier_preview = fit_classifier.extra['model_path']
                     cfg.logger.log.debug(
-                        'cfg.classifier_preview: %s'
-                        % cfg.classifier_preview
+                        'cfg.classifier_preview: %s' % cfg.classifier_preview
                     )
                 else:
                     cfg.mx.msg_err_1()
+                    cfg.ui_utils.remove_progress_bar(
+                        smtp=smtp, sound=finish_sound, failed=True
+                        )
                     return
             # load classifier
             load_classifier = cfg.classifier_preview
@@ -483,10 +515,12 @@ def run_classifier(
         )
     except Exception as err:
         cfg.logger.log.error(str(err))
-        cfg.mx.msg_err_1()
+        output = None
     if output is None:
         cfg.mx.msg_err_1()
+        failed = True
     elif output.check:
+        failed = False
         if save_classifier is not True and preview_point is None:
             output_raster = output.path
             # add raster to layers
@@ -494,6 +528,7 @@ def run_classifier(
             if raster is False:
                 cfg.logger.log.error('raster output not found')
                 cfg.mx.msg_err_1()
+                failed = True
             else:
                 cfg.util_qgis.move_layer_to_top(raster)
                 # apply symbology
@@ -521,7 +556,9 @@ def run_classifier(
                     str(err)
     else:
         cfg.mx.msg_err_1()
-    cfg.ui_utils.remove_progress_bar(smtp=smtp, sound=finish_sound)
+        failed = True
+    cfg.ui_utils.remove_progress_bar(smtp=smtp, sound=finish_sound,
+                                     failed=failed)
     return output
 
 
@@ -568,7 +605,8 @@ def create_preview(preview_point, classification_confidence=None):
         else:
             macroclass = False
         # apply symbology
-        if classification_confidence is None:
+        if (classification_confidence is None
+                and cfg.classification_preview is not False):
             apply_class_symbology(cfg.classification_preview, macroclass)
         # move to top
         cfg.util_qgis.move_layer_to_top(cfg.classification_preview)

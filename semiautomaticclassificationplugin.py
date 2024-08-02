@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download,
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2023 by Luca Congedo.
+# Copyright (C) 2012-2024 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -35,9 +35,11 @@ from PyQt5.QtCore import (
 from PyQt5.QtGui import QFont, QColor
 from PyQt5.QtWidgets import QApplication, QHeaderView, QLineEdit
 # import the QGIS libraries
+# noinspection PyUnresolvedReferences
 from qgis.core import (
     Qgis, QgsWkbTypes, QgsApplication, QgsProject, QgsSettings
 )
+# noinspection PyUnresolvedReferences
 from qgis.gui import QgsRubberBand
 
 # import plugin version
@@ -48,9 +50,11 @@ from .core.ui_utils import UiUtils
 from .interface import (
     input_interface, scp_dock, bandset_tab, accuracy_tab, stack_bandset_tab,
     classification_report_tab, classification_to_vector_tab, split_bands_tab,
-    cross_classification_tab, band_dilation_tab, band_erosion_tab, settings,
-    band_sieve_tab, band_combination_tab, band_calc_tab, band_neighbor_tab,
-    band_pca_tab, reclassification_tab, vector_to_raster_tab, clip_bands_tab,
+    cross_classification_tab, band_clustering_tab, band_dilation_tab,
+    band_erosion_tab, settings, band_sieve_tab, band_combination_tab,
+    band_calc_tab, band_neighbor_tab, band_pca_tab, spectral_distance_tab,
+    reclassification_tab, vector_to_raster_tab, clip_bands_tab,
+    edit_raster_tab, raster_zonal_stats_tab,
     reproject_bandset_tab, masking_bands_tab, download_products_tab,
     mosaic_bandsets_tab, image_conversion_tab, script_tab, classification_tab,
     rgb_composite_tab, signature_threshold_tab, multiple_roi_tab
@@ -91,10 +95,10 @@ except Exception as error:
         qgis_utils.iface.messageBar().pushMessage(
             'Semi-Automatic Classification Plugin', QApplication.translate(
                 'semiautomaticclassificationplugin',
-                'Warning. Python library Remotior Sensus was not found and was'
-                ' automatically downloaded, but SCP may not work properly.'
-                'Please, install the required Python library '
-                'Remotior Sensus following the user manual.'
+                'Warning. Python library Remotior Sensus was not '
+                'found and was automatically downloaded, but SCP may not '
+                'work properly. Please, install the required Python '
+                'library Remotior Sensus following the user manual.'
             ), level=Qgis.Info, duration=10
         )
     except Exception as error:
@@ -137,10 +141,10 @@ except Exception as error:
             qgis_utils.iface.messageBar().pushMessage(
                 'Semi-Automatic Classification Plugin', QApplication.translate(
                     'semiautomaticclassificationplugin',
-                    'Warning. Python library Remotior Sensus was not found '
-                    'and was automatically downloaded, but SCP may not work '
-                    'properly. Please, install the required Python library '
-                    'Remotior Sensus following the user manual.'
+                    'Warning. Python library Remotior Sensus was not '
+                    'found and was automatically downloaded, but SCP may not '
+                    'work properly. Please, install the required Python '
+                    'library Remotior Sensus following the user manual.'
                 ), level=Qgis.Info, duration=10
             )
         except Exception as error:
@@ -169,6 +173,15 @@ class SemiAutomaticClassificationPlugin:
         # QGIS version
         qgis_ver = Qgis.QGIS_VERSION_INT
         if plugin_check is True:
+            # check Remotior Sensus version
+            if float('%s.%s' % (remotior_sensus.__version__[0],
+                                remotior_sensus.__version__[2])) < 0.4:
+                qgis_utils.iface.messageBar().pushMessage(
+                    'Semi-Automatic Classification Plugin',
+                    'Warning. Python library Remotior Sensus is outdated.'
+                    'This could cause errors, please update Remotior Sensus.',
+                    level=Qgis.Warning, duration=10
+                )
             # set multiprocess path
             python_path = None
             if cfg.system_platform == 'Windows':
@@ -230,6 +243,11 @@ class SemiAutomaticClassificationPlugin:
             locale_settings = QSettings().value('locale/userLocale')[0:2]
             # locale
             locale_path = ''
+            # plugin directory
+            cfg.plugin_dir = ('%s/python/plugins/%s' % (
+                QFileInfo(QgsApplication.qgisUserDatabaseFilePath()).path(),
+                str(__name__).split('.')[0])
+                              )
             if QFileInfo(cfg.plugin_dir).exists():
                 locale_path = (
                         '%s/i18n/semiautomaticclassificationplugin_%s.qm'
@@ -241,7 +259,6 @@ class SemiAutomaticClassificationPlugin:
                 if qVersion() > '4.3.3':
                     QCoreApplication.installTranslator(transl)
             cfg.ui_utils = UiUtils()
-            cfg.translate = cfg.ui_utils.translate
             try:
                 # create the dialog
                 cfg.dialog = SemiAutomaticClassificationPluginDialog()
@@ -304,11 +321,15 @@ class SemiAutomaticClassificationPlugin:
             cfg.manual_roi_pointer = ManualROIPointer(cfg.map_canvas)
             cfg.mosaic_bandsets = mosaic_bandsets_tab
             cfg.vector_to_raster = vector_to_raster_tab
+            cfg.clustering = band_clustering_tab
             cfg.erosion = band_erosion_tab
             cfg.sieve = band_sieve_tab
             cfg.neighbor = band_neighbor_tab
             cfg.pca_tab = band_pca_tab
+            cfg.spectral_distance = spectral_distance_tab
             cfg.reclassification = reclassification_tab
+            cfg.edit_raster = edit_raster_tab
+            cfg.raster_zonal_stats = raster_zonal_stats_tab
             cfg.band_combination = band_combination_tab
             cfg.classification = classification_tab
             cfg.script = script_tab
@@ -331,24 +352,22 @@ class SemiAutomaticClassificationPlugin:
                 cfg.dialog.ui.menu_treeWidget.setFont(font)
             except Exception as err:
                 str(err)
-            # plugin directory
-            cfg.plugin_dir = ('%s/python/plugins/%s' % (
-                QFileInfo(
-                    QgsApplication.qgisUserDatabaseFilePath()
-                ).path(), str(__name__).split('.')[0])
-                              )
             registry_keys()
             # temporary directory
             cfg.temp_dir = get_temporary_directory()
             cfg.mx = messages
+            if cfg.qgis_registry[cfg.reg_log_key] == 2:
+                log_level = 10
+            else:
+                log_level = 20
             try:
                 cfg.rs = remotior_sensus.Session(
                     n_processes=cfg.qgis_registry[cfg.reg_threads_value],
-                    log_level=20, temporary_directory=cfg.temp_dir,
+                    log_level=log_level, temporary_directory=cfg.temp_dir,
                     available_ram=cfg.qgis_registry[cfg.reg_ram_value],
                     multiprocess_module=multiprocessing,
                     progress_callback=cfg.ui_utils.update_bar,
-                    messages_callback=cfg.mx
+                    messages_callback=cfg.mx, log_stream_handler=False
                 )
             except Exception as err:
                 str(err)
@@ -690,9 +709,15 @@ class SemiAutomaticClassificationPlugin:
             cfg.usgs_spectral_lib.add_spectral_library_to_combo()
             cfg.neighbor.load_statistic_combo()
             # bandset virtual raster
-            cfg.virtual_bandset_name = cfg.translate('Virtual Band Set ')
-            cfg.bandset_tab_name = cfg.translate('Band set ')
-            cfg.scp_layer_name = cfg.translate('SCP training layer')
+            cfg.virtual_bandset_name = QApplication.translate(
+                'semiautomaticclassificationplugin', 'Virtual Band Set '
+            )
+            cfg.bandset_tab_name = QApplication.translate(
+                'semiautomaticclassificationplugin', 'Band set '
+            )
+            cfg.scp_layer_name = QApplication.translate(
+                'semiautomaticclassificationplugin', 'SCP training layer'
+            )
             # connect to project loaded
             QgsProject.instance().readProject.connect(
                 self.project_loaded
@@ -747,7 +772,7 @@ class SemiAutomaticClassificationPlugin:
             xml = cfg.bandset_catalog.export_bandset_as_xml(
                 bandset_number=bandset_number
             )
-            xml = xml.replace('\n', '')
+            xml = str(xml).replace('\n', '')
             cfg.util_qgis.write_project_variable(
                 '%s%s' % (cfg.reg_bandset, bandset_number), xml
             )
@@ -1374,7 +1399,87 @@ def connect_gui():
     cfg.dialog.ui.toolBox_classification.currentChanged.connect(
         cfg.classification.changed_tab
     )
-
+    cfg.dialog.ui.band_set_comb_spinBox_12.valueChanged.connect(
+        cfg.classification.reset_preview
+    )
+    cfg.dialog.ui.pytorch_radioButton.toggled.connect(
+        cfg.classification.reset_preview
+    )
+    cfg.dialog.ui.hidden_layers_lineEdit.textChanged.connect(
+        cfg.classification.reset_preview
+    )
+    cfg.dialog.ui.activation_lineEdit.textChanged.connect(
+        cfg.classification.reset_preview
+    )
+    cfg.dialog.ui.batch_size_lineEdit.textChanged.connect(
+        cfg.classification.reset_preview
+    )
+    cfg.dialog.ui.max_features_lineEdit.textChanged.connect(
+        cfg.classification.reset_preview
+    )
+    cfg.dialog.ui.kernel_lineEdit.textChanged.connect(
+        cfg.classification.reset_preview
+    )
+    cfg.dialog.ui.gamma_lineEdit.textChanged.connect(
+        cfg.classification.reset_preview
+    )
+    cfg.dialog.ui.max_iterations_SpinBox.valueChanged.connect(
+        cfg.classification.reset_preview
+    )
+    cfg.dialog.ui.training_proportion_SpinBox.valueChanged.connect(
+        cfg.classification.reset_preview
+    )
+    cfg.dialog.ui.alpha_SpinBox.valueChanged.connect(
+        cfg.classification.reset_preview
+    )
+    cfg.dialog.ui.learning_rate_SpinBox.valueChanged.connect(
+        cfg.classification.reset_preview
+    )
+    cfg.dialog.ui.number_trees_SpinBox.valueChanged.connect(
+        cfg.classification.reset_preview
+    )
+    cfg.dialog.ui.min_split_SpinBox.valueChanged.connect(
+        cfg.classification.reset_preview
+    )
+    cfg.dialog.ui.param_c_SpinBox.valueChanged.connect(
+        cfg.classification.reset_preview
+    )
+    cfg.dialog.ui.steps_SpinBox.valueChanged.connect(
+        cfg.classification.reset_preview
+    )
+    cfg.dialog.ui.steps_SpinBox_2.valueChanged.connect(
+        cfg.classification.reset_preview
+    )
+    cfg.dialog.ui.steps_SpinBox_3.valueChanged.connect(
+        cfg.classification.reset_preview
+    )
+    cfg.dialog.ui.cross_validation_checkBox.stateChanged.connect(
+        cfg.classification.reset_preview
+    )
+    cfg.dialog.ui.cross_validation_checkBox_2.stateChanged.connect(
+        cfg.classification.reset_preview
+    )
+    cfg.dialog.ui.cross_validation_checkBox_3.stateChanged.connect(
+        cfg.classification.reset_preview
+    )
+    cfg.dialog.ui.best_estimator_checkBox.stateChanged.connect(
+        cfg.classification.reset_preview
+    )
+    cfg.dialog.ui.best_estimator_checkBox_2.stateChanged.connect(
+        cfg.classification.reset_preview
+    )
+    cfg.dialog.ui.best_estimator_checkBox_3.stateChanged.connect(
+        cfg.classification.reset_preview
+    )
+    cfg.dialog.ui.class_weight_checkBox.stateChanged.connect(
+        cfg.classification.reset_preview
+    )
+    cfg.dialog.ui.class_weight_checkBox_2.stateChanged.connect(
+        cfg.classification.reset_preview
+    )
+    cfg.dialog.ui.ovr_checkBox.stateChanged.connect(
+        cfg.classification.reset_preview
+    )
     cfg.dialog.ui.macroclass_radioButton.toggled.connect(
         cfg.classification.macroclass_radio
     )
@@ -1406,14 +1511,34 @@ def connect_gui():
         cfg.classification.save_classifier_action
     )
     cfg.dialog.ui.classification.clicked.connect(cfg.classification.set_script)
-    """ Band set combination"""
+    """ Band set combination """
     cfg.dialog.ui.calculateBandSetComb_toolButton.clicked.connect(
         cfg.band_combination.calculate_band_combination
     )
     cfg.dialog.ui.band_combination.clicked.connect(
         cfg.band_combination.set_script
     )
-    """ Band dilation"""
+    """ Band clustering """
+    cfg.dialog.ui.clustering_toolButton.clicked.connect(
+        cfg.clustering.band_clustering
+    )
+    cfg.dialog.ui.clustering.clicked.connect(cfg.clustering.set_script)
+    cfg.dialog.ui.min_distance_radioButton.toggled.connect(
+        cfg.clustering.algorithm_minimum_distance_radio
+    )
+    cfg.dialog.ui.spectral_angle_map_radioButton.toggled.connect(
+        cfg.clustering.algorithm_sam_radio
+    )
+    cfg.dialog.ui.kmean_siglist_radioButton.toggled.connect(
+        cfg.clustering.sig_list_changed
+    )
+    cfg.dialog.ui.kmean_minmax_radioButton.toggled.connect(
+        cfg.clustering.minmax_changed
+    )
+    cfg.dialog.ui.kmean_randomsiglist_radioButton.toggled.connect(
+        cfg.clustering.random_changed
+    )
+    """ Band dilation """
     cfg.dialog.ui.band_dilation_toolButton.clicked.connect(
         cfg.dilation.dilation_action
     )
@@ -1421,7 +1546,7 @@ def connect_gui():
         cfg.dilation.text_changed
     )
     cfg.dialog.ui.band_dilation.clicked.connect(cfg.dilation.set_script)
-    """ Band erosion"""
+    """ Band erosion """
     cfg.dialog.ui.class_erosion_toolButton.clicked.connect(
         cfg.erosion.band_erosion_action
     )
@@ -1431,10 +1556,10 @@ def connect_gui():
     cfg.dialog.ui.classification_erosion.clicked.connect(
         cfg.erosion.set_script
     )
-    """ Band sieve"""
+    """ Band sieve """
     cfg.dialog.ui.sieve_toolButton.clicked.connect(cfg.sieve.band_sieve)
     cfg.dialog.ui.classification_sieve.clicked.connect(cfg.sieve.set_script)
-    """ Band neighbor"""
+    """ Band neighbor """
     cfg.dialog.ui.class_neighbor_toolButton.clicked.connect(
         cfg.neighbor.band_neighbor_action
     )
@@ -1442,13 +1567,20 @@ def connect_gui():
     cfg.dialog.ui.toolButton_input_matrix.clicked.connect(
         cfg.neighbor.input_matrix_file
     )
-    """ Band PCA"""
+    """ Band PCA """
     cfg.dialog.ui.pca_Button.clicked.connect(cfg.pca_tab.calculate_pca_action)
     cfg.dialog.ui.pca.clicked.connect(cfg.pca_tab.set_script)
+    """ Spectral distance """
+    cfg.dialog.ui.spectral_distance_toolButton.clicked.connect(
+        cfg.spectral_distance.calculate_spectral_distance_action
+    )
+    cfg.dialog.ui.spectral_distance.clicked.connect(
+        cfg.spectral_distance.set_script
+    )
 
-    """ Post processing"""
+    """ Post processing """
 
-    """ Accuracy"""
+    """ Accuracy """
     cfg.dialog.ui.toolButton_reload_4.clicked.connect(
         cfg.utils.refresh_raster_layer
     )
@@ -1498,6 +1630,57 @@ def connect_gui():
     cfg.dialog.ui.cross_classification.clicked.connect(
         cfg.cross_classification.set_script
     )
+    """ Edit raster """
+    cfg.dialog.ui.toolButton_reload_14.clicked.connect(
+        cfg.utils.refresh_raster_layer
+    )
+    cfg.dialog.ui.toolButton_reload_20.clicked.connect(
+        cfg.utils.refresh_vector_layer
+    )
+    cfg.dialog.ui.vector_name_combo_2.currentIndexChanged.connect(
+        cfg.utils.refresh_edit_raster_vector_fields
+    )
+    cfg.dialog.ui.edit_val_use_ROI_radioButton.toggled.connect(
+        cfg.edit_raster.radio_use_roi_polygon_changed
+    )
+    cfg.dialog.ui.edit_val_use_vector_radioButton.toggled.connect(
+        cfg.edit_raster.radio_use_vector_changed
+    )
+    cfg.dialog.ui.use_field_vector_radioButton.toggled.connect(
+        cfg.edit_raster.radio_vector_field_changed
+    )
+    cfg.dialog.ui.use_constant_val_radioButton.toggled.connect(
+        cfg.edit_raster.radio_constant_val_changed
+    )
+    cfg.dialog.ui.use_expression_radioButton.toggled.connect(
+        cfg.edit_raster.radio_use_expression_changed
+    )
+    cfg.dialog.ui.edit_raster_toolButton.clicked.connect(
+        cfg.edit_raster.edit_raster_action
+    )
+    cfg.dialog.ui.undo_edit_Button.clicked.connect(
+        cfg.edit_raster.undo_edit
+    )
+    cfg.dialog.ui.edit_raster.clicked.connect(
+        cfg.edit_raster.set_script
+    )
+    """ Raster zonal stats """
+    cfg.dialog.ui.raster_zonal_stats.clicked.connect(
+        cfg.raster_zonal_stats.set_script
+    )
+    cfg.dialog.ui.raster_zonal_stats_toolButton.clicked.connect(
+        cfg.raster_zonal_stats.raster_zonal_stats_action
+    )
+    cfg.dialog.ui.toolButton_reload_24.clicked.connect(
+        cfg.utils.refresh_raster_layer
+    )
+    cfg.dialog.ui.reference_name_combo_3.currentIndexChanged.connect(
+        cfg.raster_zonal_stats.reference_layer_name
+    )
+    cfg.dialog.ui.buttonReload_shape_6.clicked.connect(
+        cfg.raster_zonal_stats.refresh_reference_layer
+    )
+
     """ Reclassification """
     cfg.dialog.ui.toolButton_reload_12.clicked.connect(
         cfg.utils.refresh_raster_layer
@@ -1530,7 +1713,7 @@ def connect_gui():
         cfg.reclassification.set_script
     )
 
-    """ Band Calc"""
+    """ Band Calc """
     cfg.dialog.ui.toolButton_reload_13.clicked.connect(
         cfg.band_calc.raster_band_table
     )
@@ -1709,8 +1892,10 @@ def reset_scp():
     for index in reversed(list(range(0, t))):
         cfg.bst.delete_bandset_tab(index)
     cfg.bandset_catalog = cfg.rs.bandset_catalog()
+    # noinspection PyTypeChecker
     cfg.dock_class_dlg.ui.label_48.setText(
-        cfg.translate(' ROI & Signature list')
+        QApplication.translate('semiautomaticclassificationplugin',
+                               ' ROI & Signature list')
     )
     cfg.utils.refresh_vector_layer()
     # reset tabs

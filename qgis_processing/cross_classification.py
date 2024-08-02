@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download,
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2023 by Luca Congedo.
+# Copyright (C) 2012-2024 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -23,6 +23,7 @@
 from pathlib import Path
 
 from PyQt5.QtGui import QIcon
+# noinspection PyUnresolvedReferences
 from qgis.core import (
     QgsProcessingParameterFolderDestination,
     QgsProcessingParameterNumber, QgsProcessingParameterString, QgsRasterLayer,
@@ -148,7 +149,7 @@ class CrossClassification(AlgorithmTemplate):
         else:
             if rs.files_directories.is_file(reference) is False:
                 layer_x = root.findLayer(reference)
-                reference = layer_x.layer().source()
+                reference = layer_x.layer().source().split("|layername=")[0]
         field = self.parameterAsString(parameters, self.TEXT, context)
         if len(field) == 0:
             field = None
@@ -161,9 +162,7 @@ class CrossClassification(AlgorithmTemplate):
         if parameters[self.BOOL] is None:
             error_matrix = None
         else:
-            error_matrix = self.parameterAsBool(
-                parameters, self.BOOL, context
-            )
+            error_matrix = self.parameterAsBool(parameters, self.BOOL, context)
         if parameters[self.BOOL_2] is None:
             cross_matrix = None
         else:
@@ -176,9 +175,7 @@ class CrossClassification(AlgorithmTemplate):
             regression_raster = self.parameterAsBool(
                 parameters, self.BOOL_3, context
             )
-        output_path = self.parameterAsString(
-            parameters, self.OUTPUT, context
-        )
+        output_path = self.parameterAsString(parameters, self.OUTPUT, context)
         try:
             if rs.files_directories.is_directory(output_path) is False:
                 rs.files_directories.create_directory(output_path)

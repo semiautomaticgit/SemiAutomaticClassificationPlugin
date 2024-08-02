@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2023 by Luca Congedo.
+# Copyright (C) 2012-2024 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -67,9 +67,7 @@ def reproject_bands():
     if bandset_number > cfg.bandset_catalog.get_bandset_count():
         cfg.mx.msg_err_2()
         return
-    output_path = cfg.util_qt.get_existing_directory(
-        None, cfg.translate('Select a directory')
-    )
+    output_path = cfg.util_qt.get_existing_directory()
     if output_path is not False:
         cfg.logger.log.info('band_sieve: %s' % output_path)
         cfg.logger.log.debug('bandset_number: %s' % bandset_number)
@@ -129,7 +127,7 @@ def reproject_bands():
             resample_pixel_factor=resample_pixel_factor,
             output_data_type=raster_type,
             same_extent=same_extent, virtual_output=virtual_output,
-            bandset_catalog=cfg.bandset_catalog,
+            bandset_catalog=cfg.bandset_catalog, multiple_resolution=True,
             compress=compress, compress_format=compress_format
         )
         if output.check:
@@ -139,7 +137,9 @@ def reproject_bands():
                 cfg.util_qgis.add_raster_layer(raster)
         else:
             cfg.mx.msg_err_1()
-        cfg.ui_utils.remove_progress_bar(smtp=str(__name__))
+        cfg.ui_utils.remove_progress_bar(
+            smtp=str(__name__), failed=not output.check
+        )
 
 
 # set script button
@@ -213,7 +213,7 @@ def set_script():
                'resampling="%s", nodata_value=%s, x_y_resolution=%s, '
                'resample_pixel_factor=%s, output_data_type="%s", '
                'same_extent=%s, virtual_output=%s, compress=%s, '
-               'compress_format="%s")'
+               'compress_format="%s", multiple_resolution=True)'
                % (str(paths), str(output_path), str(output_name), str(epsg),
                   str(align_raster), str(resampling), str(nodata_value),
                   str(x_y_resolution), str(resample_pixel_factor),

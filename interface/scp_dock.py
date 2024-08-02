@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download,
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2023 by Luca Congedo.
+# Copyright (C) 2012-2024 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -32,9 +32,12 @@ from PyQt5.QtGui import (
     QColor, QFont, QCursor, QIcon, QPixmap, QPainter, QPolygonF
 )
 from PyQt5.QtWidgets import (
-    QTreeWidget, QTreeWidgetItem, QAbstractItemView, QCompleter, QMenu, QAction
+    QTreeWidget, QTreeWidgetItem, QAbstractItemView, QCompleter, QMenu,
+    QAction, QApplication
 )
+# noinspection PyUnresolvedReferences
 from qgis.core import QgsGeometry, QgsFeature, QgsField
+# noinspection PyUnresolvedReferences
 from qgis.gui import QgsVertexMarker, QgsHighlight
 
 try:
@@ -193,8 +196,7 @@ class TrainingVectorLayer:
             )
             self.signature_catalog = signature_catalog
             cfg.logger.log.debug(
-                'signature_catalog %s'
-                % str(signature_catalog)
+                'signature_catalog %s' % str(signature_catalog)
             )
             self.temporary_file = (
                 cfg.rs.configurations.temp.temporary_file_path(
@@ -202,14 +204,12 @@ class TrainingVectorLayer:
                 )
             )
             cfg.logger.log.debug(
-                'self.temporary_file: %s'
-                % str(self.temporary_file)
+                'self.temporary_file: %s' % str(self.temporary_file)
             )
             # define output path
             self.output_path = output_path
             cfg.logger.log.debug(
-                'self.output_path: %s'
-                % str(self.output_path)
+                'self.output_path: %s' % str(self.output_path)
             )
             cfg.project_registry[cfg.reg_training_input_path] = output_path
             cfg.dock_class_dlg.ui.trainingFile_lineEdit.setText(output_path)
@@ -249,6 +249,27 @@ class TrainingVectorLayer:
         signature_catalog.geometry_file = geometry_temp_path
         return signature_catalog
 
+    # update_bandset
+    def update_bandset(self):
+        cfg.logger.log.debug('update bandset')
+        try:
+            bandset_x = cfg.bandset_catalog.get(
+                cfg.project_registry[cfg.reg_training_bandset_number]
+            )
+            if cfg.util_gdal.compare_crs(self.signature_catalog.crs,
+                                         bandset_x.crs) is False:
+                cfg.mx.msg_err_8()
+                # noinspection PyTypeChecker
+                cfg.logger.log.debug(
+                    'signature_catalog.crs: %s; bandset_x.crs: %s'
+                    % str(self.signature_catalog.crs, bandset_x.crs)
+                )
+            else:
+                self.signature_catalog.bandset = bandset_x
+                cfg.mx.msg_inf_7()
+        except Exception as err:
+            str(err)
+
     # save signature catalog to file
     def project_saved(self):
         self.save_signature_catalog(path=self.output_path)
@@ -258,6 +279,7 @@ class TrainingVectorLayer:
         )
 
     # reset signature catalog
+    # noinspection PyTypeChecker
     def reset_signature_catalog(self):
         cfg.logger.log.debug('reset_signature_catalog')
         project = cfg.util_qgis.get_qgis_project()
@@ -278,7 +300,8 @@ class TrainingVectorLayer:
         self.tree = self.clear_tree()
         self.macroclass_dock_tree = {}
         cfg.dock_class_dlg.ui.label_48.setText(
-            cfg.translate(' ROI & Signature list')
+            QApplication.translate('semiautomaticclassificationplugin',
+                                   ' ROI & Signature list')
         )
 
     # save signature catalog to file
@@ -386,7 +409,7 @@ class TrainingVectorLayer:
     def edit_signature_value(self, signature_id, field, value):
         self.signature_catalog.table[field][
             self.signature_catalog.table['signature_id'] == signature_id
-            ] = value
+        ] = value
 
     # create ROI and signature table tree
     def roi_signature_table_tree(self, tree=None):
@@ -545,7 +568,7 @@ class TrainingVectorLayer:
             )
 
     # clear tree
-    # noinspection PyUnresolvedReferences
+    # noinspection PyUnresolvedReferences,PyTypeChecker
     def clear_tree(self, tree=None):
         cfg.logger.log.debug('clear_tree')
         self.class_dock_tree = {}
@@ -573,11 +596,26 @@ class TrainingVectorLayer:
         tree_widget.setObjectName('signature_list_treeWidget')
         cfg.dock_class_dlg.ui.gridLayout.addWidget(tree_widget, 1, 1, 1, 1)
         tree_widget.setSortingEnabled(True)
-        tree_widget.headerItem().setText(0, cfg.translate('MC ID'))
-        tree_widget.headerItem().setText(1, cfg.translate('C ID'))
-        tree_widget.headerItem().setText(2, cfg.translate('Name'))
-        tree_widget.headerItem().setText(3, cfg.translate('Type'))
-        tree_widget.headerItem().setText(4, cfg.translate('Color'))
+        tree_widget.headerItem().setText(
+            0, QApplication.translate('semiautomaticclassificationplugin',
+                                      'MC ID')
+        )
+        tree_widget.headerItem().setText(
+            1, QApplication.translate('semiautomaticclassificationplugin',
+                                      'C ID')
+        )
+        tree_widget.headerItem().setText(
+            2, QApplication.translate('semiautomaticclassificationplugin',
+                                      'Name')
+        )
+        tree_widget.headerItem().setText(
+            3, QApplication.translate('semiautomaticclassificationplugin',
+                                      'Type')
+        )
+        tree_widget.headerItem().setText(
+            4, QApplication.translate('semiautomaticclassificationplugin',
+                                      'Color')
+        )
         tree_widget.headerItem().setText(5, 'signature_id')
         # tree list
         tree_widget.header().hideSection(5)
@@ -1118,7 +1156,10 @@ class TrainingVectorLayer:
         for _id in ids:
             signature_array = self.signature_catalog.table[
                 self.signature_catalog.table['signature_id'] == _id]
-            geometry_check = signature_array.geometry[0]
+            if len(signature_array.geometry) > 0:
+                geometry_check = signature_array.geometry[0]
+            else:
+                geometry_check = 0
             if geometry_check == 1:
                 macroclass_id = signature_array.macroclass_id[0]
                 class_id = signature_array.class_id[0]
@@ -1140,9 +1181,9 @@ class TrainingVectorLayer:
                         signature_id=_id
                     )
                 except Exception as err:
-                    str(err)
                     cfg.mx.msg_err_6()
-                    cfg.logger.log.error('signature id: %s' % (str(_id)))
+                    cfg.logger.log.error('signature id: %s; %s'
+                                         % (str(_id), str(err)))
 
     # get highlighted IDs
     def get_highlighted_ids(self, select_all=None, signatures=None):
@@ -1166,7 +1207,7 @@ class TrainingVectorLayer:
                     ids.append(
                         self.signature_catalog.table.signature_id[
                             self.signature_catalog.table[
-                                'signature_id'] == signature][0]
+                                'signature_id'] == signature][0].item()
                     )
                 # macroclasses
                 else:
@@ -1178,7 +1219,7 @@ class TrainingVectorLayer:
                         ids.append(
                             self.signature_catalog.table.signature_id[
                                 self.signature_catalog.table[
-                                    'signature_id'] == signature][0]
+                                    'signature_id'] == signature][0].item()
                         )
         cfg.logger.log.debug('get_highlighted_ids: %s' % (str(ids)))
         return ids
@@ -1206,10 +1247,15 @@ class TrainingVectorLayer:
 
 
 # reset input
+# noinspection PyTypeChecker
 def reset_input():
     answer = cfg.util_qt.question_box(
-        cfg.translate('Remove training input'),
-        cfg.translate('Are you sure you want to remove training input?')
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Remove training input'),
+        QApplication.translate(
+            'semiautomaticclassificationplugin',
+            'Are you sure you want to remove training input?'
+        )
     )
     if answer is True:
         reset_input_dock()
@@ -1221,16 +1267,20 @@ def reset_input_dock():
     cfg.dock_class_dlg.ui.redo_save_Button.setEnabled(False)
     if cfg.scp_training is not None:
         cfg.scp_training.reset_signature_catalog()
+    cfg.scp_training = None
 
 
 # calculate signatures
+# noinspection PyTypeChecker
 def calculate_signatures():
     ids = cfg.scp_training.get_highlighted_ids(select_all=False)
     if len(ids) == 0:
         return 0
     answer = cfg.util_qt.question_box(
-        cfg.translate('Calculate signatures'),
-        cfg.translate('Calculate signatures for highlighted items?')
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Calculate signatures'),
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Calculate signatures for highlighted items?')
     )
     if answer is True:
         # save previous catalog file
@@ -1252,14 +1302,17 @@ def calculate_signatures():
 
 
 # merge highlighted signatures
+# noinspection PyTypeChecker
 def merge_signatures():
     table = cfg.dock_class_dlg.ui.signature_list_treeWidget
     selected = table.selectedItems()
     if len(selected) > 0:
         answer = cfg.util_qt.question_box(
-            cfg.translate('Merge signatures'),
+            QApplication.translate('semiautomaticclassificationplugin',
+                                   'Merge signatures'),
             '%s MC ID: %s and C ID:%s?' % (
-                cfg.translate('Merge highlighted signatures into'),
+                QApplication.translate('semiautomaticclassificationplugin',
+                                       'Merge highlighted signatures into'),
                 cfg.project_registry[cfg.reg_roi_class_id],
                 cfg.project_registry[cfg.reg_roi_macroclass_id],
             )
@@ -1284,13 +1337,16 @@ def merge_signatures():
 
 
 # remove selected signatures
+# noinspection PyTypeChecker
 def remove_selected_signatures():
     table = cfg.dock_class_dlg.ui.signature_list_treeWidget
     selected = table.selectedItems()
     if len(selected) > 0:
         answer = cfg.util_qt.question_box(
-            cfg.translate('Delete signatures'),
-            cfg.translate(
+            QApplication.translate('semiautomaticclassificationplugin',
+                                   'Delete signatures'),
+            QApplication.translate(
+                'semiautomaticclassificationplugin',
                 'Are you sure you want to delete highlighted ROIs '
                 'and signatures?'
             )
@@ -1355,12 +1411,15 @@ def collapse_menu():
 
 
 # change macroclass menu
+# noinspection PyTypeChecker
 def change_macroclass_menu():
     dock_tree = cfg.dock_class_dlg.ui.signature_list_treeWidget
     if len(dock_tree.selectedItems()) > 0:
         answer = cfg.util_qt.question_box(
-            cfg.translate('Change Macroclass ID'),
-            cfg.translate(
+            QApplication.translate('semiautomaticclassificationplugin',
+                                   'Change Macroclass ID'),
+            QApplication.translate(
+                'semiautomaticclassificationplugin',
                 'Change the Macroclass ID for highlighted items to'
             )
             + ' %s ?' % str(cfg.project_registry[cfg.reg_roi_macroclass_id])
@@ -1483,86 +1542,99 @@ def add_menu_item(menu, function, icon_name, name, tooltip=''):
         action = QAction(name, cfg.iface.mainWindow())
     action.setObjectName('action')
     action.setToolTip(tooltip)
+    # noinspection PyUnresolvedReferences
     action.triggered.connect(function)
     menu.addAction(action)
     return action
 
 
 # menu
+# noinspection PyTypeChecker
 def context_menu(event):
     menu = QMenu()
     menu.setToolTipsVisible(True)
     add_menu_item(
         menu, zoom_to_menu,
         'semiautomaticclassificationplugin_zoom_to_ROI.svg',
-        cfg.translate('Zoom to')
+        QApplication.translate('semiautomaticclassificationplugin', 'Zoom to')
     )
     add_menu_item(
         menu, select_all_menu,
         'semiautomaticclassificationplugin_options.svg',
-        cfg.translate('Check/uncheck')
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Check/uncheck')
     )
     add_menu_item(
         menu, clear_selection_menu,
         'semiautomaticclassificationplugin_select_all.svg',
-        cfg.translate('Clear selection')
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Clear selection')
     )
     add_menu_item(
         menu, collapse_menu, 'semiautomaticclassificationplugin_docks.svg',
-        cfg.translate('Collapse/expand all')
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Collapse/expand all')
     )
     menu.addSeparator()
     add_menu_item(
         menu, change_macroclass_menu,
         'semiautomaticclassificationplugin_enter.svg',
-        cfg.translate('Change MC ID')
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Change MC ID')
     )
     add_menu_item(
         menu, change_color_menu, 'semiautomaticclassificationplugin_enter.svg',
-        cfg.translate('Change color')
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Change color')
     )
     menu.addSeparator()
     add_menu_item(
         menu, merge_signatures,
         'semiautomaticclassificationplugin_merge_sign_tool.svg',
-        cfg.translate('Merge items')
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Merge items')
     )
     add_menu_item(
         menu, calculate_signatures,
         'semiautomaticclassificationplugin_add_sign_tool.svg',
-        cfg.translate('Calculate signatures')
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Calculate signatures')
     )
     add_menu_item(
         menu, remove_selected_signatures,
         'semiautomaticclassificationplugin_remove.svg',
-        cfg.translate('Delete items')
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Delete items')
     )
     menu.addSeparator()
     add_menu_item(
         menu, add_signature_to_spectral_plot,
         'semiautomaticclassificationplugin_sign_tool.svg',
-        cfg.translate('Add to spectral plot')
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Add to spectral plot')
     )
     add_menu_item(
         menu, add_roi_to_scatter_plot,
         'semiautomaticclassificationplugin_scatter_tool.svg',
-        cfg.translate('Add to scatter plot')
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Add to scatter plot')
     )
     add_menu_item(
         menu, properties_menu,
         'semiautomaticclassificationplugin_accuracy_tool.svg',
-        cfg.translate('Properties')
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Properties')
     )
     menu.addSeparator()
     add_menu_item(
         menu, cfg.input_interface.import_signatures_tab,
         'semiautomaticclassificationplugin_import_spectral_library.svg',
-        cfg.translate('Import')
+        QApplication.translate('semiautomaticclassificationplugin', 'Import')
     )
     add_menu_item(
         menu, cfg.input_interface.export_signatures_tab,
         'semiautomaticclassificationplugin_export_spectral_library.svg',
-        cfg.translate('Export')
+        QApplication.translate('semiautomaticclassificationplugin', 'Export')
     )
     menu.exec_(
         cfg.dock_class_dlg.ui.signature_list_treeWidget.mapToGlobal(event)
@@ -2006,40 +2078,47 @@ def save_roi_to_training(bandset_number=None):
         cfg.scp_training.save_temporary_signature_catalog()
         signature_catalog = cfg.scp_training.signature_catalog_copy()
         # save roi to new catalog
-        signature_catalog.import_vector(
-            file_path=roi_path, macroclass_value=int(
-                cfg.project_registry[cfg.reg_roi_macroclass_id]
-            ),
-            class_value=int(cfg.project_registry[cfg.reg_roi_class_id]),
-            macroclass_name=cfg.project_registry[cfg.reg_roi_macroclass_name],
-            class_name=cfg.project_registry[cfg.reg_roi_class_name],
-            calculate_signature=calculate_signature
-        )
-        if cfg.rs.configurations.action:
-            cfg.scp_training.set_signature_catalog(
-                signature_catalog=signature_catalog
+        try:
+            signature_catalog.import_vector(
+                file_path=roi_path, macroclass_value=int(
+                    cfg.project_registry[cfg.reg_roi_macroclass_id]
+                ),
+                class_value=int(cfg.project_registry[cfg.reg_roi_class_id]),
+                macroclass_name=cfg.project_registry[
+                    cfg.reg_roi_macroclass_name],
+                class_name=cfg.project_registry[cfg.reg_roi_class_name],
+                calculate_signature=calculate_signature
             )
-            clear_scp_dock_rubber()
-            cfg.dock_class_dlg.ui.undo_save_Button.setEnabled(True)
-            cfg.dock_class_dlg.ui.redo_save_Button.setEnabled(False)
-            # increase C_ID
-            cfg.dock_class_dlg.ui.ROI_ID_spin.setValue(
-                int(cfg.project_registry[cfg.reg_roi_class_id]) + 1
-            )
-            # create table tree
-            cfg.scp_training.roi_signature_table_tree()
-            # save training input
-            if cfg.project_registry[cfg.reg_save_training_input_check] == 2:
-                cfg.scp_training.save_signature_catalog()
+            if cfg.rs.configurations.action:
+                cfg.scp_training.set_signature_catalog(
+                    signature_catalog=signature_catalog
+                )
+                clear_scp_dock_rubber()
+                cfg.dock_class_dlg.ui.undo_save_Button.setEnabled(True)
+                cfg.dock_class_dlg.ui.redo_save_Button.setEnabled(False)
+                # increase C_ID
+                cfg.dock_class_dlg.ui.ROI_ID_spin.setValue(
+                    int(cfg.project_registry[cfg.reg_roi_class_id]) + 1
+                )
+                # create table tree
+                cfg.scp_training.roi_signature_table_tree()
+                # save training input
+                if (cfg.project_registry[cfg.reg_save_training_input_check]
+                        == 2):
+                    cfg.scp_training.save_signature_catalog()
+        except Exception as err:
+            cfg.logger.log.error(str(err))
         cfg.ui_utils.remove_progress_bar(sound=False)
 
 
 # undo training modifications
+# noinspection PyTypeChecker
 def undo_saved_roi():
     answer = cfg.util_qt.question_box(
-        cfg.translate('Undo save ROI'), cfg.translate(
-            'Are you sure you want to undo?'
-        )
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Undo save ROI'),
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Are you sure you want to undo?')
     )
     if answer is True:
         cfg.logger.log.debug('undo')
@@ -2051,11 +2130,13 @@ def undo_saved_roi():
 
 
 # restore training buffered
+# noinspection PyTypeChecker
 def redo_saved_roi():
     answer = cfg.util_qt.question_box(
-        cfg.translate('Redo save ROI'), cfg.translate(
-            'Are you sure you want to redo?'
-        )
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Redo save ROI'),
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Are you sure you want to redo?')
     )
     if answer is True:
         cfg.logger.log.debug('redo')
@@ -2289,6 +2370,10 @@ def create_region_growing_roi(point, bandset_number=None):
             cfg.ui_utils.remove_progress_bar(sound=False)
             return False
         # create memory temp ROI
+        if region_path is None or region_path is False:
+            cfg.mx.msg_err_6()
+            cfg.ui_utils.remove_progress_bar(sound=False)
+            return False
         region_crs = cfg.util_gdal.get_crs_gdal(region_path)
         d_t = cfg.utils.get_time()
         temp_name = cfg.temp_roi_name + d_t
@@ -2379,9 +2464,12 @@ def temporary_roi_spectral_signature(bandset_number=None, roi_path=None):
 
 
 # Create new input
+# noinspection PyTypeChecker
 def create_training_input():
     output_path = cfg.util_qt.get_save_file_name(
-        None, cfg.translate('Create training input'), '', '*.scpx', 'scpx'
+        None, QApplication.translate('semiautomaticclassificationplugin',
+                                     'Create training input'),
+        '', '*.scpx', 'scpx'
     )
     if output_path is not False:
         if output_path.lower().endswith('.scpx'):
@@ -2391,9 +2479,11 @@ def create_training_input():
         reset_input_dock()
         bandset_number = cfg.project_registry[cfg.reg_active_bandset_number]
         cfg.project_registry[cfg.reg_training_bandset_number] = bandset_number
-        cfg.dock_class_dlg.ui.label_48.setText(
-            cfg.translate(' ROI & Signature list') + ' ('
-            + cfg.translate('band set') + ' ' + str(bandset_number) + ')'
+        cfg.dock_class_dlg.ui.label_48.setText('%s (%s %s)' % (
+            QApplication.translate('semiautomaticclassificationplugin',
+                                   ' ROI & Signature list'),
+            QApplication.translate('semiautomaticclassificationplugin',
+                                   'band set'), str(bandset_number))
         )
         bandset_x = cfg.bandset_catalog.get(bandset_number)
         band_count = bandset_x.get_band_count()
@@ -2414,10 +2504,12 @@ def create_training_input():
 
 
 # import training file
+# noinspection PyTypeChecker
 def import_library_file(path=None):
     if path is None or path is False:
         file_path = cfg.util_qt.get_open_file(
-            None, cfg.translate('Select a training input'), '',
+            None, QApplication.translate('semiautomaticclassificationplugin',
+                                         'Select a training input'), '',
             'Signature catalog package (*.scpx);; '
             'Signature catalog package old version (*.scp);;'
             'USGS library (*.zip);;ASTER library (*.txt);;CSV file (*.csv)'
@@ -2444,14 +2536,16 @@ def import_library_file(path=None):
             cfg.signature_importer.aster_library(file_path)
         cfg.dock_class_dlg.ui.undo_save_Button.setEnabled(True)
         cfg.dock_class_dlg.ui.redo_save_Button.setEnabled(False)
-        cfg.ui_utils.remove_progress_bar()
+        cfg.ui_utils.remove_progress_bar(sound=False)
 
 
 # open training file
+# noinspection PyTypeChecker
 def open_training_input_file(path=None):
     if path is None or path is False:
         file_path = cfg.util_qt.get_open_file(
-            None, cfg.translate('Select a training input'), '',
+            None, QApplication.translate('semiautomaticclassificationplugin',
+                                         'Select a training input'), '',
             'Signature catalog package (*.scpx)'
         )
     else:
@@ -2461,11 +2555,15 @@ def open_training_input_file(path=None):
 
 
 # open signature file
+# noinspection PyTypeChecker
 def open_signature_catalog_file(file_path=None, bandset_number=None):
     cfg.logger.log.info('open_signature_catalog_file: %s' % (str(file_path)))
     if bandset_number is None:
         bandset_number = cfg.project_registry[cfg.reg_active_bandset_number]
     bandset_x = cfg.bandset_catalog.get(bandset_number)
+    if bandset_x is None:
+        cfg.mx.msg_war_6(bandset_number)
+        return
     band_count = bandset_x.get_band_count()
     cfg.project_registry[cfg.reg_training_bandset_number] = bandset_number
     cfg.logger.log.debug('bandset band count: %s' % (str(band_count)))
@@ -2480,8 +2578,11 @@ def open_signature_catalog_file(file_path=None, bandset_number=None):
         bandset=cfg.bandset_catalog.get(bandset_number)
     )
     cfg.dock_class_dlg.ui.label_48.setText(
-        cfg.translate(' ROI & Signature list') + ' ('
-        + cfg.translate('band set') + ' ' + str(bandset_number) + ')'
+        '%s (%s %s)' % (
+            QApplication.translate('semiautomaticclassificationplugin',
+                                   ' ROI & Signature list'),
+            QApplication.translate('semiautomaticclassificationplugin',
+                                   'band set'), str(bandset_number))
     )
     signature_catalog.load(file_path=temp_path)
     # remove training input
@@ -2500,10 +2601,12 @@ def open_signature_catalog_file(file_path=None, bandset_number=None):
 
 
 # export signature to vector
+# noinspection PyTypeChecker
 def export_signature_vector():
     output_path = cfg.util_qt.get_save_file_name(
-        None, cfg.translate('Export SCP training input'), '',
-        'SHP file (*.shp);;GPKG file (*.gpkg)'
+        None, QApplication.translate('semiautomaticclassificationplugin',
+                                     'Export SCP training input'),
+        '', 'SHP file (*.shp);;GPKG file (*.gpkg)'
     )
     if output_path is not False:
         if str(output_path).endswith('.shp'):
@@ -2520,15 +2623,27 @@ def export_signature_vector():
                 signature_id_list=ids, output_path=output_path,
                 vector_format=vector_format
             )
-            cfg.ui_utils.remove_progress_bar()
+            cfg.ui_utils.remove_progress_bar(sound=False)
             cfg.mx.msg_inf_4()
+        else:
+            ids = cfg.scp_training.get_highlighted_ids(select_all=True)
+            if len(ids) > 0:
+                cfg.ui_utils.add_progress_bar()
+                cfg.scp_training.signature_catalog.export_vector(
+                    signature_id_list=ids, output_path=output_path,
+                    vector_format=vector_format
+                )
+                cfg.ui_utils.remove_progress_bar(sound=False)
+                cfg.mx.msg_inf_4()
 
 
 # export signature file
+# noinspection PyTypeChecker
 def export_signature_file():
     output_path = cfg.util_qt.get_save_file_name(
-        None, cfg.translate('Export SCP training input'), '',
-        'Training file (*.scpx)'
+        None, QApplication.translate('semiautomaticclassificationplugin',
+                                     'Export SCP training input'),
+        '', 'Training file (*.scpx)'
     )
     if output_path is not False:
         if output_path.lower().endswith('.scpx'):
@@ -2541,14 +2656,22 @@ def export_signature_file():
             cfg.scp_training.save_signature_catalog(
                 path=output_path, signature_id_list=ids
             )
-            cfg.ui_utils.remove_progress_bar()
+            cfg.ui_utils.remove_progress_bar(sound=False)
+            cfg.mx.msg_inf_4()
+        else:
+            ids = cfg.scp_training.get_highlighted_ids(select_all=True)
+            if len(ids) > 0:
+                cfg.ui_utils.add_progress_bar()
+                cfg.scp_training.save_signature_catalog(
+                    path=output_path, signature_id_list=ids
+                )
+                cfg.ui_utils.remove_progress_bar(sound=False)
+                cfg.mx.msg_inf_4()
 
 
 # export signature file
 def export_signature_as_csv():
-    output_path = cfg.util_qt.get_existing_directory(
-        None, cfg.translate('Select a directory')
-    )
+    output_path = cfg.util_qt.get_existing_directory()
     if output_path is not False:
         ids = cfg.scp_training.get_highlighted_ids()
         if len(ids) > 0:
@@ -2556,15 +2679,26 @@ def export_signature_as_csv():
             cfg.scp_training.signature_catalog.export_signatures_as_csv(
                 signature_id_list=ids, output_directory=output_path
             )
-            cfg.ui_utils.remove_progress_bar()
+            cfg.ui_utils.remove_progress_bar(sound=False)
             cfg.mx.msg_inf_4()
+        else:
+            ids = cfg.scp_training.get_highlighted_ids(select_all=True)
+            if len(ids) > 0:
+                cfg.ui_utils.add_progress_bar()
+                cfg.scp_training.signature_catalog.export_signatures_as_csv(
+                    signature_id_list=ids, output_directory=output_path
+                )
+                cfg.ui_utils.remove_progress_bar(sound=False)
+                cfg.mx.msg_inf_4()
 
 
 # open a vector
+# noinspection PyTypeChecker
 def open_vector():
     vector = cfg.util_qt.get_open_file(
-        None, cfg.translate('Select a vector'), '',
-        'SHP file (*.shp);;GPKG file (*.gpkg)'
+        None, QApplication.translate('semiautomaticclassificationplugin',
+                                     'Select a vector'),
+        '', 'SHP file (*.shp);;GPKG file (*.gpkg)'
     )
     if len(vector) > 0:
         cfg.dialog.ui.select_shapefile_label.setText(vector)
@@ -2614,7 +2748,7 @@ def import_vector():
             )
             cfg.dock_class_dlg.ui.undo_save_Button.setEnabled(True)
             cfg.dock_class_dlg.ui.redo_save_Button.setEnabled(False)
-            cfg.ui_utils.remove_progress_bar()
+            cfg.ui_utils.remove_progress_bar(sound=False)
 
 
 """ Plot """

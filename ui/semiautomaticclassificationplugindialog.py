@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2023 by Luca Congedo.
+# Copyright (C) 2012-2024 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -25,6 +25,7 @@ from PyQt5.QtCore import (
     Qt, QFileInfo, QSettings, qVersion, QCoreApplication, QTranslator
 )
 from PyQt5.QtWidgets import QDialog, QDockWidget
+# noinspection PyUnresolvedReferences
 from qgis.core import QgsApplication
 
 from .ui_semiautomaticclassificationplugin import (
@@ -134,6 +135,24 @@ class SemiAutomaticClassificationPluginDialog(QDialog):
 
     def statistic_name_combo2(self, field):
         self.ui.statistic_name_combobox_2.addItem(field)
+
+    def vector_edit_raster_combo(self, vector):
+        self.ui.vector_name_combo_2.addItem(vector)
+
+    def edit_raster_combo(self, layer):
+        self.ui.edit_raster_name_combo.addItem(layer)
+
+    def zonal_stat_raster_combo(self, layer):
+        self.ui.classification_name_combo_5.addItem(layer)
+
+    def vector_zonal_raster_combo(self, vector):
+        self.ui.reference_name_combo_3.addItem(vector)
+
+    def zonal_reference_field_combo(self, field):
+        self.ui.class_field_comboBox_4.addItem(field)
+
+    def reference_field_combo2(self, field):
+        self.ui.field_comboBox_2.addItem(field)
 
 
 # create the dialog

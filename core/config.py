@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2023 by Luca Congedo.
+# Copyright (C) 2012-2024 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -27,9 +27,10 @@ scp_dock = edit_raster = bst = mx = ui_utils = spectral_plot_dlg = None
 scatter_plot_dlg = widget_dialog = settings = system_platform = logger = None
 util_qgis = rs = bandset_catalog = plugin_dir = temp_dir = accuracy = None
 dialog_accepted = class_report = class_vector = script = band_calc = None
-cross_classification = dilation = erosion = sieve = neighbor = rgb_combo = None
-reclassification = band_combination = pca_tab = vector_to_raster = None
-stack_bandset = split_bands = reproject_bands = masking_bands = None
+cross_classification = dilation = rgb_combo = neighbor = clustering = None
+reclassification = band_combination = pca_tab = vector_to_raster = sieve = None
+stack_bandset = split_bands = reproject_bands = masking_bands = erosion = None
+spectral_distance = raster_zonal_stats = None
 image_conversion = clip_bands = clip_bands_pointer = mosaic_bandsets = None
 download_products = download_products_pointer = util_qt = translate = None
 classification = working_toolbar = classification_preview_pointer = None
@@ -61,6 +62,8 @@ empty_field_name = 'DN'
 download_table = preprocess_band_table = None
 # classification preview layer
 classification_preview = classifier_preview = preview_point = None
+# edit raster
+edit_old_array = edit_column_start = edit_row_start = None
 # saved directory
 last_saved_dir = ''
 project_path = ''

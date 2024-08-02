@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2023 by Luca Congedo.
+# Copyright (C) 2012-2024 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -24,15 +24,15 @@
 This tool allows for the conversion of images to reflectance such as Landsat
 and Sentinel-2.
 """
+from PyQt5.QtWidgets import QApplication
 
 cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
 
 # landsat input
+# noinspection PyTypeChecker
 def input_image():
-    path = cfg.util_qt.get_existing_directory(
-        None, cfg.translate('Select a directory')
-    )
+    path = cfg.util_qt.get_existing_directory()
     if path is False:
         cfg.dialog.ui.label_26.setText('')
         cfg.util_qt.clear_table(cfg.dialog.ui.bands_tableWidget)
@@ -44,10 +44,13 @@ def input_image():
 
 
 # metadata input
+# noinspection PyTypeChecker
 def input_metadata():
     metadata = cfg.util_qt.get_open_file(
-        None, cfg.translate('Select a MTL file'), '',
-        'MTL file .txt (*.txt);;MTL file .met (*.met);;MTD file .xml (*.xml)'
+        None, QApplication.translate('semiautomaticclassificationplugin',
+                                     'Select a MTL file'), '',
+        # 'MTL file .txt (*.txt);;MTL file .met (*.met);;MTD file .xml (*.xml)'
+        'MTD file .xml (*.xml)'
     )
     cfg.dialog.ui.label_27.setText(str(metadata))
     if len(cfg.dialog.ui.label_26.text()) > 0:
@@ -101,11 +104,10 @@ def populate_table(input_path, metadata_file_path=None):
 
 
 # perform conversion
+# noinspection PyTypeChecker
 def perform_conversion(output_path=None, load_in_qgis=False):
     if output_path is None or output_path is False:
-        output_path = cfg.util_qt.get_existing_directory(
-            None, cfg.translate('Select a directory')
-        )
+        output_path = cfg.util_qt.get_existing_directory()
     if output_path is not False and cfg.preprocess_band_table is not None:
         if cfg.dialog.ui.create_bandset_checkBox.isChecked() is True:
             if cfg.dialog.ui.add_new_bandset_radioButton_1.isChecked() is True:
@@ -146,14 +148,20 @@ def perform_conversion(output_path=None, load_in_qgis=False):
                 bandset_number=bandset_number
             )
         cfg.mx.msg_inf_6()
-        cfg.ui_utils.remove_progress_bar(smtp=str(__name__))
+        cfg.ui_utils.remove_progress_bar(
+            smtp=str(__name__), failed=not output.check
+        )
 
 
 # remove bands
+# noinspection PyTypeChecker
 def remove_highlighted_band():
+    # noinspection PyTypeChecker
     answer = cfg.util_qt.question_box(
-        cfg.translate('Remove rows'),
-        cfg.translate(
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Remove rows'),
+        QApplication.translate(
+            'semiautomaticclassificationplugin',
             'Are you sure you want to remove highlighted rows from the table?'
         )
     )

@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download,
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2023 by Luca Congedo.
+# Copyright (C) 2012-2024 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -23,6 +23,7 @@
 
 This tool allows for calculations between raster bands.
 """
+from PyQt5.QtWidgets import QApplication
 
 try:
     from remotior_sensus.tools import band_calc as rs_calc
@@ -345,15 +346,13 @@ def calculate_button():
 
 
 # calculate
-# noinspection PyArgumentList
+# noinspection PyArgumentList,PyTypeChecker
 def calculate(output_path=None):
     expression_count = cfg.dialog.ui.plainTextEdit_calc.blockCount()
     if output_path is None:
         # multiple lines
         if expression_count > 1:
-            output_path = cfg.util_qt.get_existing_directory(
-                None, cfg.translate('Select a directory')
-            )
+            output_path = cfg.util_qt.get_existing_directory()
             if output_path is False:
                 return
             else:
@@ -362,7 +361,9 @@ def calculate(output_path=None):
         # one line
         else:
             output_path = cfg.util_qt.get_save_file_name(
-                None, cfg.translate('Save raster output'), '',
+                None,
+                QApplication.translate('semiautomaticclassificationplugin',
+                                       'Save raster output'), '',
                 'TIF file (*.tif);;VRT file (*.vrt)', None
             )
             if output_path is not False:
@@ -486,4 +487,6 @@ def calculate(output_path=None):
             paths = output.paths
             for raster in paths:
                 cfg.util_qgis.add_raster_layer(raster)
-        cfg.ui_utils.remove_progress_bar(smtp=str(__name__))
+        cfg.ui_utils.remove_progress_bar(
+            smtp=str(__name__), failed=not output.check
+        )

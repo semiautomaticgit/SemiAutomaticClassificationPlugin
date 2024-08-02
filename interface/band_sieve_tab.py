@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2023 by Luca Congedo.
+# Copyright (C) 2012-2024 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -33,14 +33,13 @@ def sieve_classification_action():
 
 
 # band sieve
+# noinspection PyTypeChecker
 def band_sieve():
     bandset_number = cfg.dialog.ui.band_set_comb_spinBox_18.value()
     if bandset_number > cfg.bandset_catalog.get_bandset_count():
         cfg.mx.msg_err_2()
         return
-    output_path = cfg.util_qt.get_existing_directory(
-        None, cfg.translate('Select a directory')
-    )
+    output_path = cfg.util_qt.get_existing_directory()
     if output_path is not False:
         cfg.logger.log.info('band_sieve: %s' % output_path)
         cfg.logger.log.debug('bandset_number: %s' % bandset_number)
@@ -58,7 +57,8 @@ def band_sieve():
         output = cfg.rs.band_sieve(
             input_bands=bandset_number, size=size, output_path=output_path,
             connected=connection, prefix=output_name,
-            bandset_catalog=cfg.bandset_catalog, virtual_output=virtual_output
+            bandset_catalog=cfg.bandset_catalog, virtual_output=virtual_output,
+            multiple_resolution=True
         )
         if output.check:
             output_paths = output.paths
@@ -67,7 +67,9 @@ def band_sieve():
                 cfg.util_qgis.add_raster_layer(raster)
         else:
             cfg.mx.msg_err_1()
-        cfg.ui_utils.remove_progress_bar(smtp=str(__name__))
+        cfg.ui_utils.remove_progress_bar(
+            smtp=str(__name__), failed=not output.check
+        )
 
 
 # set script button
@@ -102,7 +104,8 @@ def set_script():
                   cfg.qgis_registry[cfg.reg_ram_value]))
     command = ('# band sieve (input files from bandset)\n'
                'rs.band_sieve(input_bands=%s, size=%s, output_path="%s", '
-               'connected=%s, prefix="%s", virtual_output=%s)'
+               'connected=%s, prefix="%s", virtual_output=%s, '
+               'multiple_resolution=True)'
                % (str(paths), str(size), str(output_path), str(connection),
                   str(output_name), str(virtual_output)))
 

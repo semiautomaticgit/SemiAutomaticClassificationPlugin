@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2023 by Luca Congedo.
+# Copyright (C) 2012-2024 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -26,10 +26,9 @@ from os import path
 from PyQt5.QtCore import Qt, QSettings
 from PyQt5.QtGui import QFont, QColor
 from PyQt5.QtWidgets import (
-    qApp, QWidget, QMessageBox, QColorDialog, QFileDialog, QTableWidgetItem,
-    QTableWidgetSelectionRange
+    qApp, QWidget, QColorDialog, QFileDialog, QTableWidgetItem,
+    QTableWidgetSelectionRange, QApplication, QMessageBox
 )
-
 cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
 
@@ -136,7 +135,12 @@ def get_open_files(parent, text, directory=None, filter_text=None):
 
 
 # get existing directory
-def get_existing_directory(parent, text):
+# noinspection PyTypeChecker
+def get_existing_directory(parent=None, text=None):
+    if text is None:
+        text = QApplication.translate(
+            'semiautomaticclassificationplugin', 'Select a directory'
+            )
     directory = cfg.last_saved_dir
     out = QFileDialog.getExistingDirectory(parent, text, directory)
     if len(out) > 0:
@@ -180,10 +184,13 @@ def all_items_set_state(table, value):
 
 
 # remove rows from table
+# noinspection PyTypeChecker
 def remove_rows_from_table(table):
     answer = question_box(
-        cfg.translate('Remove rows'),
-        cfg.translate(
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Remove rows'),
+        QApplication.translate(
+            'semiautomaticclassificationplugin',
             'Are you sure you want to remove highlighted rows from the table?'
         )
     )

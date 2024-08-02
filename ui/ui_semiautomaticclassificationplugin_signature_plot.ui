@@ -152,13 +152,10 @@
                 <item row="1" column="0">
                  <widget class="QToolButton" name="add_signature_list_pushButton">
                   <property name="toolTip">
-                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add highlighted spectral signatures to signature list&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   <string>Add highlighted spectral signatures to signature list</string>
                   </property>
                   <property name="styleSheet">
                    <string notr="true">margin: 0px;padding: 0px;</string>
-                  </property>
-                  <property name="text">
-                   <string/>
                   </property>
                   <property name="icon">
                    <iconset resource="resources.qrc">
@@ -175,13 +172,10 @@
                 <item row="0" column="0">
                  <widget class="QToolButton" name="remove_Signature_Button">
                   <property name="toolTip">
-                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Delete row&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   <string>Delete row</string>
                   </property>
                   <property name="styleSheet">
                    <string notr="true">margin: 0px;padding: 0px;</string>
-                  </property>
-                  <property name="text">
-                   <string>Plot</string>
                   </property>
                   <property name="icon">
                    <iconset resource="resources.qrc">
@@ -198,13 +192,10 @@
                 <item row="2" column="0">
                  <widget class="QToolButton" name="calculate_spectral_distance_Button">
                   <property name="toolTip">
-                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Calculate spectral distances of highlighted signatures&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   <string>Calculate spectral distances of highlighted signatures</string>
                   </property>
                   <property name="styleSheet">
                    <string notr="true">margin: 0px;padding: 0px;</string>
-                  </property>
-                  <property name="text">
-                   <string>Plot</string>
                   </property>
                   <property name="icon">
                    <iconset resource="resources.qrc">
@@ -322,7 +313,7 @@
              </sizepolicy>
             </property>
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Plot vertical lines for each band value&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>Plot vertical lines for each band value</string>
             </property>
             <property name="text">
              <string>Band lines</string>
@@ -353,7 +344,7 @@
                <enum>QFrame::Sunken</enum>
               </property>
               <property name="text">
-               <string>x=0.000000 y=0.000000</string>
+               <string notr="true">x=0.000000 y=0.000000</string>
               </property>
              </widget>
             </item>
@@ -413,7 +404,7 @@
              </size>
             </property>
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;Text lenght of names in the spectral plot legend&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>Text lenght of names in the spectral plot legend</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -438,7 +429,7 @@
              </sizepolicy>
             </property>
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Plot the axis grid&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>Plot the axis grid</string>
             </property>
             <property name="text">
              <string>Grid</string>
@@ -451,13 +442,10 @@
           <item row="0" column="1">
            <widget class="QToolButton" name="save_plot_pushButton">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Save the plot to file (jpg, png, pdf)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>Save the plot to file (jpg, png, pdf)</string>
             </property>
             <property name="styleSheet">
              <string notr="true">margin: 0px;padding: 0px;</string>
-            </property>
-            <property name="text">
-             <string/>
             </property>
             <property name="icon">
              <iconset resource="resources.qrc">
@@ -493,7 +481,7 @@
              </sizepolicy>
             </property>
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Plot the value range (standard deviation or defined minimum and maximum) for each signature&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>Plot the value range (standard deviation or defined minimum and maximum) for each signature</string>
             </property>
             <property name="text">
              <string>Plot value range</string>
@@ -506,13 +494,10 @@
           <item row="0" column="0">
            <widget class="QToolButton" name="fitToAxes_pushButton">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Automatically fit the plot to data&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>Automatically fit the plot to data</string>
             </property>
             <property name="styleSheet">
              <string notr="true">margin: 0px;padding: 0px;</string>
-            </property>
-            <property name="text">
-             <string/>
             </property>
             <property name="icon">
              <iconset resource="resources.qrc">
@@ -547,6 +532,13 @@
            <widget class="QTextBrowser" name="value_textBrowser">
             <property name="lineWrapMode">
              <enum>QTextEdit::NoWrap</enum>
+            </property>
+            <property name="html">
+             <string notr="true">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
            </widget>
           </item>

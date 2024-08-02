@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2023 by Luca Congedo.
+# Copyright (C) 2012-2024 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -40,8 +40,9 @@ except Exception as error:
 from PyQt5.QtCore import Qt, QUrl, QByteArray
 from PyQt5.QtGui import QColor
 from PyQt5.QtNetwork import QNetworkRequest
-from PyQt5.QtWidgets import qApp
+from PyQt5.QtWidgets import qApp, QApplication
 from osgeo import ogr, osr
+# noinspection PyUnresolvedReferences
 from qgis.core import (
     QgsNetworkAccessManager, QgsSymbol,
     QgsRendererCategory, QgsCategorizedSymbolRenderer,
@@ -193,6 +194,7 @@ def refresh_raster_layer():
     cfg.dialog.ui.classification_name_combo_2.clear()
     cfg.dialog.ui.classification_report_name_combo.clear()
     cfg.dialog.ui.classification_vector_name_combo.clear()
+    cfg.dialog.ui.classification_name_combo_5.clear()
     cfg.dialog.ui.reclassification_name_combo.clear()
     cfg.dialog.ui.classification_name_combo_4.clear()
     cfg.dialog.ui.reference_raster_name_combo.clear()
@@ -208,14 +210,19 @@ def refresh_raster_layer():
                 cfg.dialog.cloud_mask_raster_combo(layer.name())
                 cfg.dialog.reference_raster_combo(layer.name())
                 cfg.dialog.project_raster_combo(layer.name())
+                cfg.dialog.edit_raster_combo(layer.name())
+                cfg.dialog.zonal_stat_raster_combo(layer.name())
 
 
 # refresh vector combo
 def refresh_vector_layer():
     cfg.dialog.ui.vector_name_combo.blockSignals(True)
+    cfg.dialog.ui.vector_name_combo_2.blockSignals(True)
     ls = cfg.util_qgis.get_qgis_project().mapLayers().values()
     cfg.dialog.ui.shapefile_comboBox.clear()
     cfg.dialog.ui.vector_name_combo.clear()
+    cfg.dialog.ui.vector_name_combo_2.clear()
+    cfg.dialog.ui.reference_name_combo_3.clear()
     for layer in sorted(ls, key=lambda c: c.name()):
         if layer.type() == cfg.util_qgis.get_qgis_map_vector():
             if ((layer.wkbType() == cfg.util_qgis.get_qgis_wkb_types().Polygon)
@@ -223,8 +230,13 @@ def refresh_vector_layer():
                         cfg.util_qgis.get_qgis_wkb_types().MultiPolygon)):
                 cfg.dialog.shape_clip_combo(layer.name())
                 cfg.dialog.vector_to_raster_combo(layer.name())
+                cfg.dialog.vector_edit_raster_combo(layer.name())
+                cfg.dialog.vector_zonal_raster_combo(layer.name())
     cfg.dialog.ui.vector_name_combo.blockSignals(False)
+    cfg.dialog.ui.vector_name_combo_2.blockSignals(False)
     refresh_vector_fields()
+    refresh_edit_raster_vector_fields()
+    refresh_raster_zonal_stats_vector_fields()
 
 
 # reference layer name
@@ -236,6 +248,7 @@ def refresh_vector_fields():
     cfg.dialog.ui.MC_Info_combo.clear()
     cfg.dialog.ui.C_ID_combo.clear()
     cfg.dialog.ui.C_Info_combo.clear()
+    # cfg.dialog.ui.field_comboBox_2.clear()
     layer = cfg.util_qgis.select_layer_by_name(reference_layer)
     try:
         if layer.type() == cfg.util_qgis.get_qgis_map_vector():
@@ -247,12 +260,47 @@ def refresh_vector_fields():
         return str(err)
 
 
+# reference layer name
+def refresh_edit_raster_vector_fields():
+    reference_layer = cfg.dialog.ui.vector_name_combo_2.currentText()
+    cfg.dialog.ui.field_comboBox_2.clear()
+    layer = cfg.util_qgis.select_layer_by_name(reference_layer)
+    try:
+        if layer.type() == cfg.util_qgis.get_qgis_map_vector():
+            f = layer.dataProvider().fields()
+            for i in f:
+                if str(i.typeName()).lower() != 'string':
+                    cfg.dialog.reference_field_combo2(str(i.name()))
+    except Exception as err:
+        return str(err)
+
+
+# reference layer name
+def refresh_raster_zonal_stats_vector_fields():
+    reference_layer = cfg.dialog.ui.reference_name_combo_3.currentText()
+    cfg.dialog.ui.class_field_comboBox_4.clear()
+    layer = cfg.util_qgis.select_layer_by_name(reference_layer)
+    try:
+        if layer.type() == cfg.util_qgis.get_qgis_map_vector():
+            f = layer.dataProvider().fields()
+            for i in f:
+                cfg.dialog.zonal_reference_field_combo(str(i.name()))
+    except Exception as err:
+        return str(err)
+
+
 # set vector symbology
 def vector_symbol(layer, value_name_dictionary, value_color_dictionary):
     symbol = QgsSymbol.defaultSymbol(layer.geometryType())
     symbol.setColor(QColor('#000000'))
+    # noinspection PyTypeChecker
     classes = [
-        QgsRendererCategory(0, symbol, '0 - ' + cfg.translate('Unclassified'))]
+        QgsRendererCategory(
+            0, symbol,
+            '0 - %s' %
+            QApplication.translate('semiautomaticclassificationplugin',
+                                   'Unclassified'))
+    ]
     for value in value_name_dictionary:
         symbol = QgsSymbol.defaultSymbol(layer.geometryType())
         symbol.setColor(QColor(value_color_dictionary[value]))
@@ -271,8 +319,11 @@ def classification_raster_symbol(
         classification_layer, value_name_dictionary, value_color_dictionary
 ):
     # class list value, color, name for ramp
+    # noinspection PyTypeChecker
     class_list = [QgsPalettedRasterRenderer.Class(
-        0, QColor('#000000'), '0 - ' + cfg.translate('Unclassified')
+        0, QColor('#000000'),
+        '0 - %s' % QApplication.translate('semiautomaticclassificationplugin',
+                                          'Unclassified')
     )]
     for value in value_name_dictionary:
         class_list.append(
@@ -385,7 +436,8 @@ def check_point_in_image(
     if band_count == 0:
         return False
     cfg.logger.log.debug(
-        'point: %s; bandset_number: %s' % (str(point), str(bandset_number))
+        'point: %s; bandset_number: %s; point_crs: %s'
+        % (str(point), str(bandset_number), str(point_crs))
     )
     band_crs = str(
         cfg.bandset_catalog.get_bandset(bandset_number).bands[0].crs
@@ -395,7 +447,7 @@ def check_point_in_image(
     band_right = cfg.bandset_catalog.get_bandset(bandset_number).bands[0].right
     band_bottom = cfg.bandset_catalog.get_bandset(bandset_number).bands[
         0].bottom
-    if point_crs is None:
+    if point_crs is None or len(point_crs) == 0:
         point_crs = cfg.util_qgis.get_qgis_crs().toWkt()
     cfg.logger.log.debug(
         'point_crs: %s; band_crs: %s' % (str(point_crs), str(band_crs))
@@ -579,7 +631,7 @@ def create_kml_from_map():
     cfg.map_canvas.setExtent(ext1)
     cfg.map_canvas.refreshAllLayers()
     cfg.ui_utils.update_bar(100)
-    cfg.ui_utils.remove_progress_bar()
+    cfg.ui_utils.remove_progress_bar(sound=False)
 
 
 """ raster color composite functions """
@@ -642,19 +694,21 @@ def create_rgb_color_composite(color_composite, bandset_number=None):
         layer = cfg.util_qgis.select_layer_by_name(virtual_raster_name, True)
     else:
         bandset_x = cfg.bandset_catalog.get(bandset_number)
-        band_count = bandset_x.get_band_count()
-        if band_count == 0:
-            cfg.logger.log.debug('empty bandset')
-            return False
-        # create temporary virtual raster
-        virtual_raster_path = cfg.bandset_catalog.create_virtual_raster(
-            bandset_number=bandset_number
-        )
-        cfg.util_qgis.remove_layer_by_name(virtual_raster_name)
-        layer = cfg.iface.addRasterLayer(
-            virtual_raster_path,
-            virtual_raster_name
-        )
+        if bandset_x is None:
+            layer = None
+        else:
+            band_count = bandset_x.get_band_count()
+            if band_count == 0:
+                cfg.logger.log.debug('empty bandset')
+                return False
+            # create temporary virtual raster
+            virtual_raster_path = cfg.bandset_catalog.create_virtual_raster(
+                bandset_number=bandset_number
+            )
+            cfg.util_qgis.remove_layer_by_name(virtual_raster_name)
+            layer = cfg.iface.addRasterLayer(
+                virtual_raster_path, virtual_raster_name
+            )
     # get band numbers
     composite = str(color_composite).split(',')
     if len(composite) == 1:
@@ -664,7 +718,8 @@ def create_rgb_color_composite(color_composite, bandset_number=None):
     if len(composite) == 1:
         composite = str(color_composite)
     if layer is None:
-        del cfg.virtual_bandset_dict[bandset_number]
+        if bandset_number in cfg.virtual_bandset_dict:
+            del cfg.virtual_bandset_dict[bandset_number]
         cfg.logger.log.error('create_rgb_color_composite')
         return False
     elif len(composite) < 3:
@@ -879,22 +934,28 @@ def random_color():
 
 # remove file
 def remove_file(file_path):
-    os.remove(file_path)
+    if file_path is not None:
+        os.remove(file_path)
 
 
 # check if file exists
 def check_file(file_path):
-    return os.path.isfile(file_path)
+    if file_path is None:
+        return False
+    else:
+        return os.path.isfile(file_path)
 
 
 # get parent directory name
 def directory_name(file_path):
-    return os.path.dirname(file_path)
+    if file_path is not None:
+        return os.path.dirname(file_path)
 
 
 # get base name
 def base_name(file_path):
-    return os.path.basename(file_path)
+    if file_path is not None:
+        return os.path.basename(file_path)
 
 
 # relative path

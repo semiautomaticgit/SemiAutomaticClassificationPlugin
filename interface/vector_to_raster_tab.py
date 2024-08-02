@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download,
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2023 by Luca Congedo.
+# Copyright (C) 2012-2024 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -23,6 +23,7 @@
 
 This tool allows for the conversion of vector to raster.
 """
+from PyQt5.QtWidgets import QApplication
 
 cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
@@ -82,8 +83,9 @@ def convert_to_raster():
     else:
         nodata = None
     output_path = cfg.util_qt.get_save_file_name(
-        None, cfg.translate('Save raster output'), '',
-        'TIF file (*.tif);;VRT file (*.vrt)'
+        None, QApplication.translate('semiautomaticclassificationplugin',
+                                     'Save raster output'),
+        '', 'TIF file (*.tif);;VRT file (*.vrt)'
     )
     if output_path is not False:
         if output_path.lower().endswith('.tif'):
@@ -104,7 +106,9 @@ def convert_to_raster():
             cfg.util_qgis.add_raster_layer(output.path)
         else:
             cfg.mx.msg_err_1()
-        cfg.ui_utils.remove_progress_bar(smtp=str(__name__))
+        cfg.ui_utils.remove_progress_bar(
+            smtp=str(__name__), failed=not output.check
+        )
 
 
 # set script button

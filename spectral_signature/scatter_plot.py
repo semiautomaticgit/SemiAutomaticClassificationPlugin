@@ -27,6 +27,7 @@ from PyQt5.QtCore import QPointF
 from PyQt5.QtGui import QColor, QPolygonF
 from PyQt5.QtWidgets import QApplication
 from matplotlib.ticker import MaxNLocator
+# noinspection PyUnresolvedReferences
 from qgis.core import QgsVectorLayer, QgsGeometry, QgsFeature
 
 try:
@@ -442,12 +443,12 @@ class ScatterPlot:
                                 'histogram_%s_%s' % (
                                     self.scatter_band_x, self.scatter_band_y)
                                 ] = h
-                            cfg.ui_utils.remove_progress_bar()
+                            cfg.ui_utils.remove_progress_bar(sound=False)
                         else:
-                            cfg.ui_utils.remove_progress_bar()
+                            cfg.ui_utils.remove_progress_bar(sound=False)
                             return False
                     else:
-                        cfg.ui_utils.remove_progress_bar()
+                        cfg.ui_utils.remove_progress_bar(sound=False)
                         return False
                 x_min_list.append(h[1][0])
                 x_max_list.append(h[1][-1])

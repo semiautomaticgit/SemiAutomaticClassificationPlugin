@@ -1,9 +1,9 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
 <plugins>
-    <pyqgis_plugin name="Semi-Automatic Classification Plugin - master" version="8.2.2" plugin_id="284">
+    <pyqgis_plugin name="Semi-Automatic Classification Plugin - master" version="8.3.0" plugin_id="284">
         <description><![CDATA[The Semi-Automatic Classification Plugin (SCP) allows for the supervised classification of remote sensing images, providing tools for the download, the preprocessing and postprocessing of images.]]></description>
         <about><![CDATA[Developed by Luca Congedo, the Semi-Automatic Classification Plugin (SCP) allows for the supervised classification of remote sensing images, providing tools for the download, the preprocessing and postprocessing of images. Search and download is available for Landsat, Sentinel-2 images. Several algorithms are available for the land cover classification. This plugin requires the installation of Remotior Sensus, GDAL, OGR, Numpy, SciPy, and Matplotlib. For more information please visit https://fromgistors.blogspot.com .]]></about>
-        <version>8.2.2</version>
+        <version>8.3.0</version>
         <qgis_minimum_version>3.0.0</qgis_minimum_version>
         <qgis_maximum_version>3.99.0</qgis_maximum_version>
         <homepage><![CDATA[https://fromgistors.blogspot.com/p/semi-automatic-classification-plugin.html]]></homepage>

@@ -57,6 +57,6 @@ class Ui_SCP_Widget(object):
     def retranslateUi(self, SCP_Widget):
         _translate = QtCore.QCoreApplication.translate
         SCP_Widget.setWindowTitle(_translate("SCP_Widget", "Semi-Automatic Classification Plugin"))
-        self.select_all_toolButton.setToolTip(_translate("SCP_Widget", "<html><head/><body><p>Select all</p></body></html>"))
+        self.select_all_toolButton.setToolTip(_translate("SCP_Widget", "Select all"))
         self.select_all_toolButton.setText(_translate("SCP_Widget", "Plot"))
 from . import resources_rc

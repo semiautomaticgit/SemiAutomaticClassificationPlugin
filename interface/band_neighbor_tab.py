@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2023 by Luca Congedo.
+# Copyright (C) 2012-2024 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -23,6 +23,7 @@
 
 This tool allows for neighbor calculation.
 """
+from PyQt5.QtWidgets import QApplication
 
 cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
@@ -42,23 +43,24 @@ def band_neighbor_action():
 
 
 # matrix file
+# noinspection PyTypeChecker
 def input_matrix_file():
     m = cfg.util_qt.get_open_file(
-        None, cfg.translate('Select a XML file'), '',
-        'CSV file (*.csv);;Text file (*.txt)'
+        None, QApplication.translate('semiautomaticclassificationplugin',
+                                     'Select a XML file'),
+        '', 'CSV file (*.csv);;Text file (*.txt)'
     )
     cfg.dialog.ui.label_287.setText(str(m))
 
 
 # band neighbor
+# noinspection PyTypeChecker
 def band_neighbor():
     bandset_number = cfg.dialog.ui.band_set_comb_spinBox_15.value()
     if bandset_number > cfg.bandset_catalog.get_bandset_count():
         cfg.mx.msg_err_2()
         return
-    output_path = cfg.util_qt.get_existing_directory(
-        None, cfg.translate('Select a directory')
-    )
+    output_path = cfg.util_qt.get_existing_directory()
     if output_path is not False:
         cfg.logger.log.info('band_neighbor: %s' % output_path)
         cfg.logger.log.debug('bandset_number: %s' % bandset_number)
@@ -85,7 +87,7 @@ def band_neighbor():
             stat_percentile=stat_percentile, output_path=output_path,
             prefix=output_name, circular_structure=circular_structure,
             stat_name=stat_name, bandset_catalog=cfg.bandset_catalog,
-            virtual_output=virtual_output
+            virtual_output=virtual_output, multiple_resolution=True
         )
         if output.check:
             output_paths = output.paths
@@ -94,7 +96,9 @@ def band_neighbor():
                 cfg.util_qgis.add_raster_layer(raster)
         else:
             cfg.mx.msg_err_1()
-        cfg.ui_utils.remove_progress_bar(smtp=str(__name__))
+        cfg.ui_utils.remove_progress_bar(
+            smtp=str(__name__), failed=not output.check
+        )
 
 
 # set script button
@@ -137,7 +141,8 @@ def set_script():
     command = ('# band neighbor (input files from bandset)\n'
                'rs.band_neighbor_pixels(input_bands=%s, size=%s, structure=%s,'
                ' stat_percentile=%s, output_path="%s", prefix="%s", '
-               'circular_structure="%s", stat_name="%s", virtual_output="%s")'
+               'circular_structure="%s", stat_name="%s", virtual_output="%s", '
+               'multiple_resolution=True)'
                % (str(paths), str(size), str(structure), str(stat_percentile),
                   str(output_path), str(output_name),
                   str(circular_structure), str(stat_name), str(virtual_output))

@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2023 by Luca Congedo.
+# Copyright (C) 2012-2024 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -302,8 +302,14 @@ class SpectralSignaturePlot:
             str(err)
             return None
         if lines > 0:
-            for i in reversed(list(range(0, lines))):
-                self.ax.lines.pop(i)
+            # compatibility with matplotlib < 3.7
+            try:
+                for i in reversed(list(range(0, lines))):
+                    self.ax.lines.pop(i)
+            except Exception as err:
+                str(err)
+                for i in reversed(list(self.ax.lines)):
+                    i.remove()
         cfg.spectral_plot_dlg.ui.Sig_Widget.sigCanvas.draw()
         # Set labels
         self.ax.set_xlabel(
@@ -334,7 +340,10 @@ class SpectralSignaturePlot:
                 values = signature.value
                 standard_deviations = signature.standard_deviation
                 wavelengths = signature.wavelength
-                wavelengths_list.extend(wavelengths)
+                if type(wavelengths) is list:
+                    wavelengths_list.extend(wavelengths)
+                else:
+                    wavelengths_list.extend(wavelengths.tolist())
                 color = signature.color
                 pixel_count = signature.pixel_count
                 try:
@@ -384,7 +393,7 @@ class SpectralSignaturePlot:
                     name, values, standard_deviations, wavelengths, color,
                     pixel_count
                 )
-        wavelengths_list = set(wavelengths_list)
+        wavelengths_list = list(set(wavelengths_list))
         if len(wavelengths_list) > 0:
             x_minimum_value = min(wavelengths_list)
             x_maximum_value = max(wavelengths_list)

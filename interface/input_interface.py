@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2023 by Luca Congedo.
+# Copyright (C) 2012-2024 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -29,7 +29,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon, QFont, QDesktopServices, QPixmap
 from PyQt5.QtWidgets import (
     QComboBox, QRadioButton, QLabel, QAction, QMenu, QTabBar, qApp,
-    QDoubleSpinBox
+    QDoubleSpinBox, QApplication
 )
 from requests import get
 
@@ -45,138 +45,310 @@ except AttributeError:
 
 
 # function dictionaries
+# noinspection PyTypeChecker
 def function_dictionaries():
     cfg.first_functions = {
-        'Band set': bandset_tab,
-        'Download products': download_products_tab
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Band set'
+        ): bandset_tab,
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Download products'
+        ): download_products_tab
     }
     cfg.first_icons = {
-        'Band set': 'semiautomaticclassificationplugin_bandset_tool.svg',
-        'Download products':
-            'semiautomaticclassificationplugin_download_arrow.svg'
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Band set'
+        ): 'semiautomaticclassificationplugin_bandset_tool.svg',
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Download products'
+        ): 'semiautomaticclassificationplugin_download_arrow.svg'
     }
     # Basic tools
     cfg.basic_tools_functions = {
-        'RGB composite': rgb_composite_tab,
-        'Multiple ROI creation': multiple_roi_creation_tab,
-        'Import signatures': import_signatures_tab,
-        'Export signatures': export_signatures_tab,
-        'Signature threshold': signature_threshold_tab
+        QApplication.translate(
+            'semiautomaticclassificationplugin',
+            'RGB composite'
+        ): rgb_composite_tab,
+        QApplication.translate(
+            'semiautomaticclassificationplugin',
+            'Multiple ROI creation'
+        ): multiple_roi_creation_tab,
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Import signatures'
+        ): import_signatures_tab,
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Export signatures'
+        ): export_signatures_tab,
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Signature threshold'
+        ): signature_threshold_tab
     }
     cfg.basic_tools_icons = {
-        'RGB composite': 'semiautomaticclassificationplugin_rgb_tool.svg',
-        'Multiple ROI creation':
-            'semiautomaticclassificationplugin_roi_multiple.svg',
-        'Import signatures':
-            'semiautomaticclassificationplugin_import_spectral_library.svg',
-        'Export signatures':
-            'semiautomaticclassificationplugin_export_spectral_library.svg',
-        'Signature threshold':
-            'semiautomaticclassificationplugin_threshold_tool.svg'
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'RGB composite'
+        ): 'semiautomaticclassificationplugin_rgb_tool.svg',
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Multiple ROI creation'
+        ): 'semiautomaticclassificationplugin_roi_multiple.svg',
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Import signatures'
+        ): 'semiautomaticclassificationplugin_import_spectral_library.svg',
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Export signatures'
+        ): 'semiautomaticclassificationplugin_export_spectral_library.svg',
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Signature threshold'
+        ): 'semiautomaticclassificationplugin_threshold_tool.svg'
     }
     # Preprocessing
     cfg.preprocessing_functions = {
-        'Clip raster bands': clip_raster_bands_tab,
-        'Image conversion': image_conversion_tab,
-        'Masking bands': masking_bands_tab,
-        'Mosaic band sets': mosaic_bandsets_tab,
-        'Reproject raster bands': reproject_bands_tab,
-        'Split raster bands': split_bands_tab,
-        'Stack raster bands': stack_bands_tab,
-        'Vector to raster': vector_to_raster_tab
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Clip raster bands'
+        ): clip_raster_bands_tab,
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Image conversion'
+        ): image_conversion_tab,
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Masking bands'
+        ): masking_bands_tab,
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Mosaic band sets'
+        ): mosaic_bandsets_tab,
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Reproject raster bands'
+        ): reproject_bands_tab,
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Split raster bands'
+        ): split_bands_tab,
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Stack raster bands'
+        ): stack_bands_tab,
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Vector to raster'
+        ): vector_to_raster_tab
     }
     cfg.preprocessing_icons = {
-        'Clip raster bands': 'semiautomaticclassificationplugin_clip_tool.svg',
-        'Image conversion':
-            'semiautomaticclassificationplugin_landsat8_tool.svg',
-        'Masking bands':
-            'semiautomaticclassificationplugin_cloud_masking_tool.svg',
-        'Mosaic band sets':
-            'semiautomaticclassificationplugin_mosaic_tool.svg',
-        'Reproject raster bands':
-            'semiautomaticclassificationplugin_reproject_raster_bands.svg',
-        'Split raster bands':
-            'semiautomaticclassificationplugin_split_raster.svg',
-        'Stack raster bands':
-            'semiautomaticclassificationplugin_stack_raster.svg',
-        'Vector to raster':
-            'semiautomaticclassificationplugin_vector_to_raster_tool.svg'
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Clip raster bands'
+        ): 'semiautomaticclassificationplugin_clip_tool.svg',
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Image conversion'
+        ): 'semiautomaticclassificationplugin_landsat8_tool.svg',
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Masking bands'
+        ): 'semiautomaticclassificationplugin_cloud_masking_tool.svg',
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Mosaic band sets'
+        ): 'semiautomaticclassificationplugin_mosaic_tool.svg',
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Reproject raster bands'
+        ): 'semiautomaticclassificationplugin_reproject_raster_bands.svg',
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Split raster bands'
+        ): 'semiautomaticclassificationplugin_split_raster.svg',
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Stack raster bands'
+        ): 'semiautomaticclassificationplugin_stack_raster.svg',
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Vector to raster'
+        ): 'semiautomaticclassificationplugin_vector_to_raster_tool.svg'
     }
     # Band processing
     cfg.band_processing_functions = {
-        'Classification': classification_tab,
-        'PCA': pca_tab,
-        'Combination': band_combination_tab,
-        'Dilation': band_dilation_tab,
-        'Erosion': band_erosion_tab,
-        'Neighbor': band_neighbor_tab,
-        'Sieve': band_sieve_tab
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Classification'
+        ): classification_tab,
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Clustering'
+        ): band_clustering_tab,
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'PCA'
+        ): pca_tab,
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Combination'
+        ): band_combination_tab,
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Dilation'
+        ): band_dilation_tab,
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Erosion'
+        ): band_erosion_tab,
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Neighbor'
+        ): band_neighbor_tab,
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Sieve'
+        ): band_sieve_tab,
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Spectral distance'
+        ): spectral_distance_tab
     }
     cfg.band_processing_icons = {
-        'Classification':
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Classification'
+        ):
             'semiautomaticclassificationplugin_classification.svg',
-        'PCA': 'semiautomaticclassificationplugin_pca_tool.svg',
-        'Combination':
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Clustering'
+        ):
+            'semiautomaticclassificationplugin_clustering.svg',
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'PCA'
+        ):
+            'semiautomaticclassificationplugin_pca_tool.svg',
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Combination'
+        ):
             'semiautomaticclassificationplugin_band_combination_tool.svg',
-        'Dilation':
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Dilation'
+        ):
             'semiautomaticclassificationplugin_classification_dilation.svg',
-        'Neighbor': 'semiautomaticclassificationplugin_neighbor_pixels.svg',
-        'Sieve': 'semiautomaticclassificationplugin_classification_sieve.svg',
-        'Erosion':
-            'semiautomaticclassificationplugin_classification_erosion.svg'
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Neighbor'
+        ):
+            'semiautomaticclassificationplugin_neighbor_pixels.svg',
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Sieve'
+        ):
+            'semiautomaticclassificationplugin_classification_sieve.svg',
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Erosion'
+        ):
+            'semiautomaticclassificationplugin_classification_erosion.svg',
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Spectral distance'
+        ):
+            'semiautomaticclassificationplugin_spectral_distance.svg'
     }
     cfg.postprocessing_functions = {
-        'Accuracy': accuracy_tab,
-        'Classification report': classification_report_tab,
-        'Cross classification': cross_classification_tab,
-        'Classification to vector': classification_to_vector_tab,
-        'Reclassification': reclassification_tab
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Accuracy'
+        ): accuracy_tab,
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Classification report'
+        ): classification_report_tab,
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Cross classification'
+        ): cross_classification_tab,
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Classification to vector'
+        ): classification_to_vector_tab,
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Edit raster'
+        ): edit_raster_tab,
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Raster zonal stats'
+        ): raster_zonal_stats_tab,
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Reclassification'
+        ): reclassification_tab
     }
     cfg.postprocessing_icons = {
-        'Accuracy': 'semiautomaticclassificationplugin_accuracy_tool.svg',
-        'Classification report':
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Accuracy'
+        ): 'semiautomaticclassificationplugin_accuracy_tool.svg',
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Classification report'
+        ):
             'semiautomaticclassificationplugin_report_tool.svg',
-        'Cross classification':
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Cross classification'
+        ):
             'semiautomaticclassificationplugin_cross_classification.svg',
-        'Classification to vector':
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Classification to vector'
+        ):
             'semiautomaticclassificationplugin_class_to_vector_tool.svg',
-        'Reclassification':
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Edit raster'
+        ):
+            'semiautomaticclassificationplugin_edit_raster.svg',
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Raster zonal stats'
+        ):
+            'semiautomaticclassificationplugin_zonal_stat_raster_tool.svg',
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Reclassification'
+        ):
             'semiautomaticclassificationplugin_reclassification_tool.svg'
     }
     cfg.top_tree_functions = {
-        'Basic tools': top_tree,
-        'Preprocessing': top_tree,
-        'Band processing': top_tree,
-        'Postprocessing': top_tree,
-        'Settings': top_tree
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Basic tools'
+        ): top_tree,
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Preprocessing'
+        ): top_tree,
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Band processing'
+        ): top_tree,
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Postprocessing'
+        ): top_tree,
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Settings'
+        ): top_tree
     }
     cfg.calc_functions = {
-        'Band calc': band_calc_tab,
-        'Script': script_tab
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Band calc'
+        ): band_calc_tab,
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Script'
+        ): script_tab
     }
     cfg.calc_icons = {
-        'Band calc': 'semiautomaticclassificationplugin_bandcalc_tool.svg',
-        'Script': 'semiautomaticclassificationplugin_batch.svg'
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Band calc'
+        ): 'semiautomaticclassificationplugin_bandcalc_tool.svg',
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Script'
+        ): 'semiautomaticclassificationplugin_batch.svg'
     }
     cfg.other_functions = {
-        'User manual': quick_guide,
-        'Help': ask_help,
-        'About': about_tab
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'User manual'
+        ): quick_guide,
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Help'
+        ): ask_help,
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'About'
+        ): about_tab
     }
     cfg.other_icons = {
-        'User manual': 'guide.svg',
-        'Help': 'help.svg',
-        'About': 'fromGIStoRS.png'
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'User manual'
+        ): 'guide.svg',
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Help'
+        ): 'help.svg',
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'About'
+        ): 'fromGIStoRS.png'
     }
     cfg.setting_functions = {
-        'Debug': debug_tab,
-        'Interface': interface_tab,
-        'Processing setting': processing_settings_tab
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Debug'
+        ): debug_tab,
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Interface'
+        ): interface_tab,
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Processing setting'
+        ): processing_settings_tab
     }
     cfg.setting_icons = {
-        'Debug': None,
-        'Interface': None,
-        'Processing setting': None
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Debug'
+        ): None,
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Interface'
+        ): None,
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Processing setting'
+        ): None
     }
 
 
@@ -191,70 +363,101 @@ def load_input_toolbar():
 
 
 # SCP Working Toolbar
-# noinspection PyUnresolvedReferences
+# noinspection PyUnresolvedReferences,PyTypeChecker
 def load_working_toolbar():
     add_toolbar_action(
         show_plugin, 'semiautomaticclassificationplugin.svg',
-        cfg.translate('Semi-Automatic Classification Plugin')
+        QApplication.translate(
+            'semiautomaticclassificationplugin',
+            'Semi-Automatic Classification Plugin'
+            )
     )
     # button zoom to image
     add_toolbar_action(
         cfg.util_qgis.zoom_to_bandset,
         'semiautomaticclassificationplugin_zoom_to_Image.svg',
-        cfg.translate('Zoom to input image extent')
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Zoom to input image extent'
+            )
     )
     # radio button show hide input image
     cfg.inputImageRadio = add_toolbar_radio(
-        show_hide_input_mage, cfg.translate('RGB = '),
-        cfg.translate('Show/hide the input image')
+        show_hide_input_mage,
+        QApplication.translate('semiautomaticclassificationplugin', 'RGB = '),
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Show/hide the input image'
+            )
     )
     # combo RGB composite
     cfg.rgb_combo = QComboBox(cfg.iface.mainWindow())
     cfg.rgb_combo.setFixedWidth(80)
     cfg.rgb_combo.setEditable(True)
     cfg.working_toolbar.addWidget(cfg.rgb_combo)
-    cfg.rgb_combo.setToolTip(cfg.translate('Select a RGB color composite'))
+    cfg.rgb_combo.setToolTip(
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Select a RGB color composite'
+            )
+        )
     cfg.rgb_combo.currentIndexChanged.connect(rgb_combo_changed)
     # local cumulative cut stretch button
     cfg.local_cumulative_stretch_toolButton = add_toolbar_action(
         cfg.util_qgis.set_raster_cumulative_stretch,
         'semiautomaticclassificationplugin_bandset_cumulative_stretch_tool'
         '.svg',
-        cfg.translate('Local cumulative cut stretch of band set')
+        QApplication.translate(
+            'semiautomaticclassificationplugin',
+            'Local cumulative cut stretch of band set'
+            )
     )
     # local standard deviation stretch button
     cfg.local_std_dev_stretch_toolButton = add_toolbar_action(
         cfg.util_qgis.set_raster_std_dev_stretch,
         'semiautomaticclassificationplugin_bandset_std_dev_stretch_tool.svg',
-        cfg.translate('Local standard deviation stretch of band set')
+        QApplication.translate(
+            'semiautomaticclassificationplugin',
+            'Local standard deviation stretch of band set'
+            )
     )
     # button zoom to ROI
     cfg.zoom_to_temp_roi = add_toolbar_action(
         zoom_to_temp_roi, 'semiautomaticclassificationplugin_zoom_to_ROI.svg',
-        cfg.translate('Zoom to temporary ROI')
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Zoom to temporary ROI'
+            )
     )
     # radio button show hide ROI
     cfg.show_ROI_radioButton = add_toolbar_radio(
-        cfg.scp_dock.show_hide_roi, cfg.translate('ROI     '),
-        cfg.translate('Show/hide the temporary ROI')
+        cfg.scp_dock.show_hide_roi, QApplication.translate(
+            'semiautomaticclassificationplugin', 'ROI     '
+            ),
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Show/hide the temporary ROI'
+            )
     )
     # manual ROI pointer
     cfg.polygonROI_Button = add_toolbar_action(
         cfg.scp_dock.pointer_manual_roi_active,
         'semiautomaticclassificationplugin_manual_ROI.svg',
-        cfg.translate('Create a ROI polygon')
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Create a ROI polygon'
+            )
     )
     # pointer button
     cfg.pointerButton = add_toolbar_action(
         cfg.scp_dock.pointer_region_growing_roi_active,
         'semiautomaticclassificationplugin_roi_single.svg',
-        cfg.translate('Activate ROI pointer')
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Activate ROI pointer'
+            )
     )
     # redo button
     cfg.redo_ROI_Button = add_toolbar_action(
         cfg.scp_dock.redo_roi,
         'semiautomaticclassificationplugin_roi_redo.svg',
-        cfg.translate('Redo the ROI at the same point')
+        QApplication.translate(
+            'semiautomaticclassificationplugin',
+            'Redo the ROI at the same point'
+            )
     )
     cfg.redo_ROI_Button.setEnabled(False)
     style = (
@@ -263,78 +466,120 @@ def load_working_toolbar():
     )
     # spinbox spectral distance
     lbl_spectral_distance = add_toolbar_label(
-        cfg.translate(' Dist'), 'Yes'
+        QApplication.translate('semiautomaticclassificationplugin', ' Dist'),
+        'Yes'
     )
     lbl_spectral_distance.setStyleSheet(_fromUtf8(style))
     cfg.Range_radius_spin = add_toolbar_spin(
         cfg.scp_dock.range_radius,
-        cfg.translate('Similarity of pixels (distance in radiometry unit)'),
+        QApplication.translate(
+            'semiautomaticclassificationplugin',
+            'Similarity of pixels (distance in radiometry unit)'
+            ),
         6, 1e-06, 10000.0, 0.001, 0.01
     )
     # spinbox min size
-    label_min = add_toolbar_label(cfg.translate(' Min'), 'Yes')
+    label_min = add_toolbar_label(
+        QApplication.translate('semiautomaticclassificationplugin', ' Min'),
+        'Yes'
+        )
     label_min.setStyleSheet(_fromUtf8(style))
     cfg.roi_min_size_spin = add_toolbar_spin(
         cfg.scp_dock.roi_min_size,
-        cfg.translate('Minimum area of ROI (in pixel unit)'), 0, 1, 10000,
+        QApplication.translate(
+            'semiautomaticclassificationplugin',
+            'Minimum area of ROI (in pixel unit)'
+            ), 0, 1, 10000,
         1, 60, 60
     )
     # spinbox max size
-    label_max = add_toolbar_label(cfg.translate(' Max'), 'Yes')
+    label_max = add_toolbar_label(
+        QApplication.translate('semiautomaticclassificationplugin', ' Max'),
+        'Yes'
+        )
     label_max.setStyleSheet(_fromUtf8(style))
     cfg.max_roi_width_spin = add_toolbar_spin(
         cfg.scp_dock.max_roi_width,
-        cfg.translate(
+        QApplication.translate(
+            'semiautomaticclassificationplugin',
             'Side of a square which inscribes the ROI, '
             'defining the maximum width thereof (in pixel unit)'
-        ),
+            ),
         0, 1, 10000, 1, int(cfg.project_registry[cfg.reg_roi_max_width]), 60
     )
     # button zoom to preview
     add_toolbar_action(
         zoom_to_preview,
         'semiautomaticclassificationplugin_zoom_to_preview.svg',
-        cfg.translate('Zoom to the classification preview')
+        QApplication.translate(
+            'semiautomaticclassificationplugin',
+            'Zoom to the classification preview'
+            )
     )
     # radio button show hide preview
     cfg.show_preview_radioButton2 = add_toolbar_radio(
-        show_hide_preview, cfg.translate('Preview '),
-        cfg.translate('Show/hide the classification preview')
+        show_hide_preview, QApplication.translate(
+            'semiautomaticclassificationplugin', 'Preview '
+            ),
+        QApplication.translate(
+            'semiautomaticclassificationplugin',
+            'Show/hide the classification preview'
+            )
     )
     # preview pointer button
     add_toolbar_action(
         cfg.classification.pointer_classification_preview_active,
         'semiautomaticclassificationplugin_preview.svg',
-        cfg.translate('Activate classification preview pointer')
+        QApplication.translate(
+            'semiautomaticclassificationplugin',
+            'Activate classification preview pointer'
+            )
     )
     cfg.redoPreviewButton = add_toolbar_action(
         redo_preview, 'semiautomaticclassificationplugin_preview_redo.svg',
-        cfg.translate('Redo the classification preview at the same point')
+        QApplication.translate(
+            'semiautomaticclassificationplugin',
+            'Redo the classification preview at the same point'
+            )
     )
     cfg.redoPreviewButton.setEnabled(False)
     # spinbox transparency
-    lbl_t = add_toolbar_label(cfg.translate(' T'), 'Yes')
+    lbl_t = add_toolbar_label(
+        QApplication.translate('semiautomaticclassificationplugin', ' T'),
+        'Yes'
+        )
     lbl_t.setStyleSheet(_fromUtf8(style))
     add_toolbar_spin(
-        change_transparency, cfg.translate('Set preview transparency'), 0, 0,
+        change_transparency, QApplication.translate(
+            'semiautomaticclassificationplugin', 'Set preview transparency'
+            ), 0, 0,
         100, 10, 0, 50
     )
     # spinbox size
-    lbl_s = add_toolbar_label(cfg.translate(' S'), 'Yes')
+    lbl_s = add_toolbar_label(
+        QApplication.translate('semiautomaticclassificationplugin', ' S'),
+        'Yes'
+        )
     lbl_s.setStyleSheet(_fromUtf8(style))
     cfg.preview_size_spinBox = add_toolbar_spin(
-        preview_size, cfg.translate('Set the preview size (in pixel unit)'),
+        preview_size, QApplication.translate(
+            'semiautomaticclassificationplugin',
+            'Set the preview size (in pixel unit)'
+            ),
         0, 1, 1000000, 100, int(cfg.project_registry[cfg.reg_preview_size]),
         60
     )
     add_toolbar_action(
         cfg.utils.create_kml_from_map,
         'semiautomaticclassificationplugin_kml_add.svg',
-        cfg.translate('Create KML')
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Create KML'
+            )
     )
 
 
 # menu index
+# noinspection PyTypeChecker
 def menu_index():
     function_dictionaries()
     dictionaries = [
@@ -348,7 +593,9 @@ def menu_index():
         n_dict = {}
         for menu_dict in dictionaries:
             for val in menu_dict:
-                n_dict[cfg.translate(val)] = menu_dict[val]
+                n_dict[QApplication.translate(
+                    'semiautomaticclassificationplugin', val
+                    )] = menu_dict[val]
         s = cfg.dialog.ui.menu_treeWidget.selectedItems()
         n = s[0].text(0)
         t = cfg.dialog.ui.menu_treeWidget
@@ -366,7 +613,7 @@ def menu_index():
 
 
 # add spinbox
-# noinspection PyUnresolvedReferences
+# noinspection PyUnresolvedReferences,PyTypeChecker
 def add_toolbar_spin(
         function, tooltip, decimals, minimum, maximum, step, value, width=100
 ):
@@ -377,26 +624,35 @@ def add_toolbar_spin(
     spin.setMaximum(maximum)
     spin.setSingleStep(step)
     spin.setProperty('value', value)
-    spin.setToolTip(cfg.translate(tooltip))
+    spin.setToolTip(
+        QApplication.translate('semiautomaticclassificationplugin', tooltip)
+        )
     cfg.working_toolbar.addWidget(spin)
     spin.valueChanged.connect(function)
     return spin
 
 
 # add radio button
+# noinspection PyTypeChecker
 def add_toolbar_radio(function, text, tooltip):
     radio = QRadioButton(cfg.iface.mainWindow())
-    radio.setToolTip(cfg.translate(tooltip))
+    radio.setToolTip(
+        QApplication.translate('semiautomaticclassificationplugin', tooltip)
+        )
     radio.setStyleSheet(_fromUtf8('background-color : #656565; color : white'))
-    radio.setText(cfg.translate(text))
+    radio.setText(
+        QApplication.translate('semiautomaticclassificationplugin', text)
+        )
     radio.setChecked(True)
     radio.setAutoExclusive(False)
     cfg.working_toolbar.addWidget(radio)
+    # noinspection PyUnresolvedReferences
     radio.clicked.connect(function)
     return radio
 
 
 # add label to toolbar
+# noinspection PyTypeChecker
 def add_toolbar_label(text, black=None, width=None):
     font = QFont()
     font.setFamily(_fromUtf8('FreeSans'))
@@ -414,7 +670,9 @@ def add_toolbar_label(text, black=None, width=None):
     if width is not None:
         lbl.setFixedWidth(width)
     lbl.setMaximumHeight(18)
-    lbl.setText(cfg.translate(text))
+    lbl.setText(
+        QApplication.translate('semiautomaticclassificationplugin', text)
+        )
     cfg.working_toolbar.addWidget(lbl)
     return lbl
 
@@ -427,6 +685,7 @@ def add_toolbar_action(function, icon_name, tooltip):
         ), tooltip, cfg.iface.mainWindow()
     )
     action.setToolTip(tooltip)
+    # noinspection PyUnresolvedReferences
     action.triggered.connect(function)
     cfg.working_toolbar.addAction(action)
     return action
@@ -487,17 +746,21 @@ def add_menu_item(menu, function, icon_name, name):
         str(err)
         action = QAction(name, cfg.iface.mainWindow())
     action.setObjectName('action')
+    # noinspection PyUnresolvedReferences
     action.triggered.connect(function)
     menu.addAction(action)
     return action
 
 
 # load SCP menu
+# noinspection PyTypeChecker
 def load_menu():
     menu_bar = cfg.iface.mainWindow().menuBar()
     cfg.main_menu = QMenu(cfg.iface.mainWindow())
     cfg.main_menu.setObjectName('semiautomaticclassificationplugin')
-    cfg.main_menu.setTitle(cfg.translate('SCP'))
+    cfg.main_menu.setTitle(
+        QApplication.translate('semiautomaticclassificationplugin', 'SCP')
+        )
     menu_bar.insertMenu(
         cfg.iface.firstRightStandardMenu().menuAction(), cfg.main_menu
     )
@@ -505,97 +768,114 @@ def load_menu():
     for b in cfg.first_functions:
         add_menu_item(
             cfg.main_menu, cfg.first_functions[b], cfg.first_icons[b],
-            cfg.translate(b)
+            QApplication.translate('semiautomaticclassificationplugin', b)
         )
     # Basic tools
     basic_tools_menu = cfg.main_menu.addMenu(
         QIcon(
             ':/plugins/semiautomaticclassificationplugin/icons/'
             'semiautomaticclassificationplugin_roi_tool.svg'
-        ), cfg.translate('Basic tools')
+        ), QApplication.translate(
+            'semiautomaticclassificationplugin', 'Basic tools'
+            )
     )
     # Preprocessing
     preprocessing_menu = cfg.main_menu.addMenu(
         QIcon(
             ':/plugins/semiautomaticclassificationplugin/icons/'
             'semiautomaticclassificationplugin_class_tool.svg'
-        ), cfg.translate('Preprocessing')
+        ), QApplication.translate(
+            'semiautomaticclassificationplugin', 'Preprocessing'
+            )
     )
     # Band processing
     band_processing_menu = cfg.main_menu.addMenu(
         QIcon(
             ':/plugins/semiautomaticclassificationplugin/icons/'
             'semiautomaticclassificationplugin_band_processing.svg'
-        ), cfg.translate('Band processing')
+        ), QApplication.translate(
+            'semiautomaticclassificationplugin', 'Band processing'
+            )
     )
     # Postprocessing
     postprocessing_menu = cfg.main_menu.addMenu(
         QIcon(
             ':/plugins/semiautomaticclassificationplugin/icons/'
             'semiautomaticclassificationplugin_post_process.svg'
-        ), cfg.translate('Postprocessing')
+        ), QApplication.translate(
+            'semiautomaticclassificationplugin', 'Postprocessing'
+            )
     )
     for b in cfg.calc_functions:
         add_menu_item(
             cfg.main_menu, cfg.calc_functions[b], cfg.calc_icons[b],
-            cfg.translate(b)
+            QApplication.translate('semiautomaticclassificationplugin', b)
         )
     # Spectral plot
     add_menu_item(
         cfg.main_menu, spectral_plot_tab,
         'semiautomaticclassificationplugin_sign_tool.svg',
-        cfg.translate('Spectral plot')
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Spectral plot'
+            )
     )
     # Scatter plot
     add_menu_item(
         cfg.main_menu, scatter_plot_tab,
         'semiautomaticclassificationplugin_scatter_tool.svg',
-        cfg.translate('Scatter plot')
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Scatter plot'
+            )
     )
     # Settings
     settings_menu = cfg.main_menu.addMenu(
         QIcon(
             ':/plugins/semiautomaticclassificationplugin/icons/'
             'semiautomaticclassificationplugin_settings_tool.svg'
-        ), cfg.translate('Settings')
+        ),
+        QApplication.translate('semiautomaticclassificationplugin', 'Settings')
     )
     for b in cfg.other_functions:
         add_menu_item(
             cfg.main_menu, cfg.other_functions[b], cfg.other_icons[b],
-            cfg.translate(b)
+            QApplication.translate('semiautomaticclassificationplugin', b)
         )
     for b in cfg.basic_tools_functions:
         add_menu_item(
             basic_tools_menu, cfg.basic_tools_functions[b],
-            cfg.basic_tools_icons[b], cfg.translate(b)
+            cfg.basic_tools_icons[b],
+            QApplication.translate('semiautomaticclassificationplugin', b)
         )
     for b in cfg.preprocessing_functions:
         add_menu_item(
             preprocessing_menu, cfg.preprocessing_functions[b],
-            cfg.preprocessing_icons[b], cfg.translate(b)
+            cfg.preprocessing_icons[b],
+            QApplication.translate('semiautomaticclassificationplugin', b)
         )
     for b in cfg.band_processing_functions:
         add_menu_item(
             band_processing_menu, cfg.band_processing_functions[b],
             cfg.band_processing_icons[b],
-            cfg.translate(b)
+            QApplication.translate('semiautomaticclassificationplugin', b)
         )
     for b in cfg.postprocessing_functions:
         add_menu_item(
             postprocessing_menu, cfg.postprocessing_functions[b],
             cfg.postprocessing_icons[b],
-            cfg.translate(b)
+            QApplication.translate('semiautomaticclassificationplugin', b)
         )
     for b in cfg.setting_functions:
         add_menu_item(
             settings_menu, cfg.setting_functions[b], cfg.setting_icons[b],
-            cfg.translate(b)
+            QApplication.translate('semiautomaticclassificationplugin', b)
         )
     # Show plugin
     add_menu_item(
         cfg.main_menu, show_plugin,
         'semiautomaticclassificationplugin_docks.svg',
-        cfg.translate('Show plugin')
+        QApplication.translate(
+            'semiautomaticclassificationplugin', 'Show plugin'
+            )
     )
 
 
@@ -1077,6 +1357,20 @@ def band_neighbor_tab():
     tree_menu_tab()
 
 
+# select clustering tab
+def band_clustering_tab():
+    select_tab_4_main_interface(7)
+    cfg.current_tab = str(stack()[0][3])
+    tree_menu_tab()
+
+
+# spectral distance tab
+def spectral_distance_tab():
+    select_tab_4_main_interface(8)
+    cfg.current_tab = str(stack()[0][3])
+    tree_menu_tab()
+
+
 # select tab 5 from Main Interface
 def select_tab_5_main_interface(second_tab=None):
     cfg.dialog.ui.SCP_tabs.setCurrentIndex(5)
@@ -1121,6 +1415,20 @@ def classification_to_vector_tab():
 # select Reclassification tab
 def reclassification_tab():
     select_tab_5_main_interface(4)
+    cfg.current_tab = str(stack()[0][3])
+    tree_menu_tab()
+
+
+# select Edit raster tab
+def edit_raster_tab():
+    select_tab_5_main_interface(5)
+    cfg.current_tab = str(stack()[0][3])
+    tree_menu_tab()
+
+
+# select raster zonal stats tab
+def raster_zonal_stats_tab():
+    select_tab_5_main_interface(6)
     cfg.current_tab = str(stack()[0][3])
     tree_menu_tab()
 

@@ -2,7 +2,7 @@
 name=Semi-Automatic Classification Plugin
 qgisMinimumVersion=3.00
 description=The Semi-Automatic Classification Plugin (SCP) allows for the supervised classification of remote sensing images, providing tools for the download, the preprocessing and postprocessing of images.
-version=8.2.2
+version=8.3.0
 about=Developed by Luca Congedo, the Semi-Automatic Classification Plugin (SCP) allows for the supervised classification of remote sensing images, providing tools for the download, the preprocessing and postprocessing of images. Search and download is available for Landsat, Sentinel-2 images. Several algorithms are available for the land cover classification. This plugin requires the installation of Remotior Sensus, GDAL, OGR, Numpy, SciPy, and Matplotlib. For more information please visit https://fromgistors.blogspot.com .
 
 author=Luca Congedo
@@ -12,6 +12,18 @@ category=Raster
 icon=semiautomaticclassificationplugin.png
 
 changelog=
+
+	8.3.0
+	-added new Clustering tool in Band processing
+	-added new Spectral distance tool in Band processing
+	-added new Edit raster tool in Postprocessing
+	-added new Raster zonal stats tool in Postprocessing
+	-fixed training input issue with spectral signature calculation with new Band sets
+	-implemented interface language localization
+	-in Band combination new option to avoid output raster creation
+	-fixed logging
+	-minor bug fixing
+	-this version requires Remotior Sensus >= 0.4
 
 	8.2.2
 	-fixed import vector message if missing training input

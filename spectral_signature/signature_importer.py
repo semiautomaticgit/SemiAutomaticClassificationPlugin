@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2023 by Luca Congedo.
+# Copyright (C) 2012-2024 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -25,6 +25,8 @@ import shutil
 import zipfile
 
 from PyQt5.QtCore import QFileInfo
+from PyQt5.QtWidgets import QApplication
+# noinspection PyUnresolvedReferences
 from qgis.core import QgsApplication
 
 cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
@@ -32,17 +34,34 @@ cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
 class USGSSpectralLib:
 
+    # noinspection PyTypeChecker
     def __init__(self):
         self.library = None
         self.usgs_lib_name = []
         self.usgs_lib = []
-        self.usgs_c1 = cfg.translate('Chapter 1: Minerals')
-        self.usgs_c2 = cfg.translate('Chapter 2: Soils and Mixtures')
-        self.usgs_c3 = cfg.translate('Chapter 3: Coatings')
-        self.usgs_c4 = cfg.translate('Chapter 4: Liquids')
-        self.usgs_c5 = cfg.translate('Chapter 5: Organics')
-        self.usgs_c6 = cfg.translate('Chapter 6: Artificial')
-        self.usgs_c7 = cfg.translate('Chapter 7: Vegetation and Mixtures')
+        self.usgs_c1 = QApplication.translate(
+            'semiautomaticclassificationplugin', 'Chapter 1: Minerals'
+        )
+        self.usgs_c2 = QApplication.translate(
+            'semiautomaticclassificationplugin',
+            'Chapter 2: Soils and Mixtures'
+        )
+        self.usgs_c3 = QApplication.translate(
+            'semiautomaticclassificationplugin', 'Chapter 3: Coatings'
+        )
+        self.usgs_c4 = QApplication.translate(
+            'semiautomaticclassificationplugin', 'Chapter 4: Liquids'
+        )
+        self.usgs_c5 = QApplication.translate(
+            'semiautomaticclassificationplugin', 'Chapter 5: Organics'
+        )
+        self.usgs_c6 = QApplication.translate(
+            'semiautomaticclassificationplugin', 'Chapter 6: Artificial'
+        )
+        self.usgs_c7 = QApplication.translate(
+            'semiautomaticclassificationplugin',
+            'Chapter 7: Vegetation and Mixtures'
+        )
         self.usgs_lib_list = [
             '', self.usgs_c1, self.usgs_c2, self.usgs_c3, self.usgs_c4,
             self.usgs_c5, self.usgs_c6, self.usgs_c7

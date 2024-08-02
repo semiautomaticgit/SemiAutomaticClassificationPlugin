@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download,
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2023 by Luca Congedo.
+# Copyright (C) 2012-2024 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -23,6 +23,7 @@
 from pathlib import Path
 
 from PyQt5.QtGui import QIcon
+# noinspection PyUnresolvedReferences
 from qgis.core import (
     QgsProcessingParameterFolderDestination,
     QgsProcessingParameterString, QgsRasterLayer,
@@ -139,6 +140,10 @@ class BandClip(AlgorithmTemplate):
             reference = self.parameterAsFile(
                 parameters, self.INPUT_VECTOR, context
             )
+            root = QgsProject.instance().layerTreeRoot()
+            if rs.files_directories.is_file(reference) is False:
+                layer_x = root.findLayer(reference)
+                reference = layer_x.layer().source().split("|layername=")[0]
         field = self.parameterAsString(parameters, self.TEXT, context)
         if len(field) == 0:
             field = None

@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2023 by Luca Congedo.
+# Copyright (C) 2012-2024 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -24,6 +24,7 @@ import sys
 from shutil import copy
 
 from PyQt5.QtCore import QDir
+from PyQt5.QtWidgets import QApplication
 
 cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
@@ -39,12 +40,14 @@ def change_roi_color():
 
 
 # ROI transparency
+# noinspection PyTypeChecker
 def change_roi_transparency():
     cfg.qgis_registry[cfg.reg_roi_transparency] = (
         cfg.dialog.ui.transparency_Slider.value()
     )
     cfg.dialog.ui.transparency_Label.setText(
-        cfg.translate('Transparency ')
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Transparency ')
         + str(cfg.qgis_registry[cfg.reg_roi_transparency]) + '%'
     )
 
@@ -94,10 +97,13 @@ def threads_setting_change():
 
 
 # reset raster variable names
+# noinspection PyTypeChecker
 def reset_raster_variable_name():
     answer = cfg.util_qt.question_box(
-        cfg.translate('Reset variable name'),
-        cfg.translate('Are you sure you want to reset variable name?')
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Reset variable name'),
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Are you sure you want to reset variable name?')
     )
     if answer is True:
         cfg.qgis_registry[
@@ -108,10 +114,13 @@ def reset_raster_variable_name():
 
 
 # reset group name
+# noinspection PyTypeChecker
 def reset_group_name():
     answer = cfg.util_qt.question_box(
-        cfg.translate('Reset group name'),
-        cfg.translate('Are you sure you want to reset group name?')
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Reset group name'),
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Are you sure you want to reset group name?')
     )
     if answer is True:
         cfg.qgis_registry[cfg.reg_group_name] = cfg.group_name_def
@@ -121,17 +130,18 @@ def reset_group_name():
 
 
 # change temporary directory
+# noinspection PyTypeChecker
 def change_temp_dir():
     answer = cfg.util_qt.question_box(
-        cfg.translate('Change temporary directory'),
-        cfg.translate(
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Change temporary directory'),
+        QApplication.translate(
+            'semiautomaticclassificationplugin',
             'Are you sure you want to change the temporary directory?'
         )
     )
     if answer is True:
-        output = cfg.util_qt.get_existing_directory(
-            None, cfg.translate('Select a directory')
-        )
+        output = cfg.util_qt.get_existing_directory()
         if output is not False:
             if QDir(output).exists():
                 date_time = cfg.utils.get_time()
@@ -147,10 +157,13 @@ def change_temp_dir():
 
 
 # reset temporary directory
+# noinspection PyTypeChecker
 def reset_temp_dir():
     answer = cfg.util_qt.question_box(
-        cfg.translate('Reset temporary directory'),
-        cfg.translate(
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Reset temporary directory'),
+        QApplication.translate(
+            'semiautomaticclassificationplugin',
             'Are you sure you want to reset the temporary directory?'
         )
     )
@@ -163,6 +176,7 @@ def reset_temp_dir():
 
 
 # Reset ROI style
+# noinspection PyTypeChecker
 def reset_roi_style():
     cfg.qgis_registry[cfg.reg_roi_color] = cfg.roi_color_default
     cfg.qgis_registry[cfg.reg_roi_transparency] = cfg.roi_transparency_default
@@ -170,7 +184,8 @@ def reset_roi_style():
         'background-color :' + cfg.qgis_registry[cfg.reg_roi_color]
     )
     cfg.dialog.ui.transparency_Label.setText(
-        cfg.translate('Transparency ')
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Transparency ')
         + str(cfg.qgis_registry[cfg.reg_roi_transparency]) + '%'
     )
     cfg.dialog.ui.transparency_Slider.setValue(
@@ -250,23 +265,27 @@ def log_checkbox_change():
         cfg.qgis_registry[cfg.reg_log_key] = 2
         if cfg.rs is not None:
             cfg.rs.set(log_level=10)
+            cfg.logger = cfg.rs.configurations.logger
     elif cfg.dialog.ui.log_checkBox.isChecked() is False:
         cfg.qgis_registry[cfg.reg_log_key] = 0
         if cfg.rs is not None:
             cfg.rs.set(log_level=20)
+            cfg.logger = cfg.rs.configurations.logger
 
 
 # copy the Log file
+# noinspection PyTypeChecker
 def copy_log_file():
     out = cfg.util_qt.get_save_file_name(
-        None, cfg.translate('Save Log file'), '', '*.txt', 'txt'
+        None, QApplication.translate('semiautomaticclassificationplugin',
+                                     'Save Log file'), '', '*.txt', 'txt'
     )
     if out is not False:
         if not out.lower().endswith('.txt'):
             out += '.txt'
-        if cfg.utils.check_file(cfg.rs.configurations.logger.file_path):
+        if cfg.utils.check_file(cfg.logger.file_path):
             try:
-                copy(cfg.rs.configurations.logger.file_path, out)
+                copy(cfg.logger.file_path, out)
             except Exception as err:
                 str(err)
 
@@ -275,74 +294,96 @@ def copy_log_file():
 
 
 # test required dependencies
+# noinspection PyTypeChecker
 def test_dependencies():
     message = '<ul>'
     test_numpy_a = test_numpy()
     if test_numpy_a:
-        message += '<li>NumPy: %s</li>' % cfg.translate('Success')
+        message += '<li>NumPy: %s</li>' % QApplication.translate(
+            'semiautomaticclassificationplugin', 'Success'
+        )
     else:
         message += '<li style="color:red">NumPy: %s</li>' % (
-            cfg.translate('Fail')
+            QApplication.translate('semiautomaticclassificationplugin', 'Fail')
         )
     test_scipy_a = test_scipy()
     if test_scipy_a:
-        message += '<li>SciPy: %s</li>' % cfg.translate('Success')
+        message += '<li>SciPy: %s</li>' % QApplication.translate(
+            'semiautomaticclassificationplugin', 'Success'
+        )
     else:
         message += '<li style="color:red">SciPy: %s</li>' % (
-            cfg.translate('Fail'))
+            QApplication.translate('semiautomaticclassificationplugin', 'Fail')
+        )
     test_matplotlib_a = test_matplotlib()
     if test_matplotlib_a:
-        message += '<li>Matplotlib: %s</li>' % cfg.translate('Success')
+        message += '<li>Matplotlib: %s</li>' % QApplication.translate(
+            'semiautomaticclassificationplugin', 'Success'
+        )
     else:
         message += '<li style="color:red">Matplotlib: %s' % (
-            cfg.translate('Fail'))
+            QApplication.translate('semiautomaticclassificationplugin', 'Fail')
+        )
     test_gdal_a = test_gdal()
     if test_gdal_a:
-        message += '<li>GDAL: %s</li>' % cfg.translate('Success')
+        message += '<li>GDAL: %s</li>' % QApplication.translate(
+            'semiautomaticclassificationplugin', 'Success'
+        )
     else:
         message += '<li style="color:red">GDAL: %s</li>' % (
-            cfg.translate('Fail'))
+            QApplication.translate('semiautomaticclassificationplugin', 'Fail')
+        )
     test_pytorch_a = test_pytorch()
     if test_pytorch_a:
-        message += '<li>PyTorch: %s</li>' % cfg.translate('Success')
+        message += '<li>PyTorch: %s</li>' % QApplication.translate(
+            'semiautomaticclassificationplugin', 'Success'
+        )
     else:
         message += '<li style="color:red">PyTorch: %s</li>' % (
-            cfg.translate('Fail')
+            QApplication.translate('semiautomaticclassificationplugin', 'Fail')
         )
     test_sklearn_a = test_sklearn()
     if test_sklearn_a:
-        message += '<li>scikit-learn: %s</li>' % cfg.translate('Success')
+        message += '<li>scikit-learn: %s</li>' % QApplication.translate(
+            'semiautomaticclassificationplugin', 'Success'
+        )
     else:
         message += '<li style="color:red">scikit-learn: %s</li>' % (
-            cfg.translate('Fail'))
+            QApplication.translate('semiautomaticclassificationplugin', 'Fail')
+        )
     test_remotior_sensus_a = test_remotior_sensus()
     if test_remotior_sensus_a:
-        message += '<li>Remotior Sensus: %s</li>' % cfg.translate('Success')
+        message += '<li>Remotior Sensus: %s</li>' % QApplication.translate(
+            'semiautomaticclassificationplugin', 'Success'
+        )
     else:
         message += (
                 '<li style="color:red">Remotior Sensus: %s. '
                 'Please read the %s</li>' % (
-                    cfg.translate('Fail'),
+                    QApplication.translate('semiautomaticclassificationplugin',
+                                           'Fail'),
                     '<a href="https://remotior-sensus.readthedocs.io/en/latest'
                     '/installation.html">installation manual</a>'
                 )
         )
     test_multiprocess_a = test_multiprocess()
     if test_multiprocess_a:
-        message += '<li>Multiprocess: %s</li>' % cfg.translate('Success')
+        message += '<li>Multiprocess: %s</li>' % QApplication.translate(
+            'semiautomaticclassificationplugin', 'Success'
+        )
     else:
         message += '<li style="color:red">Multiprocess: %s</li>' % (
-            cfg.translate('Fail')
+            QApplication.translate('semiautomaticclassificationplugin', 'Fail')
         )
         message += '<li>sys.exec_prefix: %s</li>' % str(sys.exec_prefix)
     test_internet_a = test_internet_connection()
     if test_internet_a:
-        message += '<li>Internet connection: %s</li>' % cfg.translate(
-            'Success'
+        message += '<li>Internet connection: %s</li>' % QApplication.translate(
+            'semiautomaticclassificationplugin', 'Success'
         )
     else:
         message += '<li style="color:red">Internet connection: %s</li>' % (
-            cfg.translate('Fail')
+            QApplication.translate('semiautomaticclassificationplugin', 'Fail')
         )
     message += '</ul>'
     cfg.dialog.ui.test_textBrowser.clear()
@@ -358,7 +399,6 @@ def test_remotior_sensus():
     test = True
     try:
         import remotior_sensus
-        remotior_sensus.Session(n_processes=2, available_ram=10)
     except Exception as err:
         str(err)
         test = False
@@ -369,13 +409,11 @@ def test_remotior_sensus():
 def test_multiprocess():
     test = True
     try:
-        import remotior_sensus
         from remotior_sensus.core.processor_functions import (
             raster_unique_values_with_sum
         )
-        rs = remotior_sensus.Session(n_processes=2, available_ram=10)
         raster_path = '%s/debug/raster.tif' % cfg.plugin_dir
-        rs.configurations.multiprocess.run(
+        cfg.rs.configurations.multiprocess.run(
             raster_path=raster_path, function=raster_unique_values_with_sum,
             n_processes=2, available_ram=100, keep_output_argument=True
         )

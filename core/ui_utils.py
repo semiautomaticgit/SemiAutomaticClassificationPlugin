@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download,
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2023 by Luca Congedo.
+# Copyright (C) 2012-2024 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -66,7 +66,7 @@ class UiUtils:
         qApp.processEvents()
 
     # Create a progress bar and a cancel button
-    # noinspection PyArgumentList
+    # noinspection PyArgumentList,PyUnresolvedReferences,PyTypeChecker
     def create_progress_bar(self, main_message=None, message=''):
         size_policy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
         icon_label = QLabel()
@@ -88,7 +88,8 @@ class UiUtils:
         font.setBold(True)
         UiUtils.msg_label_main.setFont(font)
         UiUtils.msg_label_main.setText(
-            self.translate('Semi-Automatic Classification Plugin')
+            QApplication.translate('semiautomaticclassificationplugin',
+                                   'Semi-Automatic Classification Plugin')
         )
         spacer_item = QSpacerItem(
             40, 20, QSizePolicy.Expanding,
@@ -106,7 +107,9 @@ class UiUtils:
         UiUtils.progress_bar.setTextVisible(True)
         cancel_button = QPushButton()
         cancel_button.setEnabled(True)
-        cancel_button.setText(self.translate('Cancel'))
+        cancel_button.setText(QApplication.translate(
+            'semiautomaticclassificationplugin', 'Cancel'
+        ))
         q_widget = QWidget()
         horizontal_layout = QHBoxLayout()
         horizontal_layout2 = QHBoxLayout()
@@ -134,7 +137,7 @@ class UiUtils:
     # cancel action
     def cancel_action(self):
         cfg.logger.log.debug('cancel_action')
-        self.remove_progress_bar()
+        self.remove_progress_bar(failed=True)
         cfg.rs.configurations.action = False
         UiUtils.update_bar(100, ' Canceling ...')
         qApp.processEvents()
@@ -146,7 +149,7 @@ class UiUtils:
     def update_bar(
             step=None, message=None, process=None, percentage=None,
             elapsed_time=None, previous_step=None, start=None, end=None,
-            ping=0
+            failed=None, ping=0
     ):
         progress_symbols = ['○', '◔', '◑', '◕', '⬤', '⚙']
         colon = [' ◵ ', ' ◷ ']
@@ -164,6 +167,8 @@ class UiUtils:
                     UiUtils.msg_label_main.setText(str(process))
                 except Exception as err:
                     str(err)
+        elif failed:
+            pass
         elif end:
             if elapsed_time is not None:
                 e_time = (
@@ -251,7 +256,8 @@ class UiUtils:
                         str(err)
 
     # remove progress bar and cancel button
-    def remove_progress_bar(self, smtp=None, sound=None):
+    # noinspection PyTypeChecker
+    def remove_progress_bar(self, smtp=None, sound=None, failed=None):
         UiUtils.remaining = ''
         try:
             cfg.iface.messageBar().popWidget(UiUtils.widget_bar)
@@ -265,19 +271,20 @@ class UiUtils:
         if smtp is not None:
             # send SMTP message
             self.send_smtp_message(
-                subject=self.translate('Semi-Automatic Classification Plugin'),
-                message=self.translate('%s: process finished' % smtp)
+                subject=QApplication.translate(
+                    'semiautomaticclassificationplugin',
+                    'Semi-Automatic Classification Plugin'
+                ),
+                message=QApplication.translate(
+                    'semiautomaticclassificationplugin',
+                    '%s: process finished' % smtp
+                )
             )
         if sound is not False:
-            self.finish_sound()
-
-    # translate
-    @staticmethod
-    def translate(text):
-        # noinspection PyTypeChecker
-        return QApplication.translate(
-            'semiautomaticclassificationplugin', text
-        )
+            if failed is True:
+                self.failed_sound()
+            else:
+                self.finish_sound()
 
     # enable disable the interface to avoid errors
     @staticmethod
@@ -319,6 +326,16 @@ class UiUtils:
                 beeps(800, 0.2)
                 beeps(600, 0.3)
                 beeps(700, 0.5)
+            except Exception as err:
+                str(err)
+
+    # finish sound
+    @staticmethod
+    def failed_sound():
+        if cfg.qgis_registry[cfg.reg_sound] == 2:
+            try:
+                beeps(700, 0.2)
+                beeps(700, 0.1)
             except Exception as err:
                 str(err)
 

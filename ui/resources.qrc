@@ -1,5 +1,9 @@
 <RCC>
   <qresource prefix="/plugins/semiautomaticclassificationplugin">
+    <file>icons/semiautomaticclassificationplugin_zonal_stat_raster_tool.svg</file>
+    <file>icons/semiautomaticclassificationplugin_undo_edit_raster.svg</file>
+    <file>icons/semiautomaticclassificationplugin_edit_raster.svg</file>
+    <file>icons/semiautomaticclassificationplugin_clustering.svg</file>
     <file>icons/semiautomaticclassificationplugin_order_by_date.svg</file>
     <file>icons/semiautomaticclassificationplugin_cross_classification.svg</file>
     <file>icons/semiautomaticclassificationplugin_import_spectral_library.svg</file>

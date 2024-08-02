@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>440</width>
-    <height>505</height>
+    <height>501</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -93,7 +93,7 @@
           <item row="0" column="8">
            <widget class="QToolButton" name="postprocessing_toolButton_2">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Postprocessing&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>Postprocessing</string>
             </property>
             <property name="styleSheet">
              <string notr="true">margin: 0px;padding: 0px;</string>
@@ -113,7 +113,7 @@
           <item row="0" column="0">
            <widget class="QToolButton" name="bandset_toolButton">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span &gt;Band set&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>Band set</string>
             </property>
             <property name="styleSheet">
              <string notr="true">margin: 0px;padding: 0px;</string>
@@ -133,7 +133,7 @@
           <item row="0" column="6">
            <widget class="QToolButton" name="preprocessing_toolButton_2">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Preprocessing&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>Preprocessing</string>
             </property>
             <property name="styleSheet">
              <string notr="true">margin: 0px;padding: 0px;</string>
@@ -153,7 +153,7 @@
           <item row="0" column="7">
            <widget class="QToolButton" name="band_processing_toolButton">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Band processing&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>Band processing</string>
             </property>
             <property name="styleSheet">
              <string notr="true">margin: 0px;padding: 0px;</string>
@@ -173,7 +173,7 @@
           <item row="0" column="10">
            <widget class="QToolButton" name="batch_toolButton">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Batch&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>Batch</string>
             </property>
             <property name="styleSheet">
              <string notr="true">margin: 0px;padding: 0px;</string>
@@ -193,7 +193,7 @@
           <item row="0" column="2">
            <widget class="QToolButton" name="basic_tools_toolButton">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Basic tools&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>Basic tools</string>
             </property>
             <property name="styleSheet">
              <string notr="true">margin: 0px;padding: 0px;</string>
@@ -213,7 +213,7 @@
           <item row="0" column="9">
            <widget class="QToolButton" name="bandcalc_toolButton_2">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span &gt;Band calc&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>Band calc</string>
             </property>
             <property name="styleSheet">
              <string notr="true">margin: 0px;padding: 0px;</string>
@@ -233,7 +233,7 @@
           <item row="0" column="1">
            <widget class="QToolButton" name="download_images_toolButton_2">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Download products&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>Download products</string>
             </property>
             <property name="styleSheet">
              <string notr="true">margin: 0px;padding: 0px;</string>
@@ -313,7 +313,7 @@ p, li { white-space: pre-wrap; }
              <enum>QFrame::Plain</enum>
             </property>
             <property name="text">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string/>
             </property>
            </widget>
           </item>
@@ -325,24 +325,24 @@ p, li { white-space: pre-wrap; }
            <widget class="QPushButton" name="userguide_toolButton_2">
             <property name="font">
              <font>
-              <pointsize>-1</pointsize>
-              <weight>75</weight>
+              <pointsize>11</pointsize>
+              <weight>50</weight>
               <italic>false</italic>
-              <bold>true</bold>
+              <bold>false</bold>
              </font>
             </property>
             <property name="cursor">
              <cursorShape>PointingHandCursor</cursorShape>
             </property>
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;User manual&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>User manual</string>
             </property>
             <property name="styleSheet">
              <string notr="true">color: white;
 background-color: rgb(32, 97, 118);
 selection-color: yellow;
 selection-background-color: blue;
-font: bold 14px;
+font: 11pt;
 border-style: inset;
 border-width: 2px;
 border-radius: 6px;
@@ -358,24 +358,24 @@ padding: 2px;</string>
            <widget class="QPushButton" name="help_toolButton_2">
             <property name="font">
              <font>
-              <pointsize>-1</pointsize>
-              <weight>75</weight>
+              <pointsize>11</pointsize>
+              <weight>50</weight>
               <italic>false</italic>
-              <bold>true</bold>
+              <bold>false</bold>
              </font>
             </property>
             <property name="cursor">
              <cursorShape>PointingHandCursor</cursorShape>
             </property>
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ask a question&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>Ask a question</string>
             </property>
             <property name="styleSheet">
              <string notr="true">color: white;
 background-color: rgb(32, 97, 118);
 selection-color: yellow;
 selection-background-color: blue;
-font: bold 14px;
+font: 11pt;
 border-style: inset;
 border-width: 2px;
 border-radius: 6px;
@@ -396,7 +396,7 @@ padding: 2px;</string>
              <enum>QFrame::StyledPanel</enum>
             </property>
             <property name="text">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;To cite the Semi-Automatic Classification Plugin in your work:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Congedo, Luca, (2021). Semi-Automatic Classification Plugin: A Python tool for the download and processing of remote sensing images in QGIS. Journal of Open Source Software, 6(64), 3172, &lt;/span&gt;&lt;a href=&quot;https://doi.org/10.21105/joss.03172&quot;&gt;&lt;span style=&quot; font-size:10pt; text-decoration: underline; color:#0000ff;&quot;&gt;https://doi.org/10.21105/joss.03172&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string notr="true">&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;To cite the Semi-Automatic Classification Plugin in your work:&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Congedo, Luca, (2021). Semi-Automatic Classification Plugin: A Python tool for the download and processing of remote sensing images in QGIS. Journal of Open Source Software, 6(64), 3172, &lt;a href=&quot;https://doi.org/10.21105/joss.03172&quot;&gt;&lt;span style=&quot; font-size:10pt; text-decoration: underline; color:#0000ff;&quot;&gt;https://doi.org/10.21105/joss.03172&lt;/a&gt;</string>
             </property>
             <property name="textFormat">
              <enum>Qt::RichText</enum>
@@ -444,7 +444,7 @@ padding: 2px;</string>
             <item row="0" column="1">
              <widget class="QToolButton" name="button_new_input">
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span &gt;Create a new training input&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>Create a new training input</string>
               </property>
               <property name="styleSheet">
                <string notr="true">margin: 0px;padding: 0px;</string>
@@ -467,7 +467,7 @@ padding: 2px;</string>
                <bool>false</bool>
               </property>
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Input file path&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>Input file path</string>
               </property>
               <property name="placeholderText">
                <string>Training input</string>
@@ -477,7 +477,7 @@ padding: 2px;</string>
             <item row="0" column="0">
              <widget class="QToolButton" name="trainingFile_toolButton">
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span &gt;Open a training input&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>Open a training input</string>
               </property>
               <property name="styleSheet">
                <string notr="true">margin: 0px;padding: 0px;</string>
@@ -497,7 +497,7 @@ padding: 2px;</string>
             <item row="0" column="3">
              <widget class="QToolButton" name="button_reset_input">
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Remove training input&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>Remove training input</string>
               </property>
               <property name="styleSheet">
                <string notr="true">margin: 0px;padding: 0px;</string>
@@ -562,13 +562,10 @@ padding: 2px;</string>
               <item>
                <widget class="QToolButton" name="merge_signature_toolButton">
                 <property name="toolTip">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Merge highlighted spectral signatures obtaining the average signature&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 <string>Merge highlighted spectral signatures obtaining the average signature</string>
                 </property>
                 <property name="styleSheet">
                  <string notr="true">margin: 0px;padding: 0px;</string>
-                </property>
-                <property name="text">
-                 <string/>
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
@@ -585,13 +582,10 @@ padding: 2px;</string>
               <item>
                <widget class="QToolButton" name="calculate_signature_toolButton">
                 <property name="toolTip">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Calculate signatures for highlighted items&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 <string>Calculate signatures for highlighted items</string>
                 </property>
                 <property name="styleSheet">
                  <string notr="true">margin: 0px;padding: 0px;</string>
-                </property>
-                <property name="text">
-                 <string/>
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
@@ -608,13 +602,10 @@ padding: 2px;</string>
               <item>
                <widget class="QToolButton" name="delete_Signature_Button">
                 <property name="toolTip">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Delete highlighted items&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 <string>Delete highlighted items</string>
                 </property>
                 <property name="styleSheet">
                  <string notr="true">margin: 0px;padding: 0px;</string>
-                </property>
-                <property name="text">
-                 <string>...</string>
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
@@ -644,13 +635,10 @@ padding: 2px;</string>
               <item>
                <widget class="QToolButton" name="signature_spectral_plot_toolButton">
                 <property name="toolTip">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Add highlighted signatures to spectral signature plot&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 <string>Add highlighted signatures to spectral signature plot</string>
                 </property>
                 <property name="styleSheet">
                  <string notr="true">margin: 0px;padding: 0px;</string>
-                </property>
-                <property name="text">
-                 <string>Plot</string>
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
@@ -667,13 +655,10 @@ padding: 2px;</string>
               <item>
                <widget class="QToolButton" name="scatterPlot_toolButton">
                 <property name="toolTip">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add highlighted items to scatter plot&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 <string>Add highlighted items to scatter plot</string>
                 </property>
                 <property name="styleSheet">
                  <string notr="true">margin: 0px;padding: 0px;</string>
-                </property>
-                <property name="text">
-                 <string>...</string>
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
@@ -703,13 +688,10 @@ padding: 2px;</string>
               <item>
                <widget class="QToolButton" name="import_library_toolButton">
                 <property name="toolTip">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Import spectral signatures &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 <string>Import spectral signatures </string>
                 </property>
                 <property name="styleSheet">
                  <string notr="true">margin: 0px;padding: 0px;</string>
-                </property>
-                <property name="text">
-                 <string>Import library</string>
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
@@ -726,14 +708,11 @@ padding: 2px;</string>
               <item>
                <widget class="QToolButton" name="export_signature_list_toolButton">
                 <property name="toolTip">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Export highlighted spectral signatures&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
+                 <string>Export highlighted spectral signatures
 </string>
                 </property>
                 <property name="styleSheet">
                  <string notr="true">margin: 0px;padding: 0px;</string>
-                </property>
-                <property name="text">
-                 <string>Import library</string>
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
@@ -752,7 +731,7 @@ padding: 2px;</string>
             <item row="0" column="0" colspan="2">
              <widget class="QLineEdit" name="ROI_filter_lineEdit">
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Filter&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>Filter</string>
               </property>
               <property name="placeholderText">
                <string>Filter</string>
@@ -788,7 +767,7 @@ padding: 2px;</string>
                </size>
               </property>
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The macroclass ID of the ROI signature&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>The macroclass ID of the ROI signature</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -864,7 +843,7 @@ padding: 2px;</string>
                </size>
               </property>
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The class ID of the ROI signature (should be unique)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>The class ID of the ROI signature (should be unique)</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -883,7 +862,7 @@ padding: 2px;</string>
             <item row="1" column="4">
              <widget class="QLineEdit" name="ROI_Class_line">
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The class name of the ROI signature&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>The class name of the ROI signature</string>
               </property>
               <property name="text">
                <string/>
@@ -896,7 +875,7 @@ padding: 2px;</string>
             <item row="0" column="4">
              <widget class="QLineEdit" name="ROI_Macroclass_line">
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The macroclass name of the ROI signature&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>The macroclass name of the ROI signature</string>
               </property>
               <property name="text">
                <string/>
@@ -913,13 +892,10 @@ padding: 2px;</string>
             <item>
              <widget class="QToolButton" name="undo_save_Button">
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Undo ROI save&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>Undo ROI save</string>
               </property>
               <property name="styleSheet">
                <string notr="true">margin: 0px;padding: 0px;</string>
-              </property>
-              <property name="text">
-               <string>Import library</string>
               </property>
               <property name="icon">
                <iconset resource="resources.qrc">
@@ -936,13 +912,10 @@ padding: 2px;</string>
             <item>
              <widget class="QToolButton" name="redo_save_Button">
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Redo ROI save&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>Redo ROI save</string>
               </property>
               <property name="styleSheet">
                <string notr="true">margin: 0px;padding: 0px;</string>
-              </property>
-              <property name="text">
-               <string>Import library</string>
               </property>
               <property name="icon">
                <iconset resource="resources.qrc">
@@ -972,7 +945,7 @@ padding: 2px;</string>
             <item>
              <widget class="QCheckBox" name="save_input_checkBox">
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Automatically save the training input whenever a ROI is saved in it&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>Automatically save the training input whenever a ROI is saved in it</string>
               </property>
               <property name="text">
                <string>Autosave</string>
@@ -991,7 +964,7 @@ padding: 2px;</string>
                </sizepolicy>
               </property>
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add ROI spectral signature to signature list&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>Add ROI spectral signature to signature list</string>
               </property>
               <property name="text">
                <string>Signature</string>
@@ -1004,13 +977,10 @@ padding: 2px;</string>
             <item>
              <widget class="QToolButton" name="button_Save_ROI">
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Save temporary ROI to training input&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>Save temporary ROI to training input</string>
               </property>
               <property name="styleSheet">
                <string notr="true">margin: 0px;padding: 0px;</string>
-              </property>
-              <property name="text">
-               <string>Import library</string>
               </property>
               <property name="icon">
                <iconset resource="resources.qrc">
@@ -1052,7 +1022,7 @@ padding: 2px;</string>
             <item row="0" column="1">
              <widget class="QSpinBox" name="rapidROI_band_spinBox">
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Band number&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>Band number</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -1077,7 +1047,7 @@ padding: 2px;</string>
                </sizepolicy>
               </property>
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Calculate temporary ROI only on one band&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>Calculate temporary ROI only on one band</string>
               </property>
               <property name="text">
                <string>Rapid ROI b.</string>
@@ -1107,7 +1077,7 @@ padding: 2px;</string>
             <item>
              <widget class="QCheckBox" name="display_cursor_checkBox">
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Display a vegetation index value with the cursor&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>Display a vegetation index value with the cursor</string>
               </property>
               <property name="text">
                <string>Display</string>
@@ -1117,7 +1087,7 @@ padding: 2px;</string>
             <item>
              <widget class="QComboBox" name="vegetation_index_comboBox">
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select a vegetation index&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>Select a vegetation index</string>
               </property>
               <item>
                <property name="text">
@@ -1139,7 +1109,7 @@ padding: 2px;</string>
             <item>
              <widget class="QLineEdit" name="custom_index_lineEdit">
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Custom expression (e.g. &amp;quot;b1&amp;quot; / &amp;quot;b2&amp;quot; or &amp;quot;#NIR#&amp;quot; / &amp;quot;#RED#&amp;quot;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>Custom expression (e.g. &amp;quot;b1&amp;quot; / &amp;quot;b2&amp;quot; or &amp;quot;#NIR#&amp;quot; / &amp;quot;#RED#&amp;quot;)</string>
               </property>
              </widget>
             </item>
@@ -1150,7 +1120,7 @@ padding: 2px;</string>
             <item row="0" column="1">
              <widget class="QCheckBox" name="auto_refresh_ROI_checkBox">
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Automatically refresh the temporary ROI, as the parameters change&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>Automatically refresh the temporary ROI, as the parameters change</string>
               </property>
               <property name="text">
                <string>A&amp;uto-refresh ROI</string>
@@ -1163,7 +1133,7 @@ padding: 2px;</string>
             <item row="0" column="0">
              <widget class="QCheckBox" name="auto_calculate_ROI_signature_checkBox">
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Automatically calculate signature plot of temporary ROI&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>Automatically calculate signature plot of temporary ROI</string>
               </property>
               <property name="text">
                <string>Auto-plot</string>
@@ -1200,7 +1170,7 @@ padding: 2px;</string>
             <item>
              <widget class="QSpinBox" name="max_buffer_spinBox">
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Maximum training buffer for undo and redo actions (higher values require more memory)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>Maximum training buffer for undo and redo actions (higher values require more memory)</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>

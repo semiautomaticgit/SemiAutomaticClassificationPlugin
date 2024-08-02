@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2023 by Luca Congedo.
+# Copyright (C) 2012-2024 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -26,7 +26,9 @@ This tool allows for clipping bands.
 
 from PyQt5.QtCore import QPointF
 from PyQt5.QtGui import QPolygonF, QColor, QPixmap, QCursor
+# noinspection PyUnresolvedReferences
 from qgis.core import QgsGeometry
+# noinspection PyUnresolvedReferences
 from qgis.gui import QgsRubberBand
 
 cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
@@ -198,9 +200,8 @@ def clip_bands_action():
 
 # clip bands
 def clip_bands():
-    output_path = cfg.util_qt.get_existing_directory(
-        None, cfg.translate('Select a directory')
-    )
+    # noinspection PyTypeChecker
+    output_path = cfg.util_qt.get_existing_directory()
     if output_path is not False:
         cfg.logger.log.info('clip_bands: %s' % output_path)
         output_name = cfg.dialog.ui.output_clip_name_lineEdit.text()
@@ -278,53 +279,57 @@ def clip_bands():
             upper_y = cfg.dialog.ui.UY_lineEdit.text()
             lower_x = cfg.dialog.ui.LX_lineEdit.text()
             lower_y = cfg.dialog.ui.LY_lineEdit.text()
-            try:
-                clear_canvas_poly()
-                upper_left = cfg.util_qgis.create_qgis_point(
-                    float(upper_x), float(upper_y)
-                )
-                lower_right = cfg.util_qgis.create_qgis_point(
-                    float(lower_x), float(lower_y)
-                )
-                upper_x = lower_right.x()
-                upper_y = lower_right.y()
-                lower_x = upper_left.x()
-                lower_y = upper_left.y()
-                if float(upper_x) > float(lower_x):
-                    upper_x = upper_left.x()
-                    lower_x = lower_right.x()
-                if float(upper_y) < float(lower_y):
-                    upper_y = upper_left.y()
-                    lower_y = lower_right.y()
-            except Exception as err:
-                str(err)
-            bandset_x = cfg.bandset_catalog.get(bandset_number)
-            crs = bandset_x.crs
-            qgis_crs = cfg.util_qgis.get_qgis_crs()
-            if crs is None:
-                crs = qgis_crs
-            # projection of input point to bandset crs
-            if cfg.util_gdal.compare_crs(crs, qgis_crs) is False:
-                upper_left_point = cfg.util_qgis.create_qgis_point(
-                    upper_x, upper_y
-                    )
-                lower_right_point = cfg.util_qgis.create_qgis_point(
-                    lower_x, lower_y
-                    )
+            if (len(upper_x) > 0 and len(upper_y) > 0
+                    and len(lower_x) > 0 and len(lower_y) > 0):
                 try:
-                    point_1 = cfg.utils.project_qgis_point_coordinates(
-                        upper_left_point, qgis_crs, crs
+                    clear_canvas_poly()
+                    upper_left = cfg.util_qgis.create_qgis_point(
+                        float(upper_x), float(upper_y)
                     )
-                    point_2 = cfg.utils.project_qgis_point_coordinates(
-                        lower_right_point, qgis_crs, crs
+                    lower_right = cfg.util_qgis.create_qgis_point(
+                        float(lower_x), float(lower_y)
                     )
-                    upper_x = point_1.x()
-                    upper_y = point_1.y()
-                    lower_x = point_2.x()
-                    lower_y = point_2.y()
+                    upper_x = lower_right.x()
+                    upper_y = lower_right.y()
+                    lower_x = upper_left.x()
+                    lower_y = upper_left.y()
+                    if float(upper_x) > float(lower_x):
+                        upper_x = upper_left.x()
+                        lower_x = lower_right.x()
+                    if float(upper_y) < float(lower_y):
+                        upper_y = upper_left.y()
+                        lower_y = lower_right.y()
                 except Exception as err:
                     str(err)
-            extent_list = [upper_x, upper_y, lower_x, lower_y]
+                bandset_x = cfg.bandset_catalog.get(bandset_number)
+                crs = bandset_x.crs
+                qgis_crs = cfg.util_qgis.get_qgis_crs()
+                if crs is None:
+                    crs = qgis_crs
+                # projection of input point to bandset crs
+                if cfg.util_gdal.compare_crs(crs, qgis_crs) is False:
+                    upper_left_point = cfg.util_qgis.create_qgis_point(
+                        upper_x, upper_y
+                        )
+                    lower_right_point = cfg.util_qgis.create_qgis_point(
+                        lower_x, lower_y
+                        )
+                    try:
+                        point_1 = cfg.utils.project_qgis_point_coordinates(
+                            upper_left_point, qgis_crs, crs
+                        )
+                        point_2 = cfg.utils.project_qgis_point_coordinates(
+                            lower_right_point, qgis_crs, crs
+                        )
+                        upper_x = point_1.x()
+                        upper_y = point_1.y()
+                        lower_x = point_2.x()
+                        lower_y = point_2.y()
+                    except Exception as err:
+                        str(err)
+                extent_list = [upper_x, upper_y, lower_x, lower_y]
+            else:
+                return False
         cfg.logger.log.debug('bandset_number: %s' % bandset_number)
         cfg.logger.log.debug('reference: %s' % reference)
         cfg.logger.log.debug('extent_list: %s' % extent_list)
@@ -333,7 +338,8 @@ def clip_bands():
             input_bands=bandset_number, output_path=output_path,
             vector_path=reference, vector_field=vector_field,
             prefix=output_name, bandset_catalog=cfg.bandset_catalog,
-            extent_list=extent_list, virtual_output=virtual_output
+            extent_list=extent_list, virtual_output=virtual_output,
+            multiple_resolution=True
         )
         if output.check:
             output_paths = output.paths
@@ -342,7 +348,9 @@ def clip_bands():
                 cfg.util_qgis.add_raster_layer(raster)
         else:
             cfg.mx.msg_err_1()
-        cfg.ui_utils.remove_progress_bar(smtp=str(__name__))
+        cfg.ui_utils.remove_progress_bar(
+            smtp=str(__name__), failed=not output.check
+        )
 
 
 # set script button
@@ -383,7 +391,7 @@ def set_script():
             # temporary layer
             date_time = cfg.utils.get_time()
             t_vector_name = cfg.temp_roi_name + date_time + '.shp'
-            t_vector = (cfg.rs.configurations.temp.dir+ '/' + date_time
+            t_vector = (cfg.rs.configurations.temp.dir + '/' + date_time
                         + t_vector_name)
             # get layer crs
             crs = cfg.util_gdal.get_crs_gdal(reference)
@@ -464,7 +472,7 @@ def set_script():
     command = ('# clip raster bands (input files from bandset)\n'
                'rs.band_clip(input_bands=%s, output_path="%s", '
                'vector_path="%s", vector_field="%s", prefix="%s", '
-               'extent_list=%s, virtual_output=%s)'
+               'extent_list=%s, virtual_output=%s, multiple_resolution=True)'
                % (str(paths), str(output_path), str(reference),
                   str(vector_field), str(output_name),
                   str(extent_list), str(virtual_output)))

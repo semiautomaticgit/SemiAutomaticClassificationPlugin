@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2023 by Luca Congedo.
+# Copyright (C) 2012-2024 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -23,6 +23,7 @@
 
 This tool allows for stacking bands.
 """
+from PyQt5.QtWidgets import QApplication
 
 cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
@@ -33,13 +34,15 @@ def stack_action():
 
 
 # stack multiple rasters
+# noinspection PyTypeChecker
 def stack_bands():
     bandset_number = cfg.dialog.ui.band_set_comb_spinBox_3.value()
     if bandset_number > cfg.bandset_catalog.get_bandset_count():
         cfg.mx.msg_err_2()
         return
     output_path = cfg.util_qt.get_save_file_name(
-        None, cfg.translate('Save error matrix raster output'), '',
+        None, QApplication.translate('semiautomaticclassificationplugin',
+                                     'Save error matrix raster output'), '',
         'TIF file (*.tif);;VRT file (*.vrt)'
     )
     if output_path is not False:
@@ -58,7 +61,9 @@ def stack_bands():
             cfg.util_qgis.add_raster_layer(output.path)
         else:
             cfg.mx.msg_err_1()
-        cfg.ui_utils.remove_progress_bar(smtp=str(__name__))
+        cfg.ui_utils.remove_progress_bar(
+            smtp=str(__name__), failed=not output.check
+        )
 
 
 # set script button

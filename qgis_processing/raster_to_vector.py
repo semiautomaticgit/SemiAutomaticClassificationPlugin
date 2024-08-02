@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download,
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2023 by Luca Congedo.
+# Copyright (C) 2012-2024 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -24,6 +24,7 @@
 from pathlib import Path
 
 from PyQt5.QtGui import QIcon
+# noinspection PyUnresolvedReferences
 from qgis.core import (
     QgsProcessingParameterFileDestination, QgsProcessingParameterRasterLayer,
     QgsProject, QgsProcessingParameterBoolean,

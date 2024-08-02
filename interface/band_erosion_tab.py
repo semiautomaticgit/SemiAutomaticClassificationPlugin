@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2023 by Luca Congedo.
+# Copyright (C) 2012-2024 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -60,9 +60,8 @@ def band_erosion():
     # class value list
     values = check_value_list()
     if len(values) > 0:
-        output_path = cfg.util_qt.get_existing_directory(
-            None, cfg.translate('Select a directory')
-        )
+        # noinspection PyTypeChecker
+        output_path = cfg.util_qt.get_existing_directory()
         if output_path is not False:
             cfg.logger.log.info('band_erosion: %s' % output_path)
             cfg.logger.log.debug('bandset_number: %s' % bandset_number)
@@ -81,7 +80,7 @@ def band_erosion():
                 input_bands=bandset_number, value_list=values, size=size,
                 output_path=output_path, circular_structure=circular,
                 prefix=output_name, bandset_catalog=cfg.bandset_catalog,
-                virtual_output=virtual_output
+                virtual_output=virtual_output, multiple_resolution=True
             )
             if output.check:
                 output_paths = output.paths
@@ -90,7 +89,9 @@ def band_erosion():
                     cfg.util_qgis.add_raster_layer(raster)
             else:
                 cfg.mx.msg_err_1()
-            cfg.ui_utils.remove_progress_bar(smtp=str(__name__))
+            cfg.ui_utils.remove_progress_bar(
+                smtp=str(__name__), failed=not output.check
+            )
     else:
         cfg.mx.msg_inf_5()
 
@@ -132,7 +133,7 @@ def set_script():
     command = ('# band erosion (input files from bandset)\n'
                'rs.band_erosion(input_bands=%s, value_list=%s, size=%s, '
                'output_path="%s", circular_structure=%s, prefix="%s", '
-               'virtual_output=%s)'
+               'virtual_output=%s, multiple_resolution=True)'
                % (str(paths), str(values), str(size), str(output_path),
                   str(circular), str(output_name), str(virtual_output)))
     previous = cfg.dialog.ui.plainTextEdit_batch.toPlainText()

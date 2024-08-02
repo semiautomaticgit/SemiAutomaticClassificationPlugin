@@ -163,7 +163,7 @@
           <item>
            <widget class="QToolButton" name="scatter_ROI_Button">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Calculate scatter plot&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>Calculate scatter plot</string>
             </property>
             <property name="styleSheet">
              <string notr="true">margin: 0px;padding: 0px;</string>
@@ -187,7 +187,7 @@
           <item>
            <widget class="QCheckBox" name="precision_checkBox">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Use custom decimal precision&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>Use custom decimal precision</string>
             </property>
             <property name="text">
              <string>Precision</string>
@@ -197,49 +197,56 @@
           <item>
            <widget class="QComboBox" name="precision_comboBox">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select decimal precision:&lt;/p&gt;&lt;p&gt;4 = 10^&lt;span style=&quot; vertical-align:super;&quot;&gt;−4&lt;/span&gt;&lt;/p&gt;&lt;p&gt;3 = 10^&lt;span style=&quot; vertical-align:super;&quot;&gt;−3&lt;/span&gt;&lt;/p&gt;&lt;p&gt;2 = 10^&lt;span style=&quot; vertical-align:super;&quot;&gt;−2&lt;/span&gt;&lt;/p&gt;&lt;p&gt;1 = 10^&lt;span style=&quot; vertical-align:super;&quot;&gt;−1&lt;/span&gt;&lt;/p&gt;&lt;p&gt;0 = 1&lt;/p&gt;&lt;p&gt;-1 = 10&lt;/p&gt;&lt;p&gt;-2 = 10^&lt;span style=&quot; vertical-align:super;&quot;&gt;2&lt;/span&gt;&lt;/p&gt;&lt;p&gt;-3 = 10^&lt;span style=&quot; vertical-align:super;&quot;&gt;3&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>Select decimal precision:
+&lt;p&gt;4 = 10^&lt;span style=&quot; vertical-align:super;&quot;&gt;−4&lt;/span&gt;&lt;/p&gt;&lt;p&gt;3 = 10^&lt;span style=&quot; vertical-align:super;&quot;&gt;−3&lt;/span&gt;&lt;/p&gt;&lt;p&gt;2 = 10^&lt;span style=&quot; vertical-align:super;&quot;&gt;−2&lt;/span&gt;&lt;/p&gt;&lt;p&gt;1 = 10^&lt;span style=&quot; vertical-align:super;&quot;&gt;−1&lt;/span&gt;&lt;/p&gt;&lt;p&gt;0 = 1&lt;/p&gt;&lt;p&gt;-1 = 10&lt;/p&gt;&lt;p&gt;-2 = 10^&lt;span style=&quot; vertical-align:super;&quot;&gt;2&lt;/span&gt;&lt;/p&gt;&lt;p&gt;-3 = 10^&lt;span style=&quot; vertical-align:super;&quot;&gt;3&lt;/span&gt;</string>
+            </property>
+            <property name="currentText">
+             <string notr="true">4</string>
             </property>
             <property name="currentIndex">
-             <number>1</number>
+             <number>0</number>
+            </property>
+            <property name="placeholderText">
+             <string notr="true"/>
             </property>
             <item>
              <property name="text">
-              <string>4</string>
+              <string notr="true">4</string>
              </property>
             </item>
             <item>
              <property name="text">
-              <string>3</string>
+              <string notr="true">3</string>
              </property>
             </item>
             <item>
              <property name="text">
-              <string>2</string>
+              <string notr="true">2</string>
              </property>
             </item>
             <item>
              <property name="text">
-              <string>1</string>
+              <string notr="true">1</string>
              </property>
             </item>
             <item>
              <property name="text">
-              <string>0</string>
+              <string notr="true">0</string>
              </property>
             </item>
             <item>
              <property name="text">
-              <string>-1</string>
+              <string notr="true">-1</string>
              </property>
             </item>
             <item>
              <property name="text">
-              <string>-2</string>
+              <string notr="true">-2</string>
              </property>
             </item>
             <item>
              <property name="text">
-              <string>-3</string>
+              <string notr="true">-3</string>
              </property>
             </item>
            </widget>
@@ -266,7 +273,7 @@
             <item>
              <widget class="QToolButton" name="fitToAxes_pushButton_2">
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Automatically fit the plot to data&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>Automatically fit the plot to data</string>
               </property>
               <property name="styleSheet">
                <string notr="true">margin: 0px;padding: 0px;</string>
@@ -289,7 +296,7 @@
             <item>
              <widget class="QToolButton" name="save_plot_pushButton_2">
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Save the plot to file (jpg, png, pdf)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>Save the plot to file (jpg, png, pdf)</string>
               </property>
               <property name="styleSheet">
                <string notr="true">margin: 0px;padding: 0px;</string>
@@ -367,7 +374,10 @@
                </size>
               </property>
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select a colormap for selected rows&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>Select a colormap for selected rows</string>
+              </property>
+              <property name="currentText">
+               <string notr="true"/>
               </property>
               <property name="currentIndex">
                <number>-1</number>
@@ -392,7 +402,7 @@
              <enum>QFrame::Sunken</enum>
             </property>
             <property name="text">
-             <string>x=0.000000 y=0.000000</string>
+             <string notr="true">x=0.000000 y=0.000000</string>
             </property>
            </widget>
           </item>
@@ -434,7 +444,7 @@
              </size>
             </property>
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;Band Y&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>Band Y</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -488,7 +498,7 @@
              </size>
             </property>
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;Band X&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>Band X</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -511,7 +521,7 @@
           <item>
            <widget class="QToolButton" name="remove_Signature_Button">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p &gt;Delete row&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>Delete row</string>
             </property>
             <property name="styleSheet">
              <string notr="true">margin: 0px;padding: 0px;</string>
@@ -534,7 +544,7 @@
           <item>
            <widget class="QToolButton" name="plot_temp_ROI_pushButton">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Calculate scatter plot from temporary ROI&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>Calculate scatter plot from temporary ROI</string>
             </property>
             <property name="styleSheet">
              <string notr="true">margin: 0px;padding: 0px;</string>

@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2023 by Luca Congedo.
+# Copyright (C) 2012-2024 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -59,12 +59,11 @@ def mosaic_action():
 
 
 # mosaic multiple bandsets
+# noinspection PyTypeChecker
 def mosaic_bandsets():
     bandset_list = check_bandset_list()
     if len(bandset_list) > 0:
-        output_path = cfg.util_qt.get_existing_directory(
-            None, cfg.translate('Select a directory')
-        )
+        output_path = cfg.util_qt.get_existing_directory()
         if output_path is not False:
             cfg.logger.log.info('band_sieve: %s' % output_path)
             output_name = cfg.dialog.ui.mosaic_output_name_lineEdit.text()
@@ -95,7 +94,9 @@ def mosaic_bandsets():
                     cfg.util_qgis.add_raster_layer(raster)
             else:
                 cfg.mx.msg_err_1()
-            cfg.ui_utils.remove_progress_bar(smtp=str(__name__))
+            cfg.ui_utils.remove_progress_bar(
+                smtp=str(__name__), failed=not output.check
+            )
 
 
 # set script button

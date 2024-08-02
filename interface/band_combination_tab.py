@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2023 by Luca Congedo.
+# Copyright (C) 2012-2024 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -23,6 +23,7 @@
 
 This tool allows for calculating band combination.
 """
+from PyQt5.QtWidgets import QApplication
 
 cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
@@ -38,9 +39,11 @@ def band_combination():
     if bandset_number > cfg.bandset_catalog.get_bandset_count():
         cfg.mx.msg_err_2()
         return
+    # noinspection PyTypeChecker
     output_path = cfg.util_qt.get_save_file_name(
-        None, cfg.translate('Save error matrix raster output'), '',
-        'TIF file (*.tif);;VRT file (*.vrt)'
+        None, QApplication.translate('semiautomaticclassificationplugin',
+                                     'Save error matrix raster output'),
+        '', 'TIF file (*.tif);;VRT file (*.vrt)'
     )
     if output_path is not False:
         cfg.logger.log.info('band_combination: %s' % output_path)
@@ -49,11 +52,16 @@ def band_combination():
             pass
         elif not output_path.lower().endswith('.tif'):
             output_path += '.tif'
-        # No data value
+        # nodata value
         if cfg.dialog.ui.nodata_checkBox_12.isChecked() is True:
             nodata = cfg.dialog.ui.nodata_spinBox_16.value()
         else:
             nodata = None
+        # no raster output
+        if cfg.dialog.ui.no_raster_checkBox.isChecked() is True:
+            no_raster_output = True
+        else:
+            no_raster_output = False
         column_name_list = []
         bandset_x = cfg.bandset_catalog.get_bandset_by_number(bandset_number)
         for band in range(1, bandset_x.get_band_count() + 1):
@@ -62,16 +70,18 @@ def band_combination():
         output = cfg.rs.band_combination(
             input_bands=bandset_number, output_path=output_path,
             nodata_value=nodata, column_name_list=column_name_list,
-            bandset_catalog=cfg.bandset_catalog
+            bandset_catalog=cfg.bandset_catalog,
+            no_raster_output=no_raster_output
         )
         if output.check:
             output_raster, output_table = output.paths
-            # add raster to layers
-            raster = cfg.util_qgis.add_raster_layer(output_raster)
-            unique_values = output.extra['combinations']['new_val'].tolist()
-            cfg.utils.raster_symbol_generic(
-                raster, 'NoData', raster_unique_value_list=unique_values
-            )
+            if no_raster_output is False:
+                # add raster to layers
+                raster = cfg.util_qgis.add_raster_layer(output_raster)
+                unique_values = output.extra['combinations']['new_val'].tolist()
+                cfg.utils.raster_symbol_generic(
+                    raster, 'NoData', raster_unique_value_list=unique_values
+                )
             if cfg.utils.check_file(output_table):
                 with open(output_table, 'r') as f:
                     text = f.read()
@@ -81,7 +91,9 @@ def band_combination():
                 cfg.dialog.ui.toolBox_band_set_combination.setCurrentIndex(1)
         else:
             cfg.mx.msg_err_1()
-        cfg.ui_utils.remove_progress_bar(smtp=str(__name__))
+        cfg.ui_utils.remove_progress_bar(
+            smtp=str(__name__), failed=not output.check
+        )
 
 
 # set script button
