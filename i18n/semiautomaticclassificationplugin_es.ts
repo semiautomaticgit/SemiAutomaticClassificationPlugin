@@ -4350,7 +4350,7 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="836"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="844"/>
         <source>Please, restart QGIS for executing the Semi-Automatic Classification Plugin</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4425,7 +4425,7 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="416"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="424"/>
         <source>Please restart QGIS for installing the Semi-Automatic Classification Plugin</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4615,32 +4615,27 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="141"/>
-        <source>Warning. Python library Remotior Sensus was not found and was automatically downloaded, but SCP may not work properly. Please, install the required Python library Remotior Sensus following the user manual.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="228"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="236"/>
         <source>Error. Python library not found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="374"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="382"/>
         <source>Error starting Remotior Sensus</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="712"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="720"/>
         <source>Virtual Band Set </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="715"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="723"/>
         <source>Band set </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="718"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="726"/>
         <source>SCP training layer</source>
         <translation type="unfinished"></translation>
     </message>

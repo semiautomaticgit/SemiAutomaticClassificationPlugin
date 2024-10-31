@@ -81,6 +81,13 @@ try:
     plugin_check = True
 except Exception as error:
     str(error)
+    plugin_check = False
+    # noinspection PyTypeChecker
+    qgis_utils.iface.messageBar().pushMessage(
+        'Semi-Automatic Classification Plugin', str(error),
+        level=Qgis.Warning, duration=10
+    )
+    """
     try:
         lib_dir = ('%s/python/plugins/%s' % (
                     QFileInfo(
@@ -155,6 +162,7 @@ except Exception as error:
                 'Semi-Automatic Classification Plugin', str(error),
                 level=Qgis.Warning, duration=10
             )
+        """
 
 try:
     multiprocessing.freeze_support()

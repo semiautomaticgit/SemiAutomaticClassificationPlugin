@@ -223,7 +223,11 @@ def clip_bands():
                     or 'memory?geometry=' in str(reference)
                     or '(memory)' in str(reference)):
                 # temporary layer
-                t_vector = cfg.utils.createTempRasterPath('gpkg')
+                t_vector = (
+                    cfg.rs.configurations.temp.temporary_file_path(
+                        name_suffix='.gpkg'
+                    )
+                )
                 try:
                     selected = cfg.utls.select_layer_by_name(reference_layer)
                     s = cfg.util_qgis.save_qgis_memory_layer_to_file(
@@ -375,7 +379,11 @@ def set_script():
                 or 'memory?geometry=' in str(reference)
                 or '(memory)' in str(reference)):
             # temporary layer
-            t_vector = cfg.utils.createTempRasterPath('gpkg')
+            t_vector = (
+                cfg.rs.configurations.temp.temporary_file_path(
+                    name_suffix='.gpkg'
+                )
+            )
             try:
                 selected = cfg.utls.select_layer_by_name(reference_layer)
                 s = cfg.util_qgis.save_qgis_memory_layer_to_file(
@@ -413,7 +421,11 @@ def set_script():
     elif cfg.dialog.ui.temporary_ROI_radioButton.isChecked() is True:
         if cfg.temporary_roi is not None:
             # temporary layer
-            t_vector = cfg.utils.createTempRasterPath('gpkg')
+            t_vector = (
+                cfg.rs.configurations.temp.temporary_file_path(
+                    name_suffix='.gpkg'
+                )
+            )
             cfg.util_gdal.create_vector_ogr(
                 cfg.temporary_roi.crs(), t_vector, vector_format='GPKG'
             )
