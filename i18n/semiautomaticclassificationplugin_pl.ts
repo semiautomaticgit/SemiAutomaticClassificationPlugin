@@ -1365,7 +1365,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="14471"/>
+        <location filename="../ui/ui_semiautomaticclassificationplugin.ui" line="16084"/>
         <source>Select the reference vector or raster</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5035,7 +5035,7 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/raster_zonal_stats_tab.py" line="76"/>
+        <location filename="../interface/raster_zonal_stats_tab.py" line="78"/>
         <source>Save output</source>
         <translation type="unfinished"></translation>
     </message>

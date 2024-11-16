@@ -11009,8 +11009,8 @@ p, li { white-space: pre-wrap; }
                    <property name="geometry">
                     <rect>
                      <x>0</x>
-                     <y>-126</y>
-                     <width>783</width>
+                     <y>0</y>
+                     <width>732</width>
                      <height>243</height>
                     </rect>
                    </property>
@@ -11422,8 +11422,8 @@ p, li { white-space: pre-wrap; }
                    <property name="geometry">
                     <rect>
                      <x>0</x>
-                     <y>-81</y>
-                     <width>783</width>
+                     <y>0</y>
+                     <width>644</width>
                      <height>206</height>
                     </rect>
                    </property>
@@ -11869,7 +11869,7 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>783</width>
+                     <width>523</width>
                      <height>176</height>
                     </rect>
                    </property>
@@ -13948,8 +13948,8 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>488</width>
-                     <height>172</height>
+                     <width>809</width>
+                     <height>389</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -14258,8 +14258,8 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>500</width>
-                     <height>266</height>
+                     <width>809</width>
+                     <height>389</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -15959,8 +15959,8 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>808</width>
-                     <height>329</height>
+                     <width>809</width>
+                     <height>389</height>
                     </rect>
                    </property>
                    <attribute name="label">
@@ -16081,7 +16081,7 @@ p, li { white-space: pre-wrap; }
                            <enum>QFrame::Sunken</enum>
                           </property>
                           <property name="text">
-                           <string>Select the reference vector</string>
+                           <string>Select the reference vector or raster</string>
                           </property>
                           <property name="alignment">
                            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>

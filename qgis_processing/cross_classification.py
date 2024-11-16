@@ -142,14 +142,15 @@ class CrossClassification(AlgorithmTemplate):
         reference = self.parameterAsFile(
             parameters, self.INPUT_RASTER_2, context
         )
+        if len(reference) == 0:
+            reference = None
         if reference is None:
             reference = self.parameterAsFile(
                 parameters, self.INPUT_VECTOR, context
             )
-        else:
-            if rs.files_directories.is_file(reference) is False:
-                layer_x = root.findLayer(reference)
-                reference = layer_x.layer().source().split("|layername=")[0]
+        if rs.files_directories.is_file(reference) is False:
+            layer_x = root.findLayer(reference)
+            reference = layer_x.layer().source().split("|layername=")[0]
         field = self.parameterAsString(parameters, self.TEXT, context)
         if len(field) == 0:
             field = None

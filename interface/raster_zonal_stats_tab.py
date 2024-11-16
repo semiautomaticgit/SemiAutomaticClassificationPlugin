@@ -38,10 +38,12 @@ def raster_zonal_stats_action():
 def raster_zonal_stats():
     raster_layer = cfg.dialog.ui.classification_name_combo_5.currentText()
     raster = cfg.util_qgis.get_file_path(raster_layer)
-    vector_layer = cfg.dialog.ui.reference_name_combo_3.currentText()
-    vector = cfg.util_qgis.get_file_path(vector_layer)
+    reference_layer = cfg.dialog.ui.reference_name_combo_3.currentText()
+    reference = cfg.util_qgis.get_file_path(reference_layer)
     field = cfg.dialog.ui.class_field_comboBox_4.currentText()
-    if raster is not None and len(field) > 0:
+    if len(field) == 0:
+        field = None
+    if raster is not None and reference is not None:
         stat_percentile = None
         # get statistics
         stat_names = []
@@ -85,7 +87,7 @@ def raster_zonal_stats():
             cfg.logger.log.info('raster zonal stats: %s' % output_path)
             cfg.ui_utils.add_progress_bar()
             output = cfg.rs.raster_zonal_stats(
-                raster_path=raster, vector_path=vector,
+                raster_path=raster, reference_path=reference,
                 vector_field=field, stat_names=stat_names,
                 stat_percentile=stat_percentile, output_path=output_path
             )
@@ -114,6 +116,9 @@ def refresh_reference_layer():
                     or layer.wkbType() ==
                     cfg.util_qgis.get_qgis_wkb_types().MultiPolygon):
                 cfg.dialog.vector_zonal_raster_combo(layer.name())
+        elif layer.type() == cfg.util_qgis.get_qgis_map_raster():
+            if layer.bandCount() == 1:
+                cfg.dialog.vector_zonal_raster_combo(layer.name())
 
 
 # reference layer name
@@ -133,11 +138,13 @@ def reference_layer_name():
 # set script button
 def set_script():
     output_path = 'output_path'
-    reference_layer = cfg.dialog.ui.classification_name_combo_5.currentText()
+    raster_layer = cfg.dialog.ui.classification_name_combo_5.currentText()
+    raster = cfg.util_qgis.get_file_path(raster_layer)
+    reference_layer = cfg.dialog.ui.reference_name_combo_3.currentText()
     reference = cfg.util_qgis.get_file_path(reference_layer)
-    vector_layer = cfg.dialog.ui.reference_name_combo_3.currentText()
-    vector = cfg.util_qgis.get_file_path(vector_layer)
     field = cfg.dialog.ui.class_field_comboBox_4.currentText()
+    if len(field) == 0:
+        field = None
     stat_percentile = None
     # get statistics
     stat_names = []
@@ -170,10 +177,10 @@ def set_script():
                % (cfg.qgis_registry[cfg.reg_threads_value],
                   cfg.qgis_registry[cfg.reg_ram_value]))
     command = ('# raster zonal stats \n'
-               'rs.raster_zonal_stats(raster_path="%s", vector_path="%s", '
+               'rs.raster_zonal_stats(raster_path="%s", reference_path="%s", '
                'vector_field="%s", output_path="%s", stat_names=%s, '
                'stat_percentile=%s)'
-               % (str(reference), str(vector), str(field), str(output_path),
+               % (str(raster), str(reference), str(field), str(output_path),
                   str(stat_names), str(stat_percentile))
                )
     previous = cfg.dialog.ui.plainTextEdit_batch.toPlainText()

@@ -62,17 +62,25 @@ class RasterZonalStats(AlgorithmTemplate):
                 description=self.translate('Input raster')
             )
         )
+
+        self.addParameter(
+            QgsProcessingParameterRasterLayer(
+                name=self.INPUT_RASTER_2,
+                description=self.translate('Reference raster'), optional=True
+            )
+        )
         self.addParameter(
             QgsProcessingParameterVectorLayer(
                 name=self.INPUT_VECTOR,
-                description=self.translate('Reference vector')
+                description=self.translate('Reference vector'), optional=True
             )
         )
+
         self.addParameter(
             QgsProcessingParameterString(
                 name=self.TEXT,
                 description=self.translate('Vector field'),
-                defaultValue='', multiLine=False
+                defaultValue='', multiLine=False, optional=True
             )
         )
         self.addParameter(
@@ -169,8 +177,14 @@ class RasterZonalStats(AlgorithmTemplate):
             layer_x = root.findLayer(classification)
             classification = layer_x.layer().source()
         reference = self.parameterAsFile(
-            parameters, self.INPUT_VECTOR, context
+            parameters, self.INPUT_RASTER_2, context
         )
+        if len(reference) == 0:
+            reference = None
+        if reference is None:
+            reference = self.parameterAsFile(
+                parameters, self.INPUT_VECTOR, context
+            )
         if rs.files_directories.is_file(reference) is False:
             layer_x = root.findLayer(reference)
             reference = layer_x.layer().source().split("|layername=")[0]
@@ -200,7 +214,7 @@ class RasterZonalStats(AlgorithmTemplate):
             percentile = self.parameterAsString(
                 parameters, self.TEXT_2, context
             )
-            if len(field) > 0:
+            if len(percentile) > 0:
                 percentile_split = percentile.split(',')
                 stat_percentile = []
                 for i in percentile_split:
@@ -208,8 +222,8 @@ class RasterZonalStats(AlgorithmTemplate):
                         stat_percentile.append(int(i))
                     except Exception as err:
                         str(err)
-            if len(stat_percentile) == 0:
-                stat_percentile = None
+                if len(stat_percentile) == 0:
+                    stat_percentile = None
         if parameters[self.BOOL_7] is not None:
             if self.parameterAsBool(parameters, self.BOOL_7, context) is True:
                 stat_names.append('StandardDeviation')
@@ -220,8 +234,10 @@ class RasterZonalStats(AlgorithmTemplate):
             parameters, self.OUTPUT, context
         )
         output = rs.raster_zonal_stats(
-            raster_path=classification, vector_path=reference,
+            raster_path=classification, reference_path=reference,
             vector_field=field, stat_names=stat_names,
             stat_percentile=stat_percentile, output_path=output_path
         )
+        if output.check:
+            self.feedback.pushInfo('Output table: ' + str(output.path))
         return {self.OUTPUT: output.path}
