@@ -412,7 +412,7 @@ def run_classifier(
         )
         prepared = cfg.rs.shared_tools.prepare_process_files(
             input_bands=bandset_number, output_path=dummy_path,
-            bandset_catalog=cfg.bandset_catalog
+            bandset_catalog=cfg.bandset_catalog, overwrite=True
         )
         temporary_virtual_raster = prepared['temporary_virtual_raster']
         if type(temporary_virtual_raster) is list:
