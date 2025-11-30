@@ -25,8 +25,8 @@ from pathlib import Path
 from PyQt5.QtGui import QIcon
 # noinspection PyUnresolvedReferences
 from qgis.core import (
-    QgsProcessingParameterFolderDestination,
-    QgsProcessingParameterNumber, QgsProcessingParameterString, QgsRasterLayer,
+    QgsProcessingParameterFileDestination,
+    QgsProcessingParameterNumber, QgsProcessingParameterField, QgsRasterLayer,
     QgsProject, QgsProcessingParameterRasterLayer,
     QgsProcessingParameterVectorLayer
 )
@@ -75,10 +75,11 @@ class Accuracy(AlgorithmTemplate):
             )
         )
         self.addParameter(
-            QgsProcessingParameterString(
+            QgsProcessingParameterField(
                 name=self.TEXT,
                 description=self.translate('Vector field'),
-                defaultValue='', multiLine=False, optional=True
+                defaultValue='class_id',
+                parentLayerParameterName=self.INPUT_VECTOR, optional=True
             )
         )
         self.addParameter(
@@ -89,9 +90,10 @@ class Accuracy(AlgorithmTemplate):
             )
         )
         self.addParameter(
-            QgsProcessingParameterFolderDestination(
+            QgsProcessingParameterFileDestination(
                 name=self.OUTPUT,
-                description=self.translate('Calculation output')
+                description=self.translate('Calculation output'),
+                fileFilter='tif file (*.tif)'
             )
         )
 
@@ -120,14 +122,13 @@ class Accuracy(AlgorithmTemplate):
         reference = self.parameterAsFile(
             parameters, self.INPUT_RASTER_2, context
         )
-        if reference is None:
+        if reference is '':
             reference = self.parameterAsFile(
                 parameters, self.INPUT_VECTOR, context
             )
-        else:
-            if rs.files_directories.is_file(reference) is False:
-                layer_x = root.findLayer(reference)
-                reference = layer_x.layer().source().split("|layername=")[0]
+        if rs.files_directories.is_file(reference) is False:
+            layer_x = root.findLayer(reference)
+            reference = layer_x.layer().source().split("|layername=")[0]
         field = self.parameterAsString(parameters, self.TEXT, context)
         if len(field) == 0:
             field = None
@@ -140,11 +141,6 @@ class Accuracy(AlgorithmTemplate):
         output_path = self.parameterAsString(
             parameters, self.OUTPUT, context
         )
-        try:
-            if rs.files_directories.is_directory(output_path) is False:
-                rs.files_directories.create_directory(output_path)
-        except Exception as err:
-            str(err)
         output = rs.cross_classification(
             classification_path=classification, reference_path=reference,
             output_path=output_path, vector_field=field, nodata_value=nodata,
