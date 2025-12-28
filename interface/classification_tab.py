@@ -393,7 +393,7 @@ def run_classifier(
     cfg.ui_utils.add_progress_bar()
     # classification
     if preview_point is None:
-        bandset = bandset_number
+        bandset = deepcopy(bandset_x)
         finish_sound = True
         smtp = str(__name__)
     # classification preview
