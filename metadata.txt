@@ -1,6 +1,7 @@
 [general]
 name=Semi-Automatic Classification Plugin
 qgisMinimumVersion=3.99
+qgisMaximumVersion=4.98
 supportsQt6=True
 description=The Semi-Automatic Classification Plugin (SCP) allows for the supervised classification of remote sensing images, providing tools for the download, the preprocessing and postprocessing of images.
 version=9.0.0
