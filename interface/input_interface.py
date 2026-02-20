@@ -1443,7 +1443,8 @@ def main_tab_changed(index):
         cfg.dialog.ui.help_textBrowser.clear()
         cfg.dialog.ui.help_textBrowser.setPlainText('Loading ...')
         # for user manual
-        cfg.rs.files_directories.create_directory('%s/_images/' % cfg.temp_dir)
+        cfg.rs.files_directories.create_directory(
+            '%s/_images/' % cfg.rs.configurations.temp.dir)
         base_url = (
                 'https://semiautomaticclassificationmanual.readthedocs.io/en/'
                 'latest/%s.html' % cfg.current_tab
@@ -1451,26 +1452,30 @@ def main_tab_changed(index):
         cfg.logger.log.debug('help tab: %s' % base_url)
         QApplication.instance().processEvents()
         if not cfg.utils.check_file(
-                '%s/%s.html' % (cfg.temp_dir, cfg.current_tab)
+                '%s/%s.html' %
+                (cfg.rs.configurations.temp.dir, cfg.current_tab)
         ):
             response = get(base_url)
             with open(
                     '%s/%s.html'
-                    % (cfg.temp_dir, cfg.current_tab), 'wb'
+                    % (cfg.rs.configurations.temp.dir, cfg.current_tab), 'wb'
             ) as file:
                 file.write(response.content)
-        with open('%s/%s.html' % (cfg.temp_dir, cfg.current_tab), 'r') as h:
+        with open('%s/%s.html'
+                  % (cfg.rs.configurations.temp.dir, cfg.current_tab), 'r') as h:
             html = h.read()
         images = findall('src="_images/(.+?)"', str(html))
         for image in images:
-            if not cfg.utils.check_file(cfg.temp_dir + '/_images/' + image):
+            if not cfg.utils.check_file(
+                    cfg.rs.configurations.temp.dir + '/_images/' + image):
                 try:
                     response = get(
                         'https://semiautomaticclassificationmanual.'
                         'readthedocs.io/en/latest/_images/%s' % image
                     )
                     with open(
-                            '%s/_images/%s' % (cfg.temp_dir, image), 'wb'
+                            '%s/_images/%s'
+                            % (cfg.rs.configurations.temp.dir, image), 'wb'
                     ) as file:
                         file.write(response.content)
                 except Exception as err:
