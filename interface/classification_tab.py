@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2024 by Luca Congedo.
+# Copyright (C) 2012-2026 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -27,8 +27,8 @@ This tool allows for classification of band set.
 from copy import deepcopy
 
 # import the PyQt libraries
-from PyQt5.QtGui import QIcon, QPixmap, QCursor
-from PyQt5.QtWidgets import QApplication
+from PyQt6.QtGui import QIcon, QPixmap, QCursor
+from PyQt6.QtWidgets import QApplication
 
 cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
@@ -93,7 +93,7 @@ def changed_tab(index):
         QPixmap(
             ':/plugins/semiautomaticclassificationplugin/icons/'
             'semiautomaticclassificationplugin_options.svg'
-        ), QIcon.Normal, QIcon.Off
+        ), QIcon.Mode.Normal, QIcon.State.Off
     )
     count = cfg.dialog.ui.toolBox_classification.count()
     for position in range(0, count):
@@ -155,6 +155,11 @@ def run_classification_action():
     run_classifier()
 
 
+# perform classification
+def run_classification_action_simplified():
+    run_classifier(simplified=True)
+
+
 # save classifier
 def save_classifier_action():
     output = run_classifier(save_classifier=True)
@@ -165,7 +170,7 @@ def save_classifier_action():
 # noinspection PyTypeChecker
 def run_classifier(
         save_classifier=None, preview_point=None,
-        classification_confidence=None
+        classification_confidence=None, simplified=None
 ):
     threshold = False
     signature_raster = False
@@ -178,6 +183,9 @@ def run_classifier(
     svm_gamma = svm_kernel = mlp_hidden_layer_sizes = None
     mlp_training_portion = mlp_alpha = mlp_learning_rate_init = None
     mlp_max_iter = mlp_batch_size = mlp_activation = None
+    additional_algorithm_name = pretrained_model_path = pretrained_model = None
+    pretrained_segmentation = None
+    value_name_dictionary = value_color_dictionary = None
     cfg.rs.configurations.action = True
     # if not preview ask for output file
     if preview_point is None:
@@ -201,7 +209,7 @@ def run_classifier(
             name_suffix='.vrt'
         )
     if output_path is False:
-        return
+        return None
     else:
         if (output_path.lower().endswith('.vrt')
                 or output_path.lower().endswith(
@@ -213,19 +221,27 @@ def run_classifier(
     # load classifier
     if len(cfg.dialog.ui.label_classifier.text()) > 0:
         load_classifier = cfg.dialog.ui.label_classifier.text()
-    # get bandset
-    bandset_number = cfg.dialog.ui.band_set_comb_spinBox_12.value()
-    cfg.logger.log.debug('bandset_number: %s' % bandset_number)
-    classifier_index = cfg.dialog.ui.toolBox_classification.currentIndex()
-    classifier_list = [
-        cfg.rs.configurations.maximum_likelihood,
-        cfg.rs.configurations.minimum_distance,
-        cfg.rs.configurations.multi_layer_perceptron,
-        cfg.rs.configurations.random_forest,
-        cfg.rs.configurations.spectral_angle_mapping,
-        cfg.rs.configurations.support_vector_machine
-    ]
-    classifier_name = classifier_list[classifier_index]
+    if simplified:
+        bandset_number = 1
+        classifier_name = cfg.dock_class_simpl_dlg.ui.alg_combo.currentText()
+    else:
+        # get bandset
+        if cfg.simplified:
+            bandset_number = 1
+        else:
+            bandset_number = cfg.dialog.ui.band_set_comb_spinBox_12.value()
+        cfg.logger.log.debug('bandset_number: %s' % bandset_number)
+        classifier_index = cfg.dialog.ui.toolBox_classification.currentIndex()
+        classifier_list = [
+            cfg.rs.configurations.maximum_likelihood,
+            cfg.rs.configurations.minimum_distance,
+            cfg.rs.configurations.multi_layer_perceptron,
+            cfg.rs.configurations.random_forest,
+            cfg.rs.configurations.spectral_angle_mapping,
+            cfg.rs.configurations.support_vector_machine,
+            'pretrained'
+        ]
+        classifier_name = classifier_list[classifier_index]
     if cfg.dialog.ui.macroclass_radioButton.isChecked() is True:
         macroclass = True
     else:
@@ -236,14 +252,19 @@ def run_classifier(
         else:
             input_normalization = cfg.rs.configurations.linear_scaling
     if cfg.scp_training is None:
-        cfg.mx.msg_war_5()
-        return False
-    if (cfg.scp_training.signature_catalog is None
-            or cfg.scp_training.signature_catalog is False):
-        cfg.mx.msg_war_5()
-        return False
+        if classifier_name != 'pretrained':
+            cfg.mx.msg_war_5()
+            return False
+    if classifier_name == 'pretrained':
+        signature_catalog = None
+        save_classifier = False
     else:
-        signature_catalog = cfg.scp_training.signature_catalog
+        if (cfg.scp_training.signature_catalog is None
+                or cfg.scp_training.signature_catalog is False):
+            cfg.mx.msg_war_5()
+            return False
+        else:
+            signature_catalog = cfg.scp_training.signature_catalog
     if save_classifier is True:
         only_fit = True
     else:
@@ -270,6 +291,12 @@ def run_classifier(
             classification_confidence = True
     # multi layer perceptron
     elif classifier_name == cfg.rs.configurations.multi_layer_perceptron:
+        if cfg.dialog.ui.pretrained_model_checkBox.isChecked() is True:
+            pretrained_model = (
+                cfg.dialog.ui.pretrained_model_combo.currentText())
+            # exclude first element of combo that is empty
+            if len(pretrained_model) == 1:
+                pretrained_model = None
         if cfg.dialog.ui.pytorch_radioButton.isChecked() is True:
             classifier_name = (
                 cfg.rs.configurations.pytorch_multi_layer_perceptron
@@ -302,6 +329,12 @@ def run_classifier(
             classification_confidence = True
     # random forest
     elif classifier_name == cfg.rs.configurations.random_forest:
+        if cfg.dialog.ui.pretrained_model_checkBox_2.isChecked() is True:
+            pretrained_model = (
+                cfg.dialog.ui.pretrained_model_combo_2.currentText())
+            # exclude first element of combo that is empty
+            if len(pretrained_model) == 1:
+                pretrained_model = None
         if cfg.dialog.ui.best_estimator_checkBox.isChecked() is True:
             find_best_estimator = int(cfg.dialog.ui.steps_SpinBox.value())
         if cfg.dialog.ui.ovr_checkBox.isChecked() is True:
@@ -319,9 +352,13 @@ def run_classifier(
                 rf_max_features = 'sqrt'
             else:
                 try:
-                    rf_max_features = float(
-                        cfg.dialog.ui.max_features_lineEdit.text()
-                    )
+                    if int(cfg.dialog.ui.max_features_lineEdit.text()) > 1:
+                        rf_max_features = int(
+                            cfg.dialog.ui.max_features_lineEdit.text())
+                    else:
+                        rf_max_features = float(
+                            cfg.dialog.ui.max_features_lineEdit.text()
+                        )
                 except Exception as err:
                     str(err)
         if cfg.dialog.ui.confidence_raster_checkBox_4.isChecked() is True:
@@ -361,6 +398,37 @@ def run_classifier(
             class_weight = 'balanced'
         if cfg.dialog.ui.confidence_raster_checkBox_6.isChecked() is True:
             classification_confidence = True
+    # pretrained models
+    elif classifier_name == 'pretrained':
+        pretrained_segmentation = (
+            cfg.dialog.ui.pretrained_model_combo_3.currentText())
+        # exclude first element of combo that is empty
+        if len(pretrained_segmentation) == 1:
+            pretrained_segmentation = None
+
+        model_class_names = (
+            cfg.rs.configurations.segmentation_model_class_dict[
+                pretrained_segmentation]
+        )
+        model_class_colors = (
+            cfg.rs.configurations.segmentation_model_color_dict[
+                pretrained_segmentation]
+        )
+        value_name_dictionary = {}
+        value_color_dictionary = {}
+        for m, name in enumerate(model_class_names):
+            value_name_dictionary[m] = name
+        for m, color in enumerate(model_class_colors):
+            value_color_dictionary[m] = color
+    # pretrained model
+    if pretrained_model:
+        additional_algorithm_name = classifier_name
+        classifier_name = pretrained_model
+        pretrained_model_path = f'{cfg.plugin_dir}/{classifier_name}.pth'
+    # pretrained models
+    if pretrained_segmentation:
+        classifier_name = pretrained_segmentation
+        pretrained_model_path = f'{cfg.plugin_dir}/{classifier_name}.pth'
     cfg.logger.log.debug(
         'input_bands: %s; output_path: %s; spectral_signatures: %s;'
         'macroclass: %s; algorithm_name: %s; threshold: %s; '
@@ -370,7 +438,8 @@ def run_classifier(
         'svm_c: %s; svm_gamma: %s; svm_kernel: %s; mlp_training_portion: %s;'
         'mlp_alpha: %s; mlp_learning_rate_init: %s; mlp_max_iter: %s;'
         ' mlp_batch_size: %s; mlp_activation: %s; mlp_hidden_layer_sizes: %s; '
-        'classification_confidence: %s; only_fit: %s; save_classifier: %s' %
+        'additional_algorithm_name %s: classification_confidence: %s; '
+        'only_fit: %s; save_classifier: %s' %
         (bandset_number, output_path, signature_catalog, macroclass,
          classifier_name, threshold, cross_validation, signature_raster,
          input_normalization, load_classifier, class_weight,
@@ -378,22 +447,40 @@ def run_classifier(
          rf_min_samples_split, svm_c, svm_gamma, svm_kernel,
          mlp_training_portion, mlp_alpha, mlp_learning_rate_init, mlp_max_iter,
          mlp_batch_size, mlp_activation, mlp_hidden_layer_sizes,
-         classification_confidence, only_fit, save_classifier)
+         additional_algorithm_name, classification_confidence,
+         only_fit, save_classifier)
     )
     # get bandset
     bandset_x = cfg.bandset_catalog.get(bandset_number)
     if bandset_x is None:
         cfg.mx.msg_war_6(bandset_number)
-        return
+        return None
     band_count = bandset_x.get_band_count()
     cfg.logger.log.debug('bandset band count: %s' % (str(band_count)))
     if band_count == 0:
         cfg.mx.msg_war_6(bandset_number)
-        return
+        return None
     cfg.ui_utils.add_progress_bar()
+    if pretrained_model is not None:
+        if (classifier_name ==
+                cfg.rs.configurations.pytorch_pretrained_s2_swin_v2_base
+                or classifier_name ==
+                cfg.rs.configurations.pytorch_pretrained_s2_swin_v2_tiny):
+            bandset_x = order_bandset_pretrained_sentinel_2(bandset_x)
+        elif (classifier_name ==
+              cfg.rs.configurations.pytorch_pretrained_l89_swin_v2_base):
+            bandset_x = order_bandset_pretrained_landsat89(bandset_x)
+    if pretrained_segmentation is not None:
+        if (classifier_name ==
+                cfg.rs.configurations.pytorch_pretrained_s2_swin_v2_base_seg):
+            bandset_x = order_bandset_pretrained_sentinel_2_rgb8(bandset_x)
+        elif (classifier_name ==
+              cfg.rs.configurations.pytorch_pretrained_s2_swin_v2_base_rgb_seg
+        ):
+            bandset_x = order_bandset_pretrained_sentinel_2_rgb(bandset_x)
     # classification
     if preview_point is None:
-        bandset = deepcopy(bandset_x)
+        bandset = bandset_x
         finish_sound = True
         smtp = str(__name__)
     # classification preview
@@ -443,11 +530,11 @@ def run_classifier(
                 try:
                     fit_classifier = cfg.rs.band_classification(
                         only_fit=True, save_classifier=True,
-                        input_bands=bandset_number,
+                        input_bands=bandset_x,
                         output_path=classifier_path,
                         spectral_signatures=signature_catalog,
                         macroclass=macroclass, algorithm_name=classifier_name,
-                        bandset_catalog=cfg.bandset_catalog,
+                        #bandset_catalog=cfg.bandset_catalog,
                         threshold=threshold, signature_raster=signature_raster,
                         cross_validation=cross_validation,
                         input_normalization=input_normalization,
@@ -466,7 +553,9 @@ def run_classifier(
                         mlp_batch_size=mlp_batch_size,
                         mlp_activation=mlp_activation,
                         mlp_hidden_layer_sizes=mlp_hidden_layer_sizes,
-                        classification_confidence=classification_confidence
+                        classification_confidence=classification_confidence,
+                        additional_algorithm_name=additional_algorithm_name,
+                        pretrained_model_path=pretrained_model_path
                     )
                 except Exception as err:
                     cfg.logger.log.error(str(err))
@@ -474,7 +563,7 @@ def run_classifier(
                     cfg.ui_utils.remove_progress_bar(
                         smtp=smtp, sound=finish_sound, failed=True
                         )
-                    return
+                    return None
                 if fit_classifier.check:
                     only_fit = False
                     save_classifier = False
@@ -487,7 +576,7 @@ def run_classifier(
                     cfg.ui_utils.remove_progress_bar(
                         smtp=smtp, sound=finish_sound, failed=True
                         )
-                    return
+                    return None
             # load classifier
             load_classifier = cfg.classifier_preview
     # run classification
@@ -496,7 +585,8 @@ def run_classifier(
             input_bands=bandset, output_path=output_path,
             spectral_signatures=signature_catalog,
             macroclass=macroclass, algorithm_name=classifier_name,
-            bandset_catalog=cfg.bandset_catalog, threshold=threshold,
+            #bandset_catalog=cfg.bandset_catalog,
+            threshold=threshold,
             signature_raster=signature_raster,
             cross_validation=cross_validation,
             input_normalization=input_normalization,
@@ -511,6 +601,8 @@ def run_classifier(
             mlp_activation=mlp_activation,
             mlp_hidden_layer_sizes=mlp_hidden_layer_sizes,
             classification_confidence=classification_confidence,
+            additional_algorithm_name=additional_algorithm_name,
+            pretrained_model_path=pretrained_model_path,
             only_fit=only_fit, save_classifier=save_classifier
         )
     except Exception as err:
@@ -532,7 +624,14 @@ def run_classifier(
             else:
                 cfg.util_qgis.move_layer_to_top(raster)
                 # apply symbology
-                apply_class_symbology(raster, macroclass)
+                if pretrained_segmentation:
+                    cfg.utils.classification_raster_symbol(
+                        classification_layer=raster,
+                        value_name_dictionary=value_name_dictionary,
+                        value_color_dictionary=value_color_dictionary
+                    )
+                else:
+                    apply_class_symbology(raster, macroclass)
                 name = cfg.rs.files_directories.file_name(output_raster)
                 directory = cfg.rs.files_directories.parent_directory(
                     output_raster
@@ -612,13 +711,16 @@ def create_preview(preview_point, classification_confidence=None):
         cfg.util_qgis.move_layer_to_top(cfg.classification_preview)
         cfg.util_qgis.set_group_visible(group, False)
         cfg.util_qgis.set_group_expanded(group, False)
-        cfg.show_preview_radioButton2.setChecked(True)
         # enable map canvas render
         cfg.map_canvas.setRenderFlag(True)
         # enable Redo button
-        cfg.redoPreviewButton.setEnabled(True)
+        if not cfg.simplified:
+            cfg.show_preview_radioButton2.setChecked(True)
+            cfg.redoPreviewButton.setEnabled(True)
+        return True
     else:
         cfg.mx.msg_err_1()
+        return False
 
 
 # activate pointer for classification preview
@@ -636,6 +738,161 @@ def pointer_left_click(point):
 # right click pointer
 def pointer_right_click(point):
     create_preview(point, classification_confidence=True)
+
+
+# pretrained model info
+def pretrained_model_info():
+    pretrained_model = cfg.dialog.ui.pretrained_model_combo.currentText()
+    text = cfg.rs.configurations.pretrained_model_dict[pretrained_model]
+    cfg.dialog.ui.pretrained_textBrowser.clear()
+    cfg.dialog.ui.pretrained_textBrowser.setText(text)
+
+
+# pretrained model info
+def pretrained_model_info_2():
+    pretrained_model = cfg.dialog.ui.pretrained_model_combo_2.currentText()
+    text = cfg.rs.configurations.pretrained_model_dict[pretrained_model]
+    cfg.dialog.ui.pretrained_textBrowser_2.clear()
+    cfg.dialog.ui.pretrained_textBrowser_2.setText(text)
+
+# pretrained segmentation model info
+def pretrained_model_info_3():
+    pretrained_model = cfg.dialog.ui.pretrained_model_combo_3.currentText()
+    text = cfg.rs.configurations.segmentation_model_dict[pretrained_model]
+    cfg.dialog.ui.pretrained_textBrowser_3.clear()
+    cfg.dialog.ui.pretrained_textBrowser_3.setText(text)
+
+
+# pretrained model info
+def add_pretrained_model_info_to_combo(info_dict):
+    for i in info_dict:
+        cfg.dialog.ui.pretrained_model_combo.addItem(i)
+        cfg.dialog.ui.pretrained_model_combo_2.addItem(i)
+
+# pretrained segmentation model info
+def add_pretrained_segmentation_info_to_combo(info_dict):
+    for i in info_dict:
+        cfg.dialog.ui.pretrained_model_combo_3.addItem(i)
+
+
+# order Sentinel-2 bands in bandset
+def order_bandset_pretrained_sentinel_2(bandset):
+    # order bands in band set
+    # B04, B03, B02, B05, B06, B07, B08, B11, B12
+    wl_list = [
+        cfg.rs.configurations.satellites[
+            cfg.rs.configurations.satSentinel2][0][3],
+        cfg.rs.configurations.satellites[
+            cfg.rs.configurations.satSentinel2][0][2],
+        cfg.rs.configurations.satellites[
+            cfg.rs.configurations.satSentinel2][0][1],
+        cfg.rs.configurations.satellites[
+            cfg.rs.configurations.satSentinel2][0][4],
+        cfg.rs.configurations.satellites[
+            cfg.rs.configurations.satSentinel2][0][5],
+        cfg.rs.configurations.satellites[
+            cfg.rs.configurations.satSentinel2][0][6],
+        cfg.rs.configurations.satellites[
+            cfg.rs.configurations.satSentinel2][0][7],
+        cfg.rs.configurations.satellites[
+            cfg.rs.configurations.satSentinel2][0][11],
+        cfg.rs.configurations.satellites[
+            cfg.rs.configurations.satSentinel2][0][12],
+    ]
+    s2_bands = bandset.get_absolute_paths()
+    s2_band_list = []
+    for wl in wl_list:
+        band = bandset.get_band_by_wavelength(wavelength=wl,
+                                                output_as_number=True)
+        s2_band_list.append(s2_bands[band - 1])
+    bandset_catalog_s2 = cfg.rs.bandset_catalog()
+    bandset_catalog_s2.create_bandset(paths=s2_band_list, bandset_number=2)
+    return bandset_catalog_s2.get(2)
+
+# order Sentinel-2 bands in bandset
+def order_bandset_pretrained_sentinel_2_rgb8(bandset):
+    # order bands in band set
+    # B04, B03, B02, B08
+    wl_list = [
+        cfg.rs.configurations.satellites[
+            cfg.rs.configurations.satSentinel2][0][3],
+        cfg.rs.configurations.satellites[
+            cfg.rs.configurations.satSentinel2][0][2],
+        cfg.rs.configurations.satellites[
+            cfg.rs.configurations.satSentinel2][0][1],
+        cfg.rs.configurations.satellites[
+            cfg.rs.configurations.satSentinel2][0][7],
+    ]
+    s2_bands = bandset.get_absolute_paths()
+    s2_band_list = []
+    for wl in wl_list:
+        band = bandset.get_band_by_wavelength(wavelength=wl,
+                                                output_as_number=True)
+        s2_band_list.append(s2_bands[band - 1])
+    bandset_catalog_s2 = cfg.rs.bandset_catalog()
+    bandset_catalog_s2.create_bandset(paths=s2_band_list, bandset_number=2)
+    return bandset_catalog_s2.get(2)
+
+# order Sentinel-2 bands in bandset
+def order_bandset_pretrained_sentinel_2_rgb(bandset):
+    # order bands in band set
+    # B04, B03, B02
+    wl_list = [
+        cfg.rs.configurations.satellites[
+            cfg.rs.configurations.satSentinel2][0][3],
+        cfg.rs.configurations.satellites[
+            cfg.rs.configurations.satSentinel2][0][2],
+        cfg.rs.configurations.satellites[
+            cfg.rs.configurations.satSentinel2][0][1],
+    ]
+    s2_bands = bandset.get_absolute_paths()
+    s2_band_list = []
+    for wl in wl_list:
+        band = bandset.get_band_by_wavelength(wavelength=wl,
+                                                output_as_number=True)
+        s2_band_list.append(s2_bands[band - 1])
+    bandset_catalog_s2 = cfg.rs.bandset_catalog()
+    bandset_catalog_s2.create_bandset(paths=s2_band_list, bandset_number=2)
+    return bandset_catalog_s2.get(2)
+
+
+# order Landsat 8/9 bands in bandset
+def order_bandset_pretrained_landsat89(bandset):
+    # order bands in band set
+    # B01, B02, B03, B04, B05, B06, B07, B08, B09, B10, B11
+    wl_list = [
+        cfg.rs.configurations.satellites[
+            cfg.rs.configurations.satLandsat89][0][0],
+        cfg.rs.configurations.satellites[
+            cfg.rs.configurations.satLandsat89][0][1],
+        cfg.rs.configurations.satellites[
+            cfg.rs.configurations.satLandsat89][0][2],
+        cfg.rs.configurations.satellites[
+            cfg.rs.configurations.satLandsat89][0][4],
+        cfg.rs.configurations.satellites[
+            cfg.rs.configurations.satLandsat89][0][5],
+        cfg.rs.configurations.satellites[
+            cfg.rs.configurations.satLandsat89][0][7],
+        cfg.rs.configurations.satellites[
+            cfg.rs.configurations.satLandsat89][0][8],
+        cfg.rs.configurations.satellites[
+            cfg.rs.configurations.satLandsat89][0][3],
+        cfg.rs.configurations.satellites[
+            cfg.rs.configurations.satLandsat89][0][6],
+        cfg.rs.configurations.satellites[
+            cfg.rs.configurations.satLandsat89][0][9],
+        cfg.rs.configurations.satellites[
+            cfg.rs.configurations.satLandsat89][0][10],
+    ]
+    s2_bands = bandset.get_absolute_paths()
+    s2_band_list = []
+    for wl in wl_list:
+        band = bandset.get_band_by_wavelength(wavelength=wl,
+                                                output_as_number=True)
+        s2_band_list.append(s2_bands[band - 1])
+    bandset_catalog_s2 = cfg.rs.bandset_catalog()
+    bandset_catalog_s2.create_bandset(paths=s2_band_list, bandset_number=2)
+    return bandset_catalog_s2.get(2)
 
 
 # set script button
@@ -669,7 +926,8 @@ def set_script():
             cfg.rs.configurations.multi_layer_perceptron_a,
             cfg.rs.configurations.random_forest_a,
             cfg.rs.configurations.spectral_angle_mapping_a,
-            cfg.rs.configurations.support_vector_machine_a
+            cfg.rs.configurations.support_vector_machine_a,
+            'pretrained'
         ]
         classifier_name = classifier_list[classifier_index]
         # maximum likelihood
@@ -747,9 +1005,13 @@ def set_script():
                     rf_max_features = 'sqrt'
                 else:
                     try:
-                        rf_max_features = float(
-                            cfg.dialog.ui.max_features_lineEdit.text()
-                        )
+                        if int(cfg.dialog.ui.max_features_lineEdit.text()) > 1:
+                            rf_max_features = int(
+                                cfg.dialog.ui.max_features_lineEdit.text())
+                        else:
+                            rf_max_features = float(
+                                cfg.dialog.ui.max_features_lineEdit.text()
+                            )
                     except Exception as err:
                         str(err)
             if cfg.dialog.ui.confidence_raster_checkBox_4.isChecked() is True:

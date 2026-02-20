@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2024 by Luca Congedo.
+# Copyright (C) 2012-2026 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -23,8 +23,9 @@
 
 This tool allows for raster reclassification.
 """
-from PyQt5.QtWidgets import QApplication
+from PyQt6.QtWidgets import QApplication
 import numpy
+
 
 try:
     from remotior_sensus.core.processor_functions import (

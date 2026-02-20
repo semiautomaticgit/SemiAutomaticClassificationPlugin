@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download,
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2024 by Luca Congedo.
+# Copyright (C) 2012-2026 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -21,11 +21,10 @@
 # If not, see <https://www.gnu.org/licenses/>.
 
 import multiprocessing
-import platform
 import sys
 from os import path
 
-from PyQt5.QtWidgets import QApplication
+from PyQt6.QtWidgets import QApplication
 # noinspection PyUnresolvedReferences
 from processing.core.ProcessingConfig import ProcessingConfig
 # noinspection PyUnresolvedReferences
@@ -105,7 +104,7 @@ class AlgorithmTemplate(QgsProcessingAlgorithm):
             multiprocessing.set_start_method('spawn')
         except Exception as err:
             str(err)
-        if platform.system() == 'Windows':
+        if sys.platform == 'win32':
             try:
                 python_path = path.abspath(
                     path.join(sys.exec_prefix, 'pythonw.exe')

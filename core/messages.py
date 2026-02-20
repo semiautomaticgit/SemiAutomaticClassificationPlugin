@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2024 by Luca Congedo.
+# Copyright (C) 2012-2026 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -21,12 +21,13 @@
 # If not, see <https://www.gnu.org/licenses/>.
 
 
-from PyQt5.QtWidgets import QMessageBox, QToolButton, QApplication
+from PyQt6.QtWidgets import QMessageBox, QToolButton, QApplication
 # noinspection PyUnresolvedReferences
 from qgis.core import Qgis
 
 cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
+ui_name = 'semiautomaticclassificationplugin'
 
 # message box information
 def msg_box(title, message):
@@ -45,59 +46,41 @@ def msg_box_warning(title, message):
 
 # message bar information
 def msg_bar(title, message):
-    cfg.iface.messageBar().pushMessage(
-        title, message, level=Qgis.Info, duration=7
-    )
+    cfg.iface.messageBar().pushMessage(title, message, level=Qgis.Info,
+                                       duration=7)
     cfg.iface.messageBar().findChildren(QToolButton)[0].setHidden(False)
 
 
 # message bar information
 def msg_bar_info(message):
     # noinspection PyTypeChecker
-    msg_bar(
-        QApplication.translate(
-            'semiautomaticclassificationplugin',
-            'SCP information'
-            ), message
-        )
+    msg_bar(QApplication.translate(ui_name, 'SCP information'), message)
 
 
 # Message bar error
 def msg_bar_critical(title, message):
-    cfg.iface.messageBar().pushMessage(
-        title, message, level=Qgis.Critical
-    )
-    cfg.iface.messageBar().findChildren(
-        QToolButton
-    )[0].setHidden(False)
+    cfg.iface.messageBar().pushMessage(title, message, level=Qgis.Critical)
+    cfg.iface.messageBar().findChildren(QToolButton)[0].setHidden(False)
 
 
 # Message bar error
 def msg_bar_error(message):
     # noinspection PyTypeChecker
-    msg_bar_critical(
-        QApplication.translate('semiautomaticclassificationplugin', 'Error'),
-        message=message
-    )
+    msg_bar_critical(QApplication.translate(ui_name, 'Error'),message=message)
 
 
 # message bar warning
 def _msg_bar_warning(title, message):
-    cfg.iface.messageBar().pushMessage(
-        title, message, level=Qgis.Warning, duration=7
-    )
-    cfg.iface.messageBar().findChildren(
-        QToolButton
-    )[0].setHidden(False)
+    cfg.iface.messageBar().pushMessage(title, message, level=Qgis.Warning,
+                                       duration=7)
+    cfg.iface.messageBar().findChildren(QToolButton)[0].setHidden(False)
 
 
 # message bar warning
 def msg_bar_warning(message):
     # noinspection PyTypeChecker
     _msg_bar_warning(
-        title=QApplication.translate(
-            'semiautomaticclassificationplugin', 'Warning'
-            ), message=message
+        title=QApplication.translate(ui_name, 'Warning'), message=message
         )
 
 
@@ -125,76 +108,53 @@ def error(message):
 
 def msg_test(message):
     # noinspection PyTypeChecker
-    msg_box(
-        QApplication.translate(
-            'semiautomaticclassificationplugin', 'Test results'
-            ), message
-        )
+    msg_box(QApplication.translate(ui_name, 'Test results'), message)
 
 
 def msg_inf_1():
     # noinspection PyTypeChecker
     msg_bar_info(
-        QApplication.translate(
-            'semiautomaticclassificationplugin',
-            'Training input cannot be edited'
-            )
+        QApplication.translate(ui_name, 'Training input cannot be edited')
         )
 
 
 def msg_inf_2():
     # noinspection PyTypeChecker
     msg_bar_info(
-        QApplication.translate(
-            'semiautomaticclassificationplugin',
-            'At least 3 points are required'
-            )
+        QApplication.translate(ui_name, 'At least 3 points are required')
         )
 
 
 def msg_inf_3():
     # noinspection PyTypeChecker
-    msg_bar_info(
-        QApplication.translate(
-            'semiautomaticclassificationplugin', 'Detailed log is active'
-            )
-        )
+    msg_bar_info(QApplication.translate(ui_name,  'Detailed log is active'))
 
 
 def msg_inf_4():
     # noinspection PyTypeChecker
-    msg_bar_info(
-        QApplication.translate(
-            'semiautomaticclassificationplugin', 'Training vector exported'
-            )
-        )
+    msg_bar_info(QApplication.translate(ui_name, 'Training vector exported'))
 
 
 def msg_inf_5():
     # noinspection PyTypeChecker
-    msg_bar_info(
-        QApplication.translate(
-            'semiautomaticclassificationplugin', 'Enter class values'
-            )
-        )
+    msg_bar_info( QApplication.translate(ui_name, 'Enter class values'))
 
 
 def msg_inf_6():
     # noinspection PyTypeChecker
-    msg_bar_info(
-        QApplication.translate(
-            'semiautomaticclassificationplugin', 'Process completed'
-            )
-        )
+    msg_bar_info(QApplication.translate(ui_name, 'Process completed'))
 
 
 def msg_inf_7():
     # noinspection PyTypeChecker
-    msg_bar_info(
-        QApplication.translate(
-            'semiautomaticclassificationplugin', 'Training Band set updated'
-            )
-        )
+    msg_bar_info(QApplication.translate(ui_name, 'Training Band set updated'))
+
+
+def msg_inf_8():
+    # noinspection PyTypeChecker
+    msg_bar_info(QApplication.translate(
+        ui_name, 'Please restart QGIS for loading the interface'
+    ))
 
 
 """ Errors """
@@ -202,97 +162,72 @@ def msg_inf_7():
 
 def msg_err_1():
     # noinspection PyTypeChecker
-    msg_bar_error(
-        QApplication.translate(
-            'semiautomaticclassificationplugin', 'Process failed'
-            )
-        )
+    msg_bar_error(QApplication.translate(ui_name, 'Process failed'))
 
 
 def msg_err_2():
     # noinspection PyTypeChecker
-    msg_bar_error(
-        QApplication.translate(
-            'semiautomaticclassificationplugin', 'Bandset not found'
-            )
-        )
+    msg_bar_error(QApplication.translate(ui_name, 'Bandset not found'))
 
 
 def msg_err_3():
     # noinspection PyTypeChecker
-    msg_bar_error(
-        QApplication.translate(
-            'semiautomaticclassificationplugin', 'Area coordinates error'
-            )
-        )
+    msg_bar_error(QApplication.translate(ui_name, 'Area coordinates error'))
 
 
 def msg_err_4():
     # noinspection PyTypeChecker
     msg_bar_error(
-        QApplication.translate(
-            'semiautomaticclassificationplugin',
-            'Unable to create RGB color composite'
-            )
+        QApplication.translate(ui_name,
+                               'Unable to create RGB color composite')
         )
 
 
 def msg_err_5():
     # noinspection PyTypeChecker
-    msg_bar_error(
-        QApplication.translate(
-            'semiautomaticclassificationplugin', 'Unable to open file'
-            )
-        )
+    msg_bar_error(QApplication.translate(ui_name, 'Unable to open file'))
 
 
 def msg_err_6():
     # noinspection PyTypeChecker
-    msg_bar_error(
-        QApplication.translate(
-            'semiautomaticclassificationplugin', 'Unable to calculate'
-            )
-        )
+    msg_bar_error(QApplication.translate(ui_name, 'Unable to calculate'))
 
 
 def msg_err_7():
     # noinspection PyTypeChecker
-    msg_bar_error(
-        QApplication.translate(
-            'semiautomaticclassificationplugin', 'Expression error'
-            )
-        )
+    msg_bar_error(QApplication.translate(ui_name, 'Expression error'))
 
 
 def msg_err_8():
     # noinspection PyTypeChecker
     msg_bar_error(
         QApplication.translate(
-            'semiautomaticclassificationplugin',
-            'Incompatible CRS, please create a new training input'
-            )
+            ui_name, 'Incompatible CRS, please create a new training input'
+        )
     )
 
+
+def msg_err_9(layer=None):
+    # noinspection PyTypeChecker
+    msg_bar_error(
+        QApplication.translate(ui_name, f'Unable to find layer {layer}')
+    )
 
 """ Warnings """
 
 
 def msg_war_1():
     # noinspection PyTypeChecker
-    msg_bar_warning(
-        QApplication.translate(
-            'semiautomaticclassificationplugin', 'Pixel resolution undefined'
-            )
-        )
+    msg_bar_warning(QApplication.translate(ui_name,
+                                           'Pixel resolution undefined'))
 
 
 def msg_war_2():
     # noinspection PyTypeChecker
     msg_bar_warning(
         QApplication.translate(
-            'semiautomaticclassificationplugin',
-            'Unable to define hidden layer size, setting default 100'
-            )
+            ui_name, 'Unable to define hidden layer size, setting default 100'
+        )
     )
 
 
@@ -300,40 +235,31 @@ def msg_war_3():
     # noinspection PyTypeChecker
     msg_bar_warning(
         QApplication.translate(
-            'semiautomaticclassificationplugin',
-            'Point outside band set or band set not defined'
-            )
+            ui_name, 'Point outside band set or band set not defined'
+        )
     )
 
 
 def msg_war_4():
     # noinspection PyTypeChecker
-    msg_bar_warning(
-        QApplication.translate(
-            'semiautomaticclassificationplugin', 'ROI not found'
-            )
-        )
+    msg_bar_warning(QApplication.translate(ui_name, 'ROI not found'))
 
 
 def msg_war_5():
     # noinspection PyTypeChecker
     msg_bar_warning(
-        QApplication.translate(
-            'semiautomaticclassificationplugin',
-            'Select a training input; input is not loaded'
-            )
+        QApplication.translate( ui_name,
+                                'Select a training input; input is not loaded')
     )
 
 
 def msg_war_6(bandset_number=None):
     # noinspection PyTypeChecker
     msg_bar_warning(
-        QApplication.translate(
-            'semiautomaticclassificationplugin', 'Band set'
-            ) + ' ' + str(bandset_number) + ' '
-        + QApplication.translate(
-            'semiautomaticclassificationplugin', 'is empty'
-            )
+        QApplication.translate(ui_name,
+                               'Band set') + ' ' + str(bandset_number) + ' '
+        + QApplication.translate(ui_name,
+                                 'is empty')
     )
 
 
@@ -341,17 +267,11 @@ def msg_war_7():
     # noinspection PyTypeChecker
     msg_bar_warning(
         QApplication.translate(
-            'semiautomaticclassificationplugin',
-            'No band found. Check metadata inside the directory'
-            )
+            ui_name, 'No band found. Check metadata inside the directory'
         )
+    )
 
 
 def msg_war_8():
     # noinspection PyTypeChecker
-    msg_bar_warning(
-        QApplication.translate(
-            'semiautomaticclassificationplugin',
-            'No tool selected'
-            )
-    )
+    msg_bar_warning(QApplication.translate(ui_name, 'No tool selected'))

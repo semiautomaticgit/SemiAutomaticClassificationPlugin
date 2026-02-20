@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download,
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2024 by Luca Congedo.
+# Copyright (C) 2012-2026 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -27,11 +27,11 @@ import ssl
 import smtplib
 
 import qgis.core as qgis_core
-from PyQt5.QtCore import QSize
-from PyQt5.QtGui import QFont, QPixmap
-from PyQt5.QtWidgets import (
-    qApp, QWidget, QSizePolicy, QLabel, QSpacerItem, QProgressBar, QPushButton,
-    QHBoxLayout, QVBoxLayout, QToolButton, QApplication
+from PyQt6.QtCore import QSize
+from PyQt6.QtGui import QFont, QPixmap
+from PyQt6.QtWidgets import (
+    QApplication, QWidget, QSizePolicy, QLabel, QSpacerItem,
+    QProgressBar, QPushButton, QHBoxLayout, QVBoxLayout, QToolButton
 )
 
 # sound for Windows
@@ -63,12 +63,13 @@ class UiUtils:
             self.create_progress_bar(main_message, message)
         # disable map canvas render for speed
         cfg.map_canvas.setRenderFlag(False)
-        qApp.processEvents()
+        QApplication.instance().processEvents()
 
     # Create a progress bar and a cancel button
     # noinspection PyArgumentList,PyUnresolvedReferences,PyTypeChecker
     def create_progress_bar(self, main_message=None, message=''):
-        size_policy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+        size_policy = QSizePolicy(QSizePolicy.Policy.Expanding,
+                                  QSizePolicy.Policy.Preferred)
         icon_label = QLabel()
         icon_label.setMinimumSize(QSize(20, 20))
         icon_label.setMaximumSize(QSize(50, 50))
@@ -80,7 +81,8 @@ class UiUtils:
             )
         )
         UiUtils.msg_label_main = QLabel()
-        size_policy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+        size_policy = QSizePolicy(QSizePolicy.Policy.Expanding,
+                                  QSizePolicy.Policy.Preferred)
         UiUtils.msg_label_main.setMinimumSize(QSize(50, 0))
         UiUtils.msg_label_main.setMaximumSize(QSize(800, 30))
         UiUtils.msg_label_main.setSizePolicy(size_policy)
@@ -92,8 +94,8 @@ class UiUtils:
                                    'Semi-Automatic Classification Plugin')
         )
         spacer_item = QSpacerItem(
-            40, 20, QSizePolicy.Expanding,
-            QSizePolicy.Minimum
+            40, 20, QSizePolicy.Policy.Expanding,
+            QSizePolicy.Policy.Minimum
         )
         UiUtils.msg_label = QLabel()
         UiUtils.msg_label.setMinimumSize(QSize(50, 0))
@@ -140,7 +142,7 @@ class UiUtils:
         self.remove_progress_bar(failed=True)
         cfg.rs.configurations.action = False
         UiUtils.update_bar(100, ' Canceling ...')
-        qApp.processEvents()
+        QApplication.instance().processEvents()
         self.set_interface(True)
         cfg.map_canvas.setRenderFlag(True)
 
@@ -244,7 +246,7 @@ class UiUtils:
                 )
                 UiUtils.msg_label.setText(text)
                 UiUtils.progress_bar.setValue(step)
-                qApp.processEvents()
+                QApplication.instance().processEvents()
                 if process is not None:
                     UiUtils.msg_label_main.setText(str(process))
             except Exception as err:
@@ -290,11 +292,17 @@ class UiUtils:
     @staticmethod
     def set_interface(state):
         # classification dock
-        cfg.dock_class_dlg.setEnabled(state)
+        if cfg.simplified:
+            cfg.dock_class_simpl_dlg.setEnabled(state)
+        else:
+            cfg.dock_class_dlg.setEnabled(state)
+            # toolbar
+            cfg.working_toolbar.setEnabled(state)
         # main interface
         cfg.dialog.setEnabled(state)
-        # toolbar
-        cfg.working_toolbar.setEnabled(state)
+
+        if cfg.dialog is None:
+            cfg.dialog = SemiAutomaticClassificationPluginDialog()
 
     # send SMTP message
     @staticmethod
@@ -342,9 +350,9 @@ class UiUtils:
 
 # beep sound
 def beeps(frequency: int, duration: float):
-    if sys.platform.startswith('win'):
+    if cfg.system_platform.startswith('win'):
         winsound.Beep(frequency, int(duration * 1000))
-    elif sys.platform.startswith('linux'):
+    elif cfg.system_platform.startswith('linux'):
         os.system(
             'play --no-show-progress --null --channels 1 synth %s sine %s'
             % (str(duration), str(frequency))

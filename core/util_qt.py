@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2024 by Luca Congedo.
+# Copyright (C) 2012-2026 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -23,11 +23,11 @@
 
 from os import path
 
-from PyQt5.QtCore import Qt, QSettings
-from PyQt5.QtGui import QFont, QColor
-from PyQt5.QtWidgets import (
-    qApp, QWidget, QColorDialog, QFileDialog, QTableWidgetItem,
-    QTableWidgetSelectionRange, QApplication, QMessageBox
+from PyQt6.QtCore import Qt, QSettings
+from PyQt6.QtGui import QFont, QColor
+from PyQt6.QtWidgets import (
+    QApplication, QWidget, QColorDialog, QFileDialog,
+    QTableWidgetItem, QTableWidgetSelectionRange, QMessageBox
 )
 cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
@@ -55,7 +55,7 @@ def write_registry_keys(key, value):
 
 # process events
 def process_events():
-    qApp.processEvents()
+    QApplication.instance().processEvents()
 
 
 # Question box
@@ -63,12 +63,12 @@ def process_events():
 def question_box(caption, message):
     i = QWidget()
     q = QMessageBox.question(
-        i, caption, message, QMessageBox.Yes,
-        QMessageBox.No
+        i, caption, message, QMessageBox.StandardButton.Yes,
+        QMessageBox.StandardButton.No
     )
-    if q == QMessageBox.Yes:
+    if q == QMessageBox.StandardButton.Yes:
         return True
-    elif q == QMessageBox.No:
+    elif q == QMessageBox.StandardButton.No:
         return False
     else:
         return False
@@ -80,6 +80,8 @@ def select_color():
     c = QColorDialog.getColor()
     if c.isValid():
         return c
+    else:
+        return None
 
 
 # get save file name
@@ -170,7 +172,7 @@ def get_all_items_in_combobox(combobox):
 # delete all items in a table
 def clear_table(table):
     table.clearContents()
-    for i in range(0, table.rowCount()):
+    for _i in range(0, table.rowCount()):
         table.removeRow(0)
 
 
@@ -179,7 +181,7 @@ def all_items_set_state(table, value):
     table.blockSignals(True)
     rows = table.rowCount()
     for row in range(0, rows):
-        table.item(row, 0).setCheckState(value)
+        table.item(row, 0).setCheckState(check_state_from_value(value))
     table.blockSignals(False)
 
 
@@ -194,7 +196,7 @@ def remove_rows_from_table(table):
             'Are you sure you want to remove highlighted rows from the table?'
         )
     )
-    if answer is True:
+    if answer:
         table.blockSignals(True)
         # list of item to remove
         rows = []
@@ -223,10 +225,10 @@ def add_table_item(
 ):
     item_w = QTableWidgetItem()
     if checkbox_state is not None:
-        item_w.setCheckState(checkbox_state)
-    if enabled is False:
-        item_w.setFlags(Qt.ItemIsEnabled)
-    item_w.setData(Qt.DisplayRole, item)
+        item_w.setCheckState(check_state_from_value(checkbox_state))
+    if not enabled:
+        item_w.setFlags(Qt.ItemFlag.ItemIsEnabled)
+    item_w.setData(Qt.ItemDataRole.DisplayRole, item)
     table.setItem(row, column, item_w)
     if color is not None:
         table.item(row, column).setBackground(color)
@@ -259,13 +261,30 @@ def insert_table_column(table, column, name, width=None, hide=False):
     table.setHorizontalHeaderItem(column, QTableWidgetItem(name))
     if width is not None:
         table.setColumnWidth(column, width)
-    if hide is True:
+    if hide:
         table.hideColumn(column)
 
 
 # sort table column
 def sort_table_column(table, column, ascending=False):
-    table.sortItems(column, ascending)
+    if ascending:
+        o = Qt.SortOrder.AscendingOrder
+    else:
+        o = Qt.SortOrder.DescendingOrder
+    table.sortItems(column, o)
+
+
+# set check state from value
+def check_state_from_value(value):
+    if value == 0:
+        o = Qt.CheckState.Unchecked
+    elif value == 1:
+        o = Qt.CheckState.PartiallyChecked
+    elif value == 2:
+        o = Qt.CheckState.Checked
+    else:
+        o = value
+    return o
 
 
 # set table column width
@@ -289,12 +308,12 @@ def get_color_from_text(text):
 
 
 def get_match_contains():
-    return Qt.MatchContains
+    return Qt.MatchFlag.MatchContains
 
 
 def get_unchecked():
-    return Qt.Unchecked
+    return Qt.CheckState.Unchecked
 
 
 def get_checked():
-    return Qt.Checked
+    return Qt.CheckState.Checked

@@ -1,1 +1,4 @@
-remotior-sensus >= 0.4.4
+scikit-learn > 1.1.0
+scipy > 1.0.0
+torch >= 2.0.0
+torchvision >= 0.15

@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download,
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2024 by Luca Congedo.
+# Copyright (C) 2012-2026 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -27,18 +27,19 @@ import shutil
 import zipfile
 
 import numpy
-from PyQt5.QtCore import Qt, QVariant, QPoint, QPointF
-from PyQt5.QtGui import (
-    QColor, QFont, QCursor, QIcon, QPixmap, QPainter, QPolygonF
-)
-from PyQt5.QtWidgets import (
+from PyQt6.QtCore import Qt, QPoint, QPointF, QMetaType
+from PyQt6.QtGui import (QColor, QFont, QCursor, QIcon, QPixmap, QPainter,
+                         QPolygonF, QAction)
+from PyQt6.QtWidgets import (
     QTreeWidget, QTreeWidgetItem, QAbstractItemView, QCompleter, QMenu,
-    QAction, QApplication
+    QApplication, QHeaderView
 )
 # noinspection PyUnresolvedReferences
 from qgis.core import QgsGeometry, QgsFeature, QgsField
 # noinspection PyUnresolvedReferences
 from qgis.gui import QgsVertexMarker, QgsHighlight
+
+cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
 try:
     from remotior_sensus.core.spectral_signatures import (
@@ -50,7 +51,6 @@ except Exception as error:
     SpectralSignaturesCatalog = str
     str(error)
 
-cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
 """ Class to manage signature catalog buffer """
 
@@ -97,7 +97,12 @@ class SignatureCatalogBuffer:
                         str(err)
                 # remove redo keys
                 self.buffer[i] = None
-                cfg.dock_class_dlg.ui.redo_save_Button.setEnabled(False)
+                if cfg.simplified:
+                    cfg.dock_class_simpl_dlg.ui.redo_save_Button.setEnabled(
+                        False
+                    )
+                else:
+                    cfg.dock_class_dlg.ui.redo_save_Button.setEnabled(False)
         # replace undo keys
         for key in sorted(self.buffer):
             if key < 0:
@@ -113,11 +118,18 @@ class SignatureCatalogBuffer:
                     % ((key + 1), str(self.buffer[key + 1].geometry_file))
                 )
         cfg.logger.log.debug('self.buffer: %s' % self.buffer)
-        cfg.dock_class_dlg.ui.redo_save_Button.setEnabled(True)
-        cfg.dock_class_dlg.ui.undo_save_Button.setEnabled(False)
+        if cfg.simplified:
+            cfg.dock_class_simpl_dlg.ui.redo_save_Button.setEnabled(True)
+            cfg.dock_class_simpl_dlg.ui.undo_save_Button.setEnabled(False)
+        else:
+            cfg.dock_class_dlg.ui.redo_save_Button.setEnabled(True)
+            cfg.dock_class_dlg.ui.undo_save_Button.setEnabled(False)
         if self.buffer[-1] is not None:
             cfg.logger.log.debug('self.buffer[-1]: %s' % self.buffer[-1])
-            cfg.dock_class_dlg.ui.undo_save_Button.setEnabled(True)
+            if cfg.simplified:
+                cfg.dock_class_simpl_dlg.ui.undo_save_Button.setEnabled(True)
+            else:
+                cfg.dock_class_dlg.ui.undo_save_Button.setEnabled(True)
         return self.buffer[0]
 
     def redo(self):
@@ -129,11 +141,18 @@ class SignatureCatalogBuffer:
                     % ((key - 1), str(self.buffer[key - 1].geometry_file))
                 )
         cfg.logger.log.debug('self.buffer: %s' % self.buffer)
-        cfg.dock_class_dlg.ui.undo_save_Button.setEnabled(True)
-        cfg.dock_class_dlg.ui.redo_save_Button.setEnabled(False)
+        if cfg.simplified:
+            cfg.dock_class_simpl_dlg.ui.undo_save_Button.setEnabled(True)
+            cfg.dock_class_simpl_dlg.ui.redo_save_Button.setEnabled(False)
+        else:
+            cfg.dock_class_dlg.ui.undo_save_Button.setEnabled(True)
+            cfg.dock_class_dlg.ui.redo_save_Button.setEnabled(False)
         if self.buffer[1] is not None:
             cfg.logger.log.debug('self.buffer[1]: %s' % self.buffer[1])
-            cfg.dock_class_dlg.ui.redo_save_Button.setEnabled(True)
+            if cfg.simplified:
+                cfg.dock_class_simpl_dlg.ui.redo_save_Button.setEnabled(True)
+            else:
+                cfg.dock_class_dlg.ui.redo_save_Button.setEnabled(True)
         return self.buffer[0]
 
     def set_max_size(self, max_size):
@@ -148,6 +167,7 @@ class SignatureCatalogBuffer:
 """ Class to manage signature catalog and vector input in QGIS """
 
 
+# noinspection PyUnresolvedReferences
 class TrainingVectorLayer:
 
     # noinspection PyArgumentList
@@ -167,10 +187,16 @@ class TrainingVectorLayer:
         self.collapse_tree = True
         # reset classification preview classifier
         cfg.classifier_preview = None
-        cfg.dock_class_dlg.ui.button_Save_ROI.setEnabled(False)
-        cfg.dock_class_dlg.ui.undo_save_Button.setEnabled(False)
-        cfg.dock_class_dlg.ui.redo_save_Button.setEnabled(False)
+        if cfg.simplified:
+            cfg.dock_class_simpl_dlg.ui.button_Save_ROI.setEnabled(False)
+            cfg.dock_class_simpl_dlg.ui.undo_save_Button.setEnabled(False)
+            cfg.dock_class_simpl_dlg.ui.redo_save_Button.setEnabled(False)
+        else:
+            cfg.dock_class_dlg.ui.button_Save_ROI.setEnabled(False)
+            cfg.dock_class_dlg.ui.undo_save_Button.setEnabled(False)
+            cfg.dock_class_dlg.ui.redo_save_Button.setEnabled(False)
         # reset
+        # noinspection PySimplifyBooleanCheck
         if signature_catalog is False:
             # reset table tree
             self.tree = self.clear_tree()
@@ -183,7 +209,10 @@ class TrainingVectorLayer:
                     str(err)
             cfg.scp_training = None
             cfg.project_registry[cfg.reg_training_input_path] = ''
-            cfg.dock_class_dlg.ui.trainingFile_lineEdit.setText('')
+            if cfg.simplified:
+                cfg.dock_class_simpl_dlg.ui.trainingFile_lineEdit.setText('')
+            else:
+                cfg.dock_class_dlg.ui.trainingFile_lineEdit.setText('')
         # init
         else:
             cfg.logger.log.debug(
@@ -212,7 +241,13 @@ class TrainingVectorLayer:
                 'self.output_path: %s' % str(self.output_path)
             )
             cfg.project_registry[cfg.reg_training_input_path] = output_path
-            cfg.dock_class_dlg.ui.trainingFile_lineEdit.setText(output_path)
+            if cfg.simplified:
+                cfg.dock_class_simpl_dlg.ui.trainingFile_lineEdit.setText(
+                    output_path)
+            else:
+                cfg.dock_class_dlg.ui.trainingFile_lineEdit.setText(
+                    output_path
+                )
             # create self.layer in map
             self.add_vector_to_map()
             # connect project saved
@@ -225,7 +260,7 @@ class TrainingVectorLayer:
     # disable editing
     # noinspection PyPep8Naming
     def beforeEditingStarted(self):
-        if self.editing is False:
+        if not self.editing:
             self.layer.commitChanges(stopEditing=True)
             cfg.mx.msg_inf_1()
 
@@ -250,6 +285,7 @@ class TrainingVectorLayer:
         return signature_catalog
 
     # update_bandset
+    # noinspection PyUnresolvedReferences
     def update_bandset(self):
         cfg.logger.log.debug('update bandset')
         try:
@@ -262,7 +298,7 @@ class TrainingVectorLayer:
                 # noinspection PyTypeChecker
                 cfg.logger.log.debug(
                     'signature_catalog.crs: %s; bandset_x.crs: %s'
-                    % str(self.signature_catalog.crs, bandset_x.crs)
+                    % (str(self.signature_catalog.crs), bandset_x.crs)
                 )
             else:
                 self.signature_catalog.bandset = bandset_x
@@ -294,15 +330,19 @@ class TrainingVectorLayer:
         self.vector = None
         self.layer = None
         self.output_path = ''
-        cfg.dock_class_dlg.ui.trainingFile_lineEdit.setText('')
+        if cfg.simplified:
+            cfg.dock_class_simpl_dlg.ui.trainingFile_lineEdit.setText('')
+        else:
+            cfg.dock_class_dlg.ui.trainingFile_lineEdit.setText('')
         cfg.project_registry[cfg.reg_training_input_path] = ''
         # reset table tree
         self.tree = self.clear_tree()
         self.macroclass_dock_tree = {}
-        cfg.dock_class_dlg.ui.label_48.setText(
-            QApplication.translate('semiautomaticclassificationplugin',
-                                   ' ROI & Signature list')
-        )
+        if not cfg.simplified:
+            cfg.dock_class_dlg.ui.label_48.setText(
+                QApplication.translate('semiautomaticclassificationplugin',
+                                       ' ROI & Signature list')
+            )
 
     # save signature catalog to file
     def save_signature_catalog(self, path=None, signature_id_list=None):
@@ -502,33 +542,27 @@ class TrainingVectorLayer:
             )
         except Exception as err:
             cfg.logger.log.error(str(err))
-            self.add_macroclass_tree_item(
-                macroclass=macroclass_id, macroclass_info=''
-            )
+            self.add_macroclass_tree_item(macroclass=macroclass_id,
+                                          macroclass_info='')
         self.class_dock_tree[str(signature_id)].setFlags(
-            Qt.ItemIsEditable | Qt.ItemIsEnabled | Qt.ItemIsUserCheckable |
-            Qt.ItemIsSelectable | Qt.ItemIsDragEnabled
+            Qt.ItemFlag.ItemIsEditable | Qt.ItemFlag.ItemIsEnabled |
+            Qt.ItemFlag.ItemIsUserCheckable |
+            Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsDragEnabled
         )
         if checkbox_state is not None:
             self.class_dock_tree[str(signature_id)].setCheckState(
-                0, int(checkbox_state)
+                0, cfg.util_qt.check_state_from_value(int(checkbox_state))
             )
         self.class_dock_tree[str(signature_id)].setData(
             0, 0, int(macroclass_id)
         )
-        self.class_dock_tree[str(signature_id)].setData(
-            1, 0, int(class_id)
-        )
-        self.class_dock_tree[str(signature_id)].setData(
-            2, 0, str(class_info)
-        )
-        self.class_dock_tree[str(signature_id)].setData(
-            3, 0, str(type_info)
-        )
+        self.class_dock_tree[str(signature_id)].setData(1, 0, int(class_id))
+        self.class_dock_tree[str(signature_id)].setData(2, 0, str(class_info))
+        self.class_dock_tree[str(signature_id)].setData(3, 0, str(type_info))
         self.class_dock_tree[str(signature_id)].setData(
             5, 0, str(signature_id)
         )
-        if color is not None:
+        if color is not None and not cfg.simplified:
             self.class_dock_tree[str(signature_id)].setBackground(
                 4, QColor(color)
             )
@@ -541,8 +575,8 @@ class TrainingVectorLayer:
         self.macroclass_dock_tree[macroclass] = QTreeWidgetItem(row)
         self.tree.addTopLevelItem(self.macroclass_dock_tree[macroclass])
         self.macroclass_dock_tree[macroclass].setFlags(
-            Qt.ItemIsEditable | Qt.ItemIsEnabled | Qt.ItemIsSelectable |
-            Qt.ItemIsDropEnabled
+            Qt.ItemFlag.ItemIsEditable | Qt.ItemFlag.ItemIsEnabled |
+            Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsDropEnabled
         )
         self.macroclass_dock_tree[macroclass].setExpanded(True)
         self.macroclass_dock_tree[macroclass].setData(
@@ -560,7 +594,7 @@ class TrainingVectorLayer:
         self.macroclass_dock_tree[macroclass].setFont(2, font)
         if checkbox_state is not None:
             self.macroclass_dock_tree[macroclass].setCheckState(
-                0, checkbox_state
+                0, cfg.util_qt.check_state_from_value(checkbox_state)
             )
         if color is not None:
             self.macroclass_dock_tree[macroclass].setBackground(
@@ -575,31 +609,46 @@ class TrainingVectorLayer:
         self.macroclass_dock_tree = {}
         if tree is None:
             order = 0
-            sorter = Qt.AscendingOrder
+            sorter = Qt.SortOrder.AscendingOrder
         else:
             order = tree.header().sortIndicatorOrder()
             sorter = tree.header().sortIndicatorSection()
             tree.deleteLater()
-        cfg.dock_class_dlg.ui.signature_list_treeWidget = (
-            QTreeWidget(cfg.dock_class_dlg.ui.tab_2)
-        )
-        tree_widget = cfg.dock_class_dlg.ui.signature_list_treeWidget
+        if cfg.simplified:
+            cfg.dock_class_simpl_dlg.ui.signature_list_treeWidget = (
+                QTreeWidget(cfg.dock_class_simpl_dlg.ui.sig_widget)
+            )
+            tree_widget = cfg.dock_class_simpl_dlg.ui.signature_list_treeWidget
+        else:
+            cfg.dock_class_dlg.ui.signature_list_treeWidget = (
+                QTreeWidget(cfg.dock_class_dlg.ui.tab_2)
+            )
+            tree_widget = cfg.dock_class_dlg.ui.signature_list_treeWidget
         tree_widget.setEditTriggers(
-            QAbstractItemView.AnyKeyPressed | QAbstractItemView.SelectedClicked
+            QAbstractItemView.EditTrigger.AnyKeyPressed
+            | QAbstractItemView.EditTrigger.SelectedClicked
         )
         tree_widget.setAlternatingRowColors(True)
         tree_widget.setSelectionMode(
-            QAbstractItemView.MultiSelection
+            QAbstractItemView.SelectionMode.MultiSelection
         )
         tree_widget.setIndentation(5)
         tree_widget.setExpandsOnDoubleClick(False)
         tree_widget.setObjectName('signature_list_treeWidget')
-        cfg.dock_class_dlg.ui.gridLayout.addWidget(tree_widget, 1, 1, 1, 1)
         tree_widget.setSortingEnabled(True)
-        tree_widget.headerItem().setText(
-            0, QApplication.translate('semiautomaticclassificationplugin',
-                                      'MC ID')
-        )
+        if cfg.simplified:
+            cfg.dock_class_simpl_dlg.ui.sig_gridLayout.addWidget(tree_widget,
+                                                                 1, 1, 1, 1)
+            tree_widget.headerItem().setText(
+                0, QApplication.translate('semiautomaticclassificationplugin',
+                                          'Class')
+            )
+        else:
+            cfg.dock_class_dlg.ui.gridLayout.addWidget(tree_widget, 1, 1, 1, 1)
+            tree_widget.headerItem().setText(
+                0, QApplication.translate('semiautomaticclassificationplugin',
+                                          'MC ID')
+            )
         tree_widget.headerItem().setText(
             1, QApplication.translate('semiautomaticclassificationplugin',
                                       'C ID')
@@ -619,16 +668,24 @@ class TrainingVectorLayer:
         tree_widget.headerItem().setText(5, 'signature_id')
         # tree list
         tree_widget.header().hideSection(5)
-        tree_widget.header().setSortIndicator(sorter, order)
+        if cfg.simplified:
+            tree_widget.header().hideSection(1)
+            tree_widget.header().hideSection(3)
+        tree_widget.header().setSortIndicator(order, sorter)
         cfg.util_qt.set_tree_column_width_list(
             tree_widget, [[0, 60], [1, 30], [2, 100], [3, 40], [4, 30]]
         )
+        tree_widget.header().setSectionResizeMode(
+            2, QHeaderView.ResizeMode.Stretch
+        )
+        tree_widget.header().setStretchLastSection(False)
         # connect to edited cell
         tree_widget.itemChanged.connect(self.edited_cell_tree)
         # connect to signature list double click
         tree_widget.itemDoubleClicked.connect(self.signature_tree_double_click)
         #  context menu
-        tree_widget.setContextMenuPolicy(Qt.CustomContextMenu)
+        tree_widget.setContextMenuPolicy(
+            Qt.ContextMenuPolicy.CustomContextMenu)
         tree_widget.customContextMenuRequested.connect(context_menu)
         return tree_widget
 
@@ -677,7 +734,10 @@ class TrainingVectorLayer:
 
     # edited cell
     def edited_cell_tree(self, item, column):
-        table = cfg.dock_class_dlg.ui.signature_list_treeWidget
+        if cfg.simplified:
+            table = cfg.dock_class_simpl_dlg.ui.signature_list_treeWidget
+        else:
+            table = cfg.dock_class_dlg.ui.signature_list_treeWidget
         table.setSortingEnabled(False)
         table.blockSignals(True)
         reload = False
@@ -882,7 +942,7 @@ class TrainingVectorLayer:
             table.clearSelection()
         table.setSortingEnabled(True)
         table.blockSignals(False)
-        if reload is True:
+        if reload:
             self.roi_signature_table_tree()
         else:
             # info completer
@@ -893,7 +953,10 @@ class TrainingVectorLayer:
 
     # signature table double click
     def signature_tree_double_click(self, item, column):
-        table = cfg.dock_class_dlg.ui.signature_list_treeWidget
+        if cfg.simplified:
+            table = cfg.dock_class_simpl_dlg.ui.signature_list_treeWidget
+        else:
+            table = cfg.dock_class_dlg.ui.signature_list_treeWidget
         table.setSortingEnabled(False)
         table.blockSignals(True)
         reload = False
@@ -925,26 +988,35 @@ class TrainingVectorLayer:
                 zoom_to_roi_polygons(expression)
         # color column
         elif column == 4:
-            color = cfg.util_qt.select_color()
-            if color is not None:
-                # signature item
-                if signature_id is not False:
-                    for selected in table.selectedItems():
-                        signature = selected.text(5)
-                        # set color in table
-                        self.signature_catalog.table.color[
-                            self.signature_catalog.table[
-                                'signature_id'] == signature] = str(
-                            color.toRgb().name()
-                        )
-                # macroclass item
-                elif macroclass_id is not False:
-                    self.signature_catalog.macroclasses_color_string[
-                        macroclass_id] = color.toRgb().name()
-                reload = True
+            if cfg.simplified:
+                # only macroclasses
+                if macroclass_id is not False:
+                    color = cfg.util_qt.select_color()
+                    if color is not None:
+                        self.signature_catalog.macroclasses_color_string[
+                            macroclass_id] = color.toRgb().name()
+                        reload = True
+            else:
+                color = cfg.util_qt.select_color()
+                if color is not None:
+                    # signature item
+                    if signature_id is not False:
+                        for selected in table.selectedItems():
+                            signature = selected.text(5)
+                            # set color in table
+                            self.signature_catalog.table.color[
+                                self.signature_catalog.table[
+                                    'signature_id'] == signature] = str(
+                                color.toRgb().name()
+                            )
+                    # macroclass item
+                    elif macroclass_id is not False:
+                        self.signature_catalog.macroclasses_color_string[
+                            macroclass_id] = color.toRgb().name()
+                    reload = True
         table.setSortingEnabled(True)
         table.blockSignals(False)
-        if reload is True:
+        if reload:
             self.roi_signature_table_tree()
 
     # select all signatures
@@ -958,7 +1030,10 @@ class TrainingVectorLayer:
 
     # set all items to state 0 or 2
     def all_items_set_state(self, value, only_selected=None):
-        tree = cfg.dock_class_dlg.ui.signature_list_treeWidget
+        if cfg.simplified:
+            tree = cfg.dock_class_simpl_dlg.ui.signature_list_treeWidget
+        else:
+            tree = cfg.dock_class_dlg.ui.signature_list_treeWidget
         if only_selected is False:
             # set same state for all
             self.signature_catalog.table.selected[
@@ -988,7 +1063,10 @@ class TrainingVectorLayer:
 
     # change color
     def change_color(self, color):
-        tree = cfg.dock_class_dlg.ui.signature_list_treeWidget
+        if cfg.simplified:
+            tree = cfg.dock_class_simpl_dlg.ui.signature_list_treeWidget
+        else:
+            tree = cfg.dock_class_dlg.ui.signature_list_treeWidget
         if len(tree.selectedItems()) > 0:
             for item in tree.selectedItems():
                 try:
@@ -1100,9 +1178,8 @@ class TrainingVectorLayer:
                     try:
                         unzip_temp_text = open(file_path, 'wb')
                         with unzip_file, unzip_temp_text:
-                            shutil.copyfileobj(
-                                unzip_file, unzip_temp_text
-                            )
+                            # noinspection PyTypeChecker
+                            shutil.copyfileobj(unzip_file, unzip_temp_text)
                         unzip_temp_text.close()
                     except Exception as err:
                         str(err)
@@ -1187,7 +1264,10 @@ class TrainingVectorLayer:
 
     # get highlighted IDs
     def get_highlighted_ids(self, select_all=None, signatures=None):
-        tree = cfg.dock_class_dlg.ui.signature_list_treeWidget
+        if cfg.simplified:
+            tree = cfg.dock_class_simpl_dlg.ui.signature_list_treeWidget
+        else:
+            tree = cfg.dock_class_dlg.ui.signature_list_treeWidget
         if select_all is True:
             # get only signature
             if signatures is True:
@@ -1226,11 +1306,19 @@ class TrainingVectorLayer:
 
     # collapse menu
     def collapse(self):
-        if self.collapse_tree is True:
-            cfg.dock_class_dlg.ui.signature_list_treeWidget.collapseAll()
+        if self.collapse_tree:
+            if cfg.simplified:
+                tree = cfg.dock_class_simpl_dlg.ui.signature_list_treeWidget
+            else:
+                tree = cfg.dock_class_dlg.ui.signature_list_treeWidget
+            tree.collapseAll()
             self.collapse_tree = False
         else:
-            cfg.dock_class_dlg.ui.signature_list_treeWidget.expandAll()
+            if cfg.simplified:
+                tree = cfg.dock_class_simpl_dlg.ui.signature_list_treeWidget
+            else:
+                tree = cfg.dock_class_dlg.ui.signature_list_treeWidget
+            tree.expandAll()
             self.collapse_tree = True
 
     # calculate unique class id to macroclass id
@@ -1263,8 +1351,12 @@ def reset_input():
 
 # reset input
 def reset_input_dock():
-    cfg.dock_class_dlg.ui.undo_save_Button.setEnabled(False)
-    cfg.dock_class_dlg.ui.redo_save_Button.setEnabled(False)
+    if cfg.simplified:
+        cfg.dock_class_simpl_dlg.ui.undo_save_Button.setEnabled(False)
+        cfg.dock_class_simpl_dlg.ui.redo_save_Button.setEnabled(False)
+    else:
+        cfg.dock_class_dlg.ui.undo_save_Button.setEnabled(False)
+        cfg.dock_class_dlg.ui.redo_save_Button.setEnabled(False)
     if cfg.scp_training is not None:
         cfg.scp_training.reset_signature_catalog()
     cfg.scp_training = None
@@ -1292,19 +1384,27 @@ def calculate_signatures():
         cfg.ui_utils.add_progress_bar()
         cfg.scp_training.calculate_signature_of_selected_signatures()
         cfg.ui_utils.remove_progress_bar(sound=False)
-        cfg.dock_class_dlg.ui.undo_save_Button.setEnabled(True)
-        cfg.dock_class_dlg.ui.redo_save_Button.setEnabled(False)
+        if cfg.simplified:
+            cfg.dock_class_simpl_dlg.ui.undo_save_Button.setEnabled(True)
+            cfg.dock_class_simpl_dlg.ui.redo_save_Button.setEnabled(False)
+        else:
+            cfg.dock_class_dlg.ui.undo_save_Button.setEnabled(True)
+            cfg.dock_class_dlg.ui.redo_save_Button.setEnabled(False)
         # create table tree
         cfg.scp_training.roi_signature_table_tree()
         # save training input
         if cfg.project_registry[cfg.reg_save_training_input_check] == 2:
             cfg.scp_training.save_signature_catalog()
+    return None
 
 
 # merge highlighted signatures
 # noinspection PyTypeChecker
 def merge_signatures():
-    table = cfg.dock_class_dlg.ui.signature_list_treeWidget
+    if cfg.simplified:
+        table = cfg.dock_class_simpl_dlg.ui.signature_list_treeWidget
+    else:
+        table = cfg.dock_class_dlg.ui.signature_list_treeWidget
     selected = table.selectedItems()
     if len(selected) > 0:
         answer = cfg.util_qt.question_box(
@@ -1327,8 +1427,12 @@ def merge_signatures():
             cfg.ui_utils.add_progress_bar()
             cfg.scp_training.merge_selected_signatures()
             cfg.ui_utils.remove_progress_bar(sound=False)
-            cfg.dock_class_dlg.ui.undo_save_Button.setEnabled(True)
-            cfg.dock_class_dlg.ui.redo_save_Button.setEnabled(False)
+            if cfg.simplified:
+                cfg.dock_class_simpl_dlg.ui.undo_save_Button.setEnabled(True)
+                cfg.dock_class_simpl_dlg.ui.redo_save_Button.setEnabled(False)
+            else:
+                cfg.dock_class_dlg.ui.undo_save_Button.setEnabled(True)
+                cfg.dock_class_dlg.ui.redo_save_Button.setEnabled(False)
             # create table tree
             cfg.scp_training.roi_signature_table_tree()
             # save training input
@@ -1339,7 +1443,10 @@ def merge_signatures():
 # remove selected signatures
 # noinspection PyTypeChecker
 def remove_selected_signatures():
-    table = cfg.dock_class_dlg.ui.signature_list_treeWidget
+    if cfg.simplified:
+        table = cfg.dock_class_simpl_dlg.ui.signature_list_treeWidget
+    else:
+        table = cfg.dock_class_dlg.ui.signature_list_treeWidget
     selected = table.selectedItems()
     if len(selected) > 0:
         answer = cfg.util_qt.question_box(
@@ -1359,8 +1466,12 @@ def remove_selected_signatures():
                 signature_catalog=signature_catalog
             )
             cfg.scp_training.delete_selected_signatures()
-            cfg.dock_class_dlg.ui.undo_save_Button.setEnabled(True)
-            cfg.dock_class_dlg.ui.redo_save_Button.setEnabled(False)
+            if cfg.simplified:
+                cfg.dock_class_simpl_dlg.ui.undo_save_Button.setEnabled(True)
+                cfg.dock_class_simpl_dlg.ui.redo_save_Button.setEnabled(False)
+            else:
+                cfg.dock_class_dlg.ui.undo_save_Button.setEnabled(True)
+                cfg.dock_class_dlg.ui.redo_save_Button.setEnabled(False)
             # create table tree
             cfg.scp_training.roi_signature_table_tree()
             # save training input
@@ -1391,12 +1502,14 @@ def signature_checkbox():
     if cfg.dock_class_dlg.ui.signature_checkBox.isChecked() is True:
         cfg.project_registry[cfg.reg_signature_calculation_check] = 2
         cfg.dialog.ui.signature_checkBox2.blockSignals(True)
-        cfg.dialog.ui.signature_checkBox2.setCheckState(2)
+        cfg.dialog.ui.signature_checkBox2.setCheckState(
+            cfg.util_qt.check_state_from_value(2))
         cfg.dialog.ui.signature_checkBox2.blockSignals(False)
     else:
         cfg.project_registry[cfg.reg_signature_calculation_check] = 0
         cfg.dialog.ui.signature_checkBox2.blockSignals(True)
-        cfg.dialog.ui.signature_checkBox2.setCheckState(0)
+        cfg.dialog.ui.signature_checkBox2.setCheckState(
+            cfg.util_qt.check_state_from_value(0))
         cfg.dialog.ui.signature_checkBox2.blockSignals(False)
 
 
@@ -1413,7 +1526,10 @@ def collapse_menu():
 # change macroclass menu
 # noinspection PyTypeChecker
 def change_macroclass_menu():
-    dock_tree = cfg.dock_class_dlg.ui.signature_list_treeWidget
+    if cfg.simplified:
+        dock_tree = cfg.dock_class_simpl_dlg.ui.signature_list_treeWidget
+    else:
+        dock_tree = cfg.dock_class_dlg.ui.signature_list_treeWidget
     if len(dock_tree.selectedItems()) > 0:
         answer = cfg.util_qt.question_box(
             QApplication.translate('semiautomaticclassificationplugin',
@@ -1440,7 +1556,11 @@ def change_color_menu():
 
 # clear selection menu
 def clear_selection_menu():
-    cfg.dock_class_dlg.ui.signature_list_treeWidget.clearSelection()
+    if cfg.simplified:
+        table = cfg.dock_class_simpl_dlg.ui.signature_list_treeWidget
+    else:
+        table = cfg.dock_class_dlg.ui.signature_list_treeWidget
+    table.clearSelection()
 
 
 # zoom to menu
@@ -1461,11 +1581,13 @@ def zoom_to_menu():
 # select all menu
 def select_all_menu():
     checked = None
-    if len(
-            cfg.dock_class_dlg.ui.signature_list_treeWidget.selectedItems()
-    ) > 0:
+    if cfg.simplified:
+        table = cfg.dock_class_simpl_dlg.ui.signature_list_treeWidget
+    else:
+        table = cfg.dock_class_dlg.ui.signature_list_treeWidget
+    if len(table.selectedItems()) > 0:
         selected = True
-        items = cfg.dock_class_dlg.ui.signature_list_treeWidget.selectedItems()
+        items = table.selectedItems()
     else:
         selected = False
         items = []
@@ -1482,21 +1604,18 @@ def select_all_menu():
                 checked = i.child(r).checkState(0)
         break
     if checked == 2 or checked == 1:
-        cfg.scp_training.select_all_signatures(
-            check=False,
-            selected=selected
-        )
+        cfg.scp_training.select_all_signatures(check=False, selected=selected)
     elif checked == 0:
-        cfg.scp_training.select_all_signatures(
-            check=True,
-            selected=selected
-        )
+        cfg.scp_training.select_all_signatures(check=True, selected=selected)
 
 
 # filter tree
 def filter_tree():
     text = cfg.dock_class_dlg.ui.ROI_filter_lineEdit.text()
-    tree = cfg.dock_class_dlg.ui.signature_list_treeWidget
+    if cfg.simplified:
+        tree = cfg.dock_class_simpl_dlg.ui.signature_list_treeWidget
+    else:
+        tree = cfg.dock_class_dlg.ui.signature_list_treeWidget
     root = tree.invisibleRootItem()
     tree.blockSignals(True)
     if len(text) > 0:
@@ -1636,9 +1755,11 @@ def context_menu(event):
         'semiautomaticclassificationplugin_export_spectral_library.svg',
         QApplication.translate('semiautomaticclassificationplugin', 'Export')
     )
-    menu.exec_(
-        cfg.dock_class_dlg.ui.signature_list_treeWidget.mapToGlobal(event)
-    )
+    if cfg.simplified:
+        table = cfg.dock_class_simpl_dlg.ui.signature_list_treeWidget
+    else:
+        table = cfg.dock_class_dlg.ui.signature_list_treeWidget
+    menu.exec(table.mapToGlobal(event))
 
 
 """ Toolbar functions """
@@ -1722,6 +1843,7 @@ def calculate_pixel_expression(point):
                 cfg.rs.configurations.multiprocess.multiprocess_pixel_value()
                 value = cfg.rs.configurations.multiprocess.output
                 cfg.rs.configurations.multiprocess.output = False
+                # noinspection PySimplifyBooleanCheck
                 if value is not False:
                     cursor = cursor_creation(value)
     cfg.map_canvas.setCursor(cursor)
@@ -1826,7 +1948,7 @@ def pointer_manual_roi_active():
     cfg.qgis_vertex_item_list = []
     cfg.map_canvas.setMapTool(cfg.manual_roi_pointer)
     cursor = QCursor()
-    cursor.setShape(Qt.CrossCursor)
+    cursor.setShape(Qt.CursorShape.CrossCursor)
     cfg.map_canvas.setCursor(cursor)
 
 
@@ -1846,8 +1968,7 @@ def roi_min_size():
     if cfg.roi_time is None:
         cfg.roi_time = datetime.now() - timedelta(seconds=2)
     if cfg.dock_class_dlg.ui.auto_refresh_ROI_checkBox.isChecked():
-        if datetime.now() > (
-                cfg.roi_time + timedelta(seconds=1)):
+        if datetime.now() > (cfg.roi_time + timedelta(seconds=1)):
             cfg.roi_time = datetime.now()
             redo_roi()
 
@@ -1861,8 +1982,7 @@ def range_radius():
     if cfg.roi_time is None:
         cfg.roi_time = datetime.now() - timedelta(seconds=2)
     if cfg.dock_class_dlg.ui.auto_refresh_ROI_checkBox.isChecked():
-        if datetime.now() > (
-                cfg.roi_time + timedelta(seconds=1)):
+        if datetime.now() > (cfg.roi_time + timedelta(seconds=1)):
             cfg.roi_time = datetime.now()
             redo_roi()
 
@@ -1876,8 +1996,7 @@ def max_roi_width():
     if cfg.roi_time is None:
         cfg.roi_time = datetime.now() - timedelta(seconds=2)
     if cfg.dock_class_dlg.ui.auto_refresh_ROI_checkBox.isChecked():
-        if datetime.now() > (
-                cfg.roi_time + timedelta(seconds=1)):
+        if datetime.now() > (cfg.roi_time + timedelta(seconds=1)):
             cfg.roi_time = datetime.now()
             redo_roi()
 
@@ -1889,8 +2008,7 @@ def rapid_roi_band():
     )
     # auto refresh ROI
     if cfg.dock_class_dlg.ui.auto_refresh_ROI_checkBox.isChecked():
-        if datetime.now() > (
-                cfg.roi_time + timedelta(seconds=1)):
+        if datetime.now() > (cfg.roi_time + timedelta(seconds=1)):
             cfg.roi_time = datetime.now()
             redo_roi()
 
@@ -1903,8 +2021,7 @@ def rapid_roi_checkbox():
         cfg.project_registry[cfg.reg_rapid_roi_check] = 0
     # auto refresh ROI
     if cfg.dock_class_dlg.ui.auto_refresh_ROI_checkBox.isChecked():
-        if datetime.now() > (
-                cfg.roi_time + timedelta(seconds=1)):
+        if datetime.now() > (cfg.roi_time + timedelta(seconds=1)):
             cfg.roi_time = datetime.now()
             redo_roi()
 
@@ -1919,20 +2036,33 @@ def vegetation_index_checkbox():
 
 # ROI macroclass ID
 def roi_macroclass_id_value():
-    value = cfg.dock_class_dlg.ui.ROI_Macroclass_ID_spin.value()
+    if cfg.simplified:
+        value = cfg.dock_class_simpl_dlg.ui.ROI_Macroclass_ID_spin.value()
+    else:
+        value = cfg.dock_class_dlg.ui.ROI_Macroclass_ID_spin.value()
     cfg.project_registry[cfg.reg_roi_macroclass_id] = value
     # set macroclass name if existing
     if cfg.scp_training is not None:
         if value in cfg.scp_training.signature_catalog.macroclasses:
             macroclass = cfg.scp_training.signature_catalog.macroclasses[value]
-            cfg.dock_class_dlg.ui.ROI_Macroclass_line.setText(macroclass)
+            if cfg.simplified:
+                cfg.dock_class_simpl_dlg.ui.ROI_Macroclass_line.setText(
+                    macroclass
+                )
+            else:
+                cfg.dock_class_dlg.ui.ROI_Macroclass_line.setText(macroclass)
             cfg.project_registry[cfg.reg_roi_macroclass_name] = macroclass
 
 
 def roi_macroclass_name_info():
-    cfg.project_registry[cfg.reg_roi_macroclass_name] = str(
-        cfg.dock_class_dlg.ui.ROI_Macroclass_line.text()
-    )
+    if cfg.simplified:
+        cfg.project_registry[cfg.reg_roi_macroclass_name] = str(
+            cfg.dock_class_simpl_dlg.ui.ROI_Macroclass_line.text()
+        )
+    else:
+        cfg.project_registry[cfg.reg_roi_macroclass_name] = str(
+            cfg.dock_class_dlg.ui.ROI_Macroclass_line.text()
+        )
 
 
 # set ROI class ID
@@ -1964,9 +2094,14 @@ def class_info_completer(class_info_list):
 def macroclass_info_completer(macroclass_list):
     # class names
     completer_macroclass_name = QCompleter(macroclass_list)
-    cfg.dock_class_dlg.ui.ROI_Macroclass_line.setCompleter(
-        completer_macroclass_name
-    )
+    if cfg.simplified:
+        cfg.dock_class_simpl_dlg.ui.ROI_Macroclass_line.setCompleter(
+            completer_macroclass_name
+        )
+    else:
+        cfg.dock_class_dlg.ui.ROI_Macroclass_line.setCompleter(
+            completer_macroclass_name
+        )
 
 
 # Activate save input file
@@ -2011,7 +2146,8 @@ def add_roi_polygon_to_map(source_layer, feature_id):
         str(err)
     cfg.map_canvas.refresh()
     cfg.roi_map_polygon.show()
-    cfg.show_ROI_radioButton.setChecked(True)
+    if not cfg.simplified:
+        cfg.show_ROI_radioButton.setChecked(True)
     cfg.ctrl_click = None
 
 
@@ -2052,6 +2188,7 @@ def save_roi_to_training(bandset_number=None):
         return False
     elif cfg.temporary_roi is None:
         cfg.mx.msg_war_4()
+        return None
     else:
         cfg.ui_utils.add_progress_bar()
         # get vector from ROI
@@ -2077,6 +2214,12 @@ def save_roi_to_training(bandset_number=None):
         # save previous catalog file
         cfg.scp_training.save_temporary_signature_catalog()
         signature_catalog = cfg.scp_training.signature_catalog_copy()
+        if cfg.simplified:
+            class_name = cfg.project_registry[cfg.reg_roi_macroclass_name]
+            macroclass_name = cfg.project_registry[cfg.reg_roi_macroclass_name]
+        else:
+            class_name = cfg.project_registry[cfg.reg_roi_class_name]
+            macroclass_name = cfg.project_registry[cfg.reg_roi_macroclass_name]
         # save roi to new catalog
         try:
             signature_catalog.import_vector(
@@ -2084,9 +2227,7 @@ def save_roi_to_training(bandset_number=None):
                     cfg.project_registry[cfg.reg_roi_macroclass_id]
                 ),
                 class_value=int(cfg.project_registry[cfg.reg_roi_class_id]),
-                macroclass_name=cfg.project_registry[
-                    cfg.reg_roi_macroclass_name],
-                class_name=cfg.project_registry[cfg.reg_roi_class_name],
+                macroclass_name=macroclass_name, class_name=class_name,
                 calculate_signature=calculate_signature
             )
             if cfg.rs.configurations.action:
@@ -2094,12 +2235,22 @@ def save_roi_to_training(bandset_number=None):
                     signature_catalog=signature_catalog
                 )
                 clear_scp_dock_rubber()
-                cfg.dock_class_dlg.ui.undo_save_Button.setEnabled(True)
-                cfg.dock_class_dlg.ui.redo_save_Button.setEnabled(False)
-                # increase C_ID
-                cfg.dock_class_dlg.ui.ROI_ID_spin.setValue(
-                    int(cfg.project_registry[cfg.reg_roi_class_id]) + 1
-                )
+                if cfg.simplified:
+                    cfg.dock_class_simpl_dlg.ui.undo_save_Button.setEnabled(
+                        True
+                    )
+                    cfg.dock_class_simpl_dlg.ui.redo_save_Button.setEnabled(
+                        False
+                    )
+                    cfg.project_registry[cfg.reg_roi_class_id] = int(
+                        cfg.project_registry[cfg.reg_roi_class_id]) + 1
+                else:
+                    cfg.dock_class_dlg.ui.undo_save_Button.setEnabled(True)
+                    cfg.dock_class_dlg.ui.redo_save_Button.setEnabled(False)
+                    # increase C_ID
+                    cfg.dock_class_dlg.ui.ROI_ID_spin.setValue(
+                        int(cfg.project_registry[cfg.reg_roi_class_id]) + 1
+                    )
                 # create table tree
                 cfg.scp_training.roi_signature_table_tree()
                 # save training input
@@ -2109,6 +2260,7 @@ def save_roi_to_training(bandset_number=None):
         except Exception as err:
             cfg.logger.log.error(str(err))
         cfg.ui_utils.remove_progress_bar(sound=False)
+        return None
 
 
 # undo training modifications
@@ -2175,6 +2327,7 @@ def left_click_manual(point):
     cfg.qgis_vertex_item_list.append(vertex)
     cfg.scp_dock_rubber_roi.setToGeometry(geometry, qgis_crs)
     cfg.scp_dock_rubber_roi.show()
+    return None
 
 
 # right click
@@ -2197,7 +2350,7 @@ def right_click_manual(point):
     if not len(cfg.roi_points) >= 3:
         cfg.mx.msg_inf_2()
         clear_scp_dock_rubber()
-        return
+        return None
     q_point = QPointF()
     f_polygon = QPolygonF()
     for v in cfg.roi_points:
@@ -2214,7 +2367,7 @@ def right_click_manual(point):
     memory_layer.startEditing()
     # add fields
     data_provider.addAttributes(
-        [QgsField(cfg.empty_field_name, QVariant.Int)]
+        [QgsField(cfg.empty_field_name, QMetaType.Type.Int)]
     )
     # add a feature
     if cfg.ctrl_click is not None:
@@ -2227,10 +2380,15 @@ def right_click_manual(point):
     cfg.temporary_roi = memory_layer
     clear_scp_dock_rubber()
     add_roi_polygon_to_map(cfg.temporary_roi, 1)
-    # calculate temporary spectral signature
-    if cfg.dock_class_dlg.ui.auto_calculate_ROI_signature_checkBox.isChecked():
-        temporary_roi_spectral_signature()
-    cfg.dock_class_dlg.ui.button_Save_ROI.setEnabled(True)
+    if cfg.simplified:
+        cfg.dock_class_simpl_dlg.ui.button_Save_ROI.setEnabled(True)
+    else:
+        # calculate temporary spectral signature
+        if (cfg.dock_class_dlg.ui.auto_calculate_ROI_signature_checkBox
+                .isChecked()):
+            temporary_roi_spectral_signature()
+        cfg.dock_class_dlg.ui.button_Save_ROI.setEnabled(True)
+    return None
 
 
 # add multipart ROI
@@ -2265,6 +2423,7 @@ def left_click_region_growing(point):
         cfg.mx.msg_war_3()
         return False
     create_region_growing_roi(point)
+    return None
 
 
 # left click
@@ -2274,6 +2433,7 @@ def right_click_region_growing(point):
         cfg.mx.msg_war_3()
         return False
     calculate_pixel_signature(point)
+    return None
 
 
 # right click to calculate point (pixel) signature
@@ -2309,7 +2469,7 @@ def calculate_pixel_signature(point, bandset_number=None):
     vrt_check = raster_vector.create_temporary_virtual_raster(band_list)
     if bands is not None:
         for band in bands:
-            if cfg.rs.configurations.action is False:
+            if not cfg.rs.configurations.action:
                 break
             path = raster_vector.create_temporary_virtual_raster(
                 [vrt_check], band_number_list=[[int(band['band_number'])]]
@@ -2336,6 +2496,7 @@ def calculate_pixel_signature(point, bandset_number=None):
     plot_catalog.catalog[signature_id] = vector_plot
     cfg.spectral_signature_plotter.signature_list_plot_table()
     cfg.input_interface.spectral_plot_tab()
+    return None
 
 
 # create a region growing ROI
@@ -2386,7 +2547,7 @@ def create_region_growing_roi(point, bandset_number=None):
         # add fields
         provider = memory_layer.dataProvider()
         provider.addAttributes(
-            [QgsField(cfg.empty_field_name, QVariant.Int)]
+            [QgsField(cfg.empty_field_name, QMetaType.Type.Int)]
         )
         roi_layer = cfg.util_qgis.add_vector_layer(region_path)
         # add a feature
@@ -2415,13 +2576,17 @@ def create_region_growing_roi(point, bandset_number=None):
         cfg.roi_center_vertex.setColor(QColor(0, 255, 255))
         cfg.roi_center_vertex.setIconSize(12)
         cfg.roi_points.append(cfg.roi_center_vertex)
-        # calculate temporary spectral signature
-        button = cfg.dock_class_dlg.ui.auto_calculate_ROI_signature_checkBox
-        if button.isChecked():
-            temporary_roi_spectral_signature(bandset_number=bandset_number)
-        cfg.dock_class_dlg.ui.button_Save_ROI.setEnabled(True)
-        cfg.redo_ROI_Button.setEnabled(True)
+        if cfg.simplified:
+            cfg.dock_class_simpl_dlg.ui.button_Save_ROI.setEnabled(True)
+        else:
+            # calculate temporary spectral signature
+            button = cfg.dock_class_dlg.ui.auto_calculate_ROI_signature_checkBox
+            if button.isChecked():
+                temporary_roi_spectral_signature(bandset_number=bandset_number)
+            cfg.dock_class_dlg.ui.button_Save_ROI.setEnabled(True)
+            cfg.redo_ROI_Button.setEnabled(True)
         cfg.ui_utils.remove_progress_bar(sound=False)
+    return None
 
 
 # calculate temporary ROI spectral signature
@@ -2479,12 +2644,13 @@ def create_training_input():
         reset_input_dock()
         bandset_number = cfg.project_registry[cfg.reg_active_bandset_number]
         cfg.project_registry[cfg.reg_training_bandset_number] = bandset_number
-        cfg.dock_class_dlg.ui.label_48.setText('%s (%s %s)' % (
-            QApplication.translate('semiautomaticclassificationplugin',
-                                   ' ROI & Signature list'),
-            QApplication.translate('semiautomaticclassificationplugin',
-                                   'band set'), str(bandset_number))
-        )
+        if not cfg.simplified:
+            cfg.dock_class_dlg.ui.label_48.setText('%s (%s %s)' % (
+                QApplication.translate('semiautomaticclassificationplugin',
+                                       ' ROI & Signature list'),
+                QApplication.translate('semiautomaticclassificationplugin',
+                                       'band set'), str(bandset_number))
+            )
         bandset_x = cfg.bandset_catalog.get(bandset_number)
         band_count = bandset_x.get_band_count()
         cfg.logger.log.debug('bandset band count: %s' % (str(band_count)))
@@ -2534,8 +2700,12 @@ def import_library_file(path=None):
             cfg.scp_training.import_csv_file(file_path)
         elif file_path.endswith('.txt'):
             cfg.signature_importer.aster_library(file_path)
-        cfg.dock_class_dlg.ui.undo_save_Button.setEnabled(True)
-        cfg.dock_class_dlg.ui.redo_save_Button.setEnabled(False)
+        if cfg.simplified:
+            cfg.dock_class_simpl_dlg.ui.undo_save_Button.setEnabled(True)
+            cfg.dock_class_simpl_dlg.ui.redo_save_Button.setEnabled(False)
+        else:
+            cfg.dock_class_dlg.ui.undo_save_Button.setEnabled(True)
+            cfg.dock_class_dlg.ui.redo_save_Button.setEnabled(False)
         cfg.ui_utils.remove_progress_bar(sound=False)
 
 
@@ -2577,13 +2747,14 @@ def open_signature_catalog_file(file_path=None, bandset_number=None):
     signature_catalog = cfg.rs.spectral_signatures_catalog(
         bandset=cfg.bandset_catalog.get(bandset_number)
     )
-    cfg.dock_class_dlg.ui.label_48.setText(
-        '%s (%s %s)' % (
-            QApplication.translate('semiautomaticclassificationplugin',
-                                   ' ROI & Signature list'),
-            QApplication.translate('semiautomaticclassificationplugin',
-                                   'band set'), str(bandset_number))
-    )
+    if not cfg.simplified:
+        cfg.dock_class_dlg.ui.label_48.setText(
+            '%s (%s %s)' % (
+                QApplication.translate('semiautomaticclassificationplugin',
+                                       ' ROI & Signature list'),
+                QApplication.translate('semiautomaticclassificationplugin',
+                                       'band set'), str(bandset_number))
+        )
     signature_catalog.load(file_path=temp_path)
     # remove training input
     project = cfg.util_qgis.get_qgis_project()
@@ -2746,8 +2917,12 @@ def import_vector():
                 class_field=class_field, class_name_field=class_name_field,
                 calculate_signature=calculate_signature
             )
-            cfg.dock_class_dlg.ui.undo_save_Button.setEnabled(True)
-            cfg.dock_class_dlg.ui.redo_save_Button.setEnabled(False)
+            if cfg.simplified:
+                cfg.dock_class_simpl_dlg.ui.undo_save_Button.setEnabled(True)
+                cfg.dock_class_simpl_dlg.ui.redo_save_Button.setEnabled(False)
+            else:
+                cfg.dock_class_dlg.ui.undo_save_Button.setEnabled(True)
+                cfg.dock_class_dlg.ui.redo_save_Button.setEnabled(False)
             cfg.ui_utils.remove_progress_bar(sound=False)
 
 
@@ -2817,7 +2992,7 @@ def add_roi_to_scatter_plot():
 
 # export symbology
 def export_symbology(macroclass=True):
-    if macroclass is True:
+    if macroclass:
         value_color_dictionary = (
             cfg.scp_training.signature_catalog.macroclasses_color_string
         )

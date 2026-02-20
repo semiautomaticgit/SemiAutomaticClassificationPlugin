@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download,
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2024 by Luca Congedo.
+# Copyright (C) 2012-2026 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -22,7 +22,7 @@
 
 from pathlib import Path
 
-from PyQt5.QtGui import QIcon
+from PyQt6.QtGui import QIcon
 # noinspection PyUnresolvedReferences
 from qgis.core import (
     QgsProcessingParameterFileDestination,
@@ -78,8 +78,8 @@ class Accuracy(AlgorithmTemplate):
             QgsProcessingParameterField(
                 name=self.TEXT,
                 description=self.translate('Vector field'),
-                defaultValue='class_id',
-                parentLayerParameterName=self.INPUT_VECTOR, optional=True
+                defaultValue='', parentLayerParameterName=self.INPUT_VECTOR,
+                optional=True
             )
         )
         self.addParameter(
@@ -93,7 +93,9 @@ class Accuracy(AlgorithmTemplate):
             QgsProcessingParameterFileDestination(
                 name=self.OUTPUT,
                 description=self.translate('Calculation output'),
-                fileFilter='tif file (*.tif)'
+                fileFilter=self.translate(
+                    'tif file (*.tif);; vrt file (*.vrt)'
+                )
             )
         )
 
@@ -122,7 +124,7 @@ class Accuracy(AlgorithmTemplate):
         reference = self.parameterAsFile(
             parameters, self.INPUT_RASTER_2, context
         )
-        if reference is '':
+        if reference is None or len(str(reference)) == 0:
             reference = self.parameterAsFile(
                 parameters, self.INPUT_VECTOR, context
             )

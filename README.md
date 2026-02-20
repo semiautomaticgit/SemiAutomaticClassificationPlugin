@@ -12,13 +12,12 @@ is not remote sensing.
 
 Search and download is available for Landsat, Sentinel-2 images.
 Several algorithms are available for the land cover classification.
-This plugin requires the installation of Remotior Sensus, GDAL, OGR, Numpy, 
-SciPy, and Matplotlib. Other dependencies are optional for specific functions.
-For more information please visit https://fromgistors.blogspot.com .
+This plugin is built on Remotior Sensus library and requires the installation 
+of additional dependencies. For more information please visit https://fromgistors.blogspot.com .
 
 ## Plugin installation
 
-The SCP is available for QGIS version 3.x.
+The SCP is available for QGIS version 4.x.
 The SCP is developed with Python 3 and requires the installation of 
 Remotior Sensus, GDAL (OGR), NumPy, SciPy and Matplotlib.
 

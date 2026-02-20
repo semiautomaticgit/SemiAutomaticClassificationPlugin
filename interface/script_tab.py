@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2024 by Luca Congedo.
+# Copyright (C) 2012-2026 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -21,7 +21,7 @@
 # If not, see <https://www.gnu.org/licenses/>.
 
 
-from PyQt5.QtWidgets import qApp, QApplication
+from PyQt6.QtWidgets import QApplication
 cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
 
@@ -41,7 +41,7 @@ def clear_text():
 # copy text
 def copy_text():
     text = cfg.dialog.ui.plainTextEdit_batch.toPlainText()
-    clipboard = qApp.clipboard()
+    clipboard = QApplication.instance().clipboard()
     clipboard.setText(text)
 
 

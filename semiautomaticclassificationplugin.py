@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download,
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2024 by Luca Congedo.
+# Copyright (C) 2012-2026 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -22,18 +22,35 @@
 
 
 import multiprocessing
-import platform
 import sys
-from os import path, makedirs
+from os import path, makedirs, remove
+import ast
+
+try:
+    from .ui import resources_rc
+    assert resources_rc
+except Exception as error:
+    print(error)
 
 import qgis.utils as qgis_utils
-# import the PyQt libraries
-from PyQt5.QtCore import (
-    Qt, QFileInfo, QSettings, QSize, qVersion, QTranslator, QCoreApplication,
-    QDir, QDate
-)
-from PyQt5.QtGui import QFont, QColor
-from PyQt5.QtWidgets import QApplication, QHeaderView, QLineEdit
+
+global plugin_check
+
+try:
+    # import the PyQt libraries
+    from PyQt6.QtCore import (
+        Qt, QFileInfo, QSettings, QSize, QTranslator, QCoreApplication,
+        QDir, QDate
+    )
+    from PyQt6.QtGui import QFont, QColor
+    from PyQt6.QtWidgets import QApplication, QHeaderView, QLineEdit, QComboBox
+    qt_check = True
+    plugin_check = True
+except Exception as error:
+    print(error)
+    qt_check = False
+    plugin_check = False
+
 # import the QGIS libraries
 # noinspection PyUnresolvedReferences
 from qgis.core import (
@@ -43,130 +60,211 @@ from qgis.core import (
 from qgis.gui import QgsRubberBand
 
 # import plugin version
-from .__init__ import version as semiautomaticclass_version
+from .__init__ import version as semiautomatic_class_version
 # import SemiAutomaticClassificationPlugin
-from .core import config as cfg, util_qgis, util_qt, utils, util_gdal, messages
-from .core.ui_utils import UiUtils
-from .interface import (
-    input_interface, scp_dock, bandset_tab, accuracy_tab, stack_bandset_tab,
-    classification_report_tab, classification_to_vector_tab, split_bands_tab,
-    cross_classification_tab, band_clustering_tab, band_dilation_tab,
-    band_erosion_tab, settings, band_sieve_tab, band_combination_tab,
-    band_calc_tab, band_neighbor_tab, band_pca_tab, spectral_distance_tab,
-    reclassification_tab, vector_to_raster_tab, clip_bands_tab,
-    edit_raster_tab, raster_zonal_stats_tab,
-    reproject_bandset_tab, masking_bands_tab, download_products_tab,
-    mosaic_bandsets_tab, image_conversion_tab, script_tab, classification_tab,
-    rgb_composite_tab, signature_threshold_tab, multiple_roi_tab
-)
-from .map_pointers.classification_preview_pointer import ClassificationPreview
-from .map_pointers.clip_bands_pointer import ClipBandsPointer
-from .map_pointers.download_products_pointer import DownloadProductsPointer
-from .map_pointers.manual_roi_pointer import ManualROIPointer
-from .map_pointers.region_growing_pointer import RegionGrowingPointer
-from .qgis_processing.scp_algorithm_provider import SCPAlgorithmProvider
-from .spectral_signature import (
-    spectral_signature_plot, scatter_plot, signature_importer
-)
-# initialize Qt ui
-from .ui.semiautomaticclassificationplugindialog import (
-    SemiAutomaticClassificationPluginDialog, SpectralSignatureDialog,
-    ScatterPlotDialog, DockClassDialog, WidgetDialog
-)
-
-global plugin_check
-lib_dir = None
+from .core import config as cfg
 try:
-    import remotior_sensus
-    plugin_check = True
+    from .core import util_qgis
 except Exception as error:
-    str(error)
     plugin_check = False
-    # noinspection PyTypeChecker
     qgis_utils.iface.messageBar().pushMessage(
-        'Semi-Automatic Classification Plugin', str(error),
-        level=Qgis.Warning, duration=10
+        'Semi-Automatic Classification Plugin', str(error), level=Qgis.Critical
     )
-    """
+try:
+    from .core import util_qt
+except Exception as error:
+    plugin_check = False
+    qgis_utils.iface.messageBar().pushMessage(
+        'Semi-Automatic Classification Plugin', str(error), level=Qgis.Critical
+    )
+try:
+    from .core import utils
+except Exception as error:
+    plugin_check = False
+    qgis_utils.iface.messageBar().pushMessage(
+        'Semi-Automatic Classification Plugin', str(error), level=Qgis.Critical
+    )
+try:
+    from .core import util_gdal
+except Exception as error:
+    plugin_check = False
+    qgis_utils.iface.messageBar().pushMessage(
+        'Semi-Automatic Classification Plugin', str(error), level=Qgis.Critical
+    )
+try:
+    from .core import messages
+except Exception as error:
+    plugin_check = False
+    qgis_utils.iface.messageBar().pushMessage(
+        'Semi-Automatic Classification Plugin', str(error), level=Qgis.Critical
+    )
+try:
+    # initialize Qt ui
+    from .ui.semiautomaticclassificationplugindialog import (
+        SemiAutomaticClassificationPluginDialog, SpectralSignatureDialog,
+        ScatterPlotDialog, DockClassDialog, DockClassSimplifiedDialog,
+        WidgetDialog
+    )
+except Exception as error:
+    plugin_check = False
+    qgis_utils.iface.messageBar().pushMessage(
+        'Semi-Automatic Classification Plugin', str(error), level=Qgis.Critical
+    )
+
+
+# minimum remotior sensus version
+rs_version = '0.6.2'
+lib_dir = rs_path = installed_version = remotior_sensus_2 = None
+
+
+# find remotior sensus path if existing
+for p in sys.path:
+    candidate = path.join(p, 'remotior_sensus', '__init__.py')
+    if path.isfile(candidate):
+        rs_path = candidate
+
+
+def find_library_version(library_path):
+    with open(library_path) as f:
+        tree = ast.parse(f.read())
+    for node in tree.body:
+        if isinstance(node, ast.Assign):
+            for t in node.targets:
+                if getattr(t, 'id', None) == "__version__":
+                    # noinspection PyTypeChecker
+                    return ast.literal_eval(node.value)
+    return None
+
+
+if rs_path is not None:
+    installed_version = find_library_version(rs_path)
+
+
+# download remotior sensus
+def download_library(library_directory):
     try:
-        lib_dir = ('%s/python/plugins/%s' % (
-                    QFileInfo(
-                        QgsApplication.qgisUserDatabaseFilePath()
-                    ).path(), str(__name__).split('.')[0])
-                   )
-        sys.path.append(lib_dir)
-        import remotior_sensus
-        assert remotior_sensus.__version__
-        plugin_check = True
+        # download library
+        import requests
+        import tarfile
+        response = requests.get(
+            f'https://pypi.org/packages/source/r/remotior-sensus/'
+            f'remotior_sensus-{rs_version}.tar.gz'
+        )
+        with open(library_directory + f'/remotior_sensus-{rs_version}.tar.gz',
+                  'wb') as rs_file:
+            rs_file.write(response.content)
+        with (tarfile.open(
+                library_directory + f'/remotior_sensus-{rs_version}.tar.gz',
+                'r:gz') as tar):
+            for member in tar.getmembers():
+                if member.name.startswith(
+                        f'remotior_sensus-{rs_version}/src/remotior_sensus'
+                ):
+                    real_path = path.relpath(
+                        member.name, f'remotior_sensus-'
+                                     f'{rs_version}/src/remotior_sensus')
+                    file_path = (
+                        f'{library_directory}/remotior_sensus/{real_path}'
+                    )
+                    if member.isdir():
+                        makedirs(file_path, exist_ok=True)
+                    else:
+                        makedirs(path.dirname(file_path), exist_ok=True)
+                        try:
+                            source = tar.extractfile(member)
+                            if source is not None:
+                                with open(file_path, 'wb') as target:
+                                    target.write(source.read())
+                        except Exception as errr:
+                            str(errr)
+        try:
+            remove(library_directory + f'/remotior_sensus-{rs_version}.tar.gz')
+        except Exception as errr:
+            str(errr)
+        return True
+    except Exception as errr:
+        str(errr)
         # noinspection PyTypeChecker
         qgis_utils.iface.messageBar().pushMessage(
-            'Semi-Automatic Classification Plugin', QApplication.translate(
-                'semiautomaticclassificationplugin',
-                'Warning. Python library Remotior Sensus was not '
-                'found and was automatically downloaded, but SCP may not '
-                'work properly. Please, install the required Python '
-                'library Remotior Sensus following the user manual.'
-            ), level=Qgis.Info, duration=10
+            'Semi-Automatic Classification Plugin', str(errr),
+            level=Qgis.Warning, duration=10
         )
+        return False
+
+
+try:
+    # check Remotior Sensus version
+    if installed_version is None or (
+            float(f'{installed_version[0]}.{installed_version[2]}')
+            < float(f'{rs_version[0]}.{rs_version[2]}')):
+        plugin_check = False
+        raise RuntimeError('rs version ')
+    else:
+        import remotior_sensus
+        cfg.rs_version = remotior_sensus.__version__
+        plugin_check = True
+except Exception as error:
+    str(error)
+    try:
+        lib_dir = (
+                '%s/python/plugins/%s' % (
+            QFileInfo(QgsApplication.qgisUserDatabaseFilePath()).path(),
+            str(__name__).split('.')[0])
+        )
+        sys.path.insert(0, lib_dir)
+
+        if 'remotior_sensus' in sys.modules:
+            del sys.modules['remotior_sensus']
+        import remotior_sensus
+        # check Remotior Sensus version
+        if (float(f'{remotior_sensus.__version__[0]}.'
+                  f'{remotior_sensus.__version__[2]}')
+                < float(f'{rs_version[0]}.{rs_version[2]}')):
+            raise RuntimeError('rs version ')
+        cfg.rs_version = remotior_sensus.__version__
+        plugin_check = True
     except Exception as error:
         str(error)
-        try:
-            # download library
-            import requests
-            import zipfile
-            response = requests.get(
-                'https://github.com/semiautomaticgit/remotior_sensus/archive'
-                '/refs/heads/master.zip'
-            )
-            with open(lib_dir + '/rs.zip', 'wb') as rs_zip:
-                rs_zip.write(response.content)
-            # extract library
-            with zipfile.ZipFile(lib_dir + '/rs.zip') as open_file:
-                for info in open_file.infolist():
-                    if info.filename.startswith(
-                            'remotior_sensus-master/src/remotior_sensus'
-                    ):
-                        file_path = '%s/remotior_sensus/%s' % (
-                            lib_dir, path.relpath(
-                                info.filename,
-                                'remotior_sensus-master/src/remotior_sensus'
-                            )
-                        )
-                        if info.is_dir():
-                            makedirs(file_path, exist_ok=True)
-                        else:
-                            try:
-                                with open_file.open(info.filename) as source:
-                                    with open(file_path, 'wb') as target:
-                                        target.write(source.read())
-                            except Exception as error:
-                                str(error)
-            sys.path.append(lib_dir)
-            import remotior_sensus
-            plugin_check = True
-            # noinspection PyTypeChecker
-            qgis_utils.iface.messageBar().pushMessage(
-                'Semi-Automatic Classification Plugin', QApplication.translate(
-                    'semiautomaticclassificationplugin',
-                    'Warning. Python library Remotior Sensus was not '
-                    'found and was automatically downloaded, but SCP may not '
-                    'work properly. Please, install the required Python '
-                    'library Remotior Sensus following the user manual.'
-                ), level=Qgis.Info, duration=10
-            )
-        except Exception as error:
-            str(error)
+        # download library
+        d_lib = download_library(lib_dir)
+        if d_lib:
+            try:
+                sys.path.insert(0, lib_dir)
+                if 'remotior_sensus' in sys.modules:
+                    del sys.modules['remotior_sensus']
+                import remotior_sensus
+                cfg.rs_version = remotior_sensus.__version__
+                plugin_check = False
+                qgis_utils.iface.messageBar().pushMessage(
+                    'Semi-Automatic Classification Plugin',
+                    QApplication.translate(
+                        'semiautomaticclassificationplugin',
+                        'Please, restart QGIS for executing the '
+                        'Semi-Automatic Classification Plugin'
+                    ),
+                    level=Qgis.Info, duration=20
+                )
+            except Exception as error:
+                str(error)
+                plugin_check = False
+                qgis_utils.iface.messageBar().pushMessage(
+                    'Semi-Automatic Classification Plugin',
+                    'Unable to load Remotior Sensus',
+                    level=Qgis.Critical
+                )
+        else:
             plugin_check = False
-            # noinspection PyTypeChecker
             qgis_utils.iface.messageBar().pushMessage(
-                'Semi-Automatic Classification Plugin', str(error),
-                level=Qgis.Warning, duration=10
+                'Semi-Automatic Classification Plugin',
+                'Unable to load Remotior Sensus',
+                level=Qgis.Critical
             )
-        """
+
 
 try:
     multiprocessing.freeze_support()
-    multiprocessing.set_start_method('spawn')
+    # force spawn
+    multiprocessing.set_start_method('spawn', force=True)
 except Exception as error:
     str(error)
 
@@ -176,23 +274,56 @@ class SemiAutomaticClassificationPlugin:
 
     # noinspection PyArgumentList,PyTypeChecker
     def __init__(self, iface):
-        # system information
-        cfg.system_platform = platform.system()
-        # QGIS version
-        qgis_ver = Qgis.QGIS_VERSION_INT
-        if plugin_check is True:
-            # check Remotior Sensus version
-            if float('%s.%s' % (remotior_sensus.__version__[0],
-                                remotior_sensus.__version__[2])) < 0.4:
-                qgis_utils.iface.messageBar().pushMessage(
-                    'Semi-Automatic Classification Plugin',
-                    'Warning. Python library Remotior Sensus is outdated.'
-                    'This could cause errors, please update Remotior Sensus.',
-                    level=Qgis.Warning, duration=10
+        if not qt_check:
+            qgis_utils.iface.messageBar().pushMessage(
+                'Semi-Automatic Classification Plugin',
+                'The installed version of the Semi-Automatic Classification '
+                'Plugin requires Qt6. Please install a QGIS version with Qt6.',
+                level=Qgis.Critical
+            )
+        if plugin_check:
+            # import modules
+            from .core.ui_utils import UiUtils
+            from .interface import (
+                input_interface, scp_dock, bandset_tab, accuracy_tab,
+                stack_bandset_tab, classification_report_tab,
+                classification_to_vector_tab, split_bands_tab,
+                cross_classification_tab, band_clustering_tab,
+                band_dilation_tab, band_erosion_tab, settings, band_sieve_tab,
+                band_combination_tab, band_calc_tab, band_neighbor_tab,
+                band_pca_tab, spectral_distance_tab, reclassification_tab,
+                vector_to_raster_tab, clip_bands_tab, edit_raster_tab,
+                raster_zonal_stats_tab, reproject_bandset_tab,
+                masking_bands_tab, download_products_tab, mosaic_bandsets_tab,
+                image_conversion_tab, script_tab, classification_tab,
+                rgb_composite_tab, signature_threshold_tab, multiple_roi_tab
+            )
+            from .map_pointers.classification_preview_pointer import (
+                ClassificationPreview)
+            from .map_pointers.clip_bands_pointer import ClipBandsPointer
+            from .map_pointers.download_products_pointer import (
+                DownloadProductsPointer)
+            from .map_pointers.manual_roi_pointer import ManualROIPointer
+            from .map_pointers.region_growing_pointer import (
+                RegionGrowingPointer)
+            from .qgis_processing.scp_algorithm_provider import (
+                SCPAlgorithmProvider)
+            try:
+                from .spectral_signature import (
+                    spectral_signature_plot, scatter_plot, signature_importer
                 )
+            except Exception as err:
+                str(err)
+                spectral_signature_plot = None
+                scatter_plot = None
+                signature_importer = None
+            # system information
+            cfg.system_platform = sys.platform
+            # QGIS version
+            qgis_ver = Qgis.QGIS_VERSION_INT
             # set multiprocess path
             python_path = None
-            if cfg.system_platform == 'Windows':
+            if cfg.system_platform.startswith('win'):
                 try:
                     python_path = path.abspath(
                         path.join(sys.exec_prefix, 'pythonw.exe')
@@ -217,7 +348,7 @@ class SemiAutomaticClassificationPlugin:
                             )
                 except Exception as err:
                     str(err)
-            elif cfg.system_platform == 'Darwin':
+            elif cfg.system_platform.startswith('darwin'):
                 try:
                     python_path = path.abspath(
                         path.join(sys.exec_prefix, 'bin', 'python3')
@@ -255,7 +386,7 @@ class SemiAutomaticClassificationPlugin:
             cfg.plugin_dir = ('%s/python/plugins/%s' % (
                 QFileInfo(QgsApplication.qgisUserDatabaseFilePath()).path(),
                 str(__name__).split('.')[0])
-                              )
+            )
             if QFileInfo(cfg.plugin_dir).exists():
                 locale_path = (
                         '%s/i18n/semiautomaticclassificationplugin_%s.qm'
@@ -264,12 +395,16 @@ class SemiAutomaticClassificationPlugin:
             if QFileInfo(locale_path).exists():
                 transl = QTranslator()
                 transl.load(locale_path)
-                if qVersion() > '4.3.3':
-                    QCoreApplication.installTranslator(transl)
+                QCoreApplication.installTranslator(transl)
             cfg.ui_utils = UiUtils()
+            # create the dialog
+            cfg.dialog = SemiAutomaticClassificationPluginDialog()
+            cfg.dialog.destroyed.connect(dialog_deleted)
             try:
-                # create the dialog
-                cfg.dialog = SemiAutomaticClassificationPluginDialog()
+                # class dock dialog
+                cfg.dock_class_simpl_dlg = DockClassSimplifiedDialog(
+                    cfg.iface.mainWindow(), cfg.iface
+                )
                 # class dock dialog
                 cfg.dock_class_dlg = DockClassDialog(
                     cfg.iface.mainWindow(), cfg.iface
@@ -288,137 +423,161 @@ class SemiAutomaticClassificationPlugin:
                     ),
                     level=Qgis.Info
                 )
-            cfg.utils = utils
-            cfg.util_qgis = util_qgis
-            cfg.util_qt = util_qt
-            cfg.util_gdal = util_gdal
-            # spectral signature plot dialog
-            cfg.spectral_plot_dlg = SpectralSignatureDialog()
-            # scatter plot dialog
-            cfg.scatter_plot_dlg = ScatterPlotDialog()
-            cfg.settings = settings
-            cfg.bst = bandset_tab
-            cfg.signature_plot = spectral_signature_plot
-            cfg.scatter_plot = scatter_plot
-            cfg.signature_importer = signature_importer
-            cfg.usgs_spectral_lib = signature_importer.USGSSpectralLib()
-            cfg.accuracy = accuracy_tab
-            cfg.class_report = classification_report_tab
-            cfg.class_vector = classification_to_vector_tab
-            cfg.cross_classification = cross_classification_tab
-            cfg.rgb_composite = rgb_composite_tab
-            cfg.signature_threshold = signature_threshold_tab
-            cfg.multiple_roi = multiple_roi_tab
-            cfg.band_calc = band_calc_tab
-            cfg.dilation = band_dilation_tab
-            cfg.stack_bandset = stack_bandset_tab
-            cfg.split_bands = split_bands_tab
-            cfg.reproject_bands = reproject_bandset_tab
-            cfg.masking_bands = masking_bands_tab
-            cfg.image_conversion = image_conversion_tab
-            cfg.clip_bands = clip_bands_tab
-            cfg.clip_bands_pointer = ClipBandsPointer(cfg.map_canvas)
-            cfg.classification_preview_pointer = ClassificationPreview(
-                cfg.map_canvas
-            )
-            cfg.download_products = download_products_tab
-            cfg.download_products_pointer = DownloadProductsPointer(
-                cfg.map_canvas
-            )
-            cfg.region_growing_pointer = RegionGrowingPointer(cfg.map_canvas)
-            cfg.manual_roi_pointer = ManualROIPointer(cfg.map_canvas)
-            cfg.mosaic_bandsets = mosaic_bandsets_tab
-            cfg.vector_to_raster = vector_to_raster_tab
-            cfg.clustering = band_clustering_tab
-            cfg.erosion = band_erosion_tab
-            cfg.sieve = band_sieve_tab
-            cfg.neighbor = band_neighbor_tab
-            cfg.pca_tab = band_pca_tab
-            cfg.spectral_distance = spectral_distance_tab
-            cfg.reclassification = reclassification_tab
-            cfg.edit_raster = edit_raster_tab
-            cfg.raster_zonal_stats = raster_zonal_stats_tab
-            cfg.band_combination = band_combination_tab
-            cfg.classification = classification_tab
-            cfg.script = script_tab
-            cfg.scp_dock = scp_dock
-            # roi rubber band
-            cfg.scp_dock_rubber_roi = QgsRubberBand(
-                cfg.map_canvas, QgsWkbTypes.LineGeometry
-            )
-            cfg.scp_dock_rubber_roi.setColor(QColor(0, 255, 255))
-            cfg.scp_dock_rubber_roi.setWidth(2)
-            # set font
             try:
-                q_set = QgsSettings()
-                f = q_set.value('qgis/stylesheet/fontFamily')
-                s = q_set.value('qgis/stylesheet/fontPointSize')
-                font = QFont()
-                font.setFamily(f)
-                font.setPointSize(int(s))
-                cfg.dialog.setFont(font)
-                cfg.dialog.ui.menu_treeWidget.setFont(font)
+                cfg.utils = utils
+                cfg.util_qgis = util_qgis
+                cfg.util_qt = util_qt
+                cfg.util_gdal = util_gdal
+                # spectral signature plot dialog
+                cfg.spectral_plot_dlg = SpectralSignatureDialog()
+                # scatter plot dialog
+                cfg.scatter_plot_dlg = ScatterPlotDialog()
+                cfg.settings = settings
+                cfg.bst = bandset_tab
+                cfg.signature_plot = spectral_signature_plot
+                cfg.scatter_plot = scatter_plot
+                cfg.signature_importer = signature_importer
+                cfg.usgs_spectral_lib = signature_importer.USGSSpectralLib()
+                cfg.accuracy = accuracy_tab
+                cfg.class_report = classification_report_tab
+                cfg.class_vector = classification_to_vector_tab
+                cfg.cross_classification = cross_classification_tab
+                cfg.rgb_composite = rgb_composite_tab
+                cfg.signature_threshold = signature_threshold_tab
+                cfg.multiple_roi = multiple_roi_tab
+                cfg.band_calc = band_calc_tab
+                cfg.dilation = band_dilation_tab
+                cfg.stack_bandset = stack_bandset_tab
+                cfg.split_bands = split_bands_tab
+                cfg.reproject_bands = reproject_bandset_tab
+                cfg.masking_bands = masking_bands_tab
+                cfg.image_conversion = image_conversion_tab
+                cfg.clip_bands = clip_bands_tab
+                interface_check = True
             except Exception as err:
                 str(err)
-            registry_keys()
-            # temporary directory
-            cfg.temp_dir = get_temporary_directory()
-            cfg.mx = messages
-            if cfg.qgis_registry[cfg.reg_log_key] == 2:
-                log_level = 10
-            else:
-                log_level = 20
-            try:
-                cfg.rs = remotior_sensus.Session(
-                    n_processes=cfg.qgis_registry[cfg.reg_threads_value],
-                    log_level=log_level, temporary_directory=cfg.temp_dir,
-                    available_ram=cfg.qgis_registry[cfg.reg_ram_value],
-                    multiprocess_module=multiprocessing,
-                    progress_callback=cfg.ui_utils.update_bar,
-                    messages_callback=cfg.mx, log_stream_handler=False
-                )
-            except Exception as err:
-                str(err)
+                message = cfg.settings.test_all_dependencies()
                 qgis_utils.iface.messageBar().pushMessage(
-                    'Semi-Automatic Classification Plugin',
-                    QApplication.translate(
-                        'semiautomaticclassificationplugin',
-                        'Error starting Remotior Sensus'
-                    ),
-                    level=Qgis.Info
+                    'Semi-Automatic Classification Plugin', message,
+                    level=Qgis.Critical
                 )
-            if cfg.rs is not None:
-                # logger
-                cfg.logger = cfg.rs.configurations.logger
-                # create BandSet Catalog
-                cfg.bandset_catalog = cfg.rs.bandset_catalog()
-                cfg.dialog.ui.temp_directory_label.setText(cfg.temp_dir)
-                cfg.spectral_signature_plotter = (
-                    cfg.signature_plot.SpectralSignaturePlot()
+                interface_check = False
+            if interface_check:
+                cfg.clip_bands_pointer = ClipBandsPointer(cfg.map_canvas)
+                cfg.classification_preview_pointer = ClassificationPreview(
+                    cfg.map_canvas
                 )
-                cfg.scatter_plotter = (
-                    cfg.scatter_plot.ScatterPlot()
+                cfg.download_products = download_products_tab
+                cfg.download_products_pointer = DownloadProductsPointer(
+                    cfg.map_canvas
                 )
-                # info
-                sys_info = str(
-                    'SCP %s; QGIS v. %s; L: %s; OS: %s; python: %s; '
-                    'remotior sensus: %s; environment: %s'
-                    % (semiautomaticclass_version(), str(qgis_ver),
-                       locale_settings, cfg.system_platform, str(python_path),
-                       str(remotior_sensus.__version__), str(lib_dir))
+                cfg.region_growing_pointer = RegionGrowingPointer(
+                    cfg.map_canvas)
+                cfg.manual_roi_pointer = ManualROIPointer(cfg.map_canvas)
+                cfg.mosaic_bandsets = mosaic_bandsets_tab
+                cfg.vector_to_raster = vector_to_raster_tab
+                cfg.clustering = band_clustering_tab
+                cfg.erosion = band_erosion_tab
+                cfg.sieve = band_sieve_tab
+                cfg.neighbor = band_neighbor_tab
+                cfg.pca_tab = band_pca_tab
+                cfg.spectral_distance = spectral_distance_tab
+                cfg.reclassification = reclassification_tab
+                cfg.edit_raster = edit_raster_tab
+                cfg.raster_zonal_stats = raster_zonal_stats_tab
+                cfg.band_combination = band_combination_tab
+                cfg.classification = classification_tab
+                cfg.script = script_tab
+                cfg.scp_dock = scp_dock
+                # roi rubber band
+                cfg.scp_dock_rubber_roi = QgsRubberBand(
+                    cfg.map_canvas, QgsWkbTypes.LineGeometry
                 )
-                cfg.scp_processing_provider = SCPAlgorithmProvider()
-                cfg.logger.log.info(sys_info)
+                cfg.scp_dock_rubber_roi.setColor(QColor(0, 255, 255))
+                cfg.scp_dock_rubber_roi.setWidth(2)
+                # set font
+                try:
+                    q_set = QgsSettings()
+                    f = q_set.value('qgis/stylesheet/fontFamily')
+                    s = q_set.value('qgis/stylesheet/fontPointSize')
+                    font = QFont()
+                    font.setFamily(f)
+                    font.setPointSize(int(s))
+                    cfg.dialog.setFont(font)
+                    cfg.dialog.ui.menu_treeWidget.setFont(font)
+                except Exception as err:
+                    str(err)
+                registry_keys()
+                # get simplified interface registry
+                if cfg.qgis_registry[cfg.reg_simplified] == 2:
+                    cfg.simplified = True
+                else:
+                    cfg.simplified = False
+                # temporary directory
+                cfg.temp_dir = get_temporary_directory()
+                cfg.mx = messages
+                log_level = (10 if cfg.qgis_registry[cfg.reg_log_key] == 2
+                             else 20)
+                try:
+                    cfg.rs = remotior_sensus.Session(
+                        n_processes=cfg.qgis_registry[cfg.reg_threads_value],
+                        log_level=log_level, temporary_directory=cfg.temp_dir,
+                        available_ram=cfg.qgis_registry[cfg.reg_ram_value],
+                        multiprocess_module=multiprocessing,
+                        progress_callback=cfg.ui_utils.update_bar,
+                        messages_callback=cfg.mx, log_stream_handler=False
+                    )
+                except Exception as err:
+                    str(err)
+                    qgis_utils.iface.messageBar().pushMessage(
+                        'Semi-Automatic Classification Plugin',
+                        QApplication.translate(
+                            'semiautomaticclassificationplugin',
+                            'Error starting Remotior Sensus'
+                        ),
+                        level=Qgis.Info
+                    )
+                if cfg.rs is not None:
+                    # logger
+                    cfg.logger = cfg.rs.configurations.logger
+                    # create BandSet Catalog
+                    cfg.bandset_catalog = cfg.rs.bandset_catalog()
+                    cfg.dialog.ui.temp_directory_label.setText(cfg.temp_dir)
+                    cfg.spectral_signature_plotter = (
+                        cfg.signature_plot.SpectralSignaturePlot()
+                    )
+                    cfg.scatter_plotter = (
+                        cfg.scatter_plot.ScatterPlot()
+                    )
+                    # info
+                    sys_info = str(
+                        'SCP %s; QGIS v. %s; L: %s; OS: %s; python: %s; '
+                        'remotior sensus: %s; environment: %s'
+                        % (semiautomatic_class_version(), str(qgis_ver),
+                           locale_settings, cfg.system_platform,
+                           str(python_path),
+                           str(remotior_sensus.__version__), str(lib_dir))
+                    )
+                    cfg.scp_processing_provider = SCPAlgorithmProvider()
+                    cfg.logger.log.info(sys_info)
 
     # init GUI
     # noinspection PyArgumentList,PyTypeChecker
     def initGui(self):
-        if plugin_check is True and cfg.rs is not None:
+        if not qt_check:
+            pass
+        elif plugin_check is True and cfg.rs is not None:
             try:
-                cfg.iface.addDockWidget(
-                    Qt.LeftDockWidgetArea,
-                    cfg.dock_class_dlg
-                )
+                if cfg.simplified:
+                    cfg.iface.addDockWidget(
+                        Qt.DockWidgetArea.LeftDockWidgetArea,
+                        cfg.dock_class_simpl_dlg
+                    )
+                else:
+                    cfg.iface.addDockWidget(
+                        Qt.DockWidgetArea.LeftDockWidgetArea,
+                        cfg.dock_class_dlg
+                    )
             except Exception as err:
                 str(err)
                 qgis_utils.iface.messageBar().pushMessage(
@@ -433,16 +592,74 @@ class SemiAutomaticClassificationPlugin:
             # bandset tab
             cfg.bst.add_satellite_to_combo(cfg.rs.configurations.sat_band_list)
             cfg.bst.add_unit_to_combo(cfg.rs.configurations.unit_list)
-            cfg.input_interface.load_input_toolbar()
+            cfg.classification.add_pretrained_model_info_to_combo(
+                cfg.rs.configurations.pretrained_model_dict
+            )
+            cfg.classification.add_pretrained_segmentation_info_to_combo(
+                cfg.rs.configurations.segmentation_model_dict
+            )
+            if cfg.simplified:
+                cfg.bst.add_band_set_tab_simplified()
+                cfg.scp_dock.TrainingVectorLayer(signature_catalog=False,
+                                                 output_path=None)
+            else:
+                cfg.input_interface.load_input_toolbar()
             ''' menu '''
             cfg.input_interface.load_menu()
+            cfg.input_interface.load_main_menu()
             # set plugin version
-            cfg.dialog.ui.plugin_version_label.setText(
-                semiautomaticclass_version()
-            )
-            cfg.dock_class_dlg.ui.plugin_version_label2.setText(
-                'SCP %s' % semiautomaticclass_version()
-            )
+            try:
+                cfg.dialog.ui.plugin_version_label.setText(
+                    semiautomatic_class_version()
+                    + '\n(built on Remotior Sensus '
+                    + str(remotior_sensus.__version__) + ')'
+                )
+            except Exception as err:
+                str(err)
+                cfg.dialog.ui.plugin_version_label.setText(
+                    semiautomatic_class_version()
+                )
+            if cfg.simplified:
+                cfg.dock_class_simpl_dlg.ui.plugin_version_label2.setText(
+                    'SCP %s' % semiautomatic_class_version()
+                )
+                algorithm_list = [
+                    cfg.rs.configurations.maximum_likelihood,
+                    cfg.rs.configurations.minimum_distance,
+                    cfg.rs.configurations.multi_layer_perceptron,
+                    cfg.rs.configurations.random_forest,
+                    cfg.rs.configurations.spectral_angle_mapping,
+                    cfg.rs.configurations.support_vector_machine,
+                ]
+                cfg.input_interface.add_algorithm_to_combo(algorithm_list)
+                wavelength_sat_combo = (
+                    cfg.dock_class_simpl_dlg.ui.wavelength_sat_combo
+                )
+                wavelength_sat_combo.setSizeAdjustPolicy(
+                    QComboBox.SizeAdjustPolicy.AdjustToContentsOnFirstShow
+                )
+                wavelength_sat_combo.setMinimumContentsLength(10)
+                cfg.dock_class_simpl_dlg.ui.alg_combo.setSizeAdjustPolicy(
+                    QComboBox.SizeAdjustPolicy.AdjustToContentsOnFirstShow
+                )
+                cfg.dock_class_simpl_dlg.ui.alg_combo.setMinimumContentsLength(
+                    10
+                )
+                # disabled band set boxes
+                cfg.dialog.ui.band_set_comb_spinBox_2.setEnabled(False)
+                cfg.dialog.ui.band_set_comb_spinBox_9.setEnabled(False)
+                cfg.dialog.ui.band_set_comb_spinBox_12.setEnabled(False)
+                cfg.dialog.ui.band_set_comb_spinBox_5.setEnabled(False)
+                cfg.dialog.ui.band_set_comb_spinBox.setEnabled(False)
+                cfg.dialog.ui.band_set_comb_spinBox_16.setEnabled(False)
+                cfg.dialog.ui.band_set_comb_spinBox_17.setEnabled(False)
+                cfg.dialog.ui.band_set_comb_spinBox_18.setEnabled(False)
+                cfg.dialog.ui.macroclass_radioButton.setEnabled(False)
+                cfg.dialog.ui.class_radioButton.setEnabled(False)
+            else:
+                cfg.dock_class_dlg.ui.plugin_version_label2.setText(
+                    'SCP %s' % semiautomatic_class_version()
+                )
             # row height
             cfg.dialog.ui.download_images_tableWidget.verticalHeader(
             ).setDefaultSectionSize(24)
@@ -483,22 +700,22 @@ class SemiAutomaticClassificationPlugin:
             )
             try:
                 sig_list.horizontalHeader().setSectionResizeMode(
-                    2, QHeaderView.Stretch
+                    2, QHeaderView.ResizeMode.Stretch
                 )
                 sig_list.horizontalHeader().setSectionResizeMode(
-                    4, QHeaderView.Stretch
+                    4, QHeaderView.ResizeMode.Stretch
                 )
             except Exception as err:
                 str(err)
             # passwords
             cfg.dialog.ui.smtp_password_lineEdit.setEchoMode(
-                QLineEdit.Password
+                QLineEdit.EchoMode.Password
             )
             cfg.dialog.ui.password_earthdata_lineEdit.setEchoMode(
-                QLineEdit.Password
+                QLineEdit.EchoMode.Password
             )
             cfg.dialog.ui.password_copernicus_lineEdit.setEchoMode(
-                QLineEdit.Password
+                QLineEdit.EchoMode.Password
             )
             scatter = cfg.scatter_plot_dlg.ui.scatter_list_plot_tableWidget
             # scatter plot list
@@ -512,10 +729,10 @@ class SemiAutomaticClassificationPlugin:
             )
             try:
                 scatter.horizontalHeader().setSectionResizeMode(
-                    2, QHeaderView.Stretch
+                    2, QHeaderView.ResizeMode.Stretch
                 )
                 scatter.horizontalHeader().setSectionResizeMode(
-                    4, QHeaderView.Stretch
+                    4, QHeaderView.ResizeMode.Stretch
                 )
             except Exception as err:
                 str(err)
@@ -529,10 +746,10 @@ class SemiAutomaticClassificationPlugin:
             )
             try:
                 sig_table.horizontalHeader().setSectionResizeMode(
-                    1, QHeaderView.Stretch
+                    1, QHeaderView.ResizeMode.Stretch
                 )
                 sig_table.horizontalHeader().setSectionResizeMode(
-                    3, QHeaderView.Stretch
+                    3, QHeaderView.ResizeMode.Stretch
                 )
             except Exception as err:
                 str(err)
@@ -543,7 +760,9 @@ class SemiAutomaticClassificationPlugin:
             )
             # set log state
             cfg.dialog.ui.log_checkBox.setCheckState(
-                int(cfg.qgis_registry[cfg.reg_log_key])
+                cfg.util_qt.check_state_from_value(
+                    int(cfg.qgis_registry[cfg.reg_log_key])
+                )
             )
             if cfg.rs is not None:
                 if cfg.qgis_registry[cfg.reg_log_key] == 2:
@@ -558,11 +777,15 @@ class SemiAutomaticClassificationPlugin:
             )
             # set download news state
             cfg.dialog.ui.download_news_checkBox.setCheckState(
-                int(cfg.qgis_registry[cfg.reg_download_news])
+                cfg.util_qt.check_state_from_value(
+                    int(cfg.qgis_registry[cfg.reg_download_news])
+                )
             )
             # set raster compression
             cfg.dialog.ui.raster_compression_checkBox.setCheckState(
-                int(cfg.qgis_registry[cfg.reg_raster_compression])
+                cfg.util_qt.check_state_from_value(
+                    int(cfg.qgis_registry[cfg.reg_raster_compression])
+                )
             )
             # set ROI transparency
             cfg.dialog.ui.transparency_Slider.setValue(
@@ -586,7 +809,9 @@ class SemiAutomaticClassificationPlugin:
             )
             # set SMTP checkbox state
             cfg.dialog.ui.smtp_checkBox.setCheckState(
-                int(cfg.qgis_registry[cfg.reg_smtp_check])
+                cfg.util_qt.check_state_from_value(
+                    int(cfg.qgis_registry[cfg.reg_smtp_check])
+                )
             )
             if cfg.qgis_registry[cfg.reg_smtp_check] == 2:
                 cfg.smtp_notification = True
@@ -594,7 +819,9 @@ class SemiAutomaticClassificationPlugin:
                 cfg.smtp_notification = False
             # set sound state
             cfg.dialog.ui.sound_checkBox.setCheckState(
-                int(cfg.qgis_registry[cfg.reg_sound])
+                cfg.util_qt.check_state_from_value(
+                    int(cfg.qgis_registry[cfg.reg_sound])
+                )
             )
             # raster variable name
             cfg.dialog.ui.variable_name_lineEdit.setText(
@@ -704,8 +931,8 @@ class SemiAutomaticClassificationPlugin:
             )
             # add satellite list to combo
             try:
-                for product \
-                        in cfg.rs.configurations.product_description.keys():
+                for product in (cfg.rs.configurations.product_description
+                        .keys()):
                     cfg.dialog.ui.landsat_satellite_combo.addItem(product)
             except Exception as err:
                 str(err)
@@ -801,55 +1028,59 @@ class SemiAutomaticClassificationPlugin:
     # noinspection PyTypeChecker
     @staticmethod
     def unload():
-        # write registry keys
-        try:
-            for r in cfg.qgis_registry:
-                cfg.util_qt.write_registry_keys(r, cfg.qgis_registry[r])
-        except Exception as err:
+        if qt_check:
+            # write registry keys
             try:
-                cfg.logger.log.error(str(err))
+                for r in cfg.qgis_registry:
+                    cfg.util_qt.write_registry_keys(r, cfg.qgis_registry[r])
+            except Exception as err:
+                try:
+                    cfg.logger.log.error(str(err))
+                except Exception as err:
+                    str(err)
+            try:
+                cfg.logger.log.debug('unload')
+                cfg.rs.close()
             except Exception as err:
                 str(err)
-        try:
-            cfg.logger.log.debug('unload')
-            cfg.rs.close()
-        except Exception as err:
-            str(err)
-        try:
-            rs_dir = ('%s/python/plugins/%s' % (
-                        QFileInfo(
-                            QgsApplication.qgisUserDatabaseFilePath()
-                        ).path(), str(__name__).split('.')[0])
-                      )
-            sys.path.remove(rs_dir)
-        except Exception as err:
-            str(err)
-        try:
-            if cfg.dock_class_dlg is not None:
-                qgis_utils.iface.removeDockWidget(cfg.dock_class_dlg)
-            cfg.working_toolbar.deleteLater()
-            cfg.main_menu.deleteLater()
-            cfg.dialog.deleteLater()
-            QgsApplication.processingRegistry().removeProvider(
-                cfg.scp_processing_provider
-            )
-            """
-            if cfg.dialog is not None:
-                qgis_utils.iface.removeDockWidget(cfg.dialog)
-            """
-        # remove temp files
-        except Exception as err:
-            str(err)
-            if plugin_check is True:
-                qgis_utils.iface.messageBar().pushMessage(
-                    'Semi-Automatic Classification Plugin',
-                    QApplication.translate(
-                        'semiautomaticclassificationplugin',
-                        'Please, restart QGIS for executing the '
-                        'Semi-Automatic Classification Plugin'
-                    ),
-                    level=Qgis.Info
+            try:
+                rs_dir = ('%s/python/plugins/%s' % (
+                            QFileInfo(
+                                QgsApplication.qgisUserDatabaseFilePath()
+                            ).path(), str(__name__).split('.')[0])
+                          )
+                sys.path.remove(rs_dir)
+            except Exception as err:
+                str(err)
+            try:
+                if cfg.dock_class_dlg is not None:
+                    qgis_utils.iface.removeDockWidget(cfg.dock_class_dlg)
+                if cfg.dock_class_simpl_dlg is not None:
+                    qgis_utils.iface.removeDockWidget(cfg.dock_class_simpl_dlg)
+                if cfg.working_toolbar is not None:
+                    cfg.working_toolbar.deleteLater()
+                cfg.main_menu.deleteLater()
+                cfg.dialog.deleteLater()
+                QgsApplication.processingRegistry().removeProvider(
+                    cfg.scp_processing_provider
                 )
+                """
+                if cfg.dialog is not None:
+                    qgis_utils.iface.removeDockWidget(cfg.dialog)
+                """
+            # remove temp files
+            except Exception as err:
+                str(err)
+                if plugin_check:
+                    qgis_utils.iface.messageBar().pushMessage(
+                        'Semi-Automatic Classification Plugin',
+                        QApplication.translate(
+                            'semiautomaticclassificationplugin',
+                            'Please, restart QGIS for executing the '
+                            'Semi-Automatic Classification Plugin'
+                        ),
+                        level=Qgis.Info
+                    )
 
 
 # get first installation
@@ -860,8 +1091,20 @@ def get_first_installation():
     )
     if cfg.first_install == 1:
         cfg.util_qt.write_registry_keys(cfg.reg_first_install, 0)
+        cfg.util_qt.write_registry_keys(cfg.reg_simplified, 2)
+        cfg.qgis_registry[cfg.reg_simplified] = 2
         cfg.utils.find_available_ram()
         cfg.utils.find_available_processors()
+        qgis_utils.iface.messageBar().pushMessage(
+            'Semi-Automatic Classification Plugin',
+            QApplication.translate(
+                'semiautomaticclassificationplugin',
+                'You are using the simplified interface. To change the '
+                'interface go to SCP > Settings and uncheck Simplified '
+                'interface'
+            ),
+            level=Qgis.Info, duration=600
+        )
 
 
 # get temporary directory
@@ -940,9 +1183,14 @@ def connect_gui():
     cfg.dialog.ui.main_tabWidget.currentChanged.connect(
         cfg.input_interface.main_tab_changed
     )
-    cfg.dialog.ui.menu_treeWidget.itemSelectionChanged.connect(
-        cfg.input_interface.menu_index
-    )
+    if cfg.simplified:
+        cfg.dialog.ui.menu_treeWidget.itemSelectionChanged.connect(
+            cfg.input_interface.menu_index_simplified
+        )
+    else:
+        cfg.dialog.ui.menu_treeWidget.itemSelectionChanged.connect(
+            cfg.input_interface.menu_index
+        )
     cfg.dialog.ui.f_filter_lineEdit.textChanged.connect(
         cfg.input_interface.filter_tree
     )
@@ -1016,115 +1264,197 @@ def connect_gui():
     cfg.dialog.ui.sort_by_date.clicked.connect(cfg.bst.sort_bandsets_by_date)
     cfg.dialog.ui.rgb_toolButton.clicked.connect(cfg.bst.add_composite)
 
-    """ SCP dock """
-    cfg.dock_class_dlg.ui.bandset_toolButton.clicked.connect(
-        cfg.input_interface.bandset_tab
-    )
-    cfg.dock_class_dlg.ui.band_processing_toolButton.clicked.connect(
-        cfg.input_interface.band_processing_tab
-    )
-    cfg.dock_class_dlg.ui.preprocessing_toolButton_2.clicked.connect(
-        cfg.input_interface.pre_processing_tab
-    )
-    cfg.dock_class_dlg.ui.postprocessing_toolButton_2.clicked.connect(
-        cfg.input_interface.post_processing_tab
-    )
-    cfg.dock_class_dlg.ui.bandcalc_toolButton_2.clicked.connect(
-        cfg.input_interface.band_calc_tab
-    )
-    cfg.dock_class_dlg.ui.download_images_toolButton_2.clicked.connect(
-        cfg.input_interface.select_download_products_tab
-    )
-    cfg.dock_class_dlg.ui.basic_tools_toolButton.clicked.connect(
-        cfg.input_interface.basic_tools_tab
-    )
-    cfg.dock_class_dlg.ui.batch_toolButton.clicked.connect(
-        cfg.input_interface.script_tab
-    )
-    cfg.dock_class_dlg.ui.userguide_toolButton_2.clicked.connect(
-        cfg.input_interface.quick_guide
-    )
-    cfg.dock_class_dlg.ui.help_toolButton_2.clicked.connect(
-        cfg.input_interface.ask_help
-    )
-    cfg.dock_class_dlg.ui.tabWidget_dock.currentChanged.connect(
-        cfg.input_interface.dock_tab_changed
-    )
-    cfg.dock_class_dlg.ui.button_new_input.clicked.connect(
-        cfg.scp_dock.create_training_input
-    )
-    cfg.dock_class_dlg.ui.button_reset_input.clicked.connect(
-        cfg.scp_dock.reset_input
-    )
-    cfg.dock_class_dlg.ui.button_Save_ROI.clicked.connect(
-        cfg.scp_dock.save_roi_to_training
-    )
-    cfg.dock_class_dlg.ui.undo_save_Button.clicked.connect(
-        cfg.scp_dock.undo_saved_roi
-    )
-    cfg.dock_class_dlg.ui.redo_save_Button.clicked.connect(
-        cfg.scp_dock.redo_saved_roi
-    )
-    cfg.dock_class_dlg.ui.signature_checkBox.stateChanged.connect(
-        cfg.scp_dock.signature_checkbox
-    )
-    cfg.dock_class_dlg.ui.scatterPlot_toolButton.clicked.connect(
-        cfg.scp_dock.add_roi_to_scatter_plot
-    )
-    cfg.dock_class_dlg.ui.save_input_checkBox.stateChanged.connect(
-        cfg.scp_dock.save_input_checkbox
-    )
-    cfg.dock_class_dlg.ui.trainingFile_toolButton.clicked.connect(
-        cfg.scp_dock.open_training_input_file
-    )
-    cfg.dock_class_dlg.ui.export_signature_list_toolButton.clicked.connect(
-        cfg.input_interface.export_signatures_tab
-    )
-    cfg.dock_class_dlg.ui.import_library_toolButton.clicked.connect(
-        cfg.input_interface.import_signatures_tab
-    )
-    cfg.dock_class_dlg.ui.signature_spectral_plot_toolButton.clicked.connect(
-        cfg.scp_dock.add_signature_to_spectral_plot
-    )
-    cfg.dock_class_dlg.ui.ROI_filter_lineEdit.textChanged.connect(
-        cfg.scp_dock.filter_tree
-    )
-    cfg.dock_class_dlg.ui.delete_Signature_Button.clicked.connect(
-        cfg.scp_dock.remove_selected_signatures
-    )
-    cfg.dock_class_dlg.ui.merge_signature_toolButton.clicked.connect(
-        cfg.scp_dock.merge_signatures
-    )
-    cfg.dock_class_dlg.ui.calculate_signature_toolButton.clicked.connect(
-        cfg.scp_dock.calculate_signatures
-    )
-    cfg.dock_class_dlg.ui.ROI_Macroclass_ID_spin.valueChanged.connect(
-        cfg.scp_dock.roi_macroclass_id_value
-    )
-    cfg.dock_class_dlg.ui.max_buffer_spinBox.valueChanged.connect(
-        cfg.scp_dock.max_buffer
-    )
-    cfg.dock_class_dlg.ui.ROI_Macroclass_line.editingFinished.connect(
-        cfg.scp_dock.roi_macroclass_name_info
-    )
-    cfg.dock_class_dlg.ui.custom_index_lineEdit.editingFinished.connect(
-        cfg.scp_dock.custom_expression_edited
-    )
-    cfg.dock_class_dlg.ui.ROI_ID_spin.valueChanged.connect(
-        cfg.scp_dock.roi_class_id_value
-    )
-    cfg.dock_class_dlg.ui.ROI_Class_line.editingFinished.connect(
-        cfg.scp_dock.roi_class_name_info
-    )
-    cfg.dock_class_dlg.ui.display_cursor_checkBox.stateChanged.connect(
-        cfg.scp_dock.vegetation_index_checkbox
-    )
-    cfg.dock_class_dlg.ui.rapid_ROI_checkBox.stateChanged.connect(
-        cfg.scp_dock.rapid_roi_checkbox
-    )
-    cfg.dock_class_dlg.ui.rapidROI_band_spinBox.valueChanged.connect(
-        cfg.scp_dock.rapid_roi_band
-    )
+    if cfg.simplified:
+        """ SCP dock simplified """
+        cfg.dock_class_simpl_dlg.ui.scp_pushButton.clicked.connect(
+            cfg.input_interface.show_plugin
+        )
+        cfg.dock_class_simpl_dlg.ui.userguide_toolButton_2.clicked.connect(
+            cfg.input_interface.quick_guide
+        )
+        cfg.rgb_combo = cfg.dock_class_simpl_dlg.ui.rgb_combo
+        cfg.rgb_combo.currentIndexChanged.connect(
+            cfg.input_interface.rgb_combo_changed
+        )
+        download_i = cfg.dock_class_simpl_dlg.ui.download_images_toolButton_2
+        download_i.clicked.connect(
+            cfg.input_interface.select_download_products_tab
+        )
+        conv_i = cfg.dock_class_simpl_dlg.ui.image_conversion_toolButton_3
+        conv_i.clicked.connect(cfg.input_interface.image_conversion_tab)
+        wavelength_sat_combo = cfg.dock_class_simpl_dlg.ui.wavelength_sat_combo
+        wavelength_sat_combo.currentIndexChanged.connect(
+            cfg.bst.set_satellite_wavelength_simplified
+        )
+        cfg.dock_class_simpl_dlg.ui.button_new_input.clicked.connect(
+            cfg.scp_dock.create_training_input
+        )
+        cfg.dock_class_simpl_dlg.ui.button_reset_input.clicked.connect(
+            cfg.scp_dock.reset_input
+        )
+        cfg.dock_class_simpl_dlg.ui.undo_save_Button.clicked.connect(
+            cfg.scp_dock.undo_saved_roi
+        )
+        cfg.dock_class_simpl_dlg.ui.redo_save_Button.clicked.connect(
+            cfg.scp_dock.redo_saved_roi
+        )
+        cfg.dock_class_simpl_dlg.ui.trainingFile_toolButton.clicked.connect(
+            cfg.scp_dock.open_training_input_file
+        )
+        export_s = cfg.dock_class_simpl_dlg.ui.export_signature_list_toolButton
+        export_s.clicked.connect(cfg.input_interface.export_signatures_tab)
+        cfg.dock_class_simpl_dlg.ui.import_library_toolButton.clicked.connect(
+            cfg.input_interface.import_signatures_tab
+        )
+        sign_s = cfg.dock_class_simpl_dlg.ui.signature_spectral_plot_toolButton
+        sign_s.clicked.connect(cfg.scp_dock.add_signature_to_spectral_plot)
+        cfg.dock_class_simpl_dlg.ui.delete_Signature_Button.clicked.connect(
+            cfg.scp_dock.remove_selected_signatures
+        )
+        roi_spin = cfg.dock_class_simpl_dlg.ui.ROI_Macroclass_ID_spin
+        roi_spin.valueChanged.connect(cfg.scp_dock.roi_macroclass_id_value)
+        roi_line = cfg.dock_class_simpl_dlg.ui.ROI_Macroclass_line
+        roi_line.editingFinished.connect(cfg.scp_dock.roi_macroclass_name_info)
+        cfg.dock_class_simpl_dlg.ui.toolButton_input_raster.clicked.connect(
+            cfg.bst.add_file_to_band_set_action
+        )
+        add_bands = cfg.dock_class_simpl_dlg.ui.add_loaded_bands_pushButton
+        add_bands.clicked.connect(cfg.bst.add_loaded_band_to_bandset)
+        cfg.dock_class_simpl_dlg.ui.clear_bandset_toolButton.clicked.connect(
+            cfg.bst.clear_bandset_action
+        )
+        cfg.dock_class_simpl_dlg.ui.move_up_toolButton.clicked.connect(
+            cfg.bst.move_up_band)
+        cfg.dock_class_simpl_dlg.ui.move_down_toolButton.clicked.connect(
+            cfg.bst.move_down_band)
+        cfg.dock_class_simpl_dlg.ui.remove_toolButton.clicked.connect(
+            cfg.bst.remove_band)
+        cfg.dock_class_simpl_dlg.ui.polygonROI_Button.clicked.connect(
+            cfg.scp_dock.pointer_manual_roi_active)
+        cfg.dock_class_simpl_dlg.ui.pointerButton.clicked.connect(
+            cfg.scp_dock.pointer_region_growing_roi_active)
+        cfg.dock_class_simpl_dlg.ui.button_Save_ROI.clicked.connect(
+            cfg.scp_dock.save_roi_to_training
+        )
+        cfg.dock_class_simpl_dlg.ui.previewButton.clicked.connect(
+            cfg.classification.pointer_classification_preview_active
+        )
+        cfg.dock_class_simpl_dlg.ui.alg_combo.currentIndexChanged.connect(
+            cfg.classification.reset_preview
+        )
+        cfg.dock_class_simpl_dlg.ui.button_classification.clicked.connect(
+            cfg.classification.run_classification_action_simplified
+        )
+    else:
+        """ SCP dock """
+        cfg.dock_class_dlg.ui.bandset_toolButton.clicked.connect(
+            cfg.input_interface.bandset_tab
+        )
+        cfg.dock_class_dlg.ui.band_processing_toolButton.clicked.connect(
+            cfg.input_interface.band_processing_tab
+        )
+        cfg.dock_class_dlg.ui.preprocessing_toolButton_2.clicked.connect(
+            cfg.input_interface.pre_processing_tab
+        )
+        cfg.dock_class_dlg.ui.postprocessing_toolButton_2.clicked.connect(
+            cfg.input_interface.post_processing_tab
+        )
+        cfg.dock_class_dlg.ui.bandcalc_toolButton_2.clicked.connect(
+            cfg.input_interface.band_calc_tab
+        )
+        cfg.dock_class_dlg.ui.download_images_toolButton_2.clicked.connect(
+            cfg.input_interface.select_download_products_tab
+        )
+        cfg.dock_class_dlg.ui.basic_tools_toolButton.clicked.connect(
+            cfg.input_interface.basic_tools_tab
+        )
+        cfg.dock_class_dlg.ui.batch_toolButton.clicked.connect(
+            cfg.input_interface.script_tab
+        )
+        cfg.dock_class_dlg.ui.userguide_toolButton_2.clicked.connect(
+            cfg.input_interface.quick_guide
+        )
+        cfg.dock_class_dlg.ui.help_toolButton_2.clicked.connect(
+            cfg.input_interface.ask_help
+        )
+        cfg.dock_class_dlg.ui.tabWidget_dock.currentChanged.connect(
+            cfg.input_interface.dock_tab_changed
+        )
+        cfg.dock_class_dlg.ui.button_new_input.clicked.connect(
+            cfg.scp_dock.create_training_input
+        )
+        cfg.dock_class_dlg.ui.button_reset_input.clicked.connect(
+            cfg.scp_dock.reset_input
+        )
+        cfg.dock_class_dlg.ui.button_Save_ROI.clicked.connect(
+            cfg.scp_dock.save_roi_to_training
+        )
+        cfg.dock_class_dlg.ui.undo_save_Button.clicked.connect(
+            cfg.scp_dock.undo_saved_roi
+        )
+        cfg.dock_class_dlg.ui.redo_save_Button.clicked.connect(
+            cfg.scp_dock.redo_saved_roi
+        )
+        cfg.dock_class_dlg.ui.signature_checkBox.stateChanged.connect(
+            cfg.scp_dock.signature_checkbox
+        )
+        cfg.dock_class_dlg.ui.scatterPlot_toolButton.clicked.connect(
+            cfg.scp_dock.add_roi_to_scatter_plot
+        )
+        cfg.dock_class_dlg.ui.save_input_checkBox.stateChanged.connect(
+            cfg.scp_dock.save_input_checkbox
+        )
+        cfg.dock_class_dlg.ui.trainingFile_toolButton.clicked.connect(
+            cfg.scp_dock.open_training_input_file
+        )
+        cfg.dock_class_dlg.ui.export_signature_list_toolButton.clicked.connect(
+            cfg.input_interface.export_signatures_tab
+        )
+        cfg.dock_class_dlg.ui.import_library_toolButton.clicked.connect(
+            cfg.input_interface.import_signatures_tab
+        )
+        cfg.dock_class_dlg.ui.signature_spectral_plot_toolButton.clicked.connect(
+            cfg.scp_dock.add_signature_to_spectral_plot
+        )
+        cfg.dock_class_dlg.ui.ROI_filter_lineEdit.textChanged.connect(
+            cfg.scp_dock.filter_tree
+        )
+        cfg.dock_class_dlg.ui.delete_Signature_Button.clicked.connect(
+            cfg.scp_dock.remove_selected_signatures
+        )
+        cfg.dock_class_dlg.ui.merge_signature_toolButton.clicked.connect(
+            cfg.scp_dock.merge_signatures
+        )
+        cfg.dock_class_dlg.ui.calculate_signature_toolButton.clicked.connect(
+            cfg.scp_dock.calculate_signatures
+        )
+        cfg.dock_class_dlg.ui.ROI_Macroclass_ID_spin.valueChanged.connect(
+            cfg.scp_dock.roi_macroclass_id_value
+        )
+        cfg.dock_class_dlg.ui.max_buffer_spinBox.valueChanged.connect(
+            cfg.scp_dock.max_buffer
+        )
+        cfg.dock_class_dlg.ui.ROI_Macroclass_line.editingFinished.connect(
+            cfg.scp_dock.roi_macroclass_name_info
+        )
+        cfg.dock_class_dlg.ui.custom_index_lineEdit.editingFinished.connect(
+            cfg.scp_dock.custom_expression_edited
+        )
+        cfg.dock_class_dlg.ui.ROI_ID_spin.valueChanged.connect(
+            cfg.scp_dock.roi_class_id_value
+        )
+        cfg.dock_class_dlg.ui.ROI_Class_line.editingFinished.connect(
+            cfg.scp_dock.roi_class_name_info
+        )
+        cfg.dock_class_dlg.ui.display_cursor_checkBox.stateChanged.connect(
+            cfg.scp_dock.vegetation_index_checkbox
+        )
+        cfg.dock_class_dlg.ui.rapid_ROI_checkBox.stateChanged.connect(
+            cfg.scp_dock.rapid_roi_checkbox
+        )
+        cfg.dock_class_dlg.ui.rapidROI_band_spinBox.valueChanged.connect(
+            cfg.scp_dock.rapid_roi_band
+        )
 
     """ Download product"""
     cfg.dialog.ui.find_images_toolButton.clicked.connect(
@@ -1509,6 +1839,15 @@ def connect_gui():
     cfg.dialog.ui.signature_threshold_button_3.clicked.connect(
         cfg.input_interface.signature_threshold_tab
     )
+    cfg.dialog.ui.pretrained_model_combo.currentIndexChanged.connect(
+        cfg.classification.pretrained_model_info
+    )
+    cfg.dialog.ui.pretrained_model_combo_2.currentIndexChanged.connect(
+        cfg.classification.pretrained_model_info_2
+    )
+    cfg.dialog.ui.pretrained_model_combo_3.currentIndexChanged.connect(
+        cfg.classification.pretrained_model_info_3
+    )
     cfg.dialog.ui.load_classifier_Button.clicked.connect(
         cfg.classification.open_classifier
     )
@@ -1891,9 +2230,16 @@ def connect_gui():
     cfg.logger.log.debug('GUI connected')
 
 
+# get deleted dialog
+def dialog_deleted():
+    cfg.dialog = None
+
 # reset all variables and interface
 def reset_scp():
     cfg.logger.log.debug('reset_scp')
+    if cfg.dialog is None:
+        cfg.dialog = SemiAutomaticClassificationPluginDialog()
+        cfg.dialog.destroyed.connect(dialog_deleted)
     cfg.ui_utils.set_interface(False)
     # clear band set
     t = cfg.dialog.ui.Band_set_tabWidget.count()
@@ -1901,16 +2247,25 @@ def reset_scp():
         cfg.bst.delete_bandset_tab(index)
     cfg.bandset_catalog = cfg.rs.bandset_catalog()
     # noinspection PyTypeChecker
-    cfg.dock_class_dlg.ui.label_48.setText(
-        QApplication.translate('semiautomaticclassificationplugin',
-                               ' ROI & Signature list')
-    )
+    if cfg.simplified:
+        cfg.dock_class_simpl_dlg.ui.label_48.setText(
+            QApplication.translate('semiautomaticclassificationplugin',
+                                   ' ROI & Signature list')
+        )
+        cfg.rgb_combo = cfg.dock_class_simpl_dlg.ui.rgb_combo
+    else:
+        cfg.dock_class_dlg.ui.label_48.setText(
+            QApplication.translate('semiautomaticclassificationplugin',
+                                   ' ROI & Signature list')
+        )
     cfg.utils.refresh_vector_layer()
     # reset tabs
     count = cfg.dialog.ui.Band_set_tabWidget.count()
     for i in list(reversed(range(0, count))):
         cfg.bst.delete_bandset_tab(i)
     cfg.bst.add_band_set_tab()
+    if cfg.simplified:
+        cfg.bst.add_band_set_tab_simplified()
     cfg.dialog.ui.Band_set_tabWidget.blockSignals(True)
     cfg.project_path = QgsProject.instance().fileName()
     cfg.last_saved_dir = path.dirname(cfg.project_path)
@@ -1924,6 +2279,12 @@ def reset_scp():
     cfg.util_qt.clear_table(cfg.dialog.ui.download_images_tableWidget)
     cfg.scp_dock.TrainingVectorLayer(signature_catalog=False, output_path=None)
     # read variables
+    cfg.bandset_tabs = {}
     cfg.project_registry = cfg.project_registry_default.copy()
     cfg.utils.read_project_variables()
     cfg.ui_utils.set_interface(True)
+    # hide tabs
+    cfg.dialog.ui.SCP_tabs.setStyleSheet(
+        'QTabBar::tab {padding: 0px; max-height: 0px;}'
+    )
+

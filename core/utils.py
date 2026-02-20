@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2024 by Luca Congedo.
+# Copyright (C) 2012-2026 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -37,18 +37,26 @@ try:
 except Exception as error:
     str(error)
 
-from PyQt5.QtCore import Qt, QUrl, QByteArray
-from PyQt5.QtGui import QColor
-from PyQt5.QtNetwork import QNetworkRequest
-from PyQt5.QtWidgets import qApp, QApplication
-from osgeo import ogr, osr
+from PyQt6.QtCore import Qt, QUrl, QByteArray
+from PyQt6.QtGui import QColor, QDesktopServices
+from PyQt6.QtNetwork import QNetworkRequest
+from PyQt6.QtWidgets import QApplication
 # noinspection PyUnresolvedReferences
 from qgis.core import (
     QgsNetworkAccessManager, QgsSymbol,
     QgsRendererCategory, QgsCategorizedSymbolRenderer,
-    QgsPalettedRasterRenderer, QgsCoordinateReferenceSystem
+    QgsPalettedRasterRenderer, QgsCoordinateReferenceSystem, QgsProject
 )
-from scipy.spatial.distance import cdist
+
+try:
+    from osgeo import ogr, osr
+except Exception as error:
+    str(error)
+
+try:
+    from scipy.spatial.distance import cdist
+except Exception as error:
+    str(error)
 
 cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
@@ -71,12 +79,17 @@ def remotior_label():
             QByteArray(cfg.remotior_reply.readAll()).data().decode('utf-8')
         )
         latest_version = package['info']['version']
-        from remotior_sensus import __version__ as version
-        if parse(latest_version) > parse(version):
-            cfg.dock_class_dlg.ui.rs_version.setText(
-                'A new version of Remotior Sensus is available.'
-                '\nPlease update the Remotior Sensus package.'
-            )
+        if parse(latest_version) > parse(cfg.rs_version):
+            if cfg.simplified:
+                cfg.dock_class_simpl_dlg.ui.rs_version.setText(
+                    'A new version of Remotior Sensus is available.'
+                    '\nPlease update the Remotior Sensus package.'
+                )
+            else:
+                cfg.dock_class_dlg.ui.rs_version.setText(
+                    'A new version of Remotior Sensus is available.'
+                    '\nPlease update the Remotior Sensus package.'
+                )
     except Exception as err:
         return str(err)
 
@@ -568,7 +581,7 @@ def random_points_with_condition(
 
 
 # create KML from map
-# noinspection SpellCheckingInspection
+# noinspection SpellCheckingInspection,HttpUrlsUsage
 def create_kml_from_map():
     cfg.ui_utils.add_progress_bar()
     cfg.ui_utils.update_bar(10)
@@ -577,16 +590,16 @@ def create_kml_from_map():
     crs_wgs_84 = QgsCoordinateReferenceSystem(4326)
     cfg.util_qgis.set_qgis_crs(crs_wgs_84)
     cfg.map_canvas.refreshAllLayers()
-    qApp.processEvents()
+    QApplication.instance().processEvents()
     cfg.ui_utils.update_bar(30)
     time.sleep(1)
-    qApp.processEvents()
+    QApplication.instance().processEvents()
     ext = cfg.map_canvas.extent()
     # date time for temp name
     _time = get_time()
     png = '%s/%sSCP_kml.png' % (cfg.temp_dir, _time)
     kml = '%s/SCP_kml.kml' % cfg.temp_dir
-    cfg.map_canvas.setCanvasColor(Qt.transparent)
+    cfg.map_canvas.setCanvasColor(Qt.GlobalColor.transparent)
     cfg.map_canvas.saveAsImage(png)
     xml = '''<?xml version="1.0" encoding="UTF-8"?>
          <kml xmlns="http://www.opengis.net/kml/2.2">
@@ -621,9 +634,9 @@ def create_kml_from_map():
     except Exception as err:
         str(err)
     if check_file(kml):
-        if cfg.system_platform == 'Darwin':
+        if cfg.system_platform.startswith('darwin'):
             subprocess.call(('open', kml))
-        elif cfg.system_platform == 'Windows':
+        elif cfg.system_platform.startswith('win'):
             os.startfile(kml)
         else:
             subprocess.call(('xdg-open', kml))
@@ -632,6 +645,30 @@ def create_kml_from_map():
     cfg.map_canvas.refreshAllLayers()
     cfg.ui_utils.update_bar(100)
     cfg.ui_utils.remove_progress_bar(sound=False)
+
+
+# create Copernicus browser link from map
+# noinspection SpellCheckingInspection,HttpUrlsUsage
+def create_copernicus_browser_link_from_map():
+    ext1 = cfg.map_canvas.extent()
+    qgis_crs = cfg.util_qgis.get_qgis_crs()
+    crs_wgs_84 = QgsCoordinateReferenceSystem(4326)
+    cfg.util_qgis.set_qgis_crs(crs_wgs_84)
+    cfg.map_canvas.refreshAllLayers()
+    QApplication.instance().processEvents()
+    cfg.ui_utils.update_bar(30)
+    time.sleep(1)
+    QApplication.instance().processEvents()
+    ext = cfg.map_canvas.extent()
+    lat = (ext.yMinimum() + ext.yMaximum()) / 2
+    lon = (ext.xMaximum() + ext.xMinimum()) / 2
+    url = (f'https://browser.dataspace.copernicus.eu/?zoom=14&lat={lat}'
+           f'&lng={lon}&datasetId=S2_L2A_CDAS&layerId=2_FALSE_COLOR')
+    QDesktopServices().openUrl(QUrl(url))
+    cfg.util_qgis.set_qgis_crs(qgis_crs)
+    cfg.map_canvas.setExtent(ext1)
+    cfg.map_canvas.refreshAllLayers()
+    return url
 
 
 """ raster color composite functions """
@@ -649,7 +686,7 @@ def set_rgb_color_composite(composite=None, bandset_number=None):
             )
             if composite is not None:
                 check = create_rgb_color_composite(composite, bandset_number)
-                if check is True:
+                if check:
                     if composite not in cfg.project_registry[cfg.reg_rgb_list]:
                         cfg.project_registry[cfg.reg_rgb_list].append(
                             composite
@@ -679,17 +716,25 @@ def set_rgb_color_composite(composite=None, bandset_number=None):
                 cfg.logger.log.error(str(err))
                 cfg.mx.msg_err_4()
                 return False
+    else:
+        return False
+
+
+# remove RGB color composite
+def remove_rgb_color_composite(bandset_number=None):
+    if bandset_number is None:
+        bandset_number = cfg.project_registry[cfg.reg_active_bandset_number]
+    virtual_raster_name = f'{cfg.virtual_bandset_name} {bandset_number}'
+    cfg.util_qgis.remove_layer_by_name(virtual_raster_name)
 
 
 # create RGB color composite
 def create_rgb_color_composite(color_composite, bandset_number=None):
     if bandset_number is None:
         bandset_number = cfg.project_registry[cfg.reg_active_bandset_number]
-    cfg.logger.log.debug(
-        'create_rgb_color_composite bandset: %s' % bandset_number
-    )
-    virtual_raster_name = '%s %s' % (
-        cfg.virtual_bandset_name, str(bandset_number))
+    cfg.logger.log.debug(f'create_rgb_color_composite bandset: '
+                         f'{bandset_number}')
+    virtual_raster_name = f'{cfg.virtual_bandset_name} {bandset_number}'
     if bandset_number in cfg.virtual_bandset_dict:
         layer = cfg.util_qgis.select_layer_by_name(virtual_raster_name, True)
     else:
@@ -743,7 +788,7 @@ def create_rgb_color_composite(color_composite, bandset_number=None):
             'create_rgb_color_composite: %s-%s-%s'
             % (str(composite[0]), str(composite[1]), str(composite[2]))
         )
-        qApp.processEvents()
+        QApplication.instance().processEvents()
         cfg.util_qgis.set_raster_color_composite(
             layer, int(composite[0]), int(composite[1]), int(composite[2])
         )
@@ -763,65 +808,87 @@ def read_project_variables():
         except Exception as err:
             cfg.logger.log.debug('error: %s' % str(err))
     cfg.logger.log.debug('project_registry: %s' % str(cfg.project_registry))
-    # set vegetation index calculation checkbox state
-    cfg.dock_class_dlg.ui.display_cursor_checkBox.setCheckState(
-        int(cfg.project_registry[cfg.reg_index_calculation_check])
-    )
-    # set custom index
-    cfg.dock_class_dlg.ui.custom_index_lineEdit.setText(
-        cfg.project_registry[cfg.reg_custom_index_calculation]
-    )
     # set RGB list
     cfg.util_qt.set_combobox_items(
         cfg.rgb_combo, cfg.project_registry[cfg.reg_rgb_list]
     )
-    # set signature calculation checkbox state
-    cfg.dock_class_dlg.ui.signature_checkBox.setCheckState(
-        int(cfg.project_registry[cfg.reg_signature_calculation_check])
-    )
-    cfg.dialog.ui.signature_checkBox2.setCheckState(
-        int(cfg.project_registry[cfg.reg_signature_calculation_check])
-    )
-    # set rapid ROI checkbox state
-    cfg.dock_class_dlg.ui.rapid_ROI_checkBox.setCheckState(
-        int(cfg.project_registry[cfg.reg_rapid_roi_check])
-    )
-    # set save training input
-    cfg.dock_class_dlg.ui.save_input_checkBox.setCheckState(
-        int(cfg.project_registry[cfg.reg_save_training_input_check])
-    )
-    # rapid ROI band
-    cfg.dock_class_dlg.ui.rapidROI_band_spinBox.setValue(
-        int(cfg.project_registry[cfg.reg_roi_main_band])
-    )
-    # max ROI width
-    cfg.max_roi_width_spin.setValue(
-        int(cfg.project_registry[cfg.reg_roi_max_width])
-    )
-    # min ROI size
-    cfg.roi_min_size_spin.setValue(
-        int(cfg.project_registry[cfg.reg_roi_min_size])
-    )
-    # ROI range radius
-    cfg.Range_radius_spin.setValue(
-        float(cfg.project_registry[cfg.reg_roi_range_radius])
-    )
-    # ROI class ID field
-    cfg.dock_class_dlg.ui.ROI_ID_spin.setValue(
-        int(cfg.project_registry[cfg.reg_roi_class_id])
-    )
-    # ROI class info field
-    cfg.dock_class_dlg.ui.ROI_Class_line.setText(
-        cfg.project_registry[cfg.reg_roi_class_name]
-    )
-    # ROI macroclass ID field
-    cfg.dock_class_dlg.ui.ROI_Macroclass_ID_spin.setValue(
-        int(cfg.project_registry[cfg.reg_roi_macroclass_id])
-    )
-    # ROI macroclass info field
-    cfg.dock_class_dlg.ui.ROI_Macroclass_line.setText(
-        cfg.project_registry[cfg.reg_roi_macroclass_name]
-    )
+    if cfg.simplified:
+        # ROI macroclass ID field
+        cfg.dock_class_simpl_dlg.ui.ROI_Macroclass_ID_spin.setValue(
+            int(cfg.project_registry[cfg.reg_roi_macroclass_id])
+        )
+        cfg.project_registry[cfg.reg_roi_macroclass_name] = (
+            cfg.project_registry)[cfg.reg_roi_class_name]
+        # ROI macroclass info field
+        cfg.dock_class_simpl_dlg.ui.ROI_Macroclass_line.setText(
+            cfg.project_registry[cfg.reg_roi_macroclass_name]
+        )
+    else:
+        # set vegetation index calculation checkbox state
+        cfg.dock_class_dlg.ui.display_cursor_checkBox.setCheckState(
+            cfg.util_qt.check_state_from_value(
+                int(cfg.project_registry[cfg.reg_index_calculation_check])
+            )
+        )
+        # set custom index
+        cfg.dock_class_dlg.ui.custom_index_lineEdit.setText(
+            cfg.project_registry[cfg.reg_custom_index_calculation]
+        )
+        # set signature calculation checkbox state
+        cfg.dock_class_dlg.ui.signature_checkBox.setCheckState(
+            cfg.util_qt.check_state_from_value(
+                int(cfg.project_registry[cfg.reg_signature_calculation_check])
+            )
+        )
+        cfg.dialog.ui.signature_checkBox2.setCheckState(
+            cfg.util_qt.check_state_from_value(
+                int(cfg.project_registry[cfg.reg_signature_calculation_check])
+            )
+        )
+        # set rapid ROI checkbox state
+        cfg.dock_class_dlg.ui.rapid_ROI_checkBox.setCheckState(
+            cfg.util_qt.check_state_from_value(
+                int(cfg.project_registry[cfg.reg_rapid_roi_check])
+            )
+        )
+        # set save training input
+        cfg.dock_class_dlg.ui.save_input_checkBox.setCheckState(
+            cfg.util_qt.check_state_from_value(
+                int(cfg.project_registry[cfg.reg_save_training_input_check])
+            )
+        )
+        # rapid ROI band
+        cfg.dock_class_dlg.ui.rapidROI_band_spinBox.setValue(
+            int(cfg.project_registry[cfg.reg_roi_main_band])
+        )
+        # ROI class ID field
+        cfg.dock_class_dlg.ui.ROI_ID_spin.setValue(
+            int(cfg.project_registry[cfg.reg_roi_class_id])
+        )
+        # ROI class info field
+        cfg.dock_class_dlg.ui.ROI_Class_line.setText(
+            cfg.project_registry[cfg.reg_roi_class_name]
+        )
+        # ROI macroclass ID field
+        cfg.dock_class_dlg.ui.ROI_Macroclass_ID_spin.setValue(
+            int(cfg.project_registry[cfg.reg_roi_macroclass_id])
+        )
+        # ROI macroclass info field
+        cfg.dock_class_dlg.ui.ROI_Macroclass_line.setText(
+            cfg.project_registry[cfg.reg_roi_macroclass_name]
+        )
+        # max ROI width
+        cfg.max_roi_width_spin.setValue(
+            int(cfg.project_registry[cfg.reg_roi_max_width])
+        )
+        # min ROI size
+        cfg.roi_min_size_spin.setValue(
+            int(cfg.project_registry[cfg.reg_roi_min_size])
+        )
+        # ROI range radius
+        cfg.Range_radius_spin.setValue(
+            float(cfg.project_registry[cfg.reg_roi_range_radius])
+        )
     # restore active bandset number
     active_bandset_number = cfg.project_registry[cfg.reg_active_bandset_number]
     # bandset restore
@@ -846,6 +913,13 @@ def read_project_variables():
         except Exception as err:
             str(err)
         cfg.bst.band_set_to_table(bandset_number)
+    if cfg.simplified:
+        active_bandset_number = 1
+        cfg.project_registry[cfg.reg_active_bandset_number] = 1
+        cfg.logger.log.debug('bandset restore simplified')
+        # add empty bandset
+        cfg.bst.add_band_set_tab_simplified()
+        cfg.bst.band_set_to_table_simplified()
     cfg.dialog.ui.bandset_number_spinBox.setValue(active_bandset_number)
     # rgb list
     cfg.rgb_composite.rgb_table_from_list(
@@ -865,7 +939,7 @@ def read_project_variables():
 # noinspection SpellCheckingInspection
 def find_available_ram():
     try:
-        if cfg.system_platform == 'Windows':
+        if cfg.system_platform.startswith('win'):
             class GlobalMemoryStatus(ctypes.Structure):
                 _fields_ = [
                     ('length', ctypes.c_ulong), ('memoryLoad', ctypes.c_ulong),
@@ -879,6 +953,7 @@ def find_available_ram():
                 ]
 
             memory_status = GlobalMemoryStatus()
+            # noinspection PyUnresolvedReferences
             ctypes.windll.kernel32.GlobalMemoryStatus(
                 ctypes.byref(memory_status)
             )
@@ -886,7 +961,7 @@ def find_available_ram():
             cfg.qgis_registry[cfg.reg_ram_value] = int(
                 (ram_value / 1048576) / 2
             )
-        elif cfg.system_platform == 'Darwin':
+        elif cfg.system_platform.startswith('darwin'):
             cfg.qgis_registry[cfg.reg_ram_value] = 2048
         else:
             with open('/proc/meminfo') as info:
@@ -920,8 +995,8 @@ def numpy_array_from_list(values):
 
 
 # get random integer
-def random_integer(min, max):
-    return random.randint(min, max)
+def random_integer(minimum, maximum):
+    return random.randint(minimum, maximum)
 
 
 # get random color
@@ -950,12 +1025,14 @@ def check_file(file_path):
 def directory_name(file_path):
     if file_path is not None:
         return os.path.dirname(file_path)
+    return None
 
 
 # get base name
 def base_name(file_path):
     if file_path is not None:
         return os.path.basename(file_path)
+    return None
 
 
 # relative path
@@ -982,7 +1059,7 @@ def relative_to_absolute_path(path, root=None):
 
 # Try to get GDAL for macOS
 def get_gdal_path_for_mac():
-    if cfg.system_platform == 'Darwin':
+    if cfg.system_platform.startswith('darwin'):
         gdal_line = cfg.qgis_registry[cfg.reg_gdal_path]
         if len(gdal_line) > 0:
             cfg.qgis_registry[cfg.reg_gdal_path] = gdal_line.rstrip('/') + '/'

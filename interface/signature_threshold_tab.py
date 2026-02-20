@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2024 by Luca Congedo.
+# Copyright (C) 2012-2026 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -23,7 +23,7 @@
 
 Allows for setting signature thresholds.
 """
-from PyQt5.QtWidgets import QApplication
+from PyQt6.QtWidgets import QApplication
 
 try:
     from remotior_sensus.util import shared_tools

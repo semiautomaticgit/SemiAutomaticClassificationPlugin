@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2024 by Luca Congedo.
+# Copyright (C) 2012-2026 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -21,10 +21,9 @@
 # If not, see <https://www.gnu.org/licenses/>.
 
 
-from PyQt5.QtCore import (
-    Qt, QFileInfo, QSettings, qVersion, QCoreApplication, QTranslator
-)
-from PyQt5.QtWidgets import QDialog, QDockWidget
+from PyQt6.QtCore import (Qt, QFileInfo, QSettings, qVersion, QCoreApplication,
+                          QTranslator)
+from PyQt6.QtWidgets import QDialog, QDockWidget
 # noinspection PyUnresolvedReferences
 from qgis.core import QgsApplication
 
@@ -32,6 +31,8 @@ from .ui_semiautomaticclassificationplugin import (
     Ui_SemiAutomaticClassificationPlugin
 )
 from .ui_semiautomaticclassificationplugin_dock_class import Ui_DockClass
+from .ui_semiautomaticclassificationplugin_dock_class_simplified import (
+    Ui_DockClassSimplified)
 from .ui_semiautomaticclassificationplugin_scatter_plot import Ui_ScatterPlot
 from .ui_semiautomaticclassificationplugin_signature_plot import (
     Ui_SpectralSignaturePlot
@@ -52,7 +53,7 @@ class SemiAutomaticClassificationPluginDialog(QDialog):
     def __init__(self):
         QDialog.__init__(self)
         try:
-            self.setWindowFlags(Qt.Window)
+            self.setWindowFlags(Qt.WindowType.Window)
         except Exception as err:
             str(err)
             return
@@ -70,8 +71,7 @@ class SemiAutomaticClassificationPluginDialog(QDialog):
         if QFileInfo(locale_path).exists():
             self.translator = QTranslator()
             self.translator.load(locale_path)
-            if qVersion() > '4.3.3':
-                QCoreApplication.installTranslator(self.translator)
+            QCoreApplication.installTranslator(self.translator)
         # Set up the user interface from Designer.
         self.ui = Ui_SemiAutomaticClassificationPlugin()
         self.ui.setupUi(self)
@@ -178,9 +178,36 @@ class DockClassDialog(QDockWidget):
         if QFileInfo(locale_path).exists():
             self.translator = QTranslator()
             self.translator.load(locale_path)
-            if qVersion() > '4.3.3':
-                QCoreApplication.installTranslator(self.translator)
+            QCoreApplication.installTranslator(self.translator)
         self.ui = Ui_DockClass()
+        self.ui.setupUi(self)
+
+
+# create the dialog
+class DockClassSimplifiedDialog(QDockWidget):
+    # noinspection PyArgumentList,PyUnusedLocal
+    def __init__(self, parent, iface):
+        QDockWidget.__init__(self)
+        # initialize plugin directory
+        try:
+            self.plugin_dir = QFileInfo(
+                QgsApplication.qgisUserDatabaseFilePath()
+            ).path() + '/python/plugins/SemiAutomaticClassificationPlugin'
+        except Exception as err:
+            str(err)
+            return
+        # locale name
+        self.locale_name = QSettings().value('locale/userLocale')[0:2]
+        # path to locale
+        locale_path = ''
+        if QFileInfo(self.plugin_dir).exists():
+            locale_path = ('%s/i18n/semiautomaticclassificationplugin_%s.qm'
+                           % (self.plugin_dir, self.locale_name))
+        if QFileInfo(locale_path).exists():
+            self.translator = QTranslator()
+            self.translator.load(locale_path)
+            QCoreApplication.installTranslator(self.translator)
+        self.ui = Ui_DockClassSimplified()
         self.ui.setupUi(self)
 
 
@@ -191,7 +218,7 @@ class ScatterPlotDialog(QDialog):
     def __init__(self):
         QDockWidget.__init__(self)
         try:
-            self.setWindowFlags(Qt.Window)
+            self.setWindowFlags(Qt.WindowType.Window)
         except Exception as err:
             str(err)
             return
@@ -209,8 +236,7 @@ class ScatterPlotDialog(QDialog):
         if QFileInfo(locale_path).exists():
             self.translator = QTranslator()
             self.translator.load(locale_path)
-            if qVersion() > '4.3.3':
-                QCoreApplication.installTranslator(self.translator)
+            QCoreApplication.installTranslator(self.translator)
         self.ui = Ui_ScatterPlot()
         self.ui.setupUi(self)
 
@@ -220,7 +246,7 @@ class SpectralSignatureDialog(QDialog):
     # noinspection PyArgumentList
     def __init__(self):
         QDockWidget.__init__(self)
-        self.setWindowFlags(Qt.Window)
+        self.setWindowFlags(Qt.WindowType.Window)
         # initialize plugin directory
         self.plugin_dir = QFileInfo(
             QgsApplication.qgisUserDatabaseFilePath()
@@ -235,8 +261,7 @@ class SpectralSignatureDialog(QDialog):
         if QFileInfo(locale_path).exists():
             self.translator = QTranslator()
             self.translator.load(locale_path)
-            if qVersion() > '4.3.3':
-                QCoreApplication.installTranslator(self.translator)
+            QCoreApplication.installTranslator(self.translator)
         self.ui = Ui_SpectralSignaturePlot()
         self.ui.setupUi(self)
 
@@ -246,7 +271,7 @@ class WidgetDialog(QDialog):
     def __init__(self):
         QDockWidget.__init__(self)
         try:
-            self.setWindowFlags(Qt.Window)
+            self.setWindowFlags(Qt.WindowType.Window)
         except Exception as err:
             str(err)
         self.ui = Ui_SCP_Widget()

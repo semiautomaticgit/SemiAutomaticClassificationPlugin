@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2024 by Luca Congedo.
+# Copyright (C) 2012-2026 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -23,9 +23,14 @@
 
 from itertools import combinations as iter_combinations
 
-from PyQt5.QtGui import QColor
-from PyQt5.QtWidgets import QApplication
-from matplotlib.ticker import MaxNLocator
+from PyQt6.QtGui import QColor
+from PyQt6.QtWidgets import QApplication
+
+try:
+    from matplotlib.ticker import MaxNLocator
+except Exception as error:
+    print(error)
+    MaxNLocator = None
 
 cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 

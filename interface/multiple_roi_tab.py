@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2024 by Luca Congedo.
+# Copyright (C) 2012-2026 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -25,7 +25,7 @@ This tool allows for the creation of multiple ROIs.
 """
 
 import numpy
-from PyQt5.QtWidgets import qApp, QApplication
+from PyQt6.QtWidgets import QApplication
 cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
 
@@ -195,6 +195,7 @@ def create_random_point():
         for point in points:
             add_point_to_table(point)
     cfg.ui_utils.remove_progress_bar()
+    return True
 
 
 # create ROIs
@@ -208,7 +209,7 @@ def create_roi_from_points():
     if count > 0:
         cfg.ui_utils.add_progress_bar()
         for i in range(0, count):
-            qApp.processEvents()
+            QApplication.instance().processEvents()
             if cfg.rs.configurations.action:
                 cfg.ui_utils.update_bar((i + 1) * 100 / (count + 1))
                 try:
@@ -273,6 +274,7 @@ def create_roi_from_points():
         cfg.scp_dock.rapid_roi_band()
         cfg.scp_dock.rapid_roi_checkbox()
         cfg.ui_utils.remove_progress_bar()
+    return True
 
 
 # export point list to file
@@ -417,6 +419,8 @@ def remove_row_from_table():
 def signature_checkbox_2():
     if cfg.dialog.ui.signature_checkBox2.isChecked() is True:
         # connected checkbox
-        cfg.dock_class_dlg.ui.signature_checkBox.setCheckState(2)
+        cfg.dock_class_dlg.ui.signature_checkBox.setCheckState(
+            cfg.util_qt.check_state_from_value(2))
     else:
-        cfg.dock_class_dlg.ui.signature_checkBox.setCheckState(0)
+        cfg.dock_class_dlg.ui.signature_checkBox.setCheckState(
+            cfg.util_qt.check_state_from_value(0))

@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2024 by Luca Congedo.
+# Copyright (C) 2012-2026 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -30,7 +30,7 @@ dialog_accepted = class_report = class_vector = script = band_calc = None
 cross_classification = dilation = rgb_combo = neighbor = clustering = None
 reclassification = band_combination = pca_tab = vector_to_raster = sieve = None
 stack_bandset = split_bands = reproject_bands = masking_bands = erosion = None
-spectral_distance = raster_zonal_stats = None
+spectral_distance = raster_zonal_stats = dock_class_simpl_dlg = None
 image_conversion = clip_bands = clip_bands_pointer = mosaic_bandsets = None
 download_products = download_products_pointer = util_qt = translate = None
 classification = working_toolbar = classification_preview_pointer = None
@@ -39,7 +39,7 @@ first_install = signature_plot = spectral_signature_plotter = None
 scatter_plot = scatter_plotter = scp_processing_provider = None
 signature_importer = usgs_spectral_lib = multiple_roi = None
 smtp_notification = smtp_server = smtp_user = smtp_password = None
-smtp_recipients = main_menu = None
+smtp_recipients = main_menu = simplified = rs_version = None
 # welcome url
 first_reply = second_reply = second_url = None
 # QGIS proxy
@@ -163,10 +163,13 @@ reg_bandset = 'SemiAutomaticClassification_Plugin/scp_bandset_'
 """ QGIS registry keys """
 qgis_registry = {}
 # first installation
-reg_first_install = 'SemiAutomaticClassification_Plugin/first_install'
+reg_first_install = 'SemiAutomaticClassification_Plugin/first_install_9'
 # log setting
 reg_log_key = 'SemiAutomaticClassification_Plugin/log_setting'
 qgis_registry[reg_log_key] = 0
+# simplified interface
+reg_simplified = 'SemiAutomaticClassification_Plugin/simplified'
+qgis_registry[reg_simplified] = 2
 # sound
 reg_sound = 'SemiAutomaticClassification_Plugin/use_sound'
 qgis_registry[reg_sound] = 2
@@ -256,6 +259,16 @@ band_calc_functions = [
     ['EVI', '2.5# ( "#NIR#" - "#RED#" ) / '
             '( "#NIR#" + 6# "#RED#" - 7.5# "#BLUE#" + 1) @EVI'
      ], ['NBR', '( "#NIR#" - "#SWIR2#" ) / ( "#NIR#" + "#SWIR2#" ) @NBR'],
+    ['Preprocessing'],
+    ['Sentinel-2 normalization 8160',
+     '<p>forbandsinbandset[1]</p><p>np.clip("#BAND#" / 8160 , 0, 1) '
+     '@#BAND#</p>'],
+    ['Sentinel-2 normalization 10000',
+     '<p>forbandsinbandset[1]</p><p>np.clip("#BAND#" / 10000 , 0, 1) '
+     '@#BAND#</p>'],
+    ['Landsat normalization 16320',
+     '<p>forbandsinbandset[1]</p><p>np.clip(("#BAND#" - 4000) / 16320 , 0, 1) '
+     '@#BAND#</p>'],
     ['Variables'], ['nodata', 'nodata('],
     ['forbandsets', 'forbandsets[ ]'],
     ['forbandsinbandset', 'forbandsinbandset[ ]'],

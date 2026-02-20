@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2024 by Luca Congedo.
+# Copyright (C) 2012-2026 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -28,9 +28,9 @@ import subprocess
 from re import sub
 from shlex import split
 
-from PyQt5.QtCore import QPointF
-from PyQt5.QtGui import QPolygonF, QColor, QPixmap, QCursor
-from PyQt5.QtWidgets import QApplication
+from PyQt6.QtCore import QPointF
+from PyQt6.QtGui import QPolygonF, QColor, QPixmap, QCursor
+from PyQt6.QtWidgets import QApplication
 # noinspection PyUnresolvedReferences
 from qgis.core import (
     QgsGeometry, QgsCoordinateReferenceSystem, QgsRectangle
@@ -276,11 +276,14 @@ def check_all_bands():
         state = 2
     for band in range(1, 13):
         eval(
-            'cfg.dialog.ui.checkBoxs_band_%i.setCheckState(%i)'
+            'cfg.dialog.ui.checkBoxs_band_%i.setCheckState('
+            'cfg.util_qt.check_state_from_value(%i))'
             % (band, state)
         )
-    cfg.dialog.ui.ancillary_data_checkBox.setCheckState(state)
-    cfg.dialog.ui.checkBoxs_band_8A.setCheckState(state)
+    cfg.dialog.ui.ancillary_data_checkBox.setCheckState(
+        cfg.util_qt.check_state_from_value(state))
+    cfg.dialog.ui.checkBoxs_band_8A.setCheckState(
+        cfg.util_qt.check_state_from_value(state))
 
 
 """ Table """
@@ -386,6 +389,7 @@ def perform_query():
     table.setSortingEnabled(True)
     table.blockSignals(False)
     clear_canvas_poly()
+    return True
 
 
 # clear table
@@ -560,6 +564,7 @@ def open_download_table(file=None):
             n += 1
     table.setSortingEnabled(True)
     table.blockSignals(False)
+    return True
 
 
 # display images
@@ -756,6 +761,8 @@ def download_images(exporter=False):
                 copernicus_user=copernicus_user,
                 copernicus_password=copernicus_password
             )
+            if not cfg.rs.configurations.action:
+                cfg.ui_utils.remove_progress_bar(smtp=str(__name__))
             if output.check:
                 if cfg.dialog.ui.preprocess_checkBox.isChecked():
                     preprocess = True
@@ -785,6 +792,71 @@ def download_images(exporter=False):
                                 cfg.dialog.ui.bands_tableWidget
                             )
                 else:
+                    if cfg.dialog.ui.create_bandset_checkBox_2.isChecked():
+                        if output.extra is not None:
+                            # preprocess
+                            output_raster_lists = output.extra[
+                                'output_raster_lists']
+                            directories = output.extra['directory_paths']
+                            for n, output_raster_dic in enumerate(
+                                    output_raster_lists):
+                                items = output_raster_dic.items()
+                                satellite, output_raster_list = next(
+                                    iter(output_raster_dic.items()))
+                                bandset_number = cfg.project_registry[
+                                    cfg.reg_bandset_count]
+                                # check empty bandset
+                                bandset_x = (
+                                    cfg.bandset_catalog.get_bandset_by_number(
+                                        bandset_number
+                                    )
+                                )
+                                if bandset_x is None:
+                                    try:
+                                        # create bandset
+                                        cfg.bandset_catalog.create_bandset(
+                                            paths=output_raster_list,
+                                            bandset_number=bandset_number,
+                                            insert=False,
+                                            wavelengths=satellite
+                                        )
+                                    except Exception as err:
+                                        cfg.mx.msg_err_5()
+                                        cfg.logger.log.error(str(err))
+                                else:
+                                    bands = bandset_x.bands
+                                    if bands is None or bands.shape[0] == 0:
+                                        try:
+                                            # create bandset
+                                            cfg.bandset_catalog.create_bandset(
+                                                paths=output_raster_list,
+                                                bandset_number=bandset_number,
+                                                insert=False,
+                                                wavelengths=satellite
+                                            )
+                                        except Exception as err:
+                                            cfg.mx.msg_err_5()
+                                            cfg.logger.log.error(str(err))
+                                    else:
+                                        bandset_number += 1
+                                        try:
+                                            # create bandset
+                                            cfg.bandset_catalog.create_bandset(
+                                                paths=output_raster_list,
+                                                bandset_number=bandset_number,
+                                                insert=False,
+                                                wavelengths=satellite
+                                            )
+                                        except Exception as err:
+                                            cfg.mx.msg_err_5()
+                                            cfg.logger.log.error(str(err))
+                                # create table
+                                cfg.project_registry[
+                                    cfg.reg_active_bandset_number] = (
+                                    bandset_number)
+                                cfg.bst.band_set_to_table(bandset_number)
+                                cfg.band_calc.raster_band_table()
+                                cfg.band_calc.calculate(directories[n])
                     if load_in_qgis:
                         if output.paths is not None:
                             for x_path in output.paths:
@@ -832,8 +904,10 @@ def display_sentinel2(row, preview=False):
         if layer is not None:
             cfg.util_qgis.set_layer_visible(layer, True)
             cfg.util_qgis.move_layer_to_top(layer)
+            return None
         else:
             cfg.util_qgis.add_raster_layer('%s.vrt' % image_output, image_name)
+            return None
     else:
         if 'storage.googleapis.com' in url:
             check = cfg.rs.configurations.multiprocess.multi_download_file(
@@ -842,7 +916,7 @@ def display_sentinel2(row, preview=False):
                 proxy_user=proxy_user, proxy_password=proxy_password
             )
             if check is not False:
-                if preview is True:
+                if preview:
                     preview_in_label(image_output)
                     return image_output
                 min_lat = str(table.item(row, 7).text())
@@ -877,7 +951,7 @@ def display_sentinel2(row, preview=False):
                 proxy_user=proxy_user, proxy_password=proxy_password
             )
             if check is not False:
-                if preview is True:
+                if preview:
                     preview_in_label(image_output)
                     return image_output
                 min_lat = str(table.item(row, 7).text())
@@ -898,6 +972,7 @@ def display_sentinel2(row, preview=False):
                     proxy_port=proxy_port, proxy_user=proxy_user,
                     proxy_password=proxy_password
                 )
+        return None
 
 
 # display images
@@ -924,11 +999,13 @@ def display_nasa_images(row, preview=False):
         if layer is not None:
             cfg.util_qgis.set_layer_visible(layer, True)
             cfg.util_qgis.move_layer_to_top(layer)
+            return None
         else:
             r = cfg.util_qgis.add_raster_layer(
                 '%s/%s.vrt' % (cfg.rs.configurations.temp.dir, image_id)
             )
             cfg.util_qgis.set_raster_color_composite(r, 1, 2, 3)
+            return None
     else:
         download_nasa_thumbnail(
             image_id, min_lat, min_lon, max_lat, max_lon, url, sat, preview
@@ -940,6 +1017,7 @@ def display_nasa_images(row, preview=False):
                 '%s//%s.vrt' % (cfg.rs.configurations.temp.dir, image_id)
             )
             cfg.util_qgis.set_raster_color_composite(r, 1, 2, 3)
+        return None
 
 
 # display images
@@ -966,11 +1044,13 @@ def display_mpc_images(row, preview=False):
         if layer is not None:
             cfg.util_qgis.set_layer_visible(layer, True)
             cfg.util_qgis.move_layer_to_top(layer)
+            return None
         else:
             r = cfg.util_qgis.add_raster_layer(
                 '%s/%s.vrt' % (cfg.rs.configurations.temp.dir, image_id)
             )
             cfg.util_qgis.set_raster_color_composite(r, 1, 2, 3)
+            return None
     else:
         download_mpc_thumbnail(
             image_id, min_lat, min_lon, max_lat, max_lon, url, sat, preview
@@ -982,6 +1062,7 @@ def display_mpc_images(row, preview=False):
                 '%s//%s.vrt' % (cfg.rs.configurations.temp.dir, image_id)
             )
             cfg.util_qgis.set_raster_color_composite(r, 1, 2, 3)
+        return None
 
 
 # display image in label
@@ -993,10 +1074,10 @@ def preview_in_label(image_path):
         com = ('%sgdal_translate %s %s  -of PNG'
                % (cfg.qgis_registry[cfg.reg_gdal_path], image_path,
                   temp_image))
-        if cfg.system_platform != 'Windows':
+        if not cfg.system_platform.startswith('win'):
             com = split(com)
         try:
-            if cfg.system_platform == 'Windows':
+            if cfg.system_platform.startswith('win'):
                 startupinfo = subprocess.STARTUPINFO()
                 startupinfo.dwFlags = subprocess.STARTF_USESHOWWINDOW
                 startupinfo.wShowWindow = subprocess.SW_HIDE
@@ -1023,6 +1104,7 @@ def display_osm():
     temp_path = cfg.rs.configurations.temp.temporary_file_path(
         name_suffix='.xml'
     )
+    # noinspection HttpUrlsUsage
     xml = """<GDAL_WMS>
         <Service name="TMS">
         <ServerUrl>http://tile.openstreetmap.org/${z}/${x}/${y}.png</ServerUrl>
@@ -1078,10 +1160,7 @@ def onthefly_georef_image(
     )
     # WGS84 EPSG 4326
     wgs84 = QgsCoordinateReferenceSystem('EPSG:4326')
-    utm_crs = QgsCoordinateReferenceSystem()
-    utm_crs.createFromProj4(
-        '+proj=utm +zone=' + str(zone) + ' +datum=WGS84 +units=m +no_defs'
-    )
+    utm_crs = QgsCoordinateReferenceSystem(f'EPSG:{32600 + zone}')
     upper_left_proj = cfg.utils.project_qgis_point_coordinates(
         upper_left, wgs84, utm_crs
     )
@@ -1097,10 +1176,10 @@ def onthefly_georef_image(
                   str(upper_left_proj.x()), str(upper_left_proj.y()),
                   str(lower_right_proj.x()), str(lower_right_proj.y()),
                   str(zone), input_image, output_vrt))
-        if cfg.system_platform != 'Windows':
+        if not cfg.system_platform.startswith('win'):
             com = split(com)
         try:
-            if cfg.system_platform == 'Windows':
+            if cfg.system_platform.startswith('win'):
                 startupinfo = subprocess.STARTUPINFO()
                 startupinfo.dwFlags = subprocess.STARTF_USESHOWWINDOW
                 startupinfo.wShowWindow = subprocess.SW_HIDE
@@ -1144,8 +1223,8 @@ def download_nasa_thumbnail(
             proxy_host=proxy_host, proxy_port=proxy_port,
             proxy_user=proxy_user, proxy_password=proxy_password
         )
-    if check is True:
-        if preview is True:
+    if check:
+        if preview:
             preview_in_label(image_output)
             return image_output
         onthefly_georef_image(
@@ -1153,6 +1232,7 @@ def download_nasa_thumbnail(
             '%s/%s.vrt' % (cfg.rs.configurations.temp.dir, image_id), min_lon,
             max_lon, min_lat, max_lat
         )
+    return None
 
 
 # download thumbnail
@@ -1192,8 +1272,8 @@ def download_mpc_thumbnail(
         )
         if downloaded_file is not None:
             check, output = downloaded_file
-    if check is True:
-        if preview is True:
+    if check:
+        if preview:
             preview_in_label(image_output)
             return image_output
         onthefly_georef_image(
@@ -1201,3 +1281,4 @@ def download_mpc_thumbnail(
             '%s/%s.vrt' % (cfg.rs.configurations.temp.dir, image_id), min_lon,
             max_lon, min_lat, max_lat
         )
+    return None

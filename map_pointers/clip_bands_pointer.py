@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2024 by Luca Congedo.
+# Copyright (C) 2012-2026 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -20,7 +20,7 @@
 # along with SemiAutomaticClassificationPlugin. 
 # If not, see <https://www.gnu.org/licenses/>.
 
-from PyQt5.QtCore import Qt, pyqtSignal
+from PyQt6.QtCore import Qt, pyqtSignal
 from qgis.gui import QgsMapTool
 
 cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
@@ -40,7 +40,7 @@ class ClipBandsPointer(QgsMapTool):
             event.pos()
         )
         # click
-        if event.button() == Qt.RightButton:
+        if event.button() == Qt.MouseButton.RightButton:
             self.rightClicked.emit(point)
         else:
             self.leftClicked.emit(point)

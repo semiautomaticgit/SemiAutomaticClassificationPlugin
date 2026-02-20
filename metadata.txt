@@ -1,9 +1,10 @@
 [general]
 name=Semi-Automatic Classification Plugin
-qgisMinimumVersion=3.00
+qgisMinimumVersion=3.99
+supportsQt6=True
 description=The Semi-Automatic Classification Plugin (SCP) allows for the supervised classification of remote sensing images, providing tools for the download, the preprocessing and postprocessing of images.
-version=8.5.0
-about=Developed by Luca Congedo, the Semi-Automatic Classification Plugin (SCP) allows for the supervised classification of remote sensing images, providing tools for the download, the preprocessing and postprocessing of images. Search and download is available for Landsat, Sentinel-2 images. Several algorithms are available for the land cover classification. This plugin requires the installation of Remotior Sensus, GDAL, OGR, Numpy, SciPy, and Matplotlib. For more information please visit https://fromgistors.blogspot.com .
+version=9.0.0
+about=Developed by Luca Congedo, the Semi-Automatic Classification Plugin (SCP) allows for the supervised classification of remote sensing images, providing tools for the download, the preprocessing and postprocessing of images. Search and download is available for Landsat, Sentinel-2 images. Several algorithms are available for the land cover classification. This plugin is built on Remotior Sensus library and requires the installation of additional dependencies. For more information please visit https://fromgistors.blogspot.com .
 
 author=Luca Congedo
 email=ing.congedoluca@gmail.com
@@ -13,129 +14,21 @@ icon=semiautomaticclassificationplugin.png
 
 changelog=
 
-	8.5.0
-	-added raster input to the tool raster zonal stats and update the Processing
-	-this version requires Remotior Sensus >= 0.4.4
+	9.0.0
+	-new version for QGIS 4
+	-built on the new Remotior Sensus version 0.6
+	-new simplified interface designed for new users
+	-added automatic download of Remotior Sensus if library is not available or outdated
+	-in the Working toolbar added button to open a Copernicus Browser link at QGIS map coordinates
+	-in the Working toolbar added buttons to show or hide custom layers or groups by name also using keyboard shortcuts Z, X, and C
+	-in Download products added option to create band set
+	-various bug fixing
 
-	8.4.0
-	-fixed issue in clip band tool using vector
-	-added requirements.txt to be used by the plugin QPIP that allows for managing Python dependencies in QGIS
-
-	8.3.0
-	-added new Clustering tool in Band processing
-	-added new Spectral distance tool in Band processing
-	-added new Edit raster tool in Postprocessing
-	-added new Raster zonal stats tool in Postprocessing
-	-fixed training input issue with spectral signature calculation with new Band sets
-	-implemented interface language localization
-	-in Band combination new option to avoid output raster creation
-	-fixed logging
-	-minor bug fixing
-	-this version requires Remotior Sensus >= 0.4
-
-	8.2.2
-	-fixed import vector message if missing training input
-	-fixed warning message of Remotior Sensus missing installation
-
-	8.2.1
-	-fixed packaging dependency
-
-	8.2.0
-	-in Download products added the options to search and download Collections from Microsoft Planetary Computer: Sentinel-2, Landsat, ASTER, MODIS Surface Reflectance 8-Day, and Copernicus DEM(required Remotior Sensus >= 0.2.01)
-
-	8.1.7
-	-in Download products added option for login Copernicus Data Space Ecosystem (required Remotior Sensus >= 0.1.24)
-	-in SCP dock added zoom to ROI after double clik on ROI name
-
-	8.1.6
-	-fixed finish sound
-
-	8.1.5
-	-added information message when merging ROIs
-	-minor fixes classification tab
-	-fixed move layer to top
-	-fixed finish sound
-
-	8.1.4
-	-fixed finish sound
-
-	8.1.3
-	-fixed classification tool
-
-	8.1.2
-	-fixed classification tool
-
-	8.1.1
-	-fixed band set tools integration with image conversion
-
-	8.1.0
-	-added function to automatically download Remotior Sensus if not found in the environment
-
-	8.0.9
-	-fixed RGB composite from Band set tab
-
-	8.0.8
-	-fixed classification preview issue
-
-	8.0.7
-	-attempt to fix macOS installation issue
-
-	8.0.6
-	-fixed classification message
-	-reset localization file, to be translated for the new version
-
-	8.0.5
-	-fixed #298
-
-	8.0.4
-	-set warning message in case of missing remotior sensus library #295
-
-	8.0.3
-	-fixed plugin unload
-
-	8.0.2
-	-fixed download HLS
-
-	8.0.0
-	-new version based on Remotior Sensus (i.e. a Python library developed for remote sensing) as main processing framework
-	-the whole code has been substantially rewritten and improved
-	-improved the interface for managing Band sets, which support dates, and multiple band sets can be directly managed
-	-band sets, and therefore all the tools using band sets, no longer require the bands to be previously loaded in QGIS, therefore bands can be loaded directly selecting the files
-	-training input has been improved to be integrated with Remotior Sensus' management of spectral signatures
-	-download of products relies on Remotior Sensus tools, which allow for the moment the download of Copernicus Sentinel-2 and NASA Harmonized Landsat and Sentinel-2 data
-	-available preprocessing tools:
-	--"Clip raster bands" for creating image subsets
-	--new unified interface named "Image conversion" allows for image preprocessing conversion of Landsat and Sentinel-2 images
-	--"Masking bands" for masking images based on raster values or vector
-	--"Reproject raster bands" for resampling and reprojecting images
-	--"Split raster bands" for splitting multiband images
-	--"Stack raster bands" for creating a multiband raster
-	--"Vector to raster" for rasterization
-	-available processing tools:
-	--unified interface for "Classification" which includes Random Forest, Multilayer Perceptron, Support Vector Machine
-	--scikit-learn and PyTorch are used as machine learning libraries
-	--"Classification" tool allows for training the classifier, optionally saving the classifier for later use, and of course performing the classification
-	--"Combination" for calculating band combinations of values
-	--"Dilation" for calculating band dilation of values based on desired size
-	--"Erosion" for calculating band erosion of values based on desired size
-	--"Sieve" for filtering isolated pixel values
-	--"Neighbor" for calculating functions on pixels considering a desired neighbor distance
-	--"PCA" for Principal Component Analysis
-	-available postprocessing tools:
-	--"Accuracy" for calculating classification accuracy based on reference data
-	--"Classification report" for calculating area statistics of raster classes
-	--"Classification to vector" for converting a raster band to vector
-	--"Cross classification" for crossing two raster bands and calculate the combination of values or linear regression
-	--"Reclassification" for calculating new values for raster classes
-	-a few tools, such as clustering and edit raster have been removed and will be reintroduced when available in Remotior Sensus
-	-"Band calc" interface has been improved adding several options that are available through the Remotior Sensus library, such as the optional definition of extent coordinates for limiting the calculation, or the output pixel size
-	-new tab "Script" is linked to most of the tools allowing for the display of the Python code to run the equivalent commands in Remotior Sensus (pasting the code in a Python shell), which can be useful to automate tasks and creating scripts
-	-integration of several tools in the QGIS Processing, which allows for creating models and workflows between the several libraries available in QGIS
 
 experimental=False
 deprecated=False
 
-tags = Raster, Classification, Land Cover, Remote Sensing, Analysis, Landsat, Sentinel, Supervised classification, Spectral signature, Mask, Clip, Accuracy, Landscape, Copernicus, Random Forest, Processing, Remotior Sensus
+tags = Raster, Classification, Land Cover, Remote Sensing, Analysis, Landsat, Sentinel, Supervised classification, Spectral signature, Mask, Clip, Accuracy, Landscape, Copernicus, Random Forest, Processing, Remotior Sensus, Machine Learning, Deep Learning, Foundation
 
 homepage=https://fromgistors.blogspot.com/p/semi-automatic-classification-plugin.html
 tracker=https://github.com/semiautomaticgit/SemiAutomaticClassificationPlugin/issues

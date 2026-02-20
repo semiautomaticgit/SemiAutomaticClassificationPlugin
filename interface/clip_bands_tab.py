@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2024 by Luca Congedo.
+# Copyright (C) 2012-2026 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -24,8 +24,8 @@
 This tool allows for clipping bands.
 """
 
-from PyQt5.QtCore import QPointF
-from PyQt5.QtGui import QPolygonF, QColor, QPixmap, QCursor
+from PyQt6.QtCore import QPointF
+from PyQt6.QtGui import QPolygonF, QColor, QPixmap, QCursor
 # noinspection PyUnresolvedReferences
 from qgis.core import QgsGeometry
 # noinspection PyUnresolvedReferences

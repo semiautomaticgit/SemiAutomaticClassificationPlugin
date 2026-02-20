@@ -2,21 +2,21 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="34.133335"
    height="34.133335"
    id="svg2985"
    version="1.1"
-   inkscape:version="0.92.1 r15371"
-   sodipodi:docname="semiautomaticclassificationplugin_kml_add.svg"
+   inkscape:version="1.4 (e7c3feb100, 2024-10-09)"
+   sodipodi:docname="semiautomaticclassificationplugin_copernicus_browser_link.svg"
    inkscape:export-xdpi="67"
-   inkscape:export-ydpi="67">
+   inkscape:export-ydpi="67"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
   <defs
      id="defs2987" />
   <sodipodi:namedview
@@ -26,26 +26,30 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="3.9590209"
-     inkscape:cx="-141.03141"
-     inkscape:cy="47.062935"
+     inkscape:zoom="7.9180418"
+     inkscape:cx="1.0103508"
+     inkscape:cy="15.155262"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:grid-bbox="true"
      inkscape:document-units="px"
      showguides="false"
-     inkscape:window-width="1366"
-     inkscape:window-height="708"
+     inkscape:window-width="1536"
+     inkscape:window-height="790"
      inkscape:window-x="0"
      inkscape:window-y="0"
-     inkscape:window-maximized="1">
+     inkscape:window-maximized="1"
+     inkscape:showpageshadow="2"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1">
     <inkscape:grid
        type="xygrid"
        id="grid3765"
        originx="0"
        originy="0"
        spacingx="1.0666667"
-       spacingy="1.0666667" />
+       spacingy="1.0666667"
+       units="px" />
   </sodipodi:namedview>
   <metadata
      id="metadata2990">
@@ -621,14 +625,14 @@
        inkscape:export-ydpi="67" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:bold;font-size:12.80000019px;line-height:0%;font-family:sans-serif;-inkscape-font-specification:'Sans Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:#ffffff;stroke-width:1.06666672;stroke-opacity:1"
-       x="1.0956584"
-       y="22.724234"
+       style="font-style:normal;font-weight:bold;font-size:12.8px;line-height:0%;font-family:sans-serif;-inkscape-font-specification:'Sans Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:#ffffff;stroke-width:1.06667;stroke-opacity:1"
+       x="8.0221605"
+       y="22.471645"
        id="text3795"><tspan
          sodipodi:role="line"
          id="tspan3797"
-         x="1.0956584"
-         y="22.724234"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:13.33333302px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke:none;stroke-width:1.06666672">KML</tspan></text>
+         x="8.0221605"
+         y="22.471645"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:13.3333px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke:none;stroke-width:1.06667">CB</tspan></text>
   </g>
 </svg>

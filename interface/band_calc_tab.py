@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download,
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2024 by Luca Congedo.
+# Copyright (C) 2012-2026 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -23,7 +23,8 @@
 
 This tool allows for calculations between raster bands.
 """
-from PyQt5.QtWidgets import QApplication
+from PyQt6.QtWidgets import QApplication
+
 
 try:
     from remotior_sensus.tools import band_calc as rs_calc
@@ -179,7 +180,10 @@ def check_expression(expression, raster_variables=None, bandset_number=None):
                     cfg.dialog.ui.label_band_calc.setText(
                         ' Expression error %s' % message
                     )
-            cfg.dialog.ui.plainTextEdit_calc.setStyleSheet('color : black')
+            cfg.dialog.ui.plainTextEdit_calc.setStyleSheet('')
+            cfg.dialog.ui.plainTextEdit_calc.setPalette(
+                cfg.dialog.ui.plainTextEdit_calc.style().standardPalette())
+            cfg.dialog.ui.plainTextEdit_calc.ensurePolished()
             cfg.dialog.ui.toolButton_calculate.setEnabled(False)
         else:
             cfg.dialog.ui.label_band_calc.setText(' Expression')
@@ -187,6 +191,7 @@ def check_expression(expression, raster_variables=None, bandset_number=None):
             cfg.dialog.ui.toolButton_calculate.setEnabled(True)
             output_name_table(name_list=all_out_name_list)
         return exp_list
+    return None
 
 
 # Set output name table
@@ -310,6 +315,7 @@ def set_function(index):
             except Exception as err:
                 str(err)
                 return False
+    return None
 
 
 # double click

@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2024 by Luca Congedo.
+# Copyright (C) 2012-2026 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -24,7 +24,7 @@
 This tool allows for the conversion of images to reflectance such as Landsat
 and Sentinel-2.
 """
-from PyQt5.QtWidgets import QApplication
+from PyQt6.QtWidgets import QApplication
 
 cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
@@ -109,7 +109,9 @@ def perform_conversion(output_path=None, load_in_qgis=False):
     if output_path is None or output_path is False:
         output_path = cfg.util_qt.get_existing_directory()
     if output_path is not False and cfg.preprocess_band_table is not None:
-        if cfg.dialog.ui.create_bandset_checkBox.isChecked() is True:
+        if cfg.simplified:
+            add_bandset = False
+        elif cfg.dialog.ui.create_bandset_checkBox.isChecked() is True:
             if cfg.dialog.ui.add_new_bandset_radioButton_1.isChecked() is True:
                 # added new bandset
                 add_bandset = True
@@ -137,7 +139,7 @@ def perform_conversion(output_path=None, load_in_qgis=False):
                     cfg.util_qgis.add_raster_layer(raster)
         else:
             cfg.mx.msg_err_1()
-        if add_bandset is True:
+        if add_bandset:
             bandset_number = None
             for bandset_number in range(
                     1, cfg.bandset_catalog.get_bandset_count() + 1
@@ -147,6 +149,10 @@ def perform_conversion(output_path=None, load_in_qgis=False):
                 output_directory=output_path,
                 bandset_number=bandset_number
             )
+        elif add_bandset is False:
+            bandset_number = cfg.project_registry[
+                cfg.reg_active_bandset_number]
+            cfg.bst.band_set_to_table(bandset_number)
         cfg.mx.msg_inf_6()
         cfg.ui_utils.remove_progress_bar(
             smtp=str(__name__), failed=not output.check

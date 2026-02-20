@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2024 by Luca Congedo.
+# Copyright (C) 2012-2026 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -23,8 +23,8 @@
 import sys
 from shutil import copy
 
-from PyQt5.QtCore import QDir
-from PyQt5.QtWidgets import QApplication
+from PyQt6.QtCore import QDir
+from PyQt6.QtWidgets import QApplication
 
 cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
@@ -295,6 +295,36 @@ def copy_log_file():
 
 # test required dependencies
 # noinspection PyTypeChecker
+def test_all_dependencies():
+    text = []
+    if not test_numpy():
+        text.append('NumPy')
+    if not test_scipy():
+        text.append('SciPy')
+    if not test_matplotlib():
+        text.append('Matplotlib')
+    if not test_gdal():
+        text.append('GDAL')
+    if not test_pytorch():
+        text.append('PyTorch')
+    if not test_torchvision():
+        text.append('Torchvision')
+    if not test_sklearn():
+        text.append('scikit-learn')
+    if not test_remotior_sensus():
+        text.append('Remotior Sensus')
+    if len(text) > 0:
+        message =  QApplication.translate(
+            'semiautomaticclassificationplugin',
+            'Failed to load the following dependencies'
+        ) + ': ' + ', '.join(text)
+    else:
+        message = QApplication.translate(
+            'semiautomaticclassificationplugin', 'Dependencies checked'
+        )
+    return message
+
+
 def test_dependencies():
     message = '<ul>'
     test_numpy_a = test_numpy()
@@ -340,6 +370,15 @@ def test_dependencies():
         )
     else:
         message += '<li style="color:red">PyTorch: %s</li>' % (
+            QApplication.translate('semiautomaticclassificationplugin', 'Fail')
+        )
+    test_torchvision_a = test_torchvision()
+    if test_torchvision_a:
+        message += '<li>Torchvision: %s</li>' % QApplication.translate(
+            'semiautomaticclassificationplugin', 'Success'
+        )
+    else:
+        message += '<li style="color:red">Torchvision: %s</li>' % (
             QApplication.translate('semiautomaticclassificationplugin', 'Fail')
         )
     test_sklearn_a = test_sklearn()
@@ -435,12 +474,24 @@ def test_gdal():
     return test
 
 
-# test GDAL
+# test PyTorch
 def test_pytorch():
     test = True
     try:
         # noinspection PyUnresolvedReferences
         import torch
+    except Exception as err:
+        str(err)
+        test = False
+    return test
+
+
+# test Torchvision
+def test_torchvision():
+    test = True
+    try:
+        # noinspection PyUnresolvedReferences
+        from torchvision.models import swin_v2_b
     except Exception as err:
         str(err)
         test = False
@@ -467,7 +518,9 @@ def test_internet_connection():
         temp = cfg.rs.configurations.temp.temporary_file_path(
             name_suffix='.html'
         )
-        download_tools.download_file(url=url, output_path=temp)
+        check, error = download_tools.download_file(url=url, output_path=temp)
+        if not check:
+            test = False
     except Exception as err:
         str(err)
         test = False

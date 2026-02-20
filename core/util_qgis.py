@@ -3,7 +3,7 @@
 # classification of remote sensing images, providing tools for the download, 
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
-# Copyright (C) 2012-2024 by Luca Congedo.
+# Copyright (C) 2012-2026 by Luca Congedo.
 # Author: Luca Congedo
 # Email: ing.congedoluca@gmail.com
 #
@@ -140,13 +140,13 @@ def get_layer_id_by_name(layer_name):
         name = layer.name()
         if name == layer_name:
             return layer.id()
+    return None
 
 
 # read project variable
 def read_project_variable(variable_name, value):
     value = get_qgis_project().readEntry(
-        'SemiAutomaticClassificationPlugin',
-        variable_name, str(value)
+        'SemiAutomaticClassificationPlugin', variable_name, str(value)
     )[0]
     cfg.util_qt.process_events()
     try:
@@ -173,9 +173,7 @@ def write_project_variable(variable_name, value):
 # Remove layer from map
 def remove_layer_by_name(layer_name):
     try:
-        get_qgis_project().removeMapLayer(
-            get_layer_id_by_name(layer_name)
-        )
+        get_qgis_project().removeMapLayer(get_layer_id_by_name(layer_name))
     except Exception as err:
         str(err)
 
@@ -282,6 +280,7 @@ def select_layer_by_name(layer_name, filter_raster=None):
                     str(err)
                     if layer.type() == QgsMapLayer.RasterLayer:
                         return layer
+    return None
 
 
 # file path
@@ -593,3 +592,16 @@ def set_raster_std_dev_stretch():
         ]
         set_raster_contrast_enhancement(layer, cfg.std_dev_contrast)
         cfg.default_contrast = cfg.std_dev_contrast
+
+
+def activate_layer(layer_name):
+    group = group_index(layer_name)
+    if group is not None:
+        visible = group.isVisible()
+        set_group_visible(group, not visible)
+    else:
+        layer = select_layer_by_name(layer_name)
+        root = get_qgis_project().layerTreeRoot()
+        layer = root.findLayer(layer.id())
+        visible = layer.itemVisibilityChecked()
+        QgsLayerTreeNode.setItemVisibilityChecked(layer, not visible)
