@@ -3,7 +3,7 @@ SCP Easy-Install Configuration.
 
 Configuration constants for the automatic dependency installer.
 
-Easy-Install feature contributed by TerraLab (https://terralab.fr).
+Easy-Install feature contributed by TerraLab (https://terra-lab.ai).
 """
 
 import os

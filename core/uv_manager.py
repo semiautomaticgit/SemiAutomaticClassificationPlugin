@@ -6,7 +6,7 @@ Falls back to pip seamlessly if uv is unavailable.
 
 Source: https://github.com/astral-sh/uv
 
-Easy-Install feature contributed by TerraLab (https://terralab.fr).
+Easy-Install feature contributed by TerraLab (https://terra-lab.ai).
 """
 
 import os

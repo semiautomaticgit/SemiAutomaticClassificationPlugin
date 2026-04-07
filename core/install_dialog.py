@@ -4,7 +4,7 @@ SCP Dependency Install Dialog — Non-blocking.
 Non-modal QDialog that installs dependencies in a background QThread
 while keeping QGIS fully responsive.
 
-Easy-Install feature contributed by TerraLab (https://terralab.fr).
+Easy-Install feature contributed by TerraLab (https://terra-lab.ai).
 """
 
 import traceback

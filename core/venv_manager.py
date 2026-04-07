@@ -6,7 +6,7 @@ for the SemiAutomaticClassificationPlugin.
 
 All CUDA/GPU logic removed - torch is always CPU-only.
 
-Easy-Install feature contributed by TerraLab (https://terralab.fr).
+Easy-Install feature contributed by TerraLab (https://terra-lab.ai).
 """
 
 import subprocess

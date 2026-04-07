@@ -61,7 +61,7 @@ def category():
 # noinspection PyPep8Naming
 def classFactory(iface):
     # Easy-Install: fast filesystem check — never block QGIS
-    # (contributed by TerraLab — https://terralab.fr)
+    # (contributed by TerraLab — https://terra-lab.ai)
     deps_ready = False
     try:
         from .core.venv_manager import (

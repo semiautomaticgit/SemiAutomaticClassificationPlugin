@@ -6,7 +6,7 @@ the QGIS Python version, ensuring 100% compatibility.
 
 Source: https://github.com/astral-sh/python-build-standalone
 
-Easy-Install feature contributed by TerraLab (https://terralab.fr).
+Easy-Install feature contributed by TerraLab (https://terra-lab.ai).
 """
 
 import os
