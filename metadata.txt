@@ -15,6 +15,12 @@ icon=semiautomaticclassificationplugin.png
 
 changelog=
 
+	9.0.1
+	-added automatic dependency installation with one-click Easy-Install
+	 (downloads and configures remotior-sensus, scipy, scikit-learn,
+	 matplotlib, torch, torchvision in an isolated virtual environment)
+	 — Easy-Install feature contributed by TerraLab (https://terra-lab.ai)
+
 	9.0.0
 	-new version for QGIS 4
 	-built on the new Remotior Sensus version 0.6

@@ -24,7 +24,6 @@
 import multiprocessing
 import sys
 from os import path, makedirs, remove
-import ast
 
 try:
     from .ui import resources_rc
@@ -114,151 +113,25 @@ except Exception as error:
 
 # minimum remotior sensus version
 rs_version = '0.6.2'
-lib_dir = rs_path = installed_version = remotior_sensus_2 = None
 
-
-# find remotior sensus path if existing
-for p in sys.path:
-    candidate = path.join(p, 'remotior_sensus', '__init__.py')
-    if path.isfile(candidate):
-        rs_path = candidate
-
-
-def find_library_version(library_path):
-    with open(library_path) as f:
-        tree = ast.parse(f.read())
-    for node in tree.body:
-        if isinstance(node, ast.Assign):
-            for t in node.targets:
-                if getattr(t, 'id', None) == "__version__":
-                    # noinspection PyTypeChecker
-                    return ast.literal_eval(node.value)
-    return None
-
-
-if rs_path is not None:
-    installed_version = find_library_version(rs_path)
-
-
-# download remotior sensus
-def download_library(library_directory):
-    try:
-        # download library
-        import requests
-        import tarfile
-        response = requests.get(
-            f'https://pypi.org/packages/source/r/remotior-sensus/'
-            f'remotior_sensus-{rs_version}.tar.gz'
-        )
-        with open(library_directory + f'/remotior_sensus-{rs_version}.tar.gz',
-                  'wb') as rs_file:
-            rs_file.write(response.content)
-        with (tarfile.open(
-                library_directory + f'/remotior_sensus-{rs_version}.tar.gz',
-                'r:gz') as tar):
-            for member in tar.getmembers():
-                if member.name.startswith(
-                        f'remotior_sensus-{rs_version}/src/remotior_sensus'
-                ):
-                    real_path = path.relpath(
-                        member.name, f'remotior_sensus-'
-                                     f'{rs_version}/src/remotior_sensus')
-                    file_path = (
-                        f'{library_directory}/remotior_sensus/{real_path}'
-                    )
-                    if member.isdir():
-                        makedirs(file_path, exist_ok=True)
-                    else:
-                        makedirs(path.dirname(file_path), exist_ok=True)
-                        try:
-                            source = tar.extractfile(member)
-                            if source is not None:
-                                with open(file_path, 'wb') as target:
-                                    target.write(source.read())
-                        except Exception as errr:
-                            str(errr)
-        try:
-            remove(library_directory + f'/remotior_sensus-{rs_version}.tar.gz')
-        except Exception as errr:
-            str(errr)
-        return True
-    except Exception as errr:
-        str(errr)
-        # noinspection PyTypeChecker
-        qgis_utils.iface.messageBar().pushMessage(
-            'Semi-Automatic Classification Plugin', str(errr),
-            level=Qgis.Warning, duration=10
-        )
-        return False
-
-
+# Remotior Sensus is available via the Easy-Install venv managed by
+# __init__.py / core.venv_manager.  By the time this module is imported,
+# ensure_venv_packages_available() has already placed the venv
+# site-packages on sys.path, so a simple import suffices.
 try:
-    # check Remotior Sensus version
-    if installed_version is None or (
-            float(f'{installed_version[0]}.{installed_version[2]}')
+    import remotior_sensus
+    cfg.rs_version = remotior_sensus.__version__
+    if (float(f'{remotior_sensus.__version__[0]}.{remotior_sensus.__version__[2]}')
             < float(f'{rs_version[0]}.{rs_version[2]}')):
         plugin_check = False
-        raise RuntimeError('rs version ')
-    else:
-        import remotior_sensus
-        cfg.rs_version = remotior_sensus.__version__
-        plugin_check = True
-except Exception as error:
-    str(error)
-    try:
-        lib_dir = (
-                '%s/python/plugins/%s' % (
-            QFileInfo(QgsApplication.qgisUserDatabaseFilePath()).path(),
-            str(__name__).split('.')[0])
+        qgis_utils.iface.messageBar().pushMessage(
+            'Semi-Automatic Classification Plugin',
+            f'Remotior Sensus version {remotior_sensus.__version__} is outdated. '
+            f'Please update to version {rs_version} or later.',
+            level=Qgis.Warning, duration=20
         )
-        sys.path.insert(0, lib_dir)
-
-        if 'remotior_sensus' in sys.modules:
-            del sys.modules['remotior_sensus']
-        import remotior_sensus
-        # check Remotior Sensus version
-        if (float(f'{remotior_sensus.__version__[0]}.'
-                  f'{remotior_sensus.__version__[2]}')
-                < float(f'{rs_version[0]}.{rs_version[2]}')):
-            raise RuntimeError('rs version ')
-        cfg.rs_version = remotior_sensus.__version__
-        plugin_check = True
-    except Exception as error:
-        str(error)
-        # download library
-        d_lib = download_library(lib_dir)
-        if d_lib:
-            try:
-                sys.path.insert(0, lib_dir)
-                if 'remotior_sensus' in sys.modules:
-                    del sys.modules['remotior_sensus']
-                import remotior_sensus
-                cfg.rs_version = remotior_sensus.__version__
-                plugin_check = False
-                qgis_utils.iface.messageBar().pushMessage(
-                    'Semi-Automatic Classification Plugin',
-                    QApplication.translate(
-                        'semiautomaticclassificationplugin',
-                        'Please, restart QGIS for executing the '
-                        'Semi-Automatic Classification Plugin'
-                    ),
-                    level=Qgis.Info, duration=20
-                )
-            except Exception as error:
-                str(error)
-                plugin_check = False
-                qgis_utils.iface.messageBar().pushMessage(
-                    'Semi-Automatic Classification Plugin',
-                    'Unable to load Remotior Sensus',
-                    level=Qgis.Critical
-                )
-        else:
-            plugin_check = False
-            qgis_utils.iface.messageBar().pushMessage(
-                'Semi-Automatic Classification Plugin',
-                'Unable to load Remotior Sensus',
-                level=Qgis.Critical
-            )
+except Exception as error:
+    plugin_check = False
 
 
 try:
