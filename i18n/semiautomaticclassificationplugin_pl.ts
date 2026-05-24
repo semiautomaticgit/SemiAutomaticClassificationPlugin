@@ -4861,7 +4861,7 @@ size</source>
         <translation>Zapisz listę punktów w pliku</translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="805"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="834"/>
         <location filename="../interface/settings.py" line="51"/>
         <location filename="../interface/settings.py" line="189"/>
         <source>Transparency </source>
@@ -5321,9 +5321,9 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="244"/>
-        <location filename="../semiautomaticclassificationplugin.py" line="423"/>
-        <location filename="../semiautomaticclassificationplugin.py" line="1081"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="273"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="452"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="1110"/>
         <source>Please, restart QGIS for executing the Semi-Automatic Classification Plugin</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5412,7 +5412,7 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="589"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="618"/>
         <source>Please restart QGIS for installing the Semi-Automatic Classification Plugin</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5618,39 +5618,39 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="346"/>
-        <location filename="../semiautomaticclassificationplugin.py" line="372"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="375"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="401"/>
         <source>Error. Python library not found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="537"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="566"/>
         <source>Error starting Remotior Sensus</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="950"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="979"/>
         <source>Virtual Band Set </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="953"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="982"/>
         <source>Band set </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="957"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="986"/>
         <source>SCP training layer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="1105"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="1134"/>
         <source>You are using the simplified interface. To change the interface go to SCP &gt; Settings and uncheck Simplified interface</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="2254"/>
-        <location filename="../semiautomaticclassificationplugin.py" line="2260"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="2283"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="2289"/>
         <location filename="../interface/scp_dock.py" line="345"/>
         <location filename="../interface/scp_dock.py" line="2650"/>
         <location filename="../interface/scp_dock.py" line="2754"/>

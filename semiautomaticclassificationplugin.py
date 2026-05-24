@@ -113,7 +113,7 @@ except Exception as error:
 
 
 # minimum remotior sensus version
-rs_version = '0.6.2'
+rs_version = '0.7.0'
 lib_dir = rs_path = installed_version = remotior_sensus_2 = None
 
 
@@ -130,7 +130,7 @@ def find_library_version(library_path):
     for node in tree.body:
         if isinstance(node, ast.Assign):
             for t in node.targets:
-                if getattr(t, 'id', None) == "__version__":
+                if getattr(t, 'id', None) == '__version__':
                     # noinspection PyTypeChecker
                     return ast.literal_eval(node.value)
     return None
@@ -143,42 +143,71 @@ if rs_path is not None:
 # download remotior sensus
 def download_library(library_directory):
     try:
-        # download library
         import requests
         import tarfile
-        response = requests.get(
-            f'https://pypi.org/packages/source/r/remotior-sensus/'
-            f'remotior_sensus-{rs_version}.tar.gz'
+        import hashlib
+
+        tar_name = f'remotior_sensus-{rs_version}.tar.gz'
+        tar_url = (
+            f'https://pypi.org/packages/source/r/remotior-sensus/{tar_name}'
         )
-        with open(library_directory + f'/remotior_sensus-{rs_version}.tar.gz',
-                  'wb') as rs_file:
+        tar_path = path.join(library_directory, tar_name)
+        # download metadata
+        metadata_response = requests.get(
+            f'https://pypi.org/pypi/remotior-sensus/{rs_version}/json',
+            timeout=30
+        )
+        metadata_response.raise_for_status()
+        metadata = metadata_response.json()
+        sha256_target = None
+        for file in metadata.get('urls', []):
+            if file.get('filename') == tar_name:
+                sha256_target = file['digests']['sha256']
+                break
+        if not sha256_target:
+            raise RuntimeError('SHA256 not found in PyPI metadata')
+        # download tar
+        response = requests.get(tar_url, timeout=60)
+        response.raise_for_status()
+        with open(tar_path, 'wb') as rs_file:
             rs_file.write(response.content)
-        with (tarfile.open(
-                library_directory + f'/remotior_sensus-{rs_version}.tar.gz',
-                'r:gz') as tar):
+
+        # check SHA256
+        sha256 = hashlib.sha256()
+        with open(tar_path, 'rb') as f:
+            sha256.update(f.read())
+        file_hash = sha256.hexdigest()
+        if file_hash != sha256_target:
+            remove(tar_path)
+            raise RuntimeError('SHA256 check failed')
+
+        # extract tar
+        with (tarfile.open(tar_path, 'r:gz') as tar):
+            base_dir = f'remotior_sensus-{rs_version}/src/remotior_sensus'
             for member in tar.getmembers():
-                if member.name.startswith(
-                        f'remotior_sensus-{rs_version}/src/remotior_sensus'
-                ):
-                    real_path = path.relpath(
-                        member.name, f'remotior_sensus-'
-                                     f'{rs_version}/src/remotior_sensus')
-                    file_path = (
-                        f'{library_directory}/remotior_sensus/{real_path}'
-                    )
-                    if member.isdir():
-                        makedirs(file_path, exist_ok=True)
-                    else:
-                        makedirs(path.dirname(file_path), exist_ok=True)
-                        try:
-                            source = tar.extractfile(member)
-                            if source is not None:
-                                with open(file_path, 'wb') as target:
-                                    target.write(source.read())
-                        except Exception as errr:
-                            str(errr)
+                if not member.name.startswith(base_dir):
+                    continue
+                # check path
+                target_path = str(path.join(library_directory, member.name))
+                abs_base = path.abspath(library_directory)
+                abs_target = path.abspath(target_path)
+                if not abs_target.startswith(abs_base):
+                    raise RuntimeError('Unsafe path detected in tar archive')
+                rel_path = path.relpath(member.name, base_dir)
+                file_path = path.join(
+                    library_directory, 'remotior_sensus', rel_path
+                )
+                if member.isdir():
+                    makedirs(file_path, exist_ok=True)
+                else:
+                    makedirs(path.dirname(file_path), exist_ok=True)
+                    source_file = tar.extractfile(member)
+                    if source_file:
+                        with open(file_path, 'wb') as destination:
+                            destination.write(source_file.read())
+
         try:
-            remove(library_directory + f'/remotior_sensus-{rs_version}.tar.gz')
+            remove(tar_path)
         except Exception as errr:
             str(errr)
         return True

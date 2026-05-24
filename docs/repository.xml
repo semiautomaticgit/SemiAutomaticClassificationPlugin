@@ -1,11 +1,11 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
 <plugins>
-    <pyqgis_plugin name="Semi-Automatic Classification Plugin - master" version="8.5.0" plugin_id="284">
+    <pyqgis_plugin name="Semi-Automatic Classification Plugin - master" version="9.0.1" plugin_id="284">
         <description><![CDATA[The Semi-Automatic Classification Plugin (SCP) allows for the supervised classification of remote sensing images, providing tools for the download, the preprocessing and postprocessing of images.]]></description>
         <about><![CDATA[Developed by Luca Congedo, the Semi-Automatic Classification Plugin (SCP) allows for the supervised classification of remote sensing images, providing tools for the download, the preprocessing and postprocessing of images. Search and download is available for Landsat, Sentinel-2 images. Several algorithms are available for the land cover classification. This plugin requires the installation of Remotior Sensus, GDAL, OGR, Numpy, SciPy, and Matplotlib. For more information please visit https://fromgistors.blogspot.com .]]></about>
-        <version>8.5.0</version>
-        <qgis_minimum_version>3.0.0</qgis_minimum_version>
-        <qgis_maximum_version>3.99.0</qgis_maximum_version>
+        <version>9.0.1</version>
+        <qgis_minimum_version>3.99.0</qgis_minimum_version>
+        <qgis_maximum_version>4.98.0</qgis_maximum_version>
         <homepage><![CDATA[https://fromgistors.blogspot.com/p/semi-automatic-classification-plugin.html]]></homepage>
         <file_name>SemiAutomaticClassificationPlugin-master.zip</file_name>
         <icon>https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgScfQYBCTR7v-gAL1DeZIxvGuevGYvc5xTlal05-0CpJwgVex_7oMpcxaHtKTTsjONTaoBI7Bz_HbM6kQg6TZ3lTSPrGzRRgb3g3IyZGdNRaL4_VqmqToztTr3BZUCF5ib6E4SAhNzxd-nJj-_kDGpZnlYAC5Ly7ngGjxSnyz6Ow62stHV7vgIjmrXhFSF/s1600/semiautomaticclassificationplugin.png</icon>
@@ -15,7 +15,7 @@
         <repository><![CDATA[https://github.com/semiautomaticgit/SemiAutomaticClassificationPlugin]]></repository>
         <tags><![CDATA[Raster, Classification, Land Cover, Remote Sensing, Analysis, Landsat, Sentinel, Supervised classification, Spectral signature, Mask, Clip, Accuracy, Landscape, Copernicus, Random Forest, Processing, Remotior Sensus]]></tags>
         <downloads>00</downloads>
-        <average_vote>5</average_vote>
+        <average_vote>00</average_vote>
         <rating_votes>00</rating_votes>
         <external_dependencies/>
         <server>False</server>
