@@ -233,13 +233,13 @@ def edited_cell(row, column):
         )
         _array = numpy.arange(9).reshape(3, 3)
         try:
-            eval('numpy.where(' + c + ', 1, _array)')
+            eval(c, {'__builtins__': None}, {'_array': _array, 'numpy': numpy})
         except Exception as err:
             str(err)
             table.blockSignals(True)
             cfg.util_qt.set_table_item(table, row, column, '0')
             table.blockSignals(False)
-            cfg.mx.msgWar16()
+            cfg.mx.msg_war_9()
 
 
 # import reclass from file

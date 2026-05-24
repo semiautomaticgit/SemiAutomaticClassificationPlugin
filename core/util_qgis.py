@@ -21,6 +21,7 @@
 # If not, see <https://www.gnu.org/licenses/>.
 
 
+import ast
 # noinspection PyUnresolvedReferences
 from qgis.core import (
     QgsProject, QgsVectorFileWriter, QgsLayerTreeNode, QgsMapLayer,
@@ -154,7 +155,7 @@ def read_project_variable(variable_name, value):
     except Exception as err:
         str(err)
         try:
-            value = eval(value)
+            value = ast.literal_eval(value)
         except Exception as err:
             str(err)
     return value

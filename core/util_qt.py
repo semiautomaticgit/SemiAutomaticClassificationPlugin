@@ -22,6 +22,7 @@
 
 
 from os import path
+import ast
 
 from PyQt6.QtCore import Qt, QSettings
 from PyQt6.QtGui import QFont, QColor
@@ -41,7 +42,7 @@ def read_registry_keys(key, default_value):
     except Exception as err:
         str(err)
         try:
-            value = eval(value)
+            value = ast.literal_eval(value)
         except Exception as err:
             str(err)
     return value

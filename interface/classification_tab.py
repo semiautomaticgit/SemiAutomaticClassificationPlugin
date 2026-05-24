@@ -25,6 +25,7 @@ This tool allows for classification of band set.
 """
 
 from copy import deepcopy
+import ast
 
 # import the PyQt libraries
 from PyQt6.QtGui import QIcon, QPixmap, QCursor
@@ -320,7 +321,7 @@ def run_classifier(
         mlp_activation = cfg.dialog.ui.activation_lineEdit.text()
         hidden_layers = cfg.dialog.ui.hidden_layers_lineEdit.text()
         try:
-            mlp_hidden_layer_sizes = eval('[%s]' % hidden_layers)
+            mlp_hidden_layer_sizes = ast.literal_eval(f'[{hidden_layers}]')
         except Exception as err:
             mlp_hidden_layer_sizes = [100]
             cfg.mx.msg_war_2()
@@ -979,7 +980,7 @@ def set_script():
             mlp_activation = cfg.dialog.ui.activation_lineEdit.text()
             hidden_layers = cfg.dialog.ui.hidden_layers_lineEdit.text()
             try:
-                mlp_hidden_layer_sizes = eval('[%s]' % hidden_layers)
+                mlp_hidden_layer_sizes = ast.literal_eval(f'[{hidden_layers}]')
             except Exception as err:
                 mlp_hidden_layer_sizes = [100]
                 cfg.mx.msg_war_2()

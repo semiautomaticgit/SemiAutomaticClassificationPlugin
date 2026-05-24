@@ -22,6 +22,7 @@
 
 
 from itertools import combinations as iter_combinations
+import ast
 
 from PyQt6.QtGui import QColor
 from PyQt6.QtWidgets import QApplication
@@ -352,11 +353,11 @@ class SpectralSignaturePlot:
                 color = signature.color
                 pixel_count = signature.pixel_count
                 try:
-                    values = eval(str(values).replace('nan', '0'))
+                    values = ast.literal_eval(str(values).replace('nan', '0'))
                 except Exception as err:
                     str(err)
                 try:
-                    standard_deviations = eval(
+                    standard_deviations = ast.literal_eval(
                         str(standard_deviations).replace('nan', '0')
                     )
                 except Exception as err:

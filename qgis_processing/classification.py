@@ -21,6 +21,7 @@
 # If not, see <https://www.gnu.org/licenses/>.
 
 from pathlib import Path
+import ast
 
 from PyQt6.QtGui import QIcon
 # noinspection PyUnresolvedReferences
@@ -380,7 +381,7 @@ class Classification(AlgorithmTemplate):
         mlp_hidden_layer_sizes = None
         if hidden_layers is not None:
             try:
-                mlp_hidden_layer_sizes = eval('[%s]' % hidden_layers)
+                mlp_hidden_layer_sizes = ast.literal_eval(f'[{hidden_layers}]')
             except Exception as err:
                 str(err)
                 raise 'mlp hidden layer sizes'

@@ -275,11 +275,9 @@ def check_all_bands():
     else:
         state = 2
     for band in range(1, 13):
-        eval(
-            'cfg.dialog.ui.checkBoxs_band_%i.setCheckState('
-            'cfg.util_qt.check_state_from_value(%i))'
-            % (band, state)
-        )
+        name = f'checkBoxs_band_{band}'
+        checkbox = getattr(cfg.dialog.ui, name)
+        checkbox.setCheckState(cfg.util_qt.check_state_from_value(state))
     cfg.dialog.ui.ancillary_data_checkBox.setCheckState(
         cfg.util_qt.check_state_from_value(state))
     cfg.dialog.ui.checkBoxs_band_8A.setCheckState(

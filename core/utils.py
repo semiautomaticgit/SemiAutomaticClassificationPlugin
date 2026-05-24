@@ -565,7 +565,8 @@ def random_points_with_condition(
     condition = condition.replace(
         cfg.qgis_registry[cfg.reg_raster_variable_name], '_array'
     )
-    arr = np.argwhere(eval(condition))
+    condition = eval(condition, {'__builtins__': None}, {'_array': _array})
+    arr = np.argwhere(condition)
     rng = np.random.default_rng()
     try:
         pixels = rng.choice(arr, size=point_number)

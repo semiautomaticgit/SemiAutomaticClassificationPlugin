@@ -258,8 +258,7 @@ def msg_war_6(bandset_number=None):
     msg_bar_warning(
         QApplication.translate(ui_name,
                                'Band set') + ' ' + str(bandset_number) + ' '
-        + QApplication.translate(ui_name,
-                                 'is empty')
+        + QApplication.translate(ui_name, 'is empty')
     )
 
 
@@ -275,3 +274,8 @@ def msg_war_7():
 def msg_war_8():
     # noinspection PyTypeChecker
     msg_bar_warning(QApplication.translate(ui_name, 'No tool selected'))
+
+
+def msg_war_9():
+    # noinspection PyTypeChecker
+    msg_bar_warning(QApplication.translate(ui_name, 'Check the expression'))

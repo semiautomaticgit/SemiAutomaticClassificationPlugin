@@ -4722,7 +4722,7 @@ size</source>
     </message>
     <message>
         <location filename="../interface/scp_dock.py" line="1454"/>
-        <location filename="../spectral_signature/spectral_signature_plot.py" line="452"/>
+        <location filename="../spectral_signature/spectral_signature_plot.py" line="453"/>
         <source>Delete signatures</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4989,7 +4989,7 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/util_qt.py" line="146"/>
+        <location filename="../core/util_qt.py" line="147"/>
         <source>Select a directory</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5058,12 +5058,12 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/download_products_tab.py" line="734"/>
+        <location filename="../interface/download_products_tab.py" line="732"/>
         <source>Download the images in the table (requires internet connection)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/download_products_tab.py" line="403"/>
+        <location filename="../interface/download_products_tab.py" line="401"/>
         <source>Are you sure you want to clear the table?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5073,7 +5073,7 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/multiple_roi_tab.py" line="285"/>
+        <location filename="../interface/multiple_roi_tab.py" line="283"/>
         <source>Save the point list to file</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5176,28 +5176,28 @@ size</source>
     </message>
     <message>
         <location filename="../spectral_signature/scatter_plot.py" line="632"/>
-        <location filename="../spectral_signature/spectral_signature_plot.py" line="159"/>
+        <location filename="../spectral_signature/spectral_signature_plot.py" line="160"/>
         <source>Save plot to file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../spectral_signature/spectral_signature_plot.py" line="197"/>
+        <location filename="../spectral_signature/spectral_signature_plot.py" line="198"/>
         <source>Add to Signature list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../spectral_signature/spectral_signature_plot.py" line="203"/>
+        <location filename="../spectral_signature/spectral_signature_plot.py" line="204"/>
         <source>Are you sure you want to add highlighted signatures to the list?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../spectral_signature/spectral_signature_plot.py" line="457"/>
+        <location filename="../spectral_signature/spectral_signature_plot.py" line="458"/>
         <source>Are you sure you want to delete highlighted signatures?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../spectral_signature/spectral_signature_plot.py" line="329"/>
-        <location filename="../spectral_signature/spectral_signature_plot.py" line="501"/>
+        <location filename="../spectral_signature/spectral_signature_plot.py" line="330"/>
+        <location filename="../spectral_signature/spectral_signature_plot.py" line="502"/>
         <source>Values</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5328,8 +5328,8 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/download_products_tab.py" line="603"/>
-        <location filename="../interface/download_products_tab.py" line="621"/>
+        <location filename="../interface/download_products_tab.py" line="601"/>
+        <location filename="../interface/download_products_tab.py" line="619"/>
         <source>Downloading ...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5341,12 +5341,12 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/download_products_tab.py" line="481"/>
+        <location filename="../interface/download_products_tab.py" line="479"/>
         <source>Select a text file of product table</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/download_products_tab.py" line="494"/>
+        <location filename="../interface/download_products_tab.py" line="492"/>
         <source>Export table to file</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5429,7 +5429,7 @@ size</source>
     </message>
     <message>
         <location filename="../interface/band_clustering_tab.py" line="112"/>
-        <location filename="../interface/classification_tab.py" line="203"/>
+        <location filename="../interface/classification_tab.py" line="204"/>
         <source>Save classification</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5472,15 +5472,15 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/util_qt.py" line="193"/>
-        <location filename="../interface/download_products_tab.py" line="431"/>
+        <location filename="../core/util_qt.py" line="194"/>
+        <location filename="../interface/download_products_tab.py" line="429"/>
         <location filename="../interface/image_conversion_tab.py" line="168"/>
         <source>Remove rows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/util_qt.py" line="198"/>
-        <location filename="../interface/download_products_tab.py" line="436"/>
+        <location filename="../core/util_qt.py" line="199"/>
+        <location filename="../interface/download_products_tab.py" line="434"/>
         <location filename="../interface/image_conversion_tab.py" line="173"/>
         <source>Are you sure you want to remove highlighted rows from the table?</source>
         <translation type="unfinished"></translation>
@@ -5694,12 +5694,12 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/classification_tab.py" line="115"/>
+        <location filename="../interface/classification_tab.py" line="116"/>
         <source>Select a classifier file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/classification_tab.py" line="196"/>
+        <location filename="../interface/classification_tab.py" line="197"/>
         <source>Save classifier</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5710,12 +5710,12 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/download_products_tab.py" line="356"/>
+        <location filename="../interface/download_products_tab.py" line="354"/>
         <source>ERROR</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/download_products_tab.py" line="400"/>
+        <location filename="../interface/download_products_tab.py" line="398"/>
         <source>Clear the table</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5801,7 +5801,7 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/multiple_roi_tab.py" line="336"/>
+        <location filename="../interface/multiple_roi_tab.py" line="334"/>
         <source>Select a point list file</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5902,68 +5902,68 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../spectral_signature/signature_importer.py" line="45"/>
+        <location filename="../spectral_signature/signature_importer.py" line="46"/>
         <source>Chapter 1: Minerals</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../spectral_signature/signature_importer.py" line="49"/>
+        <location filename="../spectral_signature/signature_importer.py" line="50"/>
         <source>Chapter 2: Soils and Mixtures</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../spectral_signature/signature_importer.py" line="52"/>
+        <location filename="../spectral_signature/signature_importer.py" line="53"/>
         <source>Chapter 3: Coatings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../spectral_signature/signature_importer.py" line="55"/>
+        <location filename="../spectral_signature/signature_importer.py" line="56"/>
         <source>Chapter 4: Liquids</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../spectral_signature/signature_importer.py" line="58"/>
+        <location filename="../spectral_signature/signature_importer.py" line="59"/>
         <source>Chapter 5: Organics</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../spectral_signature/signature_importer.py" line="61"/>
+        <location filename="../spectral_signature/signature_importer.py" line="62"/>
         <source>Chapter 6: Artificial</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../spectral_signature/signature_importer.py" line="65"/>
+        <location filename="../spectral_signature/signature_importer.py" line="66"/>
         <source>Chapter 7: Vegetation and Mixtures</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../spectral_signature/spectral_signature_plot.py" line="324"/>
-        <location filename="../spectral_signature/spectral_signature_plot.py" line="492"/>
+        <location filename="../spectral_signature/spectral_signature_plot.py" line="325"/>
+        <location filename="../spectral_signature/spectral_signature_plot.py" line="493"/>
         <source>Wavelength</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../spectral_signature/spectral_signature_plot.py" line="489"/>
+        <location filename="../spectral_signature/spectral_signature_plot.py" line="490"/>
         <source>Pixel count</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../spectral_signature/spectral_signature_plot.py" line="508"/>
+        <location filename="../spectral_signature/spectral_signature_plot.py" line="509"/>
         <source>Standard deviation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../spectral_signature/spectral_signature_plot.py" line="584"/>
+        <location filename="../spectral_signature/spectral_signature_plot.py" line="585"/>
         <source>Euclidean distance</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../spectral_signature/spectral_signature_plot.py" line="587"/>
+        <location filename="../spectral_signature/spectral_signature_plot.py" line="588"/>
         <source>Bray-Curtis similarity [%]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../spectral_signature/spectral_signature_plot.py" line="590"/>
+        <location filename="../spectral_signature/spectral_signature_plot.py" line="591"/>
         <source>Spectral angle</source>
         <translation type="unfinished"></translation>
     </message>

@@ -23,6 +23,7 @@
 
 import shutil
 import zipfile
+import ast
 
 from PyQt6.QtCore import QFileInfo
 from PyQt6.QtWidgets import QApplication
@@ -112,7 +113,7 @@ class USGSSpectralLib:
             return 1
         library = open(usgs_list, 'r')
         for i in library.readlines():
-            row = eval(i)
+            row = ast.literal_eval(i)
             self.usgs_lib_name.append(row[0])
             self.usgs_lib.append([row[1], row[2]])
         self.add_libraries_to_combo()

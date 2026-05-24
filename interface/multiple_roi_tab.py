@@ -88,11 +88,9 @@ def expression_text_edited():
     for condition in expression_split:
         try:
             cfg.dialog.ui.stratified_lineEdit.setStyleSheet('color : green')
-            eval(
-                condition.replace(
+            eval(condition.replace(
                     cfg.qgis_registry[cfg.reg_raster_variable_name], '1'
-                )
-            )
+                ), {'__builtins__': None})
             if (condition.strip()
                     == cfg.qgis_registry[cfg.reg_raster_variable_name]):
                 cfg.dialog.ui.stratified_lineEdit.setStyleSheet('color : red')
