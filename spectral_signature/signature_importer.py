@@ -23,9 +23,7 @@
 
 import shutil
 import zipfile
-import ast
 
-from PyQt6.QtCore import QFileInfo
 from PyQt6.QtWidgets import QApplication
 # noinspection PyUnresolvedReferences
 from qgis.core import QgsApplication
@@ -67,6 +65,8 @@ class USGSSpectralLib:
             '', self.usgs_c1, self.usgs_c2, self.usgs_c3, self.usgs_c4,
             self.usgs_c5, self.usgs_c6, self.usgs_c7
         ]
+        # removed
+        """
         base_dir = (
                 QFileInfo(QgsApplication.qgisUserDatabaseFilePath()).path()
                 + '/python/plugins/SemiAutomaticClassificationPlugin/'
@@ -79,6 +79,7 @@ class USGSSpectralLib:
         self.usgs_c5p = base_dir + 'organics.csv'
         self.usgs_c6p = base_dir + 'artificial.csv'
         self.usgs_c7p = base_dir + 'vegetation.csv'
+        """
 
     # add library list to combo
     def add_libraries_to_combo(self):
@@ -89,7 +90,8 @@ class USGSSpectralLib:
             cfg.dialog.ui.usgs_library_comboBox.addItem(i)
         cfg.dialog.ui.usgs_library_comboBox.blockSignals(False)
 
-    # selection of chapter
+    # removed
+    """
     def chapter_changed(self):
         self.usgs_lib_name = []
         self.usgs_lib = []
@@ -118,6 +120,7 @@ class USGSSpectralLib:
             self.usgs_lib.append([row[1], row[2]])
         self.add_libraries_to_combo()
         cfg.dialog.ui.USGS_library_textBrowser.setHtml('')
+    """
 
     # selection of library
     def library_changed(self):

@@ -38,7 +38,7 @@ rgb_composite = signature_threshold = calc_raster_variables = None
 first_install = signature_plot = spectral_signature_plotter = None
 scatter_plot = scatter_plotter = scp_processing_provider = None
 signature_importer = usgs_spectral_lib = multiple_roi = None
-smtp_notification = smtp_server = smtp_user = smtp_password = None
+smtp_notification = smtp_server = smtp_user = smtp_pass = None
 smtp_recipients = main_menu = simplified = rs_version = None
 # welcome url
 first_reply = second_reply = second_url = None
@@ -217,8 +217,8 @@ reg_smtp_emails = 'SemiAutomaticClassificationPlugin/smtp_emails'
 qgis_registry[reg_smtp_emails] = ''
 reg_smtp_user = 'SemiAutomaticClassificationPlugin/smtp_user'
 qgis_registry[reg_smtp_user] = ''
-reg_smtp_password = 'SemiAutomaticClassificationPlugin/smtp_password'
-qgis_registry[reg_smtp_password] = ''
+reg_smtp_pass = 'SemiAutomaticClassificationPlugin/smtp_pass'
+qgis_registry[reg_smtp_pass] = ''
 # raster variable name
 reg_raster_variable_name = 'SemiAutomaticClassificationPlugin/raster_var_name'
 raster_variable_name_def = 'raster'

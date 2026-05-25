@@ -71,6 +71,7 @@ def set_satellite_wavelength(satellite_name=None, bandset_number=None):
     # create table
     band_set_to_table(bandset_number)
 
+
 # set satellite wavelengths
 def set_satellite_wavelength_simplified():
     satellite_name = (
@@ -221,17 +222,17 @@ def add_band_set_tab(position=None, create_bandset_in_catalog=True):
         cfg.logger.log.debug('existing bandset tab')
         return
     cfg.bandset_tabs[position] = bandset_uid()
-    table_w_var = 'cfg.dialog.ui.tableWidget__' + str(
-        cfg.bandset_tabs[position]
-    )
+    table_w_var = cfg.bandset_tabs[position]
     cfg.dialog.ui.bandset_number_spinBox.setMaximum(position)
     # noinspection PyArgumentList
     band_set_tab = QWidget()
     band_set_tab.setObjectName(table_w_var)
     grid_layout = QGridLayout(band_set_tab)
     grid_layout.setObjectName('grid_layout' + str(position))
-    exec(table_w_var + ' = QTableWidget(band_set_tab)')
-    table_w = eval(table_w_var)
+    if not hasattr(cfg.dialog.ui, 'table_widgets'):
+        cfg.dialog.ui.table_widgets = {}
+    cfg.dialog.ui.table_widgets[table_w_var] = QTableWidget(band_set_tab)
+    table_w = cfg.dialog.ui.table_widgets[table_w_var]
     table_w.setFrameShape(QFrame.Shape.WinPanel)
     table_w.setFrameShadow(QFrame.Shadow.Sunken)
     table_w.setAlternatingRowColors(True)
@@ -415,9 +416,7 @@ def clear_bandset(question=True, bandset_number=None):
 # band set edited
 def edited_bandset(row, column):
     bandset_number = cfg.project_registry[cfg.reg_active_bandset_number]
-    table_w = eval(
-        'cfg.dialog.ui.tableWidget__' + str(cfg.bandset_tabs[bandset_number])
-    )
+    table_w = cfg.dialog.ui.table_widgets[cfg.bandset_tabs[bandset_number]]
     cfg.logger.log.debug('edited_bandset column: %s' % str(column))
     if column == 0:
         band_names = cfg.bandset_catalog.get_bandset(
@@ -737,9 +736,7 @@ def move_down_band():
         table = cfg.dock_class_simpl_dlg.ui.tableWidget
     else:
         bandset_number = cfg.project_registry[cfg.reg_active_bandset_number]
-        table = eval(
-            f'cfg.dialog.ui.tableWidget__{cfg.bandset_tabs[bandset_number]}'
-        )
+        table = cfg.dialog.ui.table_widgets[cfg.bandset_tabs[bandset_number]]
     selected = table.selectedItems()
     selected_list = []
     for i in range(0, len(selected)):
@@ -764,9 +761,7 @@ def move_up_band():
         table = cfg.dock_class_simpl_dlg.ui.tableWidget
     else:
         bandset_number = cfg.project_registry[cfg.reg_active_bandset_number]
-        table = eval(
-            f'cfg.dialog.ui.tableWidget__{cfg.bandset_tabs[bandset_number]}'
-        )
+        table = cfg.dialog.ui.table_widgets[cfg.bandset_tabs[bandset_number]]
     selected = table.selectedItems()
     selected_list = []
     for i in range(0, len(selected)):
@@ -803,9 +798,7 @@ def remove_band():
         table_w = cfg.dock_class_simpl_dlg.ui.tableWidget
     else:
         bandset_number = cfg.project_registry[cfg.reg_active_bandset_number]
-        table_w = eval(
-            f'cfg.dialog.ui.tableWidget__{cfg.bandset_tabs[bandset_number]}'
-        )
+        table_w = cfg.dialog.ui.table_widgets[cfg.bandset_tabs[bandset_number]]
     answer = cfg.util_qt.question_box(
         QApplication.translate('semiautomaticclassificationplugin',
                                'Remove band'),
@@ -991,9 +984,7 @@ def band_set_to_table(bandset_number):
         add_band_set_tab(
             position=bandset_number, create_bandset_in_catalog=False
         )
-    table_w = eval(
-        'cfg.dialog.ui.tableWidget__' + str(cfg.bandset_tabs[bandset_number])
-    )
+    table_w = cfg.dialog.ui.table_widgets[cfg.bandset_tabs[bandset_number]]
     bands = bandset_x.bands
     cfg.logger.log.debug('band_count: %s' % str(bandset_x.get_band_count()))
     if bands is not None:

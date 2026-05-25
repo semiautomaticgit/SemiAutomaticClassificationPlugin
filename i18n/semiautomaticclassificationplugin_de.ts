@@ -4737,197 +4737,197 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/ui_utils.py" line="95"/>
-        <location filename="../core/ui_utils.py" line="279"/>
-        <location filename="../interface/input_interface.py" line="467"/>
+        <location filename="../core/ui_utils.py" line="94"/>
+        <location filename="../core/ui_utils.py" line="278"/>
+        <location filename="../interface/input_interface.py" line="466"/>
         <source>Semi-Automatic Classification Plugin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="475"/>
+        <location filename="../interface/input_interface.py" line="474"/>
         <source>Zoom to input image extent</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="483"/>
+        <location filename="../interface/input_interface.py" line="482"/>
         <source>Show/hide the input image</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="493"/>
+        <location filename="../interface/input_interface.py" line="492"/>
         <source>Select a RGB color composite</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="504"/>
+        <location filename="../interface/input_interface.py" line="503"/>
         <source>Local cumulative cut stretch of band set</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="513"/>
+        <location filename="../interface/input_interface.py" line="512"/>
         <source>Local standard deviation stretch of band set</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="520"/>
+        <location filename="../interface/input_interface.py" line="519"/>
         <source>Zoom to temporary ROI</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="529"/>
+        <location filename="../interface/input_interface.py" line="528"/>
         <source>Show/hide the temporary ROI</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="537"/>
+        <location filename="../interface/input_interface.py" line="536"/>
         <source>Create a ROI polygon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="545"/>
+        <location filename="../interface/input_interface.py" line="544"/>
         <source>Activate ROI pointer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="554"/>
+        <location filename="../interface/input_interface.py" line="553"/>
         <source>Redo the ROI at the same point</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="562"/>
+        <location filename="../interface/input_interface.py" line="561"/>
         <source> Dist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="571"/>
+        <location filename="../interface/input_interface.py" line="570"/>
         <source>Similarity of pixels (distance in radiometry unit)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="576"/>
+        <location filename="../interface/input_interface.py" line="575"/>
         <source> Min</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="585"/>
+        <location filename="../interface/input_interface.py" line="584"/>
         <source>Minimum area of ROI (in pixel unit)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="590"/>
+        <location filename="../interface/input_interface.py" line="589"/>
         <source> Max</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="600"/>
+        <location filename="../interface/input_interface.py" line="599"/>
         <source>Side of a square which inscribes the ROI, defining the maximum width thereof (in pixel unit)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="611"/>
+        <location filename="../interface/input_interface.py" line="610"/>
         <source>Zoom to the classification preview</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="621"/>
+        <location filename="../interface/input_interface.py" line="620"/>
         <source>Show/hide the classification preview</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="630"/>
+        <location filename="../interface/input_interface.py" line="629"/>
         <source>Activate classification preview pointer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="637"/>
+        <location filename="../interface/input_interface.py" line="636"/>
         <source>Redo the classification preview at the same point</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="641"/>
+        <location filename="../interface/input_interface.py" line="640"/>
         <source> T</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="648"/>
+        <location filename="../interface/input_interface.py" line="647"/>
         <source>Set preview transparency</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="653"/>
+        <location filename="../interface/input_interface.py" line="652"/>
         <source> S</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="661"/>
+        <location filename="../interface/input_interface.py" line="660"/>
         <source>Set the preview size (in pixel unit)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="678"/>
+        <location filename="../interface/input_interface.py" line="677"/>
         <source>Open Copernicus Browser</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="684"/>
+        <location filename="../interface/input_interface.py" line="683"/>
         <source>On/Off 1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="688"/>
+        <location filename="../interface/input_interface.py" line="687"/>
         <source>Press Z to show/hide the layer 1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="694"/>
+        <location filename="../interface/input_interface.py" line="693"/>
         <source>Enter the name of layer 1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="702"/>
+        <location filename="../interface/input_interface.py" line="701"/>
         <source>On/Off 2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="706"/>
+        <location filename="../interface/input_interface.py" line="705"/>
         <source>Press X to show/hide the layer 2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="712"/>
+        <location filename="../interface/input_interface.py" line="711"/>
         <source>Enter the name of layer 2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="720"/>
+        <location filename="../interface/input_interface.py" line="719"/>
         <source>On/Off 3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="724"/>
+        <location filename="../interface/input_interface.py" line="723"/>
         <source>Press C to show/hide the layer 3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="730"/>
+        <location filename="../interface/input_interface.py" line="729"/>
         <source>Enter the name of layer 3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="1164"/>
-        <location filename="../interface/input_interface.py" line="1278"/>
+        <location filename="../interface/input_interface.py" line="1165"/>
+        <location filename="../interface/input_interface.py" line="1280"/>
         <source>CPU threads</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="1170"/>
-        <location filename="../interface/input_interface.py" line="1284"/>
+        <location filename="../interface/input_interface.py" line="1171"/>
+        <location filename="../interface/input_interface.py" line="1286"/>
         <source>Simplified interface</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="1158"/>
-        <location filename="../interface/input_interface.py" line="1272"/>
+        <location filename="../interface/input_interface.py" line="1159"/>
+        <location filename="../interface/input_interface.py" line="1274"/>
         <source>Available RAM (MB)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4940,16 +4940,16 @@ size</source>
     <message>
         <location filename="../interface/input_interface.py" line="128"/>
         <location filename="../interface/input_interface.py" line="249"/>
-        <location filename="../interface/input_interface.py" line="1069"/>
-        <location filename="../interface/input_interface.py" line="1206"/>
+        <location filename="../interface/input_interface.py" line="1070"/>
+        <location filename="../interface/input_interface.py" line="1208"/>
         <source>Preprocessing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../interface/input_interface.py" line="134"/>
         <location filename="../interface/input_interface.py" line="255"/>
-        <location filename="../interface/input_interface.py" line="1087"/>
-        <location filename="../interface/input_interface.py" line="1222"/>
+        <location filename="../interface/input_interface.py" line="1088"/>
+        <location filename="../interface/input_interface.py" line="1224"/>
         <source>Postprocessing</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4961,19 +4961,19 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="1101"/>
+        <location filename="../interface/input_interface.py" line="1102"/>
         <source>Spectral plot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="1109"/>
+        <location filename="../interface/input_interface.py" line="1110"/>
         <source>Scatter plot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../interface/input_interface.py" line="258"/>
-        <location filename="../interface/input_interface.py" line="1117"/>
-        <location filename="../interface/input_interface.py" line="1235"/>
+        <location filename="../interface/input_interface.py" line="1118"/>
+        <location filename="../interface/input_interface.py" line="1237"/>
         <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4984,7 +4984,7 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="1042"/>
+        <location filename="../interface/input_interface.py" line="1043"/>
         <source>SCP</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4994,8 +4994,7 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/download_products_tab.py" line="63"/>
-        <location filename="../interface/download_products_tab.py" line="90"/>
+        <location filename="../interface/download_products_tab.py" line="95"/>
         <source>Warning</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5016,39 +5015,39 @@ size</source>
     </message>
     <message>
         <location filename="../interface/band_calc_tab.py" line="372"/>
-        <location filename="../interface/reclassification_tab.py" line="54"/>
+        <location filename="../interface/reclassification_tab.py" line="55"/>
         <location filename="../interface/spectral_distance_tab.py" line="57"/>
         <location filename="../interface/vector_to_raster_tab.py" line="87"/>
         <source>Save raster output</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/bandset_tab.py" line="397"/>
+        <location filename="../interface/bandset_tab.py" line="398"/>
         <source>Clear band set</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/bandset_tab.py" line="402"/>
+        <location filename="../interface/bandset_tab.py" line="403"/>
         <source>Are you sure you want to clear the band set?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/bandset_tab.py" line="811"/>
+        <location filename="../interface/bandset_tab.py" line="804"/>
         <source>Remove band</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/bandset_tab.py" line="816"/>
+        <location filename="../interface/bandset_tab.py" line="809"/>
         <source>Are you sure you want to remove the selected bands from band set?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/bandset_tab.py" line="852"/>
+        <location filename="../interface/bandset_tab.py" line="845"/>
         <source>Save virtual raster</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/bandset_tab.py" line="879"/>
+        <location filename="../interface/bandset_tab.py" line="872"/>
         <source>Save raster</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5058,12 +5057,12 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/download_products_tab.py" line="732"/>
+        <location filename="../interface/download_products_tab.py" line="737"/>
         <source>Download the images in the table (requires internet connection)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/download_products_tab.py" line="401"/>
+        <location filename="../interface/download_products_tab.py" line="406"/>
         <source>Are you sure you want to clear the table?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5073,7 +5072,7 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/multiple_roi_tab.py" line="283"/>
+        <location filename="../interface/multiple_roi_tab.py" line="289"/>
         <source>Save the point list to file</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5093,14 +5092,14 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="834"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="832"/>
         <location filename="../interface/settings.py" line="51"/>
         <location filename="../interface/settings.py" line="189"/>
         <source>Transparency </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/settings.py" line="281"/>
+        <location filename="../interface/settings.py" line="282"/>
         <source>Save Log file</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5145,12 +5144,12 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/settings.py" line="320"/>
+        <location filename="../interface/settings.py" line="321"/>
         <source>Failed to load the following dependencies</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/settings.py" line="325"/>
+        <location filename="../interface/settings.py" line="326"/>
         <source>Dependencies checked</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5310,7 +5309,7 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="1179"/>
+        <location filename="../interface/input_interface.py" line="1180"/>
         <source>Show plugin</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5321,15 +5320,15 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="273"/>
-        <location filename="../semiautomaticclassificationplugin.py" line="452"/>
-        <location filename="../semiautomaticclassificationplugin.py" line="1110"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="271"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="450"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="1107"/>
         <source>Please, restart QGIS for executing the Semi-Automatic Classification Plugin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/download_products_tab.py" line="601"/>
-        <location filename="../interface/download_products_tab.py" line="619"/>
+        <location filename="../interface/download_products_tab.py" line="606"/>
+        <location filename="../interface/download_products_tab.py" line="624"/>
         <source>Downloading ...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5341,12 +5340,12 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/download_products_tab.py" line="479"/>
+        <location filename="../interface/download_products_tab.py" line="484"/>
         <source>Select a text file of product table</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/download_products_tab.py" line="492"/>
+        <location filename="../interface/download_products_tab.py" line="497"/>
         <source>Export table to file</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5358,34 +5357,34 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/bandset_tab.py" line="254"/>
-        <location filename="../interface/bandset_tab.py" line="338"/>
+        <location filename="../interface/bandset_tab.py" line="255"/>
+        <location filename="../interface/bandset_tab.py" line="339"/>
         <source>Band name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/bandset_tab.py" line="258"/>
-        <location filename="../interface/bandset_tab.py" line="342"/>
+        <location filename="../interface/bandset_tab.py" line="259"/>
+        <location filename="../interface/bandset_tab.py" line="343"/>
         <source>Center wavelength</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/bandset_tab.py" line="262"/>
+        <location filename="../interface/bandset_tab.py" line="263"/>
         <source>Multiplicative Factor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/bandset_tab.py" line="266"/>
+        <location filename="../interface/bandset_tab.py" line="267"/>
         <source>Additive Factor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/bandset_tab.py" line="560"/>
+        <location filename="../interface/bandset_tab.py" line="559"/>
         <source>Remove band set</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/bandset_tab.py" line="270"/>
+        <location filename="../interface/bandset_tab.py" line="271"/>
         <source>Wavelength unit</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5398,26 +5397,26 @@ size</source>
     <message>
         <location filename="../interface/input_interface.py" line="131"/>
         <location filename="../interface/input_interface.py" line="252"/>
-        <location filename="../interface/input_interface.py" line="1078"/>
-        <location filename="../interface/input_interface.py" line="1214"/>
+        <location filename="../interface/input_interface.py" line="1079"/>
+        <location filename="../interface/input_interface.py" line="1216"/>
         <source>Band processing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../interface/input_interface.py" line="125"/>
         <location filename="../interface/input_interface.py" line="246"/>
-        <location filename="../interface/input_interface.py" line="1060"/>
-        <location filename="../interface/input_interface.py" line="1198"/>
+        <location filename="../interface/input_interface.py" line="1061"/>
+        <location filename="../interface/input_interface.py" line="1200"/>
         <source>Basic tools</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="618"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="616"/>
         <source>Please restart QGIS for installing the Semi-Automatic Classification Plugin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="671"/>
+        <location filename="../interface/input_interface.py" line="670"/>
         <source>Create KML</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5434,7 +5433,7 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/ui_utils.py" line="114"/>
+        <location filename="../core/ui_utils.py" line="113"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5457,7 +5456,7 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/bandset_tab.py" line="276"/>
+        <location filename="../interface/bandset_tab.py" line="277"/>
         <source>Date</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5473,14 +5472,14 @@ size</source>
     </message>
     <message>
         <location filename="../core/util_qt.py" line="194"/>
-        <location filename="../interface/download_products_tab.py" line="429"/>
+        <location filename="../interface/download_products_tab.py" line="434"/>
         <location filename="../interface/image_conversion_tab.py" line="168"/>
         <source>Remove rows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../core/util_qt.py" line="199"/>
-        <location filename="../interface/download_products_tab.py" line="434"/>
+        <location filename="../interface/download_products_tab.py" line="439"/>
         <location filename="../interface/image_conversion_tab.py" line="173"/>
         <source>Are you sure you want to remove highlighted rows from the table?</source>
         <translation type="unfinished"></translation>
@@ -5592,12 +5591,12 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/reclassification_tab.py" line="250"/>
+        <location filename="../interface/reclassification_tab.py" line="254"/>
         <source>Select a reclassification file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/reclassification_tab.py" line="290"/>
+        <location filename="../interface/reclassification_tab.py" line="294"/>
         <source>Save the reclassification list to file</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5618,39 +5617,39 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="375"/>
-        <location filename="../semiautomaticclassificationplugin.py" line="401"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="373"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="399"/>
         <source>Error. Python library not found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="566"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="564"/>
         <source>Error starting Remotior Sensus</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="979"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="976"/>
         <source>Virtual Band Set </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="982"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="979"/>
         <source>Band set </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="986"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="983"/>
         <source>SCP training layer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="1134"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="1131"/>
         <source>You are using the simplified interface. To change the interface go to SCP &gt; Settings and uncheck Simplified interface</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="2283"/>
-        <location filename="../semiautomaticclassificationplugin.py" line="2289"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="2278"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="2284"/>
         <location filename="../interface/scp_dock.py" line="345"/>
         <location filename="../interface/scp_dock.py" line="2650"/>
         <location filename="../interface/scp_dock.py" line="2754"/>
@@ -5658,38 +5657,38 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../core/utils.py" line="315"/>
-        <location filename="../core/utils.py" line="340"/>
+        <location filename="../core/utils.py" line="306"/>
+        <location filename="../core/utils.py" line="331"/>
         <source>Unclassified</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/bandset_tab.py" line="154"/>
+        <location filename="../interface/bandset_tab.py" line="155"/>
         <source>Select input raster</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/bandset_tab.py" line="165"/>
+        <location filename="../interface/bandset_tab.py" line="166"/>
         <source>Select csv file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/bandset_tab.py" line="273"/>
+        <location filename="../interface/bandset_tab.py" line="274"/>
         <source>Path</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/bandset_tab.py" line="565"/>
+        <location filename="../interface/bandset_tab.py" line="564"/>
         <source>Are you sure you want to remove the selected band sets?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/bandset_tab.py" line="606"/>
+        <location filename="../interface/bandset_tab.py" line="605"/>
         <source>Save the bandset to file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/bandset_tab.py" line="624"/>
+        <location filename="../interface/bandset_tab.py" line="623"/>
         <source>Select a bandset file</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5704,18 +5703,17 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/download_products_tab.py" line="66"/>
-        <location filename="../interface/download_products_tab.py" line="93"/>
+        <location filename="../interface/download_products_tab.py" line="98"/>
         <source>Password is stored unencrypted</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/download_products_tab.py" line="354"/>
+        <location filename="../interface/download_products_tab.py" line="359"/>
         <source>ERROR</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/download_products_tab.py" line="398"/>
+        <location filename="../interface/download_products_tab.py" line="403"/>
         <source>Clear the table</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5786,22 +5784,22 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="479"/>
+        <location filename="../interface/input_interface.py" line="478"/>
         <source>RGB = </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="525"/>
+        <location filename="../interface/input_interface.py" line="524"/>
         <source>ROI     </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/input_interface.py" line="616"/>
+        <location filename="../interface/input_interface.py" line="615"/>
         <source>Preview </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/multiple_roi_tab.py" line="334"/>
+        <location filename="../interface/multiple_roi_tab.py" line="340"/>
         <source>Select a point list file</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5868,30 +5866,30 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/settings.py" line="335"/>
-        <location filename="../interface/settings.py" line="344"/>
-        <location filename="../interface/settings.py" line="353"/>
-        <location filename="../interface/settings.py" line="362"/>
-        <location filename="../interface/settings.py" line="371"/>
-        <location filename="../interface/settings.py" line="380"/>
-        <location filename="../interface/settings.py" line="389"/>
-        <location filename="../interface/settings.py" line="398"/>
-        <location filename="../interface/settings.py" line="413"/>
-        <location filename="../interface/settings.py" line="423"/>
+        <location filename="../interface/settings.py" line="336"/>
+        <location filename="../interface/settings.py" line="345"/>
+        <location filename="../interface/settings.py" line="354"/>
+        <location filename="../interface/settings.py" line="363"/>
+        <location filename="../interface/settings.py" line="372"/>
+        <location filename="../interface/settings.py" line="381"/>
+        <location filename="../interface/settings.py" line="390"/>
+        <location filename="../interface/settings.py" line="399"/>
+        <location filename="../interface/settings.py" line="414"/>
+        <location filename="../interface/settings.py" line="424"/>
         <source>Success</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/settings.py" line="338"/>
-        <location filename="../interface/settings.py" line="347"/>
-        <location filename="../interface/settings.py" line="356"/>
-        <location filename="../interface/settings.py" line="365"/>
-        <location filename="../interface/settings.py" line="374"/>
-        <location filename="../interface/settings.py" line="383"/>
-        <location filename="../interface/settings.py" line="392"/>
-        <location filename="../interface/settings.py" line="403"/>
-        <location filename="../interface/settings.py" line="416"/>
-        <location filename="../interface/settings.py" line="426"/>
+        <location filename="../interface/settings.py" line="339"/>
+        <location filename="../interface/settings.py" line="348"/>
+        <location filename="../interface/settings.py" line="357"/>
+        <location filename="../interface/settings.py" line="366"/>
+        <location filename="../interface/settings.py" line="375"/>
+        <location filename="../interface/settings.py" line="384"/>
+        <location filename="../interface/settings.py" line="393"/>
+        <location filename="../interface/settings.py" line="404"/>
+        <location filename="../interface/settings.py" line="417"/>
+        <location filename="../interface/settings.py" line="427"/>
         <source>Fail</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5902,37 +5900,37 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../spectral_signature/signature_importer.py" line="46"/>
+        <location filename="../spectral_signature/signature_importer.py" line="44"/>
         <source>Chapter 1: Minerals</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../spectral_signature/signature_importer.py" line="50"/>
+        <location filename="../spectral_signature/signature_importer.py" line="48"/>
         <source>Chapter 2: Soils and Mixtures</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../spectral_signature/signature_importer.py" line="53"/>
+        <location filename="../spectral_signature/signature_importer.py" line="51"/>
         <source>Chapter 3: Coatings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../spectral_signature/signature_importer.py" line="56"/>
+        <location filename="../spectral_signature/signature_importer.py" line="54"/>
         <source>Chapter 4: Liquids</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../spectral_signature/signature_importer.py" line="59"/>
+        <location filename="../spectral_signature/signature_importer.py" line="57"/>
         <source>Chapter 5: Organics</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../spectral_signature/signature_importer.py" line="62"/>
+        <location filename="../spectral_signature/signature_importer.py" line="60"/>
         <source>Chapter 6: Artificial</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../spectral_signature/signature_importer.py" line="66"/>
+        <location filename="../spectral_signature/signature_importer.py" line="64"/>
         <source>Chapter 7: Vegetation and Mixtures</source>
         <translation type="unfinished"></translation>
     </message>

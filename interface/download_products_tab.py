@@ -47,38 +47,43 @@ cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 def remember_user_earthdata():
     if cfg.dialog.ui.remember_user_checkBox_3.isChecked():
         user = cfg.dialog.ui.user_earthdata_lineEdit.text()
-        password = cfg.utils.encrypt_password(
+        cfg.utils.encrypt_password(
             cfg.dialog.ui.password_earthdata_lineEdit.text()
         )
         cfg.qgis_registry[cfg.reg_earthdata_user] = user
-        cfg.qgis_registry[cfg.reg_earthdata_pass] = password
+        # removed
+        # cfg.qgis_registry[cfg.reg_earthdata_pass] = password
 
 
 # Earthdata user checkbox
 # noinspection PyTypeChecker
 def remember_user_earthdata_checkbox():
     if cfg.dialog.ui.remember_user_checkBox_3.isChecked():
+        """
         cfg.mx.msg_box_warning(
             QApplication.translate('semiautomaticclassificationplugin',
                                    'Warning'),
             QApplication.translate('semiautomaticclassificationplugin',
                                    'Password is stored unencrypted')
         )
+        """
         remember_user_earthdata()
     else:
         cfg.qgis_registry[cfg.reg_earthdata_user] = ''
-        cfg.qgis_registry[cfg.reg_earthdata_pass] = ''
+        # removed
+        # cfg.qgis_registry[cfg.reg_earthdata_pass] = ''
 
 
 # Copernicus data user
 def remember_user_copernicus():
     if cfg.dialog.ui.remember_user_checkBox_5.isChecked():
         user = cfg.dialog.ui.user_copernicus_lineEdit.text()
-        password = cfg.utils.encrypt_password(
+        cfg.utils.encrypt_password(
             cfg.dialog.ui.password_copernicus_lineEdit.text()
         )
         cfg.qgis_registry[cfg.reg_copernicus_user] = user
-        cfg.qgis_registry[cfg.reg_copernicus_pass] = password
+        # removed
+        # cfg.qgis_registry[cfg.reg_copernicus_pass] = password
 
 
 # Copernicus service data user checkbox

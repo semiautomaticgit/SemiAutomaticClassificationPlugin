@@ -21,10 +21,9 @@
 # If not, see <https://www.gnu.org/licenses/>.
 
 
-import os
-import sys
 import ssl
 import smtplib
+import subprocess
 
 import qgis.core as qgis_core
 from PyQt6.QtCore import QSize
@@ -313,7 +312,7 @@ class UiUtils:
                     server = smtplib.SMTP(cfg.smtp_server, 587)
                     context = ssl.create_default_context()
                     server.starttls(context=context)
-                    server.login(cfg.smtp_user, cfg.smtp_password)
+                    server.login(cfg.smtp_user, cfg.smtp_pass)
                     tolist = cfg.smtp_recipients.split(',')
                     if subject is None:
                         subject = 'completed process'
@@ -353,7 +352,8 @@ def beeps(frequency: int, duration: float):
     if cfg.system_platform.startswith('win'):
         winsound.Beep(frequency, int(duration * 1000))
     elif cfg.system_platform.startswith('linux'):
-        os.system(
-            'play --no-show-progress --null --channels 1 synth %s sine %s'
-            % (str(duration), str(frequency))
+        subprocess.run(
+            ['play', '--no-show-progress', '--null', '--channels', '1',
+             'synth', str(duration), 'sine', str(frequency),
+             ], check=True,
         )

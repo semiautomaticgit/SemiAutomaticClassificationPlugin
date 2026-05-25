@@ -64,15 +64,6 @@ cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
 
 # check Remotior Sensus version
-def check_remotior_sensus_version():
-    request = QNetworkRequest(
-        QUrl('https://pypi.org/pypi/remotior_sensus/json')
-    )
-    cfg.remotior_reply = QgsNetworkAccessManager.instance().get(request)
-    cfg.remotior_reply.finished.connect(remotior_label)
-
-
-# check Remotior Sensus version
 def remotior_label():
     try:
         package = json.loads(
@@ -553,6 +544,66 @@ def random_points_in_grid(point_number, x_min, x_max, y_min, y_max):
     return points
 
 
+# evaluate expression for dynamic use
+def evaluate_expression(expression, array):
+    if '>=' in expression:
+        left, right = expression.split('>=')
+        return array >= float(right)
+    if '<=' in expression:
+        left, right = expression.split('<=')
+        return array <= float(right)
+    if '>' in expression:
+        left, right = expression.split('>')
+        return array > float(right)
+    if '<' in expression:
+        left, right = expression.split('<')
+        return array < float(right)
+    if '==' in expression:
+        left, right = expression.split('==')
+        return array == float(right)
+    if '!=' in expression:
+        left, right = expression.split('!=')
+        return array != float(right)
+    raise ValueError('Invalid expression')
+
+
+def split_expression(expression, operator):
+    expressions = []
+    depth = 0
+    current = ''
+    i = 0
+    while i < len(expression):
+        if expression[i] == '(':
+            depth += 1
+        elif expression[i] == ')':
+            depth -= 1
+        if depth == 0 and expression[i:i+len(operator)] == operator:
+            expressions.append(current)
+            current = ''
+            i += len(operator)
+            continue
+        current += expression[i]
+        i += 1
+    expressions.append(current)
+    return expressions
+
+
+def evaluate_condition(condition, context):
+    name, a = next(iter(context.items()))
+    expression = condition.replace(name, 'a').strip()
+    or_parts = split_expression(expression, '|')
+    or_result = None
+    for part in or_parts:
+        and_parts = split_expression(part, '&')
+        and_result = None
+        for and_part in and_parts:
+            cond = evaluate_expression(and_part, a)
+            and_result = cond if and_result is None else (and_result & cond)
+        or_result = and_result if or_result is None else (or_result
+                                                          | and_result)
+    return or_result
+
+
 # calculate random points with condition
 def random_points_with_condition(
         raster_path, point_number, condition, x_min, y_top
@@ -562,10 +613,14 @@ def random_points_with_condition(
     points = []
     # band array
     _array = cfg.util_gdal.read_raster(raster_path)
+    context = {
+        cfg.qgis_registry[cfg.reg_raster_variable_name]: _array
+    }
     condition = condition.replace(
         cfg.qgis_registry[cfg.reg_raster_variable_name], '_array'
     )
-    condition = eval(condition, {'__builtins__': None}, {'_array': _array})
+    _array = context[cfg.qgis_registry[cfg.reg_raster_variable_name]]
+    condition = evaluate_condition(condition, context)
     arr = np.argwhere(condition)
     rng = np.random.default_rng()
     try:

@@ -444,7 +444,6 @@ def function_dictionaries(simplified=False):
     return dictionaries
 
 
-
 """ Interface functions """
 
 
@@ -888,6 +887,7 @@ def simplified_interface(state):
         cfg.qgis_registry[cfg.reg_simplified] = 0
     cfg.mx.msg_inf_8()
 
+
 # activate docks
 def activate_docks():
     if cfg.simplified:
@@ -948,6 +948,7 @@ def add_tree_item(tree, icon_name, name):
     except Exception as err:
         str(err)
     return action
+
 
 # add checkbox to tree
 def add_tree_checkbox(tree, icon_name, name, checked=True):
@@ -1154,7 +1155,7 @@ def load_menu():
         cfg.ram_menu_spin = add_menu_spinbox(
             settings_menu, ram_setting_change, None,
             QApplication.translate(
-                'semiautomaticclassificationplugin','Available RAM (MB)'
+                'semiautomaticclassificationplugin', 'Available RAM (MB)'
                 ), 128, 196608, cfg.qgis_registry[cfg.reg_ram_value]
         )
         cfg.cpu_menu_spin = add_menu_spinbox(
@@ -1191,10 +1192,11 @@ def load_main_menu():
         )
     # Basic tools
     basic_tools_menu = add_tree_item(
-        tree, QIcon(f'{cfg.plugin_dir}/ui/icons/'
-                    f'semiautomaticclassificationplugin_roi_tool.svg'
-        ), QApplication.translate('semiautomaticclassificationplugin',
-                                  'Basic tools')
+        tree,
+        QIcon(f'{cfg.plugin_dir}/ui/icons/'
+              f'semiautomaticclassificationplugin_roi_tool.svg'
+              ), QApplication.translate('semiautomaticclassificationplugin',
+                                        'Basic tools')
     )
     # Preprocessing
     preprocessing_menu = add_tree_item(
@@ -1327,7 +1329,8 @@ def set_dock_tabs():
         label.setStyleSheet(_fromUtf8('color : black'))
         label.setObjectName(_fromUtf8('label'))
         label.setPixmap(
-            QPixmap(icons[i - 3]).scaled(24, 24, Qt.AspectRatioMode.KeepAspectRatio)
+            QPixmap(icons[i - 3]).scaled(24, 24,
+                                         Qt.AspectRatioMode.KeepAspectRatio)
         )
         label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         cfg.dock_class_dlg.ui.tabWidget_dock.tabBar().setTabButton(
@@ -1455,14 +1458,15 @@ def main_tab_changed(index):
                 '%s/%s.html' %
                 (cfg.rs.configurations.temp.dir, cfg.current_tab)
         ):
-            response = get(base_url)
+            response = get(base_url, timeout=60)
             with open(
                     '%s/%s.html'
                     % (cfg.rs.configurations.temp.dir, cfg.current_tab), 'wb'
             ) as file:
                 file.write(response.content)
         with open('%s/%s.html'
-                  % (cfg.rs.configurations.temp.dir, cfg.current_tab), 'r') as h:
+                  % (cfg.rs.configurations.temp.dir, cfg.current_tab),
+                  'r') as h:
             html = h.read()
         images = findall('src="_images/(.+?)"', str(html))
         for image in images:
@@ -1471,7 +1475,8 @@ def main_tab_changed(index):
                 try:
                     response = get(
                         'https://semiautomaticclassificationmanual.'
-                        'readthedocs.io/en/latest/_images/%s' % image
+                        'readthedocs.io/en/latest/_images/%s' % image,
+                        timeout=60
                     )
                     with open(
                             '%s/_images/%s'
@@ -1994,7 +1999,7 @@ def add_algorithm_to_combo(algorithm_list):
 
 
 def activate_layer_1():
-    layer_name=cfg.layer_on_off_1.text()
+    layer_name = cfg.layer_on_off_1.text()
     try:
         cfg.util_qgis.activate_layer(layer_name)
     except Exception as err:
@@ -2007,7 +2012,7 @@ def key_sequence_z():
 
 
 def activate_layer_2():
-    layer_name=cfg.layer_on_off_2.text()
+    layer_name = cfg.layer_on_off_2.text()
     try:
         cfg.util_qgis.activate_layer(layer_name)
     except Exception as err:
@@ -2020,7 +2025,7 @@ def key_sequence_x():
 
 
 def activate_layer_3():
-    layer_name=cfg.layer_on_off_3.text()
+    layer_name = cfg.layer_on_off_3.text()
     try:
         cfg.util_qgis.activate_layer(layer_name)
     except Exception as err:

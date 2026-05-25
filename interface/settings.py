@@ -221,13 +221,14 @@ def remember_user():
     if cfg.dialog.ui.remeber_settings_checkBox.isChecked():
         cfg.qgis_registry[
             cfg.reg_smtp_user] = cfg.dialog.ui.smtp_user_lineEdit.text()
-        cfg.qgis_registry[cfg.reg_smtp_password] = cfg.utils.encrypt_password(
+        # removed
+        """
+        cfg.qgis_registry[cfg.reg_smtp_pass] = cfg.utils.encrypt_password(
             cfg.dialog.ui.smtp_password_lineEdit.text()
         )
+        """
     cfg.smtp_user = cfg.dialog.ui.smtp_user_lineEdit.text()
-    cfg.smtp_password = (
-        cfg.dialog.ui.smtp_password_lineEdit.text()
-    )
+    cfg.smtp_pass = cfg.dialog.ui.smtp_password_lineEdit.text()
 
 
 # checkbox remember user
@@ -236,7 +237,7 @@ def remember_user_checkbox():
         remember_user()
     else:
         cfg.qgis_registry[cfg.reg_smtp_user] = ''
-    cfg.qgis_registry[cfg.reg_smtp_password] = ''
+    cfg.qgis_registry[cfg.reg_smtp_pass] = ''
 
 
 # checkbox SMTP

@@ -25,6 +25,7 @@ This tool allows for the creation of multiple ROIs.
 """
 
 import numpy
+import ast
 from PyQt6.QtWidgets import QApplication
 cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
@@ -88,9 +89,14 @@ def expression_text_edited():
     for condition in expression_split:
         try:
             cfg.dialog.ui.stratified_lineEdit.setStyleSheet('color : green')
-            eval(condition.replace(
-                    cfg.qgis_registry[cfg.reg_raster_variable_name], '1'
-                ), {'__builtins__': None})
+            ast.literal_eval(
+                '[' + condition.replace(
+                    cfg.qgis_registry[cfg.reg_raster_variable_name], '1')
+                .replace('>=', ',').replace('<=', ',').replace('==', ',')
+                .replace('!=', ',').replace('>', ',').replace('<', ',')
+                .replace('|', ',').replace('&', ',').replace('(', '')
+                .replace(')', '') + ']'
+            )
             if (condition.strip()
                     == cfg.qgis_registry[cfg.reg_raster_variable_name]):
                 cfg.dialog.ui.stratified_lineEdit.setStyleSheet('color : red')

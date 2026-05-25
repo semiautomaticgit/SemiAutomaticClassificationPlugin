@@ -29,6 +29,7 @@ cfg = __import__(str(__name__).split('.')[0] + '.core.config', fromlist=[''])
 
 ui_name = 'semiautomaticclassificationplugin'
 
+
 # message box information
 def msg_box(title, message):
     QMessageBox.information(cfg.iface.mainWindow(), str(title), str(message))
@@ -66,7 +67,7 @@ def msg_bar_critical(title, message):
 # Message bar error
 def msg_bar_error(message):
     # noinspection PyTypeChecker
-    msg_bar_critical(QApplication.translate(ui_name, 'Error'),message=message)
+    msg_bar_critical(QApplication.translate(ui_name, 'Error'), message=message)
 
 
 # message bar warning
@@ -137,7 +138,7 @@ def msg_inf_4():
 
 def msg_inf_5():
     # noinspection PyTypeChecker
-    msg_bar_info( QApplication.translate(ui_name, 'Enter class values'))
+    msg_bar_info(QApplication.translate(ui_name, 'Enter class values'))
 
 
 def msg_inf_6():
@@ -213,6 +214,7 @@ def msg_err_9(layer=None):
         QApplication.translate(ui_name, f'Unable to find layer {layer}')
     )
 
+
 """ Warnings """
 
 
@@ -248,8 +250,8 @@ def msg_war_4():
 def msg_war_5():
     # noinspection PyTypeChecker
     msg_bar_warning(
-        QApplication.translate( ui_name,
-                                'Select a training input; input is not loaded')
+        QApplication.translate(ui_name,
+                               'Select a training input; input is not loaded')
     )
 
 

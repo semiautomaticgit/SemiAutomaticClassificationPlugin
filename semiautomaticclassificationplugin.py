@@ -235,11 +235,9 @@ try:
 except Exception as error:
     str(error)
     try:
-        lib_dir = (
-                '%s/python/plugins/%s' % (
+        lib_dir = ('%s/python/plugins/%s' % (
             QFileInfo(QgsApplication.qgisUserDatabaseFilePath()).path(),
-            str(__name__).split('.')[0])
-        )
+            str(__name__).split('.')[0]))
         sys.path.insert(0, lib_dir)
 
         if 'remotior_sensus' in sys.modules:
@@ -900,22 +898,21 @@ class SemiAutomaticClassificationPlugin:
                 cfg.dialog.ui.smtp_user_lineEdit.setText(
                     cfg.qgis_registry[cfg.reg_smtp_user]
                 )
-                if len(cfg.qgis_registry[cfg.reg_smtp_password]) > 0:
-                    smtp_password = cfg.utils.decrypt_password(
-                        cfg.qgis_registry[
-                            cfg.reg_smtp_password].decode('UTF-8')
+                if len(cfg.qgis_registry[cfg.reg_smtp_pass]) > 0:
+                    smtp_pass = cfg.utils.decrypt_password(
+                        cfg.qgis_registry[cfg.reg_smtp_pass].decode('UTF-8')
                     )
                     cfg.dialog.ui.smtp_password_lineEdit.setText(
-                        smtp_password.decode('UTF-8')
+                        smtp_pass.decode('UTF-8')
                     )
-                    # overwrite registry
+                    # removed
+                    """
                     cfg.qgis_registry[
-                        cfg.reg_smtp_password] = cfg.utils.encrypt_password(
-                        smtp_password.decode('UTF-8')
+                        cfg.reg_smtp_pass] = cfg.utils.encrypt_password(
+                        smtp_pass.decode('UTF-8')
                     )
-                    cfg.smtp_password = (
-                        smtp_password.decode('UTF-8')
-                    )
+                    """
+                    cfg.smtp_pass = (smtp_pass.decode('UTF-8'))
             except Exception as err:
                 str(err)
             cfg.smtp_user = cfg.qgis_registry[
@@ -960,8 +957,8 @@ class SemiAutomaticClassificationPlugin:
             )
             # add satellite list to combo
             try:
-                for product in (cfg.rs.configurations.product_description
-                        .keys()):
+                for product in (
+                        cfg.rs.configurations.product_description.keys()):
                     cfg.dialog.ui.landsat_satellite_combo.addItem(product)
             except Exception as err:
                 str(err)
@@ -1442,9 +1439,9 @@ def connect_gui():
         cfg.dock_class_dlg.ui.import_library_toolButton.clicked.connect(
             cfg.input_interface.import_signatures_tab
         )
-        cfg.dock_class_dlg.ui.signature_spectral_plot_toolButton.clicked.connect(
-            cfg.scp_dock.add_signature_to_spectral_plot
-        )
+        (cfg.dock_class_dlg.ui.
+         signature_spectral_plot_toolButton.clicked.connect(
+            cfg.scp_dock.add_signature_to_spectral_plot))
         cfg.dock_class_dlg.ui.ROI_filter_lineEdit.textChanged.connect(
             cfg.scp_dock.filter_tree
         )
@@ -1613,9 +1610,6 @@ def connect_gui():
     )
     cfg.dialog.ui.import_shapefile_pushButton.clicked.connect(
         cfg.scp_dock.import_vector
-    )
-    cfg.dialog.ui.usgs_chapter_comboBox.currentIndexChanged.connect(
-        cfg.usgs_spectral_lib.chapter_changed
     )
     cfg.dialog.ui.usgs_library_comboBox.currentIndexChanged.connect(
         cfg.usgs_spectral_lib.library_changed
@@ -2263,6 +2257,7 @@ def connect_gui():
 def dialog_deleted():
     cfg.dialog = None
 
+
 # reset all variables and interface
 def reset_scp():
     cfg.logger.log.debug('reset_scp')
@@ -2316,4 +2311,3 @@ def reset_scp():
     cfg.dialog.ui.SCP_tabs.setStyleSheet(
         'QTabBar::tab {padding: 0px; max-height: 0px;}'
     )
-

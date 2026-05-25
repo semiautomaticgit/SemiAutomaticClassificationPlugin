@@ -25,6 +25,7 @@ This tool allows for raster reclassification.
 """
 from PyQt6.QtWidgets import QApplication
 import numpy
+import ast
 
 
 try:
@@ -228,12 +229,15 @@ def edited_cell(row, column):
             cfg.util_qt.set_table_item(table, row, column, '0')
             table.blockSignals(False)
     elif column == 0:
-        c = val.replace(
-            cfg.qgis_registry[cfg.reg_raster_variable_name], '_array'
-        )
-        _array = numpy.arange(9).reshape(3, 3)
         try:
-            eval(c, {'__builtins__': None}, {'_array': _array, 'numpy': numpy})
+            ast.literal_eval(
+                '[' + val.replace(
+                    cfg.qgis_registry[cfg.reg_raster_variable_name], '1')
+                .replace('>=', ',').replace('<=', ',').replace('==', ',')
+                .replace('!=', ',').replace('>', ',').replace('<', ',')
+                .replace('|', ',').replace('&', ',').replace('(', '')
+                .replace(')', '') + ']'
+            )
         except Exception as err:
             str(err)
             table.blockSignals(True)
