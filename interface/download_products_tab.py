@@ -1,6 +1,6 @@
 # SemiAutomaticClassificationPlugin
-# The Semi-Automatic Classification Plugin for QGIS allows for the supervised 
-# classification of remote sensing images, providing tools for the download, 
+# The Semi-Automatic Classification Plugin for QGIS allows for the supervised
+# classification of remote sensing images, providing tools for the download,
 # the preprocessing and postprocessing of images.
 # begin: 2012-12-29
 # Copyright (C) 2012-2026 by Luca Congedo.
@@ -8,16 +8,16 @@
 # Email: ing.congedoluca@gmail.com
 #
 # This file is part of SemiAutomaticClassificationPlugin.
-# SemiAutomaticClassificationPlugin is free software: you can redistribute it 
-# and/or modify it under the terms of the GNU General Public License 
-# as published by the Free Software Foundation, 
+# SemiAutomaticClassificationPlugin is free software: you can redistribute it
+# and/or modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation,
 # either version 3 of the License, or (at your option) any later version.
-# SemiAutomaticClassificationPlugin is distributed in the hope that it will be 
+# SemiAutomaticClassificationPlugin is distributed in the hope that it will be
 # useful, but WITHOUT ANY WARRANTY; without even the implied warranty
 # of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 # See the GNU General Public License for more details.
 # You should have received a copy of the GNU General Public License
-# along with SemiAutomaticClassificationPlugin. 
+# along with SemiAutomaticClassificationPlugin.
 # If not, see <https://www.gnu.org/licenses/>.
 """Download products.
 
@@ -314,17 +314,21 @@ def perform_query():
     if len(copernicus_password) == 0:
         copernicus_password = None
     cfg.logger.log.info('perform_query product_name: %s' % product_name)
-    try:
-        QgsRectangle(
-            float(cfg.dialog.ui.UX_lineEdit_3.text()),
-            float(cfg.dialog.ui.UY_lineEdit_3.text()),
-            float(cfg.dialog.ui.LX_lineEdit_3.text()),
-            float(cfg.dialog.ui.LY_lineEdit_3.text())
-        )
-    except Exception as err:
-        str(err)
-        cfg.mx.msg_err_3()
-        return False
+    name_filter = cfg.dialog.ui.imageID_lineEdit.text()
+    if len(name_filter) == 0:
+        name_filter = None
+    if not name_filter:
+        try:
+            QgsRectangle(
+                float(cfg.dialog.ui.UX_lineEdit_3.text()),
+                float(cfg.dialog.ui.UY_lineEdit_3.text()),
+                float(cfg.dialog.ui.LX_lineEdit_3.text()),
+                float(cfg.dialog.ui.LY_lineEdit_3.text())
+            )
+        except Exception as err:
+            str(err)
+            cfg.mx.msg_err_3()
+            return False
     cfg.ui_utils.add_progress_bar()
     proxy_host = None
     proxy_port = None
@@ -341,18 +345,29 @@ def perform_query():
             proxy_host = cfg.proxy_host
             proxy_port = cfg.proxy_port
     try:
-        output = cfg.rs.download_products.search(
-            product=product_name, date_from=date_from, date_to=date_to,
-            max_cloud_cover=max_cloud_cover, result_number=result_number,
-            coordinate_list=[float(cfg.dialog.ui.UX_lineEdit_3.text()),
-                             float(cfg.dialog.ui.UY_lineEdit_3.text()),
-                             float(cfg.dialog.ui.LX_lineEdit_3.text()),
-                             float(cfg.dialog.ui.LY_lineEdit_3.text())],
-            proxy_host=proxy_host, proxy_port=proxy_port,
-            proxy_user=proxy_user, proxy_password=proxy_password,
-            copernicus_user=copernicus_user,
-            copernicus_password=copernicus_password
-        )
+        if name_filter:
+            output = cfg.rs.download_products.search(
+                product=product_name, date_from=date_from, date_to=date_to,
+                max_cloud_cover=max_cloud_cover, result_number=result_number,
+                name_filter=name_filter,
+                proxy_host=proxy_host, proxy_port=proxy_port,
+                proxy_user=proxy_user, proxy_password=proxy_password,
+                copernicus_user=copernicus_user,
+                copernicus_password=copernicus_password
+            )
+        else:
+            output = cfg.rs.download_products.search(
+                product=product_name, date_from=date_from, date_to=date_to,
+                max_cloud_cover=max_cloud_cover, result_number=result_number,
+                coordinate_list=[float(cfg.dialog.ui.UX_lineEdit_3.text()),
+                                 float(cfg.dialog.ui.UY_lineEdit_3.text()),
+                                 float(cfg.dialog.ui.LX_lineEdit_3.text()),
+                                 float(cfg.dialog.ui.LY_lineEdit_3.text())],
+                proxy_host=proxy_host, proxy_port=proxy_port,
+                proxy_user=proxy_user, proxy_password=proxy_password,
+                copernicus_user=copernicus_user,
+                copernicus_password=copernicus_password
+            )
     except Exception as err:
         cfg.mx.msg_box_error(
             QApplication.translate('semiautomaticclassificationplugin',

@@ -1642,7 +1642,8 @@ def bandset_tab():
 # select tab 1
 def select_download_products_tab():
     cfg.dialog.ui.SCP_tabs.setCurrentIndex(1)
-    dock_tab_changed('Download products')
+    if cfg.simplified:
+        dock_tab_changed('Download products')
 
 
 # select preprocessing tab

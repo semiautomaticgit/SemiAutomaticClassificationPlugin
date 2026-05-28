@@ -113,7 +113,7 @@ except Exception as error:
 
 
 # minimum remotior sensus version
-rs_version = '0.7.0'
+rs_version = '0.7.1'
 lib_dir = rs_path = installed_version = remotior_sensus_2 = None
 
 
@@ -146,6 +146,15 @@ def download_library(library_directory):
         import requests
         import tarfile
         import hashlib
+
+        qgis_utils.iface.messageBar().pushMessage(
+            'Semi-Automatic Classification Plugin',
+            QApplication.translate(
+                'semiautomaticclassificationplugin',
+                'Downloading Remotior Sensus package'
+            ),
+            level=Qgis.Info, duration=5
+        )
 
         tar_name = f'remotior_sensus-{rs_version}.tar.gz'
         tar_url = (

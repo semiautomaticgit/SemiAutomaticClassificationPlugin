@@ -4,7 +4,7 @@ qgisMinimumVersion=3.99
 qgisMaximumVersion=4.98
 supportsQt6=True
 description=The Semi-Automatic Classification Plugin (SCP) allows for the supervised classification of remote sensing images, providing tools for the download, the preprocessing and postprocessing of images.
-version=9.0.1
+version=9.0.2
 about=Developed by Luca Congedo, the Semi-Automatic Classification Plugin (SCP) allows for the supervised classification of remote sensing images, providing tools for the download, the preprocessing and postprocessing of images. Search and download is available for Landsat, Sentinel-2 images. Several algorithms are available for the land cover classification. This plugin is built on Remotior Sensus library and requires the installation of additional dependencies. For more information please visit https://fromgistors.blogspot.com .
 
 author=Luca Congedo
@@ -14,6 +14,11 @@ category=Raster
 icon=semiautomaticclassificationplugin.png
 
 changelog=
+
+	9.0.2
+	-in tab Download products it is possible to search Sentinel-2 by tile name entering in "Advanced search".
+	-output of Random Forest using scikit framework now includes a .txt file listing feature importance.
+	-minor bug fixing.
 
 	9.0.1
 	-minor bug fixing

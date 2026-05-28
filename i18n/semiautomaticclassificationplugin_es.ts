@@ -5057,12 +5057,12 @@ size</source>
         <translation>Guardar el reporte de clasificación</translation>
     </message>
     <message>
-        <location filename="../interface/download_products_tab.py" line="737"/>
+        <location filename="../interface/download_products_tab.py" line="752"/>
         <source>Download the images in the table (requires internet connection)</source>
         <translation>Descarga las imágenes de la tabla (se requiere conexión a internet)</translation>
     </message>
     <message>
-        <location filename="../interface/download_products_tab.py" line="406"/>
+        <location filename="../interface/download_products_tab.py" line="421"/>
         <source>Are you sure you want to clear the table?</source>
         <translation>¿Estás seguro que quieres borrar la tabla?</translation>
     </message>
@@ -5092,7 +5092,7 @@ size</source>
         <translation>Selecciona un archivo XML</translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="832"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="841"/>
         <location filename="../interface/settings.py" line="51"/>
         <location filename="../interface/settings.py" line="189"/>
         <source>Transparency </source>
@@ -5320,15 +5320,15 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="271"/>
-        <location filename="../semiautomaticclassificationplugin.py" line="450"/>
-        <location filename="../semiautomaticclassificationplugin.py" line="1107"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="280"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="459"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="1116"/>
         <source>Please, restart QGIS for executing the Semi-Automatic Classification Plugin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/download_products_tab.py" line="606"/>
-        <location filename="../interface/download_products_tab.py" line="624"/>
+        <location filename="../interface/download_products_tab.py" line="621"/>
+        <location filename="../interface/download_products_tab.py" line="639"/>
         <source>Downloading ...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5340,12 +5340,12 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/download_products_tab.py" line="484"/>
+        <location filename="../interface/download_products_tab.py" line="499"/>
         <source>Select a text file of product table</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/download_products_tab.py" line="497"/>
+        <location filename="../interface/download_products_tab.py" line="512"/>
         <source>Export table to file</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5411,7 +5411,7 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="616"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="625"/>
         <source>Please restart QGIS for installing the Semi-Automatic Classification Plugin</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5472,14 +5472,14 @@ size</source>
     </message>
     <message>
         <location filename="../core/util_qt.py" line="194"/>
-        <location filename="../interface/download_products_tab.py" line="434"/>
+        <location filename="../interface/download_products_tab.py" line="449"/>
         <location filename="../interface/image_conversion_tab.py" line="168"/>
         <source>Remove rows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../core/util_qt.py" line="199"/>
-        <location filename="../interface/download_products_tab.py" line="439"/>
+        <location filename="../interface/download_products_tab.py" line="454"/>
         <location filename="../interface/image_conversion_tab.py" line="173"/>
         <source>Are you sure you want to remove highlighted rows from the table?</source>
         <translation type="unfinished"></translation>
@@ -5617,39 +5617,44 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="373"/>
-        <location filename="../semiautomaticclassificationplugin.py" line="399"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="155"/>
+        <source>Downloading Remotior Sensus package</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../semiautomaticclassificationplugin.py" line="382"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="408"/>
         <source>Error. Python library not found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="564"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="573"/>
         <source>Error starting Remotior Sensus</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="976"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="985"/>
         <source>Virtual Band Set </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="979"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="988"/>
         <source>Band set </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="983"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="992"/>
         <source>SCP training layer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="1131"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="1140"/>
         <source>You are using the simplified interface. To change the interface go to SCP &gt; Settings and uncheck Simplified interface</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../semiautomaticclassificationplugin.py" line="2278"/>
-        <location filename="../semiautomaticclassificationplugin.py" line="2284"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="2287"/>
+        <location filename="../semiautomaticclassificationplugin.py" line="2293"/>
         <location filename="../interface/scp_dock.py" line="345"/>
         <location filename="../interface/scp_dock.py" line="2650"/>
         <location filename="../interface/scp_dock.py" line="2754"/>
@@ -5708,12 +5713,12 @@ size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/download_products_tab.py" line="359"/>
+        <location filename="../interface/download_products_tab.py" line="374"/>
         <source>ERROR</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../interface/download_products_tab.py" line="403"/>
+        <location filename="../interface/download_products_tab.py" line="418"/>
         <source>Clear the table</source>
         <translation type="unfinished"></translation>
     </message>
