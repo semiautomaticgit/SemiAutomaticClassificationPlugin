@@ -113,7 +113,7 @@ except Exception as error:
 
 
 # minimum remotior sensus version
-rs_version = '0.7.1'
+rs_version = '0.7.2'
 lib_dir = rs_path = installed_version = remotior_sensus_2 = None
 
 
