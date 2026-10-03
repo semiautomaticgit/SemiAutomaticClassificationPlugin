@@ -136,6 +136,10 @@ def find_library_version(library_path):
     return None
 
 
+def version_tuple(version):
+    return tuple(int(n) for n in version.split('.'))
+
+
 if rs_path is not None:
     installed_version = find_library_version(rs_path)
 
@@ -233,8 +237,7 @@ def download_library(library_directory):
 try:
     # check Remotior Sensus version
     if installed_version is None or (
-            float(f'{installed_version[0]}.{installed_version[2]}')
-            < float(f'{rs_version[0]}.{rs_version[2]}')):
+            version_tuple(installed_version) < version_tuple(rs_version)):
         plugin_check = False
         raise RuntimeError('rs version ')
     else:
@@ -253,9 +256,8 @@ except Exception as error:
             del sys.modules['remotior_sensus']
         import remotior_sensus
         # check Remotior Sensus version
-        if (float(f'{remotior_sensus.__version__[0]}.'
-                  f'{remotior_sensus.__version__[2]}')
-                < float(f'{rs_version[0]}.{rs_version[2]}')):
+        if (version_tuple(remotior_sensus.__version__)
+                < version_tuple(rs_version)):
             raise RuntimeError('rs version ')
         cfg.rs_version = remotior_sensus.__version__
         plugin_check = True
