@@ -16,6 +16,7 @@ icon=semiautomaticclassificationplugin.png
 changelog=
 
 	9.0.5
+	-removed storing password for copernicus and earthdata services.
 	-minor bug fixing.
 
 	9.0.4

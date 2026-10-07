@@ -907,6 +907,8 @@ class SemiAutomaticClassificationPlugin:
                 cfg.dialog.ui.smtp_user_lineEdit.setText(
                     cfg.qgis_registry[cfg.reg_smtp_user]
                 )
+                # removed
+                """
                 if len(cfg.qgis_registry[cfg.reg_smtp_pass]) > 0:
                     smtp_pass = cfg.utils.decrypt_password(
                         cfg.qgis_registry[cfg.reg_smtp_pass].decode('UTF-8')
@@ -914,14 +916,12 @@ class SemiAutomaticClassificationPlugin:
                     cfg.dialog.ui.smtp_password_lineEdit.setText(
                         smtp_pass.decode('UTF-8')
                     )
-                    # removed
-                    """
                     cfg.qgis_registry[
                         cfg.reg_smtp_pass] = cfg.utils.encrypt_password(
                         smtp_pass.decode('UTF-8')
                     )
-                    """
                     cfg.smtp_pass = (smtp_pass.decode('UTF-8'))
+                """
             except Exception as err:
                 str(err)
             cfg.smtp_user = cfg.qgis_registry[
@@ -935,6 +935,7 @@ class SemiAutomaticClassificationPlugin:
                 cfg.dialog.ui.user_earthdata_lineEdit.setText(
                     cfg.qgis_registry[cfg.reg_earthdata_user]
                 )
+                """
                 if cfg.qgis_registry[cfg.reg_earthdata_pass] is not None:
                     earthdata_pass = cfg.utils.decrypt_password(
                         cfg.qgis_registry[
@@ -943,6 +944,7 @@ class SemiAutomaticClassificationPlugin:
                     cfg.dialog.ui.password_earthdata_lineEdit.setText(
                         earthdata_pass.decode('UTF-8')
                     )
+                """
             except Exception as err:
                 str(err)
             try:
@@ -950,6 +952,7 @@ class SemiAutomaticClassificationPlugin:
                 cfg.dialog.ui.user_copernicus_lineEdit.setText(
                     cfg.qgis_registry[cfg.reg_copernicus_user]
                 )
+                """
                 if cfg.qgis_registry[cfg.reg_copernicus_pass] is not None:
                     copernicus_pass = cfg.utils.decrypt_password(
                         cfg.qgis_registry[
@@ -958,6 +961,7 @@ class SemiAutomaticClassificationPlugin:
                     cfg.dialog.ui.password_copernicus_lineEdit.setText(
                         copernicus_pass.decode('UTF-8')
                     )
+                """
             except Exception as err:
                 str(err)
             cfg.dialog.ui.dateEdit_to.setDate(QDate.currentDate())

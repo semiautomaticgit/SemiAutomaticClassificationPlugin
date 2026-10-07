@@ -237,7 +237,7 @@ def remember_user_checkbox():
         remember_user()
     else:
         cfg.qgis_registry[cfg.reg_smtp_user] = ''
-    cfg.qgis_registry[cfg.reg_smtp_pass] = ''
+    #cfg.qgis_registry[cfg.reg_smtp_pass] = ''
 
 
 # checkbox SMTP
