@@ -191,10 +191,14 @@ class TrainingVectorLayer:
             cfg.dock_class_simpl_dlg.ui.button_Save_ROI.setEnabled(False)
             cfg.dock_class_simpl_dlg.ui.undo_save_Button.setEnabled(False)
             cfg.dock_class_simpl_dlg.ui.redo_save_Button.setEnabled(False)
+            cfg.dock_class_simpl_dlg.ui.remove_outliers_Button.setEnabled(
+                False
+            )
         else:
             cfg.dock_class_dlg.ui.button_Save_ROI.setEnabled(False)
             cfg.dock_class_dlg.ui.undo_save_Button.setEnabled(False)
             cfg.dock_class_dlg.ui.redo_save_Button.setEnabled(False)
+            cfg.removeROIOutliers_Button.setEnabled(False)
         # reset
         # noinspection PySimplifyBooleanCheck
         if signature_catalog is False:
@@ -1305,6 +1309,28 @@ class TrainingVectorLayer:
         cfg.logger.log.debug('get_highlighted_ids: %s' % (str(ids)))
         return ids
 
+    # Returns (signatures_selected, macroclass_ids) for items selected
+    # directly in the tree: signatures_selected is True when at least one
+    # signature row is selected, macroclass_ids lists selected top-level
+    # macroclass items (used by the outlier removal scope logic).
+    def get_highlighted_selection_types(self):
+        if cfg.simplified:
+            tree = cfg.dock_class_simpl_dlg.ui.signature_list_treeWidget
+        else:
+            tree = cfg.dock_class_dlg.ui.signature_list_treeWidget
+        signatures_selected = False
+        macroclass_ids = []
+        for row in tree.selectedItems():
+            # classes have text in column 1, macroclasses do not
+            if len(row.text(1)) > 0:
+                signatures_selected = True
+            else:
+                try:
+                    macroclass_ids.append(int(row.text(0)))
+                except (TypeError, ValueError):
+                    pass
+        return signatures_selected, macroclass_ids
+
     # collapse menu
     def collapse(self):
         if self.collapse_tree:
@@ -1713,6 +1739,18 @@ def context_menu(event):
         'semiautomaticclassificationplugin_merge_sign_tool.svg',
         QApplication.translate('semiautomaticclassificationplugin',
                                'Merge items')
+    )
+    add_menu_item(
+        menu, cfg.remove_outliers_use_case.remove_outliers_selected_signatures,
+        'semiautomaticclassificationplugin_remove_outliers_tool.svg',
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Remove outliers')
+    )
+    add_menu_item(
+        menu, cfg.remove_outliers_use_case.remove_outliers_all_signatures,
+        'semiautomaticclassificationplugin_remove_outliers_all_tool.svg',
+        QApplication.translate('semiautomaticclassificationplugin',
+                               'Remove outliers (all ROIs)')
     )
     add_menu_item(
         menu, calculate_signatures,
@@ -2383,12 +2421,14 @@ def right_click_manual(point):
     add_roi_polygon_to_map(cfg.temporary_roi, 1)
     if cfg.simplified:
         cfg.dock_class_simpl_dlg.ui.button_Save_ROI.setEnabled(True)
+        cfg.dock_class_simpl_dlg.ui.remove_outliers_Button.setEnabled(True)
     else:
         # calculate temporary spectral signature
         if (cfg.dock_class_dlg.ui.auto_calculate_ROI_signature_checkBox
                 .isChecked()):
             temporary_roi_spectral_signature()
         cfg.dock_class_dlg.ui.button_Save_ROI.setEnabled(True)
+        cfg.removeROIOutliers_Button.setEnabled(True)
     return None
 
 
@@ -2579,6 +2619,7 @@ def create_region_growing_roi(point, bandset_number=None):
         cfg.roi_points.append(cfg.roi_center_vertex)
         if cfg.simplified:
             cfg.dock_class_simpl_dlg.ui.button_Save_ROI.setEnabled(True)
+            cfg.dock_class_simpl_dlg.ui.remove_outliers_Button.setEnabled(True)
         else:
             # calculate temporary spectral signature
             button = cfg.dock_class_dlg.ui.auto_calculate_ROI_signature_checkBox
@@ -2586,6 +2627,7 @@ def create_region_growing_roi(point, bandset_number=None):
                 temporary_roi_spectral_signature(bandset_number=bandset_number)
             cfg.dock_class_dlg.ui.button_Save_ROI.setEnabled(True)
             cfg.redo_ROI_Button.setEnabled(True)
+            cfg.removeROIOutliers_Button.setEnabled(True)
         cfg.ui_utils.remove_progress_bar(sound=False)
     return None
 

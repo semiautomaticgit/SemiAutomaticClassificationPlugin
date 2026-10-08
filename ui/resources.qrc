@@ -64,6 +64,9 @@
     <file>icons/semiautomaticclassificationplugin_new_file.svg</file>
     <file>icons/semiautomaticclassificationplugin_open_dir.svg</file>
     <file>icons/semiautomaticclassificationplugin_remove.svg</file>
+    <file>icons/semiautomaticclassificationplugin_remove_outliers_tool.svg</file>
+    <file>icons/semiautomaticclassificationplugin_remove_outliers_all_tool.svg</file>
+    <file>icons/semiautomaticclassificationplugin_remove_outliers_roi_tool.svg</file>
     <file>icons/semiautomaticclassificationplugin_open_file.svg</file>
     <file>icons/semiautomaticclassificationplugin_export_spectral_library.svg</file>
     <file>icons/semiautomaticclassificationplugin_download_arrow.svg</file>

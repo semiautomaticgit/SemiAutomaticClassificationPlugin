@@ -332,7 +332,8 @@ class SemiAutomaticClassificationPlugin:
                 raster_zonal_stats_tab, reproject_bandset_tab,
                 masking_bands_tab, download_products_tab, mosaic_bandsets_tab,
                 image_conversion_tab, script_tab, classification_tab,
-                rgb_composite_tab, signature_threshold_tab, multiple_roi_tab
+                rgb_composite_tab, signature_threshold_tab, multiple_roi_tab,
+                remove_outliers_dialog, remove_outliers, remove_outliers_use_case
             )
             from .map_pointers.classification_preview_pointer import (
                 ClassificationPreview)
@@ -531,6 +532,9 @@ class SemiAutomaticClassificationPlugin:
                 )
                 cfg.scp_dock_rubber_roi.setColor(QColor(0, 255, 255))
                 cfg.scp_dock_rubber_roi.setWidth(2)
+                cfg.remove_outliers_dialog = remove_outliers_dialog
+                cfg.remove_outliers = remove_outliers
+                cfg.remove_outliers_use_case = remove_outliers_use_case
                 # set font
                 try:
                     q_set = QgsSettings()
@@ -1370,6 +1374,10 @@ def connect_gui():
             cfg.bst.remove_band)
         cfg.dock_class_simpl_dlg.ui.polygonROI_Button.clicked.connect(
             cfg.scp_dock.pointer_manual_roi_active)
+        remove_outliers_b = cfg.dock_class_simpl_dlg.ui.remove_outliers_Button
+        remove_outliers_b.clicked.connect(
+            cfg.remove_outliers_use_case.remove_outliers_drawing_roi
+        )
         cfg.dock_class_simpl_dlg.ui.pointerButton.clicked.connect(
             cfg.scp_dock.pointer_region_growing_roi_active)
         cfg.dock_class_simpl_dlg.ui.button_Save_ROI.clicked.connect(

@@ -10174,6 +10174,16 @@ li.checked::marker { content: &quot;\2612&quot;; }
                     </property>
                    </widget>
                   </item>
+                  <item row="2" column="0" colspan="8">
+                   <widget class="QCheckBox" name="remove_outliers_before_classification_checkBox">
+                    <property name="toolTip">
+                     <string>Remove outliers from signatures before classification (temporary, non-destructive)</string>
+                    </property>
+                    <property name="text">
+                     <string>Remove outliers from signatures before classification</string>
+                    </property>
+                   </widget>
+                  </item>
                  </layout>
                 </item>
                 <item row="1" column="0">

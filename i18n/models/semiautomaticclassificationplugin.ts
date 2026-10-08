@@ -606,6 +606,26 @@
         <source>Download products</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class_simplified.py" line="482"/>
+        <source>Remove outliers from the temporary ROI</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class_simplified.py" line="483"/>
+        <source>Outliers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class_simplified.py" line="511"/>
+        <source>Remove outliers from signatures before classification (temporary, non-destructive)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ui/ui_semiautomaticclassificationplugin_dock_class_simplified.py" line="512"/>
+        <source>Remove outliers from signatures before classification</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SCP_Widget</name>
@@ -5985,6 +6005,11 @@ size</source>
     <message>
         <location filename="../interface/raster_zonal_stats_tab.py" line="80"/>
         <source>Save output</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../interface/input_interface.py" line="438"/>
+        <source>Remove outliers</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

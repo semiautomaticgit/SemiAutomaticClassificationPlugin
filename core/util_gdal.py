@@ -230,3 +230,36 @@ def get_polygon_from_vector(vector_path, output, attribute_filter=None):
     _v_layer = None
     _d_s = None
     return output
+
+
+# ROI clipping / mask polygonization helpers used by the outlier removal
+# feature. Implementations live in core/outlier_filters.py (a QGIS-free
+# module); these wrappers keep the cfg.util_gdal API.
+def ensure_valid_cutline(roi_gpkg):
+    return _outlier_filters().ensure_valid_cutline(roi_gpkg)
+
+
+def warp_to_memory(raster_in, roi_gpkg, nodata_value=None):
+    return _outlier_filters().warp_to_memory(raster_in, roi_gpkg, nodata_value)
+
+
+def create_mask_dataset(mask_array, geotransform, projection):
+    return _outlier_filters().create_mask_dataset(
+        mask_array, geotransform, projection
+    )
+
+
+def warp_multiband_to_memory(band_paths, roi_gpkg, nodata_value=None):
+    return _outlier_filters().warp_multiband_to_memory(
+        band_paths, roi_gpkg, nodata_value
+    )
+
+
+def polygonize_mask(mask_band, projection, output_gpkg):
+    return _outlier_filters().polygonize_mask(mask_band, projection, output_gpkg)
+
+
+def _outlier_filters():
+    return __import__(
+        str(__name__).split('.')[0] + '.core.outlier_filters', fromlist=['']
+    )
