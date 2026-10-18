@@ -22,13 +22,14 @@
 
 import multiprocessing
 import sys
-from os import path
 
 from PyQt6.QtWidgets import QApplication
 # noinspection PyUnresolvedReferences
 from processing.core.ProcessingConfig import ProcessingConfig
 # noinspection PyUnresolvedReferences
 from qgis.core import QgsProcessingAlgorithm, Qgis, QgsMessageLog
+
+from ..core.multiprocessing_utils import configure_multiprocessing_executable
 
 try:
     import remotior_sensus
@@ -104,26 +105,24 @@ class AlgorithmTemplate(QgsProcessingAlgorithm):
             multiprocessing.set_start_method('spawn')
         except Exception as err:
             str(err)
-        if sys.platform == 'win32':
-            try:
-                python_path = path.abspath(
-                    path.join(sys.exec_prefix, 'pythonw.exe')
+        try:
+            python_path = configure_multiprocessing_executable(
+                multiprocessing
+            )
+            if (python_path is None and (
+                    sys.platform.startswith('win')
+                    or sys.platform.startswith('darwin'))):
+                self.feedback.reportError(
+                    'Error. Python library not found'
                 )
-                if path.isfile(python_path):
-                    multiprocessing.set_executable(python_path)
-                else:
-                    # from https://trac.osgeo.org/osgeo4w/ticket/392
-                    python_path = path.abspath(
-                        path.join(sys.exec_prefix, '../../bin/pythonw.exe')
-                    )
-                    if path.isfile(python_path):
-                        multiprocessing.set_executable(python_path)
-                    else:
-                        self.feedback.reportError(
-                            'Error. Python library not found'
-                        )
-            except Exception as err:
-                str(err)
+                return None
+            elif python_path is None:
+                self.feedback.pushDebugInfo(
+                    'Using the default multiprocessing executable'
+                )
+        except Exception as err:
+            self.feedback.reportError(str(err))
+            return None
         self.feedback.pushDebugInfo(
             'SCP_N_PROCESSES %s'
             % ProcessingConfig.getSetting('SCP_N_PROCESSES')

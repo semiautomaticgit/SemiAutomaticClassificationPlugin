@@ -63,6 +63,7 @@ from qgis.gui import QgsRubberBand
 from .__init__ import version as semiautomatic_class_version
 # import SemiAutomaticClassificationPlugin
 from .core import config as cfg
+from .core.multiprocessing_utils import configure_multiprocessing_executable
 try:
     from .core import util_qgis
 except Exception as error:
@@ -357,59 +358,29 @@ class SemiAutomaticClassificationPlugin:
             cfg.system_platform = sys.platform
             # QGIS version
             qgis_ver = Qgis.QGIS_VERSION_INT
-            # set multiprocess path
-            python_path = None
-            if cfg.system_platform.startswith('win'):
-                try:
-                    python_path = path.abspath(
-                        path.join(sys.exec_prefix, 'pythonw.exe')
+            # Set a real Python launcher for multiprocessing. In embedded QGIS
+            # sessions sys.executable may point to the QGIS GUI application.
+            multiprocessing_ready = True
+            try:
+                python_path = configure_multiprocessing_executable(
+                    multiprocessing
+                )
+                if (python_path is None and (
+                        cfg.system_platform.startswith('win')
+                        or cfg.system_platform.startswith('darwin'))):
+                    multiprocessing_ready = False
+                    qgis_utils.iface.messageBar().pushMessage(
+                        'Semi-Automatic Classification Plugin',
+                        QApplication.translate(
+                            'semiautomaticclassificationplugin',
+                            'Error. Python library not found'
+                        ),
+                        level=Qgis.Info
                     )
-                    if path.isfile(python_path):
-                        multiprocessing.set_executable(python_path)
-                    else:
-                        # from https://trac.osgeo.org/osgeo4w/ticket/392
-                        python_path = path.abspath(
-                            path.join(sys.exec_prefix, '../../bin/pythonw.exe')
-                        )
-                        if path.isfile(python_path):
-                            multiprocessing.set_executable(python_path)
-                        else:
-                            qgis_utils.iface.messageBar().pushMessage(
-                                'Semi-Automatic Classification Plugin',
-                                QApplication.translate(
-                                    'semiautomaticclassificationplugin',
-                                    'Error. Python library not found'
-                                ),
-                                level=Qgis.Info
-                            )
-                except Exception as err:
-                    str(err)
-            elif cfg.system_platform.startswith('darwin'):
-                try:
-                    python_path = path.abspath(
-                        path.join(sys.exec_prefix, 'bin', 'python3')
-                    )
-                    if path.isfile(python_path):
-                        multiprocessing.set_executable(python_path)
-                    else:
-                        python_path = path.abspath(
-                            path.join(
-                                sys.exec_prefix, '../Resources/bin/python3'
-                            )
-                        )
-                        if path.isfile(python_path):
-                            multiprocessing.set_executable(python_path)
-                        else:
-                            qgis_utils.iface.messageBar().pushMessage(
-                                'Semi-Automatic Classification Plugin',
-                                QApplication.translate(
-                                    'semiautomaticclassificationplugin',
-                                    'Error. Python library not found'
-                                ),
-                                level=Qgis.Info
-                            )
-                except Exception as err:
-                    str(err)
+            except Exception as err:
+                str(err)
+                python_path = None
+                multiprocessing_ready = False
             # reference to QGIS interface
             cfg.iface = iface
             # reference to map canvas
@@ -554,25 +525,30 @@ class SemiAutomaticClassificationPlugin:
                 cfg.mx = messages
                 log_level = (10 if cfg.qgis_registry[cfg.reg_log_key] == 2
                              else 20)
-                try:
-                    cfg.rs = remotior_sensus.Session(
-                        n_processes=cfg.qgis_registry[cfg.reg_threads_value],
-                        log_level=log_level, temporary_directory=cfg.temp_dir,
-                        available_ram=cfg.qgis_registry[cfg.reg_ram_value],
-                        multiprocess_module=multiprocessing,
-                        progress_callback=cfg.ui_utils.update_bar,
-                        messages_callback=cfg.mx, log_stream_handler=False
-                    )
-                except Exception as err:
-                    str(err)
-                    qgis_utils.iface.messageBar().pushMessage(
-                        'Semi-Automatic Classification Plugin',
-                        QApplication.translate(
-                            'semiautomaticclassificationplugin',
-                            'Error starting Remotior Sensus'
-                        ),
-                        level=Qgis.Info
-                    )
+                if multiprocessing_ready:
+                    try:
+                        cfg.rs = remotior_sensus.Session(
+                            n_processes=cfg.qgis_registry[
+                                cfg.reg_threads_value],
+                            log_level=log_level,
+                            temporary_directory=cfg.temp_dir,
+                            available_ram=cfg.qgis_registry[
+                                cfg.reg_ram_value],
+                            multiprocess_module=multiprocessing,
+                            progress_callback=cfg.ui_utils.update_bar,
+                            messages_callback=cfg.mx,
+                            log_stream_handler=False
+                        )
+                    except Exception as err:
+                        str(err)
+                        qgis_utils.iface.messageBar().pushMessage(
+                            'Semi-Automatic Classification Plugin',
+                            QApplication.translate(
+                                'semiautomaticclassificationplugin',
+                                'Error starting Remotior Sensus'
+                            ),
+                            level=Qgis.Info
+                        )
                 if cfg.rs is not None:
                     # logger
                     cfg.logger = cfg.rs.configurations.logger
